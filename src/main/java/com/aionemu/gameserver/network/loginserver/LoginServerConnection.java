@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
@@ -78,6 +79,15 @@ public class LoginServerConnection extends AConnection {
 
 	public LoginServerConnection(SocketChannel sc, Dispatcher d) throws IOException {
 		super(sc, d, 8192 * 8, 8192 * 8);
+		init();
+	}
+
+	public LoginServerConnection(ConnectionTransport transport) {
+		super(transport, 8192 * 8, 8192 * 8);
+		init();
+	}
+
+	private void init() {
 		LsPacketHandlerFactory lsPacketHandlerFactory = LsPacketHandlerFactory.getInstance();
 		this.lsPacketHandler = lsPacketHandlerFactory.getPacketHandler();
 		state = State.CONNECTED;

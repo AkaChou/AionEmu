@@ -687,12 +687,13 @@ public class GameServer {
 		log.info("Network Config - Bind: {}, Port: {}, Threads: {}", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS);
 		
 		boolean nettyTransportEnabled = Boolean.getBoolean("aion.transport.netty");
-		nioServer = nettyTransportEnabled
-			? new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS)
-			: new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
-		gameClientTransport = nettyTransportEnabled
-			? new com.aionemu.commons.network.NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()))
-			: nioServer;
+		if (nettyTransportEnabled) {
+			nioServer = null;
+			gameClientTransport = new com.aionemu.commons.network.NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
+		} else {
+			nioServer = new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
+			gameClientTransport = nioServer;
+		}
 		BannedMacManager.getInstance();
 
 		LoginServer ls = LoginServer.getInstance();
@@ -702,10 +703,7 @@ public class GameServer {
 		cs.setNioServer(nioServer);
 
 		long transportStart = System.currentTimeMillis();
-		nioServer.connect();
-		if (nettyTransportEnabled) {
-			gameClientTransport.connect();
-		}
+		gameClientTransport.connect();
 		long transportTime = System.currentTimeMillis() - transportStart;
 		log.info("{} server transport started in {} ms", nettyTransportEnabled ? "Netty" : "NIO", transportTime);
 		

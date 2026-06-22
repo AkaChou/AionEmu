@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.Dispatcher;
+import com.aionemu.commons.network.NettyClient;
 import com.aionemu.commons.network.NioServer;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.model.account.Account;
@@ -72,6 +73,7 @@ public class LoginServer {
 	 * Connection to LoginServer.
 	 */
 	private volatile LoginServerConnection loginServer;
+	private volatile NettyClient nettyClient;
 
 	private NioServer nioServer;
 	private volatile boolean serverShutdown = false;
@@ -140,6 +142,9 @@ public class LoginServer {
 	private boolean connectOnce() {
 		loginServer = null;
 		log.info("Connecting to LoginServer: " + NetworkConfig.LOGIN_ADDRESS);
+		if (Boolean.getBoolean("aion.transport.netty")) {
+			return connectWithNetty();
+		}
 		SocketChannel sc = null;
 		try {
 			sc = SocketChannel.open(NetworkConfig.LOGIN_ADDRESS);
@@ -166,6 +171,25 @@ public class LoginServer {
 		}
 	}
 
+	private boolean connectWithNetty() {
+		shutdownNettyClient();
+		try {
+			NettyClient client = new NettyClient(NetworkConfig.LOGIN_ADDRESS, "LoginServer", transport -> {
+				LoginServerConnection connection = new LoginServerConnection(transport);
+				loginServer = connection;
+				return connection;
+			});
+			nettyClient = client;
+			client.connect();
+			return loginServer != null;
+		} catch (Exception e) {
+			loginServer = null;
+			shutdownNettyClient();
+			log.info("Cant connect to LoginServer: " + e.getMessage());
+			return false;
+		}
+	}
+
 	/**
 	 * This method is called when we lost connection to LoginServer. We will
 	 * disconnects all aionClients waiting for LoginServer response and also try
@@ -175,6 +199,7 @@ public class LoginServer {
 		log.warn("Connection with LoginServer lost...");
 
 		loginServer = null;
+		shutdownNettyClient();
 		synchronized (this) {
 			/**
 			 * We lost connection for LoginServer so client pending authentication should be
@@ -411,8 +436,17 @@ public class LoginServer {
 				loginServer.close(false);
 				loginServer = null;
 			}
+			shutdownNettyClient();
 		}
 		log.info("GameServer disconnected from the Login Server...");
+	}
+
+	private void shutdownNettyClient() {
+		NettyClient client = nettyClient;
+		if (client != null) {
+			nettyClient = null;
+			client.shutdown();
+		}
 	}
 
 	private void cancelConnectionTask() {
