@@ -1,27 +1,28 @@
 package com.aionemu.commons.database;
 
 import com.aionemu.commons.configs.DatabaseConfig;
+import com.aionemu.commons.services.ServiceContext;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class DatabaseFactory {
     
     private static final Logger log = LoggerFactory.getLogger(DatabaseFactory.class);
-    private static HikariDataSource dataSource;
-    private static String databaseName;
-    private static int databaseMajorVersion;
-    private static int databaseMinorVersion;
+    private static final Map<String, DatabaseState> states = new ConcurrentHashMap<>();
     
     private DatabaseFactory() {}
     
     public static synchronized void init() {
-        if (dataSource != null) {
+        String context = ServiceContext.current();
+        if (states.containsKey(context)) {
             return;
         }
         
@@ -48,6 +49,7 @@ public final class DatabaseFactory {
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
         config.addDataSourceProperty("useServerPrepStmts", "true");
         
+        HikariDataSource dataSource;
         try {
             dataSource = new HikariDataSource(config);
         } catch (Exception e) {
@@ -55,21 +57,25 @@ public final class DatabaseFactory {
             throw new Error("DatabaseFactory not initialized!", e);
         }
         
+        DatabaseState state = new DatabaseState(dataSource);
+        states.put(context, state);
         try (Connection c = getConnection()) {
             DatabaseMetaData dmd = c.getMetaData();
-            databaseName = dmd.getDatabaseProductName();
-            databaseMajorVersion = dmd.getDatabaseMajorVersion();
-            databaseMinorVersion = dmd.getDatabaseMinorVersion();
+            state.databaseName = dmd.getDatabaseProductName();
+            state.databaseMajorVersion = dmd.getDatabaseMajorVersion();
+            state.databaseMinorVersion = dmd.getDatabaseMinorVersion();
         } catch (Exception e) {
+            states.remove(context);
+            dataSource.close();
             log.error("Error with connection string: " + DatabaseConfig.DATABASE_URL, e);
             throw new Error("DatabaseFactory not initialized!");
         }
         
-        log.info("Successfully connected to database with HikariCP");
+        log.info("Successfully connected to database with HikariCP for {} service context", context);
     }
     
     public static Connection getConnection() throws SQLException {
-        Connection con = dataSource.getConnection();
+        Connection con = state().dataSource.getConnection();
         if (!con.getAutoCommit()) {
             log.error("Connection Settings Error: Connection obtained from database factory should be in auto-commit mode. Forcing auto-commit to true.");
             con.setAutoCommit(true);
@@ -78,21 +84,22 @@ public final class DatabaseFactory {
     }
     
     public int getActiveConnections() {
-        return dataSource.getHikariPoolMXBean().getActiveConnections();
+        return state().dataSource.getHikariPoolMXBean().getActiveConnections();
     }
     
     public int getIdleConnections() {
-        return dataSource.getHikariPoolMXBean().getIdleConnections();
+        return state().dataSource.getHikariPoolMXBean().getIdleConnections();
     }
     
     public static synchronized void shutdown() {
-        if (dataSource != null && !dataSource.isClosed()) {
+        String context = ServiceContext.current();
+        DatabaseState state = states.remove(context);
+        if (state != null && !state.dataSource.isClosed()) {
             try {
-                dataSource.close();
+                state.dataSource.close();
             } catch (Exception e) {
                 log.warn("Failed to shutdown DatabaseFactory", e);
             }
-            dataSource = null;
         }
     }
     
@@ -131,14 +138,33 @@ public final class DatabaseFactory {
     }
     
     public static String getDatabaseName() {
-        return databaseName;
+        return state().databaseName;
     }
     
     public static int getDatabaseMajorVersion() {
-        return databaseMajorVersion;
+        return state().databaseMajorVersion;
     }
     
     public static int getDatabaseMinorVersion() {
-        return databaseMinorVersion;
+        return state().databaseMinorVersion;
+    }
+
+    private static DatabaseState state() {
+        DatabaseState state = states.get(ServiceContext.current());
+        if (state == null) {
+            throw new IllegalStateException("DatabaseFactory is not initialized for " + ServiceContext.current() + " service context");
+        }
+        return state;
+    }
+
+    private static final class DatabaseState {
+        private final HikariDataSource dataSource;
+        private String databaseName;
+        private int databaseMajorVersion;
+        private int databaseMinorVersion;
+
+        private DatabaseState(HikariDataSource dataSource) {
+            this.dataSource = dataSource;
+        }
     }
 }

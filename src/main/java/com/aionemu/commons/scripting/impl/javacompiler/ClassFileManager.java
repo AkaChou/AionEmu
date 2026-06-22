@@ -3,20 +3,33 @@ package com.aionemu.commons.scripting.impl.javacompiler;
 import com.aionemu.commons.scripting.ScriptClassLoader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import javax.tools.DiagnosticListener;
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.JavaFileManager.Location;
 import javax.tools.JavaFileObject.Kind;
@@ -38,6 +51,9 @@ import javax.tools.JavaFileObject.Kind;
  * 4. Management of classpath and library dependencies
  */
 public class ClassFileManager extends ForwardingJavaFileManager<JavaFileManager> {
+
+    private static final String BOOT_CLASSES_PREFIX = "BOOT-INF/classes/";
+    private static File bootClassesDirectory;
     
     /**
      * 存储编译后的类文件映射表
@@ -66,6 +82,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<JavaFileManager>
      */
     public ClassFileManager(JavaCompiler compiler, DiagnosticListener<? super JavaFileObject> listener) {
         super(compiler.getStandardFileManager(listener, null, null));
+        configureRuntimeClassPath();
     }
 
     /**
@@ -83,6 +100,17 @@ public class ClassFileManager extends ForwardingJavaFileManager<JavaFileManager>
         BinaryClass co = new BinaryClass(className);
         this.compiledClasses.put(className, co);
         return co;
+    }
+
+    @Override
+    public JavaFileObject getJavaFileForInput(Location location, String className, Kind kind) throws IOException {
+        JavaFileObject object = super.getJavaFileForInput(location, className, kind);
+        if (object != null || !StandardLocation.CLASS_PATH.equals(location) || !Kind.CLASS.equals(kind)) {
+            return object;
+        }
+
+        URL resource = getClassLoaderResource(className.replace('.', '/') + Kind.CLASS.extension);
+        return resource == null ? null : new ClassLoaderClassFileObject(className, resource);
     }
 
     /**
@@ -181,6 +209,168 @@ public class ClassFileManager extends ForwardingJavaFileManager<JavaFileManager>
      * @return 二进制名称 / Binary name
      */
     public String inferBinaryName(Location location, JavaFileObject file) {
-        return file instanceof BinaryClass ? ((BinaryClass)file).inferBinaryName(null) : super.inferBinaryName(location, file);
+        if (file instanceof BinaryClass) {
+            return ((BinaryClass)file).inferBinaryName(null);
+        }
+        if (file instanceof ClassLoaderClassFileObject) {
+            return ((ClassLoaderClassFileObject) file).inferBinaryName();
+        }
+        return super.inferBinaryName(location, file);
+    }
+
+    private URL getClassLoaderResource(String resourceName) {
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        if (contextClassLoader != null) {
+            URL resource = contextClassLoader.getResource(resourceName);
+            if (resource != null) {
+                return resource;
+            }
+        }
+        return ClassFileManager.class.getClassLoader().getResource(resourceName);
+    }
+
+    private void configureRuntimeClassPath() {
+        if (!(fileManager instanceof StandardJavaFileManager)) {
+            return;
+        }
+
+        StandardJavaFileManager standardFileManager = (StandardJavaFileManager) fileManager;
+        try {
+            LinkedHashSet<File> classPath = new LinkedHashSet<File>();
+            Iterable<? extends File> currentClassPath = standardFileManager.getLocation(StandardLocation.CLASS_PATH);
+            if (currentClassPath != null) {
+                for (File file : currentClassPath) {
+                    classPath.add(file);
+                }
+            }
+
+            addIfExists(classPath, new File("target/classes"));
+            addIfExists(classPath, getBootClassesDirectory());
+            standardFileManager.setLocation(StandardLocation.CLASS_PATH, classPath);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to configure script compiler classpath", e);
+        }
+    }
+
+    private void addIfExists(Set<File> classPath, File file) {
+        if (file != null && file.exists()) {
+            classPath.add(file);
+        }
+    }
+
+    private static synchronized File getBootClassesDirectory() throws IOException {
+        if (bootClassesDirectory != null) {
+            return bootClassesDirectory;
+        }
+
+        File source = getBootArchiveFile();
+        if (source == null) {
+            return null;
+        }
+
+        Path tempDirectory = Files.createTempDirectory("aion-boot-classes");
+        boolean extracted = false;
+        try (ZipFile zipFile = new ZipFile(source)) {
+            Iterator<? extends ZipEntry> entries = zipFile.entries().asIterator();
+            while (entries.hasNext()) {
+                ZipEntry entry = entries.next();
+                if (entry.isDirectory() || !entry.getName().startsWith(BOOT_CLASSES_PREFIX)) {
+                    continue;
+                }
+
+                String relativeName = entry.getName().substring(BOOT_CLASSES_PREFIX.length());
+                Path target = tempDirectory.resolve(relativeName).normalize();
+                if (!target.startsWith(tempDirectory)) {
+                    throw new IOException("Invalid boot jar entry: " + entry.getName());
+                }
+                Files.createDirectories(target.getParent());
+                try (InputStream inputStream = zipFile.getInputStream(entry)) {
+                    Files.copy(inputStream, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+                extracted = true;
+            }
+        }
+
+        bootClassesDirectory = extracted ? tempDirectory.toFile() : null;
+        return bootClassesDirectory;
+    }
+
+    private static File getBootArchiveFile() throws IOException {
+        File source = findBootArchiveInClassPath(System.getProperty("java.class.path"));
+        if (source != null) {
+            return source;
+        }
+
+        source = findBootArchiveInCommand(System.getProperty("sun.java.command"));
+        if (source != null) {
+            return source;
+        }
+
+        CodeSource codeSource = ClassFileManager.class.getProtectionDomain().getCodeSource();
+        if (codeSource == null || codeSource.getLocation() == null || !"file".equals(codeSource.getLocation().getProtocol())) {
+            return null;
+        }
+
+        try {
+            source = new File(codeSource.getLocation().toURI());
+        } catch (IllegalArgumentException | URISyntaxException e) {
+            throw new IOException("Invalid code source location", e);
+        }
+        return isBootArchive(source) ? source : null;
+    }
+
+    private static File findBootArchiveInClassPath(String classPath) throws IOException {
+        if (classPath == null || classPath.isBlank()) {
+            return null;
+        }
+
+        String[] entries = classPath.split(File.pathSeparator);
+        for (String entry : entries) {
+            File file = new File(entry);
+            if (isBootArchive(file)) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+    private static File findBootArchiveInCommand(String command) throws IOException {
+        if (command == null || command.isBlank()) {
+            return null;
+        }
+
+        File file = new File(command.split("\\s+", 2)[0]);
+        return isBootArchive(file) ? file : null;
+    }
+
+    private static boolean isBootArchive(File file) throws IOException {
+        if (file == null || !file.isFile()) {
+            return false;
+        }
+
+        try (ZipFile zipFile = new ZipFile(file)) {
+            return zipFile.getEntry(BOOT_CLASSES_PREFIX) != null
+                || zipFile.getEntry(BOOT_CLASSES_PREFIX + ClassFileManager.class.getName().replace('.', '/') + Kind.CLASS.extension) != null;
+        }
+    }
+
+    private static final class ClassLoaderClassFileObject extends SimpleJavaFileObject {
+        private final String binaryName;
+        private final URL resource;
+
+        private ClassLoaderClassFileObject(String binaryName, URL resource) {
+            super(URI.create("classloader:///" + binaryName.replace('.', '/') + Kind.CLASS.extension), Kind.CLASS);
+            this.binaryName = binaryName;
+            this.resource = resource;
+        }
+
+        @Override
+        public InputStream openInputStream() throws IOException {
+            return resource.openStream();
+        }
+
+        private String inferBinaryName() {
+            return binaryName;
+        }
     }
 }

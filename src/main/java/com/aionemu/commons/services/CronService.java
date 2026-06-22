@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
@@ -47,8 +48,8 @@ public final class CronService {
     /** 日志记录器 Logger instance */
     private static final Logger log = LoggerFactory.getLogger(CronService.class);
     
-    /** 单例实例 Singleton instance */
-    private static CronService instance;
+    /** 单例实例 Singleton instances */
+    private static final Map<String, CronService> instances = new ConcurrentHashMap<String, CronService>();
     
     /** Quartz调度器 Quartz scheduler */
     private Scheduler scheduler;
@@ -63,7 +64,7 @@ public final class CronService {
      * @return CronService单例实例 CronService singleton instance
      */
     public static CronService getInstance() {
-        return instance;
+        return instances.get(ServiceContext.current());
     }
 
     /**
@@ -74,12 +75,13 @@ public final class CronService {
      * @throws CronServiceException 如果服务已初始化 if service is already initialized
      */
     public static synchronized void initSingleton(Class<? extends RunnableRunner> runableRunner) {
-      if (instance != null) {
+      String context = ServiceContext.current();
+      if (instances.containsKey(context)) {
          throw new CronServiceException("CronService is already initialized");
       } else {
          CronService cs = new CronService();
          cs.init(runableRunner);
-         instance = cs;
+         instances.put(context, cs);
       }
    }
 
@@ -100,6 +102,7 @@ public final class CronService {
          } else {
             this.runnableRunner = runnableRunner;
             Properties properties = new Properties();
+            properties.setProperty("org.quartz.scheduler.instanceName", "AionCron-" + ServiceContext.current());
             properties.setProperty("org.quartz.threadPool.threadCount", "1");
             ch.qos.logback.classic.Logger quartzLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.quartz");
             ch.qos.logback.classic.Level oldLevel = quartzLogger.getLevel();
@@ -164,7 +167,7 @@ public final class CronService {
     public void schedule(Runnable r, String cronExpression, boolean longRunning) {
       try {
          JobDataMap jdm = new JobDataMap();
-         jdm.put("cronservice.scheduled.runnable.instance", r);
+         jdm.put("cronservice.scheduled.runnable.instance", ServiceContext.wrap(r));
          jdm.put("cronservice.scheduled.runnable.islognrunning", longRunning);
          jdm.put("cronservice.scheduled.runnable.cronexpression", cronExpression);
          String jobId = "Started at ms" + System.currentTimeMillis() + "; ns" + System.nanoTime();

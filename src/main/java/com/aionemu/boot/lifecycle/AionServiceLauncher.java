@@ -2,6 +2,7 @@ package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.transport.AionTransportBoundary;
+import com.aionemu.commons.services.ServiceContext;
 import java.util.Comparator;
 import java.util.List;
 import org.slf4j.Logger;
@@ -59,7 +60,9 @@ public class AionServiceLauncher implements ApplicationRunner {
     private void startService(AionServiceLifecycle serviceLifecycle, ApplicationArguments args) throws Exception {
         String name = serviceLifecycle.getName();
         log.info("Starting {} service...", name);
-        serviceLifecycle.start(args);
+        try (ServiceContext.Scope ignored = ServiceContext.use(name)) {
+            serviceLifecycle.start(args);
+        }
         log.info("{} service startup returned.", name);
     }
 }

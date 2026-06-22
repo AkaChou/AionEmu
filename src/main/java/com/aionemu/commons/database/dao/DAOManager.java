@@ -7,6 +7,7 @@ import static com.aionemu.commons.database.DatabaseFactory.getDatabaseName;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.bind.JAXBException;
 
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.configs.DatabaseConfig;
+import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
@@ -44,41 +46,45 @@ public class DAOManager {
      * 已注册的DAO集合
      * Collection of registered DAOs
      */
-    private static final Map<String, DAO> daoMap = new HashMap<String, DAO>();
-
-    /**
-     * 负责加载DAO实现的脚本管理器
-     * Script manager responsible for loading DAO implementations
-     */
-    private static ScriptManager scriptManager;
+    private static final Map<String, DaoState> states = new ConcurrentHashMap<String, DaoState>();
 
     /**
      * 初始化DAOManager
      * Initializes DAOManager
      */
     public static void init() {
+        String context = ServiceContext.current();
+        DaoState state = new DaoState();
+        DaoState oldState = states.putIfAbsent(context, state);
+        if (oldState != null) {
+            return;
+        }
         try {
-            scriptManager = new ScriptManager();
+            state.scriptManager = new ScriptManager();
 
             // 初始化默认的类监听器 / Initialize default class listeners
             AggregatedClassListener acl = new AggregatedClassListener();
             acl.addClassListener(new OnClassLoadUnloadListener());
             acl.addClassListener(new ScheduledTaskClassListener());
             acl.addClassListener(new DAOLoader());
-            scriptManager.setGlobalClassListener(acl);
+            state.scriptManager.setGlobalClassListener(acl);
 
-            scriptManager.load(DatabaseConfig.DATABASE_SCRIPTCONTEXT_DESCRIPTOR);
+            state.scriptManager.load(DatabaseConfig.DATABASE_SCRIPTCONTEXT_DESCRIPTOR);
         } catch (RuntimeException e) {
+            states.remove(context);
             throw new Error(e.getMessage(), e);
         } catch (FileNotFoundException e) {
+            states.remove(context);
             throw new Error("Can't load database script context: " + DatabaseConfig.DATABASE_SCRIPTCONTEXT_DESCRIPTOR, e);
         } catch (JAXBException e) {
+            states.remove(context);
             throw new Error("Can't compile database handlers - check your MySQL5 implementations", e);
         } catch (Exception e) {
+            states.remove(context);
             throw new Error("A fatal error occurred during loading or compiling the database handlers", e);
         }
 
-        log.info("Loaded " + daoMap.size() + " DAO implementations.");
+        log.info("Loaded " + state.daoMap.size() + " DAO implementations for " + context + " service context.");
     }
 
     /**
@@ -86,9 +92,11 @@ public class DAOManager {
      * Shuts down DAOManager
      */
     public static void shutdown() {
-        scriptManager.shutdown();
-        daoMap.clear();
-        scriptManager = null;
+        DaoState state = states.remove(ServiceContext.current());
+        if (state != null) {
+            state.scriptManager.shutdown();
+            state.daoMap.clear();
+        }
     }
 
     /**
@@ -102,7 +110,7 @@ public class DAOManager {
      */
     @SuppressWarnings("unchecked")
     public static <T extends DAO> T getDAO(Class<T> clazz) throws DAONotFoundException {
-        DAO result = daoMap.get(clazz.getName());
+        DAO result = state().daoMap.get(clazz.getName());
 
         if (result == null) {
             String s = "DAO for class " + clazz.getSimpleName() + " not implemented";
@@ -129,8 +137,9 @@ public class DAOManager {
             return;
         }
 
+        DaoState state = state();
         synchronized (DAOManager.class) {
-            DAO oldDao = daoMap.get(dao.getClassName());
+            DAO oldDao = state.daoMap.get(dao.getClassName());
             if (oldDao != null) {
                 StringBuilder sb = new StringBuilder();
                 sb.append("DAO with className ").append(dao.getClassName()).append(" is used by ");
@@ -140,7 +149,7 @@ public class DAOManager {
                 log.error(s);
                 throw new DAOAlreadyRegisteredException(s);
             }
-            daoMap.put(dao.getClassName(), dao);
+            state.daoMap.put(dao.getClassName(), dao);
         }
 
         if (log.isDebugEnabled()) {
@@ -155,10 +164,11 @@ public class DAOManager {
      * @param daoClass 要注销的DAO实现类 / DAO implementation class to unregister
      */
     public static void unregisterDAO(Class<? extends DAO> daoClass) {
+        DaoState state = state();
         synchronized (DAOManager.class) {
-            for (DAO dao : daoMap.values()) {
+            for (DAO dao : state.daoMap.values()) {
                 if (dao.getClass() == daoClass) {
-                    daoMap.remove(dao.getClassName());
+                    state.daoMap.remove(dao.getClassName());
 
                     if (log.isDebugEnabled()) {
                         log.debug("DAO " + dao.getClassName() + " was successfully unregistered.");
@@ -176,5 +186,18 @@ public class DAOManager {
      */
     private DAOManager() {
         // 空构造函数 / Empty constructor
+    }
+
+    private static DaoState state() {
+        DaoState state = states.get(ServiceContext.current());
+        if (state == null) {
+            throw new IllegalStateException("DAOManager is not initialized for " + ServiceContext.current() + " service context");
+        }
+        return state;
+    }
+
+    private static final class DaoState {
+        private final Map<String, DAO> daoMap = new HashMap<String, DAO>();
+        private ScriptManager scriptManager;
     }
 }

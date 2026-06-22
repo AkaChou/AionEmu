@@ -1,5 +1,7 @@
 package com.aionemu.commons.utils.concurrent;
 
+import com.aionemu.commons.services.ServiceContext;
+
 /**
  * 可运行任务包装类，用于包装和监控任务的执行时间
  * Runnable wrapper class for wrapping and monitoring task execution time
@@ -9,6 +11,7 @@ public class RunnableWrapper implements Runnable {
     private final Runnable runnable;
     // 无警告运行的最大时间(毫秒) Maximum runtime in milliseconds without warning
     private final long maxRuntimeMsWithoutWarning;
+    private final String serviceContext;
 
     /**
      * 使用默认的最大运行时间创建包装器
@@ -30,6 +33,7 @@ public class RunnableWrapper implements Runnable {
     public RunnableWrapper(Runnable runnable, long maxRuntimeMsWithoutWarning) {
         this.runnable = runnable;
         this.maxRuntimeMsWithoutWarning = maxRuntimeMsWithoutWarning;
+        this.serviceContext = ServiceContext.current();
     }
 
     /**
@@ -37,6 +41,8 @@ public class RunnableWrapper implements Runnable {
      * Execute the wrapped task and monitor its runtime
      */
     public final void run() {
-        ExecuteWrapper.execute(this.runnable, this.maxRuntimeMsWithoutWarning);
+        try (ServiceContext.Scope ignored = ServiceContext.use(serviceContext)) {
+            ExecuteWrapper.execute(this.runnable, this.maxRuntimeMsWithoutWarning);
+        }
     }
 }
