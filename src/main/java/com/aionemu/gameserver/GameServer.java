@@ -728,7 +728,7 @@ public class GameServer {
 		log.info(AionRuntimeMode.isBootEmbedded() ? "Network transport started and external server connections scheduled" : "All network servers started successfully");
 	}
 
-	public static void stop() {
+	public static boolean stop() {
 		GameServer server = activeServer;
 		if (server != null) {
 			try {
@@ -737,7 +737,9 @@ public class GameServer {
 			} finally {
 				activeServer = null;
 			}
+			return true;
 		}
+		return false;
 	}
 
 	private void stopServers() {

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionRuntimeMode;
@@ -26,5 +27,10 @@ class ShutdownHookTest {
         ShutdownHook.getInstance().doShutdown(0, 1, ShutdownMode.RESTART);
 
         assertEquals(1, shutdownRequests.get());
+    }
+
+    @Test
+    void stopReportsFalseWhenGameServerWasNotStarted() {
+        assertFalse(GameServer.stop());
     }
 }

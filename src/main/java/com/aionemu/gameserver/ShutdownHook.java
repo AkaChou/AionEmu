@@ -135,7 +135,9 @@ public class ShutdownHook extends Thread {
 		if (AionRuntimeMode.isBootEmbedded()) {
 			if (!AionEmbeddedShutdownHandler.requestShutdown()) {
 				log.warn("Embedded shutdown handler is not registered; stopping GameServer directly.");
-				completeShutdown(mode, false);
+				if (!GameServer.stop()) {
+					completeShutdown(mode, false);
+				}
 			}
 			return;
 		}
