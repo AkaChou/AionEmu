@@ -49,7 +49,7 @@ Database defaults are aligned to the local MySQL instance:
 - User: `root`
 - Password: `123456`
 
-Initialization SQL now lives under `docs/mysql/`.
+Initialization SQL now lives under `src/main/resources/db/mysql/`.
 
 ## Completed Work
 
@@ -86,7 +86,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
 - [x] Made chat shutdown skip legacy Netty server creation when the chat Netty singleton was never initialized.
 - [x] Made CronService removable on shutdown so the same service context can initialize it again in one JVM.
-- [x] Moved MySQL initialization SQL into `docs/mysql/`.
+- [x] Moved MySQL initialization SQL into `src/main/resources/db/mysql/`.
 - [x] Initialized and verified local database schemas.
 - [x] Fixed the Java agent shaded jar so project callback classes are included.
 
