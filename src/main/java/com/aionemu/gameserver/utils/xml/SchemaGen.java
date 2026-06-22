@@ -28,9 +28,7 @@ import com.aionemu.gameserver.dataholders.StaticData;
 
 public class SchemaGen {
 
-	public static void main(String[] args) throws Exception {
-		final File baseDir = new File("./data/static_data");
-
+	public static void generateStaticDataSchema(File baseDir) throws Exception {
 		class MySchemaOutputResolver extends SchemaOutputResolver {
 
 			@Override

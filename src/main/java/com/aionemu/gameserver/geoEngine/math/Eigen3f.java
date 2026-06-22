@@ -3,10 +3,7 @@
  */
 package com.aionemu.gameserver.geoEngine.math;
 
-import java.util.logging.Logger;
-
 public class Eigen3f {
-	private static final Logger logger = Logger.getLogger(Eigen3f.class.getName());
 	float[] eigenValues = new float[3];
 	Vector3f[] eigenVectors = new Vector3f[3];
 	static final double ONE_THIRD_DOUBLE = 0.3333333333333333;
@@ -235,23 +232,6 @@ public class Eigen3f {
 				rootsStore[0] = root2;
 			}
 		}
-	}
-
-	public static void main(String[] args) {
-		int i;
-		Matrix3f mat = new Matrix3f(2.0f, 1.0f, 1.0f, 1.0f, 2.0f, 1.0f, 1.0f, 1.0f, 2.0f);
-		Eigen3f eigenSystem = new Eigen3f(mat);
-		logger.info("eigenvalues = ");
-		for (i = 0; i < 3; ++i) {
-			logger.info(eigenSystem.getEigenValue(i) + " ");
-		}
-		logger.info("eigenvectors = ");
-		for (i = 0; i < 3; ++i) {
-			Vector3f vector = eigenSystem.getEigenVector(i);
-			logger.info(vector.toString());
-			mat.setColumn(i, vector);
-		}
-		logger.info(mat.toString());
 	}
 
 	public float getEigenValue(int i) {

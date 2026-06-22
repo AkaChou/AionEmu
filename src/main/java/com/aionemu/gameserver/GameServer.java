@@ -274,14 +274,7 @@ public class GameServer {
 	}
 
 	/**
-	 * Launching method for GameServer
-	 */
-	public static void main(String[] args) {
-		start(args);
-	}
-
-	/**
-	 * Starts GameServer from a standalone main method or embedding launcher.
+	 * Starts GameServer from the boot-managed service lifecycle.
 	 */
 	public static void start(String[] args) {
 		start(args, null);

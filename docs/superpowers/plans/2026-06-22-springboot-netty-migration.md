@@ -55,6 +55,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Moved Java application and test code under Maven-standard `src/main/java` and `src/test/java`.
 - [x] Moved service configuration and bundled resources under `src/main/resources`.
 - [x] Added one Spring Boot launcher with `WebApplicationType.NONE`.
+- [x] Removed standalone production `main` entrypoints outside `AionBootApplication`.
 - [x] Added boot-managed lifecycle ordering: login phase 100, chat phase 200, game phase 300.
 - [x] Made chat disabled by default and configurable.
 - [x] Made Netty the default transport mode with explicit `legacy-nio` fallback.
@@ -102,6 +103,10 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 7 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=DAOManagerTest,NetConnectorTest,AionServiceLauncherTest test`
   - Result: 9 tests, 0 failures, 0 errors.
+- `rtk rg -n "public static void main\\(|static void main\\(" src/main/java src/test/java`
+  - Result: only `src/main/java/com/aionemu/boot/AionBootApplication.java` remains in production source.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionBootApplicationTest,AionServicesPropertiesTest,AionServiceLauncherTest,AionTransportBoundaryTest test`
+  - Result: 13 tests, 0 failures, 0 errors.
 - `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -DskipTests package`
   - Result: `BUILD SUCCESS`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -DskipTests package`
@@ -112,6 +117,8 @@ Initialization SQL now lives under `docs/mysql/`.
   - Chat profile + Netty logged `Aion service startup: login=true, chat=true, game=true`, `AL Chat Server started`, Netty chat listeners on `127.0.0.1:12041` and `127.0.0.1:19021`, and game-side chat connector enabled.
   - Explicit `legacy-nio` fallback logged `Using legacy NIO transport managed by existing game/login/chat startup code` and legacy listeners on `127.0.0.1:19014` and `127.0.0.1:12106`, without boot-managed Netty event loop startup.
 - Login + game smoke with temporary `aion.home` reached `Server initialization COMPLETE`.
+- Fat jar smoke on Java 25 required `--add-opens java.base/java.lang=ALL-UNNAMED` for legacy cglib/lambdaj access.
+- Fat jar smoke with temporary `aion.home`, temporary ports, geodata disabled, svstats disabled, Netty transport, and chat disabled reached `=== Server initialization COMPLETE ===`; it logged Netty listeners on `127.0.0.1:19014`, `127.0.0.1:12106`, and `127.0.0.1:17777`, plus `Chat Server is disabled by configuration`.
 - Database schema verification:
   - `al_server_gs` has 98 tables.
   - `al_server_ls` has 10 tables.

@@ -112,14 +112,7 @@ public class LoginServer {
     }
 
     /**
-     * @param args
-     */
-    public static void main(final String[] args) {
-        start(args);
-    }
-
-    /**
-     * Starts LoginServer from a standalone main method or embedding launcher.
+     * Starts LoginServer from the boot-managed service lifecycle.
      *
      * @param args startup arguments
      */

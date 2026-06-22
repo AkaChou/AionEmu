@@ -104,14 +104,7 @@ public class ChatServer {
     }
 
     /**
-     * @param args
-     */
-    public static void main(String[] args) {
-        start(args);
-    }
-
-    /**
-     * Starts ChatServer from a standalone main method or embedding launcher.
+     * Starts ChatServer from the boot-managed service lifecycle.
      *
      * @param args startup arguments
      */
