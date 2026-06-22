@@ -19,7 +19,7 @@ package com.aionemu.gameserver.network.loginserver.clientpackets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.utils.ExitCode;
+import com.aionemu.gameserver.network.GameServerAuthFailure;
 import com.aionemu.gameserver.network.NetworkController;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
@@ -82,7 +82,7 @@ public class CM_GS_AUTH_RESPONSE extends LsClientPacket {
 		 */
 		else if (response == 1) {
 			log.error("GameServer is not authenticated at LoginServer side, shutting down!");
-			System.exit(ExitCode.CODE_ERROR);
+			GameServerAuthFailure.notAuthenticated("LoginServer");
 		}
 		/**
 		 * AlreadyRegistered

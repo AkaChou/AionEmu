@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.transport.AionTransportBoundary;
+import com.aionemu.commons.utils.AionEmbeddedFailureHandler;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ class AionServiceLauncherTest {
     @AfterEach
     void clearEmbeddedMode() {
         System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
+        AionEmbeddedFailureHandler.clear();
     }
 
     @Test
@@ -84,6 +86,26 @@ class AionServiceLauncherTest {
         launcher.destroy();
 
         assertEquals(List.of("prepare", "start:failing"), events);
+    }
+
+    @Test
+    void embeddedFailureStopsStartedServicesInReverseOrder() throws Exception {
+        AionServicesProperties properties = new AionServicesProperties();
+        List<String> events = new ArrayList<>();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            properties,
+            new RecordingTransportBoundary(events),
+            List.of(
+                new RecordingLifecycle("game", 300, true, events),
+                new RecordingLifecycle("chat", 200, false, events),
+                new RecordingLifecycle("login", 100, true, events)
+            )
+        );
+
+        launcher.run(new DefaultApplicationArguments());
+        AionEmbeddedFailureHandler.fail(new IllegalStateException("auth failed"));
+
+        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login"), events);
     }
 
     private static final class RecordingTransportBoundary extends AionTransportBoundary {

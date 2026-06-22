@@ -19,7 +19,7 @@ package com.aionemu.gameserver.network.chatserver.clientpackets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.utils.ExitCode;
+import com.aionemu.gameserver.network.GameServerAuthFailure;
 import com.aionemu.gameserver.network.chatserver.ChatServerConnection.State;
 import com.aionemu.gameserver.network.chatserver.CsClientPacket;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
@@ -55,7 +55,7 @@ public class CM_CS_AUTH_RESPONSE extends CsClientPacket {
 			break;
 		case 1: // Not Authed
 			log.error("GameServer is not authenticated at ChatServer side");
-			System.exit(ExitCode.CODE_ERROR);
+			GameServerAuthFailure.notAuthenticated("ChatServer");
 			break;
 		case 2: // Already Registered
 			log.info("GameServer is already registered at ChatServer side! trying again...");

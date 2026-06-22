@@ -3,20 +3,26 @@ package com.aionemu.boot.lifecycle;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.commons.services.ServiceContext;
+import com.aionemu.commons.utils.AionEmbeddedFailureHandler;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.beans.factory.DisposableBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AionServiceLauncher implements ApplicationRunner, DisposableBean {
+public class AionServiceLauncher implements ApplicationRunner, DisposableBean, ApplicationContextAware {
 
     private static final Logger log = LoggerFactory.getLogger(AionServiceLauncher.class);
 
@@ -24,6 +30,9 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean {
     private final AionTransportBoundary transportBoundary;
     private final List<AionServiceLifecycle> serviceLifecycles;
     private final List<AionServiceLifecycle> startedServices = new ArrayList<>();
+    private final AtomicBoolean handlingEmbeddedFailure = new AtomicBoolean(false);
+    private final Consumer<RuntimeException> embeddedFailureHandler = this::handleEmbeddedFailure;
+    private ConfigurableApplicationContext applicationContext;
 
     public AionServiceLauncher(
         AionServicesProperties services,
@@ -40,6 +49,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         AionRuntimeMode.enableBootEmbeddedMode();
+        AionEmbeddedFailureHandler.register(embeddedFailureHandler);
         String[] sourceArgs = args.getSourceArgs();
         boolean loginEnabled = services.getLogin().isEnabled();
         boolean chatEnabled = services.getChat().isEnabled();
@@ -63,6 +73,13 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean {
         }
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        if (applicationContext instanceof ConfigurableApplicationContext configurableApplicationContext) {
+            this.applicationContext = configurableApplicationContext;
+        }
+    }
+
     private void startService(AionServiceLifecycle serviceLifecycle, ApplicationArguments args) throws Exception {
         String name = serviceLifecycle.getName();
         log.info("Starting {} service...", name);
@@ -75,6 +92,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean {
 
     @Override
     public void destroy() {
+        AionEmbeddedFailureHandler.clear(embeddedFailureHandler);
         ListIterator<AionServiceLifecycle> iterator = startedServices.listIterator(startedServices.size());
         while (iterator.hasPrevious()) {
             AionServiceLifecycle serviceLifecycle = iterator.previous();
@@ -90,6 +108,17 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean {
             serviceLifecycle.stop();
         } catch (Exception e) {
             log.warn("Failed to stop {} service cleanly.", name, e);
+        }
+    }
+
+    private void handleEmbeddedFailure(RuntimeException failure) {
+        if (!handlingEmbeddedFailure.compareAndSet(false, true)) {
+            return;
+        }
+        log.error("Aion embedded service failure detected; stopping services.", failure);
+        destroy();
+        if (applicationContext != null && applicationContext.isActive()) {
+            applicationContext.close();
         }
     }
 }
