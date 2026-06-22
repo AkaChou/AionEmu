@@ -2,16 +2,15 @@ package com.aionemu.chatserver.network.netty;
 
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
+import com.aionemu.commons.network.NettyEventLoopProvider;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
@@ -32,8 +31,7 @@ final class Netty4ChatClientServer {
     private final ClientPacketHandler clientPacketHandler;
     private final ChannelGroup clientChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
+    private NettyEventLoopProvider.Allocation eventLoops;
     private Channel serverChannel;
 
     Netty4ChatClientServer(InetSocketAddress address, ClientPacketHandler clientPacketHandler) {
@@ -42,15 +40,14 @@ final class Netty4ChatClientServer {
     }
 
     synchronized void connect() {
-        if (bossGroup != null) {
+        if (eventLoops != null) {
             return;
         }
 
-        bossGroup = new NioEventLoopGroup(1);
-        workerGroup = new NioEventLoopGroup();
+        eventLoops = NettyEventLoopProvider.acquire();
         try {
             serverChannel = new ServerBootstrap()
-                .group(bossGroup, workerGroup)
+                .group(eventLoops.bossGroup(), eventLoops.workerGroup())
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
@@ -78,13 +75,9 @@ final class Netty4ChatClientServer {
             serverChannel = null;
         }
         clientChannels.close().syncUninterruptibly();
-        if (workerGroup != null) {
-            workerGroup.shutdownGracefully();
-            workerGroup = null;
-        }
-        if (bossGroup != null) {
-            bossGroup.shutdownGracefully();
-            bossGroup = null;
+        if (eventLoops != null) {
+            eventLoops.shutdownGracefully();
+            eventLoops = null;
         }
     }
 

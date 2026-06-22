@@ -5,10 +5,8 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -26,8 +24,7 @@ public class NettyServer implements ServerTransport {
     private final List<Channel> serverChannels = new ArrayList<>();
     private final ChannelGroup clientChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
+    private NettyEventLoopProvider.Allocation eventLoops;
 
     public NettyServer(NettyServerCfg... cfgs) {
         this.cfgs = cfgs;
@@ -35,16 +32,15 @@ public class NettyServer implements ServerTransport {
 
     @Override
     public synchronized void connect() {
-        if (bossGroup != null) {
+        if (eventLoops != null) {
             return;
         }
 
-        bossGroup = new NioEventLoopGroup(1);
-        workerGroup = new NioEventLoopGroup();
+        eventLoops = NettyEventLoopProvider.acquire();
         try {
             for (NettyServerCfg cfg : cfgs) {
                 ChannelFuture bindFuture = new ServerBootstrap()
-                    .group(bossGroup, workerGroup)
+                    .group(eventLoops.bossGroup(), eventLoops.workerGroup())
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_REUSEADDR, true)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -74,13 +70,9 @@ public class NettyServer implements ServerTransport {
         serverChannels.clear();
         clientChannels.close().syncUninterruptibly();
 
-        if (workerGroup != null) {
-            workerGroup.shutdownGracefully().syncUninterruptibly();
-            workerGroup = null;
-        }
-        if (bossGroup != null) {
-            bossGroup.shutdownGracefully().syncUninterruptibly();
-            bossGroup = null;
+        if (eventLoops != null) {
+            eventLoops.shutdownGracefully();
+            eventLoops = null;
         }
     }
 

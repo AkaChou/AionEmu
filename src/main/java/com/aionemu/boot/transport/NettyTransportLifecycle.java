@@ -1,5 +1,6 @@
 package com.aionemu.boot.transport;
 
+import com.aionemu.commons.network.NettyEventLoopProvider;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -26,6 +27,7 @@ public class NettyTransportLifecycle {
 
         bossGroup = new NioEventLoopGroup(1);
         workerGroup = new NioEventLoopGroup();
+        NettyEventLoopProvider.useShared(bossGroup, workerGroup);
         log.info("Netty transport event loops started.");
     }
 
@@ -45,8 +47,9 @@ public class NettyTransportLifecycle {
             return;
         }
 
-        workerGroup.shutdownGracefully();
-        bossGroup.shutdownGracefully();
+        NettyEventLoopProvider.clearShared(bossGroup, workerGroup);
+        workerGroup.shutdownGracefully().syncUninterruptibly();
+        bossGroup.shutdownGracefully().syncUninterruptibly();
         workerGroup = null;
         bossGroup = null;
         log.info("Netty transport event loops stopped.");
