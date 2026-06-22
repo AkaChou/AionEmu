@@ -8,6 +8,7 @@ public class AionServicesProperties {
     private final Service game = new Service(true);
     private final Service login = new Service(true);
     private final Service chat = new Service(false);
+    private final Transport transport = new Transport();
 
     public Service getGame() {
         return game;
@@ -19,6 +20,10 @@ public class AionServicesProperties {
 
     public Service getChat() {
         return chat;
+    }
+
+    public Transport getTransport() {
+        return transport;
     }
 
     public static class Service {
@@ -38,5 +43,22 @@ public class AionServicesProperties {
         public void setEnabled(boolean enabled) {
             this.enabled = enabled;
         }
+    }
+
+    public static class Transport {
+        private TransportMode mode = TransportMode.LEGACY_NIO;
+
+        public TransportMode getMode() {
+            return mode;
+        }
+
+        public void setMode(TransportMode mode) {
+            this.mode = mode;
+        }
+    }
+
+    public enum TransportMode {
+        LEGACY_NIO,
+        NETTY
     }
 }

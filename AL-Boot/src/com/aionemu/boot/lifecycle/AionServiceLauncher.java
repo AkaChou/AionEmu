@@ -1,6 +1,7 @@
 package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.boot.transport.AionTransportBoundary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
@@ -13,9 +14,11 @@ public class AionServiceLauncher implements ApplicationRunner {
     private static final Logger log = LoggerFactory.getLogger(AionServiceLauncher.class);
 
     private final AionServicesProperties services;
+    private final AionTransportBoundary transportBoundary;
 
-    public AionServiceLauncher(AionServicesProperties services) {
+    public AionServiceLauncher(AionServicesProperties services, AionTransportBoundary transportBoundary) {
         this.services = services;
+        this.transportBoundary = transportBoundary;
     }
 
     @Override
@@ -26,6 +29,7 @@ public class AionServiceLauncher implements ApplicationRunner {
         boolean gameEnabled = services.getGame().isEnabled();
 
         log.info("Aion service startup: login={}, chat={}, game={}", loginEnabled, chatEnabled, gameEnabled);
+        transportBoundary.prepare();
         if (gameEnabled && !loginEnabled) {
             log.warn("Game service is enabled while login service is disabled; game will still use its configured login-server connector.");
         }

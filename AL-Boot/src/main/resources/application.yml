@@ -11,3 +11,5 @@ aion:
       enabled: true
     chat:
       enabled: false
+    transport:
+      mode: legacy-nio
