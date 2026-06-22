@@ -51,7 +51,7 @@ class NettyServerTest {
                 return null;
             });
 
-            NettyClient client = new NettyClient(new InetSocketAddress("127.0.0.1", serverSocket.getLocalPort()), "test", TestConnection::new);
+            NettyClient client = new NettyClient(new InetSocketAddress("127.0.0.1", serverSocket.getLocalPort()), "test", TestConnection::new, Runnable::run);
             client.connect();
             client.shutdown();
             accepted.get();

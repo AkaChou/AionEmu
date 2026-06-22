@@ -11,6 +11,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,15 +22,21 @@ public class NettyClient implements ServerTransport {
     private final InetSocketAddress address;
     private final String connectionName;
     private final NettyConnectionFactory connectionFactory;
+    private final Executor disconnectionExecutor;
     private final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     private NettyEventLoopProvider.Allocation eventLoops;
     private Channel channel;
 
     public NettyClient(InetSocketAddress address, String connectionName, NettyConnectionFactory connectionFactory) {
+        this(address, connectionName, connectionFactory, null);
+    }
+
+    NettyClient(InetSocketAddress address, String connectionName, NettyConnectionFactory connectionFactory, Executor disconnectionExecutor) {
         this.address = address;
         this.connectionName = connectionName;
         this.connectionFactory = connectionFactory;
+        this.disconnectionExecutor = disconnectionExecutor;
     }
 
     @Override
@@ -49,7 +56,11 @@ public class NettyClient implements ServerTransport {
                     @Override
                     protected void initChannel(SocketChannel channel) {
                         channels.add(channel);
-                        channel.pipeline().addLast(new NettyConnectionHandler(connectionFactory));
+                        if (disconnectionExecutor == null) {
+                            channel.pipeline().addLast(new NettyConnectionHandler(connectionFactory));
+                        } else {
+                            channel.pipeline().addLast(new NettyConnectionHandler(connectionFactory, disconnectionExecutor));
+                        }
                     }
                 })
                 .connect(address)
