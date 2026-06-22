@@ -4,22 +4,15 @@ import static com.aionemu.commons.database.DatabaseFactory.getDatabaseMajorVersi
 import static com.aionemu.commons.database.DatabaseFactory.getDatabaseMinorVersion;
 import static com.aionemu.commons.database.DatabaseFactory.getDatabaseName;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.xml.bind.JAXBException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.configs.DatabaseConfig;
 import com.aionemu.commons.services.ServiceContext;
-import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
-import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
-import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
-import com.aionemu.commons.scripting.scriptmanager.ScriptManager;
 
 /**
  * DAO管理器类
@@ -60,28 +53,13 @@ public class DAOManager {
             return;
         }
         try {
-            state.scriptManager = new ScriptManager();
-
-            // 初始化默认的类监听器 / Initialize default class listeners
-            AggregatedClassListener acl = new AggregatedClassListener();
-            acl.addClassListener(new OnClassLoadUnloadListener());
-            acl.addClassListener(new ScheduledTaskClassListener());
-            acl.addClassListener(new DAOLoader());
-            state.scriptManager.setGlobalClassListener(acl);
-
-            state.scriptManager.load(DatabaseConfig.DATABASE_SCRIPTCONTEXT_DESCRIPTOR);
+            loadCompiledDaos(context);
         } catch (RuntimeException e) {
             states.remove(context);
             throw new Error(e.getMessage(), e);
-        } catch (FileNotFoundException e) {
-            states.remove(context);
-            throw new Error("Can't load database script context: " + DatabaseConfig.DATABASE_SCRIPTCONTEXT_DESCRIPTOR, e);
-        } catch (JAXBException e) {
-            states.remove(context);
-            throw new Error("Can't compile database handlers - check your MySQL5 implementations", e);
         } catch (Exception e) {
             states.remove(context);
-            throw new Error("A fatal error occurred during loading or compiling the database handlers", e);
+            throw new Error("A fatal error occurred during loading database handlers", e);
         }
 
         log.info("Loaded " + state.daoMap.size() + " DAO implementations for " + context + " service context.");
@@ -94,7 +72,6 @@ public class DAOManager {
     public static void shutdown() {
         DaoState state = states.remove(ServiceContext.current());
         if (state != null) {
-            state.scriptManager.shutdown();
             state.daoMap.clear();
         }
     }
@@ -188,6 +165,21 @@ public class DAOManager {
         // 空构造函数 / Empty constructor
     }
 
+    private static void loadCompiledDaos(String context) {
+        DAOLoader loader = new DAOLoader();
+        boolean foundProvider = false;
+        for (DAOClassProvider provider : ServiceLoader.load(DAOClassProvider.class)) {
+            if (!context.equals(provider.contextName())) {
+                continue;
+            }
+            foundProvider = true;
+            loader.postLoad(provider.daoClasses());
+        }
+        if (!foundProvider) {
+            throw new IllegalStateException("No DAO class provider registered for " + context + " service context");
+        }
+    }
+
     private static DaoState state() {
         DaoState state = states.get(ServiceContext.current());
         if (state == null) {
@@ -198,6 +190,5 @@ public class DAOManager {
 
     private static final class DaoState {
         private final Map<String, DAO> daoMap = new HashMap<String, DAO>();
-        private ScriptManager scriptManager;
     }
 }
