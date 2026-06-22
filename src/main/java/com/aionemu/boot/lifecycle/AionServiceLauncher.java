@@ -64,12 +64,18 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
             log.info("Chat service is disabled by boot configuration; game chat connector will also be disabled.");
         }
 
-        for (AionServiceLifecycle serviceLifecycle : serviceLifecycles) {
-            if (serviceLifecycle.isEnabled()) {
-                startService(serviceLifecycle, args);
-            } else {
-                log.info("{} service is disabled by boot configuration.", serviceLifecycle.getName());
+        try {
+            for (AionServiceLifecycle serviceLifecycle : serviceLifecycles) {
+                if (serviceLifecycle.isEnabled()) {
+                    startService(serviceLifecycle, args);
+                } else {
+                    log.info("{} service is disabled by boot configuration.", serviceLifecycle.getName());
+                }
             }
+        } catch (Exception | Error e) {
+            log.error("Aion service startup failed; stopping services.", e);
+            destroy();
+            throw e;
         }
     }
 
@@ -83,10 +89,10 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     private void startService(AionServiceLifecycle serviceLifecycle, ApplicationArguments args) throws Exception {
         String name = serviceLifecycle.getName();
         log.info("Starting {} service...", name);
+        startedServices.add(serviceLifecycle);
         try (ServiceContext.Scope ignored = ServiceContext.use(name)) {
             serviceLifecycle.start(args);
         }
-        startedServices.add(serviceLifecycle);
         log.info("{} service startup returned.", name);
     }
 

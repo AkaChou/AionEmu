@@ -149,7 +149,12 @@ public class NioServer implements ServerTransport {
             }
         } catch (Exception e) {
             log.error("NioServer Initialization Error: ", e);
-            throw new Error("NioServer Initialization Error!");
+            try {
+                shutdown();
+            } catch (Exception shutdownError) {
+                log.warn("Failed to clean up NioServer after initialization error.", shutdownError);
+            }
+            throw new Error("NioServer Initialization Error!", e);
         }
     }
 

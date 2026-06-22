@@ -130,22 +130,26 @@ public class ShutdownHook extends Thread {
 			}
 		}
 
-			log.info("Starting final shutdown sequence...");
+		completeShutdown(mode, true);
+	}
 
-			try {
-				LoginServer.getInstance().gameServerDisconnected();
-				log.info("Disconnected from Login Server");
-			} catch (Exception e) {
-				log.error("Error disconnecting from Login Server", e);
-			}
-			try {
-				ChatServer.getInstance().gameServerDisconnected();
-				log.info("Disconnected from Chat Server");
-			} catch (Exception e) {
-				log.error("Error disconnecting from Chat Server", e);
-			}
+	public void completeShutdown(ShutdownMode mode, boolean haltRuntime) {
+		log.info("Starting final shutdown sequence...");
 
-			List<Player> playersToDisconnect = new ArrayList<>();
+		try {
+			LoginServer.getInstance().gameServerDisconnected();
+			log.info("Disconnected from Login Server");
+		} catch (Exception e) {
+			log.error("Error disconnecting from Login Server", e);
+		}
+		try {
+			ChatServer.getInstance().gameServerDisconnected();
+			log.info("Disconnected from Chat Server");
+		} catch (Exception e) {
+			log.error("Error disconnecting from Chat Server", e);
+		}
+
+		List<Player> playersToDisconnect = new ArrayList<>();
 		Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
 		while (onlinePlayers.hasNext()) {
 			playersToDisconnect.add(onlinePlayers.next());
@@ -194,17 +198,12 @@ public class ShutdownHook extends Thread {
 
 		log.info("All players processed, continuing shutdown...");
 
-		try {
-			RunnableStatsManager.dumpClassStats(SortBy.AVG);
-			PeriodicSaveService.getInstance().onShutdown();
-			GameTimeManager.saveTime();
-			CronService.getInstance().shutdown();
-			ThreadPoolManager.getInstance().shutdown();
-			
-			log.info("All services shut down successfully");
-		} catch (Exception e) {
-			log.error("Error during service shutdown", e);
-		}
+		runShutdownStep("dump runnable stats", () -> RunnableStatsManager.dumpClassStats(SortBy.AVG));
+		runShutdownStep("save periodic data", () -> PeriodicSaveService.getInstance().onShutdown());
+		runShutdownStep("save game time", GameTimeManager::saveTime);
+		runShutdownStep("shutdown CronService", () -> CronService.getInstance().shutdown());
+		runShutdownStep("shutdown ThreadPoolManager", () -> ThreadPoolManager.getInstance().shutdown());
+		log.info("All service shutdown steps completed");
 
 		log.info("Runtime is " + mode.getText() + " now...");
 		
@@ -214,10 +213,21 @@ public class ShutdownHook extends Thread {
 			Thread.currentThread().interrupt();
 		}
 
+		if (!haltRuntime) {
+			return;
+		}
 		if (mode == ShutdownMode.RESTART) {
 			Runtime.getRuntime().halt(ExitCode.CODE_RESTART);
 		} else {
 			Runtime.getRuntime().halt(ExitCode.CODE_NORMAL);
+		}
+	}
+
+	private void runShutdownStep(String name, Runnable step) {
+		try {
+			step.run();
+		} catch (Exception e) {
+			log.error("Error during shutdown step: {}", name, e);
 		}
 	}
 

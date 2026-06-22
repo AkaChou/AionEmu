@@ -69,7 +69,7 @@ class AionServiceLauncherTest {
     }
 
     @Test
-    void doesNotStopAServiceWhoseStartupFailed() throws Exception {
+    void stopsAServiceWhoseStartupFailed() throws Exception {
         List<String> events = new ArrayList<>();
         AionServiceLauncher launcher = new AionServiceLauncher(
             new AionServicesProperties(),
@@ -83,9 +83,7 @@ class AionServiceLauncherTest {
         );
         assertTrue(thrown.getMessage().contains("boom"));
 
-        launcher.destroy();
-
-        assertEquals(List.of("prepare", "start:failing"), events);
+        assertEquals(List.of("prepare", "start:failing", "stop:failing"), events);
     }
 
     @Test

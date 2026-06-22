@@ -2,6 +2,8 @@ package com.aionemu.commons.network;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -26,16 +28,33 @@ class NioServerTest {
         assertDoesNotThrow(() -> bind(port));
     }
 
+    @Test
+    void connectFailureReleasesAlreadyBoundChannelsAndStopsDispatchers() throws Exception {
+        int firstPort = findFreePort();
+        int occupiedPort = findFreePort();
+        NioServer server = new NioServer(1,
+            new ServerCfg("127.0.0.1", firstPort, "test", TestConnection::new),
+            new ServerCfg("127.0.0.1", occupiedPort, "test", TestConnection::new)
+        );
+
+        try (ServerSocket ignored = bind(occupiedPort)) {
+            assertThrows(Error.class, server::connect);
+        }
+
+        assertNull(server.getAcceptDispatcher());
+        assertDoesNotThrow(() -> bind(firstPort).close());
+    }
+
     private static int findFreePort() throws IOException {
         try (ServerSocket socket = new ServerSocket(0)) {
             return socket.getLocalPort();
         }
     }
 
-    private static void bind(int port) throws IOException {
-        try (ServerSocket socket = new ServerSocket()) {
-            socket.bind(new InetSocketAddress("127.0.0.1", port));
-        }
+    private static ServerSocket bind(int port) throws IOException {
+        ServerSocket socket = new ServerSocket();
+        socket.bind(new InetSocketAddress("127.0.0.1", port));
+        return socket;
     }
 
     private static final class TestConnection extends AConnection {

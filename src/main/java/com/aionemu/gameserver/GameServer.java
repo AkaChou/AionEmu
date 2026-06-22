@@ -740,8 +740,12 @@ public class GameServer {
 	public static void stop() {
 		GameServer server = activeServer;
 		if (server != null) {
-			server.stopServers();
-			activeServer = null;
+			try {
+				server.stopServers();
+				ShutdownHook.getInstance().completeShutdown(ShutdownHook.ShutdownMode.SHUTDOWN, false);
+			} finally {
+				activeServer = null;
+			}
 		}
 	}
 
