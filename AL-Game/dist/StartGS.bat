@@ -4,6 +4,8 @@ TITLE Aion 5.8 - Game Emu Console
 @COLOR 4B
 REM Specify your path to JDK8
 SET PATH="E:\Java\jdk1.8.0_321\bin"
+SET APP_HOME=%~dp0..
+CD /D "%APP_HOME%"
 
 :START
 CLS
@@ -33,8 +35,8 @@ java ^
   -XX:GCTimeRatio=99 ^
   -XX:+DisableExplicitGC ^
   -ea ^
-  -javaagent:./libs/al-commons.jar ^
-  -cp ./libs/*;./libs/AL-Game.jar ^
+  -javaagent:.\lib\al-commons-1.0-SNAPSHOT.jar ^
+  -cp ".\lib\*" ^
   com.aionemu.gameserver.GameServer
 
 if ERRORLEVEL 2 goto restart

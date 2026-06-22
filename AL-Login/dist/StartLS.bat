@@ -2,6 +2,8 @@
 TITLE Aion 5.8 - Login Emu Console
 @COLOR 1A
 SET PATH="..\JavaJDK_8\bin"
+SET APP_HOME=%~dp0..
+CD /D "%APP_HOME%"
 
 :START
 CLS
@@ -11,7 +13,7 @@ echo Starting Aion 5.8 - Login Emu.
 echo.
 REM -------------------------------------
 REM Default parameters for a basic server.
-java -Xms64m -Xmx256m -server -cp ./libs/*;AL-Login.jar com.aionemu.loginserver.LoginServer
+java -Xms64m -Xmx256m -server -cp ".\lib\*" com.aionemu.loginserver.LoginServer
 REM
 REM -------------------------------------
 

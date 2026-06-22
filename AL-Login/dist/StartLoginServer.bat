@@ -3,6 +3,8 @@ TITLE Aion German - Login Server Console
 REM SET PATH="C:\Program Files\Java\jre1.8.0_121\bin"
 REM SET PATH="Type here your path to java jdk/jre (including bin folder)."
 REM NOTE: Remove tag REM from previous line.
+SET APP_HOME=%~dp0..
+CD /D "%APP_HOME%"
 
 :start
 CLS
@@ -12,7 +14,7 @@ echo Starting Aion German Login Server.
 echo.
 REM -------------------------------------
 REM Default parameters for a basic server.
-java -Xms8m -Xmx32m -server -cp ./libs/*;AL-Login.jar com.aionemu.loginserver.LoginServer
+java -Xms8m -Xmx32m -server -cp ".\lib\*" com.aionemu.loginserver.LoginServer
 REM
 REM -------------------------------------
 
