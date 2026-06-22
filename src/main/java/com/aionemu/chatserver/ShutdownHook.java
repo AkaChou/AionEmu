@@ -67,7 +67,7 @@ public class ShutdownHook extends Thread {
             return;
         }
         RestartService.getInstance().shutdown();
-        NettyServer.getInstance().shutdownAll();
+        NettyServer.shutdownIfInitialized();
         GameServerService.getInstance().setOffline();
         com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown();
 

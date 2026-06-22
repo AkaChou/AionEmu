@@ -55,13 +55,28 @@ public class NettyServer {
     private ChannelFactory loginToClientChannelFactory;
     private Netty4ChatClientServer netty4ChatClientServer;
     private ServerTransport gameServerTransport;
+    private static NettyServer instance;
 
-    public static NettyServer getInstance() {
-        return SingletonHolder.instance;
+    public static synchronized NettyServer getInstance() {
+        if (instance == null) {
+            instance = new NettyServer();
+        }
+        return instance;
     }
 
-    private static final class SingletonHolder {
-        private static final NettyServer instance = new NettyServer();
+    public static void shutdownIfInitialized() {
+        NettyServer server;
+        synchronized (NettyServer.class) {
+            server = instance;
+            instance = null;
+        }
+        if (server != null) {
+            server.shutdownAll();
+        }
+    }
+
+    static synchronized boolean isInitialized() {
+        return instance != null;
     }
 
     public NettyServer() {

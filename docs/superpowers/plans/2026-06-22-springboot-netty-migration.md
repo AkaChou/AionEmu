@@ -83,6 +83,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
+- [x] Made chat shutdown skip legacy Netty server creation when the chat Netty singleton was never initialized.
 - [x] Made CronService removable on shutdown so the same service context can initialize it again in one JVM.
 - [x] Removed the solo-play `.vs` command entrypoint, permission entry, help text, and internal solo queue scheduler.
 - [x] Moved MySQL initialization SQL into `docs/mysql/`.
@@ -127,6 +128,8 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 12 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=ChatServiceLifecycleTest,AionServiceLauncherTest test`
   - Result: 9 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=com.aionemu.chatserver.network.netty.NettyServerTest,ChatServiceLifecycleTest test`
+  - Result: 4 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=CronServiceTest,ServiceContextTest test`
   - Result: 4 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionServicePathsTest,GameServerTest test`
