@@ -55,10 +55,13 @@ public class NettyServer {
     private ChannelFactory loginToClientChannelFactory;
     private Netty4ChatClientServer netty4ChatClientServer;
     private ServerTransport gameServerTransport;
-    private static NettyServer instance = new NettyServer();
 
     public static NettyServer getInstance() {
-        return instance;
+        return SingletonHolder.instance;
+    }
+
+    private static final class SingletonHolder {
+        private static final NettyServer instance = new NettyServer();
     }
 
     public NettyServer() {
