@@ -18,7 +18,6 @@
 
 package com.aionemu.chatserver.service;
 
-import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.model.RestartFrequency;
 import com.aionemu.commons.utils.AionRuntimeMode;
@@ -85,12 +84,7 @@ public class RestartService {
             @Override
             public void run() {
                 RestartService.log.info("Restart task is triggered - restarting chatserver!");
-                ShutdownHook.setRestartOnly(true);
-                if (AionRuntimeMode.isBootEmbedded()) {
-                    ShutdownHook.getInstance().shutdown(false);
-                } else {
-                    ShutdownHook.getInstance().start();
-                }
+                ChatRestartRequest.requestRestart();
             }
         }, calendar.getTime());
 

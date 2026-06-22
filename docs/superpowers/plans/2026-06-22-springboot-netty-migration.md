@@ -73,6 +73,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Isolated chat Aion packet internals behind `PacketReader` and `PacketWriter`, keeping JBoss `ChannelBuffer` at the legacy Netty 3 boundary.
 - [x] Made the boot launcher stop the active transport boundary after stopping service lifecycles or transport preparation failure.
 - [x] Made launcher and transport shutdown idempotent across repeated Spring destroy callbacks.
+- [x] Routed embedded login task shutdown/restart, chat scheduled restart, and game scheduled/admin shutdown requests through the boot-managed shutdown handler.
 - [x] Moved MySQL initialization SQL into `docs/mysql/`.
 - [x] Initialized and verified local database schemas.
 - [x] Fixed the Java agent shaded jar so project callback classes are included.
@@ -107,7 +108,11 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: only `src/main/java/com/aionemu/boot/AionBootApplication.java` remains in production source.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionBootApplicationTest,AionServicesPropertiesTest,AionServiceLauncherTest,AionTransportBoundaryTest test`
   - Result: 13 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=LoginTaskShutdownHandlerTest,ChatRestartRequestTest,ShutdownHookTest,AionServiceLauncherTest,GameServerAuthFailureTest test`
+  - Result: 13 tests, 0 failures, 0 errors.
 - `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -DskipTests package`
+  - Result: `BUILD SUCCESS`.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -DskipTests package`
   - Result: `BUILD SUCCESS`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -DskipTests package`
   - Result: `BUILD SUCCESS`.
