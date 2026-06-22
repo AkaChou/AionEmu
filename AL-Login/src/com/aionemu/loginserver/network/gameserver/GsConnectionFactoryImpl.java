@@ -23,14 +23,16 @@ import java.nio.channels.SocketChannel;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionFactory;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.Dispatcher;
+import com.aionemu.commons.network.NettyConnectionFactory;
 
 /**
  * ConnectionFactory implementation that will be creating GsConnections
  *
  * @author -Nemesiss-
  */
-public class GsConnectionFactoryImpl implements ConnectionFactory {
+public class GsConnectionFactoryImpl implements ConnectionFactory, NettyConnectionFactory {
 
     /**
      * Create a new {@link com.aionemu.commons.network.AConnection AConnection}
@@ -49,5 +51,10 @@ public class GsConnectionFactoryImpl implements ConnectionFactory {
     @Override
     public AConnection create(SocketChannel socket, Dispatcher dispatcher) throws IOException {
         return new GsConnection(socket, dispatcher);
+    }
+
+    @Override
+    public AConnection create(ConnectionTransport transport) throws IOException {
+        return new GsConnection(transport);
     }
 }

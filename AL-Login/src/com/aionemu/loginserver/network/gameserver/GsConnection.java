@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.PingPongThread;
@@ -85,6 +86,10 @@ public class GsConnection extends AConnection {
     public GsConnection(SocketChannel sc, Dispatcher d) throws IOException {
         super(sc, d, 8192 * 8, 8192 * 8);
 
+    }
+
+    public GsConnection(ConnectionTransport transport) {
+        super(transport, 8192 * 8, 8192 * 8);
     }
 
     /**

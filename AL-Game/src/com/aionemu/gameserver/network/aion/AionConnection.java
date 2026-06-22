@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.commons.network.PacketProcessor;
 import com.aionemu.commons.utils.concurrent.ExecuteWrapper;
@@ -134,6 +135,15 @@ public class AionConnection extends AConnection {
 	 */
 	public AionConnection(SocketChannel sc, Dispatcher d) throws IOException {
 		super(sc, d, 8192 * 2, 8192 * 2);
+		initialize();
+	}
+
+	public AionConnection(ConnectionTransport transport) {
+		super(transport, 8192 * 2, 8192 * 2);
+		initialize();
+	}
+
+	private void initialize() {
 		AionPacketHandlerFactory aionPacketHandlerFactory = AionPacketHandlerFactory.getInstance();
 		this.aionPacketHandler = aionPacketHandlerFactory.getPacketHandler();
 

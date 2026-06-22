@@ -23,7 +23,9 @@ import java.nio.channels.SocketChannel;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionFactory;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.Dispatcher;
+import com.aionemu.commons.network.NettyConnectionFactory;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.utils.FloodProtector;
 
@@ -32,7 +34,7 @@ import com.aionemu.loginserver.utils.FloodProtector;
  *
  * @author -Nemesiss-
  */
-public class AionConnectionFactoryImpl implements ConnectionFactory {
+public class AionConnectionFactoryImpl implements ConnectionFactory, NettyConnectionFactory {
 
     /**
      * Create a new {@link com.aionemu.commons.network.AConnection AConnection}
@@ -57,5 +59,17 @@ public class AionConnectionFactoryImpl implements ConnectionFactory {
         }
 
         return new LoginConnection(socket, dispatcher);
+    }
+
+    @Override
+    public AConnection create(ConnectionTransport transport) throws IOException {
+        if (Config.ENABLE_FLOOD_PROTECTION) {
+            if (FloodProtector.getInstance().tooFast(transport.getIP())) {
+                transport.close(true);
+                return null;
+            }
+        }
+
+        return new LoginConnection(transport);
     }
 }

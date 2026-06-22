@@ -24,7 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionFactory;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.Dispatcher;
+import com.aionemu.commons.network.NettyConnectionFactory;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.network.sequrity.FloodManager;
 import com.aionemu.gameserver.network.sequrity.FloodManager.Result;
@@ -34,7 +36,7 @@ import com.aionemu.gameserver.network.sequrity.FloodManager.Result;
  * 
  * @author -Nemesiss-
  */
-public class GameConnectionFactoryImpl implements ConnectionFactory {
+public class GameConnectionFactoryImpl implements ConnectionFactory, NettyConnectionFactory {
 
 	private final Logger log = LoggerFactory.getLogger(GameConnectionFactoryImpl.class);
 	private FloodManager floodAcceptor;
@@ -87,5 +89,24 @@ public class GameConnectionFactoryImpl implements ConnectionFactory {
 			}
 		}
 		return new AionConnection(socket, dispatcher);
+	}
+
+	@Override
+	public AConnection create(ConnectionTransport transport) throws IOException {
+		if (NetworkConfig.ENABLE_FLOOD_CONNECTIONS) {
+			final Result isFlooding = floodAcceptor.isFlooding(transport.getIP(), true);
+			switch (isFlooding) {
+			case REJECTED: {
+				log.warn("Rejected connection from " + transport.getIP());
+				transport.close(true);
+				return null;
+			}
+			case WARNED: {
+				log.warn("Connection over warn limit from " + transport.getIP());
+				break;
+			}
+			}
+		}
+		return new AionConnection(transport);
 	}
 }

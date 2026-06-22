@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.commons.network.PacketProcessor;
 import com.aionemu.loginserver.controller.AccountController;
@@ -120,6 +121,10 @@ public class LoginConnection extends AConnection {
     public LoginConnection(SocketChannel sc, Dispatcher d) throws IOException {
         super(sc, d, 8192 * 2, 8192 * 2);
 
+    }
+
+    public LoginConnection(ConnectionTransport transport) {
+        super(transport, 8192 * 2, 8192 * 2);
     }
 
     /**
