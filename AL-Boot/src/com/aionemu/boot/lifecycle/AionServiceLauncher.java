@@ -40,7 +40,7 @@ public class AionServiceLauncher implements ApplicationRunner {
         if (chatEnabled) {
             startService("chat", () -> com.aionemu.chatserver.ChatServer.start(sourceArgs));
         } else {
-            log.info("Chat service is disabled by boot configuration.");
+            log.info("Chat service is disabled by boot configuration; game chat connector will also be disabled.");
         }
         if (gameEnabled) {
             startService("game", () -> com.aionemu.gameserver.GameServer.start(sourceArgs, chatEnabled));
