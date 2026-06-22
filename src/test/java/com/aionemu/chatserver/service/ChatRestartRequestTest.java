@@ -3,8 +3,9 @@ package com.aionemu.chatserver.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
+import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,11 +20,11 @@ class ChatRestartRequestTest {
     @Test
     void embeddedRestartRequestsBootShutdown() {
         AionRuntimeMode.enableBootEmbeddedMode();
-        AtomicInteger shutdownRequests = new AtomicInteger();
-        AionEmbeddedShutdownHandler.register(shutdownRequests::incrementAndGet);
+        AtomicReference<AionEmbeddedShutdownMode> requestedMode = new AtomicReference<>();
+        AionEmbeddedShutdownHandler.register(requestedMode::set);
 
         ChatRestartRequest.requestRestart();
 
-        assertEquals(1, shutdownRequests.get());
+        assertEquals(AionEmbeddedShutdownMode.RESTART, requestedMode.get());
     }
 }

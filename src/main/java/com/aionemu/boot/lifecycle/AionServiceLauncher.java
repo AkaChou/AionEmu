@@ -5,6 +5,7 @@ import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.commons.utils.AionEmbeddedFailureHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
+import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -30,11 +32,12 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     private final AionServicesProperties services;
     private final AionTransportBoundary transportBoundary;
     private final List<AionServiceLifecycle> serviceLifecycles;
+    private final IntConsumer haltAction;
     private final List<AionServiceLifecycle> startedServices = new ArrayList<>();
     private final AtomicBoolean stopping = new AtomicBoolean(false);
     private final AtomicBoolean destroyed = new AtomicBoolean(false);
     private final Consumer<RuntimeException> embeddedFailureHandler = this::handleEmbeddedFailure;
-    private final Runnable embeddedShutdownHandler = this::handleEmbeddedShutdown;
+    private final Consumer<AionEmbeddedShutdownMode> embeddedShutdownHandler = this::handleEmbeddedShutdown;
     private ConfigurableApplicationContext applicationContext;
 
     public AionServiceLauncher(
@@ -42,8 +45,18 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
         AionTransportBoundary transportBoundary,
         List<AionServiceLifecycle> serviceLifecycles
     ) {
+        this(services, transportBoundary, serviceLifecycles, Runtime.getRuntime()::halt);
+    }
+
+    AionServiceLauncher(
+        AionServicesProperties services,
+        AionTransportBoundary transportBoundary,
+        List<AionServiceLifecycle> serviceLifecycles,
+        IntConsumer haltAction
+    ) {
         this.services = services;
         this.transportBoundary = transportBoundary;
+        this.haltAction = haltAction;
         this.serviceLifecycles = serviceLifecycles.stream()
             .sorted(Comparator.comparingInt(AionServiceLifecycle::getPhase))
             .toList();
@@ -142,12 +155,15 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
         stopServicesAndCloseContext();
     }
 
-    private void handleEmbeddedShutdown() {
+    private void handleEmbeddedShutdown(AionEmbeddedShutdownMode mode) {
         if (!stopping.compareAndSet(false, true)) {
             return;
         }
-        log.info("Aion embedded shutdown requested; stopping services.");
+        log.info("Aion embedded {} requested; stopping services.", mode.name().toLowerCase());
         stopServicesAndCloseContext();
+        if (mode == AionEmbeddedShutdownMode.RESTART) {
+            haltAction.accept(mode.exitCode());
+        }
     }
 
     private void stopServicesAndCloseContext() {

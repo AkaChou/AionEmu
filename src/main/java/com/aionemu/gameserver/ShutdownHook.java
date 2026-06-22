@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
+import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
@@ -133,9 +134,9 @@ public class ShutdownHook extends Thread {
 		}
 
 		if (AionRuntimeMode.isBootEmbedded()) {
-			if (!AionEmbeddedShutdownHandler.requestShutdown()) {
+			if (!AionEmbeddedShutdownHandler.requestShutdown(toEmbeddedMode(mode))) {
 				log.warn("Embedded shutdown handler is not registered; stopping GameServer directly.");
-				if (!GameServer.stop()) {
+				if (!GameServer.stop(mode)) {
 					completeShutdown(mode, false);
 				}
 			}
@@ -143,6 +144,10 @@ public class ShutdownHook extends Thread {
 		}
 
 		completeShutdown(mode, true);
+	}
+
+	private AionEmbeddedShutdownMode toEmbeddedMode(ShutdownMode mode) {
+		return mode == ShutdownMode.RESTART ? AionEmbeddedShutdownMode.RESTART : AionEmbeddedShutdownMode.SHUTDOWN;
 	}
 
 	public void completeShutdown(ShutdownMode mode, boolean haltRuntime) {

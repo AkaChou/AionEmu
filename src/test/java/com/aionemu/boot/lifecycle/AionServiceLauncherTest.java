@@ -9,9 +9,12 @@ import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.commons.utils.AionEmbeddedFailureHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
+import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
+import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.ApplicationArguments;
@@ -144,6 +147,28 @@ class AionServiceLauncherTest {
         assertTrue(AionEmbeddedShutdownHandler.requestShutdown());
 
         assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
+    }
+
+    @Test
+    void embeddedRestartRequestStopsServicesAndUsesRestartExitCode() throws Exception {
+        AionServicesProperties properties = new AionServicesProperties();
+        List<String> events = new ArrayList<>();
+        AtomicInteger exitCode = new AtomicInteger();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            properties,
+            new RecordingTransportBoundary(events),
+            List.of(
+                new RecordingLifecycle("game", 300, true, events),
+                new RecordingLifecycle("login", 100, true, events)
+            ),
+            exitCode::set
+        );
+
+        launcher.run(new DefaultApplicationArguments());
+        assertTrue(AionEmbeddedShutdownHandler.requestShutdown(AionEmbeddedShutdownMode.RESTART));
+
+        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
+        assertEquals(ExitCode.CODE_RESTART, exitCode.get());
     }
 
     @Test

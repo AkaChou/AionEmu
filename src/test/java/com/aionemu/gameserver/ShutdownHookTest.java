@@ -4,9 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
+import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,12 +22,12 @@ class ShutdownHookTest {
     @Test
     void embeddedShutdownRequestsBootShutdownAfterCountdown() {
         AionRuntimeMode.enableBootEmbeddedMode();
-        AtomicInteger shutdownRequests = new AtomicInteger();
-        AionEmbeddedShutdownHandler.register(shutdownRequests::incrementAndGet);
+        AtomicReference<AionEmbeddedShutdownMode> requestedMode = new AtomicReference<>();
+        AionEmbeddedShutdownHandler.register(requestedMode::set);
 
         ShutdownHook.getInstance().doShutdown(0, 1, ShutdownMode.RESTART);
 
-        assertEquals(1, shutdownRequests.get());
+        assertEquals(AionEmbeddedShutdownMode.RESTART, requestedMode.get());
     }
 
     @Test

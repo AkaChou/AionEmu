@@ -2,6 +2,7 @@ package com.aionemu.chatserver.service;
 
 import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
+import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ final class ChatRestartRequest {
             ShutdownHook.getInstance().start();
             return;
         }
-        if (!AionEmbeddedShutdownHandler.requestShutdown()) {
+        if (!AionEmbeddedShutdownHandler.requestShutdown(AionEmbeddedShutdownMode.RESTART)) {
             log.warn("Embedded shutdown handler is not registered; stopping ChatServer directly.");
             ShutdownHook.getInstance().shutdown(false);
         }

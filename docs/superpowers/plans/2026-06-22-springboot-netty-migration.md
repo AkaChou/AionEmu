@@ -80,6 +80,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Made the boot launcher stop the active transport boundary after stopping service lifecycles or transport preparation failure.
 - [x] Made launcher and transport shutdown idempotent across repeated Spring destroy callbacks.
 - [x] Routed embedded login task shutdown/restart, chat scheduled restart, and game scheduled/admin shutdown requests through the boot-managed shutdown handler.
+- [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
 - [x] Made CronService removable on shutdown so the same service context can initialize it again in one JVM.
@@ -120,6 +121,8 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 13 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=LoginTaskShutdownHandlerTest,ChatRestartRequestTest,ShutdownHookTest,AionServiceLauncherTest,GameServerAuthFailureTest test`
   - Result: 13 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionEmbeddedShutdownHandlerTest,AionServiceLauncherTest,ShutdownHookTest,LoginTaskShutdownHandlerTest,ChatRestartRequestTest test`
+  - Result: 15 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=ShutdownHookTest,AionServiceLauncherTest,AionTransportBoundaryTest test`
   - Result: 12 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=ChatServiceLifecycleTest,AionServiceLauncherTest test`

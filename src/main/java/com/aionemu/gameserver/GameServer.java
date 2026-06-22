@@ -729,11 +729,15 @@ public class GameServer {
 	}
 
 	public static boolean stop() {
+		return stop(ShutdownHook.ShutdownMode.SHUTDOWN);
+	}
+
+	public static boolean stop(ShutdownHook.ShutdownMode mode) {
 		GameServer server = activeServer;
 		if (server != null) {
 			try {
 				server.stopServers();
-				ShutdownHook.getInstance().completeShutdown(ShutdownHook.ShutdownMode.SHUTDOWN, false);
+				ShutdownHook.getInstance().completeShutdown(mode, false);
 			} finally {
 				activeServer = null;
 			}
