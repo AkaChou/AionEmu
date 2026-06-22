@@ -12,4 +12,8 @@ public class LegacyNioTransportLifecycle {
     public void start() {
         log.info("Using legacy NIO transport managed by existing game/login/chat startup code.");
     }
+
+    public void stop() {
+        log.info("Legacy NIO transport remains managed by existing game/login/chat shutdown code.");
+    }
 }

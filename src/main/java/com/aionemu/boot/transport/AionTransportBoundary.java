@@ -15,6 +15,7 @@ public class AionTransportBoundary implements DisposableBean {
     private final AionServicesProperties services;
     private final LegacyNioTransportLifecycle legacyNioTransport;
     private final NettyTransportLifecycle nettyTransport;
+    private TransportMode activeMode;
 
     public AionTransportBoundary(
         AionServicesProperties services,
@@ -30,17 +31,24 @@ public class AionTransportBoundary implements DisposableBean {
         TransportMode mode = services.getTransport().getMode();
         if (mode == TransportMode.NETTY) {
             System.setProperty("aion.transport.netty", "true");
+            activeMode = TransportMode.NETTY;
             nettyTransport.start();
             log.info("Using Netty transport mode for migrated server endpoints.");
             return;
         }
 
         System.setProperty("aion.transport.netty", "false");
+        activeMode = TransportMode.LEGACY_NIO;
         legacyNioTransport.start();
     }
 
     @Override
     public void destroy() {
-        nettyTransport.stop();
+        if (activeMode == TransportMode.NETTY) {
+            nettyTransport.stop();
+        } else if (activeMode == TransportMode.LEGACY_NIO) {
+            legacyNioTransport.stop();
+        }
+        activeMode = null;
     }
 }

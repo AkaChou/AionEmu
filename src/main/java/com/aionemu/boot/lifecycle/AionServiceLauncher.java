@@ -59,15 +59,15 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
         boolean gameEnabled = services.getGame().isEnabled();
 
         log.info("Aion service startup: login={}, chat={}, game={}", loginEnabled, chatEnabled, gameEnabled);
-        transportBoundary.prepare();
-        if (gameEnabled && !loginEnabled) {
-            log.warn("Game service is enabled while login service is disabled; game will still use its configured login-server connector.");
-        }
-        if (!chatEnabled) {
-            log.info("Chat service is disabled by boot configuration; game chat connector will also be disabled.");
-        }
-
         try {
+            transportBoundary.prepare();
+            if (gameEnabled && !loginEnabled) {
+                log.warn("Game service is enabled while login service is disabled; game will still use its configured login-server connector.");
+            }
+            if (!chatEnabled) {
+                log.info("Chat service is disabled by boot configuration; game chat connector will also be disabled.");
+            }
+
             for (AionServiceLifecycle serviceLifecycle : serviceLifecycles) {
                 if (serviceLifecycle.isEnabled()) {
                     startService(serviceLifecycle, args);
@@ -109,6 +109,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
             stopService(serviceLifecycle);
             iterator.remove();
         }
+        stopTransportBoundary();
     }
 
     private void stopService(AionServiceLifecycle serviceLifecycle) {
@@ -118,6 +119,14 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
             serviceLifecycle.stop();
         } catch (Exception e) {
             log.warn("Failed to stop {} service cleanly.", name, e);
+        }
+    }
+
+    private void stopTransportBoundary() {
+        try {
+            transportBoundary.destroy();
+        } catch (Exception e) {
+            log.warn("Failed to stop transport boundary cleanly.", e);
         }
     }
 

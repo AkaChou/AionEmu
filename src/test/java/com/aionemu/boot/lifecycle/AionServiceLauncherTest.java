@@ -46,7 +46,7 @@ class AionServiceLauncherTest {
         launcher.run(new DefaultApplicationArguments("--example=true"));
         launcher.destroy();
 
-        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login"), events);
+        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
         assertTrue(AionRuntimeMode.isBootEmbedded());
     }
 
@@ -85,7 +85,25 @@ class AionServiceLauncherTest {
         );
         assertTrue(thrown.getMessage().contains("boom"));
 
-        assertEquals(List.of("prepare", "start:failing", "stop:failing"), events);
+        assertEquals(List.of("prepare", "start:failing", "stop:failing", "stop:transport"), events);
+    }
+
+    @Test
+    void stopsTransportBoundaryWhenTransportPreparationFailed() {
+        List<String> events = new ArrayList<>();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            new AionServicesProperties(),
+            new FailingTransportBoundary(events),
+            List.of(new RecordingLifecycle("login", 100, true, events))
+        );
+
+        IllegalStateException thrown = assertThrows(
+            IllegalStateException.class,
+            () -> launcher.run(new DefaultApplicationArguments())
+        );
+        assertTrue(thrown.getMessage().contains("transport failed"));
+
+        assertEquals(List.of("prepare", "stop:transport"), events);
     }
 
     @Test
@@ -105,7 +123,7 @@ class AionServiceLauncherTest {
         launcher.run(new DefaultApplicationArguments());
         AionEmbeddedFailureHandler.fail(new IllegalStateException("auth failed"));
 
-        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login"), events);
+        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
     }
 
     @Test
@@ -125,7 +143,7 @@ class AionServiceLauncherTest {
         launcher.run(new DefaultApplicationArguments());
         assertTrue(AionEmbeddedShutdownHandler.requestShutdown());
 
-        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login"), events);
+        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
     }
 
     private static final class RecordingTransportBoundary extends AionTransportBoundary {
@@ -143,6 +161,27 @@ class AionServiceLauncherTest {
 
         @Override
         public void destroy() {
+            events.add("stop:transport");
+        }
+    }
+
+    private static final class FailingTransportBoundary extends AionTransportBoundary {
+        private final List<String> events;
+
+        private FailingTransportBoundary(List<String> events) {
+            super(new AionServicesProperties(), null, null);
+            this.events = events;
+        }
+
+        @Override
+        public void prepare() {
+            events.add("prepare");
+            throw new IllegalStateException("transport failed");
+        }
+
+        @Override
+        public void destroy() {
+            events.add("stop:transport");
         }
     }
 
