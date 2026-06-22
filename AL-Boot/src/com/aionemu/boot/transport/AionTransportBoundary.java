@@ -29,9 +29,13 @@ public class AionTransportBoundary implements DisposableBean {
     public void prepare() {
         TransportMode mode = services.getTransport().getMode();
         if (mode == TransportMode.NETTY) {
-            throw new IllegalStateException("Netty transport mode is not active yet. Endpoint adapters must be migrated before setting aion.services.transport.mode=netty.");
+            System.setProperty("aion.transport.netty", "true");
+            nettyTransport.start();
+            log.info("Using Netty transport mode for migrated server endpoints.");
+            return;
         }
 
+        System.setProperty("aion.transport.netty", "false");
         legacyNioTransport.start();
     }
 

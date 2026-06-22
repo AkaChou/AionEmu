@@ -44,8 +44,10 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.network.NettyServerCfg;
 import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.ServerCfg;
+import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.gameserver.ai2.AI2Engine;
@@ -672,7 +674,13 @@ public class GameServer {
 		
 		log.info("Network Config - Bind: {}, Port: {}, Threads: {}", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS);
 		
-		NioServer nioServer = new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
+		boolean nettyTransportEnabled = Boolean.getBoolean("aion.transport.netty");
+		NioServer nioServer = nettyTransportEnabled
+			? new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS)
+			: new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
+		ServerTransport gameClientTransport = nettyTransportEnabled
+			? new com.aionemu.commons.network.NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()))
+			: nioServer;
 		BannedMacManager.getInstance();
 
 		LoginServer ls = LoginServer.getInstance();
@@ -681,10 +689,13 @@ public class GameServer {
 		ls.setNioServer(nioServer);
 		cs.setNioServer(nioServer);
 
-		long nioStart = System.currentTimeMillis();
+		long transportStart = System.currentTimeMillis();
 		nioServer.connect();
-		long nioTime = System.currentTimeMillis() - nioStart;
-		log.info("NIO Server started in {} ms", nioTime);
+		if (nettyTransportEnabled) {
+			gameClientTransport.connect();
+		}
+		long transportTime = System.currentTimeMillis() - transportStart;
+		log.info("{} server transport started in {} ms", nettyTransportEnabled ? "Netty" : "NIO", transportTime);
 		
 		System.out.println("");
 		
