@@ -46,7 +46,7 @@ public class AionServicesProperties {
     }
 
     public static class Transport {
-        private TransportMode mode = TransportMode.LEGACY_NIO;
+        private TransportMode mode = TransportMode.NETTY;
 
         public TransportMode getMode() {
             return mode;
