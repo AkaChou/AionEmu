@@ -41,7 +41,7 @@ public class ChatServiceLifecycle implements AionServiceLifecycle {
         if (!started) {
             return;
         }
-        com.aionemu.chatserver.network.netty.NettyServer.getInstance().shutdownAll();
+        com.aionemu.chatserver.ShutdownHook.getInstance().shutdown(false);
         started = false;
     }
 }

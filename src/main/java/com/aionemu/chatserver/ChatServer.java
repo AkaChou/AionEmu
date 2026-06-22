@@ -43,6 +43,7 @@ import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.chatserver.utils.IdFactory;
 import com.aionemu.commons.utils.AEInfos;
+import com.aionemu.commons.utils.AionRuntimeMode;
 import org.slf4j.Logger;
 
 /**
@@ -128,7 +129,9 @@ public class ChatServer {
         NettyServer.getInstance();
         RestartService.getInstance();
 
-        Runtime.getRuntime().addShutdownHook(ShutdownHook.getInstance());
+        if (!AionRuntimeMode.isBootEmbedded()) {
+            Runtime.getRuntime().addShutdownHook(ShutdownHook.getInstance());
+        }
         log.info("AL Chat Server started in " + (System.currentTimeMillis() - start) / 1000 + " seconds.");
     }
 }

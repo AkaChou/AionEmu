@@ -19,6 +19,7 @@
 package com.aionemu.loginserver;
 
 import com.aionemu.commons.services.CronService;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +44,7 @@ public class Shutdown extends Thread {
      * Instance of Shutdown.
      */
     private static Shutdown instance = new Shutdown();
+    private static final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
     /**
      * Indicates wether the loginserver should shut dpwn or only restart
      */
@@ -80,6 +82,13 @@ public class Shutdown extends Thread {
      */
     @Override
     public void run() {
+        shutdown(true);
+    }
+
+    public void shutdown(boolean haltJvm) {
+        if (!shutdownStarted.compareAndSet(false, true)) {
+            return;
+        }
         try {
             NetConnector.getInstance().shutdown();
         } catch (Throwable t) {
@@ -101,16 +110,24 @@ public class Shutdown extends Thread {
         } catch (Throwable t) {
             log.error("Can't shutdown ThreadPoolManager", t);
         }
+        try {
+            com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown();
+        } catch (Throwable t) {
+            log.error("Can't shutdown common network ThreadPoolManager", t);
+        }
+
+        if(SvStatsConfig.SVSTATS_ENABLE)
+            DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
+
+        if (!haltJvm) {
+            return;
+        }
 
         // Do system exit
         if (restartOnly) {
             Runtime.getRuntime().halt(ExitCode.CODE_RESTART);
-            if(SvStatsConfig.SVSTATS_ENABLE)
-				DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
         } else {
             Runtime.getRuntime().halt(ExitCode.CODE_NORMAL);
-            if(SvStatsConfig.SVSTATS_ENABLE)
-				DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
         }
     }
 }

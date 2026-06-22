@@ -50,6 +50,7 @@ import com.aionemu.commons.network.ServerCfg;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
+import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.Config;
@@ -639,7 +640,9 @@ public class GameServer {
         log.info("Server startup completed in {} Seconds", startupTime);
 
         gs.startServers();
-        Runtime.getRuntime().addShutdownHook(ShutdownHook.getInstance());
+        if (!AionRuntimeMode.isBootEmbedded()) {
+            Runtime.getRuntime().addShutdownHook(ShutdownHook.getInstance());
+        }
         
         if (GSConfig.ENABLE_RATIO_LIMITATION) {
             addStartupHook(new StartupHook() {

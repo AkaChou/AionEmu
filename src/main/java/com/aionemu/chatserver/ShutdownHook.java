@@ -20,7 +20,9 @@ package com.aionemu.chatserver;
 
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.service.GameServerService;
+import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.commons.utils.ExitCode;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
@@ -29,6 +31,7 @@ import com.aionemu.commons.utils.ExitCode;
 public class ShutdownHook extends Thread {
 
     private static final ShutdownHook instance = new ShutdownHook();
+    private static final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
     /**
      * Indicates wether the loginserver should shut dpwn or only restart
      */
@@ -56,8 +59,21 @@ public class ShutdownHook extends Thread {
 
     @Override
     public void run() {
+        shutdown(true);
+    }
+
+    public void shutdown(boolean haltJvm) {
+        if (!shutdownStarted.compareAndSet(false, true)) {
+            return;
+        }
+        RestartService.getInstance().shutdown();
         NettyServer.getInstance().shutdownAll();
         GameServerService.getInstance().setOffline();
+        com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown();
+
+        if (!haltJvm) {
+            return;
+        }
 
         // Do system exit
         if (restartOnly) {

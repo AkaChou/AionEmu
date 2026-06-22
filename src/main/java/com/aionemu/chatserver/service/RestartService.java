@@ -21,6 +21,7 @@ package com.aionemu.chatserver.service;
 import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.model.RestartFrequency;
+import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,6 +36,7 @@ public class RestartService {
 
     private static final Logger log = LoggerFactory.getLogger(RestartService.class);
     private static final RestartService instance = new RestartService();
+    private Timer timer;
 
     private RestartService() {
         RestartFrequency rf;
@@ -47,7 +49,7 @@ public class RestartService {
         setTimer(rf);
     }
 
-    private void setTimer(RestartFrequency frequency) {
+    private synchronized void setTimer(RestartFrequency frequency) {
         //get time to restart
         String[] time = getRestartTime();
         int hour = Integer.parseInt(time[0]);
@@ -78,13 +80,17 @@ public class RestartService {
         }
 
         //Restart timer
-        Timer timer = new Timer();
+        timer = new Timer("ChatServerRestartTimer", AionRuntimeMode.isBootEmbedded());
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 RestartService.log.info("Restart task is triggered - restarting chatserver!");
                 ShutdownHook.setRestartOnly(true);
-                ShutdownHook.getInstance().start();
+                if (AionRuntimeMode.isBootEmbedded()) {
+                    ShutdownHook.getInstance().shutdown(false);
+                } else {
+                    ShutdownHook.getInstance().start();
+                }
             }
         }, calendar.getTime());
 
@@ -102,5 +108,13 @@ public class RestartService {
 
     public static RestartService getInstance() {
         return instance;
+    }
+
+    public synchronized void shutdown() {
+        if (timer == null) {
+            return;
+        }
+        timer.cancel();
+        timer = null;
     }
 }

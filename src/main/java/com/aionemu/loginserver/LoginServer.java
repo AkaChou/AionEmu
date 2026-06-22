@@ -40,6 +40,7 @@ import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
+import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.controller.BannedIpController;
@@ -137,7 +138,12 @@ public class LoginServer {
         /**
          * Start deadlock detector that will restart server if deadlock happened
          */
-        new DeadLockDetector(60, DeadLockDetector.RESTART).start();
+        DeadLockDetector deadLockDetector = new DeadLockDetector(
+            60,
+            AionRuntimeMode.isBootEmbedded() ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART
+        );
+        deadLockDetector.setDaemon(AionRuntimeMode.isBootEmbedded());
+        deadLockDetector.start();
         ThreadPoolManager.getInstance();
 
         /**
@@ -147,6 +153,9 @@ public class LoginServer {
             KeyGen.init();
         } catch (Exception e) {
             log.error("Failed initializing Key Generator. Reason: " + e.getMessage(), e);
+            if (AionRuntimeMode.isBootEmbedded()) {
+                throw new IllegalStateException("Failed initializing Key Generator", e);
+            }
             System.exit(ExitCode.CODE_ERROR);
         }
 
@@ -158,7 +167,9 @@ public class LoginServer {
         PlayerTransferService.getInstance();
         TaskFromDBManager.getInstance();
 
-        Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
+        if (!AionRuntimeMode.isBootEmbedded()) {
+            Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
+        }
 
         AEInfos.printAllInfos();
 

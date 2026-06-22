@@ -3,6 +3,7 @@ package com.aionemu.boot.lifecycle;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.commons.services.ServiceContext;
+import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -38,6 +39,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        AionRuntimeMode.enableBootEmbeddedMode();
         String[] sourceArgs = args.getSourceArgs();
         boolean loginEnabled = services.getLogin().isEnabled();
         boolean chatEnabled = services.getChat().isEnabled();

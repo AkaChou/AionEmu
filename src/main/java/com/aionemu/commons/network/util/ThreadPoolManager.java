@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
 import com.aionemu.commons.utils.concurrent.RunnableWrapper;
 import com.google.common.util.concurrent.JdkFutureAdapters;
@@ -99,7 +100,12 @@ public class ThreadPoolManager implements Executor {
      * Constructor, initialize thread pools and deadlock detector
      */
     private ThreadPoolManager() {
-        new DeadLockDetector(60, DeadLockDetector.RESTART).start();
+        DeadLockDetector deadLockDetector = new DeadLockDetector(
+            60,
+            AionRuntimeMode.isBootEmbedded() ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART
+        );
+        deadLockDetector.setDaemon(AionRuntimeMode.isBootEmbedded());
+        deadLockDetector.start();
         
         scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(4, new PriorityThreadFactory("ScheduledThreadPool", Thread.NORM_PRIORITY));
         scheduledThreadPool = MoreExecutors.listeningDecorator(scheduledThreadPoolExecutor);

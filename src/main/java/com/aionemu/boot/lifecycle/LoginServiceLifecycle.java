@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class LoginServiceLifecycle implements AionServiceLifecycle {
 
     private final AionServicesProperties services;
+    private boolean started;
 
     public LoginServiceLifecycle(AionServicesProperties services) {
         this.services = services;
@@ -32,5 +33,15 @@ public class LoginServiceLifecycle implements AionServiceLifecycle {
     public void start(ApplicationArguments args) {
         AionServicePaths.configureLogin();
         com.aionemu.loginserver.LoginServer.start(args.getSourceArgs());
+        started = true;
+    }
+
+    @Override
+    public void stop() {
+        if (!started) {
+            return;
+        }
+        com.aionemu.loginserver.Shutdown.getInstance().shutdown(false);
+        started = false;
     }
 }

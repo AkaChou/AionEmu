@@ -1,21 +1,31 @@
 package com.aionemu.boot.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.transport.AionTransportBoundary;
+import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
 
 class AionServiceLauncherTest {
 
+    @AfterEach
+    void clearEmbeddedMode() {
+        System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
+    }
+
     @Test
     void startsEnabledServicesInPhaseOrderAndStopsStartedServicesInReverseOrder() throws Exception {
+        assertFalse(AionRuntimeMode.isBootEmbedded());
+
         AionServicesProperties properties = new AionServicesProperties();
         List<String> events = new ArrayList<>();
         RecordingTransportBoundary transportBoundary = new RecordingTransportBoundary(events);
@@ -33,6 +43,7 @@ class AionServiceLauncherTest {
         launcher.destroy();
 
         assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login"), events);
+        assertTrue(AionRuntimeMode.isBootEmbedded());
     }
 
     @Test
