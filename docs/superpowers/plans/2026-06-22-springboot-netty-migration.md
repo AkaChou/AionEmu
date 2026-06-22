@@ -67,6 +67,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Removed the extra legacy NIO dispatcher from GameServer startup when Netty transport mode is enabled.
 - [x] Added direct Netty connection handler tests for length-frame parsing, write flushing, and single disconnect notification.
 - [x] Added Netty pending-close characterization coverage for close-frame flushing and single disconnect notification.
+- [x] Added chat Netty4/JBoss buffer adapter tests for inbound and outbound packet bridging.
 - [x] Moved MySQL initialization SQL into `docs/mysql/`.
 - [x] Initialized and verified local database schemas.
 - [x] Fixed the Java agent shaded jar so project callback classes are included.
@@ -85,6 +86,8 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 3 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=NettyConnectionPendingCloseTest test`
   - Result: 1 test, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=Netty4ChatClientServerAdapterTest test`
+  - Result: 2 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=CronServiceTest,NetConnectorTest,AionServiceLauncherTest test`
   - Result: 7 tests, 0 failures, 0 errors.
 - `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -DskipTests package`
