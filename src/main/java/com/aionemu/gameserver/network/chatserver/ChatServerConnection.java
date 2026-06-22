@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
+import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
@@ -44,6 +45,15 @@ public class ChatServerConnection extends AConnection {
 
 	public ChatServerConnection(SocketChannel sc, Dispatcher d, CsPacketHandler csPacketHandler) throws IOException {
 		super(sc, d, 8192 * 2, 8192 * 2);
+		init(csPacketHandler);
+	}
+
+	public ChatServerConnection(ConnectionTransport transport, CsPacketHandler csPacketHandler) {
+		super(transport, 8192 * 2, 8192 * 2);
+		init(csPacketHandler);
+	}
+
+	private void init(CsPacketHandler csPacketHandler) {
 		this.chatServer = ChatServer.getInstance();
 		this.csPacketHandler = csPacketHandler;
 		state = State.CONNECTED;

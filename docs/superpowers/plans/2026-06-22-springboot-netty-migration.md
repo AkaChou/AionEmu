@@ -62,6 +62,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Shared boot-managed Netty 4 event loops across migrated service endpoints.
 - [x] Made the chat Netty server lazy so loading the class does not bind ports when chat is disabled.
 - [x] Made login partial-startup cleanup avoid initializing NetConnector or CronService during shutdown.
+- [x] Added a reusable Netty 4 client connector and moved game-to-chat outbound connections to Netty when Netty transport mode is enabled.
 - [x] Moved MySQL initialization SQL into `docs/mysql/`.
 - [x] Initialized and verified local database schemas.
 - [x] Fixed the Java agent shaded jar so project callback classes are included.
@@ -73,7 +74,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=NettyServerTest,NioServerTest,AionServiceLauncherTest test`
   - Result: 8 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=com.aionemu.chatserver.network.netty.NettyServerTest,com.aionemu.commons.network.NettyServerTest test`
-  - Result: 2 tests, 0 failures, 0 errors.
+  - Result: 3 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=CronServiceTest,NetConnectorTest,AionServiceLauncherTest test`
   - Result: 7 tests, 0 failures, 0 errors.
 - `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -DskipTests package`
@@ -93,6 +94,7 @@ Initialization SQL now lives under `docs/mysql/`.
 
 ## Remaining Technical Debt
 
-- Game outbound login/chat connectors still use the legacy NIO dispatcher.
+- Game outbound login connector still uses the legacy NIO dispatcher.
+- Netty connection handler still needs direct frame/flush/pending-close characterization tests.
 - Login service startup still has large static initialization blocks; the shutdown path is now safer, but finer-grained startup components would make failure cleanup easier to test.
 - Full protocol parity still needs client-side runtime validation after the structural migration.
