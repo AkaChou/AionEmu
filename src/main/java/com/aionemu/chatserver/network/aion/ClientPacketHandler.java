@@ -18,8 +18,7 @@
 
 package com.aionemu.chatserver.network.aion;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-
+import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.common.netty.AbstractPacketHandler;
 import com.aionemu.chatserver.network.aion.clientpackets.CM_CHANNEL_MESSAGE;
 import com.aionemu.chatserver.network.aion.clientpackets.CM_CHANNEL_REQUEST;
@@ -39,14 +38,14 @@ public class ClientPacketHandler extends AbstractPacketHandler {
     private ChatService chatService = ChatService.getInstance();
 
     /**
-     * Reads one packet from ChannelBuffer
+     * Reads one packet from PacketReader
      *
      * @param buf
      * @param channelHandler
      * @return AbstractClientPacket
      */
-    public AbstractClientPacket handle(ChannelBuffer buf, ClientChannelHandler channelHandler) {
-        byte opCode = buf.readByte();
+    public AbstractClientPacket handle(PacketReader buf, ClientChannelHandler channelHandler) {
+        int opCode = buf.readC();
         State state = channelHandler.getState();
         AbstractClientPacket clientPacket = null;
 

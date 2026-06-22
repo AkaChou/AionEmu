@@ -18,8 +18,7 @@
 
 package com.aionemu.chatserver.network.aion.clientpackets;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-
+import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.network.aion.AbstractClientPacket;
 import com.aionemu.chatserver.network.aion.serverpackets.SM_CHAT_INI;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
@@ -30,8 +29,8 @@ import com.aionemu.chatserver.service.ChatService;
  */
 public class CM_CHAT_INI extends AbstractClientPacket {
 
-    public CM_CHAT_INI(ChannelBuffer channelBuffer, ClientChannelHandler clientChannelHandler, ChatService chatService) {
-        super(channelBuffer, clientChannelHandler, 0x30);
+    public CM_CHAT_INI(PacketReader packetReader, ClientChannelHandler clientChannelHandler, ChatService chatService) {
+        super(packetReader, clientChannelHandler, 0x30);
     }
 
     @Override

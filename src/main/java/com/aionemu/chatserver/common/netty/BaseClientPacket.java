@@ -18,7 +18,6 @@
 
 package com.aionemu.chatserver.common.netty;
 
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.Logger;
@@ -26,15 +25,15 @@ import org.slf4j.Logger;
 public abstract class BaseClientPacket extends AbstractPacket {
 
     private static final Logger log = LoggerFactory.getLogger(BaseClientPacket.class);
-    private ChannelBuffer buf;
+    private PacketReader buf;
 
     /**
-     * @param channelBuffer
+     * @param packetReader
      * @param opCode
      */
-    public BaseClientPacket(ChannelBuffer channelBuffer, int opCode) {
+    public BaseClientPacket(PacketReader packetReader, int opCode) {
         super(opCode);
-        this.buf = channelBuffer;
+        this.buf = packetReader;
     }
 
     public int getRemainingBytes() {
@@ -82,7 +81,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      */
     protected final int readD() {
         try {
-            return buf.readInt();
+            return buf.readD();
         } catch (Exception e) {
             log.error("Missing D for: " + this);
         }
@@ -96,7 +95,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      */
     protected final int readC() {
         try {
-            return buf.readByte() & 0xFF;
+            return buf.readC();
         } catch (Exception e) {
             log.error("Missing C for: " + this);
         }
@@ -110,7 +109,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      */
     protected final int readH() {
         try {
-            return buf.readShort() & 0xFFFF;
+            return buf.readH();
         } catch (Exception e) {
             log.error("Missing H for: " + this);
         }
@@ -124,7 +123,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      */
     protected final double readDF() {
         try {
-            return buf.readDouble();
+            return buf.readDF();
         } catch (Exception e) {
             log.error("Missing DF for: " + this);
         }
@@ -138,7 +137,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      */
     protected final float readF() {
         try {
-            return buf.readFloat();
+            return buf.readF();
         } catch (Exception e) {
             log.error("Missing F for: " + this);
         }
@@ -152,7 +151,7 @@ public abstract class BaseClientPacket extends AbstractPacket {
      */
     protected final long readQ() {
         try {
-            return buf.readLong();
+            return buf.readQ();
         } catch (Exception e) {
             log.error("Missing Q for: " + this);
         }

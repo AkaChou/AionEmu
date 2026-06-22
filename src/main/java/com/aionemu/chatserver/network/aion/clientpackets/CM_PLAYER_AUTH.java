@@ -20,8 +20,7 @@ package com.aionemu.chatserver.network.aion.clientpackets;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-
+import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.network.aion.AbstractClientPacket;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 import com.aionemu.chatserver.service.ChatService;
@@ -40,12 +39,12 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
     private String realName;
 
     /**
-     * @param channelBuffer
+     * @param packetReader
      * @param gameChannelHandler
      * @param opCode
      */
-    public CM_PLAYER_AUTH(ChannelBuffer channelBuffer, ClientChannelHandler clientChannelHandler, ChatService chatService) {
-        super(channelBuffer, clientChannelHandler, 0x05);
+    public CM_PLAYER_AUTH(PacketReader packetReader, ClientChannelHandler clientChannelHandler, ChatService chatService) {
+        super(packetReader, clientChannelHandler, 0x05);
         this.chatService = chatService;
     }
 

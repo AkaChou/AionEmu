@@ -31,6 +31,10 @@ import org.jboss.netty.channel.MessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.aionemu.chatserver.common.netty.ByteBufPacketWriter;
+import com.aionemu.chatserver.common.netty.ChannelBufferPacketReader;
+import com.aionemu.chatserver.common.netty.ChannelBufferPacketWriter;
+import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.network.aion.AbstractClientPacket;
 import com.aionemu.chatserver.network.aion.AbstractServerPacket;
@@ -67,7 +71,7 @@ public class ClientChannelHandler extends AbstractChannelHandler {
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
         super.messageReceived(ctx, e);
 
-        handlePacket((ChannelBuffer) e.getMessage());
+        handlePacket(new ChannelBufferPacketReader((ChannelBuffer) e.getMessage()));
     }
 
     public void nettyChannelActive(io.netty.channel.Channel channel) {
@@ -89,11 +93,11 @@ public class ClientChannelHandler extends AbstractChannelHandler {
         }
     }
 
-    public void nettyMessageReceived(ChannelBuffer message) {
+    public void nettyMessageReceived(PacketReader message) {
         handlePacket(message);
     }
 
-    private void handlePacket(ChannelBuffer message) {
+    private void handlePacket(PacketReader message) {
         AbstractClientPacket clientPacket = clientPacketHandler.handle(message, this);
         if (clientPacket != null && clientPacket.read()) {
             clientPacket.run();
@@ -107,20 +111,22 @@ public class ClientChannelHandler extends AbstractChannelHandler {
      * @param packet
      */
     public void sendPacket(AbstractServerPacket packet) {
-        ChannelBuffer cb = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN, 2 * 8192);
-        packet.write(this, cb);
         if (nettyChannel != null) {
-            cb.setShort(0, (short) cb.readableBytes());
-            byte[] bytes = new byte[cb.readableBytes()];
-            cb.getBytes(0, bytes);
-            ByteBuf output = Unpooled.wrappedBuffer(bytes);
+            ByteBuf output = Unpooled.buffer(2 * 8192);
+            ByteBufPacketWriter writer = new ByteBufPacketWriter(output);
+            packet.write(this, writer);
+            writer.setH(0, writer.readableBytes());
             nettyChannel.writeAndFlush(output);
             if (log.isDebugEnabled()) {
                 log.debug("Sent packet: " + packet);
             }
             return;
         }
-        channel.write(cb);
+        ChannelBuffer cb = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN, 2 * 8192);
+        ChannelBufferPacketWriter writer = new ChannelBufferPacketWriter(cb);
+        packet.write(this, writer);
+        writer.setH(0, writer.readableBytes());
+        channel.write(writer.buffer());
         if (log.isDebugEnabled()) {
             log.debug("Sent packet: " + packet);
         }

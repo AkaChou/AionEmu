@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.aionemu.chatserver.common.netty.PacketReader;
+import com.aionemu.chatserver.common.netty.PacketWriter;
 import com.aionemu.chatserver.network.aion.AbstractServerPacket;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
@@ -16,7 +18,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
-import java.nio.ByteOrder;
 import java.util.concurrent.atomic.AtomicReference;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.junit.jupiter.api.Test;
@@ -24,27 +25,23 @@ import org.junit.jupiter.api.Test;
 class Netty4ChatClientServerAdapterTest {
 
     @Test
-    void inboundByteBufIsAdaptedToLittleEndianChannelBuffer() throws Exception {
+    void inboundByteBufIsAdaptedToLittleEndianPacketReader() throws Exception {
         CapturingClientChannelHandler delegate = new CapturingClientChannelHandler();
         EmbeddedChannel channel = new EmbeddedChannel(newNetty4ClientChannelHandler(delegate));
         ByteBuf input = Unpooled.wrappedBuffer(new byte[] {0x05, 0x34, 0x12, (byte) 0x88});
 
         channel.writeInbound(input);
 
-        ChannelBuffer received = delegate.received;
-        assertNotNull(received);
-        assertEquals(ByteOrder.LITTLE_ENDIAN, received.order());
-        assertEquals(0x05, received.readUnsignedByte());
-        assertEquals(0x1234, received.readUnsignedShort());
-        assertEquals(0x88, received.readUnsignedByte());
-        assertEquals(0, received.readableBytes());
+        assertNotNull(delegate.receivedValues);
+        assertArrayEquals(new int[] {0x05, 0x1234, 0x88}, delegate.receivedValues);
+        assertEquals(0, delegate.remainingBytes);
         assertEquals(0, input.refCnt());
 
         channel.finishAndReleaseAll();
     }
 
     @Test
-    void outboundChannelBufferPacketIsWrittenAsByteBuf() {
+    void outboundPacketWriterIsWrittenAsByteBuf() {
         AtomicReference<ByteBuf> written = new AtomicReference<>();
         ClientChannelHandler handler = new ClientChannelHandler(new ClientPacketHandler());
 
@@ -63,6 +60,24 @@ class Netty4ChatClientServerAdapterTest {
         } finally {
             output.release();
         }
+    }
+
+    @Test
+    void outboundPacketWriterIsWrittenAsLegacyChannelBuffer() {
+        AtomicReference<ChannelBuffer> written = new AtomicReference<>();
+        LegacyClientChannelHandler handler = new LegacyClientChannelHandler();
+
+        handler.setLegacyChannel(legacyChannelCapturingWrites(written));
+        handler.sendPacket(new TestServerPacket());
+
+        ChannelBuffer output = written.get();
+        assertNotNull(output);
+        byte[] actual = new byte[output.readableBytes()];
+        output.getBytes(0, actual);
+        assertArrayEquals(
+            new byte[] {0x09, 0x00, 0x11, 0x33, 0x22, 0x77, 0x66, 0x55, 0x44},
+            actual
+        );
     }
 
     private static ChannelHandler newNetty4ClientChannelHandler(ClientChannelHandler delegate) throws Exception {
@@ -92,6 +107,26 @@ class Netty4ChatClientServerAdapterTest {
             };
         };
         return (Channel) Proxy.newProxyInstance(Channel.class.getClassLoader(), new Class<?>[] {Channel.class}, handler);
+    }
+
+    private static org.jboss.netty.channel.Channel legacyChannelCapturingWrites(AtomicReference<ChannelBuffer> written) {
+        InvocationHandler handler = (proxy, method, args) -> {
+            if (method.getDeclaringClass() == Object.class) {
+                return switch (method.getName()) {
+                    case "equals" -> proxy == args[0];
+                    case "hashCode" -> System.identityHashCode(proxy);
+                    case "toString" -> "capturing-legacy-channel";
+                    default -> null;
+                };
+            }
+            if ("write".equals(method.getName())) {
+                written.set((ChannelBuffer) args[0]);
+                return null;
+            }
+            return defaultValue(method.getReturnType());
+        };
+        Class<?> channelType = org.jboss.netty.channel.Channel.class;
+        return (org.jboss.netty.channel.Channel) Proxy.newProxyInstance(channelType.getClassLoader(), new Class<?>[] {channelType}, handler);
     }
 
     private static Object defaultValue(Class<?> returnType) {
@@ -125,9 +160,21 @@ class Netty4ChatClientServerAdapterTest {
         return null;
     }
 
+    private static final class LegacyClientChannelHandler extends ClientChannelHandler {
+
+        private LegacyClientChannelHandler() {
+            super(new ClientPacketHandler());
+        }
+
+        private void setLegacyChannel(org.jboss.netty.channel.Channel channel) {
+            this.channel = channel;
+        }
+    }
+
     private static final class CapturingClientChannelHandler extends ClientChannelHandler {
 
-        private ChannelBuffer received;
+        private int[] receivedValues;
+        private int remainingBytes;
 
         private CapturingClientChannelHandler() {
             super(new ClientPacketHandler());
@@ -138,8 +185,13 @@ class Netty4ChatClientServerAdapterTest {
         }
 
         @Override
-        public void nettyMessageReceived(ChannelBuffer message) {
-            received = message;
+        public void nettyMessageReceived(PacketReader message) {
+            receivedValues = new int[] {
+                message.readC(),
+                message.readH(),
+                message.readC()
+            };
+            remainingBytes = message.readableBytes();
         }
     }
 
@@ -150,7 +202,7 @@ class Netty4ChatClientServerAdapterTest {
         }
 
         @Override
-        protected void writeImpl(ClientChannelHandler cHandler, ChannelBuffer buf) {
+        protected void writeImpl(ClientChannelHandler cHandler, PacketWriter buf) {
             writeC(buf, 0x11);
             writeH(buf, 0x2233);
             writeD(buf, 0x44556677);

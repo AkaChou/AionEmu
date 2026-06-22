@@ -18,8 +18,6 @@
 
 package com.aionemu.chatserver.common.netty;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-
 /**
  * @author ATracer
  */
@@ -36,24 +34,24 @@ public abstract class BaseServerPacket extends AbstractPacket {
      * @param buf
      * @param value
      */
-    protected final void writeD(ChannelBuffer buf, int value) {
-        buf.writeInt(value);
+    protected final void writeD(PacketWriter buf, int value) {
+        buf.writeD(value);
     }
 
     /**
      * @param buf
      * @param value
      */
-    protected final void writeH(ChannelBuffer buf, int value) {
-        buf.writeShort((short) value);
+    protected final void writeH(PacketWriter buf, int value) {
+        buf.writeH(value);
     }
 
     /**
      * @param buf
      * @param value
      */
-    protected final void writeC(ChannelBuffer buf, int value) {
-        buf.writeByte((byte) value);
+    protected final void writeC(PacketWriter buf, int value) {
+        buf.writeC(value);
     }
 
     /**
@@ -62,8 +60,8 @@ public abstract class BaseServerPacket extends AbstractPacket {
      * @param buf
      * @param value
      */
-    protected final void writeDF(ChannelBuffer buf, double value) {
-        buf.writeDouble(value);
+    protected final void writeDF(PacketWriter buf, double value) {
+        buf.writeDF(value);
     }
 
     /**
@@ -72,16 +70,16 @@ public abstract class BaseServerPacket extends AbstractPacket {
      * @param buf
      * @param value
      */
-    protected final void writeF(ChannelBuffer buf, float value) {
-        buf.writeFloat(value);
+    protected final void writeF(PacketWriter buf, float value) {
+        buf.writeF(value);
     }
 
     /**
      * @param buf
      * @param data
      */
-    protected final void writeB(ChannelBuffer buf, byte[] data) {
-        buf.writeBytes(data);
+    protected final void writeB(PacketWriter buf, byte[] data) {
+        buf.writeB(data);
     }
 
     /**
@@ -90,7 +88,7 @@ public abstract class BaseServerPacket extends AbstractPacket {
      * @param buf
      * @param text
      */
-    protected final void writeS(ChannelBuffer buf, String text) {
+    protected final void writeS(PacketWriter buf, String text) {
         if (text == null) {
             buf.writeChar('\000');
         } else {
@@ -106,7 +104,7 @@ public abstract class BaseServerPacket extends AbstractPacket {
      * @param buf
      * @param data
      */
-    protected final void writeQ(ChannelBuffer buf, long data) {
-        buf.writeLong(data);
+    protected final void writeQ(PacketWriter buf, long data) {
+        buf.writeQ(data);
     }
 }

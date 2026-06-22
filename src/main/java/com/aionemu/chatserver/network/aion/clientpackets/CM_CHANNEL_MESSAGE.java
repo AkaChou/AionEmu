@@ -20,11 +20,11 @@ package com.aionemu.chatserver.network.aion.clientpackets;
 
 import java.util.Arrays;
 
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.Logger;
 
+import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.model.channel.Channel;
 import com.aionemu.chatserver.model.channel.ChatChannels;
@@ -46,12 +46,12 @@ public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
     private BroadcastService broadcastService;
 
     /**
-     * @param channelBuffer
+     * @param packetReader
      * @param gameChannelHandler
      * @param opCode
      */
-    public CM_CHANNEL_MESSAGE(ChannelBuffer channelBuffer, ClientChannelHandler gameChannelHandler, BroadcastService broadcastService) {
-        super(channelBuffer, gameChannelHandler, 0x18);
+    public CM_CHANNEL_MESSAGE(PacketReader packetReader, ClientChannelHandler gameChannelHandler, BroadcastService broadcastService) {
+        super(packetReader, gameChannelHandler, 0x18);
         this.broadcastService = broadcastService;
     }
 

@@ -1,5 +1,6 @@
 package com.aionemu.chatserver.network.netty;
 
+import com.aionemu.chatserver.common.netty.ByteBufPacketReader;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 import com.aionemu.commons.network.NettyEventLoopProvider;
@@ -16,9 +17,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import java.net.InetSocketAddress;
-import java.nio.ByteOrder;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +52,7 @@ final class Netty4ChatClientServer {
                     protected void initChannel(SocketChannel channel) {
                         clientChannels.add(channel);
                         channel.pipeline().addLast(
-                            new LengthFieldBasedFrameDecoder(ByteOrder.LITTLE_ENDIAN, MAX_PACKET_LENGTH, 0, 2, -2, 2, true),
+                            new LengthFieldBasedFrameDecoder(java.nio.ByteOrder.LITTLE_ENDIAN, MAX_PACKET_LENGTH, 0, 2, -2, 2, true),
                             new Netty4ClientChannelHandler(new ClientChannelHandler(clientPacketHandler))
                         );
                     }
@@ -113,10 +111,7 @@ final class Netty4ChatClientServer {
             }
 
             try {
-                byte[] bytes = new byte[input.readableBytes()];
-                input.readBytes(bytes);
-                ChannelBuffer channelBuffer = ChannelBuffers.wrappedBuffer(ByteOrder.LITTLE_ENDIAN, bytes);
-                delegate.nettyMessageReceived(channelBuffer);
+                delegate.nettyMessageReceived(new ByteBufPacketReader(input));
             } finally {
                 input.release();
             }

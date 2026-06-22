@@ -18,9 +18,8 @@
 
 package com.aionemu.chatserver.network.aion;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-
 import com.aionemu.chatserver.common.netty.BaseClientPacket;
+import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 
 /**
@@ -31,12 +30,12 @@ public abstract class AbstractClientPacket extends BaseClientPacket {
     protected ClientChannelHandler clientChannelHandler;
 
     /**
-     * @param channelBuffer
+     * @param packetReader
      * @param clientChannelHandler
      * @param opCode
      */
-    public AbstractClientPacket(ChannelBuffer channelBuffer, ClientChannelHandler clientChannelHandler, int opCode) {
-        super(channelBuffer, opCode);
+    public AbstractClientPacket(PacketReader packetReader, ClientChannelHandler clientChannelHandler, int opCode) {
+        super(packetReader, opCode);
         this.clientChannelHandler = clientChannelHandler;
     }
 }

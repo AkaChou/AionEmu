@@ -20,11 +20,11 @@ package com.aionemu.chatserver.network.aion.clientpackets;
 
 import java.io.UnsupportedEncodingException;
 
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.Logger;
 
+import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.model.channel.Channel;
@@ -44,12 +44,12 @@ public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
     private ChatService chatService;
 
     /**
-     * @param channelBuffer
+     * @param packetReader
      * @param gameChannelHandler
      * @param opCode
      */
-    public CM_CHANNEL_REQUEST(ChannelBuffer channelBuffer, ClientChannelHandler gameChannelHandler, ChatService chatService) {
-        super(channelBuffer, gameChannelHandler, 0x10);
+    public CM_CHANNEL_REQUEST(PacketReader packetReader, ClientChannelHandler gameChannelHandler, ChatService chatService) {
+        super(packetReader, gameChannelHandler, 0x10);
         this.chatService = chatService;
     }
 

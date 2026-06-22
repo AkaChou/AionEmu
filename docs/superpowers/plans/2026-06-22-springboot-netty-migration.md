@@ -68,6 +68,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Added direct Netty connection handler tests for length-frame parsing, write flushing, and single disconnect notification.
 - [x] Added Netty pending-close characterization coverage for close-frame flushing and single disconnect notification.
 - [x] Added chat Netty4/JBoss buffer adapter tests for inbound and outbound packet bridging.
+- [x] Isolated chat Aion packet internals behind `PacketReader` and `PacketWriter`, keeping JBoss `ChannelBuffer` at the legacy Netty 3 boundary.
 - [x] Made the boot launcher stop the active transport boundary after stopping service lifecycles or transport preparation failure.
 - [x] Made launcher and transport shutdown idempotent across repeated Spring destroy callbacks.
 - [x] Moved MySQL initialization SQL into `docs/mysql/`.
@@ -89,7 +90,9 @@ Initialization SQL now lives under `docs/mysql/`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=NettyConnectionPendingCloseTest test`
   - Result: 1 test, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=Netty4ChatClientServerAdapterTest test`
-  - Result: 2 tests, 0 failures, 0 errors.
+  - Result: 3 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=ChatPacketBufferAdapterTest,Netty4ChatClientServerAdapterTest,com.aionemu.chatserver.network.netty.NettyServerTest,com.aionemu.commons.network.NettyServerTest test`
+  - Result: 8 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionTransportBoundaryTest,AionServiceLauncherTest,AionServicesPropertiesTest test`
   - Result: 9 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionTransportBoundaryTest,AionServiceLauncherTest,AionServicesPropertiesTest test`
