@@ -39,7 +39,9 @@ import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.gameserver.GsConnectionFactoryImpl;
 import com.aionemu.chatserver.network.netty.pipeline.LoginToClientPipeLineFactory;
 import com.aionemu.commons.network.NioServer;
+import com.aionemu.commons.network.NettyServerCfg;
 import com.aionemu.commons.network.ServerCfg;
+import com.aionemu.commons.network.ServerTransport;
 
 /**
  * @author ATracer
@@ -51,7 +53,7 @@ public class NettyServer {
     private final ChannelGroup channelGroup = new DefaultChannelGroup(NettyServer.class.getName());
     private final LoginToClientPipeLineFactory loginToClientPipeLineFactory;
     private ChannelFactory loginToClientChannelFactory;
-    private NioServer nioServer;
+    private ServerTransport gameServerTransport;
     private static NettyServer instance = new NettyServer();
 
     public static NettyServer getInstance() {
@@ -73,9 +75,17 @@ public class NettyServer {
 
         channelGroup.add(loginToClientChannel);
 
-        ServerCfg gs = new ServerCfg(Config.GAME_ADDRESS.getAddress().getHostAddress(), Config.GAME_ADDRESS.getPort(), "Gs Connections", new GsConnectionFactoryImpl());
-        nioServer = new NioServer(5, gs);
-        nioServer.connect();
+        String gameHost = Config.GAME_ADDRESS.getAddress().getHostAddress();
+        int gamePort = Config.GAME_ADDRESS.getPort();
+        if (Boolean.getBoolean("aion.transport.netty")) {
+            gameServerTransport = new com.aionemu.commons.network.NettyServer(
+                new NettyServerCfg(gameHost, gamePort, "Gs Connections", new GsConnectionFactoryImpl())
+            );
+        } else {
+            ServerCfg gs = new ServerCfg(gameHost, gamePort, "Gs Connections", new GsConnectionFactoryImpl());
+            gameServerTransport = new NioServer(5, gs);
+        }
+        gameServerTransport.connect();
     }
 
     /**
@@ -112,6 +122,8 @@ public class NettyServer {
         ChannelGroupFuture future = channelGroup.close();
         future.awaitUninterruptibly();
         loginToClientChannelFactory.releaseExternalResources();
-        nioServer.shutdown();
+        if (gameServerTransport != null) {
+            gameServerTransport.shutdown();
+        }
     }
 }

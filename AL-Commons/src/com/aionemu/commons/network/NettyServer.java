@@ -18,7 +18,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NettyServer {
+public class NettyServer implements ServerTransport {
 
     private static final Logger log = LoggerFactory.getLogger(NettyServer.class);
 
@@ -33,6 +33,7 @@ public class NettyServer {
         this.cfgs = cfgs;
     }
 
+    @Override
     public synchronized void connect() {
         if (bossGroup != null) {
             return;
@@ -65,6 +66,7 @@ public class NettyServer {
         }
     }
 
+    @Override
     public synchronized void shutdown() {
         for (Channel serverChannel : serverChannels) {
             serverChannel.close().syncUninterruptibly();
@@ -82,6 +84,7 @@ public class NettyServer {
         }
     }
 
+    @Override
     public int getActiveConnections() {
         return clientChannels.size();
     }

@@ -45,7 +45,7 @@ import com.aionemu.commons.options.Assertion;
  * This class is responsible for managing network connections, including accepting new connections,
  * handling read/write operations, and managing connection lifecycles
  */
-public class NioServer {
+public class NioServer implements ServerTransport {
     
     /**
      * 日志记录器
@@ -119,6 +119,7 @@ public class NioServer {
      * 连接并启动服务器
      * Connect and start the server
      */
+    @Override
     public void connect() {
         try {
             initDispatchers(readWriteThreads, dcPool);
@@ -204,6 +205,7 @@ public class NioServer {
      * 获取活动连接数
      * Get the number of active connections
      */
+    @Override
     public final int getActiveConnections() {
         int count = 0;
         if (readWriteDispatchers != null) {
@@ -220,6 +222,7 @@ public class NioServer {
      * 关闭服务器
      * Shutdown the server
      */
+    @Override
     public final void shutdown() {
         log.info("Closing ServerChannels...");
         try {
