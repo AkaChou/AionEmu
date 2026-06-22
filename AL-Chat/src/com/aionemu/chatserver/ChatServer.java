@@ -102,6 +102,15 @@ public class ChatServer {
      * @param args
      */
     public static void main(String[] args) {
+        start(args);
+    }
+
+    /**
+     * Starts ChatServer from a standalone main method or embedding launcher.
+     *
+     * @param args startup arguments
+     */
+    public static void start(String[] args) {
         long start = System.currentTimeMillis();
 
         initalizeLoggger();

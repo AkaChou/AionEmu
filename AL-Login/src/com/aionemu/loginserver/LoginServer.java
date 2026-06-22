@@ -110,6 +110,15 @@ public class LoginServer {
      * @param args
      */
     public static void main(final String[] args) {
+        start(args);
+    }
+
+    /**
+     * Starts LoginServer from a standalone main method or embedding launcher.
+     *
+     * @param args startup arguments
+     */
+    public static void start(final String[] args) {
         long start = System.currentTimeMillis();
 
         initalizeLoggger();

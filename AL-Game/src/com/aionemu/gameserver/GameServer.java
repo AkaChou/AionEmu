@@ -266,6 +266,20 @@ public class GameServer {
 	 * Launching method for GameServer
 	 */
 	public static void main(String[] args) {
+		start(args);
+	}
+
+	/**
+	 * Starts GameServer from a standalone main method or embedding launcher.
+	 */
+	public static void start(String[] args) {
+		start(args, null);
+	}
+
+	/**
+	 * Starts GameServer with an optional chat-server connection override.
+	 */
+	public static void start(String[] args, Boolean chatServerEnabledOverride) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -284,6 +298,10 @@ public class GameServer {
 		final CountDownLatch progressLatch = new CountDownLatch(parallelEngines.length);
 		initalizeLoggger();
 		initUtilityServicesAndConfig();
+		if (chatServerEnabledOverride != null) {
+			GSConfig.ENABLE_CHAT_SERVER = chatServerEnabledOverride;
+			log.info("Chat Server connection overridden by boot configuration: {}", chatServerEnabledOverride);
+		}
 		
 		if (GSConfig.SERVER_YAADMINPANEL_SWITCH_ON) {
 			(new ServerCommandProcessor()).startAdminPanel();
