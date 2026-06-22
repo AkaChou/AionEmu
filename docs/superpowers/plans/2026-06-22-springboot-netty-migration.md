@@ -62,6 +62,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Shared boot-managed Netty 4 event loops across migrated service endpoints.
 - [x] Made the chat Netty server lazy so loading the class does not bind ports when chat is disabled.
 - [x] Made login partial-startup cleanup avoid initializing NetConnector or CronService during shutdown.
+- [x] Added DAOManager initialization-state checks and moved login server stats cleanup before DAO/database shutdown.
 - [x] Added a reusable Netty 4 client connector and moved game-to-chat outbound connections to Netty when Netty transport mode is enabled.
 - [x] Moved game-to-login outbound connections to Netty when Netty transport mode is enabled.
 - [x] Removed the extra legacy NIO dispatcher from GameServer startup when Netty transport mode is enabled.
@@ -99,6 +100,8 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 11 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=CronServiceTest,NetConnectorTest,AionServiceLauncherTest test`
   - Result: 7 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=DAOManagerTest,NetConnectorTest,AionServiceLauncherTest test`
+  - Result: 9 tests, 0 failures, 0 errors.
 - `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -DskipTests package`
   - Result: `BUILD SUCCESS`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -DskipTests package`
@@ -116,6 +119,5 @@ Initialization SQL now lives under `docs/mysql/`.
 ## Remaining Technical Debt
 
 - Legacy NIO transport remains available as an explicit fallback mode.
-- Login service startup still has large static initialization blocks; the shutdown path is now safer, but finer-grained startup components would make failure cleanup easier to test.
-- Short-lived runtime smoke that terminates during game static-data loading can still log `DatabaseFactory is not initialized for login service context` during login shutdown.
+- Login service startup still has large static initialization blocks; shutdown is guarded for partially initialized DAO/transport/service state, but finer-grained startup components would make failure cleanup easier to test.
 - Full protocol parity still needs client-side runtime validation after the structural migration.

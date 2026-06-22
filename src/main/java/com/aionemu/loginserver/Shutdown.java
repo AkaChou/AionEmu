@@ -94,12 +94,6 @@ public class Shutdown extends Thread {
         } catch (Throwable t) {
             log.error("Can't shutdown NetConnector", t);
         }
-        /* Shuting down DB connections */
-        try {
-            DatabaseFactory.shutdown();
-        } catch (Throwable t) {
-            log.error("Can't shutdown DatabaseFactory", t);
-        }
 
         // shutdown cron service prior to threadpool shutdown
         try {
@@ -122,8 +116,26 @@ public class Shutdown extends Thread {
             log.error("Can't shutdown common network ThreadPoolManager", t);
         }
 
-        if(SvStatsConfig.SVSTATS_ENABLE)
-            DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
+        try {
+            if (SvStatsConfig.SVSTATS_ENABLE && DAOManager.isInitialized()) {
+                DAOManager.getDAO(SvStatsDAO.class).update_SvStats_All_Offline(0, 0);
+            }
+        } catch (Throwable t) {
+            log.error("Can't update server stats before shutdown", t);
+        }
+
+        try {
+            DAOManager.shutdown();
+        } catch (Throwable t) {
+            log.error("Can't shutdown DAOManager", t);
+        }
+
+        /* Shuting down DB connections */
+        try {
+            DatabaseFactory.shutdown();
+        } catch (Throwable t) {
+            log.error("Can't shutdown DatabaseFactory", t);
+        }
 
         if (!haltJvm) {
             return;

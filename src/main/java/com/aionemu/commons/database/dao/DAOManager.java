@@ -76,6 +76,10 @@ public class DAOManager {
         }
     }
 
+    public static boolean isInitialized() {
+        return states.containsKey(ServiceContext.current());
+    }
+
     /**
      * 根据DAO类获取其实现
      * Returns DAO implementation by DAO class
