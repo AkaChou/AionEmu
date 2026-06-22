@@ -65,6 +65,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Added a reusable Netty 4 client connector and moved game-to-chat outbound connections to Netty when Netty transport mode is enabled.
 - [x] Moved game-to-login outbound connections to Netty when Netty transport mode is enabled.
 - [x] Removed the extra legacy NIO dispatcher from GameServer startup when Netty transport mode is enabled.
+- [x] Added direct Netty connection handler tests for length-frame parsing, write flushing, and single disconnect notification.
 - [x] Moved MySQL initialization SQL into `docs/mysql/`.
 - [x] Initialized and verified local database schemas.
 - [x] Fixed the Java agent shaded jar so project callback classes are included.
@@ -79,6 +80,8 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 3 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=LoginServerConnectionTest,NettyServerTest,AionServiceLauncherTest test`
   - Result: 9 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=NettyConnectionHandlerTest test`
+  - Result: 3 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=CronServiceTest,NetConnectorTest,AionServiceLauncherTest test`
   - Result: 7 tests, 0 failures, 0 errors.
 - `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -DskipTests package`
@@ -99,6 +102,6 @@ Initialization SQL now lives under `docs/mysql/`.
 ## Remaining Technical Debt
 
 - Legacy NIO transport remains available as an explicit fallback mode.
-- Netty connection handler still needs direct frame/flush/pending-close characterization tests.
+- Netty connection handler still needs pending-close characterization coverage.
 - Login service startup still has large static initialization blocks; the shutdown path is now safer, but finer-grained startup components would make failure cleanup easier to test.
 - Full protocol parity still needs client-side runtime validation after the structural migration.
