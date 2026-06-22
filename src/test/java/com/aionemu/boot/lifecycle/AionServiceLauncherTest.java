@@ -1,0 +1,146 @@
+package com.aionemu.boot.lifecycle;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.boot.transport.AionTransportBoundary;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.DefaultApplicationArguments;
+
+class AionServiceLauncherTest {
+
+    @Test
+    void startsEnabledServicesInPhaseOrderAndStopsStartedServicesInReverseOrder() throws Exception {
+        AionServicesProperties properties = new AionServicesProperties();
+        List<String> events = new ArrayList<>();
+        RecordingTransportBoundary transportBoundary = new RecordingTransportBoundary(events);
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            properties,
+            transportBoundary,
+            List.of(
+                new RecordingLifecycle("game", 300, true, events),
+                new RecordingLifecycle("chat", 200, false, events),
+                new RecordingLifecycle("login", 100, true, events)
+            )
+        );
+
+        launcher.run(new DefaultApplicationArguments("--example=true"));
+        launcher.destroy();
+
+        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login"), events);
+    }
+
+    @Test
+    void startsChatBetweenLoginAndGameWhenChatIsEnabled() throws Exception {
+        AionServicesProperties properties = new AionServicesProperties();
+        properties.getChat().setEnabled(true);
+        List<String> events = new ArrayList<>();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            properties,
+            new RecordingTransportBoundary(events),
+            List.of(
+                new RecordingLifecycle("game", 300, true, events),
+                new RecordingLifecycle("chat", 200, true, events),
+                new RecordingLifecycle("login", 100, true, events)
+            )
+        );
+
+        launcher.run(new DefaultApplicationArguments());
+
+        assertEquals(List.of("prepare", "start:login", "start:chat", "start:game"), events);
+    }
+
+    @Test
+    void doesNotStopAServiceWhoseStartupFailed() throws Exception {
+        List<String> events = new ArrayList<>();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            new AionServicesProperties(),
+            new RecordingTransportBoundary(events),
+            List.of(new FailingLifecycle(events))
+        );
+
+        IllegalStateException thrown = assertThrows(
+            IllegalStateException.class,
+            () -> launcher.run(new DefaultApplicationArguments())
+        );
+        assertTrue(thrown.getMessage().contains("boom"));
+
+        launcher.destroy();
+
+        assertEquals(List.of("prepare", "start:failing"), events);
+    }
+
+    private static final class RecordingTransportBoundary extends AionTransportBoundary {
+        private final List<String> events;
+
+        private RecordingTransportBoundary(List<String> events) {
+            super(new AionServicesProperties(), null, null);
+            this.events = events;
+        }
+
+        @Override
+        public void prepare() {
+            events.add("prepare");
+        }
+
+        @Override
+        public void destroy() {
+        }
+    }
+
+    private static class RecordingLifecycle implements AionServiceLifecycle {
+        private final String name;
+        private final int phase;
+        private final boolean enabled;
+        private final List<String> events;
+
+        private RecordingLifecycle(String name, int phase, boolean enabled, List<String> events) {
+            this.name = name;
+            this.phase = phase;
+            this.enabled = enabled;
+            this.events = events;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public int getPhase() {
+            return phase;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        @Override
+        public void start(ApplicationArguments args) {
+            events.add("start:" + name);
+        }
+
+        @Override
+        public void stop() {
+            events.add("stop:" + name);
+        }
+    }
+
+    private static final class FailingLifecycle extends RecordingLifecycle {
+        private FailingLifecycle(List<String> events) {
+            super("failing", 100, true, events);
+        }
+
+        @Override
+        public void start(ApplicationArguments args) {
+            super.start(args);
+            throw new IllegalStateException("boom");
+        }
+    }
+}

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class ChatServiceLifecycle implements AionServiceLifecycle {
 
     private final AionServicesProperties services;
+    private boolean started;
 
     public ChatServiceLifecycle(AionServicesProperties services) {
         this.services = services;
@@ -32,5 +33,15 @@ public class ChatServiceLifecycle implements AionServiceLifecycle {
     public void start(ApplicationArguments args) {
         AionServicePaths.configureChat();
         com.aionemu.chatserver.ChatServer.start(args.getSourceArgs());
+        started = true;
+    }
+
+    @Override
+    public void stop() {
+        if (!started) {
+            return;
+        }
+        com.aionemu.chatserver.network.netty.NettyServer.getInstance().shutdownAll();
+        started = false;
     }
 }

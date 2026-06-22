@@ -11,4 +11,7 @@ public interface AionServiceLifecycle {
     boolean isEnabled();
 
     void start(ApplicationArguments args) throws Exception;
+
+    default void stop() throws Exception {
+    }
 }

@@ -3,22 +3,26 @@ package com.aionemu.boot.lifecycle;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.commons.services.ServiceContext;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ListIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AionServiceLauncher implements ApplicationRunner {
+public class AionServiceLauncher implements ApplicationRunner, DisposableBean {
 
     private static final Logger log = LoggerFactory.getLogger(AionServiceLauncher.class);
 
     private final AionServicesProperties services;
     private final AionTransportBoundary transportBoundary;
     private final List<AionServiceLifecycle> serviceLifecycles;
+    private final List<AionServiceLifecycle> startedServices = new ArrayList<>();
 
     public AionServiceLauncher(
         AionServicesProperties services,
@@ -63,6 +67,27 @@ public class AionServiceLauncher implements ApplicationRunner {
         try (ServiceContext.Scope ignored = ServiceContext.use(name)) {
             serviceLifecycle.start(args);
         }
+        startedServices.add(serviceLifecycle);
         log.info("{} service startup returned.", name);
+    }
+
+    @Override
+    public void destroy() {
+        ListIterator<AionServiceLifecycle> iterator = startedServices.listIterator(startedServices.size());
+        while (iterator.hasPrevious()) {
+            AionServiceLifecycle serviceLifecycle = iterator.previous();
+            stopService(serviceLifecycle);
+            iterator.remove();
+        }
+    }
+
+    private void stopService(AionServiceLifecycle serviceLifecycle) {
+        String name = serviceLifecycle.getName();
+        log.info("Stopping {} service...", name);
+        try (ServiceContext.Scope ignored = ServiceContext.use(name)) {
+            serviceLifecycle.stop();
+        } catch (Exception e) {
+            log.warn("Failed to stop {} service cleanly.", name, e);
+        }
     }
 }
