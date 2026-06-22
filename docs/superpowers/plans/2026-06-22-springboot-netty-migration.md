@@ -101,11 +101,10 @@ Initialization SQL now lives under `docs/mysql/`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -DskipTests package`
   - Result: `BUILD SUCCESS`.
 - Fat jar smoke checks:
-  - default Netty mode logs `Using Netty transport mode...`.
-  - explicit `legacy-nio` fallback logs `Using legacy NIO transport...`.
-  - chat enabled logs `Starting chat service...`.
-  - chat enabled in Netty mode logs `Netty server listening ... for Chat Client Connections`.
-  - chat disabled does not create an `AL-Chat` runtime directory.
+  - Existing IntelliJ process still owned `2106/9014`, so smoke used temporary config ports.
+  - Default Netty + chat disabled logged `Aion service startup: login=true, chat=false, game=true`, `Using Netty transport mode`, `Chat service is disabled by boot configuration`, and Netty listeners on `127.0.0.1:19014` and `127.0.0.1:12106`.
+  - Chat profile + Netty logged `Aion service startup: login=true, chat=true, game=true`, `AL Chat Server started`, Netty chat listeners on `127.0.0.1:12041` and `127.0.0.1:19021`, and game-side chat connector enabled.
+  - Explicit `legacy-nio` fallback logged `Using legacy NIO transport managed by existing game/login/chat startup code` and legacy listeners on `127.0.0.1:19014` and `127.0.0.1:12106`, without boot-managed Netty event loop startup.
 - Login + game smoke with temporary `aion.home` reached `Server initialization COMPLETE`.
 - Database schema verification:
   - `al_server_gs` has 98 tables.
@@ -115,4 +114,5 @@ Initialization SQL now lives under `docs/mysql/`.
 
 - Legacy NIO transport remains available as an explicit fallback mode.
 - Login service startup still has large static initialization blocks; the shutdown path is now safer, but finer-grained startup components would make failure cleanup easier to test.
+- Short-lived runtime smoke that terminates during game static-data loading can still log `DatabaseFactory is not initialized for login service context` during login shutdown.
 - Full protocol parity still needs client-side runtime validation after the structural migration.
