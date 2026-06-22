@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest_scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="quest_script_data.xsd">
+
+	<!-- Elyos -->
+	<!-- Golden Son, Gone -->
+	<report_to id="14243" start_npc_ids="203965" end_npc_ids="790004"/>
+	<!-- Eltnen Job -->
+	<report_to id="14244" start_npc_ids="730019" end_npc_ids="800518"/>
+
+	<!-- [Group] Mother And Son Asunder -->
+	<report_to id="14275" start_npc_ids="203901" end_npc_ids="790004"/>
+
+	<!-- [Group] Impede Kromede -->
+	<monster_hunt id="14276" start_npc_ids="790004">
+		<monster var="0" npc_ids="212788 212801 212807 214094 214095 214096" end_var="5"/>
+		<monster var="1" npc_ids="212787 212802 212803 212806" end_var="3"/>
+		<monster var="2" npc_ids="212785 212786 212789 212790 212792 212793 212794" end_var="2"/>
+	</monster_hunt>
+
+	<!-- Asmodians -->
+
+	<!-- [Group] Retribution Resolution -->
+	<monster_hunt id="24275" start_npc_ids="804606">
+		<monster var="0" npc_ids="212846 214621" end_var="1"/>
+	</monster_hunt>
+</quest_scripts>

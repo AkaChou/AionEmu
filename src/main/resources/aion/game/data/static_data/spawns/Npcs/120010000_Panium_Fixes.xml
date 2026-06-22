@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<spawns>
+  <spawn_map map_id="120010000">
+	<!-- Seriphim -->
+	<spawn npc_id="798304" respawn_time="295">
+		<spot x="1387.06" y="1179.97" z="209.419" h="30"/>
+	</spawn>
+  </spawn_map>
+</spawns>

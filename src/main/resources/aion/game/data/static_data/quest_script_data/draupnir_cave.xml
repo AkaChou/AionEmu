@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest_scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="quest_script_data.xsd">
+
+	<!-- Elyos -->
+	<!-- [Group] A Bio Weapon Bio -->
+	<report_to id="14270" start_npc_ids="204500" end_npc_ids="832824"/>
+
+
+	<!-- [Coin/Group] Commander Bakarma -->
+	<monster_hunt id="3532" start_npc_ids="832824">
+		<monster var="0" end_var="1" npc_ids="213780"/>
+	</monster_hunt>
+	<!-- [Dungeon/Group] Impeding The Beritra Legion -->
+	<monster_hunt id="14252" start_npc_ids="805736" end_npc_ids="832824">
+		<monster var="0" npc_ids="213775" end_var="1"/>
+		<monster var="1" npc_ids="213780" end_var="1"/>
+		<monster var="2" npc_ids="237275" end_var="1"/>
+	</monster_hunt>
+
+	<!-- Asmodians -->
+	<!-- [Group] To Steal A Secret -->
+	<report_to id="24270" start_npc_ids="204702" end_npc_ids="832820"/>
+
+	<!-- [Dungeon/Group] Stopping The Beritra's Legion -->
+	<monster_hunt id="24252" start_npc_ids="805737" end_npc_ids="832820">
+		<monster var="0" npc_ids="213775" end_var="1"/>
+		<monster var="1" npc_ids="213780" end_var="1"/>
+		<monster var="2" npc_ids="237275" end_var="1"/>
+	</monster_hunt>
+</quest_scripts>

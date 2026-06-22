@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest_scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="quest_script_data.xsd">
+
+	<!-- Elyos -->
+	<!-- New Nochsana Orders -->
+	<report_to id="3731" start_npc_ids="203901" end_npc_ids="800518"/>
+
+	<!-- [Group] Pilfering Prototypes -->
+	<item_collecting id="3734" start_npc_ids="800518" action_item_ids="700415"/>
+
+	<!-- [Group] Instruction Destruction -->
+	<monster_hunt id="3733" start_npc_ids="800518">
+		<monster var="0" end_var="1" npc_ids="256690"/>
+		<monster var="1" end_var="1" npc_ids="256689"/>
+		<monster var="2" end_var="1" npc_ids="256692"/>
+		<monster var="3" end_var="1" npc_ids="256691"/>
+	</monster_hunt>
+
+	<!-- Asmodians -->
+	<!-- Nochsana Calls -->
+	<report_to id="4731" start_npc_ids="204301" end_npc_ids="800519"/>
+	<!-- You Have A Choice... -->
+	<report_to id="24241" start_npc_ids="204379" end_npc_ids="800519"/>
+
+	<!-- [Group] Weapons Wanted -->
+	<item_collecting id="4734" start_npc_ids="800519" action_item_ids="700415"/>
+
+	<!-- [Group] Training Terminated -->
+	<monster_hunt id="4733" start_npc_ids="800519">
+		<monster var="0" end_var="1" npc_ids="256690"/>
+		<monster var="1" end_var="1" npc_ids="256689"/>
+		<monster var="2" end_var="1" npc_ids="256692"/>
+		<monster var="3" end_var="1" npc_ids="256691"/>
+	</monster_hunt>
+</quest_scripts>

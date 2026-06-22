@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest_scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="quest_script_data.xsd">
+
+	<!-- Elyos -->
+	<!-- The Dark Transcendence -->
+	<report_to id="14260" start_npc_ids="205253" end_npc_ids="204656"/>
+	<!-- Darkness Unpassed -->
+	<report_to id="14261" start_npc_ids="798155" end_npc_ids="204656"/>
+
+	<!-- The Balaur Report -->
+	<report_to_many id="3914" start_item_id="182206084" end_npc_ids="203384">
+		<npc_infos npc_id="203752" var="0" quest_dialog="1352"/>
+		<npc_infos npc_id="203384" var="1" quest_dialog="2375" close_dialog="1009"/>
+	</report_to_many>
+
+	<!-- [Coin/Group] Expunge the Drana Fed -->
+    <monster_hunt id="3977" start_npc_ids="203384">
+        <monster var="0" npc_ids="214849 214850 214851 214880 215388 215389 286787 214895 214896 214897" end_var="8"/>
+    </monster_hunt>
+
+	<!-- Asmodians -->
+	<!-- Invade The Past -->
+	<report_to id="24260" start_npc_ids="205264" end_npc_ids="204837"/>
+	<!-- Back In Time -->
+	<report_to id="24261" start_npc_ids="205155" end_npc_ids="204837"/>
+
+	<!-- Lifeform Remodeling Report -->
+	<report_to_many id="4914" start_item_id="182207127" end_npc_ids="204837">
+		<npc_infos npc_id="204182" var="0" quest_dialog="1352"/>
+		<npc_infos npc_id="203385" var="1" quest_dialog="2375" close_dialog="1009"/>
+	</report_to_many>
+
+	<!-- [Coin/Group] Drana Gluttony -->
+	<monster_hunt id="4977" start_npc_ids="203385">
+		<monster var="0" end_var="8" npc_ids="214850 214851 214849 215389 214880 215388 214894 214896 214897 214895"/>
+	</monster_hunt>
+</quest_scripts>
