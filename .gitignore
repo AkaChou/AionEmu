@@ -22,6 +22,14 @@ logs/
 *.log
 *.pid
 
+# Legacy top-level service directories are runtime/build leftovers after the single-module migration.
+/AL-Boot/
+/AL-Chat/
+/AL-Commons/
+/AL-Game/
+/AL-Login/
+/cache/
+
 # OS files
 .DS_Store
 Thumbs.db

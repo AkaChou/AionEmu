@@ -1,89 +1,85 @@
-# Spring Boot Netty Migration Implementation Plan
+# Spring Boot Netty Migration Status
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+**Goal:** run login, optional chat, and game from one Spring Boot process with Netty as the default transport.
 
-**Goal:** Run game, login, and optionally chat from one Spring Boot process with Netty-backed service lifecycles while preserving current game behavior.
+**Current architecture:** single Maven module. The Spring Boot entrypoint, lifecycle classes, and migrated server code live under `src/main/java`. Default service configuration and bundled Aion config/data resources live under `src/main/resources`.
 
-**Architecture:** Add a boot module that owns process startup, configuration binding, and service lifecycle ordering. Keep game/login/chat protocol handlers and packet execution behavior intact while introducing Netty transport adapters behind service lifecycle classes.
-
-**Tech Stack:** Java 25, Maven multi-module, Spring Boot, Netty, existing AionEmu service and packet code.
+**Tech stack:** Java 25, Maven, Spring Boot, Netty 4, existing AionEmu protocol and service code.
 
 ---
 
-## User Constraint
+## User Constraints
 
-The user explicitly requested no red-light tests. Do not write failing tests first for this migration. Use compile checks, dependency checks, and focused runtime-safe structure checks after each phase.
+- Do not keep the Maven multi-module layout.
+- Java source code must be under `src/main/java`; tests must be under `src/test/java`.
+- Configuration and runtime resources must be under `src/main/resources`.
+- `chat` must be configurable and disabled by default.
+- The user explicitly requested no red-light tests for this migration.
 
-## File Structure
+## Current File Structure
 
-- Create `AL-Boot/pom.xml`: Spring Boot application module depending on commons, login, game, and chat modules.
-- Create `AL-Boot/src/com/aionemu/boot/AionBootApplication.java`: single process entrypoint.
-- Create `AL-Boot/src/com/aionemu/boot/config/AionServicesProperties.java`: binds `aion.services.*` toggles and network mode.
-- Create `AL-Boot/src/com/aionemu/boot/lifecycle/AionServiceLifecycle.java`: shared lifecycle contract for boot-managed services.
-- Create `AL-Boot/src/com/aionemu/boot/lifecycle/GameServiceLifecycle.java`: delegates current game startup and shutdown.
-- Create `AL-Boot/src/com/aionemu/boot/lifecycle/LoginServiceLifecycle.java`: delegates current login startup and shutdown.
-- Create `AL-Boot/src/com/aionemu/boot/lifecycle/ChatServiceLifecycle.java`: starts chat only when enabled.
-- Modify root `pom.xml`: add Spring Boot and Netty 4 dependency management, add `AL-Boot` module.
-- Modify existing game/login/chat startup classes only where needed to expose reusable `start()` and `stop()` methods while keeping old `main()` compatibility.
+- `pom.xml`: single Maven module for the combined application.
+- `src/main/java/com/aionemu/boot/AionBootApplication.java`: only Spring Boot process entrypoint.
+- `src/main/java/com/aionemu/boot/config/AionServicesProperties.java`: binds `aion.services.*`.
+- `src/main/java/com/aionemu/boot/lifecycle/*ServiceLifecycle.java`: login, chat, and game lifecycle wrappers.
+- `src/main/java/com/aionemu/boot/transport/*`: boot-managed transport boundary.
+- `src/main/resources/application.yml`: default Spring Boot configuration.
+- `src/main/resources/application-chat.yml`: optional chat profile configuration.
+- `src/main/resources/aion/login/**`: login service config, data, and runtime resources.
+- `src/main/resources/aion/game/**`: game service config, data, and runtime resources.
+- `src/main/resources/aion/chat/**`: chat service config.
+- `src/test/java/**`: focused migration tests.
 
-## Task 1: Boot Module Skeleton
+The `.java` files under `src/main/resources/aion/**/data/scripts/**` are Aion runtime script resources loaded by the server, not Maven main source files.
 
-- [x] Add `AL-Boot` module to the root Maven reactor.
-- [x] Add Spring Boot dependency management and dependencies needed for the boot module.
-- [x] Create the boot application entrypoint.
-- [x] Create properties binding for `aion.services.game.enabled`, `aion.services.login.enabled`, and `aion.services.chat.enabled`.
-- [x] Run `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -pl AL-Boot -am -DskipTests package`.
-- [x] Commit with message `feat: add spring boot launcher module`.
+## Configuration Defaults
 
-## Task 2: Lifecycle Wrappers Without Behavior Change
+- `aion.services.login.enabled=true`
+- `aion.services.game.enabled=true`
+- `aion.services.chat.enabled=false`
+- `aion.services.transport.mode=netty`
 
-- [x] Add lifecycle classes for game, login, and chat.
-- [x] Make game and login enabled by default.
-- [x] Make chat disabled by default and conditional on config.
-- [x] Keep old main classes callable.
-- [x] Run `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -pl AL-Boot -am -DskipTests package`.
-- [x] Commit with message `feat: wire server lifecycles into boot launcher`.
+Chat can be enabled with `aion.services.chat.enabled=true` or the bundled `application-chat.yml` profile resource.
 
-## Task 3: Netty Transport Boundary
+Database defaults are aligned to the local MySQL instance:
 
-- [x] Introduce a transport mode setting that defaults to current behavior during transition.
-- [x] Add Netty service abstractions that can host game, login, and chat TCP endpoints independently.
-- [x] Keep packet parsing, crypto, flood protection, and packet processor execution in existing connection/handler code.
-- [x] Run compile verification.
-- [x] Commit with message `feat: add netty transport lifecycle boundary`.
+- Host: `127.0.0.1:3306`
+- User: `root`
+- Password: `123456`
 
-## Task 4: Runtime Selection And Chat Toggle
+Initialization SQL now lives under `docs/mysql/`.
 
-- [x] Add config examples for enabling/disabling chat.
-- [x] Ensure disabled chat does not break game/login startup.
-- [x] Verify startup logs clearly identify which services are enabled.
-- [x] Run compile verification.
-- [x] Commit with message `feat: make chat startup configurable`.
+## Completed Work
 
-## Task 5: Completion Audit
+- [x] Flattened the Maven reactor into a single `aionemu` jar module.
+- [x] Moved Java application and test code under Maven-standard `src/main/java` and `src/test/java`.
+- [x] Moved service configuration and bundled resources under `src/main/resources`.
+- [x] Added one Spring Boot launcher with `WebApplicationType.NONE`.
+- [x] Added boot-managed lifecycle ordering: login phase 100, chat phase 200, game phase 300.
+- [x] Made chat disabled by default and configurable.
+- [x] Made Netty the default transport mode with explicit `legacy-nio` fallback.
+- [x] Moved MySQL initialization SQL into `docs/mysql/`.
+- [x] Initialized and verified local database schemas.
+- [x] Fixed the Java agent shaded jar so project callback classes are included.
 
-- [x] Confirm there is one bootable Spring Boot application.
-- [x] Confirm game, login, and chat are represented as lifecycle-managed services.
-- [x] Confirm chat can be disabled by configuration.
-- [x] Confirm old packet/business logic remains in place.
-- [x] Confirm build verification passes or record exact blockers.
-- [ ] Finish full protocol endpoint parity after runtime validation.
+## Verification Evidence
 
-## Current Endpoint Migration Status
+- `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -Dtest=AionServicesPropertiesTest,GameServerTest,ServiceContextTest test`
+  - Result: 6 tests, 0 failures, 0 errors.
+- `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -DskipTests package`
+  - Result: `BUILD SUCCESS`.
+- Fat jar smoke checks:
+  - default Netty mode logs `Using Netty transport mode...`.
+  - explicit `legacy-nio` fallback logs `Using legacy NIO transport...`.
+  - chat enabled logs `Starting chat service...`.
+  - chat disabled does not create an `AL-Chat` runtime directory.
+- Login + game smoke with temporary `aion.home` reached `Server initialization COMPLETE`.
+- Database schema verification:
+  - `al_server_gs` has 98 tables.
+  - `al_server_ls` has 10 tables.
 
-- Boot `aion.services.transport.mode=netty` now sets `aion.transport.netty=true` before service lifecycles start.
-- Login server acceptors for game-server and Aion-client connections can run on the commons Netty 4 transport.
-- Game server player-client acceptor can run on the commons Netty 4 transport; a legacy NIO dispatcher is still retained for outbound login/chat connectors.
-- Chat server game-server acceptor can run on the commons Netty 4 transport.
-- Chat server client acceptor still uses the existing JBoss Netty 3 pipeline and remains a follow-up migration target.
-- Game outbound login/chat connectors still use the legacy NIO dispatcher and remain a follow-up migration target.
+## Remaining Technical Debt
 
-## Completion Notes
-
-- Single boot entrypoint: `com.aionemu.boot.AionBootApplication` in module `AL-Boot`.
-- Startup order: login first, optional chat second, game last, so game keeps its existing login/chat connector behavior.
-- Chat default: disabled in `application.yml`; enabled with Spring profile resource `application-chat.yml`.
-- Transport default: `aion.services.transport.mode=legacy-nio`; Netty 4 endpoint adapters are now selectable with `aion.services.transport.mode=netty` for the migrated server acceptors.
-- Netty mode is compile-verified only. Full runtime verification is still blocked until the MySQL schemas are initialized.
-- Runtime validation blocker: MySQL at `127.0.0.1:3306` is available by user configuration, but schema tables are not initialized, so this phase intentionally did not run full application startup.
-- Verification command used after each implementation phase: `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -pl AL-Boot -am -DskipTests package`.
+- Chat client acceptor still uses the old JBoss Netty 3 pipeline.
+- Game outbound login/chat connectors still use the legacy NIO dispatcher.
+- Full protocol parity still needs client-side runtime validation after the structural migration.
