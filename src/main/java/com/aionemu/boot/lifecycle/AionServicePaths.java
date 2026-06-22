@@ -17,18 +17,18 @@ final class AionServicePaths {
     }
 
     static void configureLogin() {
-        configureConfig("aion.login.config.dir", "AL-Login/config", "aion/login/config");
-        configureResourceDirectory("aion.login.data.dir", "AL-Login/data", "aion/login/data");
+        configureConfig("aion.login.config.dir", "login/config", "aion/login/config");
+        configureResourceDirectory("aion.login.data.dir", "login/data", "aion/login/data");
     }
 
     static void configureChat() {
-        configureConfig("aion.chat.config.dir", "AL-Chat/config", "aion/chat/config");
+        configureConfig("aion.chat.config.dir", "chat/config", "aion/chat/config");
     }
 
     static void configureGame() {
-        configureConfig("aion.game.config.dir", "AL-Game/config", "aion/game/config");
-        configureResourceDirectory("aion.game.data.dir", "AL-Game/data", "aion/game/data");
-        configure("aion.game.cache.dir", "AL-Game/cache");
+        configureConfig("aion.game.config.dir", "game/config", "aion/game/config");
+        configureResourceDirectory("aion.game.data.dir", "game/data", "aion/game/data");
+        configure("aion.game.cache.dir", "game/cache");
     }
 
     private static void configure(String property, String defaultPath) {

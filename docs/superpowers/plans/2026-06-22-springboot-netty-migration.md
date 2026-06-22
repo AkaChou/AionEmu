@@ -30,7 +30,7 @@
 - `src/main/resources/aion/chat/**`: chat service config.
 - `src/test/java/**`: focused migration tests.
 
-The `.java` files under `src/main/resources/aion/**/data/scripts/**` are Aion runtime script resources loaded by the server, not Maven main source files.
+No Java source files are kept under `src/main/resources`; application code lives under `src/main/java` and tests under `src/test/java`.
 
 ## Configuration Defaults
 
@@ -40,6 +40,8 @@ The `.java` files under `src/main/resources/aion/**/data/scripts/**` are Aion ru
 - `aion.services.transport.mode=netty`
 
 Chat can be enabled with `aion.services.chat.enabled=true` or the bundled `application-chat.yml` profile resource.
+
+When no explicit runtime directory system properties are provided, bundled resources are materialized under `aion.home` using `login/`, `chat/`, and `game/` directories instead of the old `AL-*` module names.
 
 Database defaults are aligned to the local MySQL instance:
 
@@ -54,6 +56,8 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Flattened the Maven reactor into a single `aionemu` jar module.
 - [x] Moved Java application and test code under Maven-standard `src/main/java` and `src/test/java`.
 - [x] Moved service configuration and bundled resources under `src/main/resources`.
+- [x] Removed Java source files from `src/main/resources`.
+- [x] Changed default runtime materialization paths from old `AL-*` module names to `login/`, `chat/`, and `game/` under `aion.home`.
 - [x] Added one Spring Boot launcher with `WebApplicationType.NONE`.
 - [x] Removed standalone production `main` entrypoints outside `AionBootApplication`.
 - [x] Added boot-managed lifecycle ordering: login phase 100, chat phase 200, game phase 300.
