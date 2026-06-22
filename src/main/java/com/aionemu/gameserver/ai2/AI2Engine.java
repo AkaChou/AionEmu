@@ -21,7 +21,6 @@ import static ch.lambdaj.Lambda.on;
 import static ch.lambdaj.Lambda.selectDistinct;
 import static ch.lambdaj.collection.LambdaCollections.with;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +32,8 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
-import com.aionemu.commons.scripting.scriptmanager.ScriptManager;
+import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.gameserver.GameServerError;
-import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.GameEngine;
@@ -49,23 +47,18 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 public class AI2Engine implements GameEngine {
 
 	private static final Logger log = LoggerFactory.getLogger(AI2Engine.class);
-	private static ScriptManager scriptManager = new ScriptManager();
-	public static final File INSTANCE_DESCRIPTOR_FILE = Config.dataFile("./data/scripts/system/aihandlers.xml");
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<String, Class<? extends AbstractAI>>();
 
 	@Override
 	public void load(CountDownLatch progressLatch) {
 		log.info("AI2 engine load started");
-		scriptManager = new ScriptManager();
-
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
 		acl.addClassListener(new ScheduledTaskClassListener());
 		acl.addClassListener(new AI2HandlerClassListener());
-		scriptManager.setGlobalClassListener(acl);
 
 		try {
-			scriptManager.load(INSTANCE_DESCRIPTOR_FILE);
+			acl.postLoad(CompiledScriptLoader.load("ai"));
 			log.info("Loaded " + aiMap.size() + " AI2.");
 			validateScripts();
 		} catch (Exception e) {
@@ -80,8 +73,6 @@ public class AI2Engine implements GameEngine {
 	@Override
 	public void shutdown() {
 		log.info("AI2 engine shutdown started");
-		scriptManager.shutdown();
-		scriptManager = null;
 		aiMap.clear();
 		log.info("AI2 engine shutdown complete");
 	}

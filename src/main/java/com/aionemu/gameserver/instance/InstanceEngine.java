@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.instance;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -27,9 +26,8 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
-import com.aionemu.commons.scripting.scriptmanager.ScriptManager;
+import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.gameserver.GameServerError;
-import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -41,8 +39,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 public class InstanceEngine implements GameEngine {
 	private static final Logger log = LoggerFactory.getLogger(InstanceEngine.class);
-	private static ScriptManager scriptManager = new ScriptManager();
-	public static final File INSTANCE_DESCRIPTOR_FILE = Config.dataFile("./data/scripts/system/instancehandlers.xml");
 	public static final InstanceHandler DUMMY_INSTANCE_HANDLER = new GeneralInstanceHandler();
 
 	private Map<Integer, Class<? extends InstanceHandler>> handlers = new HashMap<Integer, Class<? extends InstanceHandler>>();
@@ -50,14 +46,12 @@ public class InstanceEngine implements GameEngine {
 	@Override
 	public void load(CountDownLatch progressLatch) {
 		log.info("Instance engine load started");
-		scriptManager = new ScriptManager();
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
 		acl.addClassListener(new ScheduledTaskClassListener());
 		acl.addClassListener(new InstanceHandlerClassListener());
-		scriptManager.setGlobalClassListener(acl);
 		try {
-			scriptManager.load(INSTANCE_DESCRIPTOR_FILE);
+			acl.postLoad(CompiledScriptLoader.load("instance"));
 			log.info("Loaded " + handlers.size() + " Instance Script");
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize instance handlers.", e);
@@ -71,8 +65,6 @@ public class InstanceEngine implements GameEngine {
 	@Override
 	public void shutdown() {
 		log.info("Instance engine shutdown started");
-		scriptManager.shutdown();
-		scriptManager = null;
 		handlers.clear();
 		log.info("Instance engine shutdown complete");
 	}

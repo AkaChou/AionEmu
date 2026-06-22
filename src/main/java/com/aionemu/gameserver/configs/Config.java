@@ -121,13 +121,6 @@ public class Config {
 		return normalized;
 	}
 
-	private static void resolveDatabaseScriptContext() {
-		File descriptor = DatabaseConfig.DATABASE_SCRIPTCONTEXT_DESCRIPTOR;
-		if (descriptor != null && !descriptor.isAbsolute()) {
-			DatabaseConfig.DATABASE_SCRIPTCONTEXT_DESCRIPTOR = dataFile(descriptor.getPath());
-		}
-	}
-
 	public static void load() {
 		try {
 			Properties myProps = null;
@@ -191,7 +184,6 @@ public class Config {
 			Properties[] networkProps = PropertiesUtils.loadAllFromDirectory(network);
 			PropertiesUtils.overrideProperties(networkProps, myProps);
 			ConfigurableProcessor.process(DatabaseConfig.class, networkProps);
-			resolveDatabaseScriptContext();
 			ConfigurableProcessor.process(NetworkConfig.class, networkProps);
 		} catch (Exception e) {
 			log.error("Can't load gameserver configuration: ", e);

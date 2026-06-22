@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.world.zone;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,9 +31,8 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
-import com.aionemu.commons.scripting.scriptmanager.ScriptManager;
+import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.gameserver.GameServerError;
-import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.ZoneData;
@@ -74,8 +72,6 @@ public final class ZoneService implements GameEngine {
 	private final Map<ZoneName, Class<? extends ZoneHandler>> handlers = new HashMap<ZoneName, Class<? extends ZoneHandler>>();
 	private final FastMap<ZoneName, ZoneHandler> collidableHandlers = new FastMap<ZoneName, ZoneHandler>();
 	public static final ZoneHandler DUMMY_ZONE_HANDLER = new GeneralZoneHandler();
-	private static ScriptManager scriptManager = new ScriptManager();
-	public static final File ZONE_DESCRIPTOR_FILE = Config.dataFile("./data/scripts/system/zonehandlers.xml");
 
 	private ZoneService() {
 		this.zoneByMapIdMap = DataManager.ZONE_DATA.getZones();
@@ -140,16 +136,14 @@ public final class ZoneService implements GameEngine {
 	@Override
 	public void load(CountDownLatch progressLatch) {
 		log.info("Zone engine load started");
-		scriptManager = new ScriptManager();
 
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
 		acl.addClassListener(new ScheduledTaskClassListener());
 		acl.addClassListener(new ZoneHandlerClassListener());
-		scriptManager.setGlobalClassListener(acl);
 
 		try {
-			scriptManager.load(ZONE_DESCRIPTOR_FILE);
+			acl.postLoad(CompiledScriptLoader.load("zone"));
 			log.info("Loaded " + handlers.size() + " zone handlers.");
 		} catch (IllegalStateException e) {
 			log.warn("Can't initialize instance handlers.", e.getMessage());
@@ -165,8 +159,6 @@ public final class ZoneService implements GameEngine {
 	@Override
 	public void shutdown() {
 		log.info("Zone engine shutdown started");
-		scriptManager.shutdown();
-		scriptManager = null;
 		handlers.clear();
 		log.info("Zone engine shutdown complete");
 	}

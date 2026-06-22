@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.questEngine;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -32,9 +31,8 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
-import com.aionemu.commons.scripting.scriptmanager.ScriptManager;
+import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.gameserver.GameServerError;
-import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.dataholders.XMLQuests;
@@ -80,7 +78,6 @@ public class QuestEngine implements GameEngine {
 
 	private static final Logger log = LoggerFactory.getLogger(QuestEngine.class);
 	private static final FastMap<Integer, QuestHandler> questHandlers = new FastMap<Integer, QuestHandler>();
-	private static ScriptManager scriptManager = new ScriptManager();
 	private TIntObjectHashMap<QuestNpc> questNpcs = new TIntObjectHashMap<QuestNpc>();
 	private TIntObjectHashMap<TIntArrayList> questItemRelated = new TIntObjectHashMap<TIntArrayList>();
 	private TIntObjectHashMap<TIntArrayList> questHouseItems = new TIntObjectHashMap<TIntArrayList>();
@@ -1037,17 +1034,13 @@ public class QuestEngine implements GameEngine {
 				QuestService.addQuestDrop(drop.getNpcId(), drop);
 			}
 		}
-		scriptManager = new ScriptManager();
-
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
 		acl.addClassListener(new ScheduledTaskClassListener());
 		acl.addClassListener(new QuestHandlerLoader());
-		scriptManager.setGlobalClassListener(acl);
 
 		try {
-			final File questDescription = Config.dataFile("./data/scripts/system/quest_handlers.xml");
-			scriptManager.load(questDescription);
+			acl.postLoad(CompiledScriptLoader.load("quest"));
 			XMLQuests xmlQuests = DataManager.XML_QUESTS;
 			for (XMLQuest xmlQuest : xmlQuests.getQuest()) {
 				xmlQuest.register(this);
@@ -1103,9 +1096,7 @@ public class QuestEngine implements GameEngine {
 	}
 
 	public void shutdown() {
-		scriptManager.shutdown();
 		clear();
-		scriptManager = null;
 		log.info("Quests are shutdown...");
 	}
 

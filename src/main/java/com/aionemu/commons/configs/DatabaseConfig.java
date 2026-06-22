@@ -1,7 +1,6 @@
 package com.aionemu.commons.configs;
 
 import com.aionemu.commons.configuration.Property;
-import java.io.File;
 
 public class DatabaseConfig {
     
@@ -19,7 +18,4 @@ public class DatabaseConfig {
     
     @Property(key = "database.maxconnections", defaultValue = "20")
     public static int DATABASE_MAXCONNECTIONS;
-    
-    @Property(key = "database.scriptcontext.descriptor", defaultValue = "./data/scripts/system/database.xml")
-    public static File DATABASE_SCRIPTCONTEXT_DESCRIPTOR;
 }

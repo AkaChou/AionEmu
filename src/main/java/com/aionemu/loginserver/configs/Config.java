@@ -18,7 +18,6 @@
 
 package com.aionemu.loginserver.configs;
 
-import java.io.File;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -120,32 +119,6 @@ public class Config {
         return System.getProperty("aion.login.config.dir", "./config");
     }
 
-    private static File dataFile(String relativePath) {
-        String dataDir = System.getProperty("aion.login.data.dir");
-        if (dataDir == null) {
-            return new File(relativePath);
-        }
-        return new File(dataDir, stripDataPrefix(relativePath));
-    }
-
-    private static String stripDataPrefix(String path) {
-        String normalized = path.replace('\\', '/');
-        if (normalized.startsWith("./data/")) {
-            return normalized.substring("./data/".length());
-        }
-        if (normalized.startsWith("data/")) {
-            return normalized.substring("data/".length());
-        }
-        return normalized;
-    }
-
-    private static void resolveDatabaseScriptContext() {
-        File descriptor = DatabaseConfig.DATABASE_SCRIPTCONTEXT_DESCRIPTOR;
-        if (descriptor != null && !descriptor.isAbsolute()) {
-            DatabaseConfig.DATABASE_SCRIPTCONTEXT_DESCRIPTOR = dataFile(descriptor.getPath());
-        }
-    }
-
     /**
      * Load configs from files.
      */
@@ -170,7 +143,6 @@ public class Config {
             ConfigurableProcessor.process(CommonsConfig.class, props);
             log.info("Loading: " + network + "/database.properties");
             ConfigurableProcessor.process(DatabaseConfig.class, props);
-            resolveDatabaseScriptContext();
 
         } catch (Exception e) {
             log.error("Can't load loginserver configuration", e);

@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.utils.chathandlers;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -27,14 +26,12 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
 import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
-import com.aionemu.commons.scripting.scriptmanager.ScriptManager;
+import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.commons.utils.PropertiesUtils;
 import com.aionemu.gameserver.GameServerError;
-import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import javolution.util.FastMap;
 
@@ -48,8 +45,6 @@ public class ChatProcessor implements GameEngine {
 	private static ChatProcessor instance = new ChatProcessor();
 	private Map<String, ChatCommand> commands = new FastMap<String, ChatCommand>();
 	private Map<String, Byte> accessLevel = new FastMap<String, Byte>();
-	private ScriptManager sm = new ScriptManager();
-	private Exception loadException = null;
 
 	public static ChatProcessor getInstance() {
 		return instance;
@@ -59,7 +54,7 @@ public class ChatProcessor implements GameEngine {
 	public void load(CountDownLatch progressLatch) {
 		try {
 			log.info("Chat processor load started");
-			init(sm, this);
+			init(this);
 		} finally {
 			if (progressLatch != null) {
 				progressLatch.countDown();
@@ -74,47 +69,17 @@ public class ChatProcessor implements GameEngine {
 	private ChatProcessor() {
 	}
 
-	private ChatProcessor(ScriptManager scriptManager) {
-		init(scriptManager, this);
-	}
-
-	private void init(final ScriptManager scriptManager, ChatProcessor processor) {
+	private void init(ChatProcessor processor) {
 		loadLevels();
 
 		AggregatedClassListener acl = new AggregatedClassListener();
 		acl.addClassListener(new OnClassLoadUnloadListener());
 		acl.addClassListener(new ScheduledTaskClassListener());
 		acl.addClassListener(new ChatCommandsLoader(processor));
-		scriptManager.setGlobalClassListener(acl);
-
-		final File[] files = new File[] { Config.dataFile("./data/scripts/system/adminhandlers.xml"),
-				Config.dataFile("./data/scripts/system/playerhandlers.xml"),
-				Config.dataFile("./data/scripts/system/weddinghandlers.xml") };
-		final CountDownLatch loadLatch = new CountDownLatch(files.length);
-
-		for (int i = 0; i < files.length; i++) {
-			final int index = i;
-			ThreadPoolManager.getInstance().execute(new Runnable() {
-
-				@Override
-				public void run() {
-					try {
-						scriptManager.load(files[index]);
-					} catch (Exception e) {
-						loadException = e;
-					} finally {
-						loadLatch.countDown();
-					}
-				}
-			});
-		}
-
 		try {
-			loadLatch.await();
-		} catch (InterruptedException e1) {
-		}
-		if (loadException != null) {
-			throw new GameServerError("Can't initialize chat handlers.", loadException);
+			acl.postLoad(CompiledScriptLoader.load("admincommands", "playercommands", "weddingcommands"));
+		} catch (Exception e) {
+			throw new GameServerError("Can't initialize chat handlers.", e);
 		}
 	}
 
@@ -132,26 +97,17 @@ public class ChatProcessor implements GameEngine {
 	}
 
 	public void reload() {
-		ScriptManager tmpSM;
-		final ChatProcessor adminCP;
 		Map<String, ChatCommand> backupCommands = new FastMap<String, ChatCommand>(commands);
 		commands.clear();
-		loadException = null;
 
 		try {
-			tmpSM = new ScriptManager();
-			adminCP = new ChatProcessor(tmpSM);
+			ChatProcessor adminCP = new ChatProcessor();
+			adminCP.init(adminCP);
+			backupCommands.clear();
+			instance = adminCP;
 		} catch (Throwable e) {
 			commands = backupCommands;
 			throw new GameServerError("Can't reload chat handlers.", e);
-		}
-
-		if (tmpSM != null && adminCP != null) {
-			backupCommands.clear();
-			sm.shutdown();
-			sm = null;
-			sm = tmpSM;
-			instance = adminCP;
 		}
 	}
 
