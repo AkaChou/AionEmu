@@ -1,0 +1,18 @@
+package com.aionemu.boot;
+
+import com.aionemu.boot.config.AionServicesProperties;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
+@SpringBootApplication
+@EnableConfigurationProperties(AionServicesProperties.class)
+public class AionBootApplication {
+
+    public static void main(String[] args) {
+        new SpringApplicationBuilder(AionBootApplication.class)
+            .web(WebApplicationType.NONE)
+            .run(args);
+    }
+}

@@ -14,6 +14,7 @@
         <module>AL-Chat</module>
         <module>AL-Login</module>
         <module>AL-Game</module>
+        <module>AL-Boot</module>
     </modules>
 
     <properties>
@@ -35,10 +36,18 @@
         <netty.version>3.2.10.Final</netty.version>
         <quartz.version>2.3.0</quartz.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <spring-boot.version>4.0.7</spring-boot.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>com.aionemu</groupId>
                 <artifactId>al-commons</artifactId>
@@ -194,6 +203,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>3.7.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
