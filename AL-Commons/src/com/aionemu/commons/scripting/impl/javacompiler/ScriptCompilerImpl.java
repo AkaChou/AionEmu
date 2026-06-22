@@ -3,21 +3,17 @@ package com.aionemu.commons.scripting.impl.javacompiler;
 import com.aionemu.commons.scripting.CompilationResult;
 import com.aionemu.commons.scripting.ScriptClassLoader;
 import com.aionemu.commons.scripting.ScriptCompiler;
-import com.sun.tools.javac.api.JavacTool;
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileManager.Location;
 import javax.tools.JavaFileObject.Kind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +46,7 @@ public class ScriptCompilerImpl implements ScriptCompiler {
      * Java编译器实例
      * Java compiler instance
      */
-    protected final JavaCompiler javaCompiler = JavacTool.create();
+    protected final JavaCompiler javaCompiler = ToolProvider.getSystemJavaCompiler();
     
     /**
      * 编译时需要的库文件集合
@@ -71,7 +67,7 @@ public class ScriptCompilerImpl implements ScriptCompiler {
      * @throws RuntimeException 如果编译器不可用 / If compiler is not available
      */
     public ScriptCompilerImpl() {
-        if (this.javaCompiler == null && ToolProvider.getSystemJavaCompiler() != null) {
+        if (this.javaCompiler == null) {
             throw new RuntimeException(new InstantiationException("JavaCompiler is not available."));
         }
     }
@@ -142,7 +138,7 @@ public class ScriptCompilerImpl implements ScriptCompiler {
     protected CompilationResult doCompilation(Iterable<JavaFileObject> compilationUnits) {
         List<String> options = Arrays.asList("-encoding", "UTF-8", "-g");
         DiagnosticListener<JavaFileObject> listener = new ErrorListener();
-        ClassFileManager manager = new ClassFileManager(JavacTool.create(), listener);
+        ClassFileManager manager = new ClassFileManager(this.javaCompiler, listener);
         manager.setParentClassLoader(this.parentClassLoader);
         
         if (this.libraries != null) {

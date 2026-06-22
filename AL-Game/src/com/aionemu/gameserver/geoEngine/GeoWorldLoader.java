@@ -26,6 +26,8 @@ import java.nio.FloatBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +51,6 @@ import com.aionemu.gameserver.geoEngine.scene.mesh.DoorGeometry;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.gameserver.world.zone.ZoneService;
-
-import sun.misc.Cleaner;
-import sun.nio.ch.DirectBuffer;
 
 /**
  * @author Mr. Poke
@@ -317,9 +316,18 @@ public class GeoWorldLoader {
 	}
 
 	private static void destroyDirectByteBuffer(Buffer toBeDestroyed) {
-		Cleaner cleaner = ((DirectBuffer) toBeDestroyed).cleaner();
-		if (cleaner != null) {
-			cleaner.clean();
+		if (!(toBeDestroyed instanceof ByteBuffer)) {
+			return;
+		}
+		try {
+			Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+			Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+			unsafeField.setAccessible(true);
+			Object unsafe = unsafeField.get(null);
+			Method invokeCleaner = unsafeClass.getMethod("invokeCleaner", ByteBuffer.class);
+			invokeCleaner.invoke(unsafe, (ByteBuffer) toBeDestroyed);
+		} catch (Throwable ignored) {
+			// The mapped buffer will be reclaimed by the JVM if explicit cleanup is unavailable.
 		}
 	}
 }

@@ -6,7 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
-import java.util.Locale;
+import javax.tools.ToolProvider;
 
 /**
  * 资源定位器类，用于定位类文件和资源的物理位置
@@ -146,42 +146,16 @@ public final class Locator {
     }
 
     /**
-     * 获取tools.jar文件的位置
-     * Get the location of tools.jar file
+     * 获取系统Java编译器的位置
+     * Get the location of the system Java compiler.
      *
-     * @return tools.jar文件对象，如果已经在类路径中或找不到则返回null
-     *         tools.jar File object, returns null if already in classpath or not found
+     * @return JDK 9+ exposes the compiler through the runtime image; returns null when it is available.
      */
     public static File getToolsJar() {
-        boolean toolsJarAvailable = false;
-
-        try {
-            Class.forName("com.sun.tools.javac.Main");
-            toolsJarAvailable = true;
-        } catch (Exception var4) {
-            try {
-                Class.forName("sun.tools.javac.Main");
-                toolsJarAvailable = true;
-            } catch (Exception var3) {
-            }
+        if (ToolProvider.getSystemJavaCompiler() == null) {
+            System.out.println("Unable to locate the system Java compiler. Run this application with a JDK, not a JRE.");
         }
-
-        if (toolsJarAvailable) {
-            return null;
-        } else {
-            String javaHome = System.getProperty("java.home");
-            if (javaHome.toLowerCase(Locale.US).endsWith("jre")) {
-                javaHome = javaHome.substring(0, javaHome.length() - 4);
-            }
-
-            File toolsJar = new File(javaHome + "/lib/tools.jar");
-            if (!toolsJar.exists()) {
-                System.out.println("Unable to locate tools.jar. Expected to find it in " + toolsJar.getPath());
-                return null;
-            } else {
-                return toolsJar;
-            }
-        }
+        return null;
     }
 
     /**

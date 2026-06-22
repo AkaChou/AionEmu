@@ -32,9 +32,8 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.net.URI;
 
-import com.sun.tools.javac.file.BaseFileObject;
-
-// import com.sun.tools.javac.file.BaseFileObject;
+import javax.tools.JavaFileObject.Kind;
+import javax.tools.SimpleJavaFileObject;
 
 /**
  * 二进制类文件对象，用于处理编译后的类文件
@@ -55,7 +54,7 @@ import com.sun.tools.javac.file.BaseFileObject;
  *
  * @author SoulKeeper
  */
-public class BinaryClass extends BaseFileObject {
+public class BinaryClass extends SimpleJavaFileObject {
 	
 	/**
 	 * ClassName
@@ -78,18 +77,8 @@ public class BinaryClass extends BaseFileObject {
 	 * @param name class name
 	 */
 	protected BinaryClass(String name) {
-		super(null);
+		super(URI.create("byte:///" + name.replace('.', '/') + Kind.CLASS.extension), Kind.CLASS);
 		this.name = name;
-	}
-	
-	/**
-	 * Throws {@link UnsupportedOperationException}
-	 *
-	 * @return nothing
-	 */
-	@Override
-	public URI toUri() {
-		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -101,7 +90,7 @@ public class BinaryClass extends BaseFileObject {
 	@Deprecated
 	@Override
 	public String getName() {
-		return name + ".class";
+		return name + Kind.CLASS.extension;
 	}
 	
 	/**
@@ -172,7 +161,6 @@ public class BinaryClass extends BaseFileObject {
 	 * @param path doesn't matter
 	 * @return class name
 	 */
-	@Override
 	protected String inferBinaryName(Iterable<? extends File> path) {
 		return name;
 	}
@@ -226,31 +214,14 @@ public class BinaryClass extends BaseFileObject {
 		return Kind.CLASS;
 	}
 	
-	/*
-	 * I'm adding these in for the sake of updating the compiler. It avoids some compiler warning spam in the server console when running the server
-	 * with a higher version of Java. I'm not aware of how to implement them correctly, so for now I'll leave them broken. This class is a "hack"
-	 * anyway.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.sun.tools.javac.file.BaseFileObject#equals(java.lang.Object)
-	 */
 	@Override
-	public boolean equals(Object arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	@Override
-	public String getShortName() {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean equals(Object other) {
+		return other instanceof BinaryClass && name.equals(((BinaryClass) other).name);
 	}
 	
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		return 0;
+		return name.hashCode();
 	}
 	
 }

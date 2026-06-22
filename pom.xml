@@ -17,8 +17,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
 
         <hikaricp.version>4.0.3</hikaricp.version>
         <commons-io.version>2.18.0</commons-io.version>
@@ -26,6 +25,8 @@
         <commons-pool2.version>2.12.1</commons-pool2.version>
         <guava.version>23.0</guava.version>
         <javassist.version>3.21.0-GA</javassist.version>
+        <jaxb-api.version>2.3.1</jaxb-api.version>
+        <jaxb-runtime.version>2.3.9</jaxb-runtime.version>
         <javolution.version>5.5.1</javolution.version>
         <logback.version>1.2.3</logback.version>
         <mysql-connector.version>8.0.33</mysql-connector.version>
@@ -69,6 +70,16 @@
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>${javassist.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${jaxb-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>${jaxb-runtime.version}</version>
             </dependency>
             <dependency>
                 <groupId>javolution</groupId>
@@ -156,13 +167,9 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.13.0</version>
                     <configuration>
-                        <source>${maven.compiler.source}</source>
-                        <target>${maven.compiler.target}</target>
+                        <release>${maven.compiler.release}</release>
                         <encoding>${project.build.sourceEncoding}</encoding>
                         <showWarnings>false</showWarnings>
-                        <compilerArgs>
-                            <arg>-XDignore.symbol.file</arg>
-                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -189,15 +196,15 @@
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>require-java-8</id>
+                        <id>require-java-25</id>
                         <goals>
                             <goal>enforce</goal>
                         </goals>
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[1.8,1.9)</version>
-                                    <message>This project uses JDK 8 compiler internals and must be built with Java 8.</message>
+                                    <version>[25,26)</version>
+                                    <message>This project must be built with JDK 25.</message>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
                                     <version>[3.0,)</version>

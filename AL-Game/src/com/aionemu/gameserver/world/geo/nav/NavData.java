@@ -17,8 +17,10 @@ package com.aionemu.gameserver.world.geo.nav;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.Buffer;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -350,47 +352,20 @@ public class NavData {
 
     /**
      * Safely releases a direct byte buffer's native memory.
-     * Uses reflection to avoid sun.misc.Cleaner dependency.
+     * Uses reflection to avoid a compile-time dependency on Unsafe.
      */
     private static void releaseDirectBuffer(Buffer buffer) {
-        if (buffer == null || !buffer.isDirect()) {
+        if (!(buffer instanceof ByteBuffer) || !buffer.isDirect()) {
             return;
         }
         
         try {
-            // Try Java 9+ approach first
-            if (System.getProperty("java.version").startsWith("1.")) {
-                // Java 8 - use sun.misc.Cleaner
-                try {
-                    Class<?> directBufferClass = Class.forName("sun.nio.ch.DirectBuffer");
-                    Method cleanerMethod = directBufferClass.getMethod("cleaner");
-                    cleanerMethod.setAccessible(true);
-                    Object cleaner = cleanerMethod.invoke(buffer);
-                    if (cleaner != null) {
-                        Method cleanMethod = cleaner.getClass().getMethod("clean");
-                        cleanMethod.invoke(cleaner);
-                    }
-                } catch (Exception ignored) {
-                    // Fallback: just let GC handle it
-                }
-            } else {
-                // Java 9+ - use invoke-exact or let GC handle
-                try {
-                    Method attachmentMethod = buffer.getClass().getMethod("attachment");
-                    attachmentMethod.setAccessible(true);
-                    Object attachment = attachmentMethod.invoke(buffer);
-                    
-                    if (attachment == null) {
-                        Method cleanerMethod = buffer.getClass().getMethod("cleaner");
-                        cleanerMethod.setAccessible(true);
-                        Object cleaner = cleanerMethod.invoke(buffer);
-                        if (cleaner != null) {
-                            Method cleanMethod = cleaner.getClass().getMethod("clean");
-                            cleanMethod.invoke(cleaner);
-                        }
-                    }
-                } catch (Exception ignored) {}
-            }
+            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            Object unsafe = unsafeField.get(null);
+            Method invokeCleaner = unsafeClass.getMethod("invokeCleaner", ByteBuffer.class);
+            invokeCleaner.invoke(unsafe, (ByteBuffer) buffer);
         } catch (Exception e) {
             LOG.debug("Failed to release direct buffer: {}", e.getMessage());
         }
