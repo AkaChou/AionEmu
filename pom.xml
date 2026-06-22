@@ -342,6 +342,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.4.2</version>
                 <configuration>
+                    <forceCreation>true</forceCreation>
                     <archive>
                         <manifestEntries>
                             <Premain-Class>com.aionemu.commons.callbacks.JavaAgentEnhancer</Premain-Class>
