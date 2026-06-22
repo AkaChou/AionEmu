@@ -56,6 +56,7 @@ public final class CronService {
     
     /** 可运行任务执行器类 Runnable task executor class */
     private Class<? extends RunnableRunner> runnableRunner;
+    private String context;
 
     /**
      * 获取CronService实例
@@ -84,6 +85,7 @@ public final class CronService {
          throw new CronServiceException("CronService is already initialized");
       } else {
          CronService cs = new CronService();
+         cs.context = context;
          cs.init(runableRunner);
          instances.put(context, cs);
       }
@@ -146,6 +148,9 @@ public final class CronService {
          log.error("Failed to shutdown CronService correctly", var4);
       }
 
+      if (context != null) {
+         instances.remove(context, this);
+      }
    }
 
     /**

@@ -80,6 +80,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Routed embedded login task shutdown/restart, chat scheduled restart, and game scheduled/admin shutdown requests through the boot-managed shutdown handler.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
+- [x] Made CronService removable on shutdown so the same service context can initialize it again in one JVM.
 - [x] Moved MySQL initialization SQL into `docs/mysql/`.
 - [x] Initialized and verified local database schemas.
 - [x] Fixed the Java agent shaded jar so project callback classes are included.
@@ -120,6 +121,8 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 12 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=ChatServiceLifecycleTest,AionServiceLauncherTest test`
   - Result: 9 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=CronServiceTest,ServiceContextTest test`
+  - Result: 4 tests, 0 failures, 0 errors.
 - `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -DskipTests package`
   - Result: `BUILD SUCCESS`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -DskipTests package`
