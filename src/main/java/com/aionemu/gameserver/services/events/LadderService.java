@@ -59,7 +59,6 @@ public class LadderService {
 	private static Logger log = LoggerFactory.getLogger(LadderService.class);
 	private List<AionObject> eventQueueList = new ArrayList<AionObject>();
 	private List<AionObject> normalQueueList = new ArrayList<AionObject>();
-	private List<AionObject> soloQueueList = new ArrayList<AionObject>();
 	private Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new FastMap<Integer, Battleground>());
 	private Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new FastMap<Integer, Event>());
 	private Battleground eventBg = null;
@@ -78,12 +77,6 @@ public class LadderService {
 				UpdateRanks();
 			}
 		}, rankUpdateInterval * 60 * 1000, rankUpdateInterval * 60 * 1000);
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				HandleSoloQueue();
-			}
-		}, 60 * 1000, 60 * 1000);
 		log.info("[LadderService] is initialized...");
 	}
 
@@ -121,17 +114,6 @@ public class LadderService {
 		return eventQueueList.add(player);
 	}
 
-	public boolean registerForSolo(Player player) {
-		if (player.isInGroup2() && isInQueue(player.getPlayerGroup2())) {
-			return false;
-		}
-		if (isInQueue(player)) {
-			unregisterFromQueue(player);
-		}
-		PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(1, 320150000, 0));
-		return soloQueueList.add(player);
-	}
-
 	public void unregisterForNormal(Player player) {
 		normalQueueList.remove(player);
 	}
@@ -140,12 +122,8 @@ public class LadderService {
 		eventQueueList.remove(player);
 	}
 
-	public void unregisterForSolo(Player player) {
-		soloQueueList.remove(player);
-	}
-
 	public boolean isInQueue(Player player) {
-		if (normalQueueList.contains(player) || eventQueueList.contains(player) || soloQueueList.contains(player)) {
+		if (normalQueueList.contains(player) || eventQueueList.contains(player)) {
 			return true;
 		}
 		return false;
@@ -161,10 +139,6 @@ public class LadderService {
 			unregisterForEvent(player);
 			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(2, 300350000, 0));
 			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(300350000, true));
-		}
-		if (soloQueueList.contains(player)) {
-			unregisterForSolo(player);
-			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(2, 320150000, 0));
 		}
 	}
 
@@ -620,46 +594,6 @@ public class LadderService {
 		eventTeamBased = false;
 	}
 
-	private void HandleSoloQueue() {
-		if (soloQueueList.size() < 1) {
-			return;
-		}
-		List<Player> validPlayers = new ArrayList<Player>();
-		for (AionObject ao : soloQueueList) {
-			if (ao instanceof Player) {
-				Player pl = (Player) ao;
-				if (!pl.isOnline() || pl.getBattleground() != null) {
-					continue;
-				}
-				validPlayers.add(pl);
-			}
-		}
-		soloQueueList.clear();
-		Collections.shuffle(validPlayers);
-		int iterations = 0;
-		while (validPlayers.size() >= 2 && iterations++ < 5) {
-			Battleground bg = new SoloSurvivorBg();
-			List<Integer> participants = new ArrayList<Integer>(2);
-			PacketSendUtility.sendPacket(validPlayers.get(0), new SM_AUTO_GROUP(2, 320150000, 0));
-			PacketSendUtility.sendPacket(validPlayers.get(1), new SM_AUTO_GROUP(2, 320150000, 0));
-			participants.add(validPlayers.remove(0).getObjectId());
-			participants.add(validPlayers.remove(0).getObjectId());
-			bg.setIs1v1(true);
-			bg.setMatchLength(135);
-			bg.createMatch(participants);
-			if (bg.hasPlayers()) {
-				registerBg(bg);
-			}
-		}
-		if (validPlayers.size() > 0) {
-			for (Player pl : validPlayers) {
-				PacketSendUtility.sendSys3Message(pl, "\uE05C", "No opponents found!!! Search for a new opponent...");
-				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 320150000, 0));
-				registerForSolo(pl);
-			}
-		}
-	}
-
 	public boolean isNormalReady() {
 		return normalReady;
 	}
@@ -993,9 +927,7 @@ public class LadderService {
 	}
 
 	public void handleWindow(Player player, int windowId, int dialogId) {
-		if (soloQueueList.contains(player) && windowId == 101) {
-			unregisterFromQueue(player);
-		} else if (isEventReady()) {
+		if (isEventReady()) {
 			switch (windowId) {
 			case 100:
 				switch (dialogId) {

@@ -81,6 +81,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
 - [x] Made CronService removable on shutdown so the same service context can initialize it again in one JVM.
+- [x] Removed the solo-play `.vs` command entrypoint, permission entry, help text, and internal solo queue scheduler.
 - [x] Moved MySQL initialization SQL into `docs/mysql/`.
 - [x] Initialized and verified local database schemas.
 - [x] Fixed the Java agent shaded jar so project callback classes are included.
@@ -123,6 +124,10 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 9 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=CronServiceTest,ServiceContextTest test`
   - Result: 4 tests, 0 failures, 0 errors.
+- `rtk rg -n 'cmd_solo|class cmd_solo|super\("vs"\)|^vs\s*=|\.vs :|registerForSolo|unregisterForSolo|soloQueueList|HandleSoloQueue|No opponents found' src/main/java src/main/resources/aion/game/config/administration/commands.properties`
+  - Result: no solo-play command or solo queue entrypoint remains; only normal event queue messages remain.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn clean -DskipTests compile`
+  - Result: `BUILD SUCCESS`.
 - `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -DskipTests package`
   - Result: `BUILD SUCCESS`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -DskipTests package`

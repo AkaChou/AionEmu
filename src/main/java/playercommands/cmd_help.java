@@ -47,7 +47,6 @@ public class cmd_help extends PlayerCommand {
                     " .skills : refresh or get new skills.\n" +                         
                     " .givestigma add : to get your class stigma's.\n" +
                     " .ffa : to join or leave free for all\n" +
-                    " .vs : to join or leave 1v1 battles\n" +
 					//" .pk : to make pk xform\n" +
 					" .pvp : brings you to the pvp map\n" +
 					//" .mixfight : to join of leave mixfights.\n" +
