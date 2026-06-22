@@ -155,7 +155,7 @@ public class GeoWorldLoader {
 
 	@SuppressWarnings("resource")
 	public static boolean loadWorld(int worldId, Map<String, Spatial> models, GeoMap map) throws IOException {
-		File geoFile = new File(GEO_DIR + worldId + ".geo");
+		File geoFile = Config.dataFile(GEO_DIR + worldId + ".geo");
 		FileChannel roChannel = null;
 		MappedByteBuffer geo = null;
 		roChannel = new RandomAccessFile(geoFile, "r").getChannel();

@@ -28,7 +28,7 @@ final class AionServicePaths {
     static void configureGame() {
         configureConfig("aion.game.config.dir", "game/config", "aion/game/config");
         configureResourceDirectory("aion.game.data.dir", "game/data", "aion/game/data");
-        configure("aion.game.cache.dir", "game/cache");
+        configureDirectory("aion.game.cache.dir", "game/cache");
     }
 
     private static void configure(String property, String defaultPath) {
@@ -49,6 +49,15 @@ final class AionServicePaths {
         configure(property, defaultPath);
         if (!explicit) {
             materializeDefaults(resourcePath, Path.of(System.getProperty(property)));
+        }
+    }
+
+    private static void configureDirectory(String property, String defaultPath) {
+        configure(property, defaultPath);
+        try {
+            Files.createDirectories(Path.of(System.getProperty(property)));
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to prepare runtime directory " + System.getProperty(property), e);
         }
     }
 

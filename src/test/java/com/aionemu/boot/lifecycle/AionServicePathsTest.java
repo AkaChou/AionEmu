@@ -43,6 +43,7 @@ class AionServicePathsTest {
         assertTrue(aionHome.resolve("chat/config/slf4j-logback.xml").toFile().isFile());
         assertTrue(aionHome.resolve("game/config/main/gameserver.properties").toFile().isFile());
         assertTrue(aionHome.resolve("game/data/static_data/items/item/item_misc_templates.xml").toFile().isFile());
+        assertTrue(aionHome.resolve("game/cache").toFile().isDirectory());
     }
 
     @Test

@@ -58,6 +58,8 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Moved service configuration and bundled resources under `src/main/resources`.
 - [x] Removed Java source files from `src/main/resources`.
 - [x] Changed default runtime materialization paths from old `AL-*` module names to `login/`, `chat/`, and `game/` under `aion.home`.
+- [x] Prepared the `game/cache` runtime directory during boot path setup instead of relying on callers to create it implicitly.
+- [x] Routed geodata world file lookup through `aion.game.data.dir` so runtime data overrides work under the new boot home layout.
 - [x] Added one Spring Boot launcher with `WebApplicationType.NONE`.
 - [x] Removed standalone production `main` entrypoints outside `AionBootApplication`.
 - [x] Added boot-managed lifecycle ordering: login phase 100, chat phase 200, game phase 300.
@@ -124,6 +126,8 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 9 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=CronServiceTest,ServiceContextTest test`
   - Result: 4 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionServicePathsTest,GameServerTest test`
+  - Result: 5 tests, 0 failures, 0 errors.
 - `rtk rg -n 'cmd_solo|class cmd_solo|super\("vs"\)|^vs\s*=|\.vs :|registerForSolo|unregisterForSolo|soloQueueList|HandleSoloQueue|No opponents found' src/main/java src/main/resources/aion/game/config/administration/commands.properties`
   - Result: no solo-play command or solo queue entrypoint remains; only normal event queue messages remain.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn clean -DskipTests compile`
