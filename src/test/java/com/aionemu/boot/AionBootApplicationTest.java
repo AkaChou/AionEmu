@@ -4,6 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.boot.lifecycle.AionServiceLauncher;
+import com.aionemu.boot.lifecycle.ChatServiceLifecycle;
+import com.aionemu.boot.lifecycle.GameServiceLifecycle;
+import com.aionemu.boot.lifecycle.LoginServiceLifecycle;
+import com.aionemu.boot.transport.AionTransportBoundary;
+import com.aionemu.boot.transport.LegacyNioTransportLifecycle;
+import com.aionemu.boot.transport.NettyTransportLifecycle;
 import com.aionemu.chatserver.ChatServer;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.loginserver.LoginServer;
@@ -14,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 class AionBootApplicationTest {
 
@@ -40,6 +49,24 @@ class AionBootApplicationTest {
         assertEquals(List.of(mainSource.resolve("com/aionemu/boot/AionBootApplication.java")), productionMainFiles);
     }
 
+    @Test
+    void serviceLauncherCanBeCreatedAsSpringBean() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+            context.registerBean(AionServicesProperties.class);
+            context.registerBean(LegacyNioTransportLifecycle.class);
+            context.registerBean(NettyTransportLifecycle.class);
+            context.registerBean(AionTransportBoundary.class);
+            context.registerBean(LoginServiceLifecycle.class);
+            context.registerBean(ChatServiceLifecycle.class);
+            context.registerBean(GameServiceLifecycle.class);
+            context.registerBean(AionServiceLauncher.class);
+
+            context.refresh();
+
+            assertTrue(context.containsBean("aionServiceLauncher"));
+        }
+    }
+
     private static boolean declaresPublicStaticMain(Path path) {
         try {
             String source = Files.readString(path);
@@ -63,4 +90,5 @@ class AionBootApplicationTest {
         }
         return false;
     }
+
 }

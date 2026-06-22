@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -40,6 +41,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     private final Consumer<AionEmbeddedShutdownMode> embeddedShutdownHandler = this::handleEmbeddedShutdown;
     private ConfigurableApplicationContext applicationContext;
 
+    @Autowired
     public AionServiceLauncher(
         AionServicesProperties services,
         AionTransportBoundary transportBoundary,

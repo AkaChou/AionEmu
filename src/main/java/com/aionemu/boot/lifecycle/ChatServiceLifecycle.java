@@ -2,6 +2,7 @@ package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import java.util.function.Consumer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ public class ChatServiceLifecycle implements AionServiceLifecycle {
     private final Runnable stopAction;
     private boolean started;
 
+    @Autowired
     public ChatServiceLifecycle(AionServicesProperties services) {
         this(
             services,
