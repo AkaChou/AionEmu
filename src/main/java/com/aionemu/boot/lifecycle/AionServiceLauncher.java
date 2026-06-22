@@ -4,6 +4,7 @@ import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.commons.utils.AionEmbeddedFailureHandler;
+import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,8 +31,9 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     private final AionTransportBoundary transportBoundary;
     private final List<AionServiceLifecycle> serviceLifecycles;
     private final List<AionServiceLifecycle> startedServices = new ArrayList<>();
-    private final AtomicBoolean handlingEmbeddedFailure = new AtomicBoolean(false);
+    private final AtomicBoolean stopping = new AtomicBoolean(false);
     private final Consumer<RuntimeException> embeddedFailureHandler = this::handleEmbeddedFailure;
+    private final Runnable embeddedShutdownHandler = this::handleEmbeddedShutdown;
     private ConfigurableApplicationContext applicationContext;
 
     public AionServiceLauncher(
@@ -50,6 +52,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     public void run(ApplicationArguments args) throws Exception {
         AionRuntimeMode.enableBootEmbeddedMode();
         AionEmbeddedFailureHandler.register(embeddedFailureHandler);
+        AionEmbeddedShutdownHandler.register(embeddedShutdownHandler);
         String[] sourceArgs = args.getSourceArgs();
         boolean loginEnabled = services.getLogin().isEnabled();
         boolean chatEnabled = services.getChat().isEnabled();
@@ -99,6 +102,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     @Override
     public void destroy() {
         AionEmbeddedFailureHandler.clear(embeddedFailureHandler);
+        AionEmbeddedShutdownHandler.clear(embeddedShutdownHandler);
         ListIterator<AionServiceLifecycle> iterator = startedServices.listIterator(startedServices.size());
         while (iterator.hasPrevious()) {
             AionServiceLifecycle serviceLifecycle = iterator.previous();
@@ -118,10 +122,22 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     }
 
     private void handleEmbeddedFailure(RuntimeException failure) {
-        if (!handlingEmbeddedFailure.compareAndSet(false, true)) {
+        if (!stopping.compareAndSet(false, true)) {
             return;
         }
         log.error("Aion embedded service failure detected; stopping services.", failure);
+        stopServicesAndCloseContext();
+    }
+
+    private void handleEmbeddedShutdown() {
+        if (!stopping.compareAndSet(false, true)) {
+            return;
+        }
+        log.info("Aion embedded shutdown requested; stopping services.");
+        stopServicesAndCloseContext();
+    }
+
+    private void stopServicesAndCloseContext() {
         destroy();
         if (applicationContext != null && applicationContext.isActive()) {
             applicationContext.close();
