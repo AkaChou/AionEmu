@@ -12,4 +12,5 @@ aion:
     chat:
       enabled: false
     transport:
+      # Keep legacy-nio until game/login/chat endpoint adapters are migrated to Netty 4.
       mode: legacy-nio

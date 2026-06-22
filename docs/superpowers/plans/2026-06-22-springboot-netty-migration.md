@@ -67,6 +67,7 @@ The user explicitly requested no red-light tests. Do not write failing tests fir
 - [x] Confirm chat can be disabled by configuration.
 - [x] Confirm old packet/business logic remains in place.
 - [x] Confirm build verification passes or record exact blockers.
+- [ ] Migrate game/login/chat protocol endpoints from legacy NIO or Netty 3 to the Netty 4 boundary.
 
 ## Completion Notes
 
@@ -74,5 +75,6 @@ The user explicitly requested no red-light tests. Do not write failing tests fir
 - Startup order: login first, optional chat second, game last, so game keeps its existing login/chat connector behavior.
 - Chat default: disabled in `application.yml`; enabled with Spring profile resource `application-chat.yml`.
 - Transport default: `aion.services.transport.mode=legacy-nio`; Netty 4 lifecycle and endpoint binding boundary are present for subsequent endpoint-by-endpoint migration.
+- `aion.services.transport.mode=netty` is intentionally guarded until endpoint adapters are implemented. This prevents a configuration value from claiming Netty transport while legacy endpoints still own packet IO.
 - Runtime validation blocker: MySQL at `127.0.0.1:3306` is available by user configuration, but schema tables are not initialized, so this phase intentionally did not run full application startup.
 - Verification command used after each implementation phase: `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -pl AL-Boot -am -DskipTests package`.
