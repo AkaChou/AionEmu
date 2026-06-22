@@ -105,7 +105,7 @@ public class LoginServer {
             JoranConfigurator configurator = new JoranConfigurator();
             configurator.setContext(lc);
             lc.reset();
-            configurator.doConfigure(configDir() + "/slf4j-logback.xml");
+            configurator.doConfigure(configDir() + "/logback-spring.xml");
         } catch (JoranException je) {
             throw new RuntimeException("Failed to configure loggers, shutting down...", je);
         }

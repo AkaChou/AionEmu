@@ -40,7 +40,7 @@ class AionServicePathsTest {
         assertEquals(aionHome.resolve("game/cache").toString(), System.getProperty("aion.game.cache.dir"));
 
         assertTrue(aionHome.resolve("login/config/network/database.properties").toFile().isFile());
-        assertTrue(aionHome.resolve("chat/config/slf4j-logback.xml").toFile().isFile());
+        assertTrue(aionHome.resolve("chat/config/logback-spring.xml").toFile().isFile());
         assertTrue(aionHome.resolve("game/config/main/gameserver.properties").toFile().isFile());
         assertTrue(aionHome.resolve("game/data/static_data/items/item/item_misc_templates.xml").toFile().isFile());
         assertTrue(aionHome.resolve("game/cache").toFile().isDirectory());

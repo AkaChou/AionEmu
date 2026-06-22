@@ -26,8 +26,8 @@ class GameServerTest {
 			System.setProperty("aion.game.data.dir", "AL-Game/data");
 			System.setProperty("aion.game.cache.dir", "AL-Game/cache");
 
-			assertEquals(new File("AL-Game/config/slf4j-logback.xml").getCanonicalFile(),
-				Config.configFile("slf4j-logback.xml").getCanonicalFile());
+			assertEquals(new File("AL-Game/config/logback-spring.xml").getCanonicalFile(),
+				Config.configFile("logback-spring.xml").getCanonicalFile());
 			assertEquals(new File("AL-Game/data/scripts/system/aihandlers.xml").getCanonicalFile(),
 				Config.dataFile("./data/scripts/system/aihandlers.xml").getCanonicalFile());
 			assertEquals(new File("AL-Game/data/static_data/items/item_templates.xml").getCanonicalFile(),
