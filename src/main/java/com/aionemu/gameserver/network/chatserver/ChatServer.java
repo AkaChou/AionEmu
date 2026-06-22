@@ -18,6 +18,8 @@ package com.aionemu.gameserver.network.chatserver;
 
 import java.nio.channels.SelectionKey;
 import java.nio.channels.SocketChannel;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +35,11 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class ChatServer {
 	private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
-	private ChatServerConnection chatServer;
+	private volatile ChatServerConnection chatServer;
 	private NioServer nioServer;
-	private boolean serverShutdown = false;
+	private volatile boolean serverShutdown = false;
+	private final AtomicBoolean connectionTaskQueued = new AtomicBoolean(false);
+	private volatile ScheduledFuture<?> connectionTask;
 
 	public static final ChatServer getInstance() {
 		return SingletonHolder.instance;
@@ -46,24 +50,13 @@ public class ChatServer {
 
 	public void setNioServer(NioServer nioServer) {
 		this.nioServer = nioServer;
+		serverShutdown = false;
 	}
 
 	public ChatServerConnection connect() {
-		SocketChannel sc;
 		for (;;) {
-			chatServer = null;
-			log.info("Connecting to ChatServer: " + NetworkConfig.CHAT_ADDRESS);
-			try {
-				sc = SocketChannel.open(NetworkConfig.CHAT_ADDRESS);
-				sc.configureBlocking(false);
-				Dispatcher d = nioServer.getReadWriteDispatcher();
-				CsPacketHandlerFactory csPacketHandlerFactory = new CsPacketHandlerFactory();
-				chatServer = new ChatServerConnection(sc, d, csPacketHandlerFactory.getPacketHandler());
-				d.register(sc, SelectionKey.OP_READ, chatServer);
-				chatServer.initialized();
+			if (connectOnce()) {
 				return chatServer;
-			} catch (Exception e) {
-				log.info("Cant connect to ChatServer: " + e.getMessage());
 			}
 			try {
 				Thread.sleep(10 * 1000);
@@ -72,17 +65,82 @@ public class ChatServer {
 		}
 	}
 
+	public void connectAsync() {
+		scheduleConnect(0);
+	}
+
+	private void scheduleConnect(long delay) {
+		if (serverShutdown || !connectionTaskQueued.compareAndSet(false, true)) {
+			return;
+		}
+		connectionTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			@Override
+			public void run() {
+				connectionTaskQueued.set(false);
+				connectionTask = null;
+				if (serverShutdown || chatServer != null) {
+					return;
+				}
+				if (!connectOnce()) {
+					scheduleConnect(5000);
+				} else if (serverShutdown) {
+					gameServerDisconnected();
+				}
+			}
+		}, delay);
+	}
+
+	private boolean connectOnce() {
+		chatServer = null;
+		log.info("Connecting to ChatServer: " + NetworkConfig.CHAT_ADDRESS);
+		SocketChannel sc = null;
+		try {
+			sc = SocketChannel.open(NetworkConfig.CHAT_ADDRESS);
+			sc.configureBlocking(false);
+			Dispatcher d = nioServer.getReadWriteDispatcher();
+			CsPacketHandlerFactory csPacketHandlerFactory = new CsPacketHandlerFactory();
+			chatServer = new ChatServerConnection(sc, d, csPacketHandlerFactory.getPacketHandler());
+			d.register(sc, SelectionKey.OP_READ, chatServer);
+			chatServer.initialized();
+			return true;
+		} catch (Exception e) {
+			chatServer = null;
+			if (sc != null) {
+				try {
+					sc.close();
+				} catch (Exception ignored) {
+				}
+			}
+			log.info("Cant connect to ChatServer: " + e.getMessage());
+			return false;
+		}
+	}
+
 	public void chatServerDown() {
 		log.warn("Connection with ChatServer lost...");
 		chatServer = null;
 		if (!serverShutdown) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
-				@Override
-				public void run() {
-					connect();
-				}
-			}, 5000);
+			scheduleConnect(5000);
 		}
+	}
+
+	public void gameServerDisconnected() {
+		serverShutdown = true;
+		cancelConnectionTask();
+		if (chatServer != null) {
+			chatServer.close(false);
+			chatServer = null;
+		}
+		log.info("GameServer disconnected from the Chat Server...");
+	}
+
+	private void cancelConnectionTask() {
+		ScheduledFuture<?> task = connectionTask;
+		if (task != null) {
+			task.cancel(false);
+			connectionTask = null;
+		}
+		connectionTaskQueued.set(false);
 	}
 
 	public void sendPlayerLoginRequst(Player player) {

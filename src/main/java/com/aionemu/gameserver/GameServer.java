@@ -203,6 +203,10 @@ public class GameServer {
 	private static final ReentrantLock lock = new ReentrantLock(true);
 
 	private static Set<StartupHook> startUpHooks = new HashSet<StartupHook>();
+	private static volatile GameServer activeServer;
+
+	private NioServer nioServer;
+	private ServerTransport gameClientTransport;
 
 	private static String configDir() {
 		return System.getProperty("aion.game.config.dir", "./config");
@@ -345,6 +349,7 @@ public class GameServer {
 		NavService.getInstance().initializeNav();
 		DropRegistrationService.getInstance();
 		GameServer gs = new GameServer();
+		activeServer = gs;
 		DAOManager.getDAO(PlayerDAO.class).setPlayersOffline(false);
 
 		/**
@@ -682,10 +687,10 @@ public class GameServer {
 		log.info("Network Config - Bind: {}, Port: {}, Threads: {}", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS);
 		
 		boolean nettyTransportEnabled = Boolean.getBoolean("aion.transport.netty");
-		NioServer nioServer = nettyTransportEnabled
+		nioServer = nettyTransportEnabled
 			? new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS)
 			: new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
-		ServerTransport gameClientTransport = nettyTransportEnabled
+		gameClientTransport = nettyTransportEnabled
 			? new com.aionemu.commons.network.NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()))
 			: nioServer;
 		BannedMacManager.getInstance();
@@ -707,21 +712,66 @@ public class GameServer {
 		System.out.println("");
 		
 		long lsStart = System.currentTimeMillis();
-		ls.connect();
+		if (AionRuntimeMode.isBootEmbedded()) {
+			ls.connectAsync();
+		} else {
+			ls.connect();
+		}
 		long lsTime = System.currentTimeMillis() - lsStart;
-		log.info("Login Server connected in {} ms", lsTime);
+		log.info("Login Server {} in {} ms", AionRuntimeMode.isBootEmbedded() ? "connection scheduled" : "connected", lsTime);
 
 		if (GSConfig.ENABLE_CHAT_SERVER) {
 			long csStart = System.currentTimeMillis();
-			cs.connect();
+			if (AionRuntimeMode.isBootEmbedded()) {
+				cs.connectAsync();
+			} else {
+				cs.connect();
+			}
 			long csTime = System.currentTimeMillis() - csStart;
-			log.info("Chat Server connected in {} ms", csTime);
+			log.info("Chat Server {} in {} ms", AionRuntimeMode.isBootEmbedded() ? "connection scheduled" : "connected", csTime);
 		} else {
 			log.info("Chat Server is disabled by configuration");
 		}
 		
 		Util.printSection(" *** Misc *** ");
-		log.info("All network servers started successfully");
+		log.info(AionRuntimeMode.isBootEmbedded() ? "Network transport started and external server connections scheduled" : "All network servers started successfully");
+	}
+
+	public static void stop() {
+		GameServer server = activeServer;
+		if (server != null) {
+			server.stopServers();
+			activeServer = null;
+		}
+	}
+
+	private void stopServers() {
+		try {
+			LoginServer.getInstance().gameServerDisconnected();
+		} catch (Exception e) {
+			log.warn("Failed to disconnect from Login Server cleanly.", e);
+		}
+		try {
+			ChatServer.getInstance().gameServerDisconnected();
+		} catch (Exception e) {
+			log.warn("Failed to disconnect from Chat Server cleanly.", e);
+		}
+		try {
+			if (gameClientTransport != null) {
+				gameClientTransport.shutdown();
+			}
+		} catch (Exception e) {
+			log.warn("Failed to stop game client transport cleanly.", e);
+		}
+		try {
+			if (nioServer != null && nioServer != gameClientTransport) {
+				nioServer.shutdown();
+			}
+		} catch (Exception e) {
+			log.warn("Failed to stop game connector dispatcher cleanly.", e);
+		}
+		gameClientTransport = null;
+		nioServer = null;
 	}
 
 	/**

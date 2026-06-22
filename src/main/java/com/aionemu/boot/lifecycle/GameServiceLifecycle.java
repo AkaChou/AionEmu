@@ -33,4 +33,9 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         AionServicePaths.configureGame();
         com.aionemu.gameserver.GameServer.start(args.getSourceArgs(), services.getChat().isEnabled());
     }
+
+    @Override
+    public void stop() {
+        com.aionemu.gameserver.GameServer.stop();
+    }
 }

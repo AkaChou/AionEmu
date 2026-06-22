@@ -21,6 +21,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,10 +71,12 @@ public class LoginServer {
 	/**
 	 * Connection to LoginServer.
 	 */
-	private LoginServerConnection loginServer;
+	private volatile LoginServerConnection loginServer;
 
 	private NioServer nioServer;
-	private boolean serverShutdown = false;
+	private volatile boolean serverShutdown = false;
+	private final AtomicBoolean connectionTaskQueued = new AtomicBoolean(false);
+	private volatile ScheduledFuture<?> connectionTask;
 
 	public static final LoginServer getInstance() {
 		return SingletonHolder.instance;
@@ -84,6 +88,7 @@ public class LoginServer {
 
 	public void setNioServer(NioServer nioServer) {
 		this.nioServer = nioServer;
+		serverShutdown = false;
 	}
 
 	/**
@@ -93,25 +98,9 @@ public class LoginServer {
 	 * @return LoginServerConnection
 	 */
 	public LoginServerConnection connect() {
-		SocketChannel sc;
 		for (;;) {
-			loginServer = null;
-			log.info("Connecting to LoginServer: " + NetworkConfig.LOGIN_ADDRESS);
-			try {
-				sc = SocketChannel.open(NetworkConfig.LOGIN_ADDRESS);
-				sc.configureBlocking(false);
-				Dispatcher d = nioServer.getReadWriteDispatcher();
-				loginServer = new LoginServerConnection(sc, d);
-
-				// register
-				d.register(sc, SelectionKey.OP_READ, loginServer);
-
-				// initialized
-				loginServer.initialized();
-
+			if (connectOnce()) {
 				return loginServer;
-			} catch (Exception e) {
-				log.info("Cant connect to LoginServer: " + e.getMessage());
 			}
 			try {
 				/**
@@ -120,6 +109,60 @@ public class LoginServer {
 				Thread.sleep(10 * 1000);
 			} catch (Exception e) {
 			}
+		}
+	}
+
+	public void connectAsync() {
+		scheduleConnect(0);
+	}
+
+	private void scheduleConnect(long delay) {
+		if (serverShutdown || !connectionTaskQueued.compareAndSet(false, true)) {
+			return;
+		}
+		connectionTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			@Override
+			public void run() {
+				connectionTaskQueued.set(false);
+				connectionTask = null;
+				if (serverShutdown || loginServer != null) {
+					return;
+				}
+				if (!connectOnce()) {
+					scheduleConnect(5000);
+				} else if (serverShutdown) {
+					gameServerDisconnected();
+				}
+			}
+		}, delay);
+	}
+
+	private boolean connectOnce() {
+		loginServer = null;
+		log.info("Connecting to LoginServer: " + NetworkConfig.LOGIN_ADDRESS);
+		SocketChannel sc = null;
+		try {
+			sc = SocketChannel.open(NetworkConfig.LOGIN_ADDRESS);
+			sc.configureBlocking(false);
+			Dispatcher d = nioServer.getReadWriteDispatcher();
+			loginServer = new LoginServerConnection(sc, d);
+
+			// register
+			d.register(sc, SelectionKey.OP_READ, loginServer);
+
+			// initialized
+			loginServer.initialized();
+			return true;
+		} catch (Exception e) {
+			loginServer = null;
+			if (sc != null) {
+				try {
+					sc.close();
+				} catch (Exception ignored) {
+				}
+			}
+			log.info("Cant connect to LoginServer: " + e.getMessage());
+			return false;
 		}
 	}
 
@@ -148,13 +191,7 @@ public class LoginServer {
 		 * Reconnect after 5s if not server shutdown sequence
 		 */
 		if (!serverShutdown) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					connect();
-				}
-			}, 5000);
+			scheduleConnect(5000);
 		}
 	}
 
@@ -360,6 +397,7 @@ public class LoginServer {
 	public void gameServerDisconnected() {
 		synchronized (this) {
 			serverShutdown = true;
+			cancelConnectionTask();
 			/**
 			 * GameServer shutting down, must close all pending login requests
 			 */
@@ -369,9 +407,21 @@ public class LoginServer {
 			}
 			loginRequests.clear();
 
-			loginServer.close(false);
+			if (loginServer != null) {
+				loginServer.close(false);
+				loginServer = null;
+			}
 		}
 		log.info("GameServer disconnected from the Login Server...");
+	}
+
+	private void cancelConnectionTask() {
+		ScheduledFuture<?> task = connectionTask;
+		if (task != null) {
+			task.cancel(false);
+			connectionTask = null;
+		}
+		connectionTaskQueued.set(false);
 	}
 
 	public void sendLsControlPacket(String accountName, String playerName, String adminName, int param, int type) {

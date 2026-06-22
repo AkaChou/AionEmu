@@ -16,6 +16,7 @@ import com.aionemu.commons.utils.concurrent.RunnableStatsManager.SortBy;
 import com.aionemu.gameserver.configs.main.ShutdownConfig;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
@@ -129,16 +130,22 @@ public class ShutdownHook extends Thread {
 			}
 		}
 
-		log.info("Starting final shutdown sequence...");
-		
-		try {
-			LoginServer.getInstance().gameServerDisconnected();
-			log.info("Disconnected from Login Server");
-		} catch (Exception e) {
-			log.error("Error disconnecting from Login Server", e);
-		}
+			log.info("Starting final shutdown sequence...");
 
-		List<Player> playersToDisconnect = new ArrayList<>();
+			try {
+				LoginServer.getInstance().gameServerDisconnected();
+				log.info("Disconnected from Login Server");
+			} catch (Exception e) {
+				log.error("Error disconnecting from Login Server", e);
+			}
+			try {
+				ChatServer.getInstance().gameServerDisconnected();
+				log.info("Disconnected from Chat Server");
+			} catch (Exception e) {
+				log.error("Error disconnecting from Chat Server", e);
+			}
+
+			List<Player> playersToDisconnect = new ArrayList<>();
 		Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
 		while (onlinePlayers.hasNext()) {
 			playersToDisconnect.add(onlinePlayers.next());
