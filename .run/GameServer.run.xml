@@ -1,9 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="GameServer" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="com.aionemu.gameserver.GameServer" />
-    <module name="AL-Game" />
-    <option name="VM_PARAMETERS" value="-javaagent:$PROJECT_DIR$/AL-Commons/target/al-commons.jar" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/AL-Game" />
+  <configuration default="false" name="AionEmu" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.aionemu.boot.AionBootApplication" />
+    <module name="aionemu" />
+    <option name="VM_PARAMETERS" value="--add-opens java.base/java.lang=ALL-UNNAMED -javaagent:$PROJECT_DIR$/target/aionemu-1.0-SNAPSHOT-agent.jar -Daion.home=$PROJECT_DIR$" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.aionemu.gameserver.*" />
