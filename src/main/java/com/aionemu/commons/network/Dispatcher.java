@@ -18,6 +18,7 @@ import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.nio.channels.ClosedSelectorException;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.concurrent.Executor;
 
@@ -52,6 +53,8 @@ public abstract class Dispatcher extends Thread {
      * Selector for selecting ready keys
      */
     protected Selector selector;
+
+    private volatile boolean running = true;
     
     /**
      * 用于执行断开连接任务的执行器
@@ -104,6 +107,11 @@ public abstract class Dispatcher extends Thread {
     public final Selector selector() {
         return this.selector;
     }
+
+    public final void shutdown() {
+        running = false;
+        selector.wakeup();
+    }
     
     /**
      * 调度器主循环,分发选定的键并处理待关闭的连接
@@ -111,14 +119,25 @@ public abstract class Dispatcher extends Thread {
      */
     @Override
     public void run() {
-        for (;;) {
-            try {
-                dispatch();
-                
-                synchronized (gate) {}
-            } catch (Exception e) {
-                log.error("Dispatcher error! " + e, e);
+        try {
+            while (running) {
+                try {
+                    dispatch();
+
+                    synchronized (gate) {}
+                } catch (ClosedSelectorException e) {
+                    if (running) {
+                        log.error("Dispatcher selector closed unexpectedly! " + e, e);
+                    }
+                    break;
+                } catch (Exception e) {
+                    if (running) {
+                        log.error("Dispatcher error! " + e, e);
+                    }
+                }
             }
+        } finally {
+            closeSelector();
         }
     }
     
@@ -133,6 +152,9 @@ public abstract class Dispatcher extends Thread {
      */
     public final void register(SelectableChannel ch, int ops, AConnection att) throws IOException {
         synchronized (gate) {
+            if (!running) {
+                throw new ClosedSelectorException();
+            }
             selector.wakeup();
             att.setKey(ch.register(selector, ops, att));
         }
@@ -150,6 +172,9 @@ public abstract class Dispatcher extends Thread {
      */
     public final SelectionKey register(SelectableChannel ch, int ops, Acceptor att) throws IOException {
         synchronized (gate) {
+            if (!running) {
+                throw new ClosedSelectorException();
+            }
             selector.wakeup();
             return ch.register(selector, ops, att);
         }
@@ -327,6 +352,14 @@ public abstract class Dispatcher extends Thread {
         
         if (con.onlyClose()) {
             dcPool.execute(new DisconnectionTask(con));
+        }
+    }
+
+    private void closeSelector() {
+        try {
+            selector.close();
+        } catch (IOException e) {
+            log.warn("Error closing dispatcher selector", e);
         }
     }
 }

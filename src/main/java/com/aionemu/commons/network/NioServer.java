@@ -25,6 +25,8 @@ package com.aionemu.commons.network;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.channels.Channel;
+import java.nio.channels.ClosedSelectorException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.ServerSocketChannel;
 import java.util.ArrayList;
@@ -210,10 +212,10 @@ public class NioServer implements ServerTransport {
         int count = 0;
         if (readWriteDispatchers != null) {
             for (Dispatcher d : readWriteDispatchers) {
-                count += d.selector().keys().size();
+                count += activeConnections(d);
             }
         } else {
-            count = acceptDispatcher.selector().keys().size() - serverChannelKeys.size();
+            count = activeConnections(acceptDispatcher);
         }
         return count;
     }
@@ -225,31 +227,104 @@ public class NioServer implements ServerTransport {
     @Override
     public final void shutdown() {
         log.info("Closing ServerChannels...");
-        try {
-            serverChannelKeys.forEach(SelectionKey::cancel);
-            log.info("ServerChannel closed.");
-        } catch (Exception e) {
-            log.error("Error during closing ServerChannel", e);
-        }
-        
+        closeServerChannels();
         notifyServerClose();
-        
+        sleepDuringShutdown();
+
+        log.info("Active connections: {}", getActiveConnections());
+        log.info("Forced Disconnecting all connections...");
+        closeAll();
+        sleepDuringShutdown();
+        closeDispatcherChannels();
+        log.info("Active connections: {}", getActiveConnections());
+
+        shutdownDispatchers();
+    }
+
+    private int activeConnections(Dispatcher dispatcher) {
+        if (dispatcher == null) {
+            return 0;
+        }
+        try {
+            return (int) dispatcher.selector().keys().stream()
+                .filter(key -> key.attachment() instanceof AConnection)
+                .count();
+        } catch (ClosedSelectorException e) {
+            return 0;
+        }
+    }
+
+    private void closeServerChannels() {
+        for (SelectionKey key : new ArrayList<>(serverChannelKeys)) {
+            closeKeyChannel(key);
+        }
+        serverChannelKeys.clear();
+        log.info("ServerChannels closed.");
+    }
+
+    private void sleepDuringShutdown() {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             log.warn("Nio thread was interrupted during shutdown", e);
             Thread.currentThread().interrupt();
         }
-        
-        log.info("Active connections: {}", getActiveConnections());
-        log.info("Forced Disconnecting all connections...");
-        closeAll();
-        log.info("Active connections: {}", getActiveConnections());
-        
+    }
+
+    private void closeDispatcherChannels() {
+        if (readWriteDispatchers != null) {
+            for (Dispatcher d : readWriteDispatchers) {
+                closeDispatcherChannels(d);
+            }
+        } else {
+            closeDispatcherChannels(acceptDispatcher);
+        }
+    }
+
+    private void closeDispatcherChannels(Dispatcher dispatcher) {
+        if (dispatcher == null) {
+            return;
+        }
         try {
-            Thread.sleep(1000);
+            for (SelectionKey key : new ArrayList<>(dispatcher.selector().keys())) {
+                closeKeyChannel(key);
+            }
+        } catch (ClosedSelectorException ignored) {
+        }
+    }
+
+    private void closeKeyChannel(SelectionKey key) {
+        try {
+            Channel channel = key.channel();
+            key.cancel();
+            if (channel != null) {
+                channel.close();
+            }
+        } catch (Exception e) {
+            log.warn("Error closing NIO channel", e);
+        }
+    }
+
+    private void shutdownDispatchers() {
+        if (readWriteDispatchers != null) {
+            for (Dispatcher dispatcher : readWriteDispatchers) {
+                shutdownDispatcher(dispatcher);
+            }
+        }
+        shutdownDispatcher(acceptDispatcher);
+        readWriteDispatchers = null;
+        acceptDispatcher = null;
+    }
+
+    private void shutdownDispatcher(Dispatcher dispatcher) {
+        if (dispatcher == null) {
+            return;
+        }
+        dispatcher.shutdown();
+        try {
+            dispatcher.join(1000);
         } catch (InterruptedException e) {
-            log.warn("Nio thread was interrupted during shutdown", e);
+            log.warn("Interrupted waiting for dispatcher shutdown", e);
             Thread.currentThread().interrupt();
         }
     }
@@ -261,14 +336,22 @@ public class NioServer implements ServerTransport {
     private void notifyServerClose() {
         if (readWriteDispatchers != null) {
             for (Dispatcher d : readWriteDispatchers) {
-                d.selector().keys().stream()
-                    .filter(key -> key.attachment() instanceof AConnection)
-                    .forEach(key -> ((AConnection) key.attachment()).onServerClose());
+                notifyServerClose(d);
             }
         } else {
-            acceptDispatcher.selector().keys().stream()
+            notifyServerClose(acceptDispatcher);
+        }
+    }
+
+    private void notifyServerClose(Dispatcher dispatcher) {
+        if (dispatcher == null) {
+            return;
+        }
+        try {
+            dispatcher.selector().keys().stream()
                 .filter(key -> key.attachment() instanceof AConnection)
                 .forEach(key -> ((AConnection) key.attachment()).onServerClose());
+        } catch (ClosedSelectorException ignored) {
         }
     }
 
@@ -279,14 +362,22 @@ public class NioServer implements ServerTransport {
     private void closeAll() {
         if (readWriteDispatchers != null) {
             for (Dispatcher d : readWriteDispatchers) {
-                d.selector().keys().stream()
-                    .filter(key -> key.attachment() instanceof AConnection)
-                    .forEach(key -> ((AConnection) key.attachment()).close(true));
+                closeAll(d);
             }
         } else {
-            acceptDispatcher.selector().keys().stream()
+            closeAll(acceptDispatcher);
+        }
+    }
+
+    private void closeAll(Dispatcher dispatcher) {
+        if (dispatcher == null) {
+            return;
+        }
+        try {
+            dispatcher.selector().keys().stream()
                 .filter(key -> key.attachment() instanceof AConnection)
                 .forEach(key -> ((AConnection) key.attachment()).close(true));
+        } catch (ClosedSelectorException ignored) {
         }
     }
 }

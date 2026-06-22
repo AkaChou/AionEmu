@@ -84,6 +84,7 @@ public class AcceptReadWriteDispatcherImpl extends Dispatcher {
         synchronized (this.pendingClose) {
             this.pendingClose.add(con);
         }
+        this.selector.wakeup();
     }
 
     /**

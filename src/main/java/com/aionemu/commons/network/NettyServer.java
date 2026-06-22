@@ -75,11 +75,11 @@ public class NettyServer implements ServerTransport {
         clientChannels.close().syncUninterruptibly();
 
         if (workerGroup != null) {
-            workerGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully().syncUninterruptibly();
             workerGroup = null;
         }
         if (bossGroup != null) {
-            bossGroup.shutdownGracefully();
+            bossGroup.shutdownGracefully().syncUninterruptibly();
             bossGroup = null;
         }
     }
