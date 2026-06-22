@@ -58,6 +58,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Added boot-managed lifecycle ordering: login phase 100, chat phase 200, game phase 300.
 - [x] Made chat disabled by default and configurable.
 - [x] Made Netty the default transport mode with explicit `legacy-nio` fallback.
+- [x] Migrated the chat client acceptor to a Netty 4 adapter while preserving the existing chat packet handlers.
 - [x] Moved MySQL initialization SQL into `docs/mysql/`.
 - [x] Initialized and verified local database schemas.
 - [x] Fixed the Java agent shaded jar so project callback classes are included.
@@ -72,6 +73,7 @@ Initialization SQL now lives under `docs/mysql/`.
   - default Netty mode logs `Using Netty transport mode...`.
   - explicit `legacy-nio` fallback logs `Using legacy NIO transport...`.
   - chat enabled logs `Starting chat service...`.
+  - chat enabled in Netty mode logs `Netty server listening ... for Chat Client Connections`.
   - chat disabled does not create an `AL-Chat` runtime directory.
 - Login + game smoke with temporary `aion.home` reached `Server initialization COMPLETE`.
 - Database schema verification:
@@ -80,6 +82,5 @@ Initialization SQL now lives under `docs/mysql/`.
 
 ## Remaining Technical Debt
 
-- Chat client acceptor still uses the old JBoss Netty 3 pipeline.
 - Game outbound login/chat connectors still use the legacy NIO dispatcher.
 - Full protocol parity still needs client-side runtime validation after the structural migration.

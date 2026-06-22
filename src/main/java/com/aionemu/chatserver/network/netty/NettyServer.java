@@ -53,6 +53,7 @@ public class NettyServer {
     private final ChannelGroup channelGroup = new DefaultChannelGroup(NettyServer.class.getName());
     private final LoginToClientPipeLineFactory loginToClientPipeLineFactory;
     private ChannelFactory loginToClientChannelFactory;
+    private Netty4ChatClientServer netty4ChatClientServer;
     private ServerTransport gameServerTransport;
     private static NettyServer instance = new NettyServer();
 
@@ -69,15 +70,18 @@ public class NettyServer {
      * Initialize listening on login port
      */
     public void initialize() {
-        loginToClientChannelFactory = initChannelFactory();
-
-        Channel loginToClientChannel = initChannel(loginToClientChannelFactory, Config.CHAT_ADDRESS, loginToClientPipeLineFactory);
-
-        channelGroup.add(loginToClientChannel);
-
+        boolean nettyTransport = Boolean.getBoolean("aion.transport.netty");
+        if (nettyTransport) {
+            netty4ChatClientServer = new Netty4ChatClientServer(Config.CHAT_ADDRESS, new ClientPacketHandler());
+            netty4ChatClientServer.connect();
+        } else {
+            loginToClientChannelFactory = initChannelFactory();
+            Channel loginToClientChannel = initChannel(loginToClientChannelFactory, Config.CHAT_ADDRESS, loginToClientPipeLineFactory);
+            channelGroup.add(loginToClientChannel);
+        }
         String gameHost = Config.GAME_ADDRESS.getAddress().getHostAddress();
         int gamePort = Config.GAME_ADDRESS.getPort();
-        if (Boolean.getBoolean("aion.transport.netty")) {
+        if (nettyTransport) {
             gameServerTransport = new com.aionemu.commons.network.NettyServer(
                 new NettyServerCfg(gameHost, gamePort, "Gs Connections", new GsConnectionFactoryImpl())
             );
@@ -121,7 +125,12 @@ public class NettyServer {
     public void shutdownAll() {
         ChannelGroupFuture future = channelGroup.close();
         future.awaitUninterruptibly();
-        loginToClientChannelFactory.releaseExternalResources();
+        if (loginToClientChannelFactory != null) {
+            loginToClientChannelFactory.releaseExternalResources();
+        }
+        if (netty4ChatClientServer != null) {
+            netty4ChatClientServer.shutdown();
+        }
         if (gameServerTransport != null) {
             gameServerTransport.shutdown();
         }

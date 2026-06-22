@@ -21,6 +21,8 @@ package com.aionemu.chatserver.network.netty.handler;
 import java.net.InetSocketAddress;
 import java.nio.ByteOrder;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -44,6 +46,7 @@ public class ClientChannelHandler extends AbstractChannelHandler {
     private final ClientPacketHandler clientPacketHandler;
     private State state;
     private ChatClient chatClient;
+    private io.netty.channel.Channel nettyChannel;
 
     @Inject
     public ClientChannelHandler(ClientPacketHandler clientPacketHandler) {
@@ -64,14 +67,39 @@ public class ClientChannelHandler extends AbstractChannelHandler {
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
         super.messageReceived(ctx, e);
 
-        AbstractClientPacket clientPacket = clientPacketHandler.handle((ChannelBuffer) e.getMessage(), this);
+        handlePacket((ChannelBuffer) e.getMessage());
+    }
+
+    public void nettyChannelActive(io.netty.channel.Channel channel) {
+        state = State.CONNECTED;
+        inetAddress = ((InetSocketAddress) channel.remoteAddress()).getAddress();
+        nettyChannel = channel;
+        log.info("Channel connected Ip:" + inetAddress.getHostAddress());
+    }
+
+    public void nettyChannelInactive() {
+        if (inetAddress != null) {
+            log.info("Channel disconnected IP: " + inetAddress.getHostAddress());
+        }
+    }
+
+    public void nettyExceptionCaught(Throwable cause) {
+        if (!(cause instanceof java.io.IOException)) {
+            log.error("NETTY: Exception caught: ", cause);
+        }
+    }
+
+    public void nettyMessageReceived(ChannelBuffer message) {
+        handlePacket(message);
+    }
+
+    private void handlePacket(ChannelBuffer message) {
+        AbstractClientPacket clientPacket = clientPacketHandler.handle(message, this);
         if (clientPacket != null && clientPacket.read()) {
             clientPacket.run();
         }
-        if (clientPacket != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Received packet: " + clientPacket);
-            }
+        if (clientPacket != null && log.isDebugEnabled()) {
+            log.debug("Received packet: " + clientPacket);
         }
     }
 
@@ -81,6 +109,17 @@ public class ClientChannelHandler extends AbstractChannelHandler {
     public void sendPacket(AbstractServerPacket packet) {
         ChannelBuffer cb = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN, 2 * 8192);
         packet.write(this, cb);
+        if (nettyChannel != null) {
+            cb.setShort(0, (short) cb.readableBytes());
+            byte[] bytes = new byte[cb.readableBytes()];
+            cb.getBytes(0, bytes);
+            ByteBuf output = Unpooled.wrappedBuffer(bytes);
+            nettyChannel.writeAndFlush(output);
+            if (log.isDebugEnabled()) {
+                log.debug("Sent packet: " + packet);
+            }
+            return;
+        }
         channel.write(cb);
         if (log.isDebugEnabled()) {
             log.debug("Sent packet: " + packet);
