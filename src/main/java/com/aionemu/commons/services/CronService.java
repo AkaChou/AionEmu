@@ -67,6 +67,10 @@ public final class CronService {
         return instances.get(ServiceContext.current());
     }
 
+    public static boolean isInitialized() {
+        return instances.containsKey(ServiceContext.current());
+    }
+
     /**
      * 初始化CronService单例
      * Initialize CronService singleton

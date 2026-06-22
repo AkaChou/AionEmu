@@ -26,6 +26,7 @@ import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.aion.AionConnectionFactoryImpl;
 import com.aionemu.loginserver.network.gameserver.GsConnectionFactoryImpl;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
@@ -37,27 +38,42 @@ public class NetConnector {
     /**
      * NioServer instance that will handle io.
      */
-    private final static ServerTransport instance;
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
 
-    static {
+    private static ServerTransport createTransport() {
         ServerCfg aion = new ServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new AionConnectionFactoryImpl());
 
         ServerCfg gs = new ServerCfg(Config.GAME_BIND_ADDRESS, Config.GAME_PORT, "Gs Connections", new GsConnectionFactoryImpl());
 
         if (Boolean.getBoolean("aion.transport.netty")) {
-            instance = new NettyServer(
+            return new NettyServer(
                 new NettyServerCfg(Config.GAME_BIND_ADDRESS, Config.GAME_PORT, "Gs Connections", new GsConnectionFactoryImpl()),
                 new NettyServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new AionConnectionFactoryImpl())
             );
-        } else {
-            instance = new NioServer(Config.NIO_READ_THREADS, gs, aion);
         }
+
+        return new NioServer(Config.NIO_READ_THREADS, gs, aion);
+    }
+
+    private static final class SingletonHolder {
+        private static final ServerTransport instance = createTransport();
     }
 
     /**
      * @return NioServer instance.
      */
     public static ServerTransport getInstance() {
-        return instance;
+        ServerTransport transport = SingletonHolder.instance;
+        initialized.set(true);
+        return transport;
+    }
+
+    public static boolean shutdownIfInitialized() {
+        if (!initialized.get()) {
+            return false;
+        }
+
+        getInstance().shutdown();
+        return true;
     }
 }

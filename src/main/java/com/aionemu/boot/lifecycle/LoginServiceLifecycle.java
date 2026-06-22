@@ -32,8 +32,13 @@ public class LoginServiceLifecycle implements AionServiceLifecycle {
     @Override
     public void start(ApplicationArguments args) {
         AionServicePaths.configureLogin();
-        com.aionemu.loginserver.LoginServer.start(args.getSourceArgs());
-        started = true;
+        try {
+            com.aionemu.loginserver.LoginServer.start(args.getSourceArgs());
+            started = true;
+        } catch (RuntimeException | Error e) {
+            com.aionemu.loginserver.Shutdown.getInstance().shutdown(false);
+            throw e;
+        }
     }
 
     @Override

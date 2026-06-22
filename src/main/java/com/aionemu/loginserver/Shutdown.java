@@ -90,7 +90,7 @@ public class Shutdown extends Thread {
             return;
         }
         try {
-            NetConnector.getInstance().shutdown();
+            NetConnector.shutdownIfInitialized();
         } catch (Throwable t) {
             log.error("Can't shutdown NetConnector", t);
         }
@@ -102,7 +102,13 @@ public class Shutdown extends Thread {
         }
 
         // shutdown cron service prior to threadpool shutdown
-        CronService.getInstance().shutdown();
+        try {
+            if (CronService.isInitialized()) {
+                CronService.getInstance().shutdown();
+            }
+        } catch (Throwable t) {
+            log.error("Can't shutdown CronService", t);
+        }
 
         /* Shuting down threadpools */
         try {
