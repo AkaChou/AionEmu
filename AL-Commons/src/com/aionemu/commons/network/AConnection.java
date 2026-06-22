@@ -27,6 +27,8 @@ public abstract class AConnection {
      * Dispatcher instance
      */
     private final Dispatcher dispatcher;
+
+    private final ConnectionTransport transport;
     
     /**
      * 选择键
@@ -80,12 +82,25 @@ public abstract class AConnection {
     public AConnection(SocketChannel sc, Dispatcher d, int rbSize, int wbSize) throws IOException {
         this.socketChannel = sc;
         this.dispatcher = d;
+        this.transport = null;
         this.writeBuffer = ByteBuffer.allocate(wbSize);
         this.writeBuffer.flip();
         this.writeBuffer.order(ByteOrder.LITTLE_ENDIAN);
         this.readBuffer = ByteBuffer.allocate(rbSize);
         this.readBuffer.order(ByteOrder.LITTLE_ENDIAN);
         this.ip = this.socketChannel.socket().getInetAddress().getHostAddress();
+    }
+
+    protected AConnection(ConnectionTransport transport, int rbSize, int wbSize) {
+        this.socketChannel = null;
+        this.dispatcher = null;
+        this.transport = transport;
+        this.writeBuffer = ByteBuffer.allocate(wbSize);
+        this.writeBuffer.flip();
+        this.writeBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        this.readBuffer = ByteBuffer.allocate(rbSize);
+        this.readBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        this.ip = transport.getIP();
     }
 
     /**
@@ -101,6 +116,10 @@ public abstract class AConnection {
      * Enable write operation interest
      */
     protected final void enableWriteInterest() {
+        if (this.transport != null) {
+            this.transport.enableWriteInterest();
+            return;
+        }
         if (this.key.isValid()) {
             this.key.interestOps(this.key.interestOps() | SelectionKey.OP_WRITE);
             this.key.selector().wakeup();
@@ -133,6 +152,10 @@ public abstract class AConnection {
         synchronized(this.guard) {
             if (!this.isWriteDisabled()) {
                 this.isForcedClosing = forced;
+                if (this.transport != null) {
+                    this.transport.close(forced);
+                    return;
+                }
                 this.getDispatcher().closeConnection(this);
             }
         }
@@ -146,6 +169,9 @@ public abstract class AConnection {
         synchronized(this.guard) {
             if (this.closed) {
                 return false;
+            }
+            if (this.transport != null) {
+                return this.transport.onlyClose();
             }
             try {
                 if (this.socketChannel.isOpen()) {
