@@ -32,6 +32,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     private final List<AionServiceLifecycle> serviceLifecycles;
     private final List<AionServiceLifecycle> startedServices = new ArrayList<>();
     private final AtomicBoolean stopping = new AtomicBoolean(false);
+    private final AtomicBoolean destroyed = new AtomicBoolean(false);
     private final Consumer<RuntimeException> embeddedFailureHandler = this::handleEmbeddedFailure;
     private final Runnable embeddedShutdownHandler = this::handleEmbeddedShutdown;
     private ConfigurableApplicationContext applicationContext;
@@ -101,6 +102,9 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
 
     @Override
     public void destroy() {
+        if (!destroyed.compareAndSet(false, true)) {
+            return;
+        }
         AionEmbeddedFailureHandler.clear(embeddedFailureHandler);
         AionEmbeddedShutdownHandler.clear(embeddedShutdownHandler);
         ListIterator<AionServiceLifecycle> iterator = startedServices.listIterator(startedServices.size());

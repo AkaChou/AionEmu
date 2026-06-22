@@ -146,6 +146,26 @@ class AionServiceLauncherTest {
         assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
     }
 
+    @Test
+    void destroyStopsServicesAndTransportOnlyOnceWhenCalledRepeatedly() throws Exception {
+        AionServicesProperties properties = new AionServicesProperties();
+        List<String> events = new ArrayList<>();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            properties,
+            new RecordingTransportBoundary(events),
+            List.of(
+                new RecordingLifecycle("game", 300, true, events),
+                new RecordingLifecycle("login", 100, true, events)
+            )
+        );
+
+        launcher.run(new DefaultApplicationArguments());
+        launcher.destroy();
+        launcher.destroy();
+
+        assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
+    }
+
     private static final class RecordingTransportBoundary extends AionTransportBoundary {
         private final List<String> events;
 

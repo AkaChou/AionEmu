@@ -31,6 +31,20 @@ class AionTransportBoundaryTest {
     }
 
     @Test
+    void stopsActiveTransportOnlyOnceWhenDestroyedRepeatedly() {
+        RecordingLegacyTransport legacy = new RecordingLegacyTransport();
+        RecordingNettyTransport netty = new RecordingNettyTransport();
+        AionTransportBoundary boundary = new AionTransportBoundary(new AionServicesProperties(), legacy, netty);
+
+        boundary.prepare();
+        boundary.destroy();
+        boundary.destroy();
+
+        assertEquals(0, legacy.stops);
+        assertEquals(1, netty.stops);
+    }
+
+    @Test
     void preparesAndStopsLegacyTransportWhenConfigured() {
         AionServicesProperties properties = new AionServicesProperties();
         properties.getTransport().setMode(TransportMode.LEGACY_NIO);
