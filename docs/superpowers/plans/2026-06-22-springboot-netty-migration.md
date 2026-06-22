@@ -67,14 +67,23 @@ The user explicitly requested no red-light tests. Do not write failing tests fir
 - [x] Confirm chat can be disabled by configuration.
 - [x] Confirm old packet/business logic remains in place.
 - [x] Confirm build verification passes or record exact blockers.
-- [ ] Migrate game/login/chat protocol endpoints from legacy NIO or Netty 3 to the Netty 4 boundary.
+- [ ] Finish full protocol endpoint parity after runtime validation.
+
+## Current Endpoint Migration Status
+
+- Boot `aion.services.transport.mode=netty` now sets `aion.transport.netty=true` before service lifecycles start.
+- Login server acceptors for game-server and Aion-client connections can run on the commons Netty 4 transport.
+- Game server player-client acceptor can run on the commons Netty 4 transport; a legacy NIO dispatcher is still retained for outbound login/chat connectors.
+- Chat server game-server acceptor can run on the commons Netty 4 transport.
+- Chat server client acceptor still uses the existing JBoss Netty 3 pipeline and remains a follow-up migration target.
+- Game outbound login/chat connectors still use the legacy NIO dispatcher and remain a follow-up migration target.
 
 ## Completion Notes
 
 - Single boot entrypoint: `com.aionemu.boot.AionBootApplication` in module `AL-Boot`.
 - Startup order: login first, optional chat second, game last, so game keeps its existing login/chat connector behavior.
 - Chat default: disabled in `application.yml`; enabled with Spring profile resource `application-chat.yml`.
-- Transport default: `aion.services.transport.mode=legacy-nio`; Netty 4 lifecycle and endpoint binding boundary are present for subsequent endpoint-by-endpoint migration.
-- `aion.services.transport.mode=netty` is intentionally guarded until endpoint adapters are implemented. This prevents a configuration value from claiming Netty transport while legacy endpoints still own packet IO.
+- Transport default: `aion.services.transport.mode=legacy-nio`; Netty 4 endpoint adapters are now selectable with `aion.services.transport.mode=netty` for the migrated server acceptors.
+- Netty mode is compile-verified only. Full runtime verification is still blocked until the MySQL schemas are initialized.
 - Runtime validation blocker: MySQL at `127.0.0.1:3306` is available by user configuration, but schema tables are not initialized, so this phase intentionally did not run full application startup.
 - Verification command used after each implementation phase: `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -pl AL-Boot -am -DskipTests package`.
