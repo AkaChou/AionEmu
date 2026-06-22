@@ -28,42 +28,51 @@ The user explicitly requested no red-light tests. Do not write failing tests fir
 
 ## Task 1: Boot Module Skeleton
 
-- [ ] Add `AL-Boot` module to the root Maven reactor.
-- [ ] Add Spring Boot dependency management and dependencies needed for the boot module.
-- [ ] Create the boot application entrypoint.
-- [ ] Create properties binding for `aion.services.game.enabled`, `aion.services.login.enabled`, and `aion.services.chat.enabled`.
-- [ ] Run `mvn -pl AL-Boot -am -DskipTests package`.
-- [ ] Commit with message `feat: add spring boot launcher module`.
+- [x] Add `AL-Boot` module to the root Maven reactor.
+- [x] Add Spring Boot dependency management and dependencies needed for the boot module.
+- [x] Create the boot application entrypoint.
+- [x] Create properties binding for `aion.services.game.enabled`, `aion.services.login.enabled`, and `aion.services.chat.enabled`.
+- [x] Run `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -pl AL-Boot -am -DskipTests package`.
+- [x] Commit with message `feat: add spring boot launcher module`.
 
 ## Task 2: Lifecycle Wrappers Without Behavior Change
 
-- [ ] Add lifecycle classes for game, login, and chat.
-- [ ] Make game and login enabled by default.
-- [ ] Make chat disabled by default and conditional on config.
-- [ ] Keep old main classes callable.
-- [ ] Run `mvn -pl AL-Boot -am -DskipTests package`.
-- [ ] Commit with message `feat: wire server lifecycles into boot launcher`.
+- [x] Add lifecycle classes for game, login, and chat.
+- [x] Make game and login enabled by default.
+- [x] Make chat disabled by default and conditional on config.
+- [x] Keep old main classes callable.
+- [x] Run `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -pl AL-Boot -am -DskipTests package`.
+- [x] Commit with message `feat: wire server lifecycles into boot launcher`.
 
 ## Task 3: Netty Transport Boundary
 
-- [ ] Introduce a transport mode setting that defaults to current behavior during transition.
-- [ ] Add Netty service abstractions that can host game, login, and chat TCP endpoints independently.
-- [ ] Keep packet parsing, crypto, flood protection, and packet processor execution in existing connection/handler code.
-- [ ] Run compile verification.
-- [ ] Commit with message `feat: add netty transport lifecycle boundary`.
+- [x] Introduce a transport mode setting that defaults to current behavior during transition.
+- [x] Add Netty service abstractions that can host game, login, and chat TCP endpoints independently.
+- [x] Keep packet parsing, crypto, flood protection, and packet processor execution in existing connection/handler code.
+- [x] Run compile verification.
+- [x] Commit with message `feat: add netty transport lifecycle boundary`.
 
 ## Task 4: Runtime Selection And Chat Toggle
 
-- [ ] Add config examples for enabling/disabling chat.
-- [ ] Ensure disabled chat does not break game/login startup.
-- [ ] Verify startup logs clearly identify which services are enabled.
-- [ ] Run compile verification.
-- [ ] Commit with message `feat: make chat startup configurable`.
+- [x] Add config examples for enabling/disabling chat.
+- [x] Ensure disabled chat does not break game/login startup.
+- [x] Verify startup logs clearly identify which services are enabled.
+- [x] Run compile verification.
+- [x] Commit with message `feat: make chat startup configurable`.
 
 ## Task 5: Completion Audit
 
-- [ ] Confirm there is one bootable Spring Boot application.
-- [ ] Confirm game, login, and chat are represented as lifecycle-managed services.
-- [ ] Confirm chat can be disabled by configuration.
-- [ ] Confirm old packet/business logic remains in place.
-- [ ] Confirm build verification passes or record exact blockers.
+- [x] Confirm there is one bootable Spring Boot application.
+- [x] Confirm game, login, and chat are represented as lifecycle-managed services.
+- [x] Confirm chat can be disabled by configuration.
+- [x] Confirm old packet/business logic remains in place.
+- [x] Confirm build verification passes or record exact blockers.
+
+## Completion Notes
+
+- Single boot entrypoint: `com.aionemu.boot.AionBootApplication` in module `AL-Boot`.
+- Startup order: login first, optional chat second, game last, so game keeps its existing login/chat connector behavior.
+- Chat default: disabled in `application.yml`; enabled with Spring profile resource `application-chat.yml`.
+- Transport default: `aion.services.transport.mode=legacy-nio`; Netty 4 lifecycle and endpoint binding boundary are present for subsequent endpoint-by-endpoint migration.
+- Runtime validation blocker: MySQL at `127.0.0.1:3306` is available by user configuration, but schema tables are not initialized, so this phase intentionally did not run full application startup.
+- Verification command used after each implementation phase: `JAVA_HOME=$(/usr/libexec/java_home -v 25) rtk mvn -pl AL-Boot -am -DskipTests package`.
