@@ -70,6 +70,7 @@ Initialization SQL now lives under `docs/mysql/`.
 - [x] Made the chat Netty server lazy so loading the class does not bind ports when chat is disabled.
 - [x] Made login partial-startup cleanup avoid initializing NetConnector or CronService during shutdown.
 - [x] Added DAOManager initialization-state checks and moved login server stats cleanup before DAO/database shutdown.
+- [x] Made login `NetConnector` discard its transport on shutdown so later embedded lifecycles create a fresh transport.
 - [x] Added a reusable Netty 4 client connector and moved game-to-chat outbound connections to Netty when Netty transport mode is enabled.
 - [x] Moved game-to-login outbound connections to Netty when Netty transport mode is enabled.
 - [x] Removed the extra legacy NIO dispatcher from GameServer startup when Netty transport mode is enabled.
@@ -116,6 +117,8 @@ Initialization SQL now lives under `docs/mysql/`.
   - Result: 7 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=DAOManagerTest,NetConnectorTest,AionServiceLauncherTest test`
   - Result: 9 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=NetConnectorTest,DAOManagerTest,AionServiceLauncherTest test`
+  - Result: 11 tests, 0 failures, 0 errors.
 - `rtk rg -n "public static void main\\(|static void main\\(" src/main/java src/test/java`
   - Result: only `src/main/java/com/aionemu/boot/AionBootApplication.java` remains in production source.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionBootApplicationTest,AionServicesPropertiesTest,AionServiceLauncherTest,AionTransportBoundaryTest test`

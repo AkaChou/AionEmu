@@ -26,7 +26,7 @@ import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.aion.AionConnectionFactoryImpl;
 import com.aionemu.loginserver.network.gameserver.GsConnectionFactoryImpl;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 /**
  *
@@ -38,7 +38,10 @@ public class NetConnector {
     /**
      * NioServer instance that will handle io.
      */
-    private static final AtomicBoolean initialized = new AtomicBoolean(false);
+    private static final Object lifecycleLock = new Object();
+    private static Supplier<ServerTransport> transportFactory = NetConnector::createTransport;
+    private static ServerTransport transport;
+    private static boolean initialized;
 
     private static ServerTransport createTransport() {
         ServerCfg aion = new ServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new AionConnectionFactoryImpl());
@@ -55,25 +58,45 @@ public class NetConnector {
         return new NioServer(Config.NIO_READ_THREADS, gs, aion);
     }
 
-    private static final class SingletonHolder {
-        private static final ServerTransport instance = createTransport();
-    }
-
     /**
      * @return NioServer instance.
      */
     public static ServerTransport getInstance() {
-        ServerTransport transport = SingletonHolder.instance;
-        initialized.set(true);
-        return transport;
+        synchronized (lifecycleLock) {
+            if (transport == null) {
+                transport = transportFactory.get();
+            }
+            initialized = true;
+            return transport;
+        }
     }
 
     public static boolean shutdownIfInitialized() {
-        if (!initialized.get()) {
-            return false;
+        ServerTransport activeTransport;
+        synchronized (lifecycleLock) {
+            if (!initialized) {
+                return false;
+            }
+            activeTransport = transport;
+            transport = null;
+            initialized = false;
         }
 
-        getInstance().shutdown();
+        if (activeTransport != null) {
+            activeTransport.shutdown();
+        }
         return true;
+    }
+
+    static void useTransportFactory(Supplier<ServerTransport> factory) {
+        synchronized (lifecycleLock) {
+            transportFactory = factory;
+            transport = null;
+            initialized = false;
+        }
+    }
+
+    static void resetTransportFactory() {
+        useTransportFactory(NetConnector::createTransport);
     }
 }
