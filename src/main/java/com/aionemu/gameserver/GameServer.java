@@ -70,6 +70,7 @@ import com.aionemu.gameserver.lifecycle.GameHousingGateway;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLoggingGateway;
 import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesGateway;
@@ -1207,7 +1208,7 @@ public class GameServer {
 			new GameRatioLimitLifecycle(),
 			new GameStartupHooksLifecycle(),
 			new GameStartupCompletionLifecycle(),
-			new GameLoggingLifecycle(),
+			new GameLoggingLifecycle(new GameLoggingGateway()),
 			new GameUtilityServicesLifecycle(),
 			new GameAdminPanelLifecycle(),
 			new GameSystemPropertiesLifecycle(),

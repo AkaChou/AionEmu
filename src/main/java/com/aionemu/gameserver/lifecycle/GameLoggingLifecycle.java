@@ -1,23 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.GameServer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameLoggingLifecycle {
 
-    private final Runnable loggerInitializer;
+    private final GameLoggingGateway loggingGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameLoggingLifecycle() {
-        this(GameServer::initializeLogger);
-    }
-
-    GameLoggingLifecycle(Runnable loggerInitializer) {
-        this.loggerInitializer = loggerInitializer;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -26,7 +19,7 @@ public class GameLoggingLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            loggerInitializer.run();
+            loggingGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {
