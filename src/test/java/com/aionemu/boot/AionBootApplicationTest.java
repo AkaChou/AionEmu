@@ -20,6 +20,7 @@ import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldGateway;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
+import com.aionemu.gameserver.lifecycle.GameChatServerOverrideGateway;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
@@ -208,6 +209,7 @@ class AionBootApplicationTest {
             context.registerBean(GameSystemPropertiesLifecycle.class);
             context.registerBean(GameStartupLogGateway.class);
             context.registerBean(GameStartupLogLifecycle.class);
+            context.registerBean(GameChatServerOverrideGateway.class);
             context.registerBean(GameChatServerOverrideLifecycle.class);
             context.registerBean(GameThreadPoolGateway.class);
             context.registerBean(GameThreadPoolLifecycle.class);

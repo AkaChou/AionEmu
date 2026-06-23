@@ -614,6 +614,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameChatServerOverrideLifecycle(List<String> events) {
+            super(new GameChatServerOverrideGateway());
             this.events = events;
         }
 

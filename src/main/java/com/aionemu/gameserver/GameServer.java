@@ -47,6 +47,7 @@ import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldGateway;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
+import com.aionemu.gameserver.lifecycle.GameChatServerOverrideGateway;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
@@ -1218,7 +1219,7 @@ public class GameServer {
 			new GameAdminPanelLifecycle(),
 			new GameSystemPropertiesLifecycle(new GameSystemPropertiesGateway()),
 			new GameStartupLogLifecycle(new GameStartupLogGateway()),
-			new GameChatServerOverrideLifecycle()
+			new GameChatServerOverrideLifecycle(new GameChatServerOverrideGateway())
 		);
 	}
 

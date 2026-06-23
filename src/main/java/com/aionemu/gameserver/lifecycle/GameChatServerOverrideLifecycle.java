@@ -1,39 +1,26 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.configs.main.GSConfig;
-import java.util.function.Consumer;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
+@RequiredArgsConstructor
 public class GameChatServerOverrideLifecycle {
 
-    private final Consumer<Boolean> overrideAction;
+    private final GameChatServerOverrideGateway chatServerOverrideGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameChatServerOverrideLifecycle() {
-        this(chatServerEnabled -> {
-            GSConfig.ENABLE_CHAT_SERVER = chatServerEnabled;
-            log.info("Chat Server connection overridden by boot configuration: {}", chatServerEnabled);
-        });
-    }
-
-    GameChatServerOverrideLifecycle(Consumer<Boolean> overrideAction) {
-        this.overrideAction = overrideAction;
-    }
 
     public synchronized void start(Boolean chatServerEnabledOverride) {
         if (loaded) {
             return;
         }
 
-        long start = System.currentTimeMillis();
+        long start = chatServerOverrideGateway.currentTimeMillis();
         try {
             if (chatServerEnabledOverride != null) {
-                overrideAction.accept(chatServerEnabledOverride);
+                chatServerOverrideGateway.overrideChatServerEnabled(chatServerEnabledOverride);
             }
             loaded = true;
             lastFailure = null;
@@ -42,7 +29,7 @@ public class GameChatServerOverrideLifecycle {
             lastFailure = e;
             throw e;
         } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
+            loadTimeMillis = chatServerOverrideGateway.currentTimeMillis() - start;
         }
     }
 
