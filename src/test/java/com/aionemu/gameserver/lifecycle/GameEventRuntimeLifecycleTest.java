@@ -6,11 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class GameEventRuntimeLifecycleTest {
+
+    @Test
+    void usesEventRuntimeGatewayCollaborator() {
+        assertEquals(GameEventRuntimeGateway.class, fieldType("eventRuntimeGateway"));
+    }
 
     @Test
     void startRunsEnabledEventBootstrappersOnceAndRecordsLoadTime() {
@@ -69,25 +75,14 @@ class GameEventRuntimeLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("event runtime failed");
         GameEventRuntimeLifecycle lifecycle = new GameEventRuntimeLifecycle(
-            () -> events.add("section"),
-            () -> true,
-            () -> events.add("eventService"),
-            () -> true,
-            () -> {
-                events.add("playerEvent");
-                if (events.size() == 3) {
-                    throw failure;
-                }
-            },
-            () -> false,
-            () -> events.add("crazyEvent"),
-            () -> false,
-            () -> events.add("rankingHour"),
-            () -> events.add("rankingMinute"),
-            () -> events.add("rewardWeekly"),
-            () -> events.add("packetBroadcaster"),
-            () -> events.add("temporarySpawn")
-        );
+            new RecordingGameEventRuntimeGateway(
+                events,
+                true,
+                true,
+                false,
+                false,
+                failure
+            ));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -120,20 +115,69 @@ class GameEventRuntimeLifecycleTest {
         boolean crazyEventEnabled,
         boolean topRankingUpdateEnabled
     ) {
-        return new GameEventRuntimeLifecycle(
-            () -> events.add("section"),
-            () -> eventServiceEnabled,
-            () -> events.add("eventService"),
-            () -> playerEventEnabled,
-            () -> events.add("playerEvent"),
-            () -> crazyEventEnabled,
-            () -> events.add("crazyEvent"),
-            () -> topRankingUpdateEnabled,
-            () -> events.add("rankingHour"),
-            () -> events.add("rankingMinute"),
-            () -> events.add("rewardWeekly"),
-            () -> events.add("packetBroadcaster"),
-            () -> events.add("temporarySpawn")
-        );
+        return new GameEventRuntimeLifecycle(new RecordingGameEventRuntimeGateway(
+            events,
+            eventServiceEnabled,
+            playerEventEnabled,
+            crazyEventEnabled,
+            topRankingUpdateEnabled,
+            null
+        ));
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            Field field = GameEventRuntimeLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameEventRuntimeGateway extends GameEventRuntimeGateway {
+
+        private final List<String> events;
+        private final boolean eventServiceEnabled;
+        private final boolean playerEventEnabled;
+        private final boolean crazyEventEnabled;
+        private final boolean topRankingUpdateEnabled;
+        private final RuntimeException firstFailure;
+
+        private RecordingGameEventRuntimeGateway(
+            List<String> events,
+            boolean eventServiceEnabled,
+            boolean playerEventEnabled,
+            boolean crazyEventEnabled,
+            boolean topRankingUpdateEnabled,
+            RuntimeException firstFailure
+        ) {
+            this.events = events;
+            this.eventServiceEnabled = eventServiceEnabled;
+            this.playerEventEnabled = playerEventEnabled;
+            this.crazyEventEnabled = crazyEventEnabled;
+            this.topRankingUpdateEnabled = topRankingUpdateEnabled;
+            this.firstFailure = firstFailure;
+        }
+
+        @Override
+        public void start() {
+            events.add("section");
+            if (eventServiceEnabled) {
+                events.add("eventService");
+            }
+            if (playerEventEnabled) {
+                events.add("playerEvent");
+                if (events.size() == 3 && firstFailure != null) {
+                    throw firstFailure;
+                }
+            }
+            if (crazyEventEnabled) {
+                events.add("crazyEvent");
+            }
+            events.add(topRankingUpdateEnabled ? "rankingHour" : "rankingMinute");
+            events.add("rewardWeekly");
+            events.add("packetBroadcaster");
+            events.add("temporarySpawn");
+        }
     }
 }
