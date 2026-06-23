@@ -29,6 +29,7 @@ import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
@@ -81,6 +82,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameStartupHooksLifecycle startupHooksLifecycle,
         GameUtilityServicesLifecycle utilityServicesLifecycle,
         GameAdminPanelLifecycle adminPanelLifecycle,
+        GameSystemPropertiesLifecycle systemPropertiesLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -116,6 +118,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             startupHooksLifecycle,
             utilityServicesLifecycle,
             adminPanelLifecycle,
+            systemPropertiesLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -150,7 +153,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 startupHooksLifecycle,
                 loggingLifecycle,
                 utilityServicesLifecycle,
-                adminPanelLifecycle
+                adminPanelLifecycle,
+                systemPropertiesLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -189,6 +193,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameStartupHooksLifecycle startupHooksLifecycle,
         GameUtilityServicesLifecycle utilityServicesLifecycle,
         GameAdminPanelLifecycle adminPanelLifecycle,
+        GameSystemPropertiesLifecycle systemPropertiesLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction

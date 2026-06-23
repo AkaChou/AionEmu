@@ -80,6 +80,7 @@ import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
@@ -1159,7 +1160,8 @@ public class GameServer {
 			new GameStartupHooksLifecycle(),
 			new GameLoggingLifecycle(),
 			new GameUtilityServicesLifecycle(),
-			new GameAdminPanelLifecycle()
+			new GameAdminPanelLifecycle(),
+			new GameSystemPropertiesLifecycle()
 		);
 	}
 
@@ -1199,11 +1201,10 @@ public class GameServer {
 		GameStartupHooksLifecycle startupHooksLifecycle,
 		GameLoggingLifecycle loggingLifecycle,
 		GameUtilityServicesLifecycle utilityServicesLifecycle,
-		GameAdminPanelLifecycle adminPanelLifecycle
+		GameAdminPanelLifecycle adminPanelLifecycle,
+		GameSystemPropertiesLifecycle systemPropertiesLifecycle
 	) {
-		System.setProperty("file.encoding", "UTF-8");
-		System.setProperty("java.net.preferIPv4Stack", "true");
-		System.setProperty("java.net.preferIPv6Addresses", "false");
+		systemPropertiesLifecycle.start();
 		
 		long start = System.currentTimeMillis();
 		log.info("GameServer starting...");
