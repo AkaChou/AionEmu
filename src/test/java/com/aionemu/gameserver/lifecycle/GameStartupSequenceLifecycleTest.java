@@ -570,6 +570,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameAdminPanelLifecycle(List<String> events) {
+            super(new GameAdminPanelGateway());
             this.events = events;
         }
 

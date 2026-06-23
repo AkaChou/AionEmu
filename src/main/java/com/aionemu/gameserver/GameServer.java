@@ -45,6 +45,7 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
+import com.aionemu.gameserver.lifecycle.GameAdminPanelGateway;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldGateway;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideGateway;
@@ -1217,7 +1218,7 @@ public class GameServer {
 			new GameStartupCompletionLifecycle(new GameStartupCompletionGateway()),
 			new GameLoggingLifecycle(new GameLoggingGateway()),
 			new GameUtilityServicesLifecycle(),
-			new GameAdminPanelLifecycle(),
+			new GameAdminPanelLifecycle(new GameAdminPanelGateway()),
 			new GameSystemPropertiesLifecycle(new GameSystemPropertiesGateway()),
 			new GameStartupLogLifecycle(new GameStartupLogGateway()),
 			new GameChatServerOverrideLifecycle(new GameChatServerOverrideGateway())

@@ -18,6 +18,7 @@ import com.aionemu.boot.transport.NettyTransportLifecycle;
 import com.aionemu.chatserver.ChatServer;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
+import com.aionemu.gameserver.lifecycle.GameAdminPanelGateway;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldGateway;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideGateway;
@@ -206,6 +207,7 @@ class AionBootApplicationTest {
             context.registerBean(GameStartupCompletionLifecycle.class);
             context.registerBean(GameStartupSequenceLifecycle.class);
             context.registerBean(GameUtilityServicesLifecycle.class);
+            context.registerBean(GameAdminPanelGateway.class);
             context.registerBean(GameAdminPanelLifecycle.class);
             context.registerBean(GameSystemPropertiesGateway.class);
             context.registerBean(GameSystemPropertiesLifecycle.class);
