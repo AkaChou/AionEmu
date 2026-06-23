@@ -1,40 +1,26 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.GameServer;
-import com.aionemu.gameserver.configs.main.GSConfig;
-import java.util.function.BooleanSupplier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameRatioLimitLifecycle {
 
-    private final BooleanSupplier ratioLimitationEnabled;
-    private final Runnable ratioHookRegistrar;
+    private final GameRatioLimitGateway ratioLimitGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameRatioLimitLifecycle() {
-        this(
-            () -> GSConfig.ENABLE_RATIO_LIMITATION,
-            GameServer::registerRatioLimitStartupHook
-        );
-    }
-
-    GameRatioLimitLifecycle(BooleanSupplier ratioLimitationEnabled, Runnable ratioHookRegistrar) {
-        this.ratioLimitationEnabled = ratioLimitationEnabled;
-        this.ratioHookRegistrar = ratioHookRegistrar;
-    }
 
     public synchronized void start() {
         if (loaded) {
             return;
         }
 
-        long start = System.currentTimeMillis();
+        long start = ratioLimitGateway.currentTimeMillis();
         try {
-            if (ratioLimitationEnabled.getAsBoolean()) {
-                ratioHookRegistrar.run();
+            if (ratioLimitGateway.isRatioLimitationEnabled()) {
+                ratioLimitGateway.registerRatioLimitStartupHook();
             }
             loaded = true;
             lastFailure = null;
@@ -43,7 +29,7 @@ public class GameRatioLimitLifecycle {
             lastFailure = e;
             throw e;
         } finally {
-            loadTimeMillis = System.currentTimeMillis() - start;
+            loadTimeMillis = ratioLimitGateway.currentTimeMillis() - start;
         }
     }
 

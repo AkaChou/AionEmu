@@ -80,6 +80,7 @@ import com.aionemu.gameserver.lifecycle.GameOptionalServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorGateway;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRatioLimitGateway;
 import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
@@ -1213,7 +1214,7 @@ public class GameServer {
 			systemLifecycle,
 			new GameServerNetworkLifecycle(new GameServerNetworkGateway()),
 			new GameNetworkStartupLifecycle(new GameNetworkStartupGateway()),
-			new GameRatioLimitLifecycle(),
+			new GameRatioLimitLifecycle(new GameRatioLimitGateway()),
 			new GameStartupHooksLifecycle(new GameStartupHooksGateway()),
 			new GameStartupCompletionLifecycle(new GameStartupCompletionGateway()),
 			new GameLoggingLifecycle(new GameLoggingGateway()),

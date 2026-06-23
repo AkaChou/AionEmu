@@ -497,6 +497,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameRatioLimitLifecycle(List<String> events) {
+            super(new GameRatioLimitGateway());
             this.events = events;
         }
 
