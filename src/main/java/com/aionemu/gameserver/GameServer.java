@@ -60,6 +60,7 @@ import com.aionemu.gameserver.lifecycle.GameGeoNavGateway;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
@@ -349,7 +350,7 @@ public class GameServer {
 			geoNavLifecycle,
 			worldActivationLifecycle,
 			enginesLifecycle,
-			new GameLocationBootstrapLifecycle(),
+			new GameLocationBootstrapLifecycle(new GameLocationBootstrapGateway()),
 			new GameSpawnLifecycle()
 		);
 	}
