@@ -8,6 +8,7 @@ import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
+import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
@@ -360,6 +361,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameCleaningLifecycle(List<String> events) {
+            super(new GameCleaningGateway());
             this.events = events;
         }
 

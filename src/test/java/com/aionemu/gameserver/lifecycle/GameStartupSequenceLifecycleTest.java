@@ -236,6 +236,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameCleaningLifecycle(List<String> events) {
+            super(new GameCleaningGateway());
             this.events = events;
         }
 

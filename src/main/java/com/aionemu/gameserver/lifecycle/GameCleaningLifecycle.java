@@ -1,28 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.services.DatabaseCleaningService;
-import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameCleaningLifecycle {
 
-    private final List<Runnable> cleaners;
+    private final GameCleaningGateway cleaningGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameCleaningLifecycle() {
-        this(List.of(
-            DatabaseCleaningService::getInstance,
-            AbyssRankCleaningService::getInstance
-        ));
-    }
-
-    GameCleaningLifecycle(List<Runnable> cleaners) {
-        this.cleaners = List.copyOf(cleaners);
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -31,7 +19,7 @@ public class GameCleaningLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            cleaners.forEach(Runnable::run);
+            cleaningGateway.clean();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {
