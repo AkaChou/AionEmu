@@ -41,13 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.network.NettyServerCfg;
-import com.aionemu.commons.network.NioServer;
-import com.aionemu.commons.network.ServerCfg;
-import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
@@ -87,10 +82,6 @@ import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.network.BannedMacManager;
-import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
-import com.aionemu.gameserver.network.chatserver.ChatServer;
-import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.Util;
 
@@ -117,11 +108,14 @@ public class GameServer {
 	private static Set<StartupHook> startUpHooks = new HashSet<StartupHook>();
 	private static volatile GameServer activeServer;
 
-	private NioServer nioServer;
-	private ServerTransport gameClientTransport;
+	private GameServerNetworkLifecycle networkLifecycle;
 
 	public static void activateServer(GameServer server) {
 		activeServer = server;
+	}
+
+	public void attachNetworkLifecycle(GameServerNetworkLifecycle networkLifecycle) {
+		this.networkLifecycle = networkLifecycle;
 	}
 
 	private static String configDir() {
@@ -1284,53 +1278,8 @@ public class GameServer {
 	 * Starts servers for connection with aion client and login\chat server.
 	 */
 	public void startServers() {
-		log.info("Network Config - Bind: {}, Port: {}, Threads: {}", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS);
-		
-		boolean nettyTransportEnabled = Boolean.getBoolean("aion.transport.netty");
-		if (nettyTransportEnabled) {
-			nioServer = null;
-			gameClientTransport = new com.aionemu.commons.network.NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
-		} else {
-			nioServer = new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
-			gameClientTransport = nioServer;
-		}
-		BannedMacManager.getInstance();
-
-		LoginServer ls = LoginServer.getInstance();
-		ChatServer cs = ChatServer.getInstance();
-
-		ls.setNioServer(nioServer);
-		cs.setNioServer(nioServer);
-
-		long transportStart = System.currentTimeMillis();
-		gameClientTransport.connect();
-		long transportTime = System.currentTimeMillis() - transportStart;
-		log.info("{} server transport started in {} ms", nettyTransportEnabled ? "Netty" : "NIO", transportTime);
-		
-		System.out.println("");
-		
-		long lsStart = System.currentTimeMillis();
-		if (AionRuntimeMode.isBootEmbedded()) {
-			ls.connectAsync();
-		} else {
-			ls.connect();
-		}
-		long lsTime = System.currentTimeMillis() - lsStart;
-		log.info("Login Server {} in {} ms", AionRuntimeMode.isBootEmbedded() ? "connection scheduled" : "connected", lsTime);
-
-		if (GSConfig.ENABLE_CHAT_SERVER) {
-			long csStart = System.currentTimeMillis();
-			if (AionRuntimeMode.isBootEmbedded()) {
-				cs.connectAsync();
-			} else {
-				cs.connect();
-			}
-			long csTime = System.currentTimeMillis() - csStart;
-			log.info("Chat Server {} in {} ms", AionRuntimeMode.isBootEmbedded() ? "connection scheduled" : "connected", csTime);
-		} else {
-			log.info("Chat Server is disabled by configuration");
-		}
-		
+		networkLifecycle = new GameServerNetworkLifecycle();
+		networkLifecycle.start(this);
 	}
 
 	public static boolean stop() {
@@ -1352,32 +1301,11 @@ public class GameServer {
 	}
 
 	private void stopServers() {
-		try {
-			LoginServer.getInstance().gameServerDisconnected();
-		} catch (Exception e) {
-			log.warn("Failed to disconnect from Login Server cleanly.", e);
+		GameServerNetworkLifecycle lifecycle = networkLifecycle;
+		if (lifecycle != null) {
+			lifecycle.stop();
+			networkLifecycle = null;
 		}
-		try {
-			ChatServer.getInstance().gameServerDisconnected();
-		} catch (Exception e) {
-			log.warn("Failed to disconnect from Chat Server cleanly.", e);
-		}
-		try {
-			if (gameClientTransport != null) {
-				gameClientTransport.shutdown();
-			}
-		} catch (Exception e) {
-			log.warn("Failed to stop game client transport cleanly.", e);
-		}
-		try {
-			if (nioServer != null && nioServer != gameClientTransport) {
-				nioServer.shutdown();
-			}
-		} catch (Exception e) {
-			log.warn("Failed to stop game connector dispatcher cleanly.", e);
-		}
-		gameClientTransport = null;
-		nioServer = null;
 	}
 
 	/**
