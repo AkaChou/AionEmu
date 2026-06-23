@@ -10,6 +10,6 @@ aion:
     login:
       enabled: true
     chat:
-      enabled: false
+      enabled: true
     transport:
       mode: netty
