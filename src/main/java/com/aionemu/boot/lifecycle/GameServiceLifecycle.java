@@ -30,6 +30,7 @@ import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
@@ -86,6 +87,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameUtilityServicesLifecycle utilityServicesLifecycle,
         GameAdminPanelLifecycle adminPanelLifecycle,
         GameSystemPropertiesLifecycle systemPropertiesLifecycle,
+        GameStartupLogLifecycle startupLogLifecycle,
         GameChatServerOverrideLifecycle chatServerOverrideLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
@@ -124,6 +126,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             utilityServicesLifecycle,
             adminPanelLifecycle,
             systemPropertiesLifecycle,
+            startupLogLifecycle,
             chatServerOverrideLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
@@ -162,6 +165,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 utilityServicesLifecycle,
                 adminPanelLifecycle,
                 systemPropertiesLifecycle,
+                startupLogLifecycle,
                 chatServerOverrideLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
@@ -203,6 +207,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameUtilityServicesLifecycle utilityServicesLifecycle,
         GameAdminPanelLifecycle adminPanelLifecycle,
         GameSystemPropertiesLifecycle systemPropertiesLifecycle,
+        GameStartupLogLifecycle startupLogLifecycle,
         GameChatServerOverrideLifecycle chatServerOverrideLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,

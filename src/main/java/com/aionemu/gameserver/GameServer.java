@@ -81,6 +81,7 @@ import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
@@ -1165,6 +1166,7 @@ public class GameServer {
 			new GameUtilityServicesLifecycle(),
 			new GameAdminPanelLifecycle(),
 			new GameSystemPropertiesLifecycle(),
+			new GameStartupLogLifecycle(),
 			new GameChatServerOverrideLifecycle()
 		);
 	}
@@ -1208,12 +1210,11 @@ public class GameServer {
 		GameUtilityServicesLifecycle utilityServicesLifecycle,
 		GameAdminPanelLifecycle adminPanelLifecycle,
 		GameSystemPropertiesLifecycle systemPropertiesLifecycle,
+		GameStartupLogLifecycle startupLogLifecycle,
 		GameChatServerOverrideLifecycle chatServerOverrideLifecycle
 	) {
 		systemPropertiesLifecycle.start();
-		
-		long start = System.currentTimeMillis();
-		log.info("GameServer starting...");
+		long start = startupLogLifecycle.start();
 
 		loggingLifecycle.start();
 		utilityServicesLifecycle.start(threadPoolLifecycle);

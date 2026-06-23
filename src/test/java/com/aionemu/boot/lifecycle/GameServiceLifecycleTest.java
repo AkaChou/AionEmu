@@ -32,6 +32,7 @@ import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
@@ -84,6 +85,7 @@ class GameServiceLifecycleTest {
         GameUtilityServicesLifecycle utilityServicesLifecycle = new RecordingGameUtilityServicesLifecycle(events);
         GameAdminPanelLifecycle adminPanelLifecycle = new RecordingGameAdminPanelLifecycle(events);
         GameSystemPropertiesLifecycle systemPropertiesLifecycle = new RecordingGameSystemPropertiesLifecycle(events);
+        GameStartupLogLifecycle startupLogLifecycle = new RecordingGameStartupLogLifecycle(events);
         GameChatServerOverrideLifecycle chatServerOverrideLifecycle = new RecordingGameChatServerOverrideLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         BiConsumer<String[], Boolean> startAction = (args, chatEnabled) -> events.add("start:" + chatEnabled);
@@ -123,6 +125,7 @@ class GameServiceLifecycleTest {
             utilityServicesLifecycle,
             adminPanelLifecycle,
             systemPropertiesLifecycle,
+            startupLogLifecycle,
             chatServerOverrideLifecycle,
             threadPoolLifecycle,
             startAction,
@@ -171,6 +174,7 @@ class GameServiceLifecycleTest {
         GameUtilityServicesLifecycle utilityServicesLifecycle = new RecordingGameUtilityServicesLifecycle(events);
         GameAdminPanelLifecycle adminPanelLifecycle = new RecordingGameAdminPanelLifecycle(events);
         GameSystemPropertiesLifecycle systemPropertiesLifecycle = new RecordingGameSystemPropertiesLifecycle(events);
+        GameStartupLogLifecycle startupLogLifecycle = new RecordingGameStartupLogLifecycle(events);
         GameChatServerOverrideLifecycle chatServerOverrideLifecycle = new RecordingGameChatServerOverrideLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
@@ -208,6 +212,7 @@ class GameServiceLifecycleTest {
             utilityServicesLifecycle,
             adminPanelLifecycle,
             systemPropertiesLifecycle,
+            startupLogLifecycle,
             chatServerOverrideLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> { },
@@ -681,6 +686,21 @@ class GameServiceLifecycleTest {
         @Override
         public synchronized void start() {
             events.add("systemProperties:start");
+        }
+    }
+
+    private static final class RecordingGameStartupLogLifecycle extends GameStartupLogLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameStartupLogLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public synchronized long start() {
+            events.add("startupLog:start");
+            return 1;
         }
     }
 
