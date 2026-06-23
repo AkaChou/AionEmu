@@ -2,6 +2,7 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.ShutdownHook;
+import com.aionemu.gameserver.utils.Util;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameNetworkStartupLifecycle {
 
+    private final Runnable sectionPrinter;
     private final BooleanSupplier bootEmbedded;
     private final Supplier<Thread> shutdownHookSupplier;
     private final Consumer<Thread> shutdownHookRegistrar;
@@ -19,6 +21,7 @@ public class GameNetworkStartupLifecycle {
 
     public GameNetworkStartupLifecycle() {
         this(
+            () -> Util.printSection(" *** Network *** "),
             AionRuntimeMode::isBootEmbedded,
             ShutdownHook::getInstance,
             Runtime.getRuntime()::addShutdownHook
@@ -26,10 +29,12 @@ public class GameNetworkStartupLifecycle {
     }
 
     GameNetworkStartupLifecycle(
+        Runnable sectionPrinter,
         BooleanSupplier bootEmbedded,
         Supplier<Thread> shutdownHookSupplier,
         Consumer<Thread> shutdownHookRegistrar
     ) {
+        this.sectionPrinter = sectionPrinter;
         this.bootEmbedded = bootEmbedded;
         this.shutdownHookSupplier = shutdownHookSupplier;
         this.shutdownHookRegistrar = shutdownHookRegistrar;
@@ -42,6 +47,7 @@ public class GameNetworkStartupLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             serverStarter.run();
             if (!bootEmbedded.getAsBoolean()) {
                 shutdownHookRegistrar.accept(shutdownHookSupplier.get());

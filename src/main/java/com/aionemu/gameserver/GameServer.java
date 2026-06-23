@@ -1288,8 +1288,6 @@ public class GameServer {
 	 * Starts servers for connection with aion client and login\chat server.
 	 */
 	private void startServers() {
-		Util.printSection(" *** Network *** ");
-		
 		log.info("Network Config - Bind: {}, Port: {}, Threads: {}", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS);
 		
 		boolean nettyTransportEnabled = Boolean.getBoolean("aion.transport.netty");

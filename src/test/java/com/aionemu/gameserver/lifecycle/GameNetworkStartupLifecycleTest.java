@@ -17,6 +17,7 @@ class GameNetworkStartupLifecycleTest {
         List<String> events = new ArrayList<>();
         Thread hook = new Thread();
         GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
+            () -> events.add("section"),
             () -> false,
             () -> hook,
             thread -> events.add(thread == hook ? "shutdownHook" : "wrongHook")
@@ -26,7 +27,7 @@ class GameNetworkStartupLifecycleTest {
         lifecycle.start(() -> events.add("startServersAgain"));
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("startServers", "shutdownHook"), events);
+        assertEquals(List.of("section", "startServers", "shutdownHook"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -35,6 +36,7 @@ class GameNetworkStartupLifecycleTest {
     void startSkipsShutdownHookInBootEmbeddedMode() {
         List<String> events = new ArrayList<>();
         GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
+            () -> events.add("section"),
             () -> true,
             () -> new Thread(),
             thread -> events.add("shutdownHook")
@@ -43,7 +45,7 @@ class GameNetworkStartupLifecycleTest {
         lifecycle.start(() -> events.add("startServers"));
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("startServers"), events);
+        assertEquals(List.of("section", "startServers"), events);
     }
 
     @Test
@@ -51,6 +53,7 @@ class GameNetworkStartupLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("network failed");
         GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
+            () -> events.add("section"),
             () -> true,
             () -> new Thread(),
             thread -> events.add("shutdownHook")
@@ -58,7 +61,7 @@ class GameNetworkStartupLifecycleTest {
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> lifecycle.start(() -> {
             events.add("startServers");
-            if (events.size() == 1) {
+            if (events.size() == 2) {
                 throw failure;
             }
         }));
@@ -70,7 +73,7 @@ class GameNetworkStartupLifecycleTest {
         lifecycle.start(() -> events.add("startServers"));
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("startServers", "startServers"), events);
+        assertEquals(List.of("section", "startServers", "section", "startServers"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 }
