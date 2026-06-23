@@ -1,15 +1,13 @@
 package com.aionemu.gameserver.lifecycle;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class GameNetworkStartupLifecycle {
-
-    private static final Logger log = LoggerFactory.getLogger(GameNetworkStartupLifecycle.class);
 
     private final GameNetworkStartupGateway networkStartupGateway;
     private boolean loaded;
