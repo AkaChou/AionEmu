@@ -2,42 +2,9 @@ package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
-import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
-import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
-import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
-import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
-import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
-import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
-import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
-import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
-import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
-import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
-import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
-import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
-import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
-import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
-import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
-import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
-import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
-import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
-import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
-import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
-import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
-import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
-import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
-import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
-import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
-import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
-import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
-import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
-import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
-import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
-import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
-import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
-import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
-import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
@@ -48,126 +15,21 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     private final AionServicesProperties services;
     private final LegacyConfigOverrides legacyConfigOverrides;
     private final GameThreadPoolLifecycle threadPoolLifecycle;
-    private final BiConsumer<String[], Boolean> startAction;
+    private final Consumer<Boolean> startAction;
     private final Runnable stopAction;
 
     @Autowired
     public GameServiceLifecycle(
         AionServicesProperties services,
         LegacyConfigOverrides legacyConfigOverrides,
-        GameLoggingLifecycle loggingLifecycle,
-        GameStaticDataLifecycle staticDataLifecycle,
-        GameWorldBootstrapLifecycle worldBootstrapLifecycle,
-        GameEventBootstrapLifecycle eventBootstrapLifecycle,
-        GameGeoNavLifecycle geoNavLifecycle,
-        GameWorldActivationLifecycle worldActivationLifecycle,
-        GameEnginesLifecycle enginesLifecycle,
-        GameLocationBootstrapLifecycle locationBootstrapLifecycle,
-        GameSpawnLifecycle spawnLifecycle,
-        GameEventRuntimeLifecycle eventRuntimeLifecycle,
-        GameCleaningLifecycle cleaningLifecycle,
-        GameScheduledServicesLifecycle scheduledServicesLifecycle,
-        GameCustomEventsLifecycle customEventsLifecycle,
-        GameSiegeScheduleLifecycle siegeScheduleLifecycle,
-        GameDredgionLifecycle dredgionLifecycle,
-        GameBattlefieldLifecycle battlefieldLifecycle,
-        GameProtectorConquerorLifecycle protectorConquerorLifecycle,
-        GameDisputeLandLifecycle disputeLandLifecycle,
-        GameHtmlLifecycle htmlLifecycle,
-        GameRewardServicesLifecycle rewardServicesLifecycle,
-        GameRuntimeServicesLifecycle runtimeServicesLifecycle,
-        GameOptionalServicesLifecycle optionalServicesLifecycle,
-        GameSeasonRankingLifecycle seasonRankingLifecycle,
-        GameHousingLifecycle housingLifecycle,
-        GameSystemLifecycle systemLifecycle,
-        GameNetworkStartupLifecycle networkStartupLifecycle,
-        GameRatioLimitLifecycle ratioLimitLifecycle,
-        GameStartupHooksLifecycle startupHooksLifecycle,
-        GameStartupCompletionLifecycle startupCompletionLifecycle,
-        GameUtilityServicesLifecycle utilityServicesLifecycle,
-        GameAdminPanelLifecycle adminPanelLifecycle,
-        GameSystemPropertiesLifecycle systemPropertiesLifecycle,
-        GameStartupLogLifecycle startupLogLifecycle,
-        GameChatServerOverrideLifecycle chatServerOverrideLifecycle,
+        GameStartupSequenceLifecycle startupSequenceLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
             services,
             legacyConfigOverrides,
-            loggingLifecycle,
-            staticDataLifecycle,
-            worldBootstrapLifecycle,
-            eventBootstrapLifecycle,
-            geoNavLifecycle,
-            worldActivationLifecycle,
-            enginesLifecycle,
-            locationBootstrapLifecycle,
-            spawnLifecycle,
-            eventRuntimeLifecycle,
-            cleaningLifecycle,
-            scheduledServicesLifecycle,
-            customEventsLifecycle,
-            siegeScheduleLifecycle,
-            dredgionLifecycle,
-            battlefieldLifecycle,
-            protectorConquerorLifecycle,
-            disputeLandLifecycle,
-            htmlLifecycle,
-            rewardServicesLifecycle,
-            runtimeServicesLifecycle,
-            optionalServicesLifecycle,
-            seasonRankingLifecycle,
-            housingLifecycle,
-            systemLifecycle,
-            networkStartupLifecycle,
-            ratioLimitLifecycle,
-            startupHooksLifecycle,
-            startupCompletionLifecycle,
-            utilityServicesLifecycle,
-            adminPanelLifecycle,
-            systemPropertiesLifecycle,
-            startupLogLifecycle,
-            chatServerOverrideLifecycle,
             threadPoolLifecycle,
-            (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
-                args,
-                chatEnabled,
-                threadPoolLifecycle,
-                staticDataLifecycle,
-                worldBootstrapLifecycle,
-                eventBootstrapLifecycle,
-                geoNavLifecycle,
-                worldActivationLifecycle,
-                enginesLifecycle,
-                locationBootstrapLifecycle,
-                spawnLifecycle,
-                eventRuntimeLifecycle,
-                cleaningLifecycle,
-                scheduledServicesLifecycle,
-                customEventsLifecycle,
-                siegeScheduleLifecycle,
-                dredgionLifecycle,
-                battlefieldLifecycle,
-                protectorConquerorLifecycle,
-                disputeLandLifecycle,
-                htmlLifecycle,
-                rewardServicesLifecycle,
-                runtimeServicesLifecycle,
-                optionalServicesLifecycle,
-                seasonRankingLifecycle,
-                housingLifecycle,
-                systemLifecycle,
-                networkStartupLifecycle,
-                ratioLimitLifecycle,
-                startupHooksLifecycle,
-                startupCompletionLifecycle,
-                loggingLifecycle,
-                utilityServicesLifecycle,
-                adminPanelLifecycle,
-                systemPropertiesLifecycle,
-                startupLogLifecycle,
-                chatServerOverrideLifecycle
-            ),
+            startupSequenceLifecycle::start,
             com.aionemu.gameserver.GameServer::stop
         );
     }
@@ -175,42 +37,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     GameServiceLifecycle(
         AionServicesProperties services,
         LegacyConfigOverrides legacyConfigOverrides,
-        GameLoggingLifecycle loggingLifecycle,
-        GameStaticDataLifecycle staticDataLifecycle,
-        GameWorldBootstrapLifecycle worldBootstrapLifecycle,
-        GameEventBootstrapLifecycle eventBootstrapLifecycle,
-        GameGeoNavLifecycle geoNavLifecycle,
-        GameWorldActivationLifecycle worldActivationLifecycle,
-        GameEnginesLifecycle enginesLifecycle,
-        GameLocationBootstrapLifecycle locationBootstrapLifecycle,
-        GameSpawnLifecycle spawnLifecycle,
-        GameEventRuntimeLifecycle eventRuntimeLifecycle,
-        GameCleaningLifecycle cleaningLifecycle,
-        GameScheduledServicesLifecycle scheduledServicesLifecycle,
-        GameCustomEventsLifecycle customEventsLifecycle,
-        GameSiegeScheduleLifecycle siegeScheduleLifecycle,
-        GameDredgionLifecycle dredgionLifecycle,
-        GameBattlefieldLifecycle battlefieldLifecycle,
-        GameProtectorConquerorLifecycle protectorConquerorLifecycle,
-        GameDisputeLandLifecycle disputeLandLifecycle,
-        GameHtmlLifecycle htmlLifecycle,
-        GameRewardServicesLifecycle rewardServicesLifecycle,
-        GameRuntimeServicesLifecycle runtimeServicesLifecycle,
-        GameOptionalServicesLifecycle optionalServicesLifecycle,
-        GameSeasonRankingLifecycle seasonRankingLifecycle,
-        GameHousingLifecycle housingLifecycle,
-        GameSystemLifecycle systemLifecycle,
-        GameNetworkStartupLifecycle networkStartupLifecycle,
-        GameRatioLimitLifecycle ratioLimitLifecycle,
-        GameStartupHooksLifecycle startupHooksLifecycle,
-        GameStartupCompletionLifecycle startupCompletionLifecycle,
-        GameUtilityServicesLifecycle utilityServicesLifecycle,
-        GameAdminPanelLifecycle adminPanelLifecycle,
-        GameSystemPropertiesLifecycle systemPropertiesLifecycle,
-        GameStartupLogLifecycle startupLogLifecycle,
-        GameChatServerOverrideLifecycle chatServerOverrideLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
-        BiConsumer<String[], Boolean> startAction,
+        Consumer<Boolean> startAction,
         Runnable stopAction
     ) {
         this.services = services;
@@ -239,7 +67,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     public void start(ApplicationArguments args) {
         AionServicePaths.configureGame();
         legacyConfigOverrides.applyToGameConfig();
-        startAction.accept(args.getSourceArgs(), services.getChat().isEnabled());
+        startAction.accept(services.getChat().isEnabled());
     }
 
     @Override

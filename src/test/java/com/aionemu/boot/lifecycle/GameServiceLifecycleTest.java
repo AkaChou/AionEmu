@@ -42,7 +42,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.core.env.StandardEnvironment;
@@ -54,80 +54,12 @@ class GameServiceLifecycleTest {
         AionServicesProperties services = new AionServicesProperties();
         List<String> events = new ArrayList<>();
         LegacyConfigOverrides overrides = new RecordingLegacyConfigOverrides(events);
-        GameLoggingLifecycle loggingLifecycle = new RecordingGameLoggingLifecycle(events);
-        GameStaticDataLifecycle staticDataLifecycle = new RecordingGameStaticDataLifecycle(events);
-        GameWorldBootstrapLifecycle worldBootstrapLifecycle = new RecordingGameWorldBootstrapLifecycle(events);
-        GameEventBootstrapLifecycle eventBootstrapLifecycle = new RecordingGameEventBootstrapLifecycle(events);
-        GameGeoNavLifecycle geoNavLifecycle = new RecordingGameGeoNavLifecycle(events);
-        GameWorldActivationLifecycle worldActivationLifecycle = new RecordingGameWorldActivationLifecycle(events);
-        GameEnginesLifecycle enginesLifecycle = new RecordingGameEnginesLifecycle(events);
-        GameLocationBootstrapLifecycle locationBootstrapLifecycle = new RecordingGameLocationBootstrapLifecycle(events);
-        GameSpawnLifecycle spawnLifecycle = new RecordingGameSpawnLifecycle(events);
-        GameEventRuntimeLifecycle eventRuntimeLifecycle = new RecordingGameEventRuntimeLifecycle(events);
-        GameCleaningLifecycle cleaningLifecycle = new RecordingGameCleaningLifecycle(events);
-        GameScheduledServicesLifecycle scheduledServicesLifecycle = new RecordingGameScheduledServicesLifecycle(events);
-        GameCustomEventsLifecycle customEventsLifecycle = new RecordingGameCustomEventsLifecycle(events);
-        GameSiegeScheduleLifecycle siegeScheduleLifecycle = new RecordingGameSiegeScheduleLifecycle(events);
-        GameDredgionLifecycle dredgionLifecycle = new RecordingGameDredgionLifecycle(events);
-        GameBattlefieldLifecycle battlefieldLifecycle = new RecordingGameBattlefieldLifecycle(events);
-        GameProtectorConquerorLifecycle protectorConquerorLifecycle = new RecordingGameProtectorConquerorLifecycle(events);
-        GameDisputeLandLifecycle disputeLandLifecycle = new RecordingGameDisputeLandLifecycle(events);
-        GameHtmlLifecycle htmlLifecycle = new RecordingGameHtmlLifecycle(events);
-        GameRewardServicesLifecycle rewardServicesLifecycle = new RecordingGameRewardServicesLifecycle(events);
-        GameRuntimeServicesLifecycle runtimeServicesLifecycle = new RecordingGameRuntimeServicesLifecycle(events);
-        GameOptionalServicesLifecycle optionalServicesLifecycle = new RecordingGameOptionalServicesLifecycle(events);
-        GameSeasonRankingLifecycle seasonRankingLifecycle = new RecordingGameSeasonRankingLifecycle(events);
-        GameHousingLifecycle housingLifecycle = new RecordingGameHousingLifecycle(events);
-        GameSystemLifecycle systemLifecycle = new RecordingGameSystemLifecycle(events);
-        GameNetworkStartupLifecycle networkStartupLifecycle = new RecordingGameNetworkStartupLifecycle(events);
-        GameRatioLimitLifecycle ratioLimitLifecycle = new RecordingGameRatioLimitLifecycle(events);
-        GameStartupHooksLifecycle startupHooksLifecycle = new RecordingGameStartupHooksLifecycle(events);
-        GameStartupCompletionLifecycle startupCompletionLifecycle = new RecordingGameStartupCompletionLifecycle(events);
-        GameUtilityServicesLifecycle utilityServicesLifecycle = new RecordingGameUtilityServicesLifecycle(events);
-        GameAdminPanelLifecycle adminPanelLifecycle = new RecordingGameAdminPanelLifecycle(events);
-        GameSystemPropertiesLifecycle systemPropertiesLifecycle = new RecordingGameSystemPropertiesLifecycle(events);
-        GameStartupLogLifecycle startupLogLifecycle = new RecordingGameStartupLogLifecycle(events);
-        GameChatServerOverrideLifecycle chatServerOverrideLifecycle = new RecordingGameChatServerOverrideLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
-        BiConsumer<String[], Boolean> startAction = (args, chatEnabled) -> events.add("start:" + chatEnabled);
+        Consumer<Boolean> startAction = chatEnabled -> events.add("start:" + chatEnabled);
         Runnable stopAction = () -> events.add("stop");
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
             overrides,
-            loggingLifecycle,
-            staticDataLifecycle,
-            worldBootstrapLifecycle,
-            eventBootstrapLifecycle,
-            geoNavLifecycle,
-            worldActivationLifecycle,
-            enginesLifecycle,
-            locationBootstrapLifecycle,
-            spawnLifecycle,
-            eventRuntimeLifecycle,
-            cleaningLifecycle,
-            scheduledServicesLifecycle,
-            customEventsLifecycle,
-            siegeScheduleLifecycle,
-            dredgionLifecycle,
-            battlefieldLifecycle,
-            protectorConquerorLifecycle,
-            disputeLandLifecycle,
-            htmlLifecycle,
-            rewardServicesLifecycle,
-            runtimeServicesLifecycle,
-            optionalServicesLifecycle,
-            seasonRankingLifecycle,
-            housingLifecycle,
-            systemLifecycle,
-            networkStartupLifecycle,
-            ratioLimitLifecycle,
-            startupHooksLifecycle,
-            startupCompletionLifecycle,
-            utilityServicesLifecycle,
-            adminPanelLifecycle,
-            systemPropertiesLifecycle,
-            startupLogLifecycle,
-            chatServerOverrideLifecycle,
             threadPoolLifecycle,
             startAction,
             stopAction
@@ -143,80 +75,12 @@ class GameServiceLifecycleTest {
         AionServicesProperties services = new AionServicesProperties();
         List<String> events = new ArrayList<>();
         LegacyConfigOverrides overrides = new RecordingLegacyConfigOverrides(events);
-        GameLoggingLifecycle loggingLifecycle = new RecordingGameLoggingLifecycle(events);
-        GameStaticDataLifecycle staticDataLifecycle = new RecordingGameStaticDataLifecycle(events);
-        GameWorldBootstrapLifecycle worldBootstrapLifecycle = new RecordingGameWorldBootstrapLifecycle(events);
-        GameEventBootstrapLifecycle eventBootstrapLifecycle = new RecordingGameEventBootstrapLifecycle(events);
-        GameGeoNavLifecycle geoNavLifecycle = new RecordingGameGeoNavLifecycle(events);
-        GameWorldActivationLifecycle worldActivationLifecycle = new RecordingGameWorldActivationLifecycle(events);
-        GameEnginesLifecycle enginesLifecycle = new RecordingGameEnginesLifecycle(events);
-        GameLocationBootstrapLifecycle locationBootstrapLifecycle = new RecordingGameLocationBootstrapLifecycle(events);
-        GameSpawnLifecycle spawnLifecycle = new RecordingGameSpawnLifecycle(events);
-        GameEventRuntimeLifecycle eventRuntimeLifecycle = new RecordingGameEventRuntimeLifecycle(events);
-        GameCleaningLifecycle cleaningLifecycle = new RecordingGameCleaningLifecycle(events);
-        GameScheduledServicesLifecycle scheduledServicesLifecycle = new RecordingGameScheduledServicesLifecycle(events);
-        GameCustomEventsLifecycle customEventsLifecycle = new RecordingGameCustomEventsLifecycle(events);
-        GameSiegeScheduleLifecycle siegeScheduleLifecycle = new RecordingGameSiegeScheduleLifecycle(events);
-        GameDredgionLifecycle dredgionLifecycle = new RecordingGameDredgionLifecycle(events);
-        GameBattlefieldLifecycle battlefieldLifecycle = new RecordingGameBattlefieldLifecycle(events);
-        GameProtectorConquerorLifecycle protectorConquerorLifecycle = new RecordingGameProtectorConquerorLifecycle(events);
-        GameDisputeLandLifecycle disputeLandLifecycle = new RecordingGameDisputeLandLifecycle(events);
-        GameHtmlLifecycle htmlLifecycle = new RecordingGameHtmlLifecycle(events);
-        GameRewardServicesLifecycle rewardServicesLifecycle = new RecordingGameRewardServicesLifecycle(events);
-        GameRuntimeServicesLifecycle runtimeServicesLifecycle = new RecordingGameRuntimeServicesLifecycle(events);
-        GameOptionalServicesLifecycle optionalServicesLifecycle = new RecordingGameOptionalServicesLifecycle(events);
-        GameSeasonRankingLifecycle seasonRankingLifecycle = new RecordingGameSeasonRankingLifecycle(events);
-        GameHousingLifecycle housingLifecycle = new RecordingGameHousingLifecycle(events);
-        GameSystemLifecycle systemLifecycle = new RecordingGameSystemLifecycle(events);
-        GameNetworkStartupLifecycle networkStartupLifecycle = new RecordingGameNetworkStartupLifecycle(events);
-        GameRatioLimitLifecycle ratioLimitLifecycle = new RecordingGameRatioLimitLifecycle(events);
-        GameStartupHooksLifecycle startupHooksLifecycle = new RecordingGameStartupHooksLifecycle(events);
-        GameStartupCompletionLifecycle startupCompletionLifecycle = new RecordingGameStartupCompletionLifecycle(events);
-        GameUtilityServicesLifecycle utilityServicesLifecycle = new RecordingGameUtilityServicesLifecycle(events);
-        GameAdminPanelLifecycle adminPanelLifecycle = new RecordingGameAdminPanelLifecycle(events);
-        GameSystemPropertiesLifecycle systemPropertiesLifecycle = new RecordingGameSystemPropertiesLifecycle(events);
-        GameStartupLogLifecycle startupLogLifecycle = new RecordingGameStartupLogLifecycle(events);
-        GameChatServerOverrideLifecycle chatServerOverrideLifecycle = new RecordingGameChatServerOverrideLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
             overrides,
-            loggingLifecycle,
-            staticDataLifecycle,
-            worldBootstrapLifecycle,
-            eventBootstrapLifecycle,
-            geoNavLifecycle,
-            worldActivationLifecycle,
-            enginesLifecycle,
-            locationBootstrapLifecycle,
-            spawnLifecycle,
-            eventRuntimeLifecycle,
-            cleaningLifecycle,
-            scheduledServicesLifecycle,
-            customEventsLifecycle,
-            siegeScheduleLifecycle,
-            dredgionLifecycle,
-            battlefieldLifecycle,
-            protectorConquerorLifecycle,
-            disputeLandLifecycle,
-            htmlLifecycle,
-            rewardServicesLifecycle,
-            runtimeServicesLifecycle,
-            optionalServicesLifecycle,
-            seasonRankingLifecycle,
-            housingLifecycle,
-            systemLifecycle,
-            networkStartupLifecycle,
-            ratioLimitLifecycle,
-            startupHooksLifecycle,
-            startupCompletionLifecycle,
-            utilityServicesLifecycle,
-            adminPanelLifecycle,
-            systemPropertiesLifecycle,
-            startupLogLifecycle,
-            chatServerOverrideLifecycle,
             threadPoolLifecycle,
-            (args, chatEnabled) -> { },
+            chatEnabled -> { },
             () -> events.add("stop")
         );
 
