@@ -17,6 +17,7 @@ import com.aionemu.chatserver.ChatServer;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
+import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
@@ -87,6 +88,7 @@ class AionBootApplicationTest {
             context.registerBean(GameScheduledServicesLifecycle.class);
             context.registerBean(GameCustomEventsLifecycle.class);
             context.registerBean(GameSiegeScheduleLifecycle.class);
+            context.registerBean(GameDredgionLifecycle.class);
             context.registerBean(GameThreadPoolLifecycle.class);
             context.registerBean(LoginServiceLifecycle.class);
             context.registerBean(ChatServiceLifecycle.class);

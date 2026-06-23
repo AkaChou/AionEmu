@@ -6,6 +6,7 @@ import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
+import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
@@ -45,6 +46,7 @@ class GameServiceLifecycleTest {
         GameScheduledServicesLifecycle scheduledServicesLifecycle = new RecordingGameScheduledServicesLifecycle(events);
         GameCustomEventsLifecycle customEventsLifecycle = new RecordingGameCustomEventsLifecycle(events);
         GameSiegeScheduleLifecycle siegeScheduleLifecycle = new RecordingGameSiegeScheduleLifecycle(events);
+        GameDredgionLifecycle dredgionLifecycle = new RecordingGameDredgionLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         BiConsumer<String[], Boolean> startAction = (args, chatEnabled) -> events.add("start:" + chatEnabled);
         Runnable stopAction = () -> events.add("stop");
@@ -64,6 +66,7 @@ class GameServiceLifecycleTest {
             scheduledServicesLifecycle,
             customEventsLifecycle,
             siegeScheduleLifecycle,
+            dredgionLifecycle,
             threadPoolLifecycle,
             startAction,
             stopAction
@@ -92,6 +95,7 @@ class GameServiceLifecycleTest {
         GameScheduledServicesLifecycle scheduledServicesLifecycle = new RecordingGameScheduledServicesLifecycle(events);
         GameCustomEventsLifecycle customEventsLifecycle = new RecordingGameCustomEventsLifecycle(events);
         GameSiegeScheduleLifecycle siegeScheduleLifecycle = new RecordingGameSiegeScheduleLifecycle(events);
+        GameDredgionLifecycle dredgionLifecycle = new RecordingGameDredgionLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
@@ -109,6 +113,7 @@ class GameServiceLifecycleTest {
             scheduledServicesLifecycle,
             customEventsLifecycle,
             siegeScheduleLifecycle,
+            dredgionLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> { },
             () -> events.add("stop")
@@ -314,6 +319,20 @@ class GameServiceLifecycleTest {
         @Override
         public synchronized void start() {
             events.add("siegeSchedule:start");
+        }
+    }
+
+    private static final class RecordingGameDredgionLifecycle extends GameDredgionLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameDredgionLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public synchronized void start() {
+            events.add("dredgion:start");
         }
     }
 

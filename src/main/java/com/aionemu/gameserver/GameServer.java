@@ -63,6 +63,7 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
+import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
@@ -105,8 +106,6 @@ import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
 import com.aionemu.gameserver.services.instance.HallOfTenacityService;
@@ -572,6 +571,49 @@ public class GameServer {
 		GameCustomEventsLifecycle customEventsLifecycle,
 		GameSiegeScheduleLifecycle siegeScheduleLifecycle
 	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			new GameDredgionLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle
+	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -649,12 +691,7 @@ public class GameServer {
 		 * Dredgion
 		 */
 		Util.printSection(" *** Dredgion *** ");
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			DredgionService2.getInstance().initDredgion();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			AsyunatarService.getInstance().initAsyunatar();
-		}
+		dredgionLifecycle.start();
 
 		/**
 		 * Battlefield
