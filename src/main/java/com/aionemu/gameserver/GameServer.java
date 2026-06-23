@@ -52,6 +52,7 @@ import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsGateway;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
+import com.aionemu.gameserver.lifecycle.GameDisputeLandGateway;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionGateway;
 import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
@@ -729,7 +730,7 @@ public class GameServer {
 			dredgionLifecycle,
 			battlefieldLifecycle,
 			protectorConquerorLifecycle,
-			new GameDisputeLandLifecycle()
+			new GameDisputeLandLifecycle(new GameDisputeLandGateway())
 		);
 	}
 

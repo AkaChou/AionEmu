@@ -1,34 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.services.DisputeLandService;
-import com.aionemu.gameserver.services.OutpostService;
-import com.aionemu.gameserver.utils.Util;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameDisputeLandLifecycle {
 
-    private final Runnable sectionPrinter;
-    private final List<Runnable> initializers;
+    private final GameDisputeLandGateway disputeLandGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameDisputeLandLifecycle() {
-        this(
-            () -> Util.printSection(" *** Dispute Land initialization *** "),
-            List.of(
-                () -> DisputeLandService.getInstance().initDisputeLand(),
-                () -> OutpostService.getInstance().initOutposts()
-            )
-        );
-    }
-
-    GameDisputeLandLifecycle(Runnable sectionPrinter, List<Runnable> initializers) {
-        this.sectionPrinter = sectionPrinter;
-        this.initializers = List.copyOf(initializers);
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -37,8 +19,7 @@ public class GameDisputeLandLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            sectionPrinter.run();
-            initializers.forEach(Runnable::run);
+            disputeLandGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {

@@ -13,6 +13,7 @@ import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsGateway;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
+import com.aionemu.gameserver.lifecycle.GameDisputeLandGateway;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionGateway;
 import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
@@ -472,6 +473,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameDisputeLandLifecycle(List<String> events) {
+            super(new GameDisputeLandGateway());
             this.events = events;
         }
 

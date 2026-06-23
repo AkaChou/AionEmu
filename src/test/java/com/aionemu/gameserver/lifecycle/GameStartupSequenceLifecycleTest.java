@@ -341,6 +341,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameDisputeLandLifecycle(List<String> events) {
+            super(new GameDisputeLandGateway());
             this.events = events;
         }
 
