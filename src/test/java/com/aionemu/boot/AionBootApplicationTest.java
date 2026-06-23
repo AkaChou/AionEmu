@@ -49,6 +49,7 @@ import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSiegeScheduleGateway;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnGateway;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
@@ -149,6 +150,7 @@ class AionBootApplicationTest {
             context.registerBean(GameScheduledServicesLifecycle.class);
             context.registerBean(GameCustomEventsGateway.class);
             context.registerBean(GameCustomEventsLifecycle.class);
+            context.registerBean(GameSiegeScheduleGateway.class);
             context.registerBean(GameSiegeScheduleLifecycle.class);
             context.registerBean(GameDredgionLifecycle.class);
             context.registerBean(GameBattlefieldLifecycle.class);

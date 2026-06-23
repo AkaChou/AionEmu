@@ -1,34 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.services.BaseService;
-import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.utils.Util;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameSiegeScheduleLifecycle {
 
-    private final Runnable sectionPrinter;
-    private final List<Runnable> initializers;
+    private final GameSiegeScheduleGateway siegeScheduleGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameSiegeScheduleLifecycle() {
-        this(
-            () -> Util.printSection(" *** Sieges *** "),
-            List.of(
-                () -> SiegeService.getInstance().initSieges(),
-                () -> BaseService.getInstance().initBases()
-            )
-        );
-    }
-
-    GameSiegeScheduleLifecycle(Runnable sectionPrinter, List<Runnable> initializers) {
-        this.sectionPrinter = sectionPrinter;
-        this.initializers = List.copyOf(initializers);
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -37,8 +19,7 @@ public class GameSiegeScheduleLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            sectionPrinter.run();
-            initializers.forEach(Runnable::run);
+            siegeScheduleGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {

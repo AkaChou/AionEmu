@@ -281,6 +281,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSiegeScheduleLifecycle(List<String> events) {
+            super(new GameSiegeScheduleGateway());
             this.events = events;
         }
 
