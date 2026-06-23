@@ -1,56 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.configs.main.EventsConfig;
-import com.aionemu.gameserver.services.events.PigPoppyEventService;
-import com.aionemu.gameserver.services.events.TreasureAbyssService;
-import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
-import com.aionemu.gameserver.utils.Util;
-import java.util.function.BooleanSupplier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameScheduledServicesLifecycle {
 
-    private final Runnable sectionPrinter;
-    private final BooleanSupplier pigPoppyEventEnabled;
-    private final Runnable pigPoppyScheduler;
-    private final BooleanSupplier abyssEventEnabled;
-    private final Runnable abyssEventScheduler;
-    private final BooleanSupplier imperialTombEnabled;
-    private final Runnable imperialTombStarter;
+    private final GameScheduledServicesGateway scheduledServicesGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameScheduledServicesLifecycle() {
-        this(
-            () -> Util.printSection(" *** Scheduled Services *** "),
-            () -> EventsConfig.ENABLE_PIG_POPPY_EVENT,
-            PigPoppyEventService::ScheduleCron,
-            () -> EventsConfig.ENABLE_ABYSS_EVENT,
-            TreasureAbyssService::ScheduleCron,
-            () -> EventsConfig.IMPERIAL_TOMB_ENABLE,
-            () -> ShugoImperialTombSpawnManager.getInstance().start()
-        );
-    }
-
-    GameScheduledServicesLifecycle(
-        Runnable sectionPrinter,
-        BooleanSupplier pigPoppyEventEnabled,
-        Runnable pigPoppyScheduler,
-        BooleanSupplier abyssEventEnabled,
-        Runnable abyssEventScheduler,
-        BooleanSupplier imperialTombEnabled,
-        Runnable imperialTombStarter
-    ) {
-        this.sectionPrinter = sectionPrinter;
-        this.pigPoppyEventEnabled = pigPoppyEventEnabled;
-        this.pigPoppyScheduler = pigPoppyScheduler;
-        this.abyssEventEnabled = abyssEventEnabled;
-        this.abyssEventScheduler = abyssEventScheduler;
-        this.imperialTombEnabled = imperialTombEnabled;
-        this.imperialTombStarter = imperialTombStarter;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -59,16 +19,7 @@ public class GameScheduledServicesLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            sectionPrinter.run();
-            if (pigPoppyEventEnabled.getAsBoolean()) {
-                pigPoppyScheduler.run();
-            }
-            if (abyssEventEnabled.getAsBoolean()) {
-                abyssEventScheduler.run();
-            }
-            if (imperialTombEnabled.getAsBoolean()) {
-                imperialTombStarter.run();
-            }
+            scheduledServicesGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {

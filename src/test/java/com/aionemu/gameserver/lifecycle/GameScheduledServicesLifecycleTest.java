@@ -6,11 +6,17 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class GameScheduledServicesLifecycleTest {
+
+    @Test
+    void usesScheduledServicesGatewayCollaborator() {
+        assertEquals(GameScheduledServicesGateway.class, fieldType("scheduledServicesGateway"));
+    }
 
     @Test
     void startRunsEnabledSchedulersOnceAndRecordsLoadTime() {
@@ -42,19 +48,7 @@ class GameScheduledServicesLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("scheduled service failed");
         GameScheduledServicesLifecycle lifecycle = new GameScheduledServicesLifecycle(
-            () -> events.add("section"),
-            () -> true,
-            () -> events.add("pigPoppy"),
-            () -> true,
-            () -> {
-                events.add("abyss");
-                if (events.size() == 3) {
-                    throw failure;
-                }
-            },
-            () -> true,
-            () -> events.add("imperialTomb")
-        );
+            new RecordingGameScheduledServicesGateway(events, true, true, true, failure));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -83,14 +77,61 @@ class GameScheduledServicesLifecycleTest {
         boolean abyssEventEnabled,
         boolean imperialTombEnabled
     ) {
-        return new GameScheduledServicesLifecycle(
-            () -> events.add("section"),
-            () -> pigPoppyEventEnabled,
-            () -> events.add("pigPoppy"),
-            () -> abyssEventEnabled,
-            () -> events.add("abyss"),
-            () -> imperialTombEnabled,
-            () -> events.add("imperialTomb")
-        );
+        return new GameScheduledServicesLifecycle(new RecordingGameScheduledServicesGateway(
+            events,
+            pigPoppyEventEnabled,
+            abyssEventEnabled,
+            imperialTombEnabled,
+            null
+        ));
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            Field field = GameScheduledServicesLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameScheduledServicesGateway extends GameScheduledServicesGateway {
+
+        private final List<String> events;
+        private final boolean pigPoppyEventEnabled;
+        private final boolean abyssEventEnabled;
+        private final boolean imperialTombEnabled;
+        private final RuntimeException firstFailure;
+
+        private RecordingGameScheduledServicesGateway(
+            List<String> events,
+            boolean pigPoppyEventEnabled,
+            boolean abyssEventEnabled,
+            boolean imperialTombEnabled,
+            RuntimeException firstFailure
+        ) {
+            this.events = events;
+            this.pigPoppyEventEnabled = pigPoppyEventEnabled;
+            this.abyssEventEnabled = abyssEventEnabled;
+            this.imperialTombEnabled = imperialTombEnabled;
+            this.firstFailure = firstFailure;
+        }
+
+        @Override
+        public void start() {
+            events.add("section");
+            if (pigPoppyEventEnabled) {
+                events.add("pigPoppy");
+            }
+            if (abyssEventEnabled) {
+                events.add("abyss");
+                if (events.size() == 3 && firstFailure != null) {
+                    throw firstFailure;
+                }
+            }
+            if (imperialTombEnabled) {
+                events.add("imperialTomb");
+            }
+        }
     }
 }
