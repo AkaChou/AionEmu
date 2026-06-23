@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
@@ -319,8 +320,9 @@ class GameServiceLifecycleTest {
         }
 
         @Override
-        public synchronized void start(Runnable activeServerSetter) {
+        public synchronized GameServer start() {
             events.add("worldActivation:start");
+            return new GameServer();
         }
     }
 

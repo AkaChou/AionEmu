@@ -118,6 +118,10 @@ public class GameServer {
 	private NioServer nioServer;
 	private ServerTransport gameClientTransport;
 
+	public static void activateServer(GameServer server) {
+		activeServer = server;
+	}
+
 	private static String configDir() {
 		return System.getProperty("aion.game.config.dir", "./config");
 	}
@@ -1218,8 +1222,7 @@ public class GameServer {
 		eventBootstrapLifecycle.start();
 
 		geoNavLifecycle.start();
-		worldActivationLifecycle.start(() -> activeServer = new GameServer());
-		GameServer gs = activeServer;
+		GameServer gs = worldActivationLifecycle.start();
 
 		/**
 		 * Engines
