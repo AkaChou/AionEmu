@@ -6,12 +6,17 @@ import com.aionemu.gameserver.utils.Util;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameNetworkStartupLifecycle {
 
+    private static final Logger log = LoggerFactory.getLogger(GameNetworkStartupLifecycle.class);
+
     private final Runnable sectionPrinter;
+    private final Runnable miscSectionPrinter;
     private final BooleanSupplier bootEmbedded;
     private final Supplier<Thread> shutdownHookSupplier;
     private final Consumer<Thread> shutdownHookRegistrar;
@@ -22,6 +27,7 @@ public class GameNetworkStartupLifecycle {
     public GameNetworkStartupLifecycle() {
         this(
             () -> Util.printSection(" *** Network *** "),
+            () -> Util.printSection(" *** Misc *** "),
             AionRuntimeMode::isBootEmbedded,
             ShutdownHook::getInstance,
             Runtime.getRuntime()::addShutdownHook
@@ -30,11 +36,13 @@ public class GameNetworkStartupLifecycle {
 
     GameNetworkStartupLifecycle(
         Runnable sectionPrinter,
+        Runnable miscSectionPrinter,
         BooleanSupplier bootEmbedded,
         Supplier<Thread> shutdownHookSupplier,
         Consumer<Thread> shutdownHookRegistrar
     ) {
         this.sectionPrinter = sectionPrinter;
+        this.miscSectionPrinter = miscSectionPrinter;
         this.bootEmbedded = bootEmbedded;
         this.shutdownHookSupplier = shutdownHookSupplier;
         this.shutdownHookRegistrar = shutdownHookRegistrar;
@@ -49,7 +57,10 @@ public class GameNetworkStartupLifecycle {
         try {
             sectionPrinter.run();
             serverStarter.run();
-            if (!bootEmbedded.getAsBoolean()) {
+            miscSectionPrinter.run();
+            boolean bootEmbeddedMode = bootEmbedded.getAsBoolean();
+            log.info(bootEmbeddedMode ? "Network transport started and external server connections scheduled" : "All network servers started successfully");
+            if (!bootEmbeddedMode) {
                 shutdownHookRegistrar.accept(shutdownHookSupplier.get());
             }
             loaded = true;

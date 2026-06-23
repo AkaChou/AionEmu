@@ -18,6 +18,7 @@ class GameNetworkStartupLifecycleTest {
         Thread hook = new Thread();
         GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
             () -> events.add("section"),
+            () -> events.add("misc"),
             () -> false,
             () -> hook,
             thread -> events.add(thread == hook ? "shutdownHook" : "wrongHook")
@@ -27,7 +28,7 @@ class GameNetworkStartupLifecycleTest {
         lifecycle.start(() -> events.add("startServersAgain"));
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("section", "startServers", "shutdownHook"), events);
+        assertEquals(List.of("section", "startServers", "misc", "shutdownHook"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -37,6 +38,7 @@ class GameNetworkStartupLifecycleTest {
         List<String> events = new ArrayList<>();
         GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
             () -> events.add("section"),
+            () -> events.add("misc"),
             () -> true,
             () -> new Thread(),
             thread -> events.add("shutdownHook")
@@ -45,7 +47,7 @@ class GameNetworkStartupLifecycleTest {
         lifecycle.start(() -> events.add("startServers"));
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("section", "startServers"), events);
+        assertEquals(List.of("section", "startServers", "misc"), events);
     }
 
     @Test
@@ -54,6 +56,7 @@ class GameNetworkStartupLifecycleTest {
         IllegalStateException failure = new IllegalStateException("network failed");
         GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
             () -> events.add("section"),
+            () -> events.add("misc"),
             () -> true,
             () -> new Thread(),
             thread -> events.add("shutdownHook")
@@ -73,7 +76,7 @@ class GameNetworkStartupLifecycleTest {
         lifecycle.start(() -> events.add("startServers"));
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("section", "startServers", "section", "startServers"), events);
+        assertEquals(List.of("section", "startServers", "section", "startServers", "misc"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 }

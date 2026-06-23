@@ -1327,8 +1327,6 @@ public class GameServer {
 			log.info("Chat Server is disabled by configuration");
 		}
 		
-		Util.printSection(" *** Misc *** ");
-		log.info(AionRuntimeMode.isBootEmbedded() ? "Network transport started and external server connections scheduled" : "All network servers started successfully");
 	}
 
 	public static boolean stop() {
