@@ -18,6 +18,7 @@ import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
+import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
@@ -93,6 +94,7 @@ class AionBootApplicationTest {
             context.registerBean(GameDredgionLifecycle.class);
             context.registerBean(GameBattlefieldLifecycle.class);
             context.registerBean(GameProtectorConquerorLifecycle.class);
+            context.registerBean(GameDisputeLandLifecycle.class);
             context.registerBean(GameThreadPoolLifecycle.class);
             context.registerBean(LoginServiceLifecycle.class);
             context.registerBean(ChatServiceLifecycle.class);
