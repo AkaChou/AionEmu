@@ -22,7 +22,7 @@ class GameDredgionLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("dredgion", "asyunatar"), events);
+        assertEquals(List.of("section", "dredgion", "asyunatar"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -35,7 +35,7 @@ class GameDredgionLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of(), events);
+        assertEquals(List.of("section"), events);
     }
 
     @Test
@@ -43,6 +43,7 @@ class GameDredgionLifecycleTest {
         List<String> events = new ArrayList<>();
         AtomicInteger reads = new AtomicInteger();
         GameDredgionLifecycle lifecycle = new GameDredgionLifecycle(
+            () -> events.add("section"),
             () -> reads.incrementAndGet() == 1,
             () -> events.add("dredgion"),
             () -> events.add("asyunatar")
@@ -52,7 +53,7 @@ class GameDredgionLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(2, reads.get());
-        assertEquals(List.of("dredgion"), events);
+        assertEquals(List.of("section", "dredgion"), events);
     }
 
     @Test
@@ -60,11 +61,12 @@ class GameDredgionLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("dredgion failed");
         GameDredgionLifecycle lifecycle = new GameDredgionLifecycle(
+            () -> events.add("section"),
             () -> true,
             () -> events.add("dredgion"),
             () -> {
                 events.add("asyunatar");
-                if (events.size() == 2) {
+                if (events.size() == 3) {
                     throw failure;
                 }
             }
@@ -79,12 +81,13 @@ class GameDredgionLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("dredgion", "asyunatar", "dredgion", "asyunatar"), events);
+        assertEquals(List.of("section", "dredgion", "asyunatar", "section", "dredgion", "asyunatar"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 
     private static GameDredgionLifecycle newLifecycle(List<String> events, boolean autoGroupEnabled) {
         return new GameDredgionLifecycle(
+            () -> events.add("section"),
             () -> autoGroupEnabled,
             () -> events.add("dredgion"),
             () -> events.add("asyunatar")

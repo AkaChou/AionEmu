@@ -3,12 +3,14 @@ package com.aionemu.gameserver.lifecycle;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
+import com.aionemu.gameserver.utils.Util;
 import java.util.function.BooleanSupplier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameDredgionLifecycle {
 
+    private final Runnable sectionPrinter;
     private final BooleanSupplier autoGroupEnabled;
     private final Runnable dredgionInitializer;
     private final Runnable asyunatarInitializer;
@@ -18,6 +20,7 @@ public class GameDredgionLifecycle {
 
     public GameDredgionLifecycle() {
         this(
+            () -> Util.printSection(" *** Dredgion *** "),
             () -> AutoGroupConfig.AUTO_GROUP_ENABLED,
             () -> DredgionService2.getInstance().initDredgion(),
             () -> AsyunatarService.getInstance().initAsyunatar()
@@ -25,10 +28,12 @@ public class GameDredgionLifecycle {
     }
 
     GameDredgionLifecycle(
+        Runnable sectionPrinter,
         BooleanSupplier autoGroupEnabled,
         Runnable dredgionInitializer,
         Runnable asyunatarInitializer
     ) {
+        this.sectionPrinter = sectionPrinter;
         this.autoGroupEnabled = autoGroupEnabled;
         this.dredgionInitializer = dredgionInitializer;
         this.asyunatarInitializer = asyunatarInitializer;
@@ -41,6 +46,7 @@ public class GameDredgionLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             if (autoGroupEnabled.getAsBoolean()) {
                 dredgionInitializer.run();
             }

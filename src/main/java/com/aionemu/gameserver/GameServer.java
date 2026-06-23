@@ -1254,10 +1254,6 @@ public class GameServer {
 
 		siegeScheduleLifecycle.start();
 
-		/**
-		 * Dredgion
-		 */
-		Util.printSection(" *** Dredgion *** ");
 		dredgionLifecycle.start();
 
 		/**
