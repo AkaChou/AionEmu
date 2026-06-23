@@ -1,21 +1,27 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.utils.Util;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameProtectorConquerorLifecycle {
 
+    private final Runnable sectionPrinter;
     private final Runnable initializer;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
 
     public GameProtectorConquerorLifecycle() {
-        this(() -> ProtectorConquerorService.getInstance().initSystem());
+        this(
+            () -> Util.printSection(" *** Protector/Conqueror initialization *** "),
+            () -> ProtectorConquerorService.getInstance().initSystem()
+        );
     }
 
-    GameProtectorConquerorLifecycle(Runnable initializer) {
+    GameProtectorConquerorLifecycle(Runnable sectionPrinter, Runnable initializer) {
+        this.sectionPrinter = sectionPrinter;
         this.initializer = initializer;
     }
 
@@ -26,6 +32,7 @@ public class GameProtectorConquerorLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             initializer.run();
             loaded = true;
             lastFailure = null;

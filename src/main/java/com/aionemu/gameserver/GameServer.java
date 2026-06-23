@@ -1258,10 +1258,6 @@ public class GameServer {
 
 		battlefieldLifecycle.start();
 
-		/**
-		 * Protector/Conqueror
-		 */
-		Util.printSection(" *** Protector/Conqueror initialization *** ");
 		protectorConquerorLifecycle.start();
 
 		/**

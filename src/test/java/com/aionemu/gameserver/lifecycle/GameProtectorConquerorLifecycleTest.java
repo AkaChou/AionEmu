@@ -16,6 +16,7 @@ class GameProtectorConquerorLifecycleTest {
     void startRunsInitializerOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameProtectorConquerorLifecycle lifecycle = new GameProtectorConquerorLifecycle(
+            () -> events.add("section"),
             () -> events.add("protectorConqueror")
         );
 
@@ -23,7 +24,7 @@ class GameProtectorConquerorLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("protectorConqueror"), events);
+        assertEquals(List.of("section", "protectorConqueror"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -32,9 +33,9 @@ class GameProtectorConquerorLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("protector conqueror failed");
-        GameProtectorConquerorLifecycle lifecycle = new GameProtectorConquerorLifecycle(() -> {
+        GameProtectorConquerorLifecycle lifecycle = new GameProtectorConquerorLifecycle(() -> events.add("section"), () -> {
             events.add("protectorConqueror");
-            if (events.size() == 1) {
+            if (events.size() == 2) {
                 throw failure;
             }
         });
@@ -48,7 +49,7 @@ class GameProtectorConquerorLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("protectorConqueror", "protectorConqueror"), events);
+        assertEquals(List.of("section", "protectorConqueror", "section", "protectorConqueror"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 }
