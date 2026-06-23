@@ -33,6 +33,7 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLoggingGateway;
 import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
+import com.aionemu.gameserver.lifecycle.GameNetworkStartupGateway;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
@@ -607,6 +608,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameNetworkStartupLifecycle(List<String> events) {
+            super(new GameNetworkStartupGateway());
             this.events = events;
         }
 

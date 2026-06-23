@@ -17,11 +17,7 @@ class GameNetworkStartupLifecycleTest {
         List<String> events = new ArrayList<>();
         Thread hook = new Thread();
         GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
-            () -> events.add("section"),
-            () -> events.add("misc"),
-            () -> false,
-            () -> hook,
-            thread -> events.add(thread == hook ? "shutdownHook" : "wrongHook")
+            new RecordingGameNetworkStartupGateway(events, false, hook)
         );
 
         lifecycle.start(() -> events.add("startServers"));
@@ -37,11 +33,7 @@ class GameNetworkStartupLifecycleTest {
     void startSkipsShutdownHookInBootEmbeddedMode() {
         List<String> events = new ArrayList<>();
         GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
-            () -> events.add("section"),
-            () -> events.add("misc"),
-            () -> true,
-            () -> new Thread(),
-            thread -> events.add("shutdownHook")
+            new RecordingGameNetworkStartupGateway(events, true, new Thread())
         );
 
         lifecycle.start(() -> events.add("startServers"));
@@ -55,11 +47,7 @@ class GameNetworkStartupLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("network failed");
         GameNetworkStartupLifecycle lifecycle = new GameNetworkStartupLifecycle(
-            () -> events.add("section"),
-            () -> events.add("misc"),
-            () -> true,
-            () -> new Thread(),
-            thread -> events.add("shutdownHook")
+            new RecordingGameNetworkStartupGateway(events, true, new Thread())
         );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> lifecycle.start(() -> {
@@ -78,5 +66,62 @@ class GameNetworkStartupLifecycleTest {
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of("section", "startServers", "section", "startServers", "misc"), events);
         assertEquals(null, lifecycle.getLastFailure());
+    }
+
+    @Test
+    void usesNetworkStartupGatewayCollaborator() {
+        assertEquals(GameNetworkStartupGateway.class, fieldType("networkStartupGateway"));
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            return GameNetworkStartupLifecycle.class.getDeclaredField(name).getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameNetworkStartupGateway extends GameNetworkStartupGateway {
+
+        private final List<String> events;
+        private final boolean bootEmbedded;
+        private final Thread shutdownHook;
+        private long currentTimeMillis;
+
+        private RecordingGameNetworkStartupGateway(List<String> events, boolean bootEmbedded, Thread shutdownHook) {
+            this.events = events;
+            this.bootEmbedded = bootEmbedded;
+            this.shutdownHook = shutdownHook;
+        }
+
+        @Override
+        public void printNetworkSection() {
+            events.add("section");
+        }
+
+        @Override
+        public void printMiscSection() {
+            events.add("misc");
+        }
+
+        @Override
+        public boolean isBootEmbedded() {
+            return bootEmbedded;
+        }
+
+        @Override
+        public Thread shutdownHook() {
+            return shutdownHook;
+        }
+
+        @Override
+        public void registerShutdownHook(Thread shutdownHook) {
+            events.add(shutdownHook == this.shutdownHook ? "shutdownHook" : "wrongHook");
+        }
+
+        @Override
+        public long currentTimeMillis() {
+            return currentTimeMillis++;
+        }
     }
 }
