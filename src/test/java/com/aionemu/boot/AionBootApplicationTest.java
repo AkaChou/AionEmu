@@ -57,6 +57,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -86,6 +87,18 @@ class AionBootApplicationTest {
         }
 
         assertEquals(List.of(mainSource.resolve("com/aionemu/boot/AionBootApplication.java")), productionMainFiles);
+    }
+
+    @Test
+    void legacyGameServerStartOverloadsAreDeprecated() {
+        List<Method> startMethods = Arrays.stream(GameServer.class.getDeclaredMethods())
+            .filter(method -> method.getName().equals("start"))
+            .filter(method -> Modifier.isPublic(method.getModifiers()))
+            .filter(method -> Modifier.isStatic(method.getModifiers()))
+            .toList();
+
+        assertFalse(startMethods.isEmpty());
+        assertTrue(startMethods.stream().allMatch(method -> method.isAnnotationPresent(Deprecated.class)));
     }
 
     @Test

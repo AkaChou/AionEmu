@@ -195,6 +195,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer from the boot-managed service lifecycle.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(String[] args) {
 		start(args, null);
 	}
@@ -202,6 +203,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with an optional chat-server connection override.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(String[] args, Boolean chatServerEnabledOverride) {
 		start(args, chatServerEnabledOverride, new GameThreadPoolLifecycle());
 	}
@@ -209,6 +211,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -220,6 +223,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -232,6 +236,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -245,6 +250,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -267,6 +273,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -291,6 +298,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -317,6 +325,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -346,6 +355,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -378,6 +388,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -412,6 +423,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -448,6 +460,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -486,6 +499,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -526,6 +540,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -568,6 +583,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -612,6 +628,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -658,6 +675,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -706,6 +724,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -756,6 +775,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -808,6 +828,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -862,6 +883,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -918,6 +940,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -976,6 +999,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -1036,6 +1060,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -1098,6 +1123,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
@@ -1171,6 +1197,7 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(
 		String[] args,
 		Boolean chatServerEnabledOverride,
