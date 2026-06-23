@@ -55,6 +55,7 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
+import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
@@ -1161,7 +1162,8 @@ public class GameServer {
 			new GameLoggingLifecycle(),
 			new GameUtilityServicesLifecycle(),
 			new GameAdminPanelLifecycle(),
-			new GameSystemPropertiesLifecycle()
+			new GameSystemPropertiesLifecycle(),
+			new GameChatServerOverrideLifecycle()
 		);
 	}
 
@@ -1202,7 +1204,8 @@ public class GameServer {
 		GameLoggingLifecycle loggingLifecycle,
 		GameUtilityServicesLifecycle utilityServicesLifecycle,
 		GameAdminPanelLifecycle adminPanelLifecycle,
-		GameSystemPropertiesLifecycle systemPropertiesLifecycle
+		GameSystemPropertiesLifecycle systemPropertiesLifecycle,
+		GameChatServerOverrideLifecycle chatServerOverrideLifecycle
 	) {
 		systemPropertiesLifecycle.start();
 		
@@ -1211,10 +1214,7 @@ public class GameServer {
 
 		loggingLifecycle.start();
 		utilityServicesLifecycle.start(threadPoolLifecycle);
-		if (chatServerEnabledOverride != null) {
-			GSConfig.ENABLE_CHAT_SERVER = chatServerEnabledOverride;
-			log.info("Chat Server connection overridden by boot configuration: {}", chatServerEnabledOverride);
-		}
+		chatServerOverrideLifecycle.start(chatServerEnabledOverride);
 		adminPanelLifecycle.start();
 		
 		staticDataLifecycle.start();

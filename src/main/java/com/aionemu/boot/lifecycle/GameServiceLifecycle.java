@@ -4,6 +4,7 @@ import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
+import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
@@ -83,6 +84,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameUtilityServicesLifecycle utilityServicesLifecycle,
         GameAdminPanelLifecycle adminPanelLifecycle,
         GameSystemPropertiesLifecycle systemPropertiesLifecycle,
+        GameChatServerOverrideLifecycle chatServerOverrideLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -119,6 +121,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             utilityServicesLifecycle,
             adminPanelLifecycle,
             systemPropertiesLifecycle,
+            chatServerOverrideLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -154,7 +157,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 loggingLifecycle,
                 utilityServicesLifecycle,
                 adminPanelLifecycle,
-                systemPropertiesLifecycle
+                systemPropertiesLifecycle,
+                chatServerOverrideLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -194,6 +198,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameUtilityServicesLifecycle utilityServicesLifecycle,
         GameAdminPanelLifecycle adminPanelLifecycle,
         GameSystemPropertiesLifecycle systemPropertiesLifecycle,
+        GameChatServerOverrideLifecycle chatServerOverrideLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction
