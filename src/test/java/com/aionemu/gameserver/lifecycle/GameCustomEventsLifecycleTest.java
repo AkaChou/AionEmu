@@ -21,7 +21,7 @@ class GameCustomEventsLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("ffa", "ladder", "battleground", "bandit"), events);
+        assertEquals(List.of("section", "ffa", "ladder", "battleground", "bandit"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -34,7 +34,7 @@ class GameCustomEventsLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("bandit"), events);
+        assertEquals(List.of("section", "bandit"), events);
     }
 
     @Test
@@ -42,13 +42,14 @@ class GameCustomEventsLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("custom event failed");
         GameCustomEventsLifecycle lifecycle = new GameCustomEventsLifecycle(
+            () -> events.add("section"),
             () -> true,
             () -> events.add("ffa"),
             () -> true,
             () -> events.add("ladder"),
             () -> {
                 events.add("battleground");
-                if (events.size() == 3) {
+                if (events.size() == 4) {
                     throw failure;
                 }
             },
@@ -65,9 +66,11 @@ class GameCustomEventsLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of(
+            "section",
             "ffa",
             "ladder",
             "battleground",
+            "section",
             "ffa",
             "ladder",
             "battleground",
@@ -82,6 +85,7 @@ class GameCustomEventsLifecycleTest {
         boolean battlegroundEnabled
     ) {
         return new GameCustomEventsLifecycle(
+            () -> events.add("section"),
             () -> ffaEnabled,
             () -> events.add("ffa"),
             () -> battlegroundEnabled,

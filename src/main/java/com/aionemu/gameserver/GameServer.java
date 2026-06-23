@@ -1250,10 +1250,6 @@ public class GameServer {
 
 		scheduledServicesLifecycle.start();
 
-		/**
-		 * Custom Events
-		 */
-		Util.printSection(" *** Custom Events *** ");
 		customEventsLifecycle.start();
 
 		/**

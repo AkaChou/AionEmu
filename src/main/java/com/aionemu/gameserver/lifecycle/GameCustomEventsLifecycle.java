@@ -6,12 +6,14 @@ import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
+import com.aionemu.gameserver.utils.Util;
 import java.util.function.BooleanSupplier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameCustomEventsLifecycle {
 
+    private final Runnable sectionPrinter;
     private final BooleanSupplier ffaEnabled;
     private final Runnable ffaInitializer;
     private final BooleanSupplier battlegroundEnabled;
@@ -24,6 +26,7 @@ public class GameCustomEventsLifecycle {
 
     public GameCustomEventsLifecycle() {
         this(
+            () -> Util.printSection(" *** Custom Events *** "),
             () -> FFAConfig.FFA_ENABLED,
             FFAService::getInstance,
             () -> PvPModConfig.BG_ENABLED,
@@ -34,6 +37,7 @@ public class GameCustomEventsLifecycle {
     }
 
     GameCustomEventsLifecycle(
+        Runnable sectionPrinter,
         BooleanSupplier ffaEnabled,
         Runnable ffaInitializer,
         BooleanSupplier battlegroundEnabled,
@@ -41,6 +45,7 @@ public class GameCustomEventsLifecycle {
         Runnable battlegroundInitializer,
         Runnable banditInitializer
     ) {
+        this.sectionPrinter = sectionPrinter;
         this.ffaEnabled = ffaEnabled;
         this.ffaInitializer = ffaInitializer;
         this.battlegroundEnabled = battlegroundEnabled;
@@ -56,6 +61,7 @@ public class GameCustomEventsLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             if (ffaEnabled.getAsBoolean()) {
                 ffaInitializer.run();
             }
