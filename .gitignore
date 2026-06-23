@@ -38,7 +38,8 @@ Thumbs.db
 .cursor
 
 
-game
 log
-login
-chat
+
+/game
+/chat
+/login
