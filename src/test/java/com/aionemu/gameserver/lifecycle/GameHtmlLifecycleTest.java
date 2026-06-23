@@ -15,13 +15,16 @@ class GameHtmlLifecycleTest {
     @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameHtmlLifecycle lifecycle = new GameHtmlLifecycle(() -> events.add("html"));
+        GameHtmlLifecycle lifecycle = new GameHtmlLifecycle(
+            () -> events.add("section"),
+            () -> events.add("html")
+        );
 
         lifecycle.start();
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("html"), events);
+        assertEquals(List.of("section", "html"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -30,9 +33,9 @@ class GameHtmlLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("html failed");
-        GameHtmlLifecycle lifecycle = new GameHtmlLifecycle(() -> {
+        GameHtmlLifecycle lifecycle = new GameHtmlLifecycle(() -> events.add("section"), () -> {
             events.add("html");
-            if (events.size() == 1) {
+            if (events.size() == 2) {
                 throw failure;
             }
         });
@@ -46,7 +49,7 @@ class GameHtmlLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("html", "html"), events);
+        assertEquals(List.of("section", "html", "section", "html"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 }

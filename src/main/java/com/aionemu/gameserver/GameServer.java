@@ -1262,10 +1262,6 @@ public class GameServer {
 
 		disputeLandLifecycle.start();
 
-		/**
-		 * HTML
-		 */
-		Util.printSection(" *** HTML *** ");
 		htmlLifecycle.start();
 
 		rewardServicesLifecycle.start();
