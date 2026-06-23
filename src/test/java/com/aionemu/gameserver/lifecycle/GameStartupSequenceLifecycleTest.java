@@ -416,6 +416,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSeasonRankingLifecycle(List<String> events) {
+            super(new GameSeasonRankingGateway());
             this.events = events;
         }
 

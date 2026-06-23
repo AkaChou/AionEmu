@@ -1,29 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
-import com.aionemu.gameserver.utils.Util;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameSeasonRankingLifecycle {
 
-    private final Runnable sectionPrinter;
-    private final Runnable initializer;
+    private final GameSeasonRankingGateway seasonRankingGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameSeasonRankingLifecycle() {
-        this(
-            () -> Util.printSection(" *** Season Ranking *** "),
-            () -> SeasonRankingUpdateService.getInstance().onStart()
-        );
-    }
-
-    GameSeasonRankingLifecycle(Runnable sectionPrinter, Runnable initializer) {
-        this.sectionPrinter = sectionPrinter;
-        this.initializer = initializer;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -32,8 +19,7 @@ public class GameSeasonRankingLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            sectionPrinter.run();
-            initializer.run();
+            seasonRankingGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {

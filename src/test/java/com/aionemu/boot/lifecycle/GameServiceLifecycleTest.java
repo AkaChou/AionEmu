@@ -41,6 +41,7 @@ import com.aionemu.gameserver.lifecycle.GameRewardServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSeasonRankingGateway;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
@@ -552,6 +553,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSeasonRankingLifecycle(List<String> events) {
+            super(new GameSeasonRankingGateway());
             this.events = events;
         }
 
