@@ -23,6 +23,7 @@ import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
@@ -67,6 +68,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameOptionalServicesLifecycle optionalServicesLifecycle,
         GameSeasonRankingLifecycle seasonRankingLifecycle,
         GameHousingLifecycle housingLifecycle,
+        GameSystemLifecycle systemLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -95,6 +97,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             optionalServicesLifecycle,
             seasonRankingLifecycle,
             housingLifecycle,
+            systemLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -122,7 +125,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 runtimeServicesLifecycle,
                 optionalServicesLifecycle,
                 seasonRankingLifecycle,
-                housingLifecycle
+                housingLifecycle,
+                systemLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -154,6 +158,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameOptionalServicesLifecycle optionalServicesLifecycle,
         GameSeasonRankingLifecycle seasonRankingLifecycle,
         GameHousingLifecycle housingLifecycle,
+        GameSystemLifecycle systemLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction

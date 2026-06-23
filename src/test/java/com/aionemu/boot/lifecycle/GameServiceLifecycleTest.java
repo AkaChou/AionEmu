@@ -25,6 +25,7 @@ import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
@@ -65,6 +66,7 @@ class GameServiceLifecycleTest {
         GameOptionalServicesLifecycle optionalServicesLifecycle = new RecordingGameOptionalServicesLifecycle(events);
         GameSeasonRankingLifecycle seasonRankingLifecycle = new RecordingGameSeasonRankingLifecycle(events);
         GameHousingLifecycle housingLifecycle = new RecordingGameHousingLifecycle(events);
+        GameSystemLifecycle systemLifecycle = new RecordingGameSystemLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         BiConsumer<String[], Boolean> startAction = (args, chatEnabled) -> events.add("start:" + chatEnabled);
         Runnable stopAction = () -> events.add("stop");
@@ -94,6 +96,7 @@ class GameServiceLifecycleTest {
             optionalServicesLifecycle,
             seasonRankingLifecycle,
             housingLifecycle,
+            systemLifecycle,
             threadPoolLifecycle,
             startAction,
             stopAction
@@ -132,6 +135,7 @@ class GameServiceLifecycleTest {
         GameOptionalServicesLifecycle optionalServicesLifecycle = new RecordingGameOptionalServicesLifecycle(events);
         GameSeasonRankingLifecycle seasonRankingLifecycle = new RecordingGameSeasonRankingLifecycle(events);
         GameHousingLifecycle housingLifecycle = new RecordingGameHousingLifecycle(events);
+        GameSystemLifecycle systemLifecycle = new RecordingGameSystemLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
@@ -159,6 +163,7 @@ class GameServiceLifecycleTest {
             optionalServicesLifecycle,
             seasonRankingLifecycle,
             housingLifecycle,
+            systemLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> { },
             () -> events.add("stop")
@@ -504,6 +509,21 @@ class GameServiceLifecycleTest {
         @Override
         public synchronized void start() {
             events.add("housing:start");
+        }
+    }
+
+    private static final class RecordingGameSystemLifecycle extends GameSystemLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameSystemLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public synchronized long start(long serverStartTimeMillis) {
+            events.add("system:start");
+            return 1;
         }
     }
 
