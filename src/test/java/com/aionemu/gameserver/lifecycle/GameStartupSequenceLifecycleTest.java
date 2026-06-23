@@ -100,6 +100,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameStaticDataLifecycle(List<String> events) {
+            super(new GameStaticDataGateway());
             this.events = events;
         }
 

@@ -70,6 +70,7 @@ import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStaticDataGateway;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
@@ -212,7 +213,7 @@ public class GameServer {
 		Boolean chatServerEnabledOverride,
 		GameThreadPoolLifecycle threadPoolLifecycle
 	) {
-		start(args, chatServerEnabledOverride, threadPoolLifecycle, new GameStaticDataLifecycle());
+		start(args, chatServerEnabledOverride, threadPoolLifecycle, new GameStaticDataLifecycle(new GameStaticDataGateway()));
 	}
 
 	/**

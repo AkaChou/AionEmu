@@ -1,24 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.dataholders.DataManager;
-import java.util.function.Supplier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameStaticDataLifecycle {
 
-    private final Supplier<DataManager> dataManagerSupplier;
+    private final GameStaticDataGateway staticDataGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameStaticDataLifecycle() {
-        this(DataManager::getInstance);
-    }
-
-    GameStaticDataLifecycle(Supplier<DataManager> dataManagerSupplier) {
-        this.dataManagerSupplier = dataManagerSupplier;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -27,7 +19,7 @@ public class GameStaticDataLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            dataManagerSupplier.get();
+            staticDataGateway.load();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {

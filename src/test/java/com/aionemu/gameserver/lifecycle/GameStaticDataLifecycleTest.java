@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test;
 class GameStaticDataLifecycleTest {
 
     @Test
+    void usesStaticDataGatewayCollaborator() {
+        assertEquals(GameStaticDataGateway.class, fieldType("staticDataGateway"));
+    }
+
+    @Test
     void startLoadsStaticDataOnceAndRecordsLoadTime() {
         AtomicInteger loads = new AtomicInteger();
-        GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(() -> {
-            loads.incrementAndGet();
-            return null;
-        });
+        GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, null));
 
         lifecycle.start();
         lifecycle.start();
@@ -32,12 +34,7 @@ class GameStaticDataLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         AtomicInteger loads = new AtomicInteger();
         IllegalStateException failure = new IllegalStateException("static data failed");
-        GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(() -> {
-            if (loads.incrementAndGet() == 1) {
-                throw failure;
-            }
-            return null;
-        });
+        GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, failure));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -50,5 +47,31 @@ class GameStaticDataLifecycleTest {
         assertTrue(lifecycle.isLoaded());
         assertEquals(2, loads.get());
         assertEquals(null, lifecycle.getLastFailure());
+    }
+
+    private static final class RecordingGameStaticDataGateway extends GameStaticDataGateway {
+
+        private final AtomicInteger loads;
+        private final RuntimeException firstFailure;
+
+        private RecordingGameStaticDataGateway(AtomicInteger loads, RuntimeException firstFailure) {
+            this.loads = loads;
+            this.firstFailure = firstFailure;
+        }
+
+        @Override
+        public void load() {
+            if (loads.incrementAndGet() == 1 && firstFailure != null) {
+                throw firstFailure;
+            }
+        }
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            return GameStaticDataLifecycle.class.getDeclaredField(name).getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
     }
 }
