@@ -1,21 +1,24 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
+import com.aionemu.gameserver.utils.Util;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameSpawnLifecycle {
 
+    private final Runnable sectionPrinter;
     private final Runnable spawner;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
 
     public GameSpawnLifecycle() {
-        this(SpawnEngine::spawnAll);
+        this(() -> Util.printSection(" *** Spawns *** "), SpawnEngine::spawnAll);
     }
 
-    GameSpawnLifecycle(Runnable spawner) {
+    GameSpawnLifecycle(Runnable sectionPrinter, Runnable spawner) {
+        this.sectionPrinter = sectionPrinter;
         this.spawner = spawner;
     }
 
@@ -26,6 +29,7 @@ public class GameSpawnLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             spawner.run();
             loaded = true;
             lastFailure = null;

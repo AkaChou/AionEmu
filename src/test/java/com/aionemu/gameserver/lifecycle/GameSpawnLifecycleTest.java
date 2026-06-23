@@ -6,34 +6,42 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class GameSpawnLifecycleTest {
 
     @Test
     void startSpawnsOnceAndRecordsLoadTime() {
-        AtomicInteger spawns = new AtomicInteger();
-        GameSpawnLifecycle lifecycle = new GameSpawnLifecycle(spawns::incrementAndGet);
+        List<String> events = new ArrayList<>();
+        GameSpawnLifecycle lifecycle = new GameSpawnLifecycle(
+            () -> events.add("section"),
+            () -> events.add("spawn")
+        );
 
         lifecycle.start();
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(1, spawns.get());
+        assertEquals(List.of("section", "spawn"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
 
     @Test
     void failedStartRecordsFailureAndAllowsRetry() {
-        AtomicInteger spawns = new AtomicInteger();
+        List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("spawn failed");
-        GameSpawnLifecycle lifecycle = new GameSpawnLifecycle(() -> {
-            if (spawns.incrementAndGet() == 1) {
-                throw failure;
+        GameSpawnLifecycle lifecycle = new GameSpawnLifecycle(
+            () -> events.add("section"),
+            () -> {
+                events.add("spawn");
+                if (events.size() == 2) {
+                    throw failure;
+                }
             }
-        });
+        );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -44,7 +52,7 @@ class GameSpawnLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(2, spawns.get());
+        assertEquals(List.of("section", "spawn", "section", "spawn"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 }

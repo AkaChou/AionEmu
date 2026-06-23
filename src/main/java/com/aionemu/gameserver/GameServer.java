@@ -1239,10 +1239,6 @@ public class GameServer {
 		 */
 		locationBootstrapLifecycle.start();
 
-		/**
-		 * Spawns
-		 */
-		Util.printSection(" *** Spawns *** ");
 		spawnLifecycle.start();
 		
 		// Events
