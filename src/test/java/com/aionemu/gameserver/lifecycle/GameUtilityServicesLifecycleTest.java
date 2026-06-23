@@ -20,17 +20,35 @@ class GameUtilityServicesLifecycleTest {
             () -> events.add("threadPool:stop")
         );
         GameUtilityServicesLifecycle lifecycle = new GameUtilityServicesLifecycle(
-            threadPool -> {
-                events.add("utility:start");
-                threadPool.start();
-            }
+            () -> events.add("exceptionHandler"),
+            () -> events.add("callbackSupport"),
+            () -> events.add("cron"),
+            () -> events.add("config:section"),
+            () -> events.add("config:load"),
+            () -> events.add("dateTime"),
+            () -> events.add("database:section"),
+            () -> events.add("databaseFactory"),
+            () -> events.add("dao"),
+            () -> events.add("threadConfig")
         );
 
         lifecycle.start(threadPoolLifecycle);
         lifecycle.start(threadPoolLifecycle);
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("utility:start", "threadPool:start"), events);
+        assertEquals(List.of(
+            "exceptionHandler",
+            "callbackSupport",
+            "cron",
+            "config:section",
+            "config:load",
+            "dateTime",
+            "database:section",
+            "databaseFactory",
+            "dao",
+            "threadConfig",
+            "threadPool:start"
+        ), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -44,13 +62,21 @@ class GameUtilityServicesLifecycleTest {
             () -> events.add("threadPool:stop")
         );
         GameUtilityServicesLifecycle lifecycle = new GameUtilityServicesLifecycle(
-            threadPool -> {
-                events.add("utility:start");
-                if (events.size() == 1) {
+            () -> events.add("exceptionHandler"),
+            () -> events.add("callbackSupport"),
+            () -> events.add("cron"),
+            () -> events.add("config:section"),
+            () -> {
+                events.add("config:load");
+                if (events.size() == 5) {
                     throw failure;
                 }
-                threadPool.start();
-            }
+            },
+            () -> events.add("dateTime"),
+            () -> events.add("database:section"),
+            () -> events.add("databaseFactory"),
+            () -> events.add("dao"),
+            () -> events.add("threadConfig")
         );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> lifecycle.start(threadPoolLifecycle));
@@ -62,7 +88,24 @@ class GameUtilityServicesLifecycleTest {
         lifecycle.start(threadPoolLifecycle);
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("utility:start", "utility:start", "threadPool:start"), events);
+        assertEquals(List.of(
+            "exceptionHandler",
+            "callbackSupport",
+            "cron",
+            "config:section",
+            "config:load",
+            "exceptionHandler",
+            "callbackSupport",
+            "cron",
+            "config:section",
+            "config:load",
+            "dateTime",
+            "database:section",
+            "databaseFactory",
+            "dao",
+            "threadConfig",
+            "threadPool:start"
+        ), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 }

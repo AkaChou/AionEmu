@@ -40,17 +40,13 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.NettyServerCfg;
 import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.ServerCfg;
 import com.aionemu.commons.network.ServerTransport;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
@@ -94,11 +90,7 @@ import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
-import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.utils.cron.ThreadPoolManagerRunnableRunner;
-import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
-import com.aionemu.gameserver.utils.javaagent.JavaAgentUtils;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
@@ -1391,37 +1383,7 @@ public class GameServer {
 	 * which includes:
 	 */
 	private static void initUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
-		Thread.setDefaultUncaughtExceptionHandler(new ThreadUncaughtExceptionHandler());
-		
-		if (JavaAgentUtils.isConfigured()) {
-			log.info("Callback support is configured.");
-		} else {
-			log.warn("Callback support is NOT configured. Gameplay callback behavior may be affected.");
-		}
-		
-		CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
-		Util.printSection(" *** Config *** ");
-		
-		long configStart = System.currentTimeMillis();
-		Config.load();
-		long configTime = System.currentTimeMillis() - configStart;
-		log.info("Configuration loaded in {} ms", configTime);
-		
-		DateTimeUtil.init();
-		
-		Util.printSection(" *** DataBase *** ");
-		long dbStart = System.currentTimeMillis();
-		DatabaseFactory.init();
-		long dbInitTime = System.currentTimeMillis() - dbStart;
-		log.info("Database factory initialized in {} ms", dbInitTime);
-		
-		long daoStart = System.currentTimeMillis();
-		DAOManager.init();
-		long daoTime = System.currentTimeMillis() - daoStart;
-		log.info("DAO Manager initialized in {} ms", daoTime);
-		
-		ThreadConfig.load();
-		threadPoolLifecycle.start();
+		new GameUtilityServicesLifecycle().start(threadPoolLifecycle);
 	}
 
 	public static void initializeUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
