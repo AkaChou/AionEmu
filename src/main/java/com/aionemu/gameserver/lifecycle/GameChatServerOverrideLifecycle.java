@@ -2,14 +2,12 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
 import java.util.function.Consumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class GameChatServerOverrideLifecycle {
-
-    private static final Logger log = LoggerFactory.getLogger(GameChatServerOverrideLifecycle.class);
 
     private final Consumer<Boolean> overrideAction;
     private boolean loaded;

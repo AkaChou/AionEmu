@@ -1,18 +1,16 @@
 package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class LoginServiceLifecycle implements AionServiceLifecycle {
 
     private final AionServicesProperties services;
     private boolean started;
-
-    public LoginServiceLifecycle(AionServicesProperties services) {
-        this.services = services;
-    }
 
     @Override
     public String getName() {
