@@ -73,6 +73,7 @@ import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSpawnGateway;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataGateway;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
@@ -351,7 +352,7 @@ public class GameServer {
 			worldActivationLifecycle,
 			enginesLifecycle,
 			new GameLocationBootstrapLifecycle(new GameLocationBootstrapGateway()),
-			new GameSpawnLifecycle()
+			new GameSpawnLifecycle(new GameSpawnGateway())
 		);
 	}
 

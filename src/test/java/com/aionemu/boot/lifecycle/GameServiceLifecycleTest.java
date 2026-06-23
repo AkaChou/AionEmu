@@ -34,6 +34,7 @@ import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSpawnGateway;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataGateway;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
@@ -328,6 +329,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSpawnLifecycle(List<String> events) {
+            super(new GameSpawnGateway());
             this.events = events;
         }
 
