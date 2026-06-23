@@ -49,7 +49,6 @@ import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -69,6 +68,7 @@ import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
+import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
@@ -745,6 +745,57 @@ public class GameServer {
 		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
 		GameDisputeLandLifecycle disputeLandLifecycle
 	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			new GameHtmlLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle
+	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -846,7 +897,7 @@ public class GameServer {
 		 * HTML
 		 */
 		Util.printSection(" *** HTML *** ");
-		HTMLCache.getInstance();
+		htmlLifecycle.start();
 
 		if (CustomConfig.ENABLE_REWARD_SERVICE) {
 			RewardService.getInstance();

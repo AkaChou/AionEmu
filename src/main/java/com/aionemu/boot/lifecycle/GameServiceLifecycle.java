@@ -11,6 +11,7 @@ import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
+import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
@@ -55,6 +56,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameBattlefieldLifecycle battlefieldLifecycle,
         GameProtectorConquerorLifecycle protectorConquerorLifecycle,
         GameDisputeLandLifecycle disputeLandLifecycle,
+        GameHtmlLifecycle htmlLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -77,6 +79,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             battlefieldLifecycle,
             protectorConquerorLifecycle,
             disputeLandLifecycle,
+            htmlLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -98,7 +101,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 dredgionLifecycle,
                 battlefieldLifecycle,
                 protectorConquerorLifecycle,
-                disputeLandLifecycle
+                disputeLandLifecycle,
+                htmlLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -124,6 +128,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameBattlefieldLifecycle battlefieldLifecycle,
         GameProtectorConquerorLifecycle protectorConquerorLifecycle,
         GameDisputeLandLifecycle disputeLandLifecycle,
+        GameHtmlLifecycle htmlLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction
