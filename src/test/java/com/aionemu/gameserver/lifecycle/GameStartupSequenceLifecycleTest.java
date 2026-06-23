@@ -160,6 +160,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameWorldActivationLifecycle(List<String> events) {
+            super(new GameWorldActivationGateway());
             this.events = events;
         }
 

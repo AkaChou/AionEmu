@@ -82,6 +82,7 @@ import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameWorldActivationGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
@@ -291,7 +292,7 @@ public class GameServer {
 			worldBootstrapLifecycle,
 			eventBootstrapLifecycle,
 			geoNavLifecycle,
-			new GameWorldActivationLifecycle()
+			new GameWorldActivationLifecycle(new GameWorldActivationGateway())
 		);
 	}
 
