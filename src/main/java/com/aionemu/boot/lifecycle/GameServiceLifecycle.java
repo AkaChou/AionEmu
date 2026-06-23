@@ -5,50 +5,19 @@ import com.aionemu.boot.config.LegacyConfigOverrides;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
-import java.util.function.Consumer;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameServiceLifecycle implements AionServiceLifecycle {
 
     private final AionServicesProperties services;
     private final LegacyConfigOverrides legacyConfigOverrides;
+    private final GameStartupSequenceLifecycle startupSequenceLifecycle;
+    private final GameServerNetworkLifecycle serverNetworkLifecycle;
     private final GameThreadPoolLifecycle threadPoolLifecycle;
-    private final Consumer<Boolean> startAction;
-    private final Runnable stopAction;
-
-    @Autowired
-    public GameServiceLifecycle(
-        AionServicesProperties services,
-        LegacyConfigOverrides legacyConfigOverrides,
-        GameStartupSequenceLifecycle startupSequenceLifecycle,
-        GameServerNetworkLifecycle serverNetworkLifecycle,
-        GameThreadPoolLifecycle threadPoolLifecycle
-    ) {
-        this(
-            services,
-            legacyConfigOverrides,
-            threadPoolLifecycle,
-            startupSequenceLifecycle::start,
-            serverNetworkLifecycle::stop
-        );
-    }
-
-    GameServiceLifecycle(
-        AionServicesProperties services,
-        LegacyConfigOverrides legacyConfigOverrides,
-        GameThreadPoolLifecycle threadPoolLifecycle,
-        Consumer<Boolean> startAction,
-        Runnable stopAction
-    ) {
-        this.services = services;
-        this.legacyConfigOverrides = legacyConfigOverrides;
-        this.threadPoolLifecycle = threadPoolLifecycle;
-        this.startAction = startAction;
-        this.stopAction = stopAction;
-    }
 
     @Override
     public String getName() {
@@ -69,13 +38,13 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     public void start(ApplicationArguments args) {
         AionServicePaths.configureGame();
         legacyConfigOverrides.applyToGameConfig();
-        startAction.accept(services.getChat().isEnabled());
+        startupSequenceLifecycle.start(services.getChat().isEnabled());
     }
 
     @Override
     public void stop() {
         try {
-            stopAction.run();
+            serverNetworkLifecycle.stop();
         } finally {
             threadPoolLifecycle.stop();
         }

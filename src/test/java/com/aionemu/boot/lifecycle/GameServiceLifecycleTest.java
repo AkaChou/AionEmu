@@ -28,21 +28,23 @@ import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.core.env.StandardEnvironment;
@@ -50,24 +52,47 @@ import org.springframework.core.env.StandardEnvironment;
 class GameServiceLifecycleTest {
 
     @Test
+    void usesDirectLifecycleCollaboratorsInsteadOfActionAdapters() {
+        assertEquals(GameStartupSequenceLifecycle.class, fieldType("startupSequenceLifecycle"));
+        assertEquals(GameServerNetworkLifecycle.class, fieldType("serverNetworkLifecycle"));
+        assertEquals(null, findFieldType("startAction"));
+        assertEquals(null, findFieldType("stopAction"));
+    }
+
+    @Test
     void startAppliesLegacyConfigOverridesBeforeStartingGameServer() {
         AionServicesProperties services = new AionServicesProperties();
         List<String> events = new ArrayList<>();
         LegacyConfigOverrides overrides = new RecordingLegacyConfigOverrides(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
-        Consumer<Boolean> startAction = chatEnabled -> events.add("start:" + chatEnabled);
-        Runnable stopAction = () -> events.add("stop");
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
             overrides,
-            threadPoolLifecycle,
-            startAction,
-            stopAction
+            new RecordingGameStartupSequenceLifecycle(events),
+            new RecordingGameServerNetworkLifecycle(events),
+            threadPoolLifecycle
         );
 
         lifecycle.start(new DefaultApplicationArguments("--example=true"));
 
         assertEquals(List.of("apply", "start:false"), events);
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            return GameServiceLifecycle.class.getDeclaredField(name).getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static Class<?> findFieldType(String name) {
+        try {
+            Field field = GameServiceLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            return null;
+        }
     }
 
     @Test
@@ -79,9 +104,9 @@ class GameServiceLifecycleTest {
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
             overrides,
-            threadPoolLifecycle,
-            chatEnabled -> { },
-            () -> events.add("stop")
+            new RecordingGameStartupSequenceLifecycle(events),
+            new RecordingGameServerNetworkLifecycle(events),
+            threadPoolLifecycle
         );
 
         threadPoolLifecycle.start();
@@ -102,6 +127,72 @@ class GameServiceLifecycleTest {
         @Override
         public void applyToGameConfig() {
             events.add("apply");
+        }
+    }
+
+    private static final class RecordingGameStartupSequenceLifecycle extends GameStartupSequenceLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameStartupSequenceLifecycle(List<String> events) {
+            super(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            );
+            this.events = events;
+        }
+
+        @Override
+        public void start(Boolean chatServerEnabledOverride) {
+            events.add("start:" + chatServerEnabledOverride);
+        }
+    }
+
+    private static final class RecordingGameServerNetworkLifecycle extends GameServerNetworkLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameServerNetworkLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void stop() {
+            events.add("stop");
         }
     }
 
