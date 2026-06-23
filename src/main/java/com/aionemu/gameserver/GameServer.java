@@ -80,6 +80,7 @@ import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
+import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.model.Race;
@@ -1155,7 +1156,8 @@ public class GameServer {
 			new GameNetworkStartupLifecycle(),
 			new GameRatioLimitLifecycle(),
 			new GameStartupHooksLifecycle(),
-			new GameLoggingLifecycle()
+			new GameLoggingLifecycle(),
+			new GameUtilityServicesLifecycle()
 		);
 	}
 
@@ -1193,7 +1195,8 @@ public class GameServer {
 		GameNetworkStartupLifecycle networkStartupLifecycle,
 		GameRatioLimitLifecycle ratioLimitLifecycle,
 		GameStartupHooksLifecycle startupHooksLifecycle,
-		GameLoggingLifecycle loggingLifecycle
+		GameLoggingLifecycle loggingLifecycle,
+		GameUtilityServicesLifecycle utilityServicesLifecycle
 	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -1203,7 +1206,7 @@ public class GameServer {
 		log.info("GameServer starting...");
 
 		loggingLifecycle.start();
-		initUtilityServicesAndConfig(threadPoolLifecycle);
+		utilityServicesLifecycle.start(threadPoolLifecycle);
 		if (chatServerEnabledOverride != null) {
 			GSConfig.ENABLE_CHAT_SERVER = chatServerEnabledOverride;
 			log.info("Chat Server connection overridden by boot configuration: {}", chatServerEnabledOverride);
@@ -1473,6 +1476,10 @@ public class GameServer {
 		
 		ThreadConfig.load();
 		threadPoolLifecycle.start();
+	}
+
+	public static void initializeUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
+		initUtilityServicesAndConfig(threadPoolLifecycle);
 	}
 
 	public synchronized static void addStartupHook(StartupHook hook) {

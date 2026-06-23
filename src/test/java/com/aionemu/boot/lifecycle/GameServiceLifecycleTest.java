@@ -31,6 +31,7 @@ import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
+import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ class GameServiceLifecycleTest {
         GameNetworkStartupLifecycle networkStartupLifecycle = new RecordingGameNetworkStartupLifecycle(events);
         GameRatioLimitLifecycle ratioLimitLifecycle = new RecordingGameRatioLimitLifecycle(events);
         GameStartupHooksLifecycle startupHooksLifecycle = new RecordingGameStartupHooksLifecycle(events);
+        GameUtilityServicesLifecycle utilityServicesLifecycle = new RecordingGameUtilityServicesLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         BiConsumer<String[], Boolean> startAction = (args, chatEnabled) -> events.add("start:" + chatEnabled);
         Runnable stopAction = () -> events.add("stop");
@@ -109,6 +111,7 @@ class GameServiceLifecycleTest {
             networkStartupLifecycle,
             ratioLimitLifecycle,
             startupHooksLifecycle,
+            utilityServicesLifecycle,
             threadPoolLifecycle,
             startAction,
             stopAction
@@ -152,6 +155,7 @@ class GameServiceLifecycleTest {
         GameNetworkStartupLifecycle networkStartupLifecycle = new RecordingGameNetworkStartupLifecycle(events);
         GameRatioLimitLifecycle ratioLimitLifecycle = new RecordingGameRatioLimitLifecycle(events);
         GameStartupHooksLifecycle startupHooksLifecycle = new RecordingGameStartupHooksLifecycle(events);
+        GameUtilityServicesLifecycle utilityServicesLifecycle = new RecordingGameUtilityServicesLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
@@ -184,6 +188,7 @@ class GameServiceLifecycleTest {
             networkStartupLifecycle,
             ratioLimitLifecycle,
             startupHooksLifecycle,
+            utilityServicesLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> { },
             () -> events.add("stop")
@@ -600,6 +605,20 @@ class GameServiceLifecycleTest {
         @Override
         public synchronized void start() {
             events.add("startupHooks:start");
+        }
+    }
+
+    private static final class RecordingGameUtilityServicesLifecycle extends GameUtilityServicesLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameUtilityServicesLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public synchronized void start(GameThreadPoolLifecycle threadPoolLifecycle) {
+            events.add("utilityServices:start");
         }
     }
 
