@@ -1,4 +1,4 @@
-package com.aionemu.boot;
+package com.aionemu;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import org.springframework.boot.WebApplicationType;

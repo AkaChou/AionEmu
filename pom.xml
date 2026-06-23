@@ -372,7 +372,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.aionemu.boot.AionBootApplication</mainClass>
+                    <mainClass>com.aionemu.AionBootApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

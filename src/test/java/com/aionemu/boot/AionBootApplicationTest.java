@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import com.aionemu.AionBootApplication;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
 import com.aionemu.boot.lifecycle.AionServiceLauncher;
@@ -125,7 +126,7 @@ class AionBootApplicationTest {
                 .toList();
         }
 
-        assertEquals(List.of(mainSource.resolve("com/aionemu/boot/AionBootApplication.java")), productionMainFiles);
+        assertEquals(List.of(mainSource.resolve("com/aionemu/AionBootApplication.java")), productionMainFiles);
     }
 
     @Test
@@ -138,6 +139,14 @@ class AionBootApplicationTest {
 
         assertFalse(startMethods.isEmpty());
         assertTrue(startMethods.stream().allMatch(method -> method.isAnnotationPresent(Deprecated.class)));
+    }
+
+    @Test
+    void bootApplicationScansGameLifecycleBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
+            assertTrue(context.containsBean("aionServiceLauncher"));
+            assertTrue(context.containsBean("gameStartupSequenceLifecycle"));
+        }
     }
 
     @Test
