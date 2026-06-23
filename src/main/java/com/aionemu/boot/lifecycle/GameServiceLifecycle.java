@@ -25,6 +25,7 @@ import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
@@ -73,6 +74,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameSystemLifecycle systemLifecycle,
         GameNetworkStartupLifecycle networkStartupLifecycle,
         GameRatioLimitLifecycle ratioLimitLifecycle,
+        GameStartupHooksLifecycle startupHooksLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -104,6 +106,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             systemLifecycle,
             networkStartupLifecycle,
             ratioLimitLifecycle,
+            startupHooksLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -134,7 +137,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 housingLifecycle,
                 systemLifecycle,
                 networkStartupLifecycle,
-                ratioLimitLifecycle
+                ratioLimitLifecycle,
+                startupHooksLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -169,6 +173,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameSystemLifecycle systemLifecycle,
         GameNetworkStartupLifecycle networkStartupLifecycle,
         GameRatioLimitLifecycle ratioLimitLifecycle,
+        GameStartupHooksLifecycle startupHooksLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction

@@ -76,6 +76,7 @@ import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
@@ -1143,7 +1144,8 @@ public class GameServer {
 			housingLifecycle,
 			systemLifecycle,
 			new GameNetworkStartupLifecycle(),
-			new GameRatioLimitLifecycle()
+			new GameRatioLimitLifecycle(),
+			new GameStartupHooksLifecycle()
 		);
 	}
 
@@ -1179,7 +1181,8 @@ public class GameServer {
 		GameHousingLifecycle housingLifecycle,
 		GameSystemLifecycle systemLifecycle,
 		GameNetworkStartupLifecycle networkStartupLifecycle,
-		GameRatioLimitLifecycle ratioLimitLifecycle
+		GameRatioLimitLifecycle ratioLimitLifecycle,
+		GameStartupHooksLifecycle startupHooksLifecycle
 	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -1312,8 +1315,7 @@ public class GameServer {
 
         networkStartupLifecycle.start(gs::startServers);
         ratioLimitLifecycle.start();
-        
-        onStartup();
+        startupHooksLifecycle.start();
         
         log.info("=== Server initialization COMPLETE ===");
         log.info("Total initialization time: {} seconds", startupTime);
@@ -1490,6 +1492,10 @@ public class GameServer {
 				displayRatios(false);
 			}
 		});
+	}
+
+	public static void runStartupHooks() {
+		onStartup();
 	}
 
 	private synchronized static void onStartup() {
