@@ -68,6 +68,7 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
@@ -1141,7 +1142,8 @@ public class GameServer {
 			seasonRankingLifecycle,
 			housingLifecycle,
 			systemLifecycle,
-			new GameNetworkStartupLifecycle()
+			new GameNetworkStartupLifecycle(),
+			new GameRatioLimitLifecycle()
 		);
 	}
 
@@ -1176,7 +1178,8 @@ public class GameServer {
 		GameSeasonRankingLifecycle seasonRankingLifecycle,
 		GameHousingLifecycle housingLifecycle,
 		GameSystemLifecycle systemLifecycle,
-		GameNetworkStartupLifecycle networkStartupLifecycle
+		GameNetworkStartupLifecycle networkStartupLifecycle,
+		GameRatioLimitLifecycle ratioLimitLifecycle
 	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -1308,28 +1311,7 @@ public class GameServer {
         long startupTime = systemLifecycle.start(start);
 
         networkStartupLifecycle.start(gs::startServers);
-        
-        if (GSConfig.ENABLE_RATIO_LIMITATION) {
-            addStartupHook(new StartupHook() {
-                @Override
-                public void onStartup() {
-                    lock.lock();
-                    try {
-                        long dbStart = System.currentTimeMillis();
-                        ASMOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ASMODIANS);
-                        ELYOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ELYOS);
-                        long dbTime = System.currentTimeMillis() - dbStart;
-                        log.debug("Database faction query took {} ms", dbTime);
-                        computeRatios();
-                    } catch (Exception e) {
-                        log.error("Error loading faction ratios", e);
-                    } finally {
-                        lock.unlock();
-                    }
-                    displayRatios(false);
-                }
-            });
-        }
+        ratioLimitLifecycle.start();
         
         onStartup();
         
@@ -1486,6 +1468,28 @@ public class GameServer {
 		} else {
 			hook.onStartup();
 		}
+	}
+
+	public static void registerRatioLimitStartupHook() {
+		addStartupHook(new StartupHook() {
+			@Override
+			public void onStartup() {
+				lock.lock();
+				try {
+					long dbStart = System.currentTimeMillis();
+					ASMOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ASMODIANS);
+					ELYOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ELYOS);
+					long dbTime = System.currentTimeMillis() - dbStart;
+					log.debug("Database faction query took {} ms", dbTime);
+					computeRatios();
+				} catch (Exception e) {
+					log.error("Error loading faction ratios", e);
+				} finally {
+					lock.unlock();
+				}
+				displayRatios(false);
+			}
+		});
 	}
 
 	private synchronized static void onStartup() {

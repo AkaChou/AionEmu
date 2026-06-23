@@ -17,6 +17,7 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
@@ -71,6 +72,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameHousingLifecycle housingLifecycle,
         GameSystemLifecycle systemLifecycle,
         GameNetworkStartupLifecycle networkStartupLifecycle,
+        GameRatioLimitLifecycle ratioLimitLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -101,6 +103,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             housingLifecycle,
             systemLifecycle,
             networkStartupLifecycle,
+            ratioLimitLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -130,7 +133,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 seasonRankingLifecycle,
                 housingLifecycle,
                 systemLifecycle,
-                networkStartupLifecycle
+                networkStartupLifecycle,
+                ratioLimitLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -164,6 +168,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameHousingLifecycle housingLifecycle,
         GameSystemLifecycle systemLifecycle,
         GameNetworkStartupLifecycle networkStartupLifecycle,
+        GameRatioLimitLifecycle ratioLimitLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction
