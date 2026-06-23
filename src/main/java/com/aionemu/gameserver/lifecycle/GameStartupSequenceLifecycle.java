@@ -33,6 +33,7 @@ public class GameStartupSequenceLifecycle {
     private final GameSeasonRankingLifecycle seasonRankingLifecycle;
     private final GameHousingLifecycle housingLifecycle;
     private final GameSystemLifecycle systemLifecycle;
+    private final GameServerNetworkLifecycle serverNetworkLifecycle;
     private final GameNetworkStartupLifecycle networkStartupLifecycle;
     private final GameRatioLimitLifecycle ratioLimitLifecycle;
     private final GameStartupHooksLifecycle startupHooksLifecycle;
@@ -81,7 +82,7 @@ public class GameStartupSequenceLifecycle {
 
         long startupTime = systemLifecycle.start(start);
 
-        networkStartupLifecycle.start(gs::startServers);
+        networkStartupLifecycle.start(() -> serverNetworkLifecycle.start(gs));
         ratioLimitLifecycle.start();
         startupHooksLifecycle.start();
         startupCompletionLifecycle.start(startupTime);

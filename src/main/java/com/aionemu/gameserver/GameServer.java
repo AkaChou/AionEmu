@@ -71,6 +71,7 @@ import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
@@ -1181,6 +1182,7 @@ public class GameServer {
 			seasonRankingLifecycle,
 			housingLifecycle,
 			systemLifecycle,
+			new GameServerNetworkLifecycle(),
 			new GameNetworkStartupLifecycle(),
 			new GameRatioLimitLifecycle(),
 			new GameStartupHooksLifecycle(),
@@ -1226,6 +1228,7 @@ public class GameServer {
 		GameSeasonRankingLifecycle seasonRankingLifecycle,
 		GameHousingLifecycle housingLifecycle,
 		GameSystemLifecycle systemLifecycle,
+		GameServerNetworkLifecycle serverNetworkLifecycle,
 		GameNetworkStartupLifecycle networkStartupLifecycle,
 		GameRatioLimitLifecycle ratioLimitLifecycle,
 		GameStartupHooksLifecycle startupHooksLifecycle,
@@ -1263,6 +1266,7 @@ public class GameServer {
 			seasonRankingLifecycle,
 			housingLifecycle,
 			systemLifecycle,
+			serverNetworkLifecycle,
 			networkStartupLifecycle,
 			ratioLimitLifecycle,
 			startupHooksLifecycle,

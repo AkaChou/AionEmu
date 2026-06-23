@@ -38,6 +38,7 @@ class GameStartupSequenceLifecycleTest {
             new RecordingGameSeasonRankingLifecycle(events),
             new RecordingGameHousingLifecycle(events),
             new RecordingGameSystemLifecycle(events),
+            new RecordingGameServerNetworkLifecycle(events),
             new RecordingGameNetworkStartupLifecycle(events),
             new RecordingGameRatioLimitLifecycle(events),
             new RecordingGameStartupHooksLifecycle(events),
@@ -84,6 +85,7 @@ class GameStartupSequenceLifecycleTest {
             "housing:start",
             "system:start:1",
             "networkStartup:start",
+            "serverNetwork:start",
             "ratioLimit:start",
             "startupHooks:start",
             "startupCompletion:start:2"
@@ -431,6 +433,20 @@ class GameStartupSequenceLifecycleTest {
         }
     }
 
+    private static final class RecordingGameServerNetworkLifecycle extends GameServerNetworkLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameServerNetworkLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void start(GameServer server) {
+            events.add("serverNetwork:start");
+        }
+    }
+
     private static final class RecordingGameNetworkStartupLifecycle extends GameNetworkStartupLifecycle {
 
         private final List<String> events;
@@ -442,6 +458,7 @@ class GameStartupSequenceLifecycleTest {
         @Override
         public synchronized void start(Runnable serverStarter) {
             events.add("networkStartup:start");
+            serverStarter.run();
         }
     }
 
