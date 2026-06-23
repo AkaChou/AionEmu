@@ -6,18 +6,24 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.Test;
 
 class GameSystemLifecycleTest {
 
     @Test
+    void usesSystemGatewayCollaborator() {
+        assertEquals(GameSystemGateway.class, fieldType("systemGateway"));
+    }
+
+    @Test
     void startRunsInitializersLogsSystemInfoAndRecordsStartupTime() {
         List<String> events = new ArrayList<>();
-        AtomicLong now = new AtomicLong(10_000);
-        GameSystemLifecycle lifecycle = newLifecycle(events, () -> now.getAndAdd(250));
+        GameSystemLifecycle lifecycle = new GameSystemLifecycle(
+            new RecordingGameSystemGateway(events, null, legacyEventNames(), 2)
+        );
 
         long startupTime = lifecycle.start(8_000);
         long repeatedStartupTime = lifecycle.start(8_000);
@@ -43,26 +49,20 @@ class GameSystemLifecycleTest {
     @Test
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
-        AtomicLong now = new AtomicLong(10_000);
         IllegalStateException failure = new IllegalStateException("system failed");
         GameSystemLifecycle lifecycle = new GameSystemLifecycle(
-            List.of(
-                () -> events.add("section:system"),
-                () -> {
-                    events.add("versions");
-                    if (events.size() == 2) {
-                        throw failure;
-                    }
-                }
-            ),
-            List.of("line1"),
-            now::getAndIncrement,
-            () -> 512,
-            () -> 128,
-            () -> 1024,
-            line -> events.add("banner:" + line),
-            (total, free, used, max) -> events.add("memory:" + total + ":" + free + ":" + used + ":" + max),
-            seconds -> events.add("startup:" + seconds)
+            new RecordingGameSystemGateway(
+                events,
+                failure,
+                List.of(
+                    "section:system",
+                    "versions",
+                    "banner:line1",
+                    "memory:512:128:384:1024",
+                    "startup:2"
+                ),
+                2
+            )
         );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> lifecycle.start(8_000));
@@ -88,27 +88,58 @@ class GameSystemLifecycleTest {
         assertEquals(null, lifecycle.getLastFailure());
     }
 
-    private static GameSystemLifecycle newLifecycle(List<String> events, AtomicLongSupplier currentTimeMillis) {
-        return new GameSystemLifecycle(
-            List.of(
-                () -> events.add("section:system"),
-                () -> events.add("versions"),
-                () -> events.add("infos"),
-                () -> events.add("section:gameServer")
-            ),
-            List.of("line1", "line2"),
-            currentTimeMillis::getAsLong,
-            () -> 512,
-            () -> 128,
-            () -> 1024,
-            line -> events.add("banner:" + line),
-            (total, free, used, max) -> events.add("memory:" + total + ":" + free + ":" + used + ":" + max),
-            seconds -> events.add("startup:" + seconds)
+    private static List<String> legacyEventNames() {
+        return List.of(
+            "section:system",
+            "versions",
+            "infos",
+            "section:gameServer",
+            "banner:line1",
+            "banner:line2",
+            "memory:512:128:384:1024",
+            "startup:2"
         );
     }
 
-    @FunctionalInterface
-    private interface AtomicLongSupplier {
-        long getAsLong();
+    private static Class<?> fieldType(String name) {
+        try {
+            Field field = GameSystemLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameSystemGateway extends GameSystemGateway {
+
+        private final List<String> events;
+        private final RuntimeException firstFailure;
+        private final List<String> eventNames;
+        private final long startupTimeSeconds;
+        private boolean failed;
+
+        private RecordingGameSystemGateway(
+            List<String> events,
+            RuntimeException firstFailure,
+            List<String> eventNames,
+            long startupTimeSeconds
+        ) {
+            this.events = events;
+            this.firstFailure = firstFailure;
+            this.eventNames = List.copyOf(eventNames);
+            this.startupTimeSeconds = startupTimeSeconds;
+        }
+
+        @Override
+        public long start(long serverStartTimeMillis) {
+            for (String eventName : eventNames) {
+                events.add(eventName);
+                if (events.size() == 2 && firstFailure != null && !failed) {
+                    failed = true;
+                    throw firstFailure;
+                }
+            }
+            return startupTimeSeconds;
+        }
     }
 }

@@ -96,6 +96,7 @@ import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSystemGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
@@ -1135,7 +1136,7 @@ public class GameServer {
 			optionalServicesLifecycle,
 			seasonRankingLifecycle,
 			housingLifecycle,
-			new GameSystemLifecycle()
+			new GameSystemLifecycle(new GameSystemGateway())
 		);
 	}
 
