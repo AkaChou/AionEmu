@@ -1265,10 +1265,6 @@ public class GameServer {
 		htmlLifecycle.start();
 
 		rewardServicesLifecycle.start();
-		/**
-		 * Services
-		 */
-		Util.printSection(" *** Services *** ");
 		runtimeServicesLifecycle.start();
 		optionalServicesLifecycle.start();
 

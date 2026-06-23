@@ -19,6 +19,7 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
+import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -26,37 +27,42 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameRuntimeServicesLifecycle {
 
+    private final Runnable sectionPrinter;
     private final List<Runnable> initializers;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
 
     public GameRuntimeServicesLifecycle() {
-        this(List.of(
-            PeriodicSaveService::getInstance,
-            AdminService::getInstance,
-            PlayerTransferService::getInstance,
-            () -> TerritoryService.getInstance().initTerritory(),
-            GameTimeService::getInstance,
-            AnnouncementService::getInstance,
-            DebugService::getInstance,
-            WeatherService::getInstance,
-            BrokerService::getInstance,
-            Influence::getInstance,
-            ExchangeService::getInstance,
-            PetitionService::getInstance,
-            InstanceService::load,
-            FlyRingService::getInstance,
-            CuringZoneService::getInstance,
-            SpringZoneService::getInstance,
-            () -> BoostEventService.getInstance().onStart(),
-            TaskManagerFromDB::getInstance,
-            () -> LimitedItemTradeService.getInstance().start(),
-            GameTimeManager::startClock
-        ));
+        this(
+            () -> Util.printSection(" *** Services *** "),
+            List.of(
+                PeriodicSaveService::getInstance,
+                AdminService::getInstance,
+                PlayerTransferService::getInstance,
+                () -> TerritoryService.getInstance().initTerritory(),
+                GameTimeService::getInstance,
+                AnnouncementService::getInstance,
+                DebugService::getInstance,
+                WeatherService::getInstance,
+                BrokerService::getInstance,
+                Influence::getInstance,
+                ExchangeService::getInstance,
+                PetitionService::getInstance,
+                InstanceService::load,
+                FlyRingService::getInstance,
+                CuringZoneService::getInstance,
+                SpringZoneService::getInstance,
+                () -> BoostEventService.getInstance().onStart(),
+                TaskManagerFromDB::getInstance,
+                () -> LimitedItemTradeService.getInstance().start(),
+                GameTimeManager::startClock
+            )
+        );
     }
 
-    GameRuntimeServicesLifecycle(List<Runnable> initializers) {
+    GameRuntimeServicesLifecycle(Runnable sectionPrinter, List<Runnable> initializers) {
+        this.sectionPrinter = sectionPrinter;
         this.initializers = List.copyOf(initializers);
     }
 
@@ -67,6 +73,7 @@ public class GameRuntimeServicesLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             initializers.forEach(Runnable::run);
             loaded = true;
             lastFailure = null;

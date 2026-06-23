@@ -15,13 +15,17 @@ class GameRuntimeServicesLifecycleTest {
     @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(initializers(events));
+        GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(
+            () -> events.add("section"),
+            initializers(events)
+        );
 
         lifecycle.start();
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of(
+            "section",
             "periodicSave",
             "admin",
             "playerTransfer",
@@ -51,11 +55,11 @@ class GameRuntimeServicesLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("runtime services failed");
-        GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(List.of(
+        GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(() -> events.add("section"), List.<Runnable>of(
             () -> events.add("periodicSave"),
             () -> {
                 events.add("admin");
-                if (events.size() == 2) {
+                if (events.size() == 3) {
                     throw failure;
                 }
             }
@@ -70,7 +74,7 @@ class GameRuntimeServicesLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("periodicSave", "admin", "periodicSave", "admin"), events);
+        assertEquals(List.of("section", "periodicSave", "admin", "section", "periodicSave", "admin"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 
