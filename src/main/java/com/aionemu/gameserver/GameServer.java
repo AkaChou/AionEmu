@@ -1270,10 +1270,6 @@ public class GameServer {
 
 		seasonRankingLifecycle.start();
 
-		/**
-		 * Housing
-		 */
-		Util.printSection(" *** Housing *** ");
 		housingLifecycle.start();
 
         /**

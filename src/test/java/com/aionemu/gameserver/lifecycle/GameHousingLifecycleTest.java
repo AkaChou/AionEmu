@@ -15,13 +15,16 @@ class GameHousingLifecycleTest {
     @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameHousingLifecycle lifecycle = new GameHousingLifecycle(initializers(events));
+        GameHousingLifecycle lifecycle = new GameHousingLifecycle(
+            () -> events.add("section"),
+            initializers(events)
+        );
 
         lifecycle.start();
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("housingBid", "maintenance", "town", "challengeTask"), events);
+        assertEquals(List.of("section", "housingBid", "maintenance", "town", "challengeTask"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -30,11 +33,11 @@ class GameHousingLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("housing failed");
-        GameHousingLifecycle lifecycle = new GameHousingLifecycle(List.of(
+        GameHousingLifecycle lifecycle = new GameHousingLifecycle(() -> events.add("section"), List.<Runnable>of(
             () -> events.add("housingBid"),
             () -> {
                 events.add("maintenance");
-                if (events.size() == 2) {
+                if (events.size() == 3) {
                     throw failure;
                 }
             }
@@ -49,7 +52,7 @@ class GameHousingLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("housingBid", "maintenance", "housingBid", "maintenance"), events);
+        assertEquals(List.of("section", "housingBid", "maintenance", "section", "housingBid", "maintenance"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 
