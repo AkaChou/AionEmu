@@ -6,12 +6,31 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
 class GameBattlefieldLifecycleTest {
+
+    private static final List<String> EVENT_NAMES = List.of(
+        "kamar",
+        "ophidan",
+        "suspicious",
+        "ironWall",
+        "idgel",
+        "landmark",
+        "tenacity",
+        "grandArena",
+        "idRun"
+    );
+
+    @Test
+    void usesBattlefieldGatewayCollaborator() {
+        assertEquals(GameBattlefieldGateway.class, fieldType("battlefieldGateway"));
+    }
 
     @Test
     void startRunsEnabledInitializersOnceAndRecordsLoadTime() {
@@ -43,9 +62,7 @@ class GameBattlefieldLifecycleTest {
         List<String> events = new ArrayList<>();
         AtomicInteger reads = new AtomicInteger();
         GameBattlefieldLifecycle lifecycle = new GameBattlefieldLifecycle(
-            () -> events.add("section"),
-            () -> reads.incrementAndGet() % 2 == 1,
-            initializers(events)
+            new RecordingGameBattlefieldGateway(events, () -> reads.incrementAndGet() % 2 == 1, null)
         );
 
         lifecycle.start();
@@ -60,17 +77,7 @@ class GameBattlefieldLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("battlefield failed");
         GameBattlefieldLifecycle lifecycle = new GameBattlefieldLifecycle(
-            () -> events.add("section"),
-            () -> true,
-            List.<Runnable>of(
-                () -> events.add("kamar"),
-                () -> {
-                    events.add("ophidan");
-                    if (events.size() == 3) {
-                        throw failure;
-                    }
-                }
-            )
+            new RecordingGameBattlefieldGateway(events, () -> true, failure, List.of("kamar", "ophidan"))
         );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
@@ -87,20 +94,63 @@ class GameBattlefieldLifecycleTest {
     }
 
     private static GameBattlefieldLifecycle newLifecycle(List<String> events, boolean autoGroupEnabled) {
-        return new GameBattlefieldLifecycle(() -> events.add("section"), () -> autoGroupEnabled, initializers(events));
+        return new GameBattlefieldLifecycle(new RecordingGameBattlefieldGateway(
+            events,
+            () -> autoGroupEnabled,
+            null,
+            EVENT_NAMES
+        ));
     }
 
-    private static List<Runnable> initializers(List<String> events) {
-        return List.of(
-            () -> events.add("kamar"),
-            () -> events.add("ophidan"),
-            () -> events.add("suspicious"),
-            () -> events.add("ironWall"),
-            () -> events.add("idgel"),
-            () -> events.add("landmark"),
-            () -> events.add("tenacity"),
-            () -> events.add("grandArena"),
-            () -> events.add("idRun")
-        );
+    private static Class<?> fieldType(String name) {
+        try {
+            Field field = GameBattlefieldLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameBattlefieldGateway extends GameBattlefieldGateway {
+
+        private final List<String> events;
+        private final BooleanSupplier autoGroupEnabled;
+        private final RuntimeException firstFailure;
+        private final List<String> eventNames;
+
+        private RecordingGameBattlefieldGateway(
+            List<String> events,
+            BooleanSupplier autoGroupEnabled,
+            RuntimeException firstFailure
+        ) {
+            this(events, autoGroupEnabled, firstFailure, EVENT_NAMES);
+        }
+
+        private RecordingGameBattlefieldGateway(
+            List<String> events,
+            BooleanSupplier autoGroupEnabled,
+            RuntimeException firstFailure,
+            List<String> eventNames
+        ) {
+            this.events = events;
+            this.autoGroupEnabled = autoGroupEnabled;
+            this.firstFailure = firstFailure;
+            this.eventNames = List.copyOf(eventNames);
+        }
+
+        @Override
+        public void start() {
+            events.add("section");
+            eventNames.forEach(this::maybeRun);
+        }
+
+        private void maybeRun(String event) {
+            if (autoGroupEnabled.getAsBoolean()) {
+                events.add(event);
+                if (events.size() == 3 && firstFailure != null) {
+                    throw firstFailure;
+                }
+            }
+        }
     }
 }

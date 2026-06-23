@@ -311,6 +311,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameBattlefieldLifecycle(List<String> events) {
+            super(new GameBattlefieldGateway());
             this.events = events;
         }
 

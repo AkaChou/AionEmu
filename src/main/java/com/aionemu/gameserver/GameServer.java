@@ -45,6 +45,7 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
+import com.aionemu.gameserver.lifecycle.GameBattlefieldGateway;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
@@ -631,7 +632,7 @@ public class GameServer {
 			customEventsLifecycle,
 			siegeScheduleLifecycle,
 			dredgionLifecycle,
-			new GameBattlefieldLifecycle()
+			new GameBattlefieldLifecycle(new GameBattlefieldGateway())
 		);
 	}
 

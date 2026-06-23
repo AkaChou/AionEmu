@@ -1,53 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.configs.main.AutoGroupConfig;
-import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
-import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
-import com.aionemu.gameserver.services.instance.IDRunService;
-import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
-import com.aionemu.gameserver.services.instance.IdgelDomeService;
-import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
-import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
-import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
-import com.aionemu.gameserver.utils.Util;
-import java.util.List;
-import java.util.function.BooleanSupplier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameBattlefieldLifecycle {
 
-    private final Runnable sectionPrinter;
-    private final BooleanSupplier autoGroupEnabled;
-    private final List<Runnable> initializers;
+    private final GameBattlefieldGateway battlefieldGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameBattlefieldLifecycle() {
-        this(
-            () -> Util.printSection(" *** Battlefield *** "),
-            () -> AutoGroupConfig.AUTO_GROUP_ENABLED,
-            List.of(
-                () -> KamarBattlefieldService.getInstance().initKamarBattlefield(),
-                () -> EngulfedOphidanBridgeService.getInstance().initEngulfedOphidan(),
-                () -> SuspiciousOphidanBridgeService.getInstance().initSuspiciousOphidan(),
-                () -> IronWallWarfrontService.getInstance().initIronWallWarfront(),
-                () -> IdgelDomeService.getInstance().initIdgelDome(),
-                () -> IdgelDomeLandmarkService.getInstance().initLandmark(),
-                () -> HallOfTenacityService.getInstance().initHallOfTenacity(),
-                () -> GrandArenaTrainingCampService.getInstance().initGrandArenaTrainingCamp(),
-                () -> IDRunService.getInstance().initIDRun()
-            )
-        );
-    }
-
-    GameBattlefieldLifecycle(Runnable sectionPrinter, BooleanSupplier autoGroupEnabled, List<Runnable> initializers) {
-        this.sectionPrinter = sectionPrinter;
-        this.autoGroupEnabled = autoGroupEnabled;
-        this.initializers = List.copyOf(initializers);
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -56,12 +19,7 @@ public class GameBattlefieldLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            sectionPrinter.run();
-            for (Runnable initializer : initializers) {
-                if (autoGroupEnabled.getAsBoolean()) {
-                    initializer.run();
-                }
-            }
+            battlefieldGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {

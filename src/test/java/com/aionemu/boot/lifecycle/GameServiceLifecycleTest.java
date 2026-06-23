@@ -6,6 +6,7 @@ import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
+import com.aionemu.gameserver.lifecycle.GameBattlefieldGateway;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
@@ -440,6 +441,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameBattlefieldLifecycle(List<String> events) {
+            super(new GameBattlefieldGateway());
             this.events = events;
         }
 
