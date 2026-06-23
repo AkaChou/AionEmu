@@ -296,6 +296,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameDredgionLifecycle(List<String> events) {
+            super(new GameDredgionGateway());
             this.events = events;
         }
 

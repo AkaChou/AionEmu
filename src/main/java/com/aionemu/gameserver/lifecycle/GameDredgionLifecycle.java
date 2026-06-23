@@ -1,43 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.configs.main.AutoGroupConfig;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
-import com.aionemu.gameserver.utils.Util;
-import java.util.function.BooleanSupplier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameDredgionLifecycle {
 
-    private final Runnable sectionPrinter;
-    private final BooleanSupplier autoGroupEnabled;
-    private final Runnable dredgionInitializer;
-    private final Runnable asyunatarInitializer;
+    private final GameDredgionGateway dredgionGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameDredgionLifecycle() {
-        this(
-            () -> Util.printSection(" *** Dredgion *** "),
-            () -> AutoGroupConfig.AUTO_GROUP_ENABLED,
-            () -> DredgionService2.getInstance().initDredgion(),
-            () -> AsyunatarService.getInstance().initAsyunatar()
-        );
-    }
-
-    GameDredgionLifecycle(
-        Runnable sectionPrinter,
-        BooleanSupplier autoGroupEnabled,
-        Runnable dredgionInitializer,
-        Runnable asyunatarInitializer
-    ) {
-        this.sectionPrinter = sectionPrinter;
-        this.autoGroupEnabled = autoGroupEnabled;
-        this.dredgionInitializer = dredgionInitializer;
-        this.asyunatarInitializer = asyunatarInitializer;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -46,13 +19,7 @@ public class GameDredgionLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            sectionPrinter.run();
-            if (autoGroupEnabled.getAsBoolean()) {
-                dredgionInitializer.run();
-            }
-            if (autoGroupEnabled.getAsBoolean()) {
-                asyunatarInitializer.run();
-            }
+            dredgionGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {
