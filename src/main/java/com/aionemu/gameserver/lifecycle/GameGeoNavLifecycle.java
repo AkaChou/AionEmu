@@ -1,33 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavService;
-import com.aionemu.gameserver.utils.Util;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameGeoNavLifecycle {
 
-    private final Runnable sectionPrinter;
-    private final Runnable geoInitializer;
-    private final Runnable navInitializer;
+    private final GameGeoNavGateway geoNavGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameGeoNavLifecycle() {
-        this(
-            () -> Util.printSection(" *** Geodata *** "),
-            () -> GeoService.getInstance().initializeGeo(),
-            () -> NavService.getInstance().initializeNav()
-        );
-    }
-
-    GameGeoNavLifecycle(Runnable sectionPrinter, Runnable geoInitializer, Runnable navInitializer) {
-        this.sectionPrinter = sectionPrinter;
-        this.geoInitializer = geoInitializer;
-        this.navInitializer = navInitializer;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -36,9 +19,7 @@ public class GameGeoNavLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            sectionPrinter.run();
-            geoInitializer.run();
-            navInitializer.run();
+            geoNavGateway.initialize();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {

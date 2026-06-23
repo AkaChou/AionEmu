@@ -28,6 +28,7 @@ import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
+import com.aionemu.gameserver.lifecycle.GameGeoNavGateway;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
@@ -122,6 +123,7 @@ class AionBootApplicationTest {
             context.registerBean(GameWorldBootstrapLifecycle.class);
             context.registerBean(GameEventBootstrapGateway.class);
             context.registerBean(GameEventBootstrapLifecycle.class);
+            context.registerBean(GameGeoNavGateway.class);
             context.registerBean(GameGeoNavLifecycle.class);
             context.registerBean(GameWorldActivationLifecycle.class);
             context.registerBean(GameEnginesLifecycle.class);

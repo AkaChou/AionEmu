@@ -55,6 +55,7 @@ import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
+import com.aionemu.gameserver.lifecycle.GameGeoNavGateway;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
@@ -265,7 +266,7 @@ public class GameServer {
 			staticDataLifecycle,
 			worldBootstrapLifecycle,
 			eventBootstrapLifecycle,
-			new GameGeoNavLifecycle()
+			new GameGeoNavLifecycle(new GameGeoNavGateway())
 		);
 	}
 

@@ -145,6 +145,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameGeoNavLifecycle(List<String> events) {
+            super(new GameGeoNavGateway());
             this.events = events;
         }
 
