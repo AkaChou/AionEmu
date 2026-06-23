@@ -1241,8 +1241,6 @@ public class GameServer {
 
 		spawnLifecycle.start();
 		
-		// Events
-		Util.printSection(" *** Events *** ");
 		eventRuntimeLifecycle.start();
 
 		/**

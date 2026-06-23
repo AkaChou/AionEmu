@@ -8,12 +8,14 @@ import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.utils.Util;
 import java.util.function.BooleanSupplier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameEventRuntimeLifecycle {
 
+    private final Runnable sectionPrinter;
     private final BooleanSupplier eventServiceEnabled;
     private final Runnable eventServiceStarter;
     private final BooleanSupplier playerEventEnabled;
@@ -32,6 +34,7 @@ public class GameEventRuntimeLifecycle {
 
     public GameEventRuntimeLifecycle() {
         this(
+            () -> Util.printSection(" *** Events *** "),
             () -> EventsConfig.ENABLE_EVENT_SERVICE,
             () -> EventService.getInstance().start(),
             () -> EventsConfig.EVENT_ENABLED,
@@ -48,6 +51,7 @@ public class GameEventRuntimeLifecycle {
     }
 
     GameEventRuntimeLifecycle(
+        Runnable sectionPrinter,
         BooleanSupplier eventServiceEnabled,
         Runnable eventServiceStarter,
         BooleanSupplier playerEventEnabled,
@@ -61,6 +65,7 @@ public class GameEventRuntimeLifecycle {
         Runnable packetBroadcasterInitializer,
         Runnable temporarySpawner
     ) {
+        this.sectionPrinter = sectionPrinter;
         this.eventServiceEnabled = eventServiceEnabled;
         this.eventServiceStarter = eventServiceStarter;
         this.playerEventEnabled = playerEventEnabled;
@@ -82,6 +87,7 @@ public class GameEventRuntimeLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             if (eventServiceEnabled.getAsBoolean()) {
                 eventServiceStarter.run();
             }

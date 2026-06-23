@@ -28,6 +28,7 @@ class GameEventRuntimeLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of(
+            "section",
             "eventService",
             "playerEvent",
             "crazyEvent",
@@ -55,6 +56,7 @@ class GameEventRuntimeLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of(
+            "section",
             "rankingMinute",
             "rewardWeekly",
             "packetBroadcaster",
@@ -67,12 +69,13 @@ class GameEventRuntimeLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("event runtime failed");
         GameEventRuntimeLifecycle lifecycle = new GameEventRuntimeLifecycle(
+            () -> events.add("section"),
             () -> true,
             () -> events.add("eventService"),
             () -> true,
             () -> {
                 events.add("playerEvent");
-                if (events.size() == 2) {
+                if (events.size() == 3) {
                     throw failure;
                 }
             },
@@ -96,8 +99,10 @@ class GameEventRuntimeLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(List.of(
+            "section",
             "eventService",
             "playerEvent",
+            "section",
             "eventService",
             "playerEvent",
             "rankingMinute",
@@ -116,6 +121,7 @@ class GameEventRuntimeLifecycleTest {
         boolean topRankingUpdateEnabled
     ) {
         return new GameEventRuntimeLifecycle(
+            () -> events.add("section"),
             () -> eventServiceEnabled,
             () -> events.add("eventService"),
             () -> playerEventEnabled,
