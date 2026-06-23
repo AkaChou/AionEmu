@@ -65,6 +65,7 @@ import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
@@ -184,6 +185,10 @@ public class GameServer {
 		}
 	}
 
+	public static void initializeLogger() {
+		initalizeLoggger();
+	}
+
 	/**
 	 * Starts GameServer from the boot-managed service lifecycle.
 	 */
@@ -201,7 +206,11 @@ public class GameServer {
 	/**
 	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
 	 */
-	public static void start(String[] args, Boolean chatServerEnabledOverride, GameThreadPoolLifecycle threadPoolLifecycle) {
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle
+	) {
 		start(args, chatServerEnabledOverride, threadPoolLifecycle, new GameStaticDataLifecycle());
 	}
 
@@ -1145,7 +1154,8 @@ public class GameServer {
 			systemLifecycle,
 			new GameNetworkStartupLifecycle(),
 			new GameRatioLimitLifecycle(),
-			new GameStartupHooksLifecycle()
+			new GameStartupHooksLifecycle(),
+			new GameLoggingLifecycle()
 		);
 	}
 
@@ -1182,7 +1192,8 @@ public class GameServer {
 		GameSystemLifecycle systemLifecycle,
 		GameNetworkStartupLifecycle networkStartupLifecycle,
 		GameRatioLimitLifecycle ratioLimitLifecycle,
-		GameStartupHooksLifecycle startupHooksLifecycle
+		GameStartupHooksLifecycle startupHooksLifecycle,
+		GameLoggingLifecycle loggingLifecycle
 	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -1191,7 +1202,7 @@ public class GameServer {
 		long start = System.currentTimeMillis();
 		log.info("GameServer starting...");
 
-		initalizeLoggger();
+		loggingLifecycle.start();
 		initUtilityServicesAndConfig(threadPoolLifecycle);
 		if (chatServerEnabledOverride != null) {
 			GSConfig.ENABLE_CHAT_SERVER = chatServerEnabledOverride;

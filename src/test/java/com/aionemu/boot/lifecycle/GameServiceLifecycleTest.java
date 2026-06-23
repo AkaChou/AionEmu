@@ -16,6 +16,7 @@ import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
@@ -46,6 +47,7 @@ class GameServiceLifecycleTest {
         AionServicesProperties services = new AionServicesProperties();
         List<String> events = new ArrayList<>();
         LegacyConfigOverrides overrides = new RecordingLegacyConfigOverrides(events);
+        GameLoggingLifecycle loggingLifecycle = new RecordingGameLoggingLifecycle(events);
         GameStaticDataLifecycle staticDataLifecycle = new RecordingGameStaticDataLifecycle(events);
         GameWorldBootstrapLifecycle worldBootstrapLifecycle = new RecordingGameWorldBootstrapLifecycle(events);
         GameEventBootstrapLifecycle eventBootstrapLifecycle = new RecordingGameEventBootstrapLifecycle(events);
@@ -79,6 +81,7 @@ class GameServiceLifecycleTest {
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
             overrides,
+            loggingLifecycle,
             staticDataLifecycle,
             worldBootstrapLifecycle,
             eventBootstrapLifecycle,
@@ -121,6 +124,7 @@ class GameServiceLifecycleTest {
         AionServicesProperties services = new AionServicesProperties();
         List<String> events = new ArrayList<>();
         LegacyConfigOverrides overrides = new RecordingLegacyConfigOverrides(events);
+        GameLoggingLifecycle loggingLifecycle = new RecordingGameLoggingLifecycle(events);
         GameStaticDataLifecycle staticDataLifecycle = new RecordingGameStaticDataLifecycle(events);
         GameWorldBootstrapLifecycle worldBootstrapLifecycle = new RecordingGameWorldBootstrapLifecycle(events);
         GameEventBootstrapLifecycle eventBootstrapLifecycle = new RecordingGameEventBootstrapLifecycle(events);
@@ -152,6 +156,7 @@ class GameServiceLifecycleTest {
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
             overrides,
+            loggingLifecycle,
             staticDataLifecycle,
             worldBootstrapLifecycle,
             eventBootstrapLifecycle,
@@ -202,6 +207,20 @@ class GameServiceLifecycleTest {
         @Override
         public void applyToGameConfig() {
             events.add("apply");
+        }
+    }
+
+    private static final class RecordingGameLoggingLifecycle extends GameLoggingLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameLoggingLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public synchronized void start() {
+            events.add("logging:start");
         }
     }
 

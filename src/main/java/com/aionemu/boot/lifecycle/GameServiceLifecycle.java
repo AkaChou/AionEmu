@@ -14,6 +14,7 @@ import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
@@ -48,6 +49,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     public GameServiceLifecycle(
         AionServicesProperties services,
         LegacyConfigOverrides legacyConfigOverrides,
+        GameLoggingLifecycle loggingLifecycle,
         GameStaticDataLifecycle staticDataLifecycle,
         GameWorldBootstrapLifecycle worldBootstrapLifecycle,
         GameEventBootstrapLifecycle eventBootstrapLifecycle,
@@ -80,6 +82,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         this(
             services,
             legacyConfigOverrides,
+            loggingLifecycle,
             staticDataLifecycle,
             worldBootstrapLifecycle,
             eventBootstrapLifecycle,
@@ -138,7 +141,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 systemLifecycle,
                 networkStartupLifecycle,
                 ratioLimitLifecycle,
-                startupHooksLifecycle
+                startupHooksLifecycle,
+                loggingLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -147,6 +151,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     GameServiceLifecycle(
         AionServicesProperties services,
         LegacyConfigOverrides legacyConfigOverrides,
+        GameLoggingLifecycle loggingLifecycle,
         GameStaticDataLifecycle staticDataLifecycle,
         GameWorldBootstrapLifecycle worldBootstrapLifecycle,
         GameEventBootstrapLifecycle eventBootstrapLifecycle,

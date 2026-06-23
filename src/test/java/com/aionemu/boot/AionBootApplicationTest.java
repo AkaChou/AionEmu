@@ -27,6 +27,7 @@ import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
@@ -88,6 +89,7 @@ class AionBootApplicationTest {
             context.registerBean(NettyTransportLifecycle.class);
             context.registerBean(AionTransportBoundary.class);
             context.registerBean(LegacyConfigOverrides.class);
+            context.registerBean(GameLoggingLifecycle.class);
             context.registerBean(GameStaticDataLifecycle.class);
             context.registerBean(GameWorldBootstrapLifecycle.class);
             context.registerBean(GameEventBootstrapLifecycle.class);
