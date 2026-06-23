@@ -55,8 +55,6 @@ import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
-import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
-import com.aionemu.gameserver.configs.main.WeddingsConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
@@ -71,6 +69,7 @@ import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
@@ -103,15 +102,12 @@ import com.aionemu.gameserver.services.ShieldService;
 import com.aionemu.gameserver.services.SpringZoneService;
 import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.services.WeatherService;
-import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
-import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
-import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
@@ -796,6 +792,59 @@ public class GameServer {
 		GameDisputeLandLifecycle disputeLandLifecycle,
 		GameHtmlLifecycle htmlLifecycle
 	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			new GameRewardServicesLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle
+	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -899,15 +948,7 @@ public class GameServer {
 		Util.printSection(" *** HTML *** ");
 		htmlLifecycle.start();
 
-		if (CustomConfig.ENABLE_REWARD_SERVICE) {
-			RewardService.getInstance();
-		}
-		if (WeddingsConfig.WEDDINGS_ENABLE) {
-			WeddingService.getInstance();
-		}
-		if (VeteranRewardConfig.VETERANREWARDS_ENABLED) {
-			VeteranRewardsService.getInstance();
-		}
+		rewardServicesLifecycle.start();
 		/**
 		 * Services
 		 */

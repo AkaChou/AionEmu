@@ -16,6 +16,7 @@ import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
@@ -55,6 +56,7 @@ class GameServiceLifecycleTest {
         GameProtectorConquerorLifecycle protectorConquerorLifecycle = new RecordingGameProtectorConquerorLifecycle(events);
         GameDisputeLandLifecycle disputeLandLifecycle = new RecordingGameDisputeLandLifecycle(events);
         GameHtmlLifecycle htmlLifecycle = new RecordingGameHtmlLifecycle(events);
+        GameRewardServicesLifecycle rewardServicesLifecycle = new RecordingGameRewardServicesLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         BiConsumer<String[], Boolean> startAction = (args, chatEnabled) -> events.add("start:" + chatEnabled);
         Runnable stopAction = () -> events.add("stop");
@@ -79,6 +81,7 @@ class GameServiceLifecycleTest {
             protectorConquerorLifecycle,
             disputeLandLifecycle,
             htmlLifecycle,
+            rewardServicesLifecycle,
             threadPoolLifecycle,
             startAction,
             stopAction
@@ -112,6 +115,7 @@ class GameServiceLifecycleTest {
         GameProtectorConquerorLifecycle protectorConquerorLifecycle = new RecordingGameProtectorConquerorLifecycle(events);
         GameDisputeLandLifecycle disputeLandLifecycle = new RecordingGameDisputeLandLifecycle(events);
         GameHtmlLifecycle htmlLifecycle = new RecordingGameHtmlLifecycle(events);
+        GameRewardServicesLifecycle rewardServicesLifecycle = new RecordingGameRewardServicesLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
@@ -134,6 +138,7 @@ class GameServiceLifecycleTest {
             protectorConquerorLifecycle,
             disputeLandLifecycle,
             htmlLifecycle,
+            rewardServicesLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> { },
             () -> events.add("stop")
@@ -409,6 +414,20 @@ class GameServiceLifecycleTest {
         @Override
         public synchronized void start() {
             events.add("html:start");
+        }
+    }
+
+    private static final class RecordingGameRewardServicesLifecycle extends GameRewardServicesLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameRewardServicesLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public synchronized void start() {
+            events.add("rewardServices:start");
         }
     }
 

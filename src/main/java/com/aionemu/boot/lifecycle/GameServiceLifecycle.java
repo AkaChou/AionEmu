@@ -14,6 +14,7 @@ import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
@@ -57,6 +58,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameProtectorConquerorLifecycle protectorConquerorLifecycle,
         GameDisputeLandLifecycle disputeLandLifecycle,
         GameHtmlLifecycle htmlLifecycle,
+        GameRewardServicesLifecycle rewardServicesLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -80,6 +82,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             protectorConquerorLifecycle,
             disputeLandLifecycle,
             htmlLifecycle,
+            rewardServicesLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -102,7 +105,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 battlefieldLifecycle,
                 protectorConquerorLifecycle,
                 disputeLandLifecycle,
-                htmlLifecycle
+                htmlLifecycle,
+                rewardServicesLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -129,6 +133,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameProtectorConquerorLifecycle protectorConquerorLifecycle,
         GameDisputeLandLifecycle disputeLandLifecycle,
         GameHtmlLifecycle htmlLifecycle,
+        GameRewardServicesLifecycle rewardServicesLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction
