@@ -115,6 +115,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameWorldBootstrapLifecycle(List<String> events) {
+            super(new GameWorldBootstrapGateway());
             this.events = events;
         }
 

@@ -81,6 +81,7 @@ import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
@@ -226,7 +227,7 @@ public class GameServer {
 		GameThreadPoolLifecycle threadPoolLifecycle,
 		GameStaticDataLifecycle staticDataLifecycle
 	) {
-		start(args, chatServerEnabledOverride, threadPoolLifecycle, staticDataLifecycle, new GameWorldBootstrapLifecycle());
+		start(args, chatServerEnabledOverride, threadPoolLifecycle, staticDataLifecycle, new GameWorldBootstrapLifecycle(new GameWorldBootstrapGateway()));
 	}
 
 	/**

@@ -13,21 +13,20 @@ import org.junit.jupiter.api.Test;
 class GameWorldBootstrapLifecycleTest {
 
     @Test
+    void usesWorldBootstrapGatewayCollaborator() {
+        assertEquals(GameWorldBootstrapGateway.class, fieldType("worldBootstrapGateway"));
+    }
+
+    @Test
     void startRunsWorldBootstrappersOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameWorldBootstrapLifecycle lifecycle = new GameWorldBootstrapLifecycle(List.of(
-            () -> events.add("idFactory"),
-            () -> events.add("zone"),
-            () -> events.add("hotspot"),
-            () -> events.add("road"),
-            () -> events.add("world")
-        ));
+        GameWorldBootstrapLifecycle lifecycle = new GameWorldBootstrapLifecycle(new RecordingGameWorldBootstrapGateway(events, null));
 
         lifecycle.start();
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("idFactory", "zone", "hotspot", "road", "world"), events);
+        assertEquals(List.of("worldBootstrap"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -36,15 +35,7 @@ class GameWorldBootstrapLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("zone failed");
-        GameWorldBootstrapLifecycle lifecycle = new GameWorldBootstrapLifecycle(List.of(
-            () -> events.add("idFactory"),
-            () -> {
-                events.add("zone");
-                if (events.size() == 2) {
-                    throw failure;
-                }
-            }
-        ));
+        GameWorldBootstrapLifecycle lifecycle = new GameWorldBootstrapLifecycle(new RecordingGameWorldBootstrapGateway(events, failure));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -55,7 +46,34 @@ class GameWorldBootstrapLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("idFactory", "zone", "idFactory", "zone"), events);
+        assertEquals(List.of("worldBootstrap", "worldBootstrap"), events);
         assertEquals(null, lifecycle.getLastFailure());
+    }
+
+    private static final class RecordingGameWorldBootstrapGateway extends GameWorldBootstrapGateway {
+
+        private final List<String> events;
+        private final RuntimeException firstFailure;
+
+        private RecordingGameWorldBootstrapGateway(List<String> events, RuntimeException firstFailure) {
+            this.events = events;
+            this.firstFailure = firstFailure;
+        }
+
+        @Override
+        public void bootstrap() {
+            events.add("worldBootstrap");
+            if (events.size() == 1 && firstFailure != null) {
+                throw firstFailure;
+            }
+        }
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            return GameWorldBootstrapLifecycle.class.getDeclaredField(name).getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
     }
 }
