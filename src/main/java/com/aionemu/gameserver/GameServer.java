@@ -1268,10 +1268,6 @@ public class GameServer {
 		runtimeServicesLifecycle.start();
 		optionalServicesLifecycle.start();
 
-		/**
-		 * Season Ranking Update
-		 */
-		Util.printSection(" *** Season Ranking *** ");
 		seasonRankingLifecycle.start();
 
 		/**

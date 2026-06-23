@@ -1,21 +1,27 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
+import com.aionemu.gameserver.utils.Util;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameSeasonRankingLifecycle {
 
+    private final Runnable sectionPrinter;
     private final Runnable initializer;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
 
     public GameSeasonRankingLifecycle() {
-        this(() -> SeasonRankingUpdateService.getInstance().onStart());
+        this(
+            () -> Util.printSection(" *** Season Ranking *** "),
+            () -> SeasonRankingUpdateService.getInstance().onStart()
+        );
     }
 
-    GameSeasonRankingLifecycle(Runnable initializer) {
+    GameSeasonRankingLifecycle(Runnable sectionPrinter, Runnable initializer) {
+        this.sectionPrinter = sectionPrinter;
         this.initializer = initializer;
     }
 
@@ -26,6 +32,7 @@ public class GameSeasonRankingLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             initializer.run();
             loaded = true;
             lastFailure = null;

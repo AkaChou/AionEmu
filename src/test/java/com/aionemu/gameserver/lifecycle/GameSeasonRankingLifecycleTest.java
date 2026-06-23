@@ -15,13 +15,16 @@ class GameSeasonRankingLifecycleTest {
     @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameSeasonRankingLifecycle lifecycle = new GameSeasonRankingLifecycle(() -> events.add("seasonRanking"));
+        GameSeasonRankingLifecycle lifecycle = new GameSeasonRankingLifecycle(
+            () -> events.add("section"),
+            () -> events.add("seasonRanking")
+        );
 
         lifecycle.start();
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("seasonRanking"), events);
+        assertEquals(List.of("section", "seasonRanking"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -30,9 +33,9 @@ class GameSeasonRankingLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("season ranking failed");
-        GameSeasonRankingLifecycle lifecycle = new GameSeasonRankingLifecycle(() -> {
+        GameSeasonRankingLifecycle lifecycle = new GameSeasonRankingLifecycle(() -> events.add("section"), () -> {
             events.add("seasonRanking");
-            if (events.size() == 1) {
+            if (events.size() == 2) {
                 throw failure;
             }
         });
@@ -46,7 +49,7 @@ class GameSeasonRankingLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("seasonRanking", "seasonRanking"), events);
+        assertEquals(List.of("section", "seasonRanking", "section", "seasonRanking"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 }
