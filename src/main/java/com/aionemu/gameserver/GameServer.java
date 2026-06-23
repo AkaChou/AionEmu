@@ -70,6 +70,7 @@ import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
@@ -79,43 +80,23 @@ import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
-import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
-import com.aionemu.gameserver.services.AdminService;
-import com.aionemu.gameserver.services.AnnouncementService;
-import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ChallengeTaskService;
-import com.aionemu.gameserver.services.CuringZoneService;
-import com.aionemu.gameserver.services.DebugService;
-import com.aionemu.gameserver.services.ExchangeService;
-import com.aionemu.gameserver.services.FlyRingService;
-import com.aionemu.gameserver.services.GameTimeService;
 import com.aionemu.gameserver.services.HousingBidService;
-import com.aionemu.gameserver.services.LimitedItemTradeService;
 import com.aionemu.gameserver.services.NpcShoutsService;
-import com.aionemu.gameserver.services.PeriodicSaveService;
-import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.ShieldService;
-import com.aionemu.gameserver.services.SpringZoneService;
 import com.aionemu.gameserver.services.TownService;
-import com.aionemu.gameserver.services.WeatherService;
-import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
-import com.aionemu.gameserver.services.territory.TerritoryService;
-import com.aionemu.gameserver.services.transfers.PlayerTransferService;
-import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
-import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.utils.javaagent.JavaAgentUtils;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -845,6 +826,61 @@ public class GameServer {
 		GameHtmlLifecycle htmlLifecycle,
 		GameRewardServicesLifecycle rewardServicesLifecycle
 	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			new GameRuntimeServicesLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle,
+		GameRuntimeServicesLifecycle runtimeServicesLifecycle
+	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -953,26 +989,7 @@ public class GameServer {
 		 * Services
 		 */
 		Util.printSection(" *** Services *** ");
-		PeriodicSaveService.getInstance();
-		AdminService.getInstance();
-		PlayerTransferService.getInstance();
-		TerritoryService.getInstance().initTerritory();
-		GameTimeService.getInstance();
-		AnnouncementService.getInstance();
-		DebugService.getInstance();
-		WeatherService.getInstance();
-		BrokerService.getInstance();
-		Influence.getInstance();
-		ExchangeService.getInstance();
-		PetitionService.getInstance();
-		InstanceService.load();
-		FlyRingService.getInstance();
-		CuringZoneService.getInstance();
-		SpringZoneService.getInstance();
-		BoostEventService.getInstance().onStart();
-		TaskManagerFromDB.getInstance();
-		LimitedItemTradeService.getInstance().start();
-		GameTimeManager.startClock();
+		runtimeServicesLifecycle.start();
 
 		if (CustomConfig.LIMITS_ENABLED) {
 			PlayerLimitService.getInstance().scheduleUpdate();
