@@ -49,6 +49,7 @@ import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
+import com.aionemu.gameserver.lifecycle.GameCustomEventsGateway;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
@@ -499,7 +500,7 @@ public class GameServer {
 			eventRuntimeLifecycle,
 			cleaningLifecycle,
 			scheduledServicesLifecycle,
-			new GameCustomEventsLifecycle()
+			new GameCustomEventsLifecycle(new GameCustomEventsGateway())
 		);
 	}
 
