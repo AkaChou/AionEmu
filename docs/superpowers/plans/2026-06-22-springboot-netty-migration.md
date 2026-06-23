@@ -152,7 +152,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Chat profile + Netty logged `Aion service startup: login=true, chat=true, game=true`, `AL Chat Server started`, Netty chat listeners on `127.0.0.1:12041` and `127.0.0.1:19021`, and game-side chat connector enabled.
   - Explicit `legacy-nio` fallback logged `Using legacy NIO transport managed by existing game/login/chat startup code` and legacy listeners on `127.0.0.1:19014` and `127.0.0.1:12106`, without boot-managed Netty event loop startup.
 - Login + game smoke with temporary `aion.home` reached `Server initialization COMPLETE`.
-- Fat jar smoke on Java 25 required `--add-opens java.base/java.lang=ALL-UNNAMED` for legacy cglib/lambdaj access.
+- Earlier fat jar smoke on Java 25 required `--add-opens java.base/java.lang=ALL-UNNAMED` for legacy reflective proxy access; current code no longer depends on that workaround.
 - Fat jar smoke with temporary `aion.home`, temporary ports, geodata disabled, svstats disabled, Netty transport, and chat disabled reached `=== Server initialization COMPLETE ===`; it logged Netty listeners on `127.0.0.1:19014`, `127.0.0.1:12106`, and `127.0.0.1:17777`, plus `Chat Server is disabled by configuration`.
 - Database schema verification:
   - `al_server_gs` has 98 tables.

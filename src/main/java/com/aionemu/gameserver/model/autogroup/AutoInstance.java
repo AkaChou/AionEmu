@@ -16,14 +16,16 @@
  */
 package com.aionemu.gameserver.model.autogroup;
 
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.sort;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.aionemu.commons.taskmanager.AbstractLockManager;
+import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
@@ -45,7 +47,12 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 		if (i < count) {
 			return false;
 		}
-		items = sort(items, on(Item.class).getExpireTime());
+		Collections.sort(items, new Comparator<Item>() {
+			@Override
+			public int compare(Item o1, Item o2) {
+				return Long.compare(o1.getExpireTime(), o2.getExpireTime());
+			}
+		});
 		for (Item item : items) {
 			long l = player.getInventory().decreaseItemCount(item, count);
 			if (l == 0) {
@@ -55,6 +62,36 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 			}
 		}
 		return true;
+	}
+
+	protected List<AGPlayer> getAGPlayersByRace(Race race) {
+		List<AGPlayer> result = new ArrayList<AGPlayer>();
+		for (AGPlayer agPlayer : players.values()) {
+			if (agPlayer.getRace() == race) {
+				result.add(agPlayer);
+			}
+		}
+		return result;
+	}
+
+	protected List<Player> getPlayersByRace(Race race) {
+		List<Player> result = new ArrayList<Player>();
+		for (Player player : instance.getPlayersInside()) {
+			if (player.getRace() == race) {
+				result.add(player);
+			}
+		}
+		return result;
+	}
+
+	protected List<AGPlayer> getPlayersByClass(PlayerClass playerClass) {
+		List<AGPlayer> result = new ArrayList<AGPlayer>();
+		for (AGPlayer agPlayer : players.values()) {
+			if (agPlayer.getPlayerClass() == playerClass) {
+				result.add(agPlayer);
+			}
+		}
+		return result;
 	}
 
 	@Override

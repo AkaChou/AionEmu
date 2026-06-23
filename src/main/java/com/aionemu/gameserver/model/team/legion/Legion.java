@@ -16,11 +16,6 @@
  */
 package com.aionemu.gameserver.model.team.legion;
 
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.select;
-import static org.hamcrest.Matchers.equalTo;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -510,7 +505,13 @@ public class Legion {
 		if (legionHistory.isEmpty()) {
 			return legionHistory;
 		}
-		return select(legionHistory, having(on(LegionHistory.class).getTabId(), equalTo(tabType)));
+		List<LegionHistory> result = new ArrayList<LegionHistory>();
+		for (LegionHistory history : legionHistory) {
+			if (history.getTabId() == tabType) {
+				result.add(history);
+			}
+		}
+		return result;
 	}
 
 	/**

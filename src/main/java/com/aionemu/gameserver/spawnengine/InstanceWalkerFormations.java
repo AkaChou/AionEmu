@@ -16,20 +16,13 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
-import static ch.lambdaj.Lambda.by;
-import static ch.lambdaj.Lambda.group;
-import static ch.lambdaj.Lambda.on;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ch.lambdaj.group.Group;
 
 /**
  * @author Rolandas
@@ -66,13 +59,12 @@ public class InstanceWalkerFormations {
 	 */
 	protected void organizeAndSpawn() {
 		for (List<ClusteredNpc> candidates : groupedSpawnObjects.values()) {
-			Group<ClusteredNpc> bySize = group(candidates, by(on(ClusteredNpc.class).getPositionHash()));
-			Set<String> keys = bySize.keySet();
+			Map<Integer, List<ClusteredNpc>> byPosition = groupByPositionHash(candidates);
 			int maxSize = 0;
 			List<ClusteredNpc> npcs = null;
-			for (String key : keys) {
-				if (bySize.find(key).size() > maxSize) {
-					npcs = bySize.find(key);
+			for (List<ClusteredNpc> group : byPosition.values()) {
+				if (group.size() > maxSize) {
+					npcs = group;
 					maxSize = npcs.size();
 				}
 			}
@@ -97,6 +89,20 @@ public class InstanceWalkerFormations {
 				}
 			}
 		}
+	}
+
+	private Map<Integer, List<ClusteredNpc>> groupByPositionHash(List<ClusteredNpc> candidates) {
+		Map<Integer, List<ClusteredNpc>> grouped = new HashMap<Integer, List<ClusteredNpc>>();
+		for (ClusteredNpc candidate : candidates) {
+			Integer positionHash = candidate.getPositionHash();
+			List<ClusteredNpc> group = grouped.get(positionHash);
+			if (group == null) {
+				group = new ArrayList<ClusteredNpc>();
+				grouped.put(positionHash, group);
+			}
+			group.add(candidate);
+		}
+		return grouped;
 	}
 
 	protected synchronized void onInstanceDestroy() {

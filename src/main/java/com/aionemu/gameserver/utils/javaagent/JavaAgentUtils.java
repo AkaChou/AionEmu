@@ -31,7 +31,7 @@ public class JavaAgentUtils {
 	public static boolean isConfigured() {
 		JavaAgentUtils jau = new JavaAgentUtils();
 		if (!(jau instanceof EnhancedObject)) {
-			throw new Error("Please configure -javaagent jvm option.");
+			throw new Error("Callback bytecode weaving is not configured. Run Maven process-classes before startup.");
 		}
 
 		if (!checkGlobalCallback()) {

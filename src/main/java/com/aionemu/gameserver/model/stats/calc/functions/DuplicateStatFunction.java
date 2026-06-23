@@ -16,10 +16,6 @@
  */
 package com.aionemu.gameserver.model.stats.calc.functions;
 
-import static ch.lambdaj.Lambda.forEach;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.selectMax;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,13 +67,25 @@ class DuplicateStatFunction extends StatFunction {
 			}
 			if (!functions.isEmpty()) {
 				if (getName() == StatEnum.PVP_ATTACK_RATIO || (getName() == StatEnum.PVP_DEFEND_RATIO)) {
-					forEach(functions).apply(stat);
+					for (StatFunction function : functions) {
+						function.apply(stat);
+					}
 				} else {
-					((StatFunction) selectMax(functions, on(StatFunction.class).getValue())).apply(stat);
+					selectMaxValue(functions).apply(stat);
 				}
 				functions.clear();
 			}
 		}
+	}
+
+	private StatFunction selectMaxValue(List<StatFunction> functions) {
+		StatFunction max = functions.get(0);
+		for (StatFunction function : functions) {
+			if (function.getValue() > max.getValue()) {
+				max = function;
+			}
+		}
+		return max;
 	}
 
 	private List<StatFunction> getFunctions(List<StatFunction> list, Stat2 stat, Item item) {

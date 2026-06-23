@@ -16,10 +16,6 @@
  */
 package com.aionemu.gameserver.dataholders;
 
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.selectDistinct;
-import static ch.lambdaj.collection.LambdaCollections.with;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -264,7 +260,9 @@ public class ItemGroupsData {
 			List<ItemRaceEntry> food = getPetFood(foodType);
 			if (food != null) {
 				FastSet<Integer> itemIds = FastSet.newInstance();
-				itemIds.addAll(selectDistinct(with(food).extract(on(ItemRaceEntry.class).getId())));
+				for (ItemRaceEntry item : food) {
+					itemIds.add(item.getId());
+				}
 				petFood.put(foodType, itemIds);
 				if (foodType != FoodType.EXCLUDES && foodType != FoodType.STINKY) {
 					petFoodCount += itemIds.size();

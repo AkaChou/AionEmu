@@ -16,13 +16,10 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.sort;
-import static ch.lambdaj.Lambda.sum;
-
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +48,13 @@ public class WalkerGroup {
 	private volatile int groupStep;
 
 	public WalkerGroup(List<ClusteredNpc> members) {
-		this.members = sort(members, on(ClusteredNpc.class).getWalkerIndex());
+		this.members = members;
+		Collections.sort(this.members, new Comparator<ClusteredNpc>() {
+			@Override
+			public int compare(ClusteredNpc o1, ClusteredNpc o2) {
+				return Integer.compare(o1.getWalkerIndex(), o2.getWalkerIndex());
+			}
+		});
 		memberSteps = new int[members.size()];
 		walkerXpos = members.get(0).getX();
 		walkerYpos = members.get(0).getY();
@@ -61,15 +64,14 @@ public class WalkerGroup {
 	public void form() {
 		if (getWalkType() == WalkerGroupType.SQUARE) {
 			int[] rows = members.get(0).getWalkTemplate().getRows();
-			if (sum(ArrayUtils.toObject(rows), on(Integer.class)) != members.size()) {
+			if (sumRows(rows) != members.size()) {
 				log.warn("Invalid row sizes for walk cluster " + members.get(0).getWalkTemplate().getRouteId());
 			}
 			if (rows.length == 1) {
 				// Line formation: distance 2 meters from each other (divide by 2 and multiple
 				// by 2)
 				// negative at left hand and positive at the right hand
-				float bounds = sum(members,
-						on(ClusteredNpc.class).getNpc().getObjectTemplate().getBoundRadius().getSide());
+				float bounds = sumMemberBoundSides();
 				float distance = (1 - members.size()) / 2f * (WalkerGroupShift.DISTANCE + bounds);
 				Point2D origin = new Point2D(walkerXpos, walkerYpos);
 				Point2D destination = new Point2D(members.get(0).getWalkTemplate().getRouteStep(2).getX(),
@@ -137,6 +139,22 @@ public class WalkerGroup {
 		}else if (getWalkType() == WalkerGroupType.POINT) {
 			log.warn("No formation specified for walk cluster " + members.get(0).getWalkTemplate().getRouteId());
 		}
+	}
+
+	private int sumRows(int[] rows) {
+		int sum = 0;
+		for (int row : rows) {
+			sum += row;
+		}
+		return sum;
+	}
+
+	private float sumMemberBoundSides() {
+		float sum = 0;
+		for (ClusteredNpc member : members) {
+			sum += member.getNpc().getObjectTemplate().getBoundRadius().getSide();
+		}
+		return sum;
 	}
 
 	@SuppressWarnings("unused")

@@ -16,16 +16,13 @@
  */
 package com.aionemu.gameserver.ai2;
 
-import static ch.lambdaj.Lambda.join;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.selectDistinct;
-import static ch.lambdaj.collection.LambdaCollections.with;
-
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,11 +105,13 @@ public class AI2Engine implements GameEngine {
 	}
 
 	private void validateScripts() {
-		Collection<String> npcAINames = selectDistinct(
-				with(DataManager.NPC_DATA.getNpcData().valueCollection()).extract(on(NpcTemplate.class).getAi()));
+		Collection<String> npcAINames = new HashSet<String>();
+		for (NpcTemplate npcTemplate : DataManager.NPC_DATA.getNpcData().valueCollection()) {
+			npcAINames.add(npcTemplate.getAi());
+		}
 		npcAINames.removeAll(aiMap.keySet());
 		if (npcAINames.size() > 0) {
-			log.warn("Bad AI names: " + join(npcAINames));
+			log.warn("Bad AI names: " + StringUtils.join(npcAINames, ", "));
 		}
 	}
 

@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.model.autogroup;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
-
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,7 +32,10 @@ public class SearchInstance {
 		this.instanceMaskId = instanceMaskId;
 		this.ert = ert;
 		if (members != null) {
-			this.members = extract(members, on(Player.class).getObjectId());
+			this.members = new ArrayList<Integer>();
+			for (Player member : members) {
+				this.members.add(member.getObjectId());
+			}
 		}
 	}
 

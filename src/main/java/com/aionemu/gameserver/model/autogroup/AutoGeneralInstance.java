@@ -16,11 +16,6 @@
  */
 package com.aionemu.gameserver.model.autogroup;
 
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.select;
-import static org.hamcrest.Matchers.equalTo;
-
 import java.util.List;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -133,7 +128,4 @@ public class AutoGeneralInstance extends AutoInstance {
 		PlayerGroupService.removePlayer(player);
 	}
 
-	private List<AGPlayer> getPlayersByClass(PlayerClass playerClass) {
-		return select(players, having(on(AGPlayer.class).getPlayerClass(), equalTo(playerClass)));
-	}
 }

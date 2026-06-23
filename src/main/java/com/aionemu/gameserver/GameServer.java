@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -181,7 +180,6 @@ import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import com.aionemu.gameserver.world.zone.ZoneService;
 
-import ch.lambdaj.Lambda;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
@@ -291,7 +289,6 @@ public class GameServer {
 		long start = System.currentTimeMillis();
 		log.info("GameServer starting...");
 
-		enableLambdaJitting();
 		final GameEngine[] parallelEngines = { 
 			QuestEngine.getInstance(), 
 			InstanceEngine.getInstance(),
@@ -783,9 +780,9 @@ public class GameServer {
 		Thread.setDefaultUncaughtExceptionHandler(new ThreadUncaughtExceptionHandler());
 		
 		if (JavaAgentUtils.isConfigured()) {
-			log.info("JavaAgent [Callback Support] is configured.");
+			log.info("Callback support is configured.");
 		} else {
-			log.warn("JavaAgent [Callback Support] is NOT configured. Performance may be affected.");
+			log.warn("Callback support is NOT configured. Gameplay callback behavior may be affected.");
 		}
 		
 		CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
@@ -811,17 +808,6 @@ public class GameServer {
 		
 		ThreadConfig.load();
 		ThreadPoolManager.getInstance();
-	}
-
-	private static void enableLambdaJitting() {
-		try {
-			Method enableJitting = Lambda.class.getMethod("enableJitting", boolean.class);
-			enableJitting.invoke(null, true);
-		} catch (NoSuchMethodException e) {
-			log.debug("lambdaj runtime does not expose enableJitting(boolean); skipping JIT configuration.");
-		} catch (Exception e) {
-			log.warn("Unable to configure lambdaj JIT support.", e);
-		}
 	}
 
 	public synchronized static void addStartupHook(StartupHook hook) {

@@ -16,11 +16,6 @@
  */
 package com.aionemu.gameserver.model.instance.instancereward;
 
-import static ch.lambdaj.Lambda.maxFrom;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.sort;
-
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.mutable.MutableInt;
@@ -29,7 +24,6 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.geometry.Point3D;
 import com.aionemu.gameserver.model.instance.playerreward.KamarBattlefieldPlayerReward;
-import com.aionemu.gameserver.model.instance.playerreward.PvPArenaPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -98,12 +92,8 @@ public class KamarBattlefieldReward extends InstanceReward<KamarBattlefieldPlaye
 	}
 
 	public List<KamarBattlefieldPlayerReward> sortPoints() {
-		return sort(getInstanceRewards(), on(PvPArenaPlayerReward.class).getScorePoints(), new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return o2 != null ? o2.compareTo(o1) : -o1.compareTo(o2);
-			}
-		});
+		return RewardCollections.sortedByScoreDescending(getInstanceRewards(),
+				KamarBattlefieldPlayerReward::getScorePoints);
 	}
 
 	private void setStartPositions() {
@@ -214,6 +204,6 @@ public class KamarBattlefieldReward extends InstanceReward<KamarBattlefieldPlaye
 	}
 
 	public boolean hasCapPoints() {
-		return maxFrom(getInstanceRewards()).getPoints() >= capPoints;
+		return RewardCollections.maxPoints(getInstanceRewards()) >= capPoints;
 	}
 }

@@ -16,9 +16,6 @@
  */
 package com.aionemu.gameserver.dataholders;
 
-import static ch.lambdaj.Lambda.extract;
-import static ch.lambdaj.Lambda.on;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -61,7 +58,9 @@ public class MaterialData {
 		for (MaterialTemplate template : materialTemplates) {
 			materialsById.put(template.getId(), template);
 			if (template.getSkills() != null) {
-				skillIds.addAll(extract(template.getSkills(), on(MaterialSkill.class).getId()));
+				for (MaterialSkill skill : template.getSkills()) {
+					skillIds.add(skill.getId());
+				}
 			}
 		}
 

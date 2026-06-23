@@ -37,10 +37,12 @@ class AionBootApplicationTest {
     @Test
     void productionSourcesExposeOnlyBootMain() throws IOException {
         Path mainSource = Path.of("src/main/java");
+        Path callbackBuildToolSource = mainSource.resolve("com/aionemu/commons/callbacks/weaver");
         List<Path> productionMainFiles;
         try (var paths = Files.walk(mainSource)) {
             productionMainFiles = paths
                 .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.startsWith(callbackBuildToolSource))
                 .filter(AionBootApplicationTest::declaresPublicStaticMain)
                 .sorted()
                 .toList();
