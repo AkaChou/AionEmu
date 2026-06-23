@@ -52,6 +52,7 @@ import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
@@ -241,7 +242,8 @@ public class GameServer {
 		GameStaticDataLifecycle staticDataLifecycle,
 		GameWorldBootstrapLifecycle worldBootstrapLifecycle
 	) {
-		start(args, chatServerEnabledOverride, threadPoolLifecycle, staticDataLifecycle, worldBootstrapLifecycle, new GameEventBootstrapLifecycle());
+		start(args, chatServerEnabledOverride, threadPoolLifecycle, staticDataLifecycle, worldBootstrapLifecycle,
+			new GameEventBootstrapLifecycle(new GameEventBootstrapGateway()));
 	}
 
 	/**

@@ -13,6 +13,7 @@ import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
@@ -247,6 +248,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameEventBootstrapLifecycle(List<String> events) {
+            super(new GameEventBootstrapGateway());
             this.events = events;
         }
 

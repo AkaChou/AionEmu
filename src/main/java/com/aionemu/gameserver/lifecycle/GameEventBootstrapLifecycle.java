@@ -1,40 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.services.events.AtreianPassportService;
-import com.aionemu.gameserver.services.events.EventWindowService;
-import com.aionemu.gameserver.services.events.ShugoSweepService;
-import com.aionemu.gameserver.services.player.LunaShopService;
-import com.aionemu.gameserver.services.toypet.MinionService;
-import com.aionemu.gameserver.utils.Util;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameEventBootstrapLifecycle {
 
-    private final List<Runnable> bootstrappers;
+    private final GameEventBootstrapGateway eventBootstrapGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameEventBootstrapLifecycle() {
-        this(List.of(
-            () -> Util.printSection(" *** Luna Shop System *** "),
-            () -> LunaShopService.getInstance().init(),
-            () -> Util.printSection(" *** Minion System *** "),
-            () -> MinionService.getInstance().init(),
-            () -> Util.printSection(" *** Shugo Sweep System *** "),
-            () -> ShugoSweepService.getInstance().initShugoSweep(),
-            () -> Util.printSection(" *** Atreian Passport System *** "),
-            () -> AtreianPassportService.getInstance().onStart(),
-            () -> Util.printSection(" *** Event Window System *** "),
-            () -> EventWindowService.getInstance().initialize()
-        ));
-    }
-
-    GameEventBootstrapLifecycle(List<Runnable> bootstrappers) {
-        this.bootstrappers = List.copyOf(bootstrappers);
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -43,7 +19,7 @@ public class GameEventBootstrapLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            bootstrappers.forEach(Runnable::run);
+            eventBootstrapGateway.bootstrap();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {
