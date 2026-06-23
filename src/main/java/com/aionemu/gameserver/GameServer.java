@@ -1225,10 +1225,6 @@ public class GameServer {
 		worldBootstrapLifecycle.start();
 		eventBootstrapLifecycle.start();
 
-		/**
-		 * GeoData
-		 */
-		Util.printSection(" *** Geodata *** ");
 		geoNavLifecycle.start();
 		worldActivationLifecycle.start(() -> activeServer = new GameServer());
 		GameServer gs = activeServer;

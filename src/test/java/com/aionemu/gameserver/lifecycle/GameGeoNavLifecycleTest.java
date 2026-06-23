@@ -16,6 +16,7 @@ class GameGeoNavLifecycleTest {
     void startInitializesGeoThenNavOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameGeoNavLifecycle lifecycle = new GameGeoNavLifecycle(
+            () -> events.add("section"),
             () -> events.add("geo"),
             () -> events.add("nav")
         );
@@ -24,7 +25,7 @@ class GameGeoNavLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("geo", "nav"), events);
+        assertEquals(List.of("section", "geo", "nav"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -34,10 +35,11 @@ class GameGeoNavLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("nav failed");
         GameGeoNavLifecycle lifecycle = new GameGeoNavLifecycle(
+            () -> events.add("section"),
             () -> events.add("geo"),
             () -> {
                 events.add("nav");
-                if (events.size() == 2) {
+                if (events.size() == 3) {
                     throw failure;
                 }
             }
@@ -52,7 +54,7 @@ class GameGeoNavLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("geo", "nav", "geo", "nav"), events);
+        assertEquals(List.of("section", "geo", "nav", "section", "geo", "nav"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 }

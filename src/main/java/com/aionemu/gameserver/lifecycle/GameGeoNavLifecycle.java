@@ -2,11 +2,13 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.utils.Util;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameGeoNavLifecycle {
 
+    private final Runnable sectionPrinter;
     private final Runnable geoInitializer;
     private final Runnable navInitializer;
     private boolean loaded;
@@ -15,12 +17,14 @@ public class GameGeoNavLifecycle {
 
     public GameGeoNavLifecycle() {
         this(
+            () -> Util.printSection(" *** Geodata *** "),
             () -> GeoService.getInstance().initializeGeo(),
             () -> NavService.getInstance().initializeNav()
         );
     }
 
-    GameGeoNavLifecycle(Runnable geoInitializer, Runnable navInitializer) {
+    GameGeoNavLifecycle(Runnable sectionPrinter, Runnable geoInitializer, Runnable navInitializer) {
+        this.sectionPrinter = sectionPrinter;
         this.geoInitializer = geoInitializer;
         this.navInitializer = navInitializer;
     }
@@ -32,6 +36,7 @@ public class GameGeoNavLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             geoInitializer.run();
             navInitializer.run();
             loaded = true;
