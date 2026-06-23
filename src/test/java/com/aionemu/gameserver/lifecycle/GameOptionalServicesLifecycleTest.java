@@ -6,12 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
 class GameOptionalServicesLifecycleTest {
+
+    @Test
+    void usesOptionalServicesGatewayCollaborator() {
+        assertEquals(GameOptionalServicesGateway.class, fieldType("optionalServicesGateway"));
+    }
 
     @Test
     void startRunsEnabledInitializersOnceInLegacyOrderAndRecordsLoadTime() {
@@ -34,21 +41,22 @@ class GameOptionalServicesLifecycleTest {
         AtomicInteger shoutReads = new AtomicInteger();
         AtomicInteger shieldReads = new AtomicInteger();
         GameOptionalServicesLifecycle lifecycle = new GameOptionalServicesLifecycle(
-            () -> {
-                limitReads.incrementAndGet();
-                return false;
-            },
-            () -> events.add("playerLimit"),
-            () -> {
-                shoutReads.incrementAndGet();
-                return true;
-            },
-            () -> events.add("npcShouts"),
-            () -> {
-                shieldReads.incrementAndGet();
-                return false;
-            },
-            () -> events.add("shield")
+            new RecordingGameOptionalServicesGateway(
+                events,
+                () -> {
+                    limitReads.incrementAndGet();
+                    return false;
+                },
+                () -> {
+                    shoutReads.incrementAndGet();
+                    return true;
+                },
+                () -> {
+                    shieldReads.incrementAndGet();
+                    return false;
+                },
+                null
+            )
         );
 
         lifecycle.start();
@@ -65,17 +73,13 @@ class GameOptionalServicesLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("optional services failed");
         GameOptionalServicesLifecycle lifecycle = new GameOptionalServicesLifecycle(
-            () -> true,
-            () -> events.add("playerLimit"),
-            () -> true,
-            () -> {
-                events.add("npcShouts");
-                if (events.size() == 2) {
-                    throw failure;
-                }
-            },
-            () -> true,
-            () -> events.add("shield")
+            new RecordingGameOptionalServicesGateway(
+                events,
+                () -> true,
+                () -> true,
+                () -> true,
+                failure
+            )
         );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
@@ -98,12 +102,61 @@ class GameOptionalServicesLifecycleTest {
         boolean siegeShieldEnabled
     ) {
         return new GameOptionalServicesLifecycle(
-            () -> limitsEnabled,
-            () -> events.add("playerLimit"),
-            () -> npcShoutsEnabled,
-            () -> events.add("npcShouts"),
-            () -> siegeShieldEnabled,
-            () -> events.add("shield")
+            new RecordingGameOptionalServicesGateway(
+                events,
+                () -> limitsEnabled,
+                () -> npcShoutsEnabled,
+                () -> siegeShieldEnabled,
+                null
+            )
         );
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            Field field = GameOptionalServicesLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameOptionalServicesGateway extends GameOptionalServicesGateway {
+
+        private final List<String> events;
+        private final BooleanSupplier limitsEnabled;
+        private final BooleanSupplier npcShoutsEnabled;
+        private final BooleanSupplier siegeShieldEnabled;
+        private final RuntimeException firstFailure;
+
+        private RecordingGameOptionalServicesGateway(
+            List<String> events,
+            BooleanSupplier limitsEnabled,
+            BooleanSupplier npcShoutsEnabled,
+            BooleanSupplier siegeShieldEnabled,
+            RuntimeException firstFailure
+        ) {
+            this.events = events;
+            this.limitsEnabled = limitsEnabled;
+            this.npcShoutsEnabled = npcShoutsEnabled;
+            this.siegeShieldEnabled = siegeShieldEnabled;
+            this.firstFailure = firstFailure;
+        }
+
+        @Override
+        public void start() {
+            if (limitsEnabled.getAsBoolean()) {
+                events.add("playerLimit");
+            }
+            if (npcShoutsEnabled.getAsBoolean()) {
+                events.add("npcShouts");
+                if (events.size() == 2 && firstFailure != null) {
+                    throw firstFailure;
+                }
+            }
+            if (siegeShieldEnabled.getAsBoolean()) {
+                events.add("shield");
+            }
+        }
     }
 }

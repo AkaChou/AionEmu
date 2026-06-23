@@ -401,6 +401,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameOptionalServicesLifecycle(List<String> events) {
+            super(new GameOptionalServicesGateway());
             this.events = events;
         }
 
