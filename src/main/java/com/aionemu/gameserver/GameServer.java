@@ -100,6 +100,7 @@ import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSystemPropertiesGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
@@ -1211,7 +1212,7 @@ public class GameServer {
 			new GameLoggingLifecycle(new GameLoggingGateway()),
 			new GameUtilityServicesLifecycle(),
 			new GameAdminPanelLifecycle(),
-			new GameSystemPropertiesLifecycle(),
+			new GameSystemPropertiesLifecycle(new GameSystemPropertiesGateway()),
 			new GameStartupLogLifecycle(new GameStartupLogGateway()),
 			new GameChatServerOverrideLifecycle()
 		);

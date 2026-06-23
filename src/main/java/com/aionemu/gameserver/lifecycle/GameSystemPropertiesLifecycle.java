@@ -1,26 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameSystemPropertiesLifecycle {
 
-    private final Runnable propertyInitializer;
+    private final GameSystemPropertiesGateway systemPropertiesGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameSystemPropertiesLifecycle() {
-        this(() -> {
-            System.setProperty("file.encoding", "UTF-8");
-            System.setProperty("java.net.preferIPv4Stack", "true");
-            System.setProperty("java.net.preferIPv6Addresses", "false");
-        });
-    }
-
-    GameSystemPropertiesLifecycle(Runnable propertyInitializer) {
-        this.propertyInitializer = propertyInitializer;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -29,7 +19,7 @@ public class GameSystemPropertiesLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            propertyInitializer.run();
+            systemPropertiesGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {

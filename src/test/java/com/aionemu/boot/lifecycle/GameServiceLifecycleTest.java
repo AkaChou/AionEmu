@@ -61,6 +61,7 @@ import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSystemPropertiesGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
@@ -688,6 +689,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSystemPropertiesLifecycle(List<String> events) {
+            super(new GameSystemPropertiesGateway());
             this.events = events;
         }
 

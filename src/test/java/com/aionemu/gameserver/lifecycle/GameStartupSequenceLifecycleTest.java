@@ -576,6 +576,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameSystemPropertiesLifecycle(List<String> events) {
+            super(new GameSystemPropertiesGateway());
             this.events = events;
         }
 
