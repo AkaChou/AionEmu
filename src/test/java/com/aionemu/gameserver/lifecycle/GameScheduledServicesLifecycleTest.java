@@ -21,7 +21,7 @@ class GameScheduledServicesLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("pigPoppy", "abyss", "imperialTomb"), events);
+        assertEquals(List.of("section", "pigPoppy", "abyss", "imperialTomb"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -34,7 +34,7 @@ class GameScheduledServicesLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of(), events);
+        assertEquals(List.of("section"), events);
     }
 
     @Test
@@ -42,12 +42,13 @@ class GameScheduledServicesLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("scheduled service failed");
         GameScheduledServicesLifecycle lifecycle = new GameScheduledServicesLifecycle(
+            () -> events.add("section"),
             () -> true,
             () -> events.add("pigPoppy"),
             () -> true,
             () -> {
                 events.add("abyss");
-                if (events.size() == 2) {
+                if (events.size() == 3) {
                     throw failure;
                 }
             },
@@ -64,7 +65,15 @@ class GameScheduledServicesLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("pigPoppy", "abyss", "pigPoppy", "abyss", "imperialTomb"), events);
+        assertEquals(List.of(
+            "section",
+            "pigPoppy",
+            "abyss",
+            "section",
+            "pigPoppy",
+            "abyss",
+            "imperialTomb"
+        ), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 
@@ -75,6 +84,7 @@ class GameScheduledServicesLifecycleTest {
         boolean imperialTombEnabled
     ) {
         return new GameScheduledServicesLifecycle(
+            () -> events.add("section"),
             () -> pigPoppyEventEnabled,
             () -> events.add("pigPoppy"),
             () -> abyssEventEnabled,

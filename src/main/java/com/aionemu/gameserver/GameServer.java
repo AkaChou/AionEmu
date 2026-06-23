@@ -1248,10 +1248,6 @@ public class GameServer {
 		 */
 		cleaningLifecycle.start();
 
-		/**
-		 * Scheduled Services
-		 */
-		Util.printSection(" *** Scheduled Services *** ");
 		scheduledServicesLifecycle.start();
 
 		/**

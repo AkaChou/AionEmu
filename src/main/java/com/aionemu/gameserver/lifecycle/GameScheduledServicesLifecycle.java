@@ -4,12 +4,14 @@ import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.services.events.PigPoppyEventService;
 import com.aionemu.gameserver.services.events.TreasureAbyssService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
+import com.aionemu.gameserver.utils.Util;
 import java.util.function.BooleanSupplier;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameScheduledServicesLifecycle {
 
+    private final Runnable sectionPrinter;
     private final BooleanSupplier pigPoppyEventEnabled;
     private final Runnable pigPoppyScheduler;
     private final BooleanSupplier abyssEventEnabled;
@@ -22,6 +24,7 @@ public class GameScheduledServicesLifecycle {
 
     public GameScheduledServicesLifecycle() {
         this(
+            () -> Util.printSection(" *** Scheduled Services *** "),
             () -> EventsConfig.ENABLE_PIG_POPPY_EVENT,
             PigPoppyEventService::ScheduleCron,
             () -> EventsConfig.ENABLE_ABYSS_EVENT,
@@ -32,6 +35,7 @@ public class GameScheduledServicesLifecycle {
     }
 
     GameScheduledServicesLifecycle(
+        Runnable sectionPrinter,
         BooleanSupplier pigPoppyEventEnabled,
         Runnable pigPoppyScheduler,
         BooleanSupplier abyssEventEnabled,
@@ -39,6 +43,7 @@ public class GameScheduledServicesLifecycle {
         BooleanSupplier imperialTombEnabled,
         Runnable imperialTombStarter
     ) {
+        this.sectionPrinter = sectionPrinter;
         this.pigPoppyEventEnabled = pigPoppyEventEnabled;
         this.pigPoppyScheduler = pigPoppyScheduler;
         this.abyssEventEnabled = abyssEventEnabled;
@@ -54,6 +59,7 @@ public class GameScheduledServicesLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             if (pigPoppyEventEnabled.getAsBoolean()) {
                 pigPoppyScheduler.run();
             }
