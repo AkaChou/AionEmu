@@ -8,16 +8,22 @@ import org.springframework.stereotype.Component;
 public class GameServerNetworkLifecycle {
 
     private final Consumer<GameServer> serverStarter;
+    private final Runnable serverStopper;
 
     public GameServerNetworkLifecycle() {
-        this(GameServer::startServers);
+        this(GameServer::startServers, GameServer::stop);
     }
 
-    GameServerNetworkLifecycle(Consumer<GameServer> serverStarter) {
+    GameServerNetworkLifecycle(Consumer<GameServer> serverStarter, Runnable serverStopper) {
         this.serverStarter = serverStarter;
+        this.serverStopper = serverStopper;
     }
 
     public void start(GameServer server) {
         serverStarter.accept(server);
+    }
+
+    public void stop() {
+        serverStopper.run();
     }
 }

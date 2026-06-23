@@ -2,6 +2,7 @@ package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import java.util.function.Consumer;
@@ -23,6 +24,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         AionServicesProperties services,
         LegacyConfigOverrides legacyConfigOverrides,
         GameStartupSequenceLifecycle startupSequenceLifecycle,
+        GameServerNetworkLifecycle serverNetworkLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -30,7 +32,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             legacyConfigOverrides,
             threadPoolLifecycle,
             startupSequenceLifecycle::start,
-            com.aionemu.gameserver.GameServer::stop
+            serverNetworkLifecycle::stop
         );
     }
 
