@@ -356,6 +356,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameHtmlLifecycle(List<String> events) {
+            super(new GameHtmlGateway());
             this.events = events;
         }
 

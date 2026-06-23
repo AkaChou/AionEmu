@@ -64,6 +64,7 @@ import com.aionemu.gameserver.lifecycle.GameEventRuntimeGateway;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
 import com.aionemu.gameserver.lifecycle.GameGeoNavGateway;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
+import com.aionemu.gameserver.lifecycle.GameHtmlGateway;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapGateway;
@@ -781,7 +782,7 @@ public class GameServer {
 			battlefieldLifecycle,
 			protectorConquerorLifecycle,
 			disputeLandLifecycle,
-			new GameHtmlLifecycle()
+			new GameHtmlLifecycle(new GameHtmlGateway())
 		);
 	}
 

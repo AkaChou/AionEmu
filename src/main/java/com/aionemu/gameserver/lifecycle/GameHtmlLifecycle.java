@@ -1,26 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.cache.HTMLCache;
-import com.aionemu.gameserver.utils.Util;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameHtmlLifecycle {
 
-    private final Runnable sectionPrinter;
-    private final Runnable initializer;
+    private final GameHtmlGateway htmlGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameHtmlLifecycle() {
-        this(() -> Util.printSection(" *** HTML *** "), HTMLCache::getInstance);
-    }
-
-    GameHtmlLifecycle(Runnable sectionPrinter, Runnable initializer) {
-        this.sectionPrinter = sectionPrinter;
-        this.initializer = initializer;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -29,8 +19,7 @@ public class GameHtmlLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            sectionPrinter.run();
-            initializer.run();
+            htmlGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {
