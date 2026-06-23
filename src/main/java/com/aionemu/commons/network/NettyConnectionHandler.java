@@ -1,6 +1,7 @@
 package com.aionemu.commons.network;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
+import com.aionemu.commons.services.ServiceContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -42,11 +43,29 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
             context.close();
             return;
         }
-        this.connection.initialized();
+        runInConnectionContext(new Runnable() {
+            @Override
+            public void run() {
+                connection.initialized();
+            }
+        });
     }
 
     @Override
     public void channelRead(ChannelHandlerContext context, Object message) {
+        if (connection != null) {
+            runInConnectionContext(new Runnable() {
+                @Override
+                public void run() {
+                    read(context, message);
+                }
+            });
+            return;
+        }
+        read(context, message);
+    }
+
+    private void read(ChannelHandlerContext context, Object message) {
         if (!(message instanceof ByteBuf byteBuf)) {
             context.fireChannelRead(message);
             return;
@@ -107,7 +126,12 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     @Override
     public void enableWriteInterest() {
         if (context != null) {
-            context.executor().execute(this::flushWrites);
+            context.executor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    flushWrites();
+                }
+            });
         }
     }
 
@@ -170,6 +194,12 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         if (connection == null || context == null) {
             return;
         }
+        try (ServiceContext.Scope ignored = ServiceContext.use(connection.getServiceContext())) {
+            flushWritesInConnectionContext();
+        }
+    }
+
+    private void flushWritesInConnectionContext() {
 
         synchronized (connection.guard) {
             ByteBuffer writeBuffer = connection.writeBuffer;
@@ -205,6 +235,12 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     private void notifyDisconnect() {
         if (disconnectNotified.compareAndSet(false, true)) {
             disconnectionExecutor.execute(new DisconnectionTask(connection));
+        }
+    }
+
+    private void runInConnectionContext(Runnable runnable) {
+        try (ServiceContext.Scope ignored = ServiceContext.use(connection.getServiceContext())) {
+            runnable.run();
         }
     }
 }

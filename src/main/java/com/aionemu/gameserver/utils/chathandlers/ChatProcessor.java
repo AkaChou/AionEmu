@@ -29,6 +29,7 @@ import com.aionemu.commons.scripting.classlistener.ScheduledTaskClassListener;
 import com.aionemu.commons.scripting.CompiledScriptLoader;
 import com.aionemu.commons.utils.PropertiesUtils;
 import com.aionemu.gameserver.GameServerError;
+import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -114,7 +115,7 @@ public class ChatProcessor implements GameEngine {
 	private void loadLevels() {
 		accessLevel.clear();
 		try {
-			java.util.Properties props = PropertiesUtils.load("config/administration/commands.properties");
+			java.util.Properties props = PropertiesUtils.load(Config.configFile("administration/commands.properties").getPath());
 
 			for (Object key : props.keySet()) {
 				String str = (String) key;

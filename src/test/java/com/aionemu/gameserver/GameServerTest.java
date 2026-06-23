@@ -28,6 +28,8 @@ class GameServerTest {
 
 			assertEquals(new File("AL-Game/config/logback-spring.xml").getCanonicalFile(),
 				Config.configFile("logback-spring.xml").getCanonicalFile());
+			assertEquals(new File("AL-Game/config/administration/commands.properties").getCanonicalFile(),
+				Config.configFile("administration/commands.properties").getCanonicalFile());
 			assertEquals(new File("AL-Game/data/scripts/system/aihandlers.xml").getCanonicalFile(),
 				Config.dataFile("./data/scripts/system/aihandlers.xml").getCanonicalFile());
 			assertEquals(new File("AL-Game/data/static_data/items/item_templates.xml").getCanonicalFile(),

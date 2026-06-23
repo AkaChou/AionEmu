@@ -1,6 +1,7 @@
 package com.aionemu.commons.network;
 
 import com.aionemu.commons.network.packet.BaseClientPacket;
+import com.aionemu.commons.services.ServiceContext;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -87,6 +88,7 @@ public class PacketProcessor<T extends AConnection> {
      * Packet executor
      */
     private final Executor executor;
+    private final String serviceContext;
 
     /**
      * 构造函数,使用默认执行器
@@ -122,6 +124,7 @@ public class PacketProcessor<T extends AConnection> {
         this.threadSpawnThreshold = threadSpawnThreshold;
         this.threadKillThreshold = threadKillThreshold;
         this.executor = executor;
+        this.serviceContext = ServiceContext.current();
         
         if (minThreads != maxThreads) {
             this.startCheckerThread();
@@ -137,7 +140,7 @@ public class PacketProcessor<T extends AConnection> {
      * Start checker thread
      */
     private void startCheckerThread() {
-        new Thread(new CheckerTask(), "PacketProcessor:Checker").start();
+        new Thread(ServiceContext.wrap(new CheckerTask(), serviceContext), "PacketProcessor:Checker").start();
     }
 
     /**
@@ -153,7 +156,7 @@ public class PacketProcessor<T extends AConnection> {
         
         String name = "PacketProcessor:" + this.threads.size();
         log.debug("Creating new PacketProcessor Thread: " + name);
-        Thread t = new Thread(new PacketProcessorTask(), name);
+        Thread t = new Thread(ServiceContext.wrap(new PacketProcessorTask(), serviceContext), name);
         this.threads.add(t);
         t.start();
         return true;

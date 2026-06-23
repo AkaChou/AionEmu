@@ -1,5 +1,7 @@
 package com.aionemu.commons.network;
 
+import com.aionemu.commons.services.ServiceContext;
+
 /**
  * 断开连接任务类
  * Disconnection Task Class
@@ -31,6 +33,8 @@ public class DisconnectionTask implements Runnable {
      */
     @Override
     public void run() {
-        this.connection.onDisconnect();
+        try (ServiceContext.Scope ignored = ServiceContext.use(connection.getServiceContext())) {
+            this.connection.onDisconnect();
+        }
     }
 }

@@ -27,6 +27,7 @@ import com.aionemu.commons.network.ConnectionFactory;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.commons.network.NettyConnectionFactory;
+import com.aionemu.commons.services.ServiceContext;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.network.sequrity.FloodManager;
 import com.aionemu.gameserver.network.sequrity.FloodManager.Result;
@@ -37,6 +38,8 @@ import com.aionemu.gameserver.network.sequrity.FloodManager.Result;
  * @author -Nemesiss-
  */
 public class GameConnectionFactoryImpl implements ConnectionFactory, NettyConnectionFactory {
+
+	private static final String GAME_CONTEXT = "game";
 
 	private final Logger log = LoggerFactory.getLogger(GameConnectionFactoryImpl.class);
 	private FloodManager floodAcceptor;
@@ -88,7 +91,9 @@ public class GameConnectionFactoryImpl implements ConnectionFactory, NettyConnec
 			}
 			}
 		}
-		return new AionConnection(socket, dispatcher);
+		try (ServiceContext.Scope ignored = ServiceContext.use(GAME_CONTEXT)) {
+			return new AionConnection(socket, dispatcher);
+		}
 	}
 
 	@Override
@@ -107,6 +112,8 @@ public class GameConnectionFactoryImpl implements ConnectionFactory, NettyConnec
 			}
 			}
 		}
-		return new AionConnection(transport);
+		try (ServiceContext.Scope ignored = ServiceContext.use(GAME_CONTEXT)) {
+			return new AionConnection(transport);
+		}
 	}
 }

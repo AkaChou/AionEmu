@@ -1,5 +1,6 @@
 package com.aionemu.commons.network;
 
+import com.aionemu.commons.services.ServiceContext;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -29,6 +30,7 @@ public abstract class AConnection {
     private final Dispatcher dispatcher;
 
     private final ConnectionTransport transport;
+    private final String serviceContext;
     
     /**
      * 选择键
@@ -83,6 +85,7 @@ public abstract class AConnection {
         this.socketChannel = sc;
         this.dispatcher = d;
         this.transport = null;
+        this.serviceContext = ServiceContext.current();
         this.writeBuffer = ByteBuffer.allocate(wbSize);
         this.writeBuffer.flip();
         this.writeBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -95,6 +98,7 @@ public abstract class AConnection {
         this.socketChannel = null;
         this.dispatcher = null;
         this.transport = transport;
+        this.serviceContext = ServiceContext.current();
         this.writeBuffer = ByteBuffer.allocate(wbSize);
         this.writeBuffer.flip();
         this.writeBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -209,6 +213,10 @@ public abstract class AConnection {
      */
     public final String getIP() {
         return this.ip;
+    }
+
+    public final String getServiceContext() {
+        return this.serviceContext;
     }
 
     /**

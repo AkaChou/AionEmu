@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.PropertiesUtils;
+import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 
 /**
@@ -45,7 +46,7 @@ public class PacketFloodFilter {
 			int cnt = 0;
 			packets = new int[maxClientRequest];
 			try {
-				java.util.Properties props = PropertiesUtils.load("config/administration/pff.properties");
+				java.util.Properties props = PropertiesUtils.load(Config.configFile("administration/pff.properties").getPath());
 				for (Object key : props.keySet()) {
 					String str = (String) key;
 					packets[Integer.decode(str)] = Integer.valueOf(props.getProperty(str).trim());
