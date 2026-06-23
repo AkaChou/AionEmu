@@ -53,6 +53,7 @@ import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
@@ -1157,7 +1158,8 @@ public class GameServer {
 			new GameRatioLimitLifecycle(),
 			new GameStartupHooksLifecycle(),
 			new GameLoggingLifecycle(),
-			new GameUtilityServicesLifecycle()
+			new GameUtilityServicesLifecycle(),
+			new GameAdminPanelLifecycle()
 		);
 	}
 
@@ -1196,7 +1198,8 @@ public class GameServer {
 		GameRatioLimitLifecycle ratioLimitLifecycle,
 		GameStartupHooksLifecycle startupHooksLifecycle,
 		GameLoggingLifecycle loggingLifecycle,
-		GameUtilityServicesLifecycle utilityServicesLifecycle
+		GameUtilityServicesLifecycle utilityServicesLifecycle,
+		GameAdminPanelLifecycle adminPanelLifecycle
 	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -1211,10 +1214,7 @@ public class GameServer {
 			GSConfig.ENABLE_CHAT_SERVER = chatServerEnabledOverride;
 			log.info("Chat Server connection overridden by boot configuration: {}", chatServerEnabledOverride);
 		}
-		
-		if (GSConfig.SERVER_YAADMINPANEL_SWITCH_ON) {
-			(new ServerCommandProcessor()).startAdminPanel();
-		}
+		adminPanelLifecycle.start();
 		
 		staticDataLifecycle.start();
 		worldBootstrapLifecycle.start();

@@ -2,6 +2,7 @@ package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
@@ -79,6 +80,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameRatioLimitLifecycle ratioLimitLifecycle,
         GameStartupHooksLifecycle startupHooksLifecycle,
         GameUtilityServicesLifecycle utilityServicesLifecycle,
+        GameAdminPanelLifecycle adminPanelLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -113,6 +115,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             ratioLimitLifecycle,
             startupHooksLifecycle,
             utilityServicesLifecycle,
+            adminPanelLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -146,7 +149,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 ratioLimitLifecycle,
                 startupHooksLifecycle,
                 loggingLifecycle,
-                utilityServicesLifecycle
+                utilityServicesLifecycle,
+                adminPanelLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -184,6 +188,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameRatioLimitLifecycle ratioLimitLifecycle,
         GameStartupHooksLifecycle startupHooksLifecycle,
         GameUtilityServicesLifecycle utilityServicesLifecycle,
+        GameAdminPanelLifecycle adminPanelLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction
