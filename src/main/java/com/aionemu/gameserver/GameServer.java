@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -50,7 +49,6 @@ import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.AIConfig;
@@ -60,16 +58,23 @@ import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.configs.main.FFAConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.PvPModConfig;
-import com.aionemu.gameserver.configs.main.RankingConfig;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
 import com.aionemu.gameserver.configs.main.WeddingsConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.instance.InstanceEngine;
-import com.aionemu.gameserver.model.GameEngine;
+import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
+import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
+import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
@@ -77,66 +82,36 @@ import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
-import com.aionemu.gameserver.questEngine.QuestEngine;
-import com.aionemu.gameserver.services.AbyssLandingService;
-import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.AdminService;
-import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.services.AnnouncementService;
-import com.aionemu.gameserver.services.AnohaService;
 import com.aionemu.gameserver.services.BaseService;
-import com.aionemu.gameserver.services.BeritraService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ChallengeTaskService;
-import com.aionemu.gameserver.services.ConquestService;
 import com.aionemu.gameserver.services.CuringZoneService;
-import com.aionemu.gameserver.services.DatabaseCleaningService;
 import com.aionemu.gameserver.services.DebugService;
 import com.aionemu.gameserver.services.DisputeLandService;
-import com.aionemu.gameserver.services.DynamicRiftService;
-import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.services.FlyRingService;
 import com.aionemu.gameserver.services.GameTimeService;
 import com.aionemu.gameserver.services.HousingBidService;
-import com.aionemu.gameserver.services.IdianDepthsService;
-import com.aionemu.gameserver.services.InstanceRiftService;
-import com.aionemu.gameserver.services.IuService;
 import com.aionemu.gameserver.services.LimitedItemTradeService;
-import com.aionemu.gameserver.services.MoltenusService;
-import com.aionemu.gameserver.services.NightmareCircusService;
 import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
-import com.aionemu.gameserver.services.RiftService;
-import com.aionemu.gameserver.services.RoadService;
-import com.aionemu.gameserver.services.RvrService;
 import com.aionemu.gameserver.services.ShieldService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.SpringZoneService;
-import com.aionemu.gameserver.services.SvsService;
-import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.TownService;
-import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.WeddingService;
-import com.aionemu.gameserver.services.ZorshivDredgionService;
-import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
-import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
-import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
-import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.events.CrazyDaevaService;
-import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.PigPoppyEventService;
-import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.events.TreasureAbyssService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
@@ -150,35 +125,22 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
-import com.aionemu.gameserver.services.player.LunaShopService;
-import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
-import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
-import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
-import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
-import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.utils.javaagent.JavaAgentUtils;
-import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavService;
-import com.aionemu.gameserver.world.zone.ZoneService;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
@@ -282,6 +244,226 @@ public class GameServer {
 	 * Starts GameServer with an optional chat-server connection override.
 	 */
 	public static void start(String[] args, Boolean chatServerEnabledOverride) {
+		start(args, chatServerEnabledOverride, new GameThreadPoolLifecycle());
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(String[] args, Boolean chatServerEnabledOverride, GameThreadPoolLifecycle threadPoolLifecycle) {
+		start(args, chatServerEnabledOverride, threadPoolLifecycle, new GameStaticDataLifecycle());
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle
+	) {
+		start(args, chatServerEnabledOverride, threadPoolLifecycle, staticDataLifecycle, new GameWorldBootstrapLifecycle());
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle
+	) {
+		start(args, chatServerEnabledOverride, threadPoolLifecycle, staticDataLifecycle, worldBootstrapLifecycle, new GameEventBootstrapLifecycle());
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			new GameGeoNavLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			new GameWorldActivationLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			new GameEnginesLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			new GameLocationBootstrapLifecycle(),
+			new GameSpawnLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			new GameEventRuntimeLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			new GameCleaningLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle
+	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -289,16 +471,8 @@ public class GameServer {
 		long start = System.currentTimeMillis();
 		log.info("GameServer starting...");
 
-		final GameEngine[] parallelEngines = { 
-			QuestEngine.getInstance(), 
-			InstanceEngine.getInstance(),
-			AI2Engine.getInstance(), 
-			ChatProcessor.getInstance() 
-		};
-
-		final CountDownLatch progressLatch = new CountDownLatch(parallelEngines.length);
 		initalizeLoggger();
-		initUtilityServicesAndConfig();
+		initUtilityServicesAndConfig(threadPoolLifecycle);
 		if (chatServerEnabledOverride != null) {
 			GSConfig.ENABLE_CHAT_SERVER = chatServerEnabledOverride;
 			log.info("Chat Server connection overridden by boot configuration: {}", chatServerEnabledOverride);
@@ -308,147 +482,42 @@ public class GameServer {
 			(new ServerCommandProcessor()).startAdminPanel();
 		}
 		
-		DataManager.getInstance();
-		Util.printSection(" *** IDFactory *** ");
-		IDFactory.getInstance();
-		Util.printSection(" *** Zone *** ");
-		ZoneService.getInstance().load(null);
-		HotspotTeleportService.getInstance();
-		RoadService.getInstance();
-		World.getInstance();
-
-		/**
-		 * Event
-		 */
-		Util.printSection(" *** Luna Shop System *** ");
-		LunaShopService.getInstance().init();
-		Util.printSection(" *** Minion System *** ");
-		MinionService.getInstance().init();
-		Util.printSection(" *** Shugo Sweep System *** ");
-		ShugoSweepService.getInstance().initShugoSweep();
-		Util.printSection(" *** Atreian Passport System *** ");
-		AtreianPassportService.getInstance().onStart();
-		Util.printSection(" *** Event Window System *** ");
-		EventWindowService.getInstance().initialize();
+		staticDataLifecycle.start();
+		worldBootstrapLifecycle.start();
+		eventBootstrapLifecycle.start();
 
 		/**
 		 * GeoData
 		 */
 		Util.printSection(" *** Geodata *** ");
-		GeoService.getInstance().initializeGeo();
-		NavService.getInstance().initializeNav();
-		DropRegistrationService.getInstance();
-		GameServer gs = new GameServer();
-		activeServer = gs;
-		DAOManager.getDAO(PlayerDAO.class).setPlayersOffline(false);
+		geoNavLifecycle.start();
+		worldActivationLifecycle.start(() -> activeServer = new GameServer());
+		GameServer gs = activeServer;
 
 		/**
 		 * Engines
 		 */
-		Util.printSection(" *** Engines *** ");
-		for (int i = 0; i < parallelEngines.length; i++) {
-			final int index = i;
-			ThreadPoolManager.getInstance().execute(new Runnable() {
-				public void run() {
-					parallelEngines[index].load(progressLatch);
-				}
-			});
-		}
-		try {
-			progressLatch.await();
-		} catch (InterruptedException e1) {
-			log.warn("Main thread interrupted while waiting for engines", e1);
-			Thread.currentThread().interrupt();
-		}
+		enginesLifecycle.start();
 
 		/**
 		 * Location Data
 		 */
-		Util.printSection(" *** Siege & Battlefield Locations *** ");
-		SiegeService.getInstance().initSiegeLocations();
-		BaseService.getInstance().initBaseLocations();
-		BaseService.getInstance().initBaseReset();
-		OutpostService.getInstance().initOutpostLocations();
-		OutpostService.getInstance().initOupostReset();
-		
-		Util.printSection(" *** Vortex & World Boss Locations *** ");
-		VortexService.getInstance().initVortex();
-		VortexService.getInstance().initVortexLocations();
-		BeritraService.getInstance().initBeritra();
-		BeritraService.getInstance().initBeritraLocations();
-		AgentService.getInstance().initAgent();
-		AgentService.getInstance().initAgentLocations();
-		AnohaService.getInstance().initAnoha();
-		AnohaService.getInstance().initAnohaLocations();
-		SvsService.getInstance().initSvs();
-		SvsService.getInstance().initSvsLocations();
-		
-		Util.printSection(" *** PvP & RvR Locations *** ");
-		RvrService.getInstance().initRvr();
-		RvrService.getInstance().initRvrLocations();
-		IuService.getInstance().initConcert();
-		IuService.getInstance().initConcertLocations();
-		NightmareCircusService.getInstance().initCircus();
-		NightmareCircusService.getInstance().initCircusLocations();
-		DynamicRiftService.getInstance().initDynamicRift();
-		DynamicRiftService.getInstance().initDynamicRiftLocations();
-		
-		Util.printSection(" *** Instance & Dungeon Locations *** ");
-		InstanceRiftService.getInstance().initInstance();
-		InstanceRiftService.getInstance().initInstanceLocations();
-		ZorshivDredgionService.getInstance().initZorshivDredgion();
-		ZorshivDredgionService.getInstance().initZorshivDredgionLocations();
-		MoltenusService.getInstance().initMoltenus();
-		MoltenusService.getInstance().initMoltenusLocations();
-		RiftService.getInstance().initRifts();
-		RiftService.getInstance().initRiftLocations();
-		ConquestService.getInstance().initOffering();
-		ConquestService.getInstance().initConquestLocations();
-		IdianDepthsService.getInstance().initIdianDepths();
-		IdianDepthsService.getInstance().initIdianDepthsLocations();
-		TowerOfEternityService.getInstance().initTowerOfEternity();
-		TowerOfEternityService.getInstance().initTowerOfEternityLocation();
-		
-		Util.printSection(" *** Abyss & Landing Locations *** ");
-		AbyssLandingService.getInstance().initLandingLocations();
-		LandingUpdateService.getInstance().initResetQuestPoints();
-		LandingUpdateService.getInstance().initResetAbyssLandingPoints();
-		AbyssLandingSpecialService.getInstance().initLandingSpecialLocations();
+		locationBootstrapLifecycle.start();
 
 		/**
 		 * Spawns
 		 */
 		Util.printSection(" *** Spawns *** ");
-		SpawnEngine.spawnAll();
+		spawnLifecycle.start();
 		
 		// Events
 		Util.printSection(" *** Events *** ");
-		if (EventsConfig.ENABLE_EVENT_SERVICE) {
-			EventService.getInstance().start();
-		}
-		if (EventsConfig.EVENT_ENABLED) {
-			PlayerEventService.getInstance();
-		}
-		if (EventsConfig.ENABLE_CRAZY) {
-			CrazyDaevaService.getInstance().startTimer();
-		}
-		if (RankingConfig.TOP_RANKING_UPDATE_SETTING) {
-			AbyssRankUpdateService.getInstance().scheduleUpdateHour();
-		} else {
-			AbyssRankUpdateService.getInstance().scheduleUpdateMinute();
-		}
-
-		AbyssRankUpdateService.getInstance().initRewardWeeklyManager();
-		
-		PacketBroadcaster.getInstance();
-
-		TemporarySpawnEngine.spawnAll();
+		eventRuntimeLifecycle.start();
 
 		/**
 		 * Cleaning
 		 */
-		DatabaseCleaningService.getInstance();
-		AbyssRankCleaningService.getInstance();
+		cleaningLifecycle.start();
 
 		/**
 		 * Scheduled Services
@@ -776,7 +845,7 @@ public class GameServer {
 	 * Initialize all helper services, that are not directly related to aion gs,
 	 * which includes:
 	 */
-	private static void initUtilityServicesAndConfig() {
+	private static void initUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
 		Thread.setDefaultUncaughtExceptionHandler(new ThreadUncaughtExceptionHandler());
 		
 		if (JavaAgentUtils.isConfigured()) {
@@ -807,7 +876,7 @@ public class GameServer {
 		log.info("DAO Manager initialized in {} ms", daoTime);
 		
 		ThreadConfig.load();
-		ThreadPoolManager.getInstance();
+		threadPoolLifecycle.start();
 	}
 
 	public synchronized static void addStartupHook(StartupHook hook) {

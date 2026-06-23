@@ -1,6 +1,20 @@
 package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
+import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
+import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
+import java.util.function.BiConsumer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
@@ -8,9 +22,82 @@ import org.springframework.stereotype.Component;
 public class GameServiceLifecycle implements AionServiceLifecycle {
 
     private final AionServicesProperties services;
+    private final LegacyConfigOverrides legacyConfigOverrides;
+    private final GameThreadPoolLifecycle threadPoolLifecycle;
+    private final BiConsumer<String[], Boolean> startAction;
+    private final Runnable stopAction;
 
-    public GameServiceLifecycle(AionServicesProperties services) {
+    @Autowired
+    public GameServiceLifecycle(
+        AionServicesProperties services,
+        LegacyConfigOverrides legacyConfigOverrides,
+        GameStaticDataLifecycle staticDataLifecycle,
+        GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+        GameEventBootstrapLifecycle eventBootstrapLifecycle,
+        GameGeoNavLifecycle geoNavLifecycle,
+        GameWorldActivationLifecycle worldActivationLifecycle,
+        GameEnginesLifecycle enginesLifecycle,
+        GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+        GameSpawnLifecycle spawnLifecycle,
+        GameEventRuntimeLifecycle eventRuntimeLifecycle,
+        GameCleaningLifecycle cleaningLifecycle,
+        GameThreadPoolLifecycle threadPoolLifecycle
+    ) {
+        this(
+            services,
+            legacyConfigOverrides,
+            staticDataLifecycle,
+            worldBootstrapLifecycle,
+            eventBootstrapLifecycle,
+            geoNavLifecycle,
+            worldActivationLifecycle,
+            enginesLifecycle,
+            locationBootstrapLifecycle,
+            spawnLifecycle,
+            eventRuntimeLifecycle,
+            cleaningLifecycle,
+            threadPoolLifecycle,
+            (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
+                args,
+                chatEnabled,
+                threadPoolLifecycle,
+                staticDataLifecycle,
+                worldBootstrapLifecycle,
+                eventBootstrapLifecycle,
+                geoNavLifecycle,
+                worldActivationLifecycle,
+                enginesLifecycle,
+                locationBootstrapLifecycle,
+                spawnLifecycle,
+                eventRuntimeLifecycle,
+                cleaningLifecycle
+            ),
+            com.aionemu.gameserver.GameServer::stop
+        );
+    }
+
+    GameServiceLifecycle(
+        AionServicesProperties services,
+        LegacyConfigOverrides legacyConfigOverrides,
+        GameStaticDataLifecycle staticDataLifecycle,
+        GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+        GameEventBootstrapLifecycle eventBootstrapLifecycle,
+        GameGeoNavLifecycle geoNavLifecycle,
+        GameWorldActivationLifecycle worldActivationLifecycle,
+        GameEnginesLifecycle enginesLifecycle,
+        GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+        GameSpawnLifecycle spawnLifecycle,
+        GameEventRuntimeLifecycle eventRuntimeLifecycle,
+        GameCleaningLifecycle cleaningLifecycle,
+        GameThreadPoolLifecycle threadPoolLifecycle,
+        BiConsumer<String[], Boolean> startAction,
+        Runnable stopAction
+    ) {
         this.services = services;
+        this.legacyConfigOverrides = legacyConfigOverrides;
+        this.threadPoolLifecycle = threadPoolLifecycle;
+        this.startAction = startAction;
+        this.stopAction = stopAction;
     }
 
     @Override
@@ -31,11 +118,16 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     @Override
     public void start(ApplicationArguments args) {
         AionServicePaths.configureGame();
-        com.aionemu.gameserver.GameServer.start(args.getSourceArgs(), services.getChat().isEnabled());
+        legacyConfigOverrides.applyToGameConfig();
+        startAction.accept(args.getSourceArgs(), services.getChat().isEnabled());
     }
 
     @Override
     public void stop() {
-        com.aionemu.gameserver.GameServer.stop();
+        try {
+            stopAction.run();
+        } finally {
+            threadPoolLifecycle.stop();
+        }
     }
 }

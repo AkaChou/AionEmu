@@ -74,9 +74,18 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 
 public class Config {
 	protected static final Logger log = LoggerFactory.getLogger(Config.class);
+	private static volatile Properties bootOverrides = new Properties();
 
 	private static String configDir() {
 		return System.getProperty("aion.game.config.dir", "./config");
+	}
+
+	public static void setBootOverrides(Properties properties) {
+		Properties copy = new Properties();
+		if (properties != null) {
+			copy.putAll(properties);
+		}
+		bootOverrides = copy;
 	}
 
 	public static File configFile(String relativePath) {
@@ -121,6 +130,11 @@ public class Config {
 		return normalized;
 	}
 
+	private static void overrideRuntimeProperties(Properties[] targetProperties, Properties fileOverrides) {
+		PropertiesUtils.overrideProperties(targetProperties, fileOverrides);
+		PropertiesUtils.overrideProperties(targetProperties, bootOverrides);
+	}
+
 	public static void load() {
 		try {
 			Properties myProps = null;
@@ -132,12 +146,12 @@ public class Config {
 			}
 			String administration = configDir() + "/administration";
 			Properties[] adminProps = PropertiesUtils.loadAllFromDirectory(administration);
-			PropertiesUtils.overrideProperties(adminProps, myProps);
+			overrideRuntimeProperties(adminProps, myProps);
 			ConfigurableProcessor.process(AdminConfig.class, adminProps);
 			ConfigurableProcessor.process(DeveloperConfig.class, adminProps);
 			String main = configDir() + "/main";
 			Properties[] mainProps = PropertiesUtils.loadAllFromDirectory(main);
-			PropertiesUtils.overrideProperties(mainProps, myProps);
+			overrideRuntimeProperties(mainProps, myProps);
 			ConfigurableProcessor.process(AIConfig.class, mainProps);
 			ConfigurableProcessor.process(BrokerConfig.class, mainProps);
 			ConfigurableProcessor.process(CommonsConfig.class, mainProps);
@@ -182,7 +196,7 @@ public class Config {
 			ConfigurableProcessor.process(VeteranRewardConfig.class, mainProps);
 			String network = configDir() + "/network";
 			Properties[] networkProps = PropertiesUtils.loadAllFromDirectory(network);
-			PropertiesUtils.overrideProperties(networkProps, myProps);
+			overrideRuntimeProperties(networkProps, myProps);
 			ConfigurableProcessor.process(DatabaseConfig.class, networkProps);
 			ConfigurableProcessor.process(NetworkConfig.class, networkProps);
 		} catch (Exception e) {
@@ -203,12 +217,12 @@ public class Config {
 			}
 			String administration = configDir() + "/administration";
 			Properties[] adminProps = PropertiesUtils.loadAllFromDirectory(administration);
-			PropertiesUtils.overrideProperties(adminProps, myProps);
+			overrideRuntimeProperties(adminProps, myProps);
 			ConfigurableProcessor.process(AdminConfig.class, adminProps);
 			ConfigurableProcessor.process(DeveloperConfig.class, adminProps);
 			String main = configDir() + "/main";
 			Properties[] mainProps = PropertiesUtils.loadAllFromDirectory(main);
-			PropertiesUtils.overrideProperties(mainProps, myProps);
+			overrideRuntimeProperties(mainProps, myProps);
 			ConfigurableProcessor.process(AIConfig.class, mainProps);
 			ConfigurableProcessor.process(BrokerConfig.class, mainProps);
 			ConfigurableProcessor.process(CommonsConfig.class, mainProps);

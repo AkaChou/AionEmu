@@ -219,7 +219,11 @@ public class ShutdownHook extends Thread {
 		runShutdownStep("save periodic data", () -> PeriodicSaveService.getInstance().onShutdown());
 		runShutdownStep("save game time", GameTimeManager::saveTime);
 		runShutdownStep("shutdown CronService", () -> CronService.getInstance().shutdown());
-		runShutdownStep("shutdown ThreadPoolManager", () -> ThreadPoolManager.getInstance().shutdown());
+		if (AionRuntimeMode.isBootEmbedded()) {
+			log.info("ThreadPoolManager shutdown is managed by Spring Boot lifecycle.");
+		} else {
+			runShutdownStep("shutdown ThreadPoolManager", () -> ThreadPoolManager.getInstance().shutdown());
+		}
 		log.info("All service shutdown steps completed");
 
 		log.info("Runtime is " + mode.getText() + " now...");
