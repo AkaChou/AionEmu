@@ -111,6 +111,7 @@ import com.aionemu.gameserver.lifecycle.GameSystemPropertiesGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolGateway;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
+import com.aionemu.gameserver.lifecycle.GameUtilityServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
@@ -1218,7 +1219,7 @@ public class GameServer {
 			new GameStartupHooksLifecycle(new GameStartupHooksGateway()),
 			new GameStartupCompletionLifecycle(new GameStartupCompletionGateway()),
 			new GameLoggingLifecycle(new GameLoggingGateway()),
-			new GameUtilityServicesLifecycle(),
+			new GameUtilityServicesLifecycle(new GameUtilityServicesGateway()),
 			new GameAdminPanelLifecycle(new GameAdminPanelGateway()),
 			new GameSystemPropertiesLifecycle(new GameSystemPropertiesGateway()),
 			new GameStartupLogLifecycle(new GameStartupLogGateway()),
@@ -1349,7 +1350,7 @@ public class GameServer {
 	 * which includes:
 	 */
 	private static void initUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
-		new GameUtilityServicesLifecycle().start(threadPoolLifecycle);
+		new GameUtilityServicesLifecycle(new GameUtilityServicesGateway()).start(threadPoolLifecycle);
 	}
 
 	public static void initializeUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
