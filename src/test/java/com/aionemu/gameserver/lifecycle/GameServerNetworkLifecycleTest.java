@@ -20,15 +20,7 @@ class GameServerNetworkLifecycleTest {
         RecordingNetworkPeer loginServer = new RecordingNetworkPeer("login", events);
         RecordingNetworkPeer chatServer = new RecordingNetworkPeer("chat", events);
         GameServerNetworkLifecycle lifecycle = new GameServerNetworkLifecycle(
-            () -> true,
-            () -> false,
-            () -> true,
-            () -> new RecordingTransport("netty", events),
-            () -> nioServer,
-            () -> events.add("bannedMac:init"),
-            () -> loginServer,
-            () -> chatServer,
-            new IncrementingClock()
+            new RecordingGameServerNetworkGateway(events, true, false, true, nioServer, loginServer, chatServer)
         );
 
         lifecycle.start(new GameServer());
@@ -52,15 +44,7 @@ class GameServerNetworkLifecycleTest {
         RecordingNetworkPeer loginServer = new RecordingNetworkPeer("login", events);
         RecordingNetworkPeer chatServer = new RecordingNetworkPeer("chat", events);
         GameServerNetworkLifecycle lifecycle = new GameServerNetworkLifecycle(
-            () -> false,
-            () -> false,
-            () -> true,
-            () -> new RecordingTransport("netty", events),
-            () -> nioServer,
-            () -> events.add("bannedMac:init"),
-            () -> loginServer,
-            () -> chatServer,
-            new IncrementingClock()
+            new RecordingGameServerNetworkGateway(events, false, false, true, nioServer, loginServer, chatServer)
         );
 
         lifecycle.start(new GameServer());
@@ -85,15 +69,15 @@ class GameServerNetworkLifecycleTest {
         List<String> events = new ArrayList<>();
         GameServer server = new GameServer();
         GameServerNetworkLifecycle lifecycle = new GameServerNetworkLifecycle(
-            () -> true,
-            () -> false,
-            () -> false,
-            () -> new RecordingTransport("netty", events),
-            () -> new RecordingNioServer(events),
-            () -> events.add("bannedMac:init"),
-            () -> new RecordingNetworkPeer("login", events),
-            () -> new RecordingNetworkPeer("chat", events),
-            new IncrementingClock()
+            new RecordingGameServerNetworkGateway(
+                events,
+                true,
+                false,
+                false,
+                new RecordingNioServer(events),
+                new RecordingNetworkPeer("login", events),
+                new RecordingNetworkPeer("chat", events)
+            )
         );
 
         lifecycle.start(server);
@@ -101,6 +85,94 @@ class GameServerNetworkLifecycleTest {
         Field networkLifecycle = GameServer.class.getDeclaredField("networkLifecycle");
         networkLifecycle.setAccessible(true);
         assertSame(lifecycle, networkLifecycle.get(server));
+    }
+
+    @Test
+    void usesServerNetworkGatewayCollaborator() {
+        assertEquals(GameServerNetworkGateway.class, fieldType("networkGateway"));
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            return GameServerNetworkLifecycle.class.getDeclaredField(name).getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameServerNetworkGateway extends GameServerNetworkGateway {
+
+        private final List<String> events;
+        private final boolean nettyTransportEnabled;
+        private final boolean bootEmbedded;
+        private final boolean chatServerEnabled;
+        private final RecordingNioServer nioServer;
+        private final RecordingNetworkPeer loginServer;
+        private final RecordingNetworkPeer chatServer;
+        private final IncrementingClock clock = new IncrementingClock();
+
+        private RecordingGameServerNetworkGateway(
+            List<String> events,
+            boolean nettyTransportEnabled,
+            boolean bootEmbedded,
+            boolean chatServerEnabled,
+            RecordingNioServer nioServer,
+            RecordingNetworkPeer loginServer,
+            RecordingNetworkPeer chatServer
+        ) {
+            this.events = events;
+            this.nettyTransportEnabled = nettyTransportEnabled;
+            this.bootEmbedded = bootEmbedded;
+            this.chatServerEnabled = chatServerEnabled;
+            this.nioServer = nioServer;
+            this.loginServer = loginServer;
+            this.chatServer = chatServer;
+        }
+
+        @Override
+        public boolean isNettyTransportEnabled() {
+            return nettyTransportEnabled;
+        }
+
+        @Override
+        public boolean isBootEmbedded() {
+            return bootEmbedded;
+        }
+
+        @Override
+        public boolean isChatServerEnabled() {
+            return chatServerEnabled;
+        }
+
+        @Override
+        public ServerTransport createNettyTransport() {
+            return new RecordingTransport("netty", events);
+        }
+
+        @Override
+        public NioServer createNioServer() {
+            return nioServer;
+        }
+
+        @Override
+        public void initializeBannedMacManager() {
+            events.add("bannedMac:init");
+        }
+
+        @Override
+        public GameServerNetworkLifecycle.NetworkPeer loginServer() {
+            return loginServer;
+        }
+
+        @Override
+        public GameServerNetworkLifecycle.NetworkPeer chatServer() {
+            return chatServer;
+        }
+
+        @Override
+        public long currentTimeMillis() {
+            return clock.getAsLong();
+        }
     }
 
     private static final class RecordingNetworkPeer implements GameServerNetworkLifecycle.NetworkPeer {
@@ -177,12 +249,11 @@ class GameServerNetworkLifecycleTest {
         }
     }
 
-    private static final class IncrementingClock implements java.util.function.LongSupplier {
+    private static final class IncrementingClock {
 
         private long value;
 
-        @Override
-        public long getAsLong() {
+        private long getAsLong() {
             return value++;
         }
     }

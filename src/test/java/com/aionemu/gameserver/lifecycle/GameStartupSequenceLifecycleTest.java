@@ -466,6 +466,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameServerNetworkLifecycle(List<String> events) {
+            super(new GameServerNetworkGateway());
             this.events = events;
         }
 

@@ -84,6 +84,7 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingGateway;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkGateway;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
@@ -1206,7 +1207,7 @@ public class GameServer {
 			seasonRankingLifecycle,
 			housingLifecycle,
 			systemLifecycle,
-			new GameServerNetworkLifecycle(),
+			new GameServerNetworkLifecycle(new GameServerNetworkGateway()),
 			new GameNetworkStartupLifecycle(),
 			new GameRatioLimitLifecycle(),
 			new GameStartupHooksLifecycle(new GameStartupHooksGateway()),
@@ -1308,7 +1309,7 @@ public class GameServer {
 	 * Starts servers for connection with aion client and login\chat server.
 	 */
 	public void startServers() {
-		networkLifecycle = new GameServerNetworkLifecycle();
+		networkLifecycle = new GameServerNetworkLifecycle(new GameServerNetworkGateway());
 		networkLifecycle.start(this);
 	}
 

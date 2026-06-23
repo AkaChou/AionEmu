@@ -47,6 +47,7 @@ import com.aionemu.gameserver.lifecycle.GameSeasonRankingGateway;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkGateway;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleGateway;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
@@ -83,6 +84,7 @@ class GameServiceLifecycleTest {
     void usesDirectLifecycleCollaboratorsInsteadOfActionAdapters() {
         assertEquals(GameStartupSequenceLifecycle.class, fieldType("startupSequenceLifecycle"));
         assertEquals(GameServerNetworkLifecycle.class, fieldType("serverNetworkLifecycle"));
+        assertEquals(GameServerNetworkGateway.class, fieldType(GameServerNetworkLifecycle.class, "networkGateway"));
         assertEquals(GameThreadPoolGateway.class, fieldType(GameThreadPoolLifecycle.class, "threadPoolGateway"));
     }
 
@@ -213,6 +215,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameServerNetworkLifecycle(List<String> events) {
+            super(new GameServerNetworkGateway());
             this.events = events;
         }
 
