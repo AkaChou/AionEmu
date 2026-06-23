@@ -311,8 +311,8 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[25,26)</version>
-                                    <message>This project must be built with JDK 25.</message>
+                                    <version>[25,)</version>
+                                    <message>This project must be built with JDK 25 or newer. Bytecode target remains Java 25.</message>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
                                     <version>[3.0,)</version>
