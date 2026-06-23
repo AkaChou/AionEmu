@@ -15,13 +15,16 @@ class GameDisputeLandLifecycleTest {
     @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameDisputeLandLifecycle lifecycle = new GameDisputeLandLifecycle(initializers(events));
+        GameDisputeLandLifecycle lifecycle = new GameDisputeLandLifecycle(
+            () -> events.add("section"),
+            initializers(events)
+        );
 
         lifecycle.start();
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("disputeLand", "outposts"), events);
+        assertEquals(List.of("section", "disputeLand", "outposts"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -30,11 +33,11 @@ class GameDisputeLandLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("dispute land failed");
-        GameDisputeLandLifecycle lifecycle = new GameDisputeLandLifecycle(List.of(
+        GameDisputeLandLifecycle lifecycle = new GameDisputeLandLifecycle(() -> events.add("section"), List.<Runnable>of(
             () -> events.add("disputeLand"),
             () -> {
                 events.add("outposts");
-                if (events.size() == 2) {
+                if (events.size() == 3) {
                     throw failure;
                 }
             }
@@ -49,7 +52,7 @@ class GameDisputeLandLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("disputeLand", "outposts", "disputeLand", "outposts"), events);
+        assertEquals(List.of("section", "disputeLand", "outposts", "section", "disputeLand", "outposts"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 

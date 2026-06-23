@@ -1260,10 +1260,6 @@ public class GameServer {
 
 		protectorConquerorLifecycle.start();
 
-		/**
-		 * Dispute Land
-		 */
-		Util.printSection(" *** Dispute Land initialization *** ");
 		disputeLandLifecycle.start();
 
 		/**
