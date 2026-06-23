@@ -1,0 +1,2 @@
+com.aionemu.gameserver.dao.mysql8.GameMySQL8DAOClassProvider
+com.aionemu.loginserver.dao.mysql8.LoginMySQL8DAOClassProvider

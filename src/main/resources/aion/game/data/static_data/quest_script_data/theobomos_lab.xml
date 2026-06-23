@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest_scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="quest_script_data.xsd">
+
+	<!-- Elyos -->
+	<!-- [Group] Research Party -->
+	<report_to id="14271" start_npc_ids="798155" end_npc_ids="798225"/>
+
+	<!-- Asmodians -->
+
+
+	<!-- Berserk Silikor -->
+	<monster_hunt id="3097" start_npc_ids="798225">
+		<monster var="0" end_var="1" npc_ids="237248"/>
+	</monster_hunt>
+	<!-- The Theobomos Syndrome -->
+	<monster_hunt id="3098" start_npc_ids="798225">
+		<monster var="0" end_var="1" npc_ids="237110"/>
+	</monster_hunt>
+	<!-- [Coin/Group] Triroan In The Lab -->
+	<monster_hunt id="3113" start_npc_ids="798225">
+		<monster var="0" end_var="1" npc_ids="237250"/>
+	</monster_hunt>
+</quest_scripts>

@@ -1,0 +1,4 @@
+aion:
+  services:
+    chat:
+      enabled: true

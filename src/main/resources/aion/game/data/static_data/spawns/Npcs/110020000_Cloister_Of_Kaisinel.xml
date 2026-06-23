@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Parsed By Angry Catster. Don't modify this file directly - put your changes into 110020000_Cloister_Of_Kaisinel.xml instead
+ -->
+<spawns>
+  <spawn_map map_id="110020000">
+    <spawn npc_id="798505" respawn_time="60">
+      <spot x="2138.564453" y="1614.963989" z="1204.9724" h="10"/>
+    </spawn>
+    <spawn npc_id="805692" respawn_time="60">
+      <spot x="461.475586" y="499.321930" z="499.59976"/>
+    </spawn>
+    <spawn npc_id="798508" respawn_time="60">
+      <spot x="2149.118164" y="1620.534058" z="1204.9724" h="70"/>
+    </spawn>
+    <spawn npc_id="798512" respawn_time="60">
+      <spot x="2145.629883" y="1577.144531" z="1205.4822" h="10"/>
+    </spawn>
+    <spawn npc_id="798603" respawn_time="60">
+      <spot x="2148.402100" y="1621.694580" z="1204.9724" h="70"/>
+    </spawn>
+    <spawn npc_id="798602" respawn_time="60">
+      <spot x="2143.619873" y="1626.474243" z="1204.9724" h="100"/>
+    </spawn>
+    <spawn npc_id="830764" respawn_time="60">
+      <spot x="2141.087646" y="1610.450073" z="1204.9724" h="10"/>
+    </spawn>
+    <spawn npc_id="730266" respawn_time="60">
+      <spot x="2154.073975" y="1567.014526" z="1204.8967" entity_id="17"/>
+    </spawn>
+    <spawn npc_id="805362" respawn_time="60">
+      <spot x="500.055695" y="500.063324" z="499.72086" h="60"/>
+    </spawn>
+    <spawn npc_id="798507" respawn_time="60">
+      <spot x="2142.575439" y="1625.879517" z="1204.9724" h="100"/>
+    </spawn>
+    <spawn npc_id="798500" respawn_time="60">
+      <spot x="2177.899902" y="1588.800049" z="1206.1139" h="70"/>
+    </spawn>
+    <spawn npc_id="798501" respawn_time="60">
+      <spot x="2180.297607" y="1611.926147" z="1212.2659" h="80"/>
+    </spawn>
+    <spawn npc_id="801217" respawn_time="60">
+      <spot x="2197.180664" y="1586.291748" z="1212.266" h="60"/>
+    </spawn>
+    <spawn npc_id="806247" respawn_time="60">
+      <spot x="2175.661865" y="1593.622803" z="1206.1139" h="70"/>
+    </spawn>
+    <spawn npc_id="830994" respawn_time="60">
+      <spot x="2151.463867" y="1616.022949" z="1204.9724" h="70"/>
+    </spawn>
+    <spawn npc_id="798502" respawn_time="60">
+      <spot x="2193.166504" y="1603.890137" z="1212.4497" h="76"/>
+    </spawn>
+    <spawn npc_id="798504" respawn_time="60">
+      <spot x="2197.177734" y="1582.395996" z="1212.266" h="60"/>
+    </spawn>
+    <spawn npc_id="206353" respawn_time="60">
+      <spot x="2188.023193" y="1554.213135" z="1204.9724" h="66"/>
+    </spawn>
+    <spawn npc_id="798513" respawn_time="60">
+      <spot x="2186.628906" y="1566.000610" z="1212.0792" h="41"/>
+    </spawn>
+    <spawn npc_id="798503" respawn_time="60">
+      <spot x="2196.592529" y="1598.203003" z="1212.4498" h="66"/>
+    </spawn>
+    <spawn npc_id="801216" respawn_time="60">
+      <spot x="2183.313232" y="1609.947632" z="1212.2659" h="80"/>
+    </spawn>
+    <spawn npc_id="798600" respawn_time="60">
+      <spot x="2177.854248" y="1591.145020" z="1206.1139" h="70"/>
+    </spawn>
+    <spawn npc_id="798601" respawn_time="60">
+      <spot x="2175.883545" y="1549.488159" z="1204.9724" h="6"/>
+    </spawn>
+    <spawn npc_id="798511" respawn_time="60">
+      <spot x="2150.000000" y="1570.000000" z="1205.4822" h="10"/>
+    </spawn>
+    <spawn npc_id="798506" respawn_time="60">
+      <spot x="2136.982178" y="1622.984009" z="1204.9724" h="100"/>
+    </spawn>
+  </spawn_map>
+</spawns>

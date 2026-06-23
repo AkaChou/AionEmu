@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quest_scripts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="quest_script_data.xsd">
+<!--
+    Quest Steel Rake Make By (Encom)
+-->
+    <!-- Elyos -->
+
+    <!-- Snow Blessing -->
+	<report_to_many id="3201" start_npc_ids="798318" end_npc_ids="204534">
+		<npc_infos npc_id="278651" var="0" quest_dialog="1352"/>
+		<npc_infos npc_id="204534" var="1" quest_dialog="2375" close_dialog="1009"/>
+	</report_to_many>
+
+	<!-- A Promise To A Customer -->
+	<item_collecting id="3202" start_npc_ids="204534" action_item_ids="700523"/>
+	<!-- The Manduri Imperative -->
+	<item_collecting id="3203" start_npc_ids="805834"/>
+	<!-- Hairpin Ahoy! -->
+	<item_collecting id="3206" start_npc_ids="805835"/>
+	<!-- The Pirates' Log -->
+	<item_collecting id="3207" start_npc_ids="805836" action_item_ids="700524"/>
+	<!-- [Group] The Pirates' Pouch -->
+	<item_collecting id="3214" start_npc_ids="805835"/>
+	<!-- [Group] Bring Back The Booty -->
+	<item_collecting id="3215" start_npc_ids="805838"/>
+	<!-- [Group] Plunder The Pirates -->
+	<item_collecting id="3216" start_npc_ids="805833"/>
+
+	<!-- Shameless Peperinrinerk -->
+	<report_to id="3204" start_npc_ids="805834" end_npc_ids="804601" item_id="182209085"/>
+	<!-- [Group] Steel Rake Spy -->
+	<report_to id="3209" start_npc_ids="805832" end_npc_ids="798331"/>
+	<!-- [Group] The Difficulties Of Beauty -->
+	<report_to id="3218" start_npc_ids="798334" end_npc_ids="805835" item_id="182209096"/>
+	<!-- Suspicious Shugo -->
+	<report_to id="3221" start_npc_ids="204530" end_npc_ids="204658"/>
+
+	<!-- [Group] Against The Steel Rake -->
+	<monster_hunt id="3211" start_npc_ids="798331" end_npc_ids="805832">
+		<monster var="1" npc_ids="215069" end_var="1"/>
+		<monster var="2" npc_ids="215070" end_var="1"/>
+		<monster var="3" npc_ids="215081" end_var="1"/>
+	</monster_hunt>
+	<!-- [Group] Revenge Of Maximus -->
+	<monster_hunt id="3213" start_npc_ids="204535">
+		<monster var="0" npc_ids="214982 214983 214977 214978 214979" end_var="20"/>
+	</monster_hunt>
+	<!-- [Group] Golden Eye Gambit -->
+	<monster_hunt id="3978" start_npc_ids="798319">
+		<monster var="0" npc_ids="215079" end_var="1"/>
+	</monster_hunt>
+	<!-- [Group] Steel Rake Rumpus -->
+	<monster_hunt id="3979" start_npc_ids="798322">
+		<monster var="0" npc_ids="215081" end_var="1"/>
+	</monster_hunt>
+
+    <!-- Asmodians -->
+
+	<!-- Sandblossom Wine -->
+	<report_to_many id="4201" start_npc_ids="278151" end_npc_ids="204791">
+		<npc_infos npc_id="205233" var="0" quest_dialog="1352"/>
+		<npc_infos npc_id="204791" var="1" quest_dialog="2375" close_dialog="1009"/>
+	</report_to_many>
+
+	<!-- Request Of A Wine Lover -->
+	<item_collecting id="4202" start_npc_ids="204791"/>
+	<!-- Anikiki's Taming Manual -->
+	<item_collecting id="4203" start_npc_ids="805841"/>
+	<!-- Hat Of The Steel Rake Pirates -->
+	<item_collecting id="4206" start_npc_ids="805842"/>
+	<!-- Log Of The Steel Rake -->
+	<item_collecting id="4207" start_npc_ids="805843" action_item_ids="700524"/>
+	<!-- [Group] Rendezvous With The Spy -->
+	<report_to id="4209" start_npc_ids="805839" end_npc_ids="798331"/>
+	<!-- [Group] Black Cloud Ledgers -->
+	<item_collecting id="4214" start_npc_ids="805843"/>
+	<!-- [Group] The Medicine Thief -->
+	<item_collecting id="4215" start_npc_ids="805846"/>
+	<!-- [Group] A Present For Father -->
+	<item_collecting id="4216" start_npc_ids="805840"/>
+
+	<!-- Deliver The Taming Manual -->
+	<report_to id="4204" start_npc_ids="805841" end_npc_ids="205233" item_id="182209100"/>
+	<!-- [Group] Mysterious Amabille -->
+	<report_to id="4218" start_npc_ids="798334" end_npc_ids="805843" item_id="182209111"/>
+	<!-- The Shugo From Pandaemonium -->
+	<report_to id="4221" start_npc_ids="204710" end_npc_ids="204839"/>
+
+	<!-- [Group] Steel Rake Slaughter -->
+	<monster_hunt id="4211" start_npc_ids="798331" end_npc_ids="805839">
+		<monster var="1" npc_ids="215069" end_var="1"/>
+		<monster var="2" npc_ids="215070" end_var="1"/>
+		<monster var="3" npc_ids="215081" end_var="1"/>
+	</monster_hunt>
+	<!-- [Group] Unfortunate Baba Hun -->
+	<monster_hunt id="4213" start_npc_ids="204792">
+		<monster npc_ids="215032 215033 215408" var="0" end_var="4"/>
+		<monster npc_ids="215410" var="1" end_var="4"/>
+	</monster_hunt>
+	<!-- [Group] Safecracking -->
+	<monster_hunt id="4978" start_npc_ids="204286">
+		<monster var="0" end_var="1" npc_ids="215079"/>
+	</monster_hunt>
+	<!-- [Group] In Shugo's Clothing -->
+	<monster_hunt id="4979" start_npc_ids="204283">
+		<monster var="0" end_var="1" npc_ids="215081"/>
+	</monster_hunt>
+</quest_scripts>

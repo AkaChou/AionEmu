@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<spawns>
+  <spawn_map map_id="210010000">
+	<!-- Seirenia -->
+	<spawn npc_id="203175" respawn_time="295">
+		<temporary_spawn spawn_time="21.*.*" despawn_time="4.*.*"/>
+		<spot x="474.22" y="1551.18" z="105.486" h="42"/>
+	</spawn>
+  </spawn_map>
+</spawns>

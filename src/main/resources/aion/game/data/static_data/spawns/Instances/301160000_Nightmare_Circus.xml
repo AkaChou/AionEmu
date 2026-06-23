@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Nightmare Circus Spawn By (Encom)
+ -->
+<spawns>
+	<spawn_map map_id="301160000">
+	    <!-- Adana -->
+		<spawn npc_id="831550">
+	        <spot x="472.8042" y="564.03595" z="201.81464" h="60"/>
+		</spawn>
+		<!-- Ailee -->
+	    <spawn npc_id="831551">
+	        <spot x="473.88882" y="571.22723" z="201.82707" h="59"/>
+		</spawn>
+		<!-- Adiva -->
+	    <spawn npc_id="831552">
+	        <spot x="471.46265" y="572.5938" z="201.70798" h="59"/>
+		</spawn>
+		<!-- Aine -->
+	    <spawn npc_id="831553">
+	        <spot x="471.54446" y="562.4371" z="201.7918" h="60"/>
+		</spawn>
+		<!-- IU (Otherworldly Fairy) -->
+	    <spawn npc_id="831573">
+	        <spot x="524.807556" y="565.477783" z="200.118851" h="0"/>
+		</spawn>
+		<!-- Minor Blessed Relics -->
+		<spawn npc_id="831988">
+            <spot x="475.278" y="567.12115" z="201.85933" h="1"/>
+        </spawn>
+	</spawn_map>
+</spawns>

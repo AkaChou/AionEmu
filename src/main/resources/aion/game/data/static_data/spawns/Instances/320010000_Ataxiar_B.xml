@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	카람마티스 C (100% Same Official Server)
+	Spawn By (Encom)
+ -->
+<spawns>
+	<spawn_map map_id="320010000">
+		<!-- Hagen -->
+		<spawn npc_id="205020">
+			<spot x="434.750" y="399.500" z="233.566" h="15"/>
+		</spawn>
+		<!-- Archon Legionary -->
+		<spawn npc_id="205023" respawn_time="60">
+			<spot x="445.0" y="416.75" z="229.792" h="3"/>
+		</spawn>
+		<!-- Archon Legionary -->
+		<spawn npc_id="205024">
+			<spot x="445.000" y="409.250" z="230.627" h="16"/>
+			<spot x="448.750" y="420.250" z="230.262" h="3"/>
+		</spawn>
+		<!-- Archon Legionary -->
+		<spawn npc_id="205035" respawn_time="1">
+			<spot x="442.500" y="413.250" z="230.186" h="10"/>
+			<spot x="451.500" y="415.750" z="229.943" h="6"/>
+			<spot x="256.750" y="220.000" z="207.500" h="90" random_walk="6"/>
+			<spot x="238.000" y="282.750" z="210.000" h="90" random_walk="6"/>			
+		</spawn>
+		<!-- Archon Legionary -->
+		<spawn npc_id="205036" respawn_time="1">
+			<spot x="448.000" y="412.750" z="229.835" h="15"/>
+			<spot x="254.000" y="298.250" z="207.000" h="90" random_walk="6"/>
+			<spot x="229.500" y="272.750" z="207.500" h="90" random_walk="6"/>			
+		</spawn>
+		<spawn npc_id="205038" respawn_time="1"><!-- AbProD2_Guardian_Chanter -->
+			<spot x="270.000" y="300.250" z="206.000" h="90" random_walk="6"/>
+			<spot x="256.000" y="300.000" z="207.000" h="90" random_walk="6"/>
+			<spot x="232.000" y="233.250" z="207.500" h="90" random_walk="6"/>
+			<spot x="259.000" y="218.750" z="207.500" h="90" random_walk="6"/>
+			<spot x="239.000" y="280.750" z="210.000" h="90" random_walk="6"/>
+			<spot x="282.000" y="221.750" z="209.750" h="90" random_walk="6"/>
+			<spot x="230.000" y="274.500" z="207.500" h="90" random_walk="6"/>
+		</spawn>
+		<spawn npc_id="205028" respawn_time="1"><!-- AbProD2_Combat_Archon_F2 -->
+			<spot x="376.250" y="368.250" z="229.750" h="90" fly="1"/>
+			<spot x="369.250" y="327.250" z="221.000" h="90" fly="1"/>
+		</spawn>
+		<spawn npc_id="205025" respawn_time="1"><!-- AbProD2_Combat_Archon_M1 -->
+			<spot x="381.500" y="352.000" z="234.500" h="90" fly="1"/>
+			<spot x="413.000" y="385.500" z="224.000" h="90" fly="1"/>
+			<spot x="329.750" y="318.000" z="203.750" h="90" fly="1"/>
+		</spawn>
+		<spawn npc_id="205039" respawn_time="1"><!-- AbProD2_Guardian_Knight -->
+			<spot x="405.750" y="370.250" z="231.750" h="90" fly="1"/>
+			<spot x="365.750" y="325.000" z="221.500" h="90" fly="1"/>
+			<spot x="366.500" y="353.250" z="217.500" h="90" fly="1"/>
+			<spot x="414.500" y="389.250" z="224.000" h="90" fly="1"/>
+			<spot x="327.750" y="321.000" z="203.750" h="90" fly="1"/>
+			<spot x="358.250" y="367.750" z="216.250" h="90" fly="1"/>
+			<spot x="379.250" y="372.250" z="229.750" h="90" fly="1"/>
+			<spot x="334.500" y="358.000" z="209.750" h="90" fly="1"/>
+			<spot x="343.000" y="317.750" z="201.750" h="90" fly="1"/>
+			<spot x="382.250" y="356.000" z="234.500" h="90" fly="1"/>			
+		</spawn>
+		<spawn npc_id="205033" respawn_time="1"><!-- AbProD2_Air_Archon_M4 -->
+			<spot x="313.500" y="257.000" z="225.000" h="90" fly="1"/>
+		</spawn>
+		<spawn npc_id="205034" respawn_time="1"><!-- AbProD2_Air_Archon_F4 -->
+			<spot x="195.500" y="256.250" z="225.000" h="90" fly="1"/>
+		</spawn>	
+		<spawn npc_id="205026" respawn_time="1"><!-- AbProD2_Combat_Archon_M2 -->
+			<spot x="355.250" y="366.250" z="216.250" h="90" fly="1"/>
+			<spot x="369.000" y="351.000" z="217.500" h="90" fly="1"/>
+		</spawn>
+		<spawn npc_id="205027" respawn_time="1"><!-- AbProD2_Combat_Archon_F1 -->
+			<spot x="337.000" y="354.250" z="209.750" h="90" fly="1"/>
+			<spot x="408.250" y="374.000" z="231.750" h="90" fly="1"/>
+			<spot x="340.000" y="314.250" z="201.750" h="90" fly="1"/>
+		</spawn>
+	</spawn_map>
+</spawns>

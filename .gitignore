@@ -1,0 +1,44 @@
+# Build outputs
+target/
+build/
+out/
+
+# Local dependency directories from the legacy Ant layout
+**/libs/
+
+# IDE and local tooling
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+.cursor/
+.codegraph/
+
+# Runtime logs and pid files
+log/
+logs/
+*.log
+*.pid
+
+# Legacy top-level service directories are runtime/build leftovers after the single-module migration.
+/AL-Boot/
+/AL-Chat/
+/AL-Commons/
+/AL-Game/
+/AL-Login/
+/cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+.codegraph
+.cursor
+
+
+game
+log
+login
+chat

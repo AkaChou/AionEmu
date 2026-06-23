@@ -1,0 +1,15 @@
+spring:
+  main:
+    banner-mode: "off"
+    web-application-type: none
+
+aion:
+  services:
+    game:
+      enabled: true
+    login:
+      enabled: true
+    chat:
+      enabled: true
+    transport:
+      mode: netty
