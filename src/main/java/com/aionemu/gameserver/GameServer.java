@@ -64,6 +64,7 @@ import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
+import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
@@ -78,14 +79,10 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
-import com.aionemu.gameserver.services.ChallengeTaskService;
-import com.aionemu.gameserver.services.HousingBidService;
-import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
@@ -992,6 +989,67 @@ public class GameServer {
 		GameOptionalServicesLifecycle optionalServicesLifecycle,
 		GameSeasonRankingLifecycle seasonRankingLifecycle
 	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			runtimeServicesLifecycle,
+			optionalServicesLifecycle,
+			seasonRankingLifecycle,
+			new GameHousingLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle,
+		GameRuntimeServicesLifecycle runtimeServicesLifecycle,
+		GameOptionalServicesLifecycle optionalServicesLifecycle,
+		GameSeasonRankingLifecycle seasonRankingLifecycle,
+		GameHousingLifecycle housingLifecycle
+	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -1113,10 +1171,7 @@ public class GameServer {
 		 * Housing
 		 */
 		Util.printSection(" *** Housing *** ");
-		HousingBidService.getInstance().start();
-		MaintenanceTask.getInstance();
-		TownService.getInstance();
-		ChallengeTaskService.getInstance();
+		housingLifecycle.start();
 
         /**
          * 系统初始化最终阶段
