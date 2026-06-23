@@ -16,8 +16,7 @@ class GameUtilityServicesLifecycleTest {
     void startInitializesUtilityServicesOnce() {
         List<String> events = new ArrayList<>();
         GameThreadPoolLifecycle threadPoolLifecycle = new GameThreadPoolLifecycle(
-            () -> events.add("threadPool:start"),
-            () -> events.add("threadPool:stop")
+            new RecordingGameThreadPoolGateway(events)
         );
         GameUtilityServicesLifecycle lifecycle = new GameUtilityServicesLifecycle(
             () -> events.add("exceptionHandler"),
@@ -58,8 +57,7 @@ class GameUtilityServicesLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("utility failed");
         GameThreadPoolLifecycle threadPoolLifecycle = new GameThreadPoolLifecycle(
-            () -> events.add("threadPool:start"),
-            () -> events.add("threadPool:stop")
+            new RecordingGameThreadPoolGateway(events)
         );
         GameUtilityServicesLifecycle lifecycle = new GameUtilityServicesLifecycle(
             () -> events.add("exceptionHandler"),
@@ -107,5 +105,24 @@ class GameUtilityServicesLifecycleTest {
             "threadPool:start"
         ), events);
         assertEquals(null, lifecycle.getLastFailure());
+    }
+
+    private static final class RecordingGameThreadPoolGateway extends GameThreadPoolGateway {
+
+        private final List<String> events;
+
+        private RecordingGameThreadPoolGateway(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void start() {
+            events.add("threadPool:start");
+        }
+
+        @Override
+        public void stop() {
+            events.add("threadPool:stop");
+        }
     }
 }

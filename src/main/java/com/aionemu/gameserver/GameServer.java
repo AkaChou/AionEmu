@@ -103,6 +103,7 @@ import com.aionemu.gameserver.lifecycle.GameSystemGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolGateway;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationGateway;
@@ -228,7 +229,7 @@ public class GameServer {
 	 */
 	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(String[] args, Boolean chatServerEnabledOverride) {
-		start(args, chatServerEnabledOverride, new GameThreadPoolLifecycle());
+		start(args, chatServerEnabledOverride, new GameThreadPoolLifecycle(new GameThreadPoolGateway()));
 	}
 
 	/**

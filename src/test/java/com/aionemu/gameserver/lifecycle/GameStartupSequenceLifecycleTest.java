@@ -93,6 +93,10 @@ class GameStartupSequenceLifecycleTest {
     }
 
     private static final class RecordingGameThreadPoolLifecycle extends GameThreadPoolLifecycle {
+
+        private RecordingGameThreadPoolLifecycle() {
+            super(new GameThreadPoolGateway());
+        }
     }
 
     private static final class RecordingGameStaticDataLifecycle extends GameStaticDataLifecycle {

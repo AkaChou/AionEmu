@@ -1,29 +1,20 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.utils.ThreadPoolManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameThreadPoolLifecycle {
 
-    private final Runnable startAction;
-    private final Runnable stopAction;
+    private final GameThreadPoolGateway threadPoolGateway;
     private boolean started;
-
-    public GameThreadPoolLifecycle() {
-        this(() -> ThreadPoolManager.getInstance(), () -> ThreadPoolManager.getInstance().shutdown());
-    }
-
-    GameThreadPoolLifecycle(Runnable startAction, Runnable stopAction) {
-        this.startAction = startAction;
-        this.stopAction = stopAction;
-    }
 
     public synchronized void start() {
         if (started) {
             return;
         }
-        startAction.run();
+        threadPoolGateway.start();
         started = true;
     }
 
@@ -32,7 +23,7 @@ public class GameThreadPoolLifecycle {
             return;
         }
         try {
-            stopAction.run();
+            threadPoolGateway.stop();
         } finally {
             started = false;
         }

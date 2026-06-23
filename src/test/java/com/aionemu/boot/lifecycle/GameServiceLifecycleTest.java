@@ -64,13 +64,13 @@ import com.aionemu.gameserver.lifecycle.GameSystemGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolGateway;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -83,8 +83,7 @@ class GameServiceLifecycleTest {
     void usesDirectLifecycleCollaboratorsInsteadOfActionAdapters() {
         assertEquals(GameStartupSequenceLifecycle.class, fieldType("startupSequenceLifecycle"));
         assertEquals(GameServerNetworkLifecycle.class, fieldType("serverNetworkLifecycle"));
-        assertEquals(null, findFieldType("startAction"));
-        assertEquals(null, findFieldType("stopAction"));
+        assertEquals(GameThreadPoolGateway.class, fieldType(GameThreadPoolLifecycle.class, "threadPoolGateway"));
     }
 
     @Test
@@ -114,12 +113,11 @@ class GameServiceLifecycleTest {
         }
     }
 
-    private static Class<?> findFieldType(String name) {
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameServiceLifecycle.class.getDeclaredField(name);
-            return field.getType();
+            return type.getDeclaredField(name).getType();
         } catch (NoSuchFieldException e) {
-            return null;
+            throw new AssertionError("Missing field: " + name, e);
         }
     }
 
@@ -737,6 +735,7 @@ class GameServiceLifecycleTest {
         private boolean started;
 
         private RecordingGameThreadPoolLifecycle(List<String> events) {
+            super(new GameThreadPoolGateway());
             this.events = events;
         }
 
