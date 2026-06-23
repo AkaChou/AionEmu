@@ -505,6 +505,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameStartupHooksLifecycle(List<String> events) {
+            super(new GameStartupHooksGateway());
             this.events = events;
         }
 

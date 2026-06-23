@@ -55,6 +55,7 @@ import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataGateway;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupHooksGateway;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupLogGateway;
 import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
@@ -633,6 +634,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameStartupHooksLifecycle(List<String> events) {
+            super(new GameStartupHooksGateway());
             this.events = events;
         }
 

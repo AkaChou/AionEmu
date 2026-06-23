@@ -1,23 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.GameServer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameStartupHooksLifecycle {
 
-    private final Runnable startupHookExecutor;
+    private final GameStartupHooksGateway startupHooksGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameStartupHooksLifecycle() {
-        this(GameServer::runStartupHooks);
-    }
-
-    GameStartupHooksLifecycle(Runnable startupHookExecutor) {
-        this.startupHookExecutor = startupHookExecutor;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -26,7 +19,7 @@ public class GameStartupHooksLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            startupHookExecutor.run();
+            startupHooksGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {
