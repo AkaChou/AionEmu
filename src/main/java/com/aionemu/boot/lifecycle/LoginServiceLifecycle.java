@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class LoginServiceLifecycle implements AionServiceLifecycle {
 
     private final AionServicesProperties services;
+    private final LoginServerLifecycleGateway loginServerLifecycleGateway;
     private boolean started;
 
     @Override
@@ -31,10 +32,10 @@ public class LoginServiceLifecycle implements AionServiceLifecycle {
     public void start(ApplicationArguments args) {
         AionServicePaths.configureLogin();
         try {
-            com.aionemu.loginserver.LoginServer.start(args.getSourceArgs());
+            loginServerLifecycleGateway.start(args.getSourceArgs());
             started = true;
         } catch (RuntimeException | Error e) {
-            com.aionemu.loginserver.Shutdown.getInstance().shutdown(false);
+            loginServerLifecycleGateway.stop();
             throw e;
         }
     }
@@ -44,7 +45,7 @@ public class LoginServiceLifecycle implements AionServiceLifecycle {
         if (!started) {
             return;
         }
-        com.aionemu.loginserver.Shutdown.getInstance().shutdown(false);
+        loginServerLifecycleGateway.stop();
         started = false;
     }
 }

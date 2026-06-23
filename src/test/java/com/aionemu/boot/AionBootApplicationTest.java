@@ -10,6 +10,7 @@ import com.aionemu.boot.lifecycle.AionServiceLauncher;
 import com.aionemu.boot.lifecycle.ChatServerLifecycleGateway;
 import com.aionemu.boot.lifecycle.ChatServiceLifecycle;
 import com.aionemu.boot.lifecycle.GameServiceLifecycle;
+import com.aionemu.boot.lifecycle.LoginServerLifecycleGateway;
 import com.aionemu.boot.lifecycle.LoginServiceLifecycle;
 import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.boot.transport.LegacyNioTransportLifecycle;
@@ -148,6 +149,7 @@ class AionBootApplicationTest {
             context.registerBean(GameStartupLogLifecycle.class);
             context.registerBean(GameChatServerOverrideLifecycle.class);
             context.registerBean(GameThreadPoolLifecycle.class);
+            context.registerBean(LoginServerLifecycleGateway.class);
             context.registerBean(LoginServiceLifecycle.class);
             context.registerBean(ChatServerLifecycleGateway.class);
             context.registerBean(ChatServiceLifecycle.class);
