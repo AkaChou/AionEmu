@@ -78,6 +78,7 @@ import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
@@ -1209,80 +1210,49 @@ public class GameServer {
 		GameStartupLogLifecycle startupLogLifecycle,
 		GameChatServerOverrideLifecycle chatServerOverrideLifecycle
 	) {
-		systemPropertiesLifecycle.start();
-		long start = startupLogLifecycle.start();
-
-		loggingLifecycle.start();
-		utilityServicesLifecycle.start(threadPoolLifecycle);
-		chatServerOverrideLifecycle.start(chatServerEnabledOverride);
-		adminPanelLifecycle.start();
-		
-		staticDataLifecycle.start();
-		worldBootstrapLifecycle.start();
-		eventBootstrapLifecycle.start();
-
-		geoNavLifecycle.start();
-		GameServer gs = worldActivationLifecycle.start();
-
-		/**
-		 * Engines
-		 */
-		enginesLifecycle.start();
-
-		/**
-		 * Location Data
-		 */
-		locationBootstrapLifecycle.start();
-
-		spawnLifecycle.start();
-		
-		eventRuntimeLifecycle.start();
-
-		/**
-		 * Cleaning
-		 */
-		cleaningLifecycle.start();
-
-		scheduledServicesLifecycle.start();
-
-		customEventsLifecycle.start();
-
-		siegeScheduleLifecycle.start();
-
-		dredgionLifecycle.start();
-
-		battlefieldLifecycle.start();
-
-		protectorConquerorLifecycle.start();
-
-		disputeLandLifecycle.start();
-
-		htmlLifecycle.start();
-
-		rewardServicesLifecycle.start();
-		runtimeServicesLifecycle.start();
-		optionalServicesLifecycle.start();
-
-		seasonRankingLifecycle.start();
-
-		housingLifecycle.start();
-
-        /**
-         * 系统初始化最终阶段
-         * System initialization final phase
-         */
-        long startupTime = systemLifecycle.start(start);
-
-        networkStartupLifecycle.start(gs::startServers);
-        ratioLimitLifecycle.start();
-        startupHooksLifecycle.start();
-        startupCompletionLifecycle.start(startupTime);
+		new GameStartupSequenceLifecycle(
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			runtimeServicesLifecycle,
+			optionalServicesLifecycle,
+			seasonRankingLifecycle,
+			housingLifecycle,
+			systemLifecycle,
+			networkStartupLifecycle,
+			ratioLimitLifecycle,
+			startupHooksLifecycle,
+			startupCompletionLifecycle,
+			loggingLifecycle,
+			utilityServicesLifecycle,
+			adminPanelLifecycle,
+			systemPropertiesLifecycle,
+			startupLogLifecycle,
+			chatServerOverrideLifecycle
+		).start(chatServerEnabledOverride);
 	}
 
 	/**
 	 * Starts servers for connection with aion client and login\chat server.
 	 */
-	private void startServers() {
+	public void startServers() {
 		log.info("Network Config - Bind: {}, Port: {}, Threads: {}", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS);
 		
 		boolean nettyTransportEnabled = Boolean.getBoolean("aion.transport.netty");
