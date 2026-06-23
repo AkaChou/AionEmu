@@ -526,6 +526,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameStartupCompletionLifecycle(List<String> events) {
+            super(new GameStartupCompletionGateway());
             this.events = events;
         }
 

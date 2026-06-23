@@ -70,6 +70,7 @@ import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataGateway;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupCompletionGateway;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksGateway;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupLogGateway;
@@ -201,6 +202,7 @@ class AionBootApplicationTest {
             context.registerBean(GameRatioLimitLifecycle.class);
             context.registerBean(GameStartupHooksGateway.class);
             context.registerBean(GameStartupHooksLifecycle.class);
+            context.registerBean(GameStartupCompletionGateway.class);
             context.registerBean(GameStartupCompletionLifecycle.class);
             context.registerBean(GameStartupSequenceLifecycle.class);
             context.registerBean(GameUtilityServicesLifecycle.class);
