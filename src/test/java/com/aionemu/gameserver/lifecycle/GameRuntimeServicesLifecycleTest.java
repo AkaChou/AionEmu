@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -13,11 +14,15 @@ import org.junit.jupiter.api.Test;
 class GameRuntimeServicesLifecycleTest {
 
     @Test
+    void usesRuntimeServicesGatewayCollaborator() {
+        assertEquals(GameRuntimeServicesGateway.class, fieldType("runtimeServicesGateway"));
+    }
+
+    @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(
-            () -> events.add("section"),
-            initializers(events)
+            new RecordingGameRuntimeServicesGateway(events, null, eventNames())
         );
 
         lifecycle.start();
@@ -55,15 +60,9 @@ class GameRuntimeServicesLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("runtime services failed");
-        GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(() -> events.add("section"), List.<Runnable>of(
-            () -> events.add("periodicSave"),
-            () -> {
-                events.add("admin");
-                if (events.size() == 3) {
-                    throw failure;
-                }
-            }
-        ));
+        GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(
+            new RecordingGameRuntimeServicesGateway(events, failure, List.of("periodicSave", "admin"))
+        );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -78,28 +77,65 @@ class GameRuntimeServicesLifecycleTest {
         assertEquals(null, lifecycle.getLastFailure());
     }
 
-    private static List<Runnable> initializers(List<String> events) {
+    private static List<String> eventNames() {
         return List.of(
-            () -> events.add("periodicSave"),
-            () -> events.add("admin"),
-            () -> events.add("playerTransfer"),
-            () -> events.add("territory"),
-            () -> events.add("gameTime"),
-            () -> events.add("announcement"),
-            () -> events.add("debug"),
-            () -> events.add("weather"),
-            () -> events.add("broker"),
-            () -> events.add("influence"),
-            () -> events.add("exchange"),
-            () -> events.add("petition"),
-            () -> events.add("instance"),
-            () -> events.add("flyRing"),
-            () -> events.add("curingZone"),
-            () -> events.add("springZone"),
-            () -> events.add("boostEvent"),
-            () -> events.add("taskManager"),
-            () -> events.add("limitedItemTrade"),
-            () -> events.add("gameTimeClock")
+            "periodicSave",
+            "admin",
+            "playerTransfer",
+            "territory",
+            "gameTime",
+            "announcement",
+            "debug",
+            "weather",
+            "broker",
+            "influence",
+            "exchange",
+            "petition",
+            "instance",
+            "flyRing",
+            "curingZone",
+            "springZone",
+            "boostEvent",
+            "taskManager",
+            "limitedItemTrade",
+            "gameTimeClock"
         );
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            Field field = GameRuntimeServicesLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameRuntimeServicesGateway extends GameRuntimeServicesGateway {
+
+        private final List<String> events;
+        private final RuntimeException firstFailure;
+        private final List<String> eventNames;
+
+        private RecordingGameRuntimeServicesGateway(
+            List<String> events,
+            RuntimeException firstFailure,
+            List<String> eventNames
+        ) {
+            this.events = events;
+            this.firstFailure = firstFailure;
+            this.eventNames = List.copyOf(eventNames);
+        }
+
+        @Override
+        public void start() {
+            events.add("section");
+            for (String eventName : eventNames) {
+                events.add(eventName);
+                if (events.size() == 3 && firstFailure != null) {
+                    throw firstFailure;
+                }
+            }
+        }
     }
 }

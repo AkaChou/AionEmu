@@ -38,6 +38,7 @@ import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesGateway;
@@ -520,6 +521,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameRuntimeServicesLifecycle(List<String> events) {
+            super(new GameRuntimeServicesGateway());
             this.events = events;
         }
 

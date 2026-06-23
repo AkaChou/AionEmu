@@ -386,6 +386,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameRuntimeServicesLifecycle(List<String> events) {
+            super(new GameRuntimeServicesGateway());
             this.events = events;
         }
 
