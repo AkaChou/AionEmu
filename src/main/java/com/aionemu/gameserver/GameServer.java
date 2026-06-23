@@ -52,7 +52,6 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.AIConfig;
-import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
@@ -61,6 +60,7 @@ import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
 import com.aionemu.gameserver.configs.main.WeddingsConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
+import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
@@ -106,16 +106,7 @@ import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
-import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
-import com.aionemu.gameserver.services.instance.IDRunService;
-import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
-import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.InstanceService;
-import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
-import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
-import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
@@ -614,6 +605,51 @@ public class GameServer {
 		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
 		GameDredgionLifecycle dredgionLifecycle
 	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			new GameBattlefieldLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle
+	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -697,33 +733,7 @@ public class GameServer {
 		 * Battlefield
 		 */
 		Util.printSection(" *** Battlefield *** ");
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			KamarBattlefieldService.getInstance().initKamarBattlefield();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			EngulfedOphidanBridgeService.getInstance().initEngulfedOphidan();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			SuspiciousOphidanBridgeService.getInstance().initSuspiciousOphidan();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			IronWallWarfrontService.getInstance().initIronWallWarfront();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			IdgelDomeService.getInstance().initIdgelDome();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			IdgelDomeLandmarkService.getInstance().initLandmark();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			HallOfTenacityService.getInstance().initHallOfTenacity();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			GrandArenaTrainingCampService.getInstance().initGrandArenaTrainingCamp();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			IDRunService.getInstance().initIDRun();
-		}
+		battlefieldLifecycle.start();
 
 		/**
 		 * Protector/Conqueror

@@ -2,6 +2,7 @@ package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
@@ -49,6 +50,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameCustomEventsLifecycle customEventsLifecycle,
         GameSiegeScheduleLifecycle siegeScheduleLifecycle,
         GameDredgionLifecycle dredgionLifecycle,
+        GameBattlefieldLifecycle battlefieldLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -68,6 +70,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             customEventsLifecycle,
             siegeScheduleLifecycle,
             dredgionLifecycle,
+            battlefieldLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -86,7 +89,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 scheduledServicesLifecycle,
                 customEventsLifecycle,
                 siegeScheduleLifecycle,
-                dredgionLifecycle
+                dredgionLifecycle,
+                battlefieldLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -109,6 +113,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameCustomEventsLifecycle customEventsLifecycle,
         GameSiegeScheduleLifecycle siegeScheduleLifecycle,
         GameDredgionLifecycle dredgionLifecycle,
+        GameBattlefieldLifecycle battlefieldLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction

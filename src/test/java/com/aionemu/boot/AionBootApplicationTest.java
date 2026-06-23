@@ -15,6 +15,7 @@ import com.aionemu.boot.transport.LegacyNioTransportLifecycle;
 import com.aionemu.boot.transport.NettyTransportLifecycle;
 import com.aionemu.chatserver.ChatServer;
 import com.aionemu.gameserver.GameServer;
+import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
@@ -89,6 +90,7 @@ class AionBootApplicationTest {
             context.registerBean(GameCustomEventsLifecycle.class);
             context.registerBean(GameSiegeScheduleLifecycle.class);
             context.registerBean(GameDredgionLifecycle.class);
+            context.registerBean(GameBattlefieldLifecycle.class);
             context.registerBean(GameThreadPoolLifecycle.class);
             context.registerBean(LoginServiceLifecycle.class);
             context.registerBean(ChatServiceLifecycle.class);
