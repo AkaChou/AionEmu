@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
 import com.aionemu.boot.lifecycle.AionServiceLauncher;
+import com.aionemu.boot.lifecycle.ChatServerLifecycleGateway;
 import com.aionemu.boot.lifecycle.ChatServiceLifecycle;
 import com.aionemu.boot.lifecycle.GameServiceLifecycle;
 import com.aionemu.boot.lifecycle.LoginServiceLifecycle;
@@ -148,6 +149,7 @@ class AionBootApplicationTest {
             context.registerBean(GameChatServerOverrideLifecycle.class);
             context.registerBean(GameThreadPoolLifecycle.class);
             context.registerBean(LoginServiceLifecycle.class);
+            context.registerBean(ChatServerLifecycleGateway.class);
             context.registerBean(ChatServiceLifecycle.class);
             context.registerBean(GameServiceLifecycle.class);
             context.registerBean(AionServiceLauncher.class);
