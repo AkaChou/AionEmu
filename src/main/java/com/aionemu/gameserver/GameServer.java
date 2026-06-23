@@ -79,6 +79,7 @@ import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
@@ -1159,6 +1160,7 @@ public class GameServer {
 			new GameNetworkStartupLifecycle(),
 			new GameRatioLimitLifecycle(),
 			new GameStartupHooksLifecycle(),
+			new GameStartupCompletionLifecycle(),
 			new GameLoggingLifecycle(),
 			new GameUtilityServicesLifecycle(),
 			new GameAdminPanelLifecycle(),
@@ -1201,6 +1203,7 @@ public class GameServer {
 		GameNetworkStartupLifecycle networkStartupLifecycle,
 		GameRatioLimitLifecycle ratioLimitLifecycle,
 		GameStartupHooksLifecycle startupHooksLifecycle,
+		GameStartupCompletionLifecycle startupCompletionLifecycle,
 		GameLoggingLifecycle loggingLifecycle,
 		GameUtilityServicesLifecycle utilityServicesLifecycle,
 		GameAdminPanelLifecycle adminPanelLifecycle,
@@ -1331,10 +1334,7 @@ public class GameServer {
         networkStartupLifecycle.start(gs::startServers);
         ratioLimitLifecycle.start();
         startupHooksLifecycle.start();
-        
-        log.info("=== Server initialization COMPLETE ===");
-        log.info("Total initialization time: {} seconds", startupTime);
-        log.info("Server is now ready to accept connections");
+        startupCompletionLifecycle.start(startupTime);
 	}
 
 	/**

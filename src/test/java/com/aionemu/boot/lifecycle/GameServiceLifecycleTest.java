@@ -30,6 +30,7 @@ import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
@@ -79,6 +80,7 @@ class GameServiceLifecycleTest {
         GameNetworkStartupLifecycle networkStartupLifecycle = new RecordingGameNetworkStartupLifecycle(events);
         GameRatioLimitLifecycle ratioLimitLifecycle = new RecordingGameRatioLimitLifecycle(events);
         GameStartupHooksLifecycle startupHooksLifecycle = new RecordingGameStartupHooksLifecycle(events);
+        GameStartupCompletionLifecycle startupCompletionLifecycle = new RecordingGameStartupCompletionLifecycle(events);
         GameUtilityServicesLifecycle utilityServicesLifecycle = new RecordingGameUtilityServicesLifecycle(events);
         GameAdminPanelLifecycle adminPanelLifecycle = new RecordingGameAdminPanelLifecycle(events);
         GameSystemPropertiesLifecycle systemPropertiesLifecycle = new RecordingGameSystemPropertiesLifecycle(events);
@@ -117,6 +119,7 @@ class GameServiceLifecycleTest {
             networkStartupLifecycle,
             ratioLimitLifecycle,
             startupHooksLifecycle,
+            startupCompletionLifecycle,
             utilityServicesLifecycle,
             adminPanelLifecycle,
             systemPropertiesLifecycle,
@@ -164,6 +167,7 @@ class GameServiceLifecycleTest {
         GameNetworkStartupLifecycle networkStartupLifecycle = new RecordingGameNetworkStartupLifecycle(events);
         GameRatioLimitLifecycle ratioLimitLifecycle = new RecordingGameRatioLimitLifecycle(events);
         GameStartupHooksLifecycle startupHooksLifecycle = new RecordingGameStartupHooksLifecycle(events);
+        GameStartupCompletionLifecycle startupCompletionLifecycle = new RecordingGameStartupCompletionLifecycle(events);
         GameUtilityServicesLifecycle utilityServicesLifecycle = new RecordingGameUtilityServicesLifecycle(events);
         GameAdminPanelLifecycle adminPanelLifecycle = new RecordingGameAdminPanelLifecycle(events);
         GameSystemPropertiesLifecycle systemPropertiesLifecycle = new RecordingGameSystemPropertiesLifecycle(events);
@@ -200,6 +204,7 @@ class GameServiceLifecycleTest {
             networkStartupLifecycle,
             ratioLimitLifecycle,
             startupHooksLifecycle,
+            startupCompletionLifecycle,
             utilityServicesLifecycle,
             adminPanelLifecycle,
             systemPropertiesLifecycle,
@@ -620,6 +625,20 @@ class GameServiceLifecycleTest {
         @Override
         public synchronized void start() {
             events.add("startupHooks:start");
+        }
+    }
+
+    private static final class RecordingGameStartupCompletionLifecycle extends GameStartupCompletionLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameStartupCompletionLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public synchronized void start(long startupTime) {
+            events.add("startupCompletion:start:" + startupTime);
         }
     }
 

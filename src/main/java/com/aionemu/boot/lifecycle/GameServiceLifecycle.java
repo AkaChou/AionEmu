@@ -28,6 +28,7 @@ import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
@@ -81,6 +82,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameNetworkStartupLifecycle networkStartupLifecycle,
         GameRatioLimitLifecycle ratioLimitLifecycle,
         GameStartupHooksLifecycle startupHooksLifecycle,
+        GameStartupCompletionLifecycle startupCompletionLifecycle,
         GameUtilityServicesLifecycle utilityServicesLifecycle,
         GameAdminPanelLifecycle adminPanelLifecycle,
         GameSystemPropertiesLifecycle systemPropertiesLifecycle,
@@ -118,6 +120,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             networkStartupLifecycle,
             ratioLimitLifecycle,
             startupHooksLifecycle,
+            startupCompletionLifecycle,
             utilityServicesLifecycle,
             adminPanelLifecycle,
             systemPropertiesLifecycle,
@@ -154,6 +157,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 networkStartupLifecycle,
                 ratioLimitLifecycle,
                 startupHooksLifecycle,
+                startupCompletionLifecycle,
                 loggingLifecycle,
                 utilityServicesLifecycle,
                 adminPanelLifecycle,
@@ -195,6 +199,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameNetworkStartupLifecycle networkStartupLifecycle,
         GameRatioLimitLifecycle ratioLimitLifecycle,
         GameStartupHooksLifecycle startupHooksLifecycle,
+        GameStartupCompletionLifecycle startupCompletionLifecycle,
         GameUtilityServicesLifecycle utilityServicesLifecycle,
         GameAdminPanelLifecycle adminPanelLifecycle,
         GameSystemPropertiesLifecycle systemPropertiesLifecycle,
