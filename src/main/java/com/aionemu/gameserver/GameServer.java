@@ -69,6 +69,7 @@ import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
@@ -85,7 +86,6 @@ import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.ChallengeTaskService;
 import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.TownService;
-import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
@@ -933,6 +933,65 @@ public class GameServer {
 		GameRuntimeServicesLifecycle runtimeServicesLifecycle,
 		GameOptionalServicesLifecycle optionalServicesLifecycle
 	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			runtimeServicesLifecycle,
+			optionalServicesLifecycle,
+			new GameSeasonRankingLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle,
+		GameRuntimeServicesLifecycle runtimeServicesLifecycle,
+		GameOptionalServicesLifecycle optionalServicesLifecycle,
+		GameSeasonRankingLifecycle seasonRankingLifecycle
+	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -1048,7 +1107,7 @@ public class GameServer {
 		 * Season Ranking Update
 		 */
 		Util.printSection(" *** Season Ranking *** ");
-		SeasonRankingUpdateService.getInstance().onStart();
+		seasonRankingLifecycle.start();
 
 		/**
 		 * Housing

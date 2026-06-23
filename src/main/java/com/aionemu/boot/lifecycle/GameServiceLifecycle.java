@@ -17,6 +17,7 @@ import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
@@ -63,6 +64,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameRewardServicesLifecycle rewardServicesLifecycle,
         GameRuntimeServicesLifecycle runtimeServicesLifecycle,
         GameOptionalServicesLifecycle optionalServicesLifecycle,
+        GameSeasonRankingLifecycle seasonRankingLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -89,6 +91,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             rewardServicesLifecycle,
             runtimeServicesLifecycle,
             optionalServicesLifecycle,
+            seasonRankingLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -114,7 +117,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 htmlLifecycle,
                 rewardServicesLifecycle,
                 runtimeServicesLifecycle,
-                optionalServicesLifecycle
+                optionalServicesLifecycle,
+                seasonRankingLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -144,6 +148,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameRewardServicesLifecycle rewardServicesLifecycle,
         GameRuntimeServicesLifecycle runtimeServicesLifecycle,
         GameOptionalServicesLifecycle optionalServicesLifecycle,
+        GameSeasonRankingLifecycle seasonRankingLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction
