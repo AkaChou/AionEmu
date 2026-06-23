@@ -54,9 +54,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.configs.main.FFAConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.configs.main.PvPModConfig;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
@@ -64,6 +62,7 @@ import com.aionemu.gameserver.configs.main.WeddingsConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
+import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
@@ -106,11 +105,7 @@ import com.aionemu.gameserver.services.SpringZoneService;
 import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.WeddingService;
-import com.aionemu.gameserver.services.events.BGService;
-import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.events.FFAService;
-import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
@@ -498,6 +493,45 @@ public class GameServer {
 		GameCleaningLifecycle cleaningLifecycle,
 		GameScheduledServicesLifecycle scheduledServicesLifecycle
 	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			new GameCustomEventsLifecycle()
+		);
+	}
+
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle
+	) {
 		System.setProperty("file.encoding", "UTF-8");
 		System.setProperty("java.net.preferIPv4Stack", "true");
 		System.setProperty("java.net.preferIPv6Addresses", "false");
@@ -563,15 +597,7 @@ public class GameServer {
 		 * Custom Events
 		 */
 		Util.printSection(" *** Custom Events *** ");
-		// FFA
-		if (FFAConfig.FFA_ENABLED) {
-			FFAService.getInstance();
-		}
-		if (PvPModConfig.BG_ENABLED) {
-			LadderService.getInstance();
-			BGService.getInstance();
-		}
-		BanditService.getInstance().onInit();
+		customEventsLifecycle.start();
 
 		/**
 		 * Siege Schedule Initialization

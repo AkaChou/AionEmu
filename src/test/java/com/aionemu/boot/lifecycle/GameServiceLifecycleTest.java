@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
+import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
@@ -41,6 +42,7 @@ class GameServiceLifecycleTest {
         GameEventRuntimeLifecycle eventRuntimeLifecycle = new RecordingGameEventRuntimeLifecycle(events);
         GameCleaningLifecycle cleaningLifecycle = new RecordingGameCleaningLifecycle(events);
         GameScheduledServicesLifecycle scheduledServicesLifecycle = new RecordingGameScheduledServicesLifecycle(events);
+        GameCustomEventsLifecycle customEventsLifecycle = new RecordingGameCustomEventsLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         BiConsumer<String[], Boolean> startAction = (args, chatEnabled) -> events.add("start:" + chatEnabled);
         Runnable stopAction = () -> events.add("stop");
@@ -58,6 +60,7 @@ class GameServiceLifecycleTest {
             eventRuntimeLifecycle,
             cleaningLifecycle,
             scheduledServicesLifecycle,
+            customEventsLifecycle,
             threadPoolLifecycle,
             startAction,
             stopAction
@@ -84,6 +87,7 @@ class GameServiceLifecycleTest {
         GameEventRuntimeLifecycle eventRuntimeLifecycle = new RecordingGameEventRuntimeLifecycle(events);
         GameCleaningLifecycle cleaningLifecycle = new RecordingGameCleaningLifecycle(events);
         GameScheduledServicesLifecycle scheduledServicesLifecycle = new RecordingGameScheduledServicesLifecycle(events);
+        GameCustomEventsLifecycle customEventsLifecycle = new RecordingGameCustomEventsLifecycle(events);
         GameThreadPoolLifecycle threadPoolLifecycle = new RecordingGameThreadPoolLifecycle(events);
         GameServiceLifecycle lifecycle = new GameServiceLifecycle(
             services,
@@ -99,6 +103,7 @@ class GameServiceLifecycleTest {
             eventRuntimeLifecycle,
             cleaningLifecycle,
             scheduledServicesLifecycle,
+            customEventsLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> { },
             () -> events.add("stop")
@@ -276,6 +281,20 @@ class GameServiceLifecycleTest {
         @Override
         public synchronized void start() {
             events.add("scheduledServices:start");
+        }
+    }
+
+    private static final class RecordingGameCustomEventsLifecycle extends GameCustomEventsLifecycle {
+
+        private final List<String> events;
+
+        private RecordingGameCustomEventsLifecycle(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public synchronized void start() {
+            events.add("customEvents:start");
         }
     }
 

@@ -3,6 +3,7 @@ package com.aionemu.boot.lifecycle;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
+import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
@@ -43,6 +44,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameEventRuntimeLifecycle eventRuntimeLifecycle,
         GameCleaningLifecycle cleaningLifecycle,
         GameScheduledServicesLifecycle scheduledServicesLifecycle,
+        GameCustomEventsLifecycle customEventsLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle
     ) {
         this(
@@ -59,6 +61,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
             eventRuntimeLifecycle,
             cleaningLifecycle,
             scheduledServicesLifecycle,
+            customEventsLifecycle,
             threadPoolLifecycle,
             (args, chatEnabled) -> com.aionemu.gameserver.GameServer.start(
                 args,
@@ -74,7 +77,8 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
                 spawnLifecycle,
                 eventRuntimeLifecycle,
                 cleaningLifecycle,
-                scheduledServicesLifecycle
+                scheduledServicesLifecycle,
+                customEventsLifecycle
             ),
             com.aionemu.gameserver.GameServer::stop
         );
@@ -94,6 +98,7 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
         GameEventRuntimeLifecycle eventRuntimeLifecycle,
         GameCleaningLifecycle cleaningLifecycle,
         GameScheduledServicesLifecycle scheduledServicesLifecycle,
+        GameCustomEventsLifecycle customEventsLifecycle,
         GameThreadPoolLifecycle threadPoolLifecycle,
         BiConsumer<String[], Boolean> startAction,
         Runnable stopAction
