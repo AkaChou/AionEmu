@@ -431,6 +431,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameHousingLifecycle(List<String> events) {
+            super(new GameHousingGateway());
             this.events = events;
         }
 

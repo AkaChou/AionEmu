@@ -27,6 +27,7 @@ import com.aionemu.gameserver.lifecycle.GameGeoNavGateway;
 import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHtmlGateway;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
+import com.aionemu.gameserver.lifecycle.GameHousingGateway;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
@@ -568,6 +569,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameHousingLifecycle(List<String> events) {
+            super(new GameHousingGateway());
             this.events = events;
         }
 
