@@ -176,6 +176,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameEnginesLifecycle(List<String> events) {
+            super(new GameEnginesGateway());
             this.events = events;
         }
 

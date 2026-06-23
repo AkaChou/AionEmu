@@ -7,29 +7,37 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.model.GameEngine;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 
 class GameEnginesLifecycleTest {
+
+    @Test
+    void usesEnginesGatewayCollaborator() {
+        assertEquals(GameEnginesGateway.class, fieldType("enginesGateway"));
+    }
 
     @Test
     void startSubmitsEachEngineLoadOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         List<Runnable> submittedTasks = new ArrayList<>();
         GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(
-            () -> List.of(
-                new RecordingEngine("quest", events),
-                new RecordingEngine("instance", events),
-                new RecordingEngine("ai", events),
-                new RecordingEngine("chat", events)
-            ),
-            task -> {
-                submittedTasks.add(task);
-                task.run();
-            }
-        );
+            new RecordingGameEnginesGateway(
+                List.of(
+                    new RecordingEngine("quest", events),
+                    new RecordingEngine("instance", events),
+                    new RecordingEngine("ai", events),
+                    new RecordingEngine("chat", events)
+                ),
+                task -> {
+                    submittedTasks.add(task);
+                    task.run();
+                }
+            ));
 
         lifecycle.start();
         lifecycle.start();
@@ -47,9 +55,7 @@ class GameEnginesLifecycleTest {
         IllegalStateException failure = new IllegalStateException("engine failed");
         FailingOnceEngine engine = new FailingOnceEngine(events, failure);
         GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(
-            () -> List.of(engine),
-            Runnable::run
-        );
+            new RecordingGameEnginesGateway(List.of(engine), Runnable::run));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -67,9 +73,7 @@ class GameEnginesLifecycleTest {
     @Test
     void interruptedWaitRestoresInterruptFlagAndMarksLoaded() {
         GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(
-            () -> List.of(),
-            Runnable::run
-        );
+            new RecordingGameEnginesGateway(List.of(), Runnable::run));
 
         Thread.currentThread().interrupt();
         try {
@@ -79,6 +83,43 @@ class GameEnginesLifecycleTest {
             assertTrue(lifecycle.isLoaded());
         } finally {
             Thread.interrupted();
+        }
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            Field field = GameEnginesLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameEnginesGateway extends GameEnginesGateway {
+
+        private final List<GameEngine> engines;
+        private final Consumer<Runnable> taskExecutor;
+
+        private RecordingGameEnginesGateway(
+            List<GameEngine> engines,
+            Consumer<Runnable> taskExecutor
+        ) {
+            this.engines = engines;
+            this.taskExecutor = taskExecutor;
+        }
+
+        @Override
+        public void printSection() {
+        }
+
+        @Override
+        public List<GameEngine> engines() {
+            return engines;
+        }
+
+        @Override
+        public void execute(Runnable runnable) {
+            taskExecutor.accept(runnable);
         }
     }
 
