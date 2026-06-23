@@ -1252,10 +1252,6 @@ public class GameServer {
 
 		customEventsLifecycle.start();
 
-		/**
-		 * Siege Schedule Initialization
-		 */
-		Util.printSection(" *** Sieges *** ");
 		siegeScheduleLifecycle.start();
 
 		/**

@@ -15,16 +15,19 @@ class GameSiegeScheduleLifecycleTest {
     @Test
     void startRunsInitializersOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
-        GameSiegeScheduleLifecycle lifecycle = new GameSiegeScheduleLifecycle(List.of(
-            () -> events.add("sieges"),
-            () -> events.add("bases")
-        ));
+        GameSiegeScheduleLifecycle lifecycle = new GameSiegeScheduleLifecycle(
+            () -> events.add("section"),
+            List.<Runnable>of(
+                () -> events.add("sieges"),
+                () -> events.add("bases")
+            )
+        );
 
         lifecycle.start();
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("sieges", "bases"), events);
+        assertEquals(List.of("section", "sieges", "bases"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -33,15 +36,18 @@ class GameSiegeScheduleLifecycleTest {
     void failedStartRecordsFailureAndAllowsRetry() {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("siege schedule failed");
-        GameSiegeScheduleLifecycle lifecycle = new GameSiegeScheduleLifecycle(List.of(
-            () -> events.add("sieges"),
-            () -> {
-                events.add("bases");
-                if (events.size() == 2) {
-                    throw failure;
+        GameSiegeScheduleLifecycle lifecycle = new GameSiegeScheduleLifecycle(
+            () -> events.add("section"),
+            List.<Runnable>of(
+                () -> events.add("sieges"),
+                () -> {
+                    events.add("bases");
+                    if (events.size() == 3) {
+                        throw failure;
+                    }
                 }
-            }
-        ));
+            )
+        );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -52,7 +58,7 @@ class GameSiegeScheduleLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("sieges", "bases", "sieges", "bases"), events);
+        assertEquals(List.of("section", "sieges", "bases", "section", "sieges", "bases"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 }
