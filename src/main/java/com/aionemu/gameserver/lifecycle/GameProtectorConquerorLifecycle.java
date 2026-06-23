@@ -1,29 +1,16 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.services.ProtectorConquerorService;
-import com.aionemu.gameserver.utils.Util;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameProtectorConquerorLifecycle {
 
-    private final Runnable sectionPrinter;
-    private final Runnable initializer;
+    private final GameProtectorConquerorGateway protectorConquerorGateway;
     private boolean loaded;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameProtectorConquerorLifecycle() {
-        this(
-            () -> Util.printSection(" *** Protector/Conqueror initialization *** "),
-            () -> ProtectorConquerorService.getInstance().initSystem()
-        );
-    }
-
-    GameProtectorConquerorLifecycle(Runnable sectionPrinter, Runnable initializer) {
-        this.sectionPrinter = sectionPrinter;
-        this.initializer = initializer;
-    }
 
     public synchronized void start() {
         if (loaded) {
@@ -32,8 +19,7 @@ public class GameProtectorConquerorLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            sectionPrinter.run();
-            initializer.run();
+            protectorConquerorGateway.start();
             loaded = true;
             lastFailure = null;
         } catch (RuntimeException | Error e) {

@@ -326,6 +326,7 @@ class GameStartupSequenceLifecycleTest {
         private final List<String> events;
 
         private RecordingGameProtectorConquerorLifecycle(List<String> events) {
+            super(new GameProtectorConquerorGateway());
             this.events = events;
         }
 

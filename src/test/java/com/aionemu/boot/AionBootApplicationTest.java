@@ -43,6 +43,7 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameProtectorConquerorGateway;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
@@ -158,6 +159,7 @@ class AionBootApplicationTest {
             context.registerBean(GameDredgionLifecycle.class);
             context.registerBean(GameBattlefieldGateway.class);
             context.registerBean(GameBattlefieldLifecycle.class);
+            context.registerBean(GameProtectorConquerorGateway.class);
             context.registerBean(GameProtectorConquerorLifecycle.class);
             context.registerBean(GameDisputeLandLifecycle.class);
             context.registerBean(GameHtmlLifecycle.class);

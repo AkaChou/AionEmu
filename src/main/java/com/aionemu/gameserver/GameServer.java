@@ -70,6 +70,7 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameProtectorConquerorGateway;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
@@ -679,7 +680,7 @@ public class GameServer {
 			siegeScheduleLifecycle,
 			dredgionLifecycle,
 			battlefieldLifecycle,
-			new GameProtectorConquerorLifecycle()
+			new GameProtectorConquerorLifecycle(new GameProtectorConquerorGateway())
 		);
 	}
 
