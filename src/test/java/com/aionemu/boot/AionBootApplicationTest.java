@@ -67,6 +67,7 @@ import com.aionemu.gameserver.lifecycle.GameStaticDataGateway;
 import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupLogGateway;
 import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
 import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSystemGateway;
@@ -194,6 +195,7 @@ class AionBootApplicationTest {
             context.registerBean(GameUtilityServicesLifecycle.class);
             context.registerBean(GameAdminPanelLifecycle.class);
             context.registerBean(GameSystemPropertiesLifecycle.class);
+            context.registerBean(GameStartupLogGateway.class);
             context.registerBean(GameStartupLogLifecycle.class);
             context.registerBean(GameChatServerOverrideLifecycle.class);
             context.registerBean(GameThreadPoolLifecycle.class);

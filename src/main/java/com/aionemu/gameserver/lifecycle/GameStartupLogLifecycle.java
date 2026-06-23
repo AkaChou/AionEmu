@@ -1,27 +1,17 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.GameServer;
-import java.util.function.LongSupplier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameStartupLogLifecycle {
 
-    private final LongSupplier currentTimeMillis;
-    private final Runnable startupLogger;
+    private final GameStartupLogGateway startupLogGateway;
     private boolean loaded;
     private long startupTimeMillis = -1;
     private long loadTimeMillis = -1;
     private Throwable lastFailure;
-
-    public GameStartupLogLifecycle() {
-        this(System::currentTimeMillis, () -> GameServer.log.info("GameServer starting..."));
-    }
-
-    GameStartupLogLifecycle(LongSupplier currentTimeMillis, Runnable startupLogger) {
-        this.currentTimeMillis = currentTimeMillis;
-        this.startupLogger = startupLogger;
-    }
 
     public synchronized long start() {
         if (loaded) {
@@ -30,8 +20,7 @@ public class GameStartupLogLifecycle {
 
         long start = System.currentTimeMillis();
         try {
-            startupTimeMillis = currentTimeMillis.getAsLong();
-            startupLogger.run();
+            startupTimeMillis = startupLogGateway.start();
             loaded = true;
             lastFailure = null;
             return startupTimeMillis;
