@@ -1256,10 +1256,6 @@ public class GameServer {
 
 		dredgionLifecycle.start();
 
-		/**
-		 * Battlefield
-		 */
-		Util.printSection(" *** Battlefield *** ");
 		battlefieldLifecycle.start();
 
 		/**

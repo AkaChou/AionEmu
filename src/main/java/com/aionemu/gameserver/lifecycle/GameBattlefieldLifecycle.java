@@ -10,6 +10,7 @@ import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
+import com.aionemu.gameserver.utils.Util;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class GameBattlefieldLifecycle {
 
+    private final Runnable sectionPrinter;
     private final BooleanSupplier autoGroupEnabled;
     private final List<Runnable> initializers;
     private boolean loaded;
@@ -25,6 +27,7 @@ public class GameBattlefieldLifecycle {
 
     public GameBattlefieldLifecycle() {
         this(
+            () -> Util.printSection(" *** Battlefield *** "),
             () -> AutoGroupConfig.AUTO_GROUP_ENABLED,
             List.of(
                 () -> KamarBattlefieldService.getInstance().initKamarBattlefield(),
@@ -40,7 +43,8 @@ public class GameBattlefieldLifecycle {
         );
     }
 
-    GameBattlefieldLifecycle(BooleanSupplier autoGroupEnabled, List<Runnable> initializers) {
+    GameBattlefieldLifecycle(Runnable sectionPrinter, BooleanSupplier autoGroupEnabled, List<Runnable> initializers) {
+        this.sectionPrinter = sectionPrinter;
         this.autoGroupEnabled = autoGroupEnabled;
         this.initializers = List.copyOf(initializers);
     }
@@ -52,6 +56,7 @@ public class GameBattlefieldLifecycle {
 
         long start = System.currentTimeMillis();
         try {
+            sectionPrinter.run();
             for (Runnable initializer : initializers) {
                 if (autoGroupEnabled.getAsBoolean()) {
                     initializer.run();

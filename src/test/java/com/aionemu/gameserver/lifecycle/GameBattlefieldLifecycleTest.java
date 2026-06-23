@@ -22,7 +22,7 @@ class GameBattlefieldLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("kamar", "ophidan", "suspicious", "ironWall", "idgel", "landmark", "tenacity", "grandArena", "idRun"), events);
+        assertEquals(List.of("section", "kamar", "ophidan", "suspicious", "ironWall", "idgel", "landmark", "tenacity", "grandArena", "idRun"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -35,7 +35,7 @@ class GameBattlefieldLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of(), events);
+        assertEquals(List.of("section"), events);
     }
 
     @Test
@@ -43,6 +43,7 @@ class GameBattlefieldLifecycleTest {
         List<String> events = new ArrayList<>();
         AtomicInteger reads = new AtomicInteger();
         GameBattlefieldLifecycle lifecycle = new GameBattlefieldLifecycle(
+            () -> events.add("section"),
             () -> reads.incrementAndGet() % 2 == 1,
             initializers(events)
         );
@@ -51,7 +52,7 @@ class GameBattlefieldLifecycleTest {
 
         assertTrue(lifecycle.isLoaded());
         assertEquals(9, reads.get());
-        assertEquals(List.of("kamar", "suspicious", "idgel", "tenacity", "idRun"), events);
+        assertEquals(List.of("section", "kamar", "suspicious", "idgel", "tenacity", "idRun"), events);
     }
 
     @Test
@@ -59,12 +60,13 @@ class GameBattlefieldLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("battlefield failed");
         GameBattlefieldLifecycle lifecycle = new GameBattlefieldLifecycle(
+            () -> events.add("section"),
             () -> true,
-            List.of(
+            List.<Runnable>of(
                 () -> events.add("kamar"),
                 () -> {
                     events.add("ophidan");
-                    if (events.size() == 2) {
+                    if (events.size() == 3) {
                         throw failure;
                     }
                 }
@@ -80,12 +82,12 @@ class GameBattlefieldLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("kamar", "ophidan", "kamar", "ophidan"), events);
+        assertEquals(List.of("section", "kamar", "ophidan", "section", "kamar", "ophidan"), events);
         assertEquals(null, lifecycle.getLastFailure());
     }
 
     private static GameBattlefieldLifecycle newLifecycle(List<String> events, boolean autoGroupEnabled) {
-        return new GameBattlefieldLifecycle(() -> autoGroupEnabled, initializers(events));
+        return new GameBattlefieldLifecycle(() -> events.add("section"), () -> autoGroupEnabled, initializers(events));
     }
 
     private static List<Runnable> initializers(List<String> events) {
