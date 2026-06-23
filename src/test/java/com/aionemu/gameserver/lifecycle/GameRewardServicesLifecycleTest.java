@@ -6,12 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
 class GameRewardServicesLifecycleTest {
+
+    @Test
+    void usesRewardServicesGatewayCollaborator() {
+        assertEquals(GameRewardServicesGateway.class, fieldType("rewardServicesGateway"));
+    }
 
     @Test
     void startRunsEnabledInitializersOnceInLegacyOrderAndRecordsLoadTime() {
@@ -34,21 +41,22 @@ class GameRewardServicesLifecycleTest {
         AtomicInteger weddingReads = new AtomicInteger();
         AtomicInteger veteranReads = new AtomicInteger();
         GameRewardServicesLifecycle lifecycle = new GameRewardServicesLifecycle(
-            () -> {
-                rewardReads.incrementAndGet();
-                return false;
-            },
-            () -> events.add("reward"),
-            () -> {
-                weddingReads.incrementAndGet();
-                return true;
-            },
-            () -> events.add("wedding"),
-            () -> {
-                veteranReads.incrementAndGet();
-                return false;
-            },
-            () -> events.add("veteranRewards")
+            new RecordingGameRewardServicesGateway(
+                events,
+                () -> {
+                    rewardReads.incrementAndGet();
+                    return false;
+                },
+                () -> {
+                    weddingReads.incrementAndGet();
+                    return true;
+                },
+                () -> {
+                    veteranReads.incrementAndGet();
+                    return false;
+                },
+                null
+            )
         );
 
         lifecycle.start();
@@ -65,17 +73,13 @@ class GameRewardServicesLifecycleTest {
         List<String> events = new ArrayList<>();
         IllegalStateException failure = new IllegalStateException("reward services failed");
         GameRewardServicesLifecycle lifecycle = new GameRewardServicesLifecycle(
-            () -> true,
-            () -> events.add("reward"),
-            () -> true,
-            () -> {
-                events.add("wedding");
-                if (events.size() == 2) {
-                    throw failure;
-                }
-            },
-            () -> true,
-            () -> events.add("veteranRewards")
+            new RecordingGameRewardServicesGateway(
+                events,
+                () -> true,
+                () -> true,
+                () -> true,
+                failure
+            )
         );
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
@@ -98,12 +102,61 @@ class GameRewardServicesLifecycleTest {
         boolean veteranRewardsEnabled
     ) {
         return new GameRewardServicesLifecycle(
-            () -> rewardEnabled,
-            () -> events.add("reward"),
-            () -> weddingEnabled,
-            () -> events.add("wedding"),
-            () -> veteranRewardsEnabled,
-            () -> events.add("veteranRewards")
+            new RecordingGameRewardServicesGateway(
+                events,
+                () -> rewardEnabled,
+                () -> weddingEnabled,
+                () -> veteranRewardsEnabled,
+                null
+            )
         );
+    }
+
+    private static Class<?> fieldType(String name) {
+        try {
+            Field field = GameRewardServicesLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static final class RecordingGameRewardServicesGateway extends GameRewardServicesGateway {
+
+        private final List<String> events;
+        private final BooleanSupplier rewardEnabled;
+        private final BooleanSupplier weddingEnabled;
+        private final BooleanSupplier veteranRewardsEnabled;
+        private final RuntimeException firstFailure;
+
+        private RecordingGameRewardServicesGateway(
+            List<String> events,
+            BooleanSupplier rewardEnabled,
+            BooleanSupplier weddingEnabled,
+            BooleanSupplier veteranRewardsEnabled,
+            RuntimeException firstFailure
+        ) {
+            this.events = events;
+            this.rewardEnabled = rewardEnabled;
+            this.weddingEnabled = weddingEnabled;
+            this.veteranRewardsEnabled = veteranRewardsEnabled;
+            this.firstFailure = firstFailure;
+        }
+
+        @Override
+        public void start() {
+            if (rewardEnabled.getAsBoolean()) {
+                events.add("reward");
+            }
+            if (weddingEnabled.getAsBoolean()) {
+                events.add("wedding");
+                if (events.size() == 2 && firstFailure != null) {
+                    throw firstFailure;
+                }
+            }
+            if (veteranRewardsEnabled.getAsBoolean()) {
+                events.add("veteranRewards");
+            }
+        }
     }
 }

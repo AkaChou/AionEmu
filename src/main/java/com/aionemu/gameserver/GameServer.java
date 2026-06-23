@@ -75,6 +75,7 @@ import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorGateway;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRewardServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
@@ -835,7 +836,7 @@ public class GameServer {
 			protectorConquerorLifecycle,
 			disputeLandLifecycle,
 			htmlLifecycle,
-			new GameRewardServicesLifecycle()
+			new GameRewardServicesLifecycle(new GameRewardServicesGateway())
 		);
 	}
 
