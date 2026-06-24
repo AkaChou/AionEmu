@@ -3,9 +3,11 @@ package com.aionemu.gameserver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Properties;
 
 import com.aionemu.commons.configuration.ConfigurableProcessor;
@@ -45,6 +47,68 @@ class GameServerTest {
 	void loadsGeoDataDefaultsWithoutOverrideProperties() {
 		assertDoesNotThrow(() -> ConfigurableProcessor.process(GeoDataConfig.class, new Properties()));
 		assertFalse(GeoDataConfig.GEO_MONONO2_IN_USE);
+		assertTrue(readBooleanConfig("GEO_NAV_LAZY_LOAD"));
+		assertEquals(50, readIntConfig("GEO_NAV_CACHE_SIZE"));
+		assertEquals(1, readIntConfig("GEO_NAV_LOG_LEVEL"));
+		assertTrue(readBooleanConfig("GEO_NAV_PULL_ENABLE"));
+		assertEquals(800, readIntConfig("GEO_NAV_MAX_NODES"));
+		assertEquals(5F, readFloatConfig("GEO_NAV_TARGET_THRESHOLD"), 0.0001F);
+		assertEquals(0.2F, readFloatConfig("GEO_NAV_PATH_WEIGHT"), 0.0001F);
+		assertEquals(20F, readFloatConfig("GEO_NAV_TARGET_WEIGHT"), 0.0001F);
+		assertEquals(5F, readFloatConfig("GEO_NAV_GROUND_SEARCH_DISTANCE"), 0.0001F);
+		assertEquals(0.8F, readFloatConfig("GEO_NAV_BOX_EXTENT_XY"), 0.0001F);
+		assertEquals(-1F, readFloatConfig("GEO_NAV_BOX_OFFSET_Z_MIN"), 0.0001F);
+		assertEquals(4F, readFloatConfig("GEO_NAV_BOX_OFFSET_Z_MAX"), 0.0001F);
+		assertEquals(0.2F, readFloatConfig("GEO_NAV_BOX_CENTER_Z"), 0.0001F);
+		assertTrue(readBooleanConfig("GEO_NAV_SMOOTH_PATH"));
+		assertEquals(800, readIntConfig("GEO_NAV_CORRIDOR_LENGTH"));
+		assertTrue(readBooleanConfig("GEO_NAV_CACHE_GROUND"));
+		assertEquals(1000, readIntConfig("GEO_NAV_CACHE_TTL"));
+		assertFalse(readBooleanConfig("GEO_NAV_SOFT_CACHE"));
+	}
+
+	@Test
+	void loadsGeoNavOverrideProperties() {
+		Properties properties = new Properties();
+		properties.setProperty("gameserver.geo.nav.lazy.load", "false");
+		properties.setProperty("gameserver.geo.nav.cache.size", "7");
+		properties.setProperty("gameserver.geo.nav.log.level", "2");
+		properties.setProperty("gameserver.geo.nav.pull.enable", "false");
+		properties.setProperty("gameserver.geo.nav.max.nodes", "123");
+		properties.setProperty("gameserver.geo.nav.target.threshold", "6.5");
+		properties.setProperty("gameserver.geo.nav.path.weight", "0.4");
+		properties.setProperty("gameserver.geo.nav.target.weight", "12.5");
+		properties.setProperty("gameserver.geo.nav.ground.search.distance", "9.5");
+		properties.setProperty("gameserver.geo.nav.box.extent.xy", "1.5");
+		properties.setProperty("gameserver.geo.nav.box.offset.z.min", "-2.5");
+		properties.setProperty("gameserver.geo.nav.box.offset.z.max", "6.5");
+		properties.setProperty("gameserver.geo.nav.box.center.z", "0.6");
+		properties.setProperty("gameserver.geo.nav.smooth.path", "false");
+		properties.setProperty("gameserver.geo.nav.corridor.length", "321");
+		properties.setProperty("gameserver.geo.nav.cache.ground", "false");
+		properties.setProperty("gameserver.geo.nav.cache.ttl", "2500");
+		properties.setProperty("gameserver.geo.nav.soft.cache", "true");
+
+		ConfigurableProcessor.process(GeoDataConfig.class, properties);
+
+		assertFalse(readBooleanConfig("GEO_NAV_LAZY_LOAD"));
+		assertEquals(7, readIntConfig("GEO_NAV_CACHE_SIZE"));
+		assertEquals(2, readIntConfig("GEO_NAV_LOG_LEVEL"));
+		assertFalse(readBooleanConfig("GEO_NAV_PULL_ENABLE"));
+		assertEquals(123, readIntConfig("GEO_NAV_MAX_NODES"));
+		assertEquals(6.5F, readFloatConfig("GEO_NAV_TARGET_THRESHOLD"), 0.0001F);
+		assertEquals(0.4F, readFloatConfig("GEO_NAV_PATH_WEIGHT"), 0.0001F);
+		assertEquals(12.5F, readFloatConfig("GEO_NAV_TARGET_WEIGHT"), 0.0001F);
+		assertEquals(9.5F, readFloatConfig("GEO_NAV_GROUND_SEARCH_DISTANCE"), 0.0001F);
+		assertEquals(1.5F, readFloatConfig("GEO_NAV_BOX_EXTENT_XY"), 0.0001F);
+		assertEquals(-2.5F, readFloatConfig("GEO_NAV_BOX_OFFSET_Z_MIN"), 0.0001F);
+		assertEquals(6.5F, readFloatConfig("GEO_NAV_BOX_OFFSET_Z_MAX"), 0.0001F);
+		assertEquals(0.6F, readFloatConfig("GEO_NAV_BOX_CENTER_Z"), 0.0001F);
+		assertFalse(readBooleanConfig("GEO_NAV_SMOOTH_PATH"));
+		assertEquals(321, readIntConfig("GEO_NAV_CORRIDOR_LENGTH"));
+		assertFalse(readBooleanConfig("GEO_NAV_CACHE_GROUND"));
+		assertEquals(2500, readIntConfig("GEO_NAV_CACHE_TTL"));
+		assertTrue(readBooleanConfig("GEO_NAV_SOFT_CACHE"));
 	}
 
 	@Test
@@ -58,6 +122,28 @@ class GameServerTest {
 			System.clearProperty(key);
 		} else {
 			System.setProperty(key, value);
+		}
+	}
+
+	private static boolean readBooleanConfig(String fieldName) {
+		return (boolean) readConfig(fieldName);
+	}
+
+	private static int readIntConfig(String fieldName) {
+		return (int) readConfig(fieldName);
+	}
+
+	private static float readFloatConfig(String fieldName) {
+		return (float) readConfig(fieldName);
+	}
+
+	private static Object readConfig(String fieldName) {
+		try {
+			Field field = GeoDataConfig.class.getDeclaredField(fieldName);
+			field.setAccessible(true);
+			return field.get(null);
+		} catch (ReflectiveOperationException e) {
+			throw new AssertionError("Missing GeoDataConfig field " + fieldName, e);
 		}
 	}
 }

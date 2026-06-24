@@ -88,6 +88,57 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.nav.pathfinding.enable", defaultValue = "false")
 	public static boolean GEO_NAV_ENABLE;
 
-    @Property(key = "gameserver.geo.nav.softcache.enable", defaultValue = "false")
-    public static boolean GEO_NAV_SOFT_CACHE;
+	@Property(key = "gameserver.geo.nav.lazy.load", defaultValue = "true")
+	public static boolean GEO_NAV_LAZY_LOAD;
+
+	@Property(key = "gameserver.geo.nav.cache.size", defaultValue = "50")
+	public static int GEO_NAV_CACHE_SIZE;
+
+	@Property(key = "gameserver.geo.nav.log.level", defaultValue = "1")
+	public static int GEO_NAV_LOG_LEVEL;
+
+	@Property(key = "gameserver.geo.nav.pull.enable", defaultValue = "true")
+	public static boolean GEO_NAV_PULL_ENABLE;
+
+	@Property(key = "gameserver.geo.nav.max.nodes", defaultValue = "800")
+	public static int GEO_NAV_MAX_NODES;
+
+	@Property(key = "gameserver.geo.nav.target.threshold", defaultValue = "5")
+	public static float GEO_NAV_TARGET_THRESHOLD;
+
+	@Property(key = "gameserver.geo.nav.path.weight", defaultValue = "0.2")
+	public static float GEO_NAV_PATH_WEIGHT;
+
+	@Property(key = "gameserver.geo.nav.target.weight", defaultValue = "20")
+	public static float GEO_NAV_TARGET_WEIGHT;
+
+	@Property(key = "gameserver.geo.nav.ground.search.distance", defaultValue = "5")
+	public static float GEO_NAV_GROUND_SEARCH_DISTANCE;
+
+	@Property(key = "gameserver.geo.nav.box.extent.xy", defaultValue = "0.8")
+	public static float GEO_NAV_BOX_EXTENT_XY;
+
+	@Property(key = "gameserver.geo.nav.box.offset.z.min", defaultValue = "-1")
+	public static float GEO_NAV_BOX_OFFSET_Z_MIN;
+
+	@Property(key = "gameserver.geo.nav.box.offset.z.max", defaultValue = "4")
+	public static float GEO_NAV_BOX_OFFSET_Z_MAX;
+
+	@Property(key = "gameserver.geo.nav.box.center.z", defaultValue = "0.2")
+	public static float GEO_NAV_BOX_CENTER_Z;
+
+	@Property(key = "gameserver.geo.nav.smooth.path", defaultValue = "true")
+	public static boolean GEO_NAV_SMOOTH_PATH;
+
+	@Property(key = "gameserver.geo.nav.corridor.length", defaultValue = "800")
+	public static int GEO_NAV_CORRIDOR_LENGTH;
+
+	@Property(key = "gameserver.geo.nav.cache.ground", defaultValue = "true")
+	public static boolean GEO_NAV_CACHE_GROUND;
+
+	@Property(key = "gameserver.geo.nav.cache.ttl", defaultValue = "1000")
+	public static int GEO_NAV_CACHE_TTL;
+
+	@Property(key = "gameserver.geo.nav.soft.cache", defaultValue = "false")
+	public static boolean GEO_NAV_SOFT_CACHE;
 }
