@@ -40,6 +40,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.NavGeometry;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
+import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
 
 /**
  * Thread-safe lazy loader for navigation mesh data.
@@ -129,6 +130,9 @@ public class NavData {
         logInfo("Scanning for navigation files...");
         long startTime = System.currentTimeMillis();
         int fileCount = 0;
+        int scannedCount = 0;
+        int totalMaps = DataManager.WORLD_MAPS_DATA.size();
+        ConsoleProgressLineRenderer progressRenderer = progressRenderer();
         
         for (WorldMapTemplate map : DataManager.WORLD_MAPS_DATA) {
             int mapId = map.getMapId();
@@ -138,7 +142,10 @@ public class NavData {
                 navFiles.put(mapId, navFile);
                 fileCount++;
             }
+            progressRenderer.progress("NavigationFiles", ++scannedCount, totalMaps);
         }
+
+        progressRenderer.finished("NavigationFiles", totalMaps);
         
         long duration = System.currentTimeMillis() - startTime;
         logInfo("Found {} navigation files, took {} ms", fileCount, duration);
@@ -156,19 +163,23 @@ public class NavData {
      * @return GeoMap with nav mesh, or null if not available
      */
     public GeoMap getNavMap(int worldId) {
+        return getNavMap(worldId, true);
+    }
+
+    private GeoMap getNavMap(int worldId, boolean logLoadInfo) {
         // Fast path: config check
         if (!GeoDataConfig.GEO_NAV_ENABLE) {
             return null;
         }
 
         if (GeoDataConfig.GEO_NAV_SOFT_CACHE) {
-            return getSoftCachedMap(worldId);
+            return getSoftCachedMap(worldId, logLoadInfo);
         }
 
-        return getStrongCachedMap(worldId);
+        return getStrongCachedMap(worldId, logLoadInfo);
     }
 
-    private GeoMap getStrongCachedMap(int worldId) {
+    private GeoMap getStrongCachedMap(int worldId, boolean logLoadInfo) {
         synchronized (navMaps) {
             GeoMap cached = navMaps.get(worldId);
             if (cached != null) {
@@ -185,7 +196,7 @@ public class NavData {
                     return cached;
                 }
             }
-            GeoMap loaded = loadMap(worldId);
+            GeoMap loaded = loadMap(worldId, logLoadInfo);
             if (loaded != null) {
                 synchronized (navMaps) {
                     navMaps.put(worldId, loaded);
@@ -197,7 +208,7 @@ public class NavData {
         }
     }
 
-    private GeoMap getSoftCachedMap(int worldId) {
+    private GeoMap getSoftCachedMap(int worldId, boolean logLoadInfo) {
         GeoMap cached = getSoftReference(worldId);
         if (cached != null) {
             return cached;
@@ -210,7 +221,7 @@ public class NavData {
             if (cached != null) {
                 return cached;
             }
-            GeoMap loaded = loadMap(worldId);
+            GeoMap loaded = loadMap(worldId, logLoadInfo);
             if (loaded != null) {
                 softNavMaps.put(worldId, new SoftReference<>(loaded));
             }
@@ -235,11 +246,17 @@ public class NavData {
     private void preloadNavMaps() {
         int loaded = 0;
         long startTime = System.currentTimeMillis();
+        logInfo("Loading navigation meshes..");
+        int totalMaps = navFiles.size();
+        int processedMaps = 0;
+        ConsoleProgressLineRenderer progressRenderer = progressRenderer();
         for (Integer worldId : navFiles.keySet()) {
-            if (getNavMap(worldId) != null) {
+            if (getNavMap(worldId, false) != null) {
                 loaded++;
             }
+            progressRenderer.progress("NavigationMeshes", ++processedMaps, totalMaps);
         }
+        progressRenderer.finished("NavigationMeshes", totalMaps);
         logInfo("Preloaded {} navigation meshes, took {} ms", loaded, System.currentTimeMillis() - startTime);
     }
 
@@ -247,7 +264,7 @@ public class NavData {
      * Internal map loading logic.
      * Called only once per map via computeIfAbsent.
      */
-    private GeoMap loadMap(Integer worldId) {
+    private GeoMap loadMap(Integer worldId, boolean logLoadInfo) {
         // Check if file exists for this map
         File navFile = navFiles.get(worldId);
         if (navFile == null) {
@@ -267,7 +284,11 @@ public class NavData {
         try {
             if (loadNavMesh(worldId, navFile, geoMap)) {
                 long duration = System.currentTimeMillis() - startTime;
-                logInfo("Loaded navigation mesh for map {} ({} triangles), took {} ms", worldId, geoMap.getChildren() != null ? geoMap.getChildren().size() : 0, duration);
+                if (logLoadInfo) {
+                    logInfo("Loaded navigation mesh for map {} ({} triangles), took {} ms", worldId, geoMap.getChildren() != null ? geoMap.getChildren().size() : 0, duration);
+                } else {
+                    logDebug("Loaded navigation mesh for map {} ({} triangles), took {} ms", worldId, geoMap.getChildren() != null ? geoMap.getChildren().size() : 0, duration);
+                }
                 return geoMap;
             }
         } catch (IOException e) {
@@ -531,6 +552,14 @@ public class NavData {
         if (GeoDataConfig.GEO_NAV_LOG_LEVEL >= 2) {
             LOG.debug(message, arguments);
         }
+    }
+
+    private static boolean showProgress() {
+        return GeoDataConfig.GEO_NAV_LOG_LEVEL >= 1;
+    }
+
+    private static ConsoleProgressLineRenderer progressRenderer() {
+        return new ConsoleProgressLineRenderer(System.out, showProgress());
     }
 
     /**

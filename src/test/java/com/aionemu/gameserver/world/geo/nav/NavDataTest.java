@@ -1,11 +1,15 @@
 package com.aionemu.gameserver.world.geo.nav;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -28,18 +32,21 @@ class NavDataTest {
 
 	private String oldDataDir;
 	private WorldMapsData oldWorldMapsData;
+	private PrintStream oldOut;
 	private final NavData navData = NavData.getInstance();
 
 	@BeforeEach
 	void setUp() throws Exception {
 		oldDataDir = System.getProperty("aion.game.data.dir");
 		oldWorldMapsData = DataManager.WORLD_MAPS_DATA;
+		oldOut = System.out;
 		System.setProperty("aion.game.data.dir", dataDir.toString());
 		DataManager.WORLD_MAPS_DATA = worldMaps(256, 1001, 1002);
 		resetNavData();
 		GeoDataConfig.GEO_NAV_ENABLE = true;
 		setGeoConfig("GEO_NAV_SOFT_CACHE", false);
 		setGeoConfig("GEO_NAV_CACHE_SIZE", 50);
+		setGeoConfig("GEO_NAV_LOG_LEVEL", 1);
 	}
 
 	@AfterEach
@@ -51,6 +58,7 @@ class NavDataTest {
 		} else {
 			System.setProperty("aion.game.data.dir", oldDataDir);
 		}
+		System.setOut(oldOut);
 		GeoDataConfig.GEO_NAV_ENABLE = false;
 	}
 
@@ -74,6 +82,34 @@ class NavDataTest {
 
 		assertEquals(1, navData.getAvailableMapCount());
 		assertEquals(1, navData.getLoadedMapCount());
+	}
+
+	@Test
+	void lazyLoadScanPrintsBlockProgressLine() throws Exception {
+		setGeoConfig("GEO_NAV_LAZY_LOAD", true);
+		writeNavFile(1001);
+		ByteArrayOutputStream bytes = captureSystemOut();
+
+		navData.loadNavMaps();
+
+		String output = bytes.toString(StandardCharsets.UTF_8);
+		assertTrue(output.contains("\r████████████████████ | \"NavigationFiles\" | 2/2\n"));
+		assertTrue(output.contains("NavigationFiles"));
+		assertTrue(output.chars().noneMatch(character -> character == '%'));
+	}
+
+	@Test
+	void preloadModePrintsBlockProgressForIndexedFilesAndLoadedMeshes() throws Exception {
+		setGeoConfig("GEO_NAV_LAZY_LOAD", false);
+		writeNavFile(1001);
+		ByteArrayOutputStream bytes = captureSystemOut();
+
+		navData.loadNavMaps();
+
+		String output = bytes.toString(StandardCharsets.UTF_8);
+		assertTrue(output.contains("\r████████████████████ | \"NavigationFiles\" | 2/2\n"));
+		assertTrue(output.contains("\r████████████████████ | \"NavigationMeshes\" | 1/1\n"));
+		assertTrue(output.chars().noneMatch(character -> character == '%'));
 	}
 
 	@Test
@@ -116,6 +152,12 @@ class NavDataTest {
 		buffer.putInt(0).putInt(1).putInt(2);
 		buffer.putInt(-1).putInt(-1).putInt(-1);
 		Files.write(navDir.resolve(mapId + ".nav"), buffer.array());
+	}
+
+	private ByteArrayOutputStream captureSystemOut() {
+		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(bytes, true, StandardCharsets.UTF_8));
+		return bytes;
 	}
 
 	private static WorldMapsData worldMaps(int worldSize, int... mapIds) throws Exception {
