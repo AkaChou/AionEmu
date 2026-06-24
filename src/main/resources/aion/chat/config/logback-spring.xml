@@ -13,7 +13,7 @@
 		</encoder>
 	</appender>
 	<appender name="app_chat" class="ch.qos.logback.core.FileAppender">
-		<filter class="com.aionl.slf4j.filters.ChatLogFilter"></filter>
+		<filter class="com.aionemu.commons.logging.slf4j.filters.ChatLogFilter"></filter>
 		<file>${logFolder}/chat.log</file>
 		<append>true</append>
 		<encoder>

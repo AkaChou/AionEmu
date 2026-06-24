@@ -1,4 +1,4 @@
-package com.aionl.slf4j.filters;
+package com.aionemu.commons.logging.slf4j.filters;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.filter.Filter;

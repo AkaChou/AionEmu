@@ -15,7 +15,7 @@
 			<Pattern>%date %message%n</Pattern>
 		</encoder>
 	</appender>
-	<appender name="app_console" class="com.aionl.slf4j.conversion.TruncateToZipFileAppender">
+	<appender name="app_console" class="com.aionemu.commons.logging.slf4j.conversion.TruncateToZipFileAppender">
 		<file>${logFolder}/console.log</file>
 		<encoder>
 			<Pattern>%date{HH:mm:ss.SSS} %-5level[%thread]: %logger [%file:%line] - %message%n</Pattern>
@@ -43,7 +43,7 @@
 			<Pattern>%date %message%n</Pattern>
 		</encoder>
 	</appender>
-	<logger name="com.aionl.network.mmocore.handler.ClientPacketHandler" level="debug" additivity="false"> <!-- unknown packets -->
+	<logger name="com.aionemu.chatserver.network.aion.ClientPacketHandler" level="debug" additivity="false"> <!-- unknown packets -->
 		<appender-ref ref="app_unkpk"/>
 	</logger>
 	<logger name="com.aionemu.loginserver.network.aion.clientpackets.CM_LOGIN" level="debug" additivity="false"> <!-- server logins -->

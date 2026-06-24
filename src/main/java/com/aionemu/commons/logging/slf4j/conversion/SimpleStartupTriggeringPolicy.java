@@ -1,4 +1,4 @@
-package com.aionl.slf4j.conversion;
+package com.aionemu.commons.logging.slf4j.conversion;
 
 import ch.qos.logback.core.rolling.TriggeringPolicyBase;
 import java.io.File;
