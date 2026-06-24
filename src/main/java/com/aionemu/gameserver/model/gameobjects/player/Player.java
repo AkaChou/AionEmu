@@ -63,6 +63,7 @@ import com.aionemu.gameserver.model.gameobjects.Trap;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank.AbyssRankUpdateType;
 import com.aionemu.gameserver.model.gameobjects.player.FriendList.Status;
 import com.aionemu.gameserver.model.gameobjects.player.emotion.EmotionList;
+import com.aionemu.gameserver.model.gameobjects.player.equipmentsetting.EquipmentSettingList;
 import com.aionemu.gameserver.model.gameobjects.player.f2p.F2p;
 import com.aionemu.gameserver.model.gameobjects.player.motion.MotionList;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFactions;
@@ -174,6 +175,7 @@ public class Player extends Creature {
 	private Storage regularWarehouse;
 	private Storage accountWarehouse;
 	private Equipment equipment;
+	private EquipmentSettingList equipmentSettingList;
 	private HouseRegistry houseRegistry;
 	private PlayerStatsTemplate playerStatsTemplate;
 	private final AbsoluteStatOwner absStatsHolder;
@@ -382,6 +384,7 @@ public class Player extends Creature {
 		this.requester = new ResponseRequester(this);
 		this.questStateList = new QuestStateList();
 		this.titleList = new TitleList();
+		this.equipmentSettingList = new EquipmentSettingList(this);
 		this.portalCooldownList = new PortalCooldownList(this);
 		this.craftCooldownList = new CraftCooldownList(this);
 		houseObjectCooldownList = new HouseObjectCooldownList(this);
@@ -706,6 +709,20 @@ public class Player extends Creature {
 
 	public void setEquipment(Equipment equipment) {
 		this.equipment = equipment;
+	}
+
+	public EquipmentSettingList getEquipmentSettingList() {
+		if (equipmentSettingList == null) {
+			equipmentSettingList = new EquipmentSettingList(this);
+		}
+		return equipmentSettingList;
+	}
+
+	public void setEquipmentSettingList(EquipmentSettingList equipmentSettingList) {
+		this.equipmentSettingList = equipmentSettingList;
+		if (this.equipmentSettingList != null) {
+			this.equipmentSettingList.setOwner(this);
+		}
 	}
 
 	/**

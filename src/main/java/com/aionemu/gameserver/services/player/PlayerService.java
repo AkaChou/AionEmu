@@ -51,6 +51,7 @@ import com.aionemu.gameserver.dao.PlayerCreativityPointsDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.PlayerEffectsDAO;
 import com.aionemu.gameserver.dao.PlayerEmotionListDAO;
+import com.aionemu.gameserver.dao.PlayerEquipmentSettingDAO;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
@@ -131,6 +132,7 @@ public class PlayerService {
 		DAOManager.getDAO(PlayerDAO.class).storePlayer(player);
 		DAOManager.getDAO(PlayerSkillListDAO.class).storeSkills(player);
 		DAOManager.getDAO(PlayerStigmasEquippedDAO.class).storeItems(player);
+		DAOManager.getDAO(PlayerEquipmentSettingDAO.class).store(player);
 		DAOManager.getDAO(PlayerSettingsDAO.class).saveSettings(player);
 		DAOManager.getDAO(PlayerQuestListDAO.class).store(player);
 		DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);
@@ -181,6 +183,7 @@ public class PlayerService {
 		player.setWardrobe(DAOManager.getDAO(PlayerWardrobeDAO.class).load(player));
 		DAOManager.getDAO(F2pDAO.class).loadF2pInfo(player);
 		DAOManager.getDAO(PlayerSettingsDAO.class).loadSettings(player);
+		DAOManager.getDAO(PlayerEquipmentSettingDAO.class).loadEquipmentSetting(player);
 		DAOManager.getDAO(AbyssRankDAO.class).loadAbyssRank(player);
 		DAOManager.getDAO(PlayerNpcFactionsDAO.class).loadNpcFactions(player);
 		DAOManager.getDAO(MotionDAO.class).loadMotionList(player);

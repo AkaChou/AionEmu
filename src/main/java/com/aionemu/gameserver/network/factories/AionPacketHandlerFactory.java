@@ -72,6 +72,7 @@ public class AionPacketHandlerFactory {
 		addPacket(new CM_CHAT_MESSAGE_WHISPER(0x00e7, State.IN_GAME)); // 5.8
 		addPacket(new CM_USE_ITEM(0xEC, State.IN_GAME)); // 5.8
 		addPacket(new CM_EQUIP_ITEM(0x00ed, State.IN_GAME)); // 5.8
+		addPacket(new CM_EQUIPMENT_SETTING_SAVE(0x01D2, State.IN_GAME)); // 5.8
 		addPacket(new CM_ABYSS_RANKING_PLAYERS(0x0184, State.IN_GAME)); // 5.8
 		addPacket(new CM_ABYSS_RANKING_LEGIONS(0x0132, State.IN_GAME)); // 5.8
 		addPacket(new CM_SET_NOTE(0x02f1, State.IN_GAME)); // 5.8

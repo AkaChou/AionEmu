@@ -48,6 +48,7 @@ public class GameMySQL8DAOClassProvider implements DAOClassProvider {
 			MySQL8PlayerCreativityPointsDAO.class,
 			MySQL8PlayerDAO.class,
 			MySQL8PlayerEffectsDAO.class,
+			MySQL8PlayerEquipmentSettingDAO.class,
 			MySQL8PlayerEmotionListDAO.class,
 			MySQL8PlayerEventsWindowDAO.class,
 			MySQL8PlayerLifeStatsDAO.class,
