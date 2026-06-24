@@ -24,6 +24,7 @@
         <jaxb-runtime.version>2.3.9</jaxb-runtime.version>
         <javolution.version>5.5.1</javolution.version>
         <junit-jupiter.version>5.11.4</junit-jupiter.version>
+        <lombok.version>1.18.46</lombok.version>
         <logback.version>1.5.34</logback.version>
         <mysql-connector.version>8.0.33</mysql-connector.version>
         <netty.version>3.2.10.Final</netty.version>
@@ -156,6 +157,11 @@
                 <artifactId>junit-jupiter</artifactId>
                 <version>${junit-jupiter.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -266,6 +272,11 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -303,6 +314,18 @@
                     <release>${maven.compiler.release}</release>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <showWarnings>false</showWarnings>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                            <version>${spring-boot.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
@@ -349,7 +372,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.aionemu.boot.AionBootApplication</mainClass>
+                    <mainClass>com.aionemu.AionBootApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

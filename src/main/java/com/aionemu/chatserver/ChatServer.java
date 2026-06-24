@@ -32,7 +32,6 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
 import com.aionemu.chatserver.configs.Config;
@@ -42,6 +41,7 @@ import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.chatserver.utils.IdFactory;
+import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import org.slf4j.Logger;
@@ -56,11 +56,10 @@ public class ChatServer {
      */
     private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
 
-    private static String configDir() {
-        return System.getProperty("aion.chat.config.dir", "./config");
-    }
-
     private static void initalizeLoggger() {
+        if (AionRuntimeMode.isBootEmbedded()) {
+            return;
+        }
         new File("./log/backup/").mkdirs();
         File[] files = new File("log").listFiles(new FilenameFilter() {
             @Override
@@ -94,10 +93,7 @@ public class ChatServer {
         }
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
         try {
-            JoranConfigurator configurator = new JoranConfigurator();
-            configurator.setContext(lc);
-            lc.reset();
-            configurator.doConfigure(configDir() + "/logback-spring.xml");
+            LogbackConfiguration.configure(lc);
         } catch (JoranException je) {
             throw new RuntimeException("Failed to configure loggers, shutting down...", je);
         }

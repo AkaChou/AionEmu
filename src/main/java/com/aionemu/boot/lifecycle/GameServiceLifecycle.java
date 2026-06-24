@@ -1,17 +1,23 @@
 package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class GameServiceLifecycle implements AionServiceLifecycle {
 
     private final AionServicesProperties services;
-
-    public GameServiceLifecycle(AionServicesProperties services) {
-        this.services = services;
-    }
+    private final LegacyConfigOverrides legacyConfigOverrides;
+    private final GameStartupSequenceLifecycle startupSequenceLifecycle;
+    private final GameServerNetworkLifecycle serverNetworkLifecycle;
+    private final GameThreadPoolLifecycle threadPoolLifecycle;
 
     @Override
     public String getName() {
@@ -31,11 +37,16 @@ public class GameServiceLifecycle implements AionServiceLifecycle {
     @Override
     public void start(ApplicationArguments args) {
         AionServicePaths.configureGame();
-        com.aionemu.gameserver.GameServer.start(args.getSourceArgs(), services.getChat().isEnabled());
+        legacyConfigOverrides.applyToGameConfig();
+        startupSequenceLifecycle.start(services.getChat().isEnabled());
     }
 
     @Override
     public void stop() {
-        com.aionemu.gameserver.GameServer.stop();
+        try {
+            serverNetworkLifecycle.stop();
+        } finally {
+            threadPoolLifecycle.stop();
+        }
     }
 }

@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -41,147 +40,89 @@ import java.util.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.network.NettyServerCfg;
-import com.aionemu.commons.network.NioServer;
-import com.aionemu.commons.network.ServerCfg;
-import com.aionemu.commons.network.ServerTransport;
-import com.aionemu.commons.services.CronService;
-import com.aionemu.commons.utils.AEInfos;
+import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import com.aionemu.gameserver.ai2.AI2Engine;
-import com.aionemu.gameserver.cache.HTMLCache;
-import com.aionemu.gameserver.configs.Config;
-import com.aionemu.gameserver.configs.main.AIConfig;
-import com.aionemu.gameserver.configs.main.AutoGroupConfig;
-import com.aionemu.gameserver.configs.main.CustomConfig;
-import com.aionemu.gameserver.configs.main.EventsConfig;
-import com.aionemu.gameserver.configs.main.FFAConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
-import com.aionemu.gameserver.configs.main.PvPModConfig;
-import com.aionemu.gameserver.configs.main.RankingConfig;
-import com.aionemu.gameserver.configs.main.SiegeConfig;
-import com.aionemu.gameserver.configs.main.ThreadConfig;
-import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
-import com.aionemu.gameserver.configs.main.WeddingsConfig;
-import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
-import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.instance.InstanceEngine;
-import com.aionemu.gameserver.model.GameEngine;
+import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
+import com.aionemu.gameserver.lifecycle.GameAdminPanelGateway;
+import com.aionemu.gameserver.lifecycle.GameBattlefieldGateway;
+import com.aionemu.gameserver.lifecycle.GameBattlefieldLifecycle;
+import com.aionemu.gameserver.lifecycle.GameChatServerOverrideGateway;
+import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
+import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
+import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
+import com.aionemu.gameserver.lifecycle.GameCustomEventsGateway;
+import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
+import com.aionemu.gameserver.lifecycle.GameDisputeLandGateway;
+import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
+import com.aionemu.gameserver.lifecycle.GameDredgionGateway;
+import com.aionemu.gameserver.lifecycle.GameDredgionLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEnginesGateway;
+import com.aionemu.gameserver.lifecycle.GameEnginesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapGateway;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEventRuntimeGateway;
+import com.aionemu.gameserver.lifecycle.GameEventRuntimeLifecycle;
+import com.aionemu.gameserver.lifecycle.GameGeoNavGateway;
+import com.aionemu.gameserver.lifecycle.GameGeoNavLifecycle;
+import com.aionemu.gameserver.lifecycle.GameHtmlGateway;
+import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
+import com.aionemu.gameserver.lifecycle.GameHousingGateway;
+import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapGateway;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameLoggingGateway;
+import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
+import com.aionemu.gameserver.lifecycle.GameNetworkStartupGateway;
+import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
+import com.aionemu.gameserver.lifecycle.GameOptionalServicesGateway;
+import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameProtectorConquerorGateway;
+import com.aionemu.gameserver.lifecycle.GameProtectorConquerorLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRatioLimitGateway;
+import com.aionemu.gameserver.lifecycle.GameRatioLimitLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRewardServicesGateway;
+import com.aionemu.gameserver.lifecycle.GameRewardServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServicesGateway;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSeasonRankingGateway;
+import com.aionemu.gameserver.lifecycle.GameSeasonRankingLifecycle;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkGateway;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkLifecycle;
+import com.aionemu.gameserver.lifecycle.GameScheduledServicesGateway;
+import com.aionemu.gameserver.lifecycle.GameScheduledServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSiegeScheduleGateway;
+import com.aionemu.gameserver.lifecycle.GameSiegeScheduleLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSpawnGateway;
+import com.aionemu.gameserver.lifecycle.GameSpawnLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStaticDataGateway;
+import com.aionemu.gameserver.lifecycle.GameStaticDataLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupCompletionLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupCompletionGateway;
+import com.aionemu.gameserver.lifecycle.GameStartupHooksGateway;
+import com.aionemu.gameserver.lifecycle.GameStartupHooksLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupLogGateway;
+import com.aionemu.gameserver.lifecycle.GameStartupLogLifecycle;
+import com.aionemu.gameserver.lifecycle.GameStartupSequenceLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSystemGateway;
+import com.aionemu.gameserver.lifecycle.GameSystemLifecycle;
+import com.aionemu.gameserver.lifecycle.GameSystemPropertiesGateway;
+import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolGateway;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
+import com.aionemu.gameserver.lifecycle.GameUtilityServicesGateway;
+import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameWorldActivationGateway;
+import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapGateway;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.house.MaintenanceTask;
-import com.aionemu.gameserver.model.siege.Influence;
-import com.aionemu.gameserver.network.BannedMacManager;
-import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
-import com.aionemu.gameserver.network.chatserver.ChatServer;
-import com.aionemu.gameserver.network.loginserver.LoginServer;
-import com.aionemu.gameserver.questEngine.QuestEngine;
-import com.aionemu.gameserver.services.AbyssLandingService;
-import com.aionemu.gameserver.services.AbyssLandingSpecialService;
-import com.aionemu.gameserver.services.AdminService;
-import com.aionemu.gameserver.services.AgentService;
-import com.aionemu.gameserver.services.AnnouncementService;
-import com.aionemu.gameserver.services.AnohaService;
-import com.aionemu.gameserver.services.BaseService;
-import com.aionemu.gameserver.services.BeritraService;
-import com.aionemu.gameserver.services.BrokerService;
-import com.aionemu.gameserver.services.ChallengeTaskService;
-import com.aionemu.gameserver.services.ConquestService;
-import com.aionemu.gameserver.services.CuringZoneService;
-import com.aionemu.gameserver.services.DatabaseCleaningService;
-import com.aionemu.gameserver.services.DebugService;
-import com.aionemu.gameserver.services.DisputeLandService;
-import com.aionemu.gameserver.services.DynamicRiftService;
-import com.aionemu.gameserver.services.EventService;
-import com.aionemu.gameserver.services.ExchangeService;
-import com.aionemu.gameserver.services.FlyRingService;
-import com.aionemu.gameserver.services.GameTimeService;
-import com.aionemu.gameserver.services.HousingBidService;
-import com.aionemu.gameserver.services.IdianDepthsService;
-import com.aionemu.gameserver.services.InstanceRiftService;
-import com.aionemu.gameserver.services.IuService;
-import com.aionemu.gameserver.services.LimitedItemTradeService;
-import com.aionemu.gameserver.services.MoltenusService;
-import com.aionemu.gameserver.services.NightmareCircusService;
-import com.aionemu.gameserver.services.NpcShoutsService;
-import com.aionemu.gameserver.services.OutpostService;
-import com.aionemu.gameserver.services.PeriodicSaveService;
-import com.aionemu.gameserver.services.PetitionService;
-import com.aionemu.gameserver.services.ProtectorConquerorService;
-import com.aionemu.gameserver.services.RiftService;
-import com.aionemu.gameserver.services.RoadService;
-import com.aionemu.gameserver.services.RvrService;
-import com.aionemu.gameserver.services.ShieldService;
-import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.services.SpringZoneService;
-import com.aionemu.gameserver.services.SvsService;
-import com.aionemu.gameserver.services.TowerOfEternityService;
-import com.aionemu.gameserver.services.TownService;
-import com.aionemu.gameserver.services.VortexService;
-import com.aionemu.gameserver.services.WeatherService;
-import com.aionemu.gameserver.services.WeddingService;
-import com.aionemu.gameserver.services.ZorshivDredgionService;
-import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
-import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
-import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
-import com.aionemu.gameserver.services.events.AtreianPassportService;
-import com.aionemu.gameserver.services.events.BGService;
-import com.aionemu.gameserver.services.events.BanditService;
-import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.events.CrazyDaevaService;
-import com.aionemu.gameserver.services.events.EventWindowService;
-import com.aionemu.gameserver.services.events.FFAService;
-import com.aionemu.gameserver.services.events.LadderService;
-import com.aionemu.gameserver.services.events.PigPoppyEventService;
-import com.aionemu.gameserver.services.events.ShugoSweepService;
-import com.aionemu.gameserver.services.events.TreasureAbyssService;
-import com.aionemu.gameserver.services.instance.AsyunatarService;
-import com.aionemu.gameserver.services.instance.DredgionService2;
-import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
-import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
-import com.aionemu.gameserver.services.instance.HallOfTenacityService;
-import com.aionemu.gameserver.services.instance.IDRunService;
-import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
-import com.aionemu.gameserver.services.instance.IdgelDomeService;
-import com.aionemu.gameserver.services.instance.InstanceService;
-import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
-import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
-import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
-import com.aionemu.gameserver.services.player.LunaShopService;
-import com.aionemu.gameserver.services.player.PlayerEventService;
-import com.aionemu.gameserver.services.player.PlayerLimitService;
-import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
-import com.aionemu.gameserver.services.reward.RewardService;
-import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
-import com.aionemu.gameserver.services.territory.TerritoryService;
-import com.aionemu.gameserver.services.toypet.MinionService;
-import com.aionemu.gameserver.services.transfers.PlayerTransferService;
-import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
-import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
-import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
-import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
-import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
-import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
-import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
-import com.aionemu.gameserver.utils.cron.ThreadPoolManagerRunnableRunner;
-import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
-import com.aionemu.gameserver.utils.gametime.GameTimeManager;
-import com.aionemu.gameserver.utils.idfactory.IDFactory;
-import com.aionemu.gameserver.utils.javaagent.JavaAgentUtils;
-import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavService;
-import com.aionemu.gameserver.world.zone.ZoneService;
 
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
 /**
@@ -203,11 +144,14 @@ public class GameServer {
 	private static Set<StartupHook> startUpHooks = new HashSet<StartupHook>();
 	private static volatile GameServer activeServer;
 
-	private NioServer nioServer;
-	private ServerTransport gameClientTransport;
+	private GameServerNetworkLifecycle networkLifecycle;
 
-	private static String configDir() {
-		return System.getProperty("aion.game.config.dir", "./config");
+	public static void activateServer(GameServer server) {
+		activeServer = server;
+	}
+
+	public void attachNetworkLifecycle(GameServerNetworkLifecycle networkLifecycle) {
+		this.networkLifecycle = networkLifecycle;
 	}
 
 	/**
@@ -215,6 +159,9 @@ public class GameServer {
 	 * Initialize the logging system, including backing up old log files and configuring new loggers
 	 */
 	private static void initalizeLoggger() {
+		if (AionRuntimeMode.isBootEmbedded()) {
+			return;
+		}
 		File backupDir = new File("./log/backup/");
 		if (!backupDir.exists() && !backupDir.mkdirs()) {
 			System.err.println("Could not create backup directory");
@@ -262,18 +209,20 @@ public class GameServer {
 		
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		try {
-			JoranConfigurator configurator = new JoranConfigurator();
-			configurator.setContext(lc);
-			lc.reset();
-			configurator.doConfigure(configDir() + "/logback-spring.xml");
+			LogbackConfiguration.configure(lc);
 		} catch (JoranException je) {
 			throw new RuntimeException("[LoggerFactory] Failed to configure loggers, shutting down...", je);
 		}
 	}
 
+	public static void initializeLogger() {
+		initalizeLoggger();
+	}
+
 	/**
 	 * Starts GameServer from the boot-managed service lifecycle.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(String[] args) {
 		start(args, null);
 	}
@@ -281,448 +230,1089 @@ public class GameServer {
 	/**
 	 * Starts GameServer with an optional chat-server connection override.
 	 */
+	@Deprecated(since = "1.0", forRemoval = false)
 	public static void start(String[] args, Boolean chatServerEnabledOverride) {
-		System.setProperty("file.encoding", "UTF-8");
-		System.setProperty("java.net.preferIPv4Stack", "true");
-		System.setProperty("java.net.preferIPv6Addresses", "false");
-		
-		long start = System.currentTimeMillis();
-		log.info("GameServer starting...");
+		start(args, chatServerEnabledOverride, new GameThreadPoolLifecycle(new GameThreadPoolGateway()));
+	}
 
-		final GameEngine[] parallelEngines = { 
-			QuestEngine.getInstance(), 
-			InstanceEngine.getInstance(),
-			AI2Engine.getInstance(), 
-			ChatProcessor.getInstance() 
-		};
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle
+	) {
+		start(args, chatServerEnabledOverride, threadPoolLifecycle, new GameStaticDataLifecycle(new GameStaticDataGateway()));
+	}
 
-		final CountDownLatch progressLatch = new CountDownLatch(parallelEngines.length);
-		initalizeLoggger();
-		initUtilityServicesAndConfig();
-		if (chatServerEnabledOverride != null) {
-			GSConfig.ENABLE_CHAT_SERVER = chatServerEnabledOverride;
-			log.info("Chat Server connection overridden by boot configuration: {}", chatServerEnabledOverride);
-		}
-		
-		if (GSConfig.SERVER_YAADMINPANEL_SWITCH_ON) {
-			(new ServerCommandProcessor()).startAdminPanel();
-		}
-		
-		DataManager.getInstance();
-		Util.printSection(" *** IDFactory *** ");
-		IDFactory.getInstance();
-		Util.printSection(" *** Zone *** ");
-		ZoneService.getInstance().load(null);
-		HotspotTeleportService.getInstance();
-		RoadService.getInstance();
-		World.getInstance();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle
+	) {
+		start(args, chatServerEnabledOverride, threadPoolLifecycle, staticDataLifecycle, new GameWorldBootstrapLifecycle(new GameWorldBootstrapGateway()));
+	}
 
-		/**
-		 * Event
-		 */
-		Util.printSection(" *** Luna Shop System *** ");
-		LunaShopService.getInstance().init();
-		Util.printSection(" *** Minion System *** ");
-		MinionService.getInstance().init();
-		Util.printSection(" *** Shugo Sweep System *** ");
-		ShugoSweepService.getInstance().initShugoSweep();
-		Util.printSection(" *** Atreian Passport System *** ");
-		AtreianPassportService.getInstance().onStart();
-		Util.printSection(" *** Event Window System *** ");
-		EventWindowService.getInstance().initialize();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle
+	) {
+		start(args, chatServerEnabledOverride, threadPoolLifecycle, staticDataLifecycle, worldBootstrapLifecycle,
+			new GameEventBootstrapLifecycle(new GameEventBootstrapGateway()));
+	}
 
-		/**
-		 * GeoData
-		 */
-		Util.printSection(" *** Geodata *** ");
-		GeoService.getInstance().initializeGeo();
-		NavService.getInstance().initializeNav();
-		DropRegistrationService.getInstance();
-		GameServer gs = new GameServer();
-		activeServer = gs;
-		DAOManager.getDAO(PlayerDAO.class).setPlayersOffline(false);
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			new GameGeoNavLifecycle(new GameGeoNavGateway())
+		);
+	}
 
-		/**
-		 * Engines
-		 */
-		Util.printSection(" *** Engines *** ");
-		for (int i = 0; i < parallelEngines.length; i++) {
-			final int index = i;
-			ThreadPoolManager.getInstance().execute(new Runnable() {
-				public void run() {
-					parallelEngines[index].load(progressLatch);
-				}
-			});
-		}
-		try {
-			progressLatch.await();
-		} catch (InterruptedException e1) {
-			log.warn("Main thread interrupted while waiting for engines", e1);
-			Thread.currentThread().interrupt();
-		}
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			new GameWorldActivationLifecycle(new GameWorldActivationGateway())
+		);
+	}
 
-		/**
-		 * Location Data
-		 */
-		Util.printSection(" *** Siege & Battlefield Locations *** ");
-		SiegeService.getInstance().initSiegeLocations();
-		BaseService.getInstance().initBaseLocations();
-		BaseService.getInstance().initBaseReset();
-		OutpostService.getInstance().initOutpostLocations();
-		OutpostService.getInstance().initOupostReset();
-		
-		Util.printSection(" *** Vortex & World Boss Locations *** ");
-		VortexService.getInstance().initVortex();
-		VortexService.getInstance().initVortexLocations();
-		BeritraService.getInstance().initBeritra();
-		BeritraService.getInstance().initBeritraLocations();
-		AgentService.getInstance().initAgent();
-		AgentService.getInstance().initAgentLocations();
-		AnohaService.getInstance().initAnoha();
-		AnohaService.getInstance().initAnohaLocations();
-		SvsService.getInstance().initSvs();
-		SvsService.getInstance().initSvsLocations();
-		
-		Util.printSection(" *** PvP & RvR Locations *** ");
-		RvrService.getInstance().initRvr();
-		RvrService.getInstance().initRvrLocations();
-		IuService.getInstance().initConcert();
-		IuService.getInstance().initConcertLocations();
-		NightmareCircusService.getInstance().initCircus();
-		NightmareCircusService.getInstance().initCircusLocations();
-		DynamicRiftService.getInstance().initDynamicRift();
-		DynamicRiftService.getInstance().initDynamicRiftLocations();
-		
-		Util.printSection(" *** Instance & Dungeon Locations *** ");
-		InstanceRiftService.getInstance().initInstance();
-		InstanceRiftService.getInstance().initInstanceLocations();
-		ZorshivDredgionService.getInstance().initZorshivDredgion();
-		ZorshivDredgionService.getInstance().initZorshivDredgionLocations();
-		MoltenusService.getInstance().initMoltenus();
-		MoltenusService.getInstance().initMoltenusLocations();
-		RiftService.getInstance().initRifts();
-		RiftService.getInstance().initRiftLocations();
-		ConquestService.getInstance().initOffering();
-		ConquestService.getInstance().initConquestLocations();
-		IdianDepthsService.getInstance().initIdianDepths();
-		IdianDepthsService.getInstance().initIdianDepthsLocations();
-		TowerOfEternityService.getInstance().initTowerOfEternity();
-		TowerOfEternityService.getInstance().initTowerOfEternityLocation();
-		
-		Util.printSection(" *** Abyss & Landing Locations *** ");
-		AbyssLandingService.getInstance().initLandingLocations();
-		LandingUpdateService.getInstance().initResetQuestPoints();
-		LandingUpdateService.getInstance().initResetAbyssLandingPoints();
-		AbyssLandingSpecialService.getInstance().initLandingSpecialLocations();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			new GameEnginesLifecycle(new GameEnginesGateway())
+		);
+	}
 
-		/**
-		 * Spawns
-		 */
-		Util.printSection(" *** Spawns *** ");
-		SpawnEngine.spawnAll();
-		
-		// Events
-		Util.printSection(" *** Events *** ");
-		if (EventsConfig.ENABLE_EVENT_SERVICE) {
-			EventService.getInstance().start();
-		}
-		if (EventsConfig.EVENT_ENABLED) {
-			PlayerEventService.getInstance();
-		}
-		if (EventsConfig.ENABLE_CRAZY) {
-			CrazyDaevaService.getInstance().startTimer();
-		}
-		if (RankingConfig.TOP_RANKING_UPDATE_SETTING) {
-			AbyssRankUpdateService.getInstance().scheduleUpdateHour();
-		} else {
-			AbyssRankUpdateService.getInstance().scheduleUpdateMinute();
-		}
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			new GameLocationBootstrapLifecycle(new GameLocationBootstrapGateway()),
+			new GameSpawnLifecycle(new GameSpawnGateway())
+		);
+	}
 
-		AbyssRankUpdateService.getInstance().initRewardWeeklyManager();
-		
-		PacketBroadcaster.getInstance();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			new GameEventRuntimeLifecycle(new GameEventRuntimeGateway())
+		);
+	}
 
-		TemporarySpawnEngine.spawnAll();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			new GameCleaningLifecycle(new GameCleaningGateway())
+		);
+	}
 
-		/**
-		 * Cleaning
-		 */
-		DatabaseCleaningService.getInstance();
-		AbyssRankCleaningService.getInstance();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			new GameScheduledServicesLifecycle(new GameScheduledServicesGateway())
+		);
+	}
 
-		/**
-		 * Scheduled Services
-		 */
-		Util.printSection(" *** Scheduled Services *** ");
-		if (EventsConfig.ENABLE_PIG_POPPY_EVENT) {
-			PigPoppyEventService.ScheduleCron();
-		}
-		if (EventsConfig.ENABLE_ABYSS_EVENT) {
-			TreasureAbyssService.ScheduleCron();
-		}
-		if (EventsConfig.IMPERIAL_TOMB_ENABLE) {
-			ShugoImperialTombSpawnManager.getInstance().start();
-		}
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			new GameCustomEventsLifecycle(new GameCustomEventsGateway())
+		);
+	}
 
-		/**
-		 * Custom Events
-		 */
-		Util.printSection(" *** Custom Events *** ");
-		// FFA
-		if (FFAConfig.FFA_ENABLED) {
-			FFAService.getInstance();
-		}
-		if (PvPModConfig.BG_ENABLED) {
-			LadderService.getInstance();
-			BGService.getInstance();
-		}
-		BanditService.getInstance().onInit();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			new GameSiegeScheduleLifecycle(new GameSiegeScheduleGateway())
+		);
+	}
 
-		/**
-		 * Siege Schedule Initialization
-		 */
-		Util.printSection(" *** Sieges *** ");
-		SiegeService.getInstance().initSieges();
-		BaseService.getInstance().initBases();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			new GameDredgionLifecycle(new GameDredgionGateway())
+		);
+	}
 
-		/**
-		 * Dredgion
-		 */
-		Util.printSection(" *** Dredgion *** ");
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			DredgionService2.getInstance().initDredgion();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			AsyunatarService.getInstance().initAsyunatar();
-		}
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			new GameBattlefieldLifecycle(new GameBattlefieldGateway())
+		);
+	}
 
-		/**
-		 * Battlefield
-		 */
-		Util.printSection(" *** Battlefield *** ");
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			KamarBattlefieldService.getInstance().initKamarBattlefield();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			EngulfedOphidanBridgeService.getInstance().initEngulfedOphidan();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			SuspiciousOphidanBridgeService.getInstance().initSuspiciousOphidan();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			IronWallWarfrontService.getInstance().initIronWallWarfront();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			IdgelDomeService.getInstance().initIdgelDome();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			IdgelDomeLandmarkService.getInstance().initLandmark();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			HallOfTenacityService.getInstance().initHallOfTenacity();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			GrandArenaTrainingCampService.getInstance().initGrandArenaTrainingCamp();
-		}
-		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			IDRunService.getInstance().initIDRun();
-		}
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			new GameProtectorConquerorLifecycle(new GameProtectorConquerorGateway())
+		);
+	}
 
-		/**
-		 * Protector/Conqueror
-		 */
-		Util.printSection(" *** Protector/Conqueror initialization *** ");
-		ProtectorConquerorService.getInstance().initSystem();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			new GameDisputeLandLifecycle(new GameDisputeLandGateway())
+		);
+	}
 
-		/**
-		 * Dispute Land
-		 */
-		Util.printSection(" *** Dispute Land initialization *** ");
-		DisputeLandService.getInstance().initDisputeLand();
-		OutpostService.getInstance().initOutposts();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			new GameHtmlLifecycle(new GameHtmlGateway())
+		);
+	}
 
-		/**
-		 * HTML
-		 */
-		Util.printSection(" *** HTML *** ");
-		HTMLCache.getInstance();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			new GameRewardServicesLifecycle(new GameRewardServicesGateway())
+		);
+	}
 
-		if (CustomConfig.ENABLE_REWARD_SERVICE) {
-			RewardService.getInstance();
-		}
-		if (WeddingsConfig.WEDDINGS_ENABLE) {
-			WeddingService.getInstance();
-		}
-		if (VeteranRewardConfig.VETERANREWARDS_ENABLED) {
-			VeteranRewardsService.getInstance();
-		}
-		/**
-		 * Services
-		 */
-		Util.printSection(" *** Services *** ");
-		PeriodicSaveService.getInstance();
-		AdminService.getInstance();
-		PlayerTransferService.getInstance();
-		TerritoryService.getInstance().initTerritory();
-		GameTimeService.getInstance();
-		AnnouncementService.getInstance();
-		DebugService.getInstance();
-		WeatherService.getInstance();
-		BrokerService.getInstance();
-		Influence.getInstance();
-		ExchangeService.getInstance();
-		PetitionService.getInstance();
-		InstanceService.load();
-		FlyRingService.getInstance();
-		CuringZoneService.getInstance();
-		SpringZoneService.getInstance();
-		BoostEventService.getInstance().onStart();
-		TaskManagerFromDB.getInstance();
-		LimitedItemTradeService.getInstance().start();
-		GameTimeManager.startClock();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			new GameRuntimeServicesLifecycle(new GameRuntimeServicesGateway())
+		);
+	}
 
-		if (CustomConfig.LIMITS_ENABLED) {
-			PlayerLimitService.getInstance().scheduleUpdate();
-		}
-		if (AIConfig.SHOUTS_ENABLE) {
-			NpcShoutsService.getInstance();
-		}
-		if (SiegeConfig.SIEGE_SHIELD_ENABLED) {
-			ShieldService.getInstance().spawnAll();
-		}
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle,
+		GameRuntimeServicesLifecycle runtimeServicesLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			runtimeServicesLifecycle,
+			new GameOptionalServicesLifecycle(new GameOptionalServicesGateway())
+		);
+	}
 
-		/**
-		 * Season Ranking Update
-		 */
-		Util.printSection(" *** Season Ranking *** ");
-		SeasonRankingUpdateService.getInstance().onStart();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle,
+		GameRuntimeServicesLifecycle runtimeServicesLifecycle,
+		GameOptionalServicesLifecycle optionalServicesLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			runtimeServicesLifecycle,
+			optionalServicesLifecycle,
+			new GameSeasonRankingLifecycle(new GameSeasonRankingGateway())
+		);
+	}
 
-		/**
-		 * Housing
-		 */
-		Util.printSection(" *** Housing *** ");
-		HousingBidService.getInstance().start();
-		MaintenanceTask.getInstance();
-		TownService.getInstance();
-		ChallengeTaskService.getInstance();
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle,
+		GameRuntimeServicesLifecycle runtimeServicesLifecycle,
+		GameOptionalServicesLifecycle optionalServicesLifecycle,
+		GameSeasonRankingLifecycle seasonRankingLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			runtimeServicesLifecycle,
+			optionalServicesLifecycle,
+			seasonRankingLifecycle,
+			new GameHousingLifecycle(new GameHousingGateway())
+		);
+	}
 
-        /**
-         * 系统初始化最终阶段
-         * System initialization final phase
-         */
-        Util.printSection(" *** System *** ");
-        AEVersions.printFullVersionInfo();
-        AEInfos.printAllInfos();
-        Util.printSection("GameServer");
-        log.info("Power by Encom / Aion 5.8 Community Project");
-        log.info("══════════════════════════════════════════════════════════");
-        log.info(" █████  ██  ██████  ███    ██ ███████ ███    ███ ██    ██ ███████     █████");
-        log.info("██   ██ ██ ██    ██ ████   ██ ██      ████  ████ ██    ██ ██         ██   ██");
-        log.info("███████ ██ ██    ██ ██ ██  ██ █████   ██ ████ ██ ██    ██ ███████     █████");
-        log.info("██   ██ ██ ██    ██ ██  ██ ██ ██      ██  ██  ██ ██    ██      ██    ██   ██");
-        log.info("██   ██ ██  ██████  ██   ████ ███████ ██      ██  ██████  ███████ ██  █████");
-        log.info("══════════════════════════════════════════════════════════");
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle,
+		GameRuntimeServicesLifecycle runtimeServicesLifecycle,
+		GameOptionalServicesLifecycle optionalServicesLifecycle,
+		GameSeasonRankingLifecycle seasonRankingLifecycle,
+		GameHousingLifecycle housingLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			runtimeServicesLifecycle,
+			optionalServicesLifecycle,
+			seasonRankingLifecycle,
+			housingLifecycle,
+			new GameSystemLifecycle(new GameSystemGateway())
+		);
+	}
 
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle,
+		GameRuntimeServicesLifecycle runtimeServicesLifecycle,
+		GameOptionalServicesLifecycle optionalServicesLifecycle,
+		GameSeasonRankingLifecycle seasonRankingLifecycle,
+		GameHousingLifecycle housingLifecycle,
+		GameSystemLifecycle systemLifecycle
+	) {
+		start(
+			args,
+			chatServerEnabledOverride,
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			runtimeServicesLifecycle,
+			optionalServicesLifecycle,
+			seasonRankingLifecycle,
+			housingLifecycle,
+			systemLifecycle,
+			new GameServerNetworkLifecycle(new GameServerNetworkGateway()),
+			new GameNetworkStartupLifecycle(new GameNetworkStartupGateway()),
+			new GameRatioLimitLifecycle(new GameRatioLimitGateway()),
+			new GameStartupHooksLifecycle(new GameStartupHooksGateway()),
+			new GameStartupCompletionLifecycle(new GameStartupCompletionGateway()),
+			new GameLoggingLifecycle(new GameLoggingGateway()),
+			new GameUtilityServicesLifecycle(new GameUtilityServicesGateway()),
+			new GameAdminPanelLifecycle(new GameAdminPanelGateway()),
+			new GameSystemPropertiesLifecycle(new GameSystemPropertiesGateway()),
+			new GameStartupLogLifecycle(new GameStartupLogGateway()),
+			new GameChatServerOverrideLifecycle(new GameChatServerOverrideGateway())
+		);
+	}
 
-        Runtime runtime = Runtime.getRuntime();
-        long totalMemory = runtime.totalMemory() / (1024 * 1024);
-        long freeMemory = runtime.freeMemory() / (1024 * 1024);
-        long usedMemory = totalMemory - freeMemory;
-        long maxMemory = runtime.maxMemory() / (1024 * 1024);
-        log.info("Memory Status After GC: Allocated={} MB, Free={} MB, Used={} MB, Max={} MB", totalMemory, freeMemory, usedMemory, maxMemory);
-        
-        long startupTime = (System.currentTimeMillis() - start) / 1000;
-        log.info("Server startup completed in {} Seconds", startupTime);
-
-        gs.startServers();
-        if (!AionRuntimeMode.isBootEmbedded()) {
-            Runtime.getRuntime().addShutdownHook(ShutdownHook.getInstance());
-        }
-        
-        if (GSConfig.ENABLE_RATIO_LIMITATION) {
-            addStartupHook(new StartupHook() {
-                @Override
-                public void onStartup() {
-                    lock.lock();
-                    try {
-                        long dbStart = System.currentTimeMillis();
-                        ASMOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ASMODIANS);
-                        ELYOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ELYOS);
-                        long dbTime = System.currentTimeMillis() - dbStart;
-                        log.debug("Database faction query took {} ms", dbTime);
-                        computeRatios();
-                    } catch (Exception e) {
-                        log.error("Error loading faction ratios", e);
-                    } finally {
-                        lock.unlock();
-                    }
-                    displayRatios(false);
-                }
-            });
-        }
-        
-        onStartup();
-        
-        log.info("=== Server initialization COMPLETE ===");
-        log.info("Total initialization time: {} seconds", startupTime);
-        log.info("Server is now ready to accept connections");
+	/**
+	 * Starts GameServer with Spring-managed game runtime resources when boot embedded.
+	 */
+	@Deprecated(since = "1.0", forRemoval = false)
+	public static void start(
+		String[] args,
+		Boolean chatServerEnabledOverride,
+		GameThreadPoolLifecycle threadPoolLifecycle,
+		GameStaticDataLifecycle staticDataLifecycle,
+		GameWorldBootstrapLifecycle worldBootstrapLifecycle,
+		GameEventBootstrapLifecycle eventBootstrapLifecycle,
+		GameGeoNavLifecycle geoNavLifecycle,
+		GameWorldActivationLifecycle worldActivationLifecycle,
+		GameEnginesLifecycle enginesLifecycle,
+		GameLocationBootstrapLifecycle locationBootstrapLifecycle,
+		GameSpawnLifecycle spawnLifecycle,
+		GameEventRuntimeLifecycle eventRuntimeLifecycle,
+		GameCleaningLifecycle cleaningLifecycle,
+		GameScheduledServicesLifecycle scheduledServicesLifecycle,
+		GameCustomEventsLifecycle customEventsLifecycle,
+		GameSiegeScheduleLifecycle siegeScheduleLifecycle,
+		GameDredgionLifecycle dredgionLifecycle,
+		GameBattlefieldLifecycle battlefieldLifecycle,
+		GameProtectorConquerorLifecycle protectorConquerorLifecycle,
+		GameDisputeLandLifecycle disputeLandLifecycle,
+		GameHtmlLifecycle htmlLifecycle,
+		GameRewardServicesLifecycle rewardServicesLifecycle,
+		GameRuntimeServicesLifecycle runtimeServicesLifecycle,
+		GameOptionalServicesLifecycle optionalServicesLifecycle,
+		GameSeasonRankingLifecycle seasonRankingLifecycle,
+		GameHousingLifecycle housingLifecycle,
+		GameSystemLifecycle systemLifecycle,
+		GameServerNetworkLifecycle serverNetworkLifecycle,
+		GameNetworkStartupLifecycle networkStartupLifecycle,
+		GameRatioLimitLifecycle ratioLimitLifecycle,
+		GameStartupHooksLifecycle startupHooksLifecycle,
+		GameStartupCompletionLifecycle startupCompletionLifecycle,
+		GameLoggingLifecycle loggingLifecycle,
+		GameUtilityServicesLifecycle utilityServicesLifecycle,
+		GameAdminPanelLifecycle adminPanelLifecycle,
+		GameSystemPropertiesLifecycle systemPropertiesLifecycle,
+		GameStartupLogLifecycle startupLogLifecycle,
+		GameChatServerOverrideLifecycle chatServerOverrideLifecycle
+	) {
+		new GameStartupSequenceLifecycle(
+			threadPoolLifecycle,
+			staticDataLifecycle,
+			worldBootstrapLifecycle,
+			eventBootstrapLifecycle,
+			geoNavLifecycle,
+			worldActivationLifecycle,
+			enginesLifecycle,
+			locationBootstrapLifecycle,
+			spawnLifecycle,
+			eventRuntimeLifecycle,
+			cleaningLifecycle,
+			scheduledServicesLifecycle,
+			customEventsLifecycle,
+			siegeScheduleLifecycle,
+			dredgionLifecycle,
+			battlefieldLifecycle,
+			protectorConquerorLifecycle,
+			disputeLandLifecycle,
+			htmlLifecycle,
+			rewardServicesLifecycle,
+			runtimeServicesLifecycle,
+			optionalServicesLifecycle,
+			seasonRankingLifecycle,
+			housingLifecycle,
+			systemLifecycle,
+			serverNetworkLifecycle,
+			networkStartupLifecycle,
+			ratioLimitLifecycle,
+			startupHooksLifecycle,
+			startupCompletionLifecycle,
+			loggingLifecycle,
+			utilityServicesLifecycle,
+			adminPanelLifecycle,
+			systemPropertiesLifecycle,
+			startupLogLifecycle,
+			chatServerOverrideLifecycle
+		).start(chatServerEnabledOverride);
 	}
 
 	/**
 	 * Starts servers for connection with aion client and login\chat server.
 	 */
-	private void startServers() {
-		Util.printSection(" *** Network *** ");
-		
-		log.info("Network Config - Bind: {}, Port: {}, Threads: {}", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS);
-		
-		boolean nettyTransportEnabled = Boolean.getBoolean("aion.transport.netty");
-		if (nettyTransportEnabled) {
-			nioServer = null;
-			gameClientTransport = new com.aionemu.commons.network.NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
-		} else {
-			nioServer = new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
-			gameClientTransport = nioServer;
-		}
-		BannedMacManager.getInstance();
-
-		LoginServer ls = LoginServer.getInstance();
-		ChatServer cs = ChatServer.getInstance();
-
-		ls.setNioServer(nioServer);
-		cs.setNioServer(nioServer);
-
-		long transportStart = System.currentTimeMillis();
-		gameClientTransport.connect();
-		long transportTime = System.currentTimeMillis() - transportStart;
-		log.info("{} server transport started in {} ms", nettyTransportEnabled ? "Netty" : "NIO", transportTime);
-		
-		System.out.println("");
-		
-		long lsStart = System.currentTimeMillis();
-		if (AionRuntimeMode.isBootEmbedded()) {
-			ls.connectAsync();
-		} else {
-			ls.connect();
-		}
-		long lsTime = System.currentTimeMillis() - lsStart;
-		log.info("Login Server {} in {} ms", AionRuntimeMode.isBootEmbedded() ? "connection scheduled" : "connected", lsTime);
-
-		if (GSConfig.ENABLE_CHAT_SERVER) {
-			long csStart = System.currentTimeMillis();
-			if (AionRuntimeMode.isBootEmbedded()) {
-				cs.connectAsync();
-			} else {
-				cs.connect();
-			}
-			long csTime = System.currentTimeMillis() - csStart;
-			log.info("Chat Server {} in {} ms", AionRuntimeMode.isBootEmbedded() ? "connection scheduled" : "connected", csTime);
-		} else {
-			log.info("Chat Server is disabled by configuration");
-		}
-		
-		Util.printSection(" *** Misc *** ");
-		log.info(AionRuntimeMode.isBootEmbedded() ? "Network transport started and external server connections scheduled" : "All network servers started successfully");
+	public void startServers() {
+		networkLifecycle = new GameServerNetworkLifecycle(new GameServerNetworkGateway());
+		networkLifecycle.start(this);
 	}
 
 	public static boolean stop() {
@@ -744,70 +1334,23 @@ public class GameServer {
 	}
 
 	private void stopServers() {
-		try {
-			LoginServer.getInstance().gameServerDisconnected();
-		} catch (Exception e) {
-			log.warn("Failed to disconnect from Login Server cleanly.", e);
+		GameServerNetworkLifecycle lifecycle = networkLifecycle;
+		if (lifecycle != null) {
+			lifecycle.stop();
+			networkLifecycle = null;
 		}
-		try {
-			ChatServer.getInstance().gameServerDisconnected();
-		} catch (Exception e) {
-			log.warn("Failed to disconnect from Chat Server cleanly.", e);
-		}
-		try {
-			if (gameClientTransport != null) {
-				gameClientTransport.shutdown();
-			}
-		} catch (Exception e) {
-			log.warn("Failed to stop game client transport cleanly.", e);
-		}
-		try {
-			if (nioServer != null && nioServer != gameClientTransport) {
-				nioServer.shutdown();
-			}
-		} catch (Exception e) {
-			log.warn("Failed to stop game connector dispatcher cleanly.", e);
-		}
-		gameClientTransport = null;
-		nioServer = null;
 	}
 
 	/**
 	 * Initialize all helper services, that are not directly related to aion gs,
 	 * which includes:
 	 */
-	private static void initUtilityServicesAndConfig() {
-		Thread.setDefaultUncaughtExceptionHandler(new ThreadUncaughtExceptionHandler());
-		
-		if (JavaAgentUtils.isConfigured()) {
-			log.info("Callback support is configured.");
-		} else {
-			log.warn("Callback support is NOT configured. Gameplay callback behavior may be affected.");
-		}
-		
-		CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
-		Util.printSection(" *** Config *** ");
-		
-		long configStart = System.currentTimeMillis();
-		Config.load();
-		long configTime = System.currentTimeMillis() - configStart;
-		log.info("Configuration loaded in {} ms", configTime);
-		
-		DateTimeUtil.init();
-		
-		Util.printSection(" *** DataBase *** ");
-		long dbStart = System.currentTimeMillis();
-		DatabaseFactory.init();
-		long dbInitTime = System.currentTimeMillis() - dbStart;
-		log.info("Database factory initialized in {} ms", dbInitTime);
-		
-		long daoStart = System.currentTimeMillis();
-		DAOManager.init();
-		long daoTime = System.currentTimeMillis() - daoStart;
-		log.info("DAO Manager initialized in {} ms", daoTime);
-		
-		ThreadConfig.load();
-		ThreadPoolManager.getInstance();
+	private static void initUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
+		new GameUtilityServicesLifecycle(new GameUtilityServicesGateway()).start(threadPoolLifecycle);
+	}
+
+	public static void initializeUtilityServicesAndConfig(GameThreadPoolLifecycle threadPoolLifecycle) {
+		initUtilityServicesAndConfig(threadPoolLifecycle);
 	}
 
 	public synchronized static void addStartupHook(StartupHook hook) {
@@ -816,6 +1359,32 @@ public class GameServer {
 		} else {
 			hook.onStartup();
 		}
+	}
+
+	public static void registerRatioLimitStartupHook() {
+		addStartupHook(new StartupHook() {
+			@Override
+			public void onStartup() {
+				lock.lock();
+				try {
+					long dbStart = System.currentTimeMillis();
+					ASMOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ASMODIANS);
+					ELYOS_COUNT = DAOManager.getDAO(PlayerDAO.class).getCharacterCountForRace(Race.ELYOS);
+					long dbTime = System.currentTimeMillis() - dbStart;
+					log.debug("Database faction query took {} ms", dbTime);
+					computeRatios();
+				} catch (Exception e) {
+					log.error("Error loading faction ratios", e);
+				} finally {
+					lock.unlock();
+				}
+				displayRatios(false);
+			}
+		});
+	}
+
+	public static void runStartupHooks() {
+		onStartup();
 	}
 
 	private synchronized static void onStartup() {

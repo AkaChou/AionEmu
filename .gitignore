@@ -38,7 +38,13 @@ Thumbs.db
 .cursor
 
 
-game
 log
-login
-chat
+
+/game
+/chat
+/login
+
+
+/src/main/resources/aion/game/data/geo/*.geo
+/src/main/resources/aion/game/data/geo/models
+/src/main/resources/aion/game/data/nav/*.nav

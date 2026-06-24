@@ -255,14 +255,12 @@ public class BrokerService {
 	 * @return
 	 */
 	private Map<Integer, BrokerItem> getRaceBrokerItems(Race race) {
-		switch (race) {
-		case ELYOS:
+		if (race == Race.ELYOS) {
 			return elyosBrokerItems;
-		case ASMODIANS:
+		} else if (race == Race.ASMODIANS) {
 			return asmodianBrokerItems;
-		default:
-			return null;
 		}
+		return null;
 	}
 
 	/**
@@ -270,14 +268,12 @@ public class BrokerService {
 	 * @return
 	 */
 	private Map<Integer, BrokerItem> getRaceBrokerSettledItems(Race race) {
-		switch (race) {
-		case ELYOS:
+		if (race == Race.ELYOS) {
 			return elyosSettledItems;
-		case ASMODIANS:
+		} else if (race == Race.ASMODIANS) {
 			return asmodianSettledItems;
-		default:
-			return null;
 		}
+		return null;
 	}
 
 	/**
@@ -408,17 +404,12 @@ public class BrokerService {
 		newBrokerItem.removeItem();
 		newBrokerItem.setPersistentState(PersistentState.NEW);
 		saveManager.add(new BrokerOpSaveTask(newBrokerItem));
-		switch (race) {
-		case ASMODIANS:
+		if (race == Race.ASMODIANS) {
 			asmodianBrokerItems.put(brokerItem.getItemUniqueId(), brokerItem);
 			asmodianSettledItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
-			break;
-		case ELYOS:
+		} else if (race == Race.ELYOS) {
 			elyosBrokerItems.put(brokerItem.getItemUniqueId(), brokerItem);
 			elyosSettledItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
-			break;
-		default:
-			break;
 		}
 		Player seller = World.getInstance().findPlayer(brokerItem.getSellerId());
 		if (seller != null) {
@@ -484,15 +475,10 @@ public class BrokerService {
 
 		brokerItem.setPersistentState(PersistentState.UPDATE_REQUIRED);
 
-		switch (race) {
-		case ASMODIANS:
+		if (race == Race.ASMODIANS) {
 			asmodianSettledItems.put(brokerItem.getItemUniqueId(), brokerItem);
-			break;
-		case ELYOS:
+		} else if (race == Race.ELYOS) {
 			elyosSettledItems.put(brokerItem.getItemUniqueId(), brokerItem);
-			break;
-		default:
-			break;
 		}
 
 		Player seller = World.getInstance().findPlayer(brokerItem.getSellerId());
@@ -606,13 +592,10 @@ public class BrokerService {
 		BrokerItem newBrokerItem = new BrokerItem(itemToRegister, TotalItemPrice, player.getName(),
 				player.getObjectId(), brRace, isSplitSell);
 
-		switch (brRace) {
-		case ASMODIAN:
+		if (brRace == BrokerRace.ASMODIAN) {
 			asmodianBrokerItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
-			break;
-		case ELYOS:
+		} else if (brRace == BrokerRace.ELYOS) {
 			elyosBrokerItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
-			break;
 		}
 
 		BrokerOpSaveTask bost = new BrokerOpSaveTask(newBrokerItem, itemToRegister,
@@ -859,15 +842,10 @@ public class BrokerService {
 		for (BrokerItem item : collectedItems) {
 			if (item.isSold()) {
 				boolean result = false;
-				switch (playerRace) {
-				case ASMODIANS:
+				if (playerRace == Race.ASMODIANS) {
 					result = asmodianSettledItems.remove(item.getItemUniqueId()) != null;
-					break;
-				case ELYOS:
+				} else if (playerRace == Race.ELYOS) {
 					result = elyosSettledItems.remove(item.getItemUniqueId()) != null;
-					break;
-				default:
-					break;
 				}
 
 				if (result) {
@@ -880,15 +858,10 @@ public class BrokerService {
 					Item resultItem = player.getInventory().add(item.getItem());
 					if (resultItem != null) {
 						boolean result = false;
-						switch (playerRace) {
-						case ASMODIANS:
+						if (playerRace == Race.ASMODIANS) {
 							result = asmodianSettledItems.remove(item.getItemUniqueId()) != null;
-							break;
-						case ELYOS:
+						} else if (playerRace == Race.ELYOS) {
 							result = elyosSettledItems.remove(item.getItemUniqueId()) != null;
-							break;
-						default:
-							break;
 						}
 						if (result) {
 							item.setPersistentState(PersistentState.DELETED);

@@ -72,9 +72,9 @@ public class AutoGroupConfig {
 	public static String IDGEL_SCHEDULE_MIDNIGHT;
 
 	// ASHUNATAL DREDGION 5.1
-	@Property(key = "gameserver.ashunatal.timer", defaultValue = "60")
+	@Property(key = "gameserver.ashunatal.dredgion.timer", defaultValue = "60")
 	public static long ASHUNATAL_TIMER;
-	@Property(key = "gameserver.ashunatal.enable", defaultValue = "true")
+	@Property(key = "gameserver.ashunatal.dredgion.enable", defaultValue = "true")
 	public static boolean ASHUNATAL_ENABLED;
 	@Property(key = "gameserver.ashunatal.schedule.midday", defaultValue = "0 0 12 ? * MON,TUE,WED,THU,FRI,SAT,SUN *")
 	public static String ASHUNATAL_SCHEDULE_MIDDAY;

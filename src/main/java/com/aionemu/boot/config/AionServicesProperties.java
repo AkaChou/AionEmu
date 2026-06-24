@@ -1,7 +1,12 @@
 package com.aionemu.boot.config;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@Getter
 @ConfigurationProperties(prefix = "aion.services")
 public class AionServicesProperties {
 
@@ -10,51 +15,18 @@ public class AionServicesProperties {
     private final Service chat = new Service(false);
     private final Transport transport = new Transport();
 
-    public Service getGame() {
-        return game;
-    }
-
-    public Service getLogin() {
-        return login;
-    }
-
-    public Service getChat() {
-        return chat;
-    }
-
-    public Transport getTransport() {
-        return transport;
-    }
-
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Service {
         private boolean enabled;
-
-        public Service() {
-        }
-
-        public Service(boolean enabled) {
-            this.enabled = enabled;
-        }
-
-        public boolean isEnabled() {
-            return enabled;
-        }
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
     }
 
+    @Getter
+    @Setter
     public static class Transport {
         private TransportMode mode = TransportMode.NETTY;
-
-        public TransportMode getMode() {
-            return mode;
-        }
-
-        public void setMode(TransportMode mode) {
-            this.mode = mode;
-        }
     }
 
     public enum TransportMode {

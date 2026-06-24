@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.model.templates.mail.Mails;
 
 @XmlRootElement(name = "ae_static_data")
@@ -296,6 +297,9 @@ public class StaticData {
 
 	@SuppressWarnings("unused")
 	private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+		if (!GSConfig.STATIC_DATA_SUMMARY_LOG) {
+			return;
+		}
 		DataManager.log.info("Loaded " + worldMapsData.size() + " Map");
 		DataManager.log.info("Loaded " + playerExperienceTable.getMaxLevel() + " Level");
 		DataManager.log.info("Loaded " + playerStatsData.size() + " Player Stats Template");

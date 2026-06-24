@@ -44,6 +44,10 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 public class CM_CREATE_CHARACTER extends AionClientPacket {
 	private PlayerAppearance playerAppearance;
 	private PlayerCommonData playerCommonData;
+	private String name;
+	private Gender gender;
+	private Race race;
+	private int playerClassId;
 	private int create_protocol_47;
 
 	public CM_CREATE_CHARACTER(int opcode, State state, State... restStates) {
@@ -54,18 +58,11 @@ public class CM_CREATE_CHARACTER extends AionClientPacket {
 	protected void readImpl() {
 		readD();
 		readS();
-		playerCommonData = new PlayerCommonData(IDFactory.getInstance().nextId());
-		String name = Util.convertName(readS());
-		playerCommonData.setName(name);
+		name = Util.convertName(readS());
 		readB(50 - (name.length() * 2));
-		playerCommonData.setLevel(1);
-		playerCommonData.setGender(readD() == 0 ? Gender.MALE : Gender.FEMALE);
-		playerCommonData.setRace(readD() == 0 ? Race.ELYOS : Race.ASMODIANS);
-		playerCommonData.setPlayerClass(PlayerClass.getPlayerClassById((byte) readD()));
-
-		if (getConnection().getAccount().getMembership() >= MembershipConfig.STIGMA_SLOT_QUEST) {
-			playerCommonData.setAdvancedStigmaSlotSize(7);
-		}
+		gender = readD() == 0 ? Gender.MALE : Gender.FEMALE;
+		race = readD() == 0 ? Race.ELYOS : Race.ASMODIANS;
+		playerClassId = readD();
 		playerAppearance = new PlayerAppearance();
 		playerAppearance.setVoice(readD());
 		playerAppearance.setSkinRGB(readD());
@@ -147,6 +144,22 @@ public class CM_CREATE_CHARACTER extends AionClientPacket {
 		if (create_protocol_47 == 1) {
 			client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.RESPONSE_CREATE_NEW));
 			return;
+		}
+		PlayerClass playerClass;
+		try {
+			playerClass = PlayerClass.getPlayerClassById((byte) playerClassId);
+		} catch (IllegalArgumentException e) {
+			client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.FAILED_TO_CREATE_THE_CHARACTER));
+			return;
+		}
+		playerCommonData = new PlayerCommonData(IDFactory.getInstance().nextId());
+		playerCommonData.setName(name);
+		playerCommonData.setLevel(1);
+		playerCommonData.setGender(gender);
+		playerCommonData.setRace(race);
+		playerCommonData.setPlayerClass(playerClass);
+		if (account.getMembership() >= MembershipConfig.STIGMA_SLOT_QUEST) {
+			playerCommonData.setAdvancedStigmaSlotSize(7);
 		}
 		if (account.getMembership() >= MembershipConfig.CHARACTER_ADDITIONAL_ENABLE) {
 			if (MembershipConfig.CHARACTER_ADDITIONAL_COUNT <= account.size()) {

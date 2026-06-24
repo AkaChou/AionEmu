@@ -1,18 +1,17 @@
 package com.aionemu.boot.lifecycle;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class LoginServiceLifecycle implements AionServiceLifecycle {
 
     private final AionServicesProperties services;
+    private final LoginServerLifecycleGateway loginServerLifecycleGateway;
     private boolean started;
-
-    public LoginServiceLifecycle(AionServicesProperties services) {
-        this.services = services;
-    }
 
     @Override
     public String getName() {
@@ -33,10 +32,10 @@ public class LoginServiceLifecycle implements AionServiceLifecycle {
     public void start(ApplicationArguments args) {
         AionServicePaths.configureLogin();
         try {
-            com.aionemu.loginserver.LoginServer.start(args.getSourceArgs());
+            loginServerLifecycleGateway.start(args.getSourceArgs());
             started = true;
         } catch (RuntimeException | Error e) {
-            com.aionemu.loginserver.Shutdown.getInstance().shutdown(false);
+            loginServerLifecycleGateway.stop();
             throw e;
         }
     }
@@ -46,7 +45,7 @@ public class LoginServiceLifecycle implements AionServiceLifecycle {
         if (!started) {
             return;
         }
-        com.aionemu.loginserver.Shutdown.getInstance().shutdown(false);
+        loginServerLifecycleGateway.stop();
         started = false;
     }
 }

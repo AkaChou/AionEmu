@@ -116,7 +116,7 @@ public class CustomConfig {
 	public static boolean ABYSSXFORM_LOGOUT;
 	@Property(key = "gameserver.instance.duel.enable", defaultValue = "true")
 	public static boolean INSTANCE_DUEL_ENABLE;
-	@Property(key = " gameserver.ride.restriction.enable", defaultValue = "true")
+	@Property(key = "gameserver.ride.restriction.enable", defaultValue = "true")
 	public static boolean ENABLE_RIDE_RESTRICTION;
 	@Property(key = "gameserver.challenge.tasks.enabled", defaultValue = "false")
 	public static boolean CHALLENGE_TASKS_ENABLED;

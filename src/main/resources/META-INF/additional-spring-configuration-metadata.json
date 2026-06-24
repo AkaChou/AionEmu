@@ -1,0 +1,10 @@
+{
+  "properties": [
+    {
+      "name": "aion.game.startup.progress.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether the game server prints startup progress messages.",
+      "defaultValue": true
+    }
+  ]
+}

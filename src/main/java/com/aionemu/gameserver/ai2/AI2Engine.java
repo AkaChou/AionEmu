@@ -55,7 +55,7 @@ public class AI2Engine implements GameEngine {
 		acl.addClassListener(new AI2HandlerClassListener());
 
 		try {
-			acl.postLoad(CompiledScriptLoader.load("ai"));
+			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.ai"));
 			log.info("Loaded " + aiMap.size() + " AI2.");
 			validateScripts();
 		} catch (Exception e) {
