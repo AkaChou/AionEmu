@@ -163,6 +163,9 @@ public class GameServer {
 	 * Initialize the logging system, including backing up old log files and configuring new loggers
 	 */
 	private static void initalizeLoggger() {
+		if (AionRuntimeMode.isBootEmbedded()) {
+			return;
+		}
 		File backupDir = new File("./log/backup/");
 		if (!backupDir.exists() && !backupDir.mkdirs()) {
 			System.err.println("Could not create backup directory");

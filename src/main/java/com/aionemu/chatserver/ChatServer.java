@@ -61,6 +61,9 @@ public class ChatServer {
     }
 
     private static void initalizeLoggger() {
+        if (AionRuntimeMode.isBootEmbedded()) {
+            return;
+        }
         new File("./log/backup/").mkdirs();
         File[] files = new File("log").listFiles(new FilenameFilter() {
             @Override
