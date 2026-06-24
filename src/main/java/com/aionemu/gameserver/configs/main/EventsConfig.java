@@ -94,9 +94,9 @@ public class EventsConfig {
 	/**
 	 * Shugo Sweep
 	 */
-	@Property(key = "gameserver.shugoSweep.board", defaultValue = "1")
+	@Property(key = "gameserver.event.shugoSweep.board", defaultValue = "1")
 	public static int EVENT_SHUGOSWEEP_BOARD;
-	@Property(key = "gameserver.shugoSweep.freeDice", defaultValue = "5")
+	@Property(key = "gameserver.event.shugoSweep.freeDice", defaultValue = "5")
 	public static int EVENT_SHUGOSWEEP_FREEDICE;
 
 	/**
