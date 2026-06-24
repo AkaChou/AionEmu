@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.150.
  */
-package com.eleanor.processors.movement.motor;
+package com.aionemu.gameserver.movement.processors.movement.motor;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -11,7 +11,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
-import com.eleanor.processors.movement.MovementProcessor;
+import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
 
 public class ReturnMotor extends AMovementMotor {
 	private ScheduledFuture<?> _task;

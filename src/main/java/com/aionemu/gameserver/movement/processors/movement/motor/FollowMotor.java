@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.150.
  */
-package com.eleanor.processors.movement.motor;
+package com.aionemu.gameserver.movement.processors.movement.motor;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -14,9 +14,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
-import com.eleanor.processors.movement.MovementProcessor;
-import com.eleanor.processors.movement.PathfindHelper;
-import com.eleanor.utils.GeomUtil;
+import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
+import com.aionemu.gameserver.movement.processors.movement.PathfindHelper;
+import com.aionemu.gameserver.movement.utils.GeomUtil;
 
 public class FollowMotor extends AMovementMotor {
 	private static final int TARGET_REVALIDATE_TIME = 300;

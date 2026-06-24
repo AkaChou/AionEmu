@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.150.
  */
-package com.eleanor.utils;
+package com.aionemu.gameserver.movement.utils;
 
 import com.aionemu.gameserver.geoEngine.math.FastMath;
 import com.aionemu.gameserver.geoEngine.math.Vector2f;

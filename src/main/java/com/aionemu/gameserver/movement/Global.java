@@ -1,6 +1,6 @@
-package com.eleanor;
+package com.aionemu.gameserver.movement;
 
-import com.eleanor.processors.movement.MovementProcessor;
+import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
 
 /**
  * @author MetaWind

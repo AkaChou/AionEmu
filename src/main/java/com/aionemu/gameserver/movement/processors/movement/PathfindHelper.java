@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.150.
  */
-package com.eleanor.processors.movement;
+package com.aionemu.gameserver.movement.processors.movement;
 
 import com.aionemu.gameserver.geoEngine.math.Vector2f;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
@@ -10,7 +10,7 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.geo.GeoService;
-import com.eleanor.utils.GeomUtil;
+import com.aionemu.gameserver.movement.utils.GeomUtil;
 
 public class PathfindHelper {
 	private static final int VISIBLE_ANGLE = 180;

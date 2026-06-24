@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.150.
  */
-package com.eleanor.processors;
+package com.aionemu.gameserver.movement.processors;
 
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ScheduledFuture;

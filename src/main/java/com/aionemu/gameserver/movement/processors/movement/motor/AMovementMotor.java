@@ -1,14 +1,14 @@
 /*
  * Decompiled with CFR 0.150.
  */
-package com.eleanor.processors.movement.motor;
+package com.aionemu.gameserver.movement.processors.movement.motor;
 
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
-import com.eleanor.processors.movement.MovementProcessor;
+import com.aionemu.gameserver.movement.processors.movement.MovementProcessor;
 
 public abstract class AMovementMotor {
 	final Npc _owner;

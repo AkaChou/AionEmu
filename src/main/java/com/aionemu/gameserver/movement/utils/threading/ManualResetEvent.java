@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.150.
  */
-package com.eleanor.utils.threading;
+package com.aionemu.gameserver.movement.utils.threading;
 
 public class ManualResetEvent {
 	private final Object monitor = new Object();

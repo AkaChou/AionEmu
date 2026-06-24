@@ -1,16 +1,16 @@
 /*
  * Decompiled with CFR 0.150.
  */
-package com.eleanor.processors.movement;
+package com.aionemu.gameserver.movement.processors.movement;
 
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.eleanor.processors.AGameProcessor;
-import com.eleanor.processors.movement.motor.AMovementMotor;
-import com.eleanor.processors.movement.motor.ReturnMotor;
+import com.aionemu.gameserver.movement.processors.AGameProcessor;
+import com.aionemu.gameserver.movement.processors.movement.motor.AMovementMotor;
+import com.aionemu.gameserver.movement.processors.movement.motor.ReturnMotor;
 
 public class MovementProcessor extends AGameProcessor {
 	private final ConcurrentHashMap<Creature, AMovementMotor> _registeredCreatures = new ConcurrentHashMap<Creature, AMovementMotor>();

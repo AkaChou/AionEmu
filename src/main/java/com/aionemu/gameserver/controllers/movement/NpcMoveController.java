@@ -39,8 +39,8 @@ import com.aionemu.gameserver.world.geo.nav.NavService;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.eleanor.Global;
-import com.eleanor.processors.movement.motor.FollowMotor;
+import com.aionemu.gameserver.movement.Global;
+import com.aionemu.gameserver.movement.processors.movement.motor.FollowMotor;
 
 public class NpcMoveController
         extends CreatureMoveController<Npc> {
