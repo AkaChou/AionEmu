@@ -33,11 +33,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.AionRuntimeMode;
@@ -63,10 +63,6 @@ public class LoginServer {
      * Logger for this class.
      */
     private static final Logger log = LoggerFactory.getLogger(LoginServer.class);
-
-    private static String configDir() {
-        return System.getProperty("aion.login.config.dir", "./config");
-    }
 
     private static void initalizeLoggger() {
         if (AionRuntimeMode.isBootEmbedded()) {
@@ -105,10 +101,7 @@ public class LoginServer {
         }
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
         try {
-            JoranConfigurator configurator = new JoranConfigurator();
-            configurator.setContext(lc);
-            lc.reset();
-            configurator.doConfigure(configDir() + "/logback-spring.xml");
+            LogbackConfiguration.configure(lc);
         } catch (JoranException je) {
             throw new RuntimeException("Failed to configure loggers, shutting down...", je);
         }

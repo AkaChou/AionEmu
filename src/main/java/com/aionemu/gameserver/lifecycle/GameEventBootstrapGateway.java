@@ -5,22 +5,60 @@ import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.toypet.MinionService;
-import com.aionemu.gameserver.utils.Util;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameEventBootstrapGateway {
 
+    private final StartupProgressReporter progressReporter;
+
+    public GameEventBootstrapGateway() {
+        this(ConsoleStartupProgressReporter.forCurrentConsole());
+    }
+
+    GameEventBootstrapGateway(StartupProgressReporter progressReporter) {
+        this.progressReporter = progressReporter;
+    }
+
     public void bootstrap() {
-        Util.printSection(" *** Luna Shop System *** ");
+        long start = System.currentTimeMillis();
+        progressReporter.start("game event systems");
+        try {
+            loadStep("Luna Shop System", this::initializeLunaShopSystem);
+            loadStep("Minion System", this::initializeMinionSystem);
+            loadStep("Shugo Sweep System", this::initializeShugoSweepSystem);
+            loadStep("Atreian Passport System", this::initializeAtreianPassportSystem);
+            loadStep("Event Window System", this::initializeEventWindowSystem);
+            progressReporter.finish("game event systems", System.currentTimeMillis() - start);
+        } catch (RuntimeException | Error e) {
+            progressReporter.failed();
+            throw e;
+        }
+    }
+
+    protected void initializeLunaShopSystem() {
         LunaShopService.getInstance().init();
-        Util.printSection(" *** Minion System *** ");
+    }
+
+    protected void initializeMinionSystem() {
         MinionService.getInstance().init();
-        Util.printSection(" *** Shugo Sweep System *** ");
+    }
+
+    protected void initializeShugoSweepSystem() {
         ShugoSweepService.getInstance().initShugoSweep();
-        Util.printSection(" *** Atreian Passport System *** ");
+    }
+
+    protected void initializeAtreianPassportSystem() {
         AtreianPassportService.getInstance().onStart();
-        Util.printSection(" *** Event Window System *** ");
+    }
+
+    protected void initializeEventWindowSystem() {
         EventWindowService.getInstance().initialize();
+    }
+
+    private void loadStep(String stepName, Runnable loader) {
+        progressReporter.stepStarted(stepName);
+        loader.run();
+        progressReporter.stepFinished(stepName);
     }
 }

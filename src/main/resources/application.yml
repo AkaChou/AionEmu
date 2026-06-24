@@ -4,6 +4,10 @@ spring:
     web-application-type: none
 
 aion:
+  game:
+    startup:
+      progress:
+        enabled: true
   services:
     game:
       enabled: true

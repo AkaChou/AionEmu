@@ -17,13 +17,20 @@
 package com.aionemu.gameserver.dataholders.loadingutils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
-import java.util.IdentityHashMap;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.XMLConstants;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
@@ -65,6 +72,10 @@ public class XmlDataLoader {
 	 * @return StaticData object, containing all game data defined in xml files
 	 */
 	public StaticData loadStaticData() {
+		return loadStaticData(ConsoleStaticDataProgressReporter.forCurrentConsole());
+	}
+
+	StaticData loadStaticData(StaticDataProgressReporter progressReporter) {
 		File cachedXml = Config.cacheFile(CACHE_XML_FILE);
 		makeCacheDirectory(cachedXml.getParentFile());
 		File cleanMainXml = Config.dataFile(MAIN_XML_FILE);
@@ -75,15 +86,20 @@ public class XmlDataLoader {
 
 		try {
 			long unmarshalStart = System.currentTimeMillis();
+			int totalSections = staticDataSectionCount();
+			Map<String, Integer> sectionEntryCounts = staticDataSectionEntryCounts(cachedXml);
+			progressReporter.start(totalSections);
 			log.info("Unmarshalling static data from {}", cachedXml.getPath());
 			JAXBContext jc = JAXBContext.newInstance(StaticData.class);
 			Unmarshaller un = jc.createUnmarshaller();
 			un.setEventHandler(new XmlValidationHandler());
 			un.setSchema(getSchema());
-			un.setListener(new StaticDataProgressListener());
+			un.setListener(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
-				log.info("Unmarshalled static data in {} ms", System.currentTimeMillis() - unmarshalStart);
+				long elapsed = System.currentTimeMillis() - unmarshalStart;
+				progressReporter.finish(totalSections, elapsed);
+				log.info("Unmarshalled static data in {} ms", elapsed);
 				return data;
 			}
 		}
@@ -97,6 +113,7 @@ public class XmlDataLoader {
 		 * Error("Error while loading static data", e); }
 		 */
 		catch (Exception e) {
+			progressReporter.failed();
 			log.error("Error while loading static data", e);
 		}
 		return null;
@@ -109,9 +126,78 @@ public class XmlDataLoader {
 		return target.getClass().getSimpleName();
 	}
 
+	static int staticDataSectionCount() {
+		int count = 0;
+		for (Field field : StaticData.class.getFields()) {
+			if (field.getAnnotation(XmlElement.class) != null) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	static Map<String, Integer> staticDataSectionEntryCounts(File staticDataXml) throws Exception {
+		Map<String, String> sectionNamesByXmlElement = staticDataSectionNamesByXmlElement();
+		Map<String, Integer> counts = new HashMap<>();
+		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
+		try (FileInputStream stream = new FileInputStream(staticDataXml)) {
+			XMLStreamReader reader = inputFactory.createXMLStreamReader(stream);
+			int depth = 0;
+			String currentSectionName = null;
+			try {
+				while (reader.hasNext()) {
+					int event = reader.next();
+					if (event == XMLStreamConstants.START_ELEMENT) {
+						depth++;
+						if (depth == 2) {
+							currentSectionName = sectionNamesByXmlElement.get(reader.getLocalName());
+							if (currentSectionName != null) {
+								counts.putIfAbsent(currentSectionName, 0);
+							}
+						} else if (depth == 3 && currentSectionName != null) {
+							counts.merge(currentSectionName, 1, Integer::sum);
+						}
+					} else if (event == XMLStreamConstants.END_ELEMENT) {
+						if (depth == 2) {
+							currentSectionName = null;
+						}
+						depth--;
+					}
+				}
+			} finally {
+				reader.close();
+			}
+		}
+		counts.replaceAll((sectionName, count) -> Math.max(1, count));
+		return counts;
+	}
+
+	private static Map<String, String> staticDataSectionNamesByXmlElement() {
+		Map<String, String> sectionNamesByXmlElement = new HashMap<>();
+		for (Field field : StaticData.class.getFields()) {
+			XmlElement element = field.getAnnotation(XmlElement.class);
+			if (element != null) {
+				sectionNamesByXmlElement.put(element.name(), field.getType().getSimpleName());
+			}
+		}
+		return sectionNamesByXmlElement;
+	}
+
 	private static final class StaticDataProgressListener extends Unmarshaller.Listener {
 
-		private final Map<Object, Long> sectionStartTimes = new IdentityHashMap<>();
+		private final StaticDataProgressReporter progressReporter;
+		private final int totalSections;
+		private final Map<String, Integer> sectionEntryCounts;
+		private final Set<String> sectionNames;
+		private final Map<String, Integer> sectionEntriesLoaded = new HashMap<>();
+		private int sectionIndex;
+
+		private StaticDataProgressListener(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts) {
+			this.progressReporter = progressReporter;
+			this.totalSections = totalSections;
+			this.sectionEntryCounts = sectionEntryCounts;
+			this.sectionNames = sectionEntryCounts.keySet();
+		}
 
 		@Override
 		public void beforeUnmarshal(Object target, Object parent) {
@@ -119,23 +205,33 @@ public class XmlDataLoader {
 			if (sectionName == null) {
 				return;
 			}
-			sectionStartTimes.put(target, System.currentTimeMillis());
-			log.info("Loading static data section: {}", sectionName);
+			sectionEntriesLoaded.put(sectionName, 0);
+			progressReporter.sectionStarted(++sectionIndex, totalSections, sectionName, sectionEntryCounts.getOrDefault(sectionName, 1));
 		}
 
 		@Override
 		public void afterUnmarshal(Object target, Object parent) {
 			String sectionName = staticDataSectionName(target, parent);
-			if (sectionName == null) {
+			if (sectionName != null) {
+				progressReporter.sectionFinished(sectionIndex, totalSections, sectionName, sectionEntryCounts.getOrDefault(sectionName, 1));
 				return;
 			}
-			Long startedAt = sectionStartTimes.remove(target);
-			if (startedAt == null) {
-				log.info("Loaded static data section: {}", sectionName);
+			String parentSectionName = staticDataChildSectionName(parent, sectionNames);
+			if (parentSectionName == null) {
 				return;
 			}
-			log.info("Loaded static data section: {} in {} ms", sectionName, System.currentTimeMillis() - startedAt);
+			int totalEntries = sectionEntryCounts.getOrDefault(parentSectionName, 1);
+			int currentEntries = Math.min(totalEntries, sectionEntriesLoaded.merge(parentSectionName, 1, Integer::sum));
+			progressReporter.sectionProgress(sectionIndex, totalSections, parentSectionName, currentEntries, totalEntries);
 		}
+	}
+
+	private static String staticDataChildSectionName(Object parent, Set<String> sectionNames) {
+		if (parent == null) {
+			return null;
+		}
+		String sectionName = parent.getClass().getSimpleName();
+		return sectionNames.contains(sectionName) ? sectionName : null;
 	}
 
 	/**

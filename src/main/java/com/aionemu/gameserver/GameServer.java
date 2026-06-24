@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -122,7 +123,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.Util;
 
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
 /**
@@ -152,10 +152,6 @@ public class GameServer {
 
 	public void attachNetworkLifecycle(GameServerNetworkLifecycle networkLifecycle) {
 		this.networkLifecycle = networkLifecycle;
-	}
-
-	private static String configDir() {
-		return System.getProperty("aion.game.config.dir", "./config");
 	}
 
 	/**
@@ -213,10 +209,7 @@ public class GameServer {
 		
 		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 		try {
-			JoranConfigurator configurator = new JoranConfigurator();
-			configurator.setContext(lc);
-			lc.reset();
-			configurator.doConfigure(configDir() + "/logback-spring.xml");
+			LogbackConfiguration.configure(lc);
 		} catch (JoranException je) {
 			throw new RuntimeException("[LoggerFactory] Failed to configure loggers, shutting down...", je);
 		}
