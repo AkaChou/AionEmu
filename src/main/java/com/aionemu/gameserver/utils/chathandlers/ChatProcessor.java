@@ -78,7 +78,7 @@ public class ChatProcessor implements GameEngine {
 		acl.addClassListener(new ScheduledTaskClassListener());
 		acl.addClassListener(new ChatCommandsLoader(processor));
 		try {
-			acl.postLoad(CompiledScriptLoader.load("admincommands", "playercommands", "weddingcommands"));
+			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.commands.admin", "com.aionemu.gameserver.commands.player", "com.aionemu.gameserver.commands.wedding"));
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize chat handlers.", e);
 		}
