@@ -1040,7 +1040,7 @@ public class QuestEngine implements GameEngine {
 		acl.addClassListener(new QuestHandlerLoader());
 
 		try {
-			acl.postLoad(CompiledScriptLoader.load("quest"));
+			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.quest.handlers"));
 			XMLQuests xmlQuests = DataManager.XML_QUESTS;
 			for (XMLQuest xmlQuest : xmlQuests.getQuest()) {
 				xmlQuest.register(this);
