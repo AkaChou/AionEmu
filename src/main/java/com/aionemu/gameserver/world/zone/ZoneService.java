@@ -143,7 +143,7 @@ public final class ZoneService implements GameEngine {
 		acl.addClassListener(new ZoneHandlerClassListener());
 
 		try {
-			acl.postLoad(CompiledScriptLoader.load("zone"));
+			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.world.zone.scripts"));
 			log.info("Loaded " + handlers.size() + " zone handlers.");
 		} catch (IllegalStateException e) {
 			log.warn("Can't initialize instance handlers.", e.getMessage());

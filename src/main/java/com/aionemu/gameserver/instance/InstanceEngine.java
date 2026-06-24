@@ -51,7 +51,7 @@ public class InstanceEngine implements GameEngine {
 		acl.addClassListener(new ScheduledTaskClassListener());
 		acl.addClassListener(new InstanceHandlerClassListener());
 		try {
-			acl.postLoad(CompiledScriptLoader.load("instance"));
+			acl.postLoad(CompiledScriptLoader.load("com.aionemu.gameserver.instance.handlers.scripts"));
 			log.info("Loaded " + handlers.size() + " Instance Script");
 		} catch (Exception e) {
 			throw new GameServerError("Can't initialize instance handlers.", e);
