@@ -26,6 +26,11 @@ class GameDisputeLandLifecycleTest {
     }
 
     @Test
+    void disputeLandGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameDisputeLandGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameDisputeLandLifecycle lifecycle = new GameDisputeLandLifecycle(

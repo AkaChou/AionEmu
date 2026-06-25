@@ -12,6 +12,7 @@ public class GameDisputeLandGateway {
 
     private ObjectProvider<DisputeLandService> disputeLandServiceProvider;
     private ObjectProvider<OutpostService> outpostServiceProvider;
+    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setDisputeLandServiceProvider(ObjectProvider<DisputeLandService> disputeLandServiceProvider) {
@@ -23,6 +24,11 @@ public class GameDisputeLandGateway {
         this.outpostServiceProvider = outpostServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void start() {
         Util.printSection(" *** Dispute Land initialization *** ");
         disputeLandService().initDisputeLand();
@@ -31,15 +37,22 @@ public class GameDisputeLandGateway {
 
     private DisputeLandService disputeLandService() {
         if (disputeLandServiceProvider == null) {
-            return DisputeLandService.getInstance();
+            return runtimeBridge().disputeLandService();
         }
-        return disputeLandServiceProvider.getIfAvailable(DisputeLandService::getInstance);
+        return disputeLandServiceProvider.getIfAvailable(() -> runtimeBridge().disputeLandService());
     }
 
     private OutpostService outpostService() {
         if (outpostServiceProvider == null) {
-            return OutpostService.getInstance();
+            return runtimeBridge().outpostService();
         }
-        return outpostServiceProvider.getIfAvailable(OutpostService::getInstance);
+        return outpostServiceProvider.getIfAvailable(() -> runtimeBridge().outpostService());
+    }
+
+    private GameFeatureServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameFeatureServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
     }
 }

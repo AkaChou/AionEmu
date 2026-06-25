@@ -29,6 +29,11 @@ class GameRewardServicesLifecycleTest {
     }
 
     @Test
+    void rewardGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsEnabledInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameRewardServicesLifecycle lifecycle = newLifecycle(events, true, false, true);

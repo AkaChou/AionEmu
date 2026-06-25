@@ -16,6 +16,7 @@ public class GameOptionalServicesGateway {
     private ObjectProvider<PlayerLimitService> playerLimitServiceProvider;
     private ObjectProvider<NpcShoutsService> npcShoutsServiceProvider;
     private ObjectProvider<ShieldService> shieldServiceProvider;
+    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setPlayerLimitServiceProvider(ObjectProvider<PlayerLimitService> playerLimitServiceProvider) {
@@ -32,6 +33,11 @@ public class GameOptionalServicesGateway {
         this.shieldServiceProvider = shieldServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void start() {
         if (CustomConfig.LIMITS_ENABLED) {
             playerLimitService().scheduleUpdate();
@@ -46,22 +52,29 @@ public class GameOptionalServicesGateway {
 
     private PlayerLimitService playerLimitService() {
         if (playerLimitServiceProvider == null) {
-            return PlayerLimitService.getInstance();
+            return runtimeBridge().playerLimitService();
         }
-        return playerLimitServiceProvider.getIfAvailable(PlayerLimitService::getInstance);
+        return playerLimitServiceProvider.getIfAvailable(() -> runtimeBridge().playerLimitService());
     }
 
     private NpcShoutsService npcShoutsService() {
         if (npcShoutsServiceProvider == null) {
-            return NpcShoutsService.getInstance();
+            return runtimeBridge().npcShoutsService();
         }
-        return npcShoutsServiceProvider.getIfAvailable(NpcShoutsService::getInstance);
+        return npcShoutsServiceProvider.getIfAvailable(() -> runtimeBridge().npcShoutsService());
     }
 
     private ShieldService shieldService() {
         if (shieldServiceProvider == null) {
-            return ShieldService.getInstance();
+            return runtimeBridge().shieldService();
         }
-        return shieldServiceProvider.getIfAvailable(ShieldService::getInstance);
+        return shieldServiceProvider.getIfAvailable(() -> runtimeBridge().shieldService());
+    }
+
+    private GameFeatureServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameFeatureServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
     }
 }

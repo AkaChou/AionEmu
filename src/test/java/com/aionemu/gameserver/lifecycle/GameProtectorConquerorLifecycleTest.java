@@ -25,6 +25,11 @@ class GameProtectorConquerorLifecycleTest {
     }
 
     @Test
+    void protectorConquerorGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameProtectorConquerorGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameProtectorConquerorLifecycle lifecycle = new GameProtectorConquerorLifecycle(

@@ -13,6 +13,7 @@ public class GameDredgionGateway {
 
     private ObjectProvider<DredgionService2> dredgionServiceProvider;
     private ObjectProvider<AsyunatarService> asyunatarServiceProvider;
+    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setDredgionServiceProvider(ObjectProvider<DredgionService2> dredgionServiceProvider) {
@@ -22,6 +23,11 @@ public class GameDredgionGateway {
     @Autowired(required = false)
     void setAsyunatarServiceProvider(ObjectProvider<AsyunatarService> asyunatarServiceProvider) {
         this.asyunatarServiceProvider = asyunatarServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     public void start() {
@@ -36,15 +42,22 @@ public class GameDredgionGateway {
 
     private DredgionService2 dredgionService() {
         if (dredgionServiceProvider == null) {
-            return DredgionService2.getInstance();
+            return runtimeBridge().dredgionService();
         }
-        return dredgionServiceProvider.getIfAvailable(DredgionService2::getInstance);
+        return dredgionServiceProvider.getIfAvailable(() -> runtimeBridge().dredgionService());
     }
 
     private AsyunatarService asyunatarService() {
         if (asyunatarServiceProvider == null) {
-            return AsyunatarService.getInstance();
+            return runtimeBridge().asyunatarService();
         }
-        return asyunatarServiceProvider.getIfAvailable(AsyunatarService::getInstance);
+        return asyunatarServiceProvider.getIfAvailable(() -> runtimeBridge().asyunatarService());
+    }
+
+    private GameFeatureServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameFeatureServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
     }
 }

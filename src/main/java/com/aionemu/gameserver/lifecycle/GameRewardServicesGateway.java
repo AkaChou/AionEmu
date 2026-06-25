@@ -16,6 +16,7 @@ public class GameRewardServicesGateway {
     private ObjectProvider<RewardService> rewardServiceProvider;
     private ObjectProvider<WeddingService> weddingServiceProvider;
     private ObjectProvider<VeteranRewardsService> veteranRewardsServiceProvider;
+    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setRewardServiceProvider(ObjectProvider<RewardService> rewardServiceProvider) {
@@ -32,6 +33,11 @@ public class GameRewardServicesGateway {
         this.veteranRewardsServiceProvider = veteranRewardsServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void start() {
         if (CustomConfig.ENABLE_REWARD_SERVICE) {
             rewardService();
@@ -46,22 +52,29 @@ public class GameRewardServicesGateway {
 
     private RewardService rewardService() {
         if (rewardServiceProvider == null) {
-            return RewardService.getInstance();
+            return runtimeBridge().rewardService();
         }
-        return rewardServiceProvider.getIfAvailable(RewardService::getInstance);
+        return rewardServiceProvider.getIfAvailable(() -> runtimeBridge().rewardService());
     }
 
     private WeddingService weddingService() {
         if (weddingServiceProvider == null) {
-            return WeddingService.getInstance();
+            return runtimeBridge().weddingService();
         }
-        return weddingServiceProvider.getIfAvailable(WeddingService::getInstance);
+        return weddingServiceProvider.getIfAvailable(() -> runtimeBridge().weddingService());
     }
 
     private VeteranRewardsService veteranRewardsService() {
         if (veteranRewardsServiceProvider == null) {
-            return VeteranRewardsService.getInstance();
+            return runtimeBridge().veteranRewardsService();
         }
-        return veteranRewardsServiceProvider.getIfAvailable(VeteranRewardsService::getInstance);
+        return veteranRewardsServiceProvider.getIfAvailable(() -> runtimeBridge().veteranRewardsService());
+    }
+
+    private GameFeatureServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameFeatureServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
     }
 }

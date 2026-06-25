@@ -28,6 +28,11 @@ class GameDredgionLifecycleTest {
     }
 
     @Test
+    void dredgionGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameDredgionGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsEnabledInitializersOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameDredgionLifecycle lifecycle = newLifecycle(events, true);

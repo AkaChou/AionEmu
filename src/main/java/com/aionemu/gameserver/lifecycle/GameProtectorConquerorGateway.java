@@ -10,10 +10,16 @@ import org.springframework.stereotype.Component;
 public class GameProtectorConquerorGateway {
 
     private ObjectProvider<ProtectorConquerorService> protectorConquerorServiceProvider;
+    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setProtectorConquerorServiceProvider(ObjectProvider<ProtectorConquerorService> protectorConquerorServiceProvider) {
         this.protectorConquerorServiceProvider = protectorConquerorServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     public void start() {
@@ -23,8 +29,15 @@ public class GameProtectorConquerorGateway {
 
     private ProtectorConquerorService protectorConquerorService() {
         if (protectorConquerorServiceProvider == null) {
-            return ProtectorConquerorService.getInstance();
+            return runtimeBridge().protectorConquerorService();
         }
-        return protectorConquerorServiceProvider.getIfAvailable(ProtectorConquerorService::getInstance);
+        return protectorConquerorServiceProvider.getIfAvailable(() -> runtimeBridge().protectorConquerorService());
+    }
+
+    private GameFeatureServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameFeatureServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
     }
 }

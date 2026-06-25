@@ -29,6 +29,11 @@ class GameOptionalServicesLifecycleTest {
     }
 
     @Test
+    void optionalServicesGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsEnabledInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameOptionalServicesLifecycle lifecycle = newLifecycle(events, true, false, true);
