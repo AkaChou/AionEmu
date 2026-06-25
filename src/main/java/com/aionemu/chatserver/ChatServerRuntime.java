@@ -20,6 +20,7 @@ public class ChatServerRuntime implements ChatServerDependencies {
     private final ObjectProvider<ChatService> chatService;
     private final ObjectProvider<NettyServer> nettyServer;
     private final ObjectProvider<RestartService> restartService;
+    private final ObjectProvider<ChatServerStartupBridge> startupBridge;
 
     public ChatServerRuntime(
         ObjectProvider<IdFactory> idFactory,
@@ -27,7 +28,8 @@ public class ChatServerRuntime implements ChatServerDependencies {
         ObjectProvider<BroadcastService> broadcastService,
         ObjectProvider<ChatService> chatService,
         ObjectProvider<NettyServer> nettyServer,
-        ObjectProvider<RestartService> restartService
+        ObjectProvider<RestartService> restartService,
+        ObjectProvider<ChatServerStartupBridge> startupBridge
     ) {
         this.idFactory = idFactory;
         this.gameServerService = gameServerService;
@@ -35,10 +37,16 @@ public class ChatServerRuntime implements ChatServerDependencies {
         this.chatService = chatService;
         this.nettyServer = nettyServer;
         this.restartService = restartService;
+        this.startupBridge = startupBridge;
     }
 
     public void start(String[] args) {
         ChatServer.start(args, this);
+    }
+
+    @Override
+    public ChatServerStartupBridge startupBridge() {
+        return startupBridge.getIfAvailable(ChatServerStartupBridge::new);
     }
 
     @Override

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.chatserver.ChatServerRuntime;
+import com.aionemu.chatserver.ChatServerStartupBridge;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -111,6 +112,27 @@ class ChatServiceLifecycleTest {
         assertEquals(List.of("bridge:start:1", "shutdown:false"), events);
     }
 
+    @Test
+    void chatRuntimeUsesStartupBridgeProvider() {
+        List<String> events = new ArrayList<>();
+        ChatServerRuntime runtime = new ChatServerRuntime(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            provider(ChatServerStartupBridge.class, new RecordingChatServerStartupBridge(events))
+        );
+
+        runtime.startupBridge().initializeLogger();
+        runtime.startupBridge().loadConfig();
+        runtime.startupBridge().printInfos();
+        runtime.startupBridge().registerShutdownHook();
+
+        assertEquals(List.of("logger:init", "config:load", "infos:print", "shutdownHook"), events);
+    }
+
     private static final class RecordingChatServerLifecycleGateway extends ChatServerLifecycleGateway {
 
         private final List<String> events;
@@ -140,13 +162,42 @@ class ChatServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingChatServerRuntime(List<String> events) {
-            super(null, null, null, null, null, null);
+            super(null, null, null, null, null, null, null);
             this.events = events;
         }
 
         @Override
         public void start(String[] args) {
             events.add("runtime:start:" + args.length);
+        }
+    }
+
+    private static final class RecordingChatServerStartupBridge extends ChatServerStartupBridge {
+
+        private final List<String> events;
+
+        private RecordingChatServerStartupBridge(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void initializeLogger() {
+            events.add("logger:init");
+        }
+
+        @Override
+        public void loadConfig() {
+            events.add("config:load");
+        }
+
+        @Override
+        public void printInfos() {
+            events.add("infos:print");
+        }
+
+        @Override
+        public void registerShutdownHook() {
+            events.add("shutdownHook");
         }
     }
 

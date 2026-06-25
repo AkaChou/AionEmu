@@ -9,6 +9,10 @@ import com.aionemu.chatserver.utils.IdFactory;
 
 interface ChatServerDependencies {
 
+    default ChatServerStartupBridge startupBridge() {
+        return new ChatServerStartupBridge();
+    }
+
     IdFactory idFactory();
 
     GameServerService gameServerService();

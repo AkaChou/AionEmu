@@ -34,9 +34,7 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.joran.spi.JoranException;
 
-import com.aionemu.chatserver.configs.Config;
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
-import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import org.slf4j.Logger;
 
@@ -50,7 +48,7 @@ public class ChatServer {
      */
     private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
 
-    private static void initalizeLoggger() {
+    static void initializeLogger() {
         if (AionRuntimeMode.isBootEmbedded()) {
             return;
         }
@@ -103,12 +101,13 @@ public class ChatServer {
     }
 
     static void start(String[] args, ChatServerDependencies dependencies) {
-        long start = System.currentTimeMillis();
+        ChatServerStartupBridge startupBridge = dependencies.startupBridge();
+        long start = startupBridge.currentTimeMillis();
 
-        initalizeLoggger();
+        startupBridge.initializeLogger();
 
-        Config.load();
-        AEInfos.printAllInfos();
+        startupBridge.loadConfig();
+        startupBridge.printInfos();
         dependencies.idFactory();
         dependencies.gameServerService();
         dependencies.broadcastService();
@@ -116,9 +115,9 @@ public class ChatServer {
         dependencies.nettyServer();
         dependencies.restartService();
 
-        if (!AionRuntimeMode.isBootEmbedded()) {
-            Runtime.getRuntime().addShutdownHook(ShutdownHook.getInstance());
+        if (!startupBridge.isBootEmbedded()) {
+            startupBridge.registerShutdownHook();
         }
-        log.info("AL Chat Server started in " + (System.currentTimeMillis() - start) / 1000 + " seconds.");
+        log.info("AL Chat Server started in " + (startupBridge.currentTimeMillis() - start) / 1000 + " seconds.");
     }
 }
