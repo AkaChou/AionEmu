@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -167,5 +168,11 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public DropRegistrationService dropRegistrationService() {
         return DropRegistrationService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ShutdownHook shutdownHook() {
+        return ShutdownHook.getInstance();
     }
 }

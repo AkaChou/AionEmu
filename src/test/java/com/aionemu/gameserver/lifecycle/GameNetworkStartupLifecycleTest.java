@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameNetworkStartupLifecycleTest {
 
@@ -73,9 +74,22 @@ class GameNetworkStartupLifecycleTest {
         assertEquals(GameNetworkStartupGateway.class, fieldType("networkStartupGateway"));
     }
 
+    @Test
+    void networkStartupGatewayBridgesShutdownHookThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameNetworkStartupGateway.class, "shutdownHookProvider"));
+    }
+
     private static Class<?> fieldType(String name) {
         try {
             return GameNetworkStartupLifecycle.class.getDeclaredField(name).getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
+        try {
+            return type.getDeclaredField(name).getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
         }

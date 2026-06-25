@@ -24,6 +24,7 @@ import com.aionemu.gameserver.world.geo.nav.NavService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import com.aionemu.gameserver.ShutdownHook;
 
 class GameLegacyServiceBridgeConfigurationTest {
 
@@ -168,6 +169,15 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("dropRegistrationService"));
             assertEquals(DropRegistrationService.class, context.getType("dropRegistrationService"));
             assertLazy(context.getBeanFactory(), "dropRegistrationService");
+        }
+    }
+
+    @Test
+    void exposesNetworkStartupServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("shutdownHook"));
+            assertEquals(ShutdownHook.class, context.getType("shutdownHook"));
+            assertLazy(context.getBeanFactory(), "shutdownHook");
         }
     }
 
