@@ -18,9 +18,7 @@
 
 package com.aionemu.loginserver.network.gameserver;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -29,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
-import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.PingPongThread;
 import com.aionemu.loginserver.configs.Config;
@@ -76,24 +73,12 @@ public class GsConnection extends AConnection {
     private GameServerInfo gameServerInfo = null;
     private PingPongThread pingThread;
 
-    /**
-     * Constructor.
-     *
-     * @param sc
-     * @param d
-     * @throws IOException
-     */
-    public GsConnection(SocketChannel sc, Dispatcher d) throws IOException {
-        super(sc, d, 8192 * 8, 8192 * 8);
-
-    }
-
     public GsConnection(ConnectionTransport transport) {
         super(transport, 8192 * 8, 8192 * 8);
     }
 
     /**
-     * Called by Dispatcher. ByteBuffer data contains one packet that should be
+     * Called by the transport frame handler. ByteBuffer data contains one packet that should be
      * processed.
      *
      * @param data
@@ -112,7 +97,7 @@ public class GsConnection extends AConnection {
     }
 
     /**
-     * This method will be called by Dispatcher, and will be repeated till
+     * This method will be called by the transport frame handler, and will be repeated till
      * return false.
      *
      * @param data
@@ -133,7 +118,7 @@ public class GsConnection extends AConnection {
     }
 
     /**
-     * This method is called by Dispatcher when connection is ready to be
+     * This method is called by the transport when connection is ready to be
      * closed.
      *
      * @return time in ms after witch onDisconnect() method will be called.
@@ -191,8 +176,8 @@ public class GsConnection extends AConnection {
 
     /**
      * Its guaranted that closePacket will be sent before closing connection,
-     * but all past and future packets wont. Connection will be closed [by
-     * Dispatcher Thread], and onDisconnect() method will be called to clear all
+     * but all past and future packets wont. Connection will be closed by
+     * the transport, and onDisconnect() method will be called to clear all
      * other things. forced means that server shouldn't wait with removing this
      * connection.
      *

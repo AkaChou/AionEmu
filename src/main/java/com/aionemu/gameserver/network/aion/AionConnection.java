@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -27,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
-import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.commons.network.PacketProcessor;
 import com.aionemu.commons.utils.concurrent.ExecuteWrapper;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
@@ -126,18 +123,6 @@ public class AionConnection extends AConnection {
 	private int[] pff;
 	private long[] pffRequests;
 
-	/**
-	 * Constructor
-	 * 
-	 * @param sc
-	 * @param d
-	 * @throws IOException
-	 */
-	public AionConnection(SocketChannel sc, Dispatcher d) throws IOException {
-		super(sc, d, 8192 * 2, 8192 * 2);
-		initialize();
-	}
-
 	public AionConnection(ConnectionTransport transport) {
 		super(transport, 8192 * 2, 8192 * 2);
 		initialize();
@@ -181,7 +166,7 @@ public class AionConnection extends AConnection {
 	}
 
 	/**
-	 * Called by Dispatcher. ByteBuffer data contains one packet that should be
+	 * Called by the transport frame handler. ByteBuffer data contains one packet that should be
 	 * processed.
 	 * 
 	 * @param data
@@ -251,7 +236,7 @@ public class AionConnection extends AConnection {
 	}
 
 	/**
-	 * This method will be called by Dispatcher, and will be repeated till return
+	 * This method will be called by the transport frame handler, and will be repeated till return
 	 * false.
 	 * 
 	 * @param data
@@ -277,7 +262,7 @@ public class AionConnection extends AConnection {
 	}
 
 	/**
-	 * This method is called by Dispatcher when connection is ready to be closed.
+	 * This method is called by the transport when connection is ready to be closed.
 	 * 
 	 * @return time in ms after witch onDisconnect() method will be called. Always
 	 *         return 0.
@@ -346,8 +331,8 @@ public class AionConnection extends AConnection {
 
 	/**
 	 * Its guaranteed that closePacket will be sent before closing connection, but
-	 * all past and future packets wont. Connection will be closed [by Dispatcher
-	 * Thread], and onDisconnect() method will be called to clear all other things.
+	 * all past and future packets wont. Connection will be closed by the transport,
+	 * and onDisconnect() method will be called to clear all other things.
 	 * forced means that server shouldn't wait with removing this connection.
 	 * 
 	 * @param closePacket Packet that will be send before closing.

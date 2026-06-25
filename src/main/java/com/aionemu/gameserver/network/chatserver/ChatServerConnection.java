@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.chatserver;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -27,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
-import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
@@ -42,11 +39,6 @@ public class ChatServerConnection extends AConnection {
 	private State state;
 	private ChatServer chatServer;
 	private CsPacketHandler csPacketHandler;
-
-	public ChatServerConnection(SocketChannel sc, Dispatcher d, CsPacketHandler csPacketHandler) throws IOException {
-		super(sc, d, 8192 * 2, 8192 * 2);
-		init(csPacketHandler);
-	}
 
 	public ChatServerConnection(ConnectionTransport transport, CsPacketHandler csPacketHandler) {
 		super(transport, 8192 * 2, 8192 * 2);

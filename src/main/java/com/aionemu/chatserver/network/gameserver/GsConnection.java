@@ -18,9 +18,7 @@
 
 package com.aionemu.chatserver.network.gameserver;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -31,7 +29,6 @@ import com.aionemu.chatserver.network.factories.GsPacketHandlerFactory;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
-import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 
 /**
@@ -48,10 +45,6 @@ public class GsConnection extends AConnection {
     }
     private final Deque<GsServerPacket> sendMsgQueue = new ArrayDeque<GsServerPacket>();
     private State state;
-
-    public GsConnection(SocketChannel sc, Dispatcher d) throws IOException {
-        super(sc, d, 8192 * 8, 8192 * 8);
-    }
 
     public GsConnection(ConnectionTransport transport) {
         super(transport, 8192 * 8, 8192 * 8);
