@@ -11,6 +11,7 @@ import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
@@ -547,5 +548,119 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public BaseService baseService() {
         return BaseService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public VortexService vortexService() {
+        return VortexService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public BeritraService beritraService() {
+        return BeritraService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public AgentService agentService() {
+        return AgentService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public AnohaService anohaService() {
+        return AnohaService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public SvsService svsService() {
+        return SvsService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public RvrService rvrService() {
+        return RvrService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public IuService iuService() {
+        return IuService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public NightmareCircusService nightmareCircusService() {
+        return NightmareCircusService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public DynamicRiftService dynamicRiftService() {
+        return DynamicRiftService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public InstanceRiftService instanceRiftService() {
+        return InstanceRiftService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ZorshivDredgionService zorshivDredgionService() {
+        return ZorshivDredgionService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public MoltenusService moltenusService() {
+        return MoltenusService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public RiftService riftService() {
+        return RiftService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ConquestService conquestService() {
+        return ConquestService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public IdianDepthsService idianDepthsService() {
+        return IdianDepthsService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public TowerOfEternityService towerOfEternityService() {
+        return TowerOfEternityService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public AbyssLandingService abyssLandingService() {
+        return AbyssLandingService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public LandingUpdateService landingUpdateService() {
+        return LandingUpdateService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public AbyssLandingSpecialService abyssLandingSpecialService() {
+        return AbyssLandingSpecialService.getInstance();
     }
 }

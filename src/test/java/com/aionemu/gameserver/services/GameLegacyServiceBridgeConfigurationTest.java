@@ -13,6 +13,7 @@ import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
@@ -451,6 +452,69 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(BaseService.class, context.getType("baseService"));
             assertLazy(context.getBeanFactory(), "siegeService");
             assertLazy(context.getBeanFactory(), "baseService");
+        }
+    }
+
+    @Test
+    void exposesLocationBootstrapServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("vortexService"));
+            assertTrue(context.containsBeanDefinition("beritraService"));
+            assertTrue(context.containsBeanDefinition("agentService"));
+            assertTrue(context.containsBeanDefinition("anohaService"));
+            assertTrue(context.containsBeanDefinition("svsService"));
+            assertTrue(context.containsBeanDefinition("rvrService"));
+            assertTrue(context.containsBeanDefinition("iuService"));
+            assertTrue(context.containsBeanDefinition("nightmareCircusService"));
+            assertTrue(context.containsBeanDefinition("dynamicRiftService"));
+            assertTrue(context.containsBeanDefinition("instanceRiftService"));
+            assertTrue(context.containsBeanDefinition("zorshivDredgionService"));
+            assertTrue(context.containsBeanDefinition("moltenusService"));
+            assertTrue(context.containsBeanDefinition("riftService"));
+            assertTrue(context.containsBeanDefinition("conquestService"));
+            assertTrue(context.containsBeanDefinition("idianDepthsService"));
+            assertTrue(context.containsBeanDefinition("towerOfEternityService"));
+            assertTrue(context.containsBeanDefinition("abyssLandingService"));
+            assertTrue(context.containsBeanDefinition("landingUpdateService"));
+            assertTrue(context.containsBeanDefinition("abyssLandingSpecialService"));
+            assertEquals(VortexService.class, context.getType("vortexService"));
+            assertEquals(BeritraService.class, context.getType("beritraService"));
+            assertEquals(AgentService.class, context.getType("agentService"));
+            assertEquals(AnohaService.class, context.getType("anohaService"));
+            assertEquals(SvsService.class, context.getType("svsService"));
+            assertEquals(RvrService.class, context.getType("rvrService"));
+            assertEquals(IuService.class, context.getType("iuService"));
+            assertEquals(NightmareCircusService.class, context.getType("nightmareCircusService"));
+            assertEquals(DynamicRiftService.class, context.getType("dynamicRiftService"));
+            assertEquals(InstanceRiftService.class, context.getType("instanceRiftService"));
+            assertEquals(ZorshivDredgionService.class, context.getType("zorshivDredgionService"));
+            assertEquals(MoltenusService.class, context.getType("moltenusService"));
+            assertEquals(RiftService.class, context.getType("riftService"));
+            assertEquals(ConquestService.class, context.getType("conquestService"));
+            assertEquals(IdianDepthsService.class, context.getType("idianDepthsService"));
+            assertEquals(TowerOfEternityService.class, context.getType("towerOfEternityService"));
+            assertEquals(AbyssLandingService.class, context.getType("abyssLandingService"));
+            assertEquals(LandingUpdateService.class, context.getType("landingUpdateService"));
+            assertEquals(AbyssLandingSpecialService.class, context.getType("abyssLandingSpecialService"));
+            assertLazy(context.getBeanFactory(), "vortexService");
+            assertLazy(context.getBeanFactory(), "beritraService");
+            assertLazy(context.getBeanFactory(), "agentService");
+            assertLazy(context.getBeanFactory(), "anohaService");
+            assertLazy(context.getBeanFactory(), "svsService");
+            assertLazy(context.getBeanFactory(), "rvrService");
+            assertLazy(context.getBeanFactory(), "iuService");
+            assertLazy(context.getBeanFactory(), "nightmareCircusService");
+            assertLazy(context.getBeanFactory(), "dynamicRiftService");
+            assertLazy(context.getBeanFactory(), "instanceRiftService");
+            assertLazy(context.getBeanFactory(), "zorshivDredgionService");
+            assertLazy(context.getBeanFactory(), "moltenusService");
+            assertLazy(context.getBeanFactory(), "riftService");
+            assertLazy(context.getBeanFactory(), "conquestService");
+            assertLazy(context.getBeanFactory(), "idianDepthsService");
+            assertLazy(context.getBeanFactory(), "towerOfEternityService");
+            assertLazy(context.getBeanFactory(), "abyssLandingService");
+            assertLazy(context.getBeanFactory(), "landingUpdateService");
+            assertLazy(context.getBeanFactory(), "abyssLandingSpecialService");
         }
     }
 
