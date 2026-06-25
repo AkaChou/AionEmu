@@ -27,11 +27,6 @@ public class NettyTransportLifecycle implements AionTransportLifecycle {
     }
 
     @Override
-    public boolean nettyEnabled() {
-        return true;
-    }
-
-    @Override
     public synchronized void start() {
         if (bossGroup != null) {
             return;

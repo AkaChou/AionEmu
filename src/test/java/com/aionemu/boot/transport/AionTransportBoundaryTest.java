@@ -3,16 +3,9 @@ package com.aionemu.boot.transport;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.aionemu.boot.config.AionServicesProperties;
-import com.aionemu.boot.config.AionServicesProperties.TransportMode;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 class AionTransportBoundaryTest {
-
-    @AfterEach
-    void clearTransportFlag() {
-        System.clearProperty("aion.transport.netty");
-    }
 
     @Test
     void preparesAndStopsNettyTransportByDefault() {
@@ -22,7 +15,6 @@ class AionTransportBoundaryTest {
         boundary.prepare();
         boundary.destroy();
 
-        assertEquals("true", System.getProperty("aion.transport.netty"));
         assertEquals(1, netty.starts);
         assertEquals(1, netty.stops);
     }
@@ -49,7 +41,6 @@ class AionTransportBoundaryTest {
         boundary.prepare();
         boundary.destroy();
 
-        assertEquals("true", System.getProperty("aion.transport.netty"));
         assertEquals(1, netty.starts);
         assertEquals(1, netty.stops);
     }

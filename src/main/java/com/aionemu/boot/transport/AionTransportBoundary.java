@@ -39,7 +39,6 @@ public class AionTransportBoundary implements DisposableBean {
     public void prepare() {
         TransportMode mode = services.getTransport().getMode();
         AionTransportLifecycle transport = transport(mode);
-        System.setProperty("aion.transport.netty", Boolean.toString(transport.nettyEnabled()));
         activeTransport = transport;
         transport.start();
         if (mode == TransportMode.NETTY) {

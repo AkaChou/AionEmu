@@ -147,7 +147,6 @@ class AionBootApplicationTest {
     @AfterEach
     void clearBootRuntimeFlags() {
         System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
-        System.clearProperty("aion.transport.netty");
     }
 
     @Test
@@ -262,7 +261,6 @@ class AionBootApplicationTest {
             )) {
             assertTrue(context.isActive());
             assertTrue(AionRuntimeMode.isBootEmbedded());
-            assertEquals("true", System.getProperty("aion.transport.netty"));
         }
     }
 

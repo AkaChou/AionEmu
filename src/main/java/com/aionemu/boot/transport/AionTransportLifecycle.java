@@ -6,8 +6,6 @@ public interface AionTransportLifecycle {
 
     TransportMode mode();
 
-    boolean nettyEnabled();
-
     void start();
 
     void stop();
