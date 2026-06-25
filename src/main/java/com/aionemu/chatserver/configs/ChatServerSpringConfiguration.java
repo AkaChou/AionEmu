@@ -2,6 +2,7 @@ package com.aionemu.chatserver.configs;
 
 import com.aionemu.chatserver.ChatProcessRuntimeBridge;
 import com.aionemu.chatserver.ShutdownHook;
+import com.aionemu.chatserver.service.ChatRestartRequest;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.network.netty.pipeline.LoginToClientPipeLineFactory;
@@ -10,6 +11,7 @@ import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.chatserver.utils.IdFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,7 +68,8 @@ public class ChatServerSpringConfiguration {
 
     @Bean
     @Lazy
-    public RestartService restartService() {
+    public RestartService restartService(ObjectProvider<ChatProcessRuntimeBridge> processBridgeProvider) {
+        ChatRestartRequest.setProcessBridgeProvider(processBridgeProvider);
         return RestartService.getInstance();
     }
 

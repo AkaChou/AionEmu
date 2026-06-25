@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class ChatRestartRequestTest {
 
@@ -20,6 +21,7 @@ class ChatRestartRequestTest {
         System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
         AionEmbeddedShutdownHandler.clear();
         ShutdownHook.setRestartOnly(false);
+        ChatRestartRequest.setProcessBridgeProvider(null);
     }
 
     @Test
@@ -38,6 +40,16 @@ class ChatRestartRequestTest {
         List<String> events = new ArrayList<>();
 
         ChatRestartRequest.requestRestart(new RecordingChatProcessRuntimeBridge(events));
+
+        assertEquals(List.of("hook:start"), events);
+    }
+
+    @Test
+    void configuredProcessBridgeIsUsedForRestartOutsideBoot() {
+        List<String> events = new ArrayList<>();
+        ChatRestartRequest.setProcessBridgeProvider(provider(new RecordingChatProcessRuntimeBridge(events)));
+
+        ChatRestartRequest.requestRestart();
 
         assertEquals(List.of("hook:start"), events);
     }
@@ -74,5 +86,11 @@ class ChatRestartRequestTest {
         public void shutdown(boolean restart) {
             events.add("shutdown:" + restart);
         }
+    }
+
+    private static org.springframework.beans.factory.ObjectProvider<ChatProcessRuntimeBridge> provider(ChatProcessRuntimeBridge instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(ChatProcessRuntimeBridge.class.getName(), instance);
+        return beanFactory.getBeanProvider(ChatProcessRuntimeBridge.class);
     }
 }
