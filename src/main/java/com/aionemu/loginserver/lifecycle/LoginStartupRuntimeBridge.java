@@ -27,10 +27,16 @@ import org.springframework.stereotype.Component;
 public class LoginStartupRuntimeBridge {
 
     private ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider;
+    private ObjectProvider<PlayerTransferService> playerTransferServiceProvider;
 
     @Autowired(required = false)
     void setProcessBridgeProvider(ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider) {
         this.processBridgeProvider = processBridgeProvider;
+    }
+
+    @Autowired(required = false)
+    void setPlayerTransferServiceProvider(ObjectProvider<PlayerTransferService> playerTransferServiceProvider) {
+        this.playerTransferServiceProvider = playerTransferServiceProvider;
     }
 
     public void initializeLogger() {
@@ -87,7 +93,10 @@ public class LoginStartupRuntimeBridge {
     }
 
     public PlayerTransferService playerTransferService() {
-        return PlayerTransferService.getInstance();
+        if (playerTransferServiceProvider == null) {
+            return PlayerTransferService.getInstance();
+        }
+        return playerTransferServiceProvider.getIfAvailable(PlayerTransferService::getInstance);
     }
 
     public void initializeTaskManager() {
