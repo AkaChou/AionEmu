@@ -23,7 +23,7 @@ public class ChatServerSpringConfiguration {
     @Bean
     @Lazy
     public IdFactory idFactory() {
-        return IdFactory.getInstance();
+        return new IdFactory();
     }
 
     @Bean
@@ -41,19 +41,19 @@ public class ChatServerSpringConfiguration {
     @Bean
     @Lazy
     public GameServerService gameServerService() {
-        return GameServerService.getInstance();
+        return new GameServerService();
     }
 
     @Bean
     @Lazy
     public BroadcastService broadcastService() {
-        return BroadcastService.getInstance();
+        return new BroadcastService();
     }
 
     @Bean
     @Lazy
-    public ChatService chatService() {
-        return ChatService.getInstance();
+    public ChatService chatService(BroadcastService broadcastService) {
+        return new ChatService(broadcastService);
     }
 
     @Bean

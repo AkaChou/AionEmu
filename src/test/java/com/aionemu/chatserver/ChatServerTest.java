@@ -122,6 +122,23 @@ class ChatServerTest {
     }
 
     @Test
+    void springConfigurationCreatesCoreServicesWithoutLegacySingletons() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/configs/ChatServerSpringConfiguration.java"));
+        String chatServiceSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/service/ChatService.java"));
+
+        assertFalse(source.contains("return IdFactory.getInstance();"));
+        assertFalse(source.contains("return GameServerService.getInstance();"));
+        assertFalse(source.contains("return BroadcastService.getInstance();"));
+        assertFalse(source.contains("return ChatService.getInstance();"));
+        assertTrue(source.contains("return new IdFactory();"));
+        assertTrue(source.contains("return new GameServerService();"));
+        assertTrue(source.contains("return new BroadcastService();"));
+        assertTrue(source.contains("return new ChatService(broadcastService);"));
+        assertTrue(chatServiceSource.contains("public ChatService(BroadcastService broadcastService)"));
+        assertTrue(chatServiceSource.contains("@Deprecated(since = \"boot-migration\")"));
+    }
+
+    @Test
     void dependenciesInterfaceDoesNotConstructLegacySingletons() throws IOException {
         String dependenciesSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServerDependencies.java"));
         String serverSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServer.java"));
