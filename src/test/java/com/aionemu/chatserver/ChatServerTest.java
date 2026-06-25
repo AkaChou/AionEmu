@@ -89,6 +89,16 @@ class ChatServerTest {
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_NORMAL)"));
     }
 
+    @Test
+    void dependenciesInterfaceDoesNotConstructLegacySingletons() throws IOException {
+        String dependenciesSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServerDependencies.java"));
+        String serverSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServer.java"));
+
+        assertFalse(dependenciesSource.contains("getInstance()"));
+        assertFalse(dependenciesSource.contains("static ChatServerDependencies legacy()"));
+        assertTrue(serverSource.contains("new ChatServerLegacyDependencies()"));
+    }
+
     private static final class RecordingChatServerDependencies implements ChatServerDependencies {
 
         private final List<String> events;

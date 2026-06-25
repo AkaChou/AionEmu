@@ -24,38 +24,4 @@ interface ChatServerDependencies {
     NettyServer nettyServer();
 
     RestartService restartService();
-
-    static ChatServerDependencies legacy() {
-        return new ChatServerDependencies() {
-            @Override
-            public IdFactory idFactory() {
-                return IdFactory.getInstance();
-            }
-
-            @Override
-            public GameServerService gameServerService() {
-                return GameServerService.getInstance();
-            }
-
-            @Override
-            public BroadcastService broadcastService() {
-                return BroadcastService.getInstance();
-            }
-
-            @Override
-            public ChatService chatService() {
-                return ChatService.getInstance();
-            }
-
-            @Override
-            public NettyServer nettyServer() {
-                return NettyServer.getInstance();
-            }
-
-            @Override
-            public RestartService restartService() {
-                return RestartService.getInstance();
-            }
-        };
-    }
 }
