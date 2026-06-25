@@ -116,9 +116,9 @@ public class LoginStartupGateway {
 
     private PlayerTransferService playerTransferService() {
         if (playerTransferServiceProvider == null) {
-            return PlayerTransferService.getInstance();
+            return runtimeBridge().playerTransferService();
         }
-        return playerTransferServiceProvider.getIfAvailable(PlayerTransferService::getInstance);
+        return playerTransferServiceProvider.getIfAvailable(() -> runtimeBridge().playerTransferService());
     }
 
     private LoginStartupRuntimeBridge runtimeBridge() {

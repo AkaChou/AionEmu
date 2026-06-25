@@ -14,6 +14,7 @@ import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
+import com.aionemu.loginserver.service.PlayerTransferService;
 import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.DeadLockDetector;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
@@ -76,6 +77,10 @@ public class LoginStartupRuntimeBridge {
 
     public void connectNetwork() {
         NetConnector.getInstance().connect();
+    }
+
+    public PlayerTransferService playerTransferService() {
+        return PlayerTransferService.getInstance();
     }
 
     public void initializeTaskManager() {
