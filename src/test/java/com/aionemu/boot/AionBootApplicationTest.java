@@ -62,6 +62,7 @@ import com.aionemu.gameserver.lifecycle.GameLoggingGateway;
 import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupGateway;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
+import com.aionemu.gameserver.lifecycle.GameNetworkStartupRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorGateway;
@@ -186,9 +187,11 @@ class AionBootApplicationTest {
             assertEquals(AdminService.class, context.getType("adminService"));
             assertEquals(GameRuntimeServiceBridge.class, context.getType("gameRuntimeServiceBridge"));
             assertEquals(GameUtilityServicesRuntimeBridge.class, context.getType("gameUtilityServicesRuntimeBridge"));
+            assertEquals(GameNetworkStartupRuntimeBridge.class, context.getType("gameNetworkStartupRuntimeBridge"));
             assertLazy(context.getBeanFactory(), "adminService");
             assertLazy(context.getBeanFactory(), "gameRuntimeServiceBridge");
             assertLazy(context.getBeanFactory(), "gameUtilityServicesRuntimeBridge");
+            assertLazy(context.getBeanFactory(), "gameNetworkStartupRuntimeBridge");
         }
     }
 
@@ -348,6 +351,7 @@ class AionBootApplicationTest {
             context.registerBean(GameSystemGateway.class);
             context.registerBean(GameSystemLifecycle.class);
             context.registerBean(GameNetworkStartupGateway.class);
+            context.registerBean(GameNetworkStartupRuntimeBridge.class);
             context.registerBean(GameNetworkStartupLifecycle.class);
             context.registerBean(GameRatioLimitGateway.class);
             context.registerBean(GameRatioLimitLifecycle.class);

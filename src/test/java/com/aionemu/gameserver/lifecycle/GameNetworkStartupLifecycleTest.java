@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class GameNetworkStartupLifecycleTest {
 
@@ -79,6 +80,28 @@ class GameNetworkStartupLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameNetworkStartupGateway.class, "shutdownHookProvider"));
     }
 
+    @Test
+    void networkStartupGatewayBridgesRuntimeCallsThroughSpringProviders() {
+        List<String> events = new ArrayList<>();
+        Thread hook = new Thread();
+        RecordingGameNetworkStartupRuntimeBridge bridge = new RecordingGameNetworkStartupRuntimeBridge(events, hook);
+        GameNetworkStartupGateway gateway = new GameNetworkStartupGateway();
+        gateway.setRuntimeBridgeProvider(provider(GameNetworkStartupRuntimeBridge.class, bridge));
+
+        assertSame(hook, gateway.shutdownHook());
+        assertFalse(gateway.isBootEmbedded());
+        gateway.registerShutdownHook(hook);
+        assertEquals(42L, gateway.currentTimeMillis());
+
+        assertEquals(List.of("shutdownHook", "isBootEmbedded", "registerShutdownHook", "currentTimeMillis"), events);
+        assertSame(hook, bridge.registeredHook);
+    }
+
+    @Test
+    void networkStartupGatewayBridgesRuntimeBoundaryThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameNetworkStartupGateway.class, "runtimeBridgeProvider"));
+    }
+
     private static Class<?> fieldType(String name) {
         try {
             return GameNetworkStartupLifecycle.class.getDeclaredField(name).getType();
@@ -137,5 +160,47 @@ class GameNetworkStartupLifecycleTest {
         public long currentTimeMillis() {
             return currentTimeMillis++;
         }
+    }
+
+    private static final class RecordingGameNetworkStartupRuntimeBridge extends GameNetworkStartupRuntimeBridge {
+
+        private final List<String> events;
+        private final Thread shutdownHook;
+        private Thread registeredHook;
+
+        private RecordingGameNetworkStartupRuntimeBridge(List<String> events, Thread shutdownHook) {
+            this.events = events;
+            this.shutdownHook = shutdownHook;
+        }
+
+        @Override
+        public boolean isBootEmbedded() {
+            events.add("isBootEmbedded");
+            return false;
+        }
+
+        @Override
+        public Thread shutdownHook() {
+            events.add("shutdownHook");
+            return shutdownHook;
+        }
+
+        @Override
+        public void registerShutdownHook(Thread shutdownHook) {
+            events.add("registerShutdownHook");
+            registeredHook = shutdownHook;
+        }
+
+        @Override
+        public long currentTimeMillis() {
+            events.add("currentTimeMillis");
+            return 42L;
+        }
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
     }
 }
