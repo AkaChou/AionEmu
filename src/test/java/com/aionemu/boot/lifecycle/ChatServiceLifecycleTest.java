@@ -34,6 +34,7 @@ class ChatServiceLifecycleTest {
         assertEquals(null, findFieldType("stopAction"));
         assertEquals(ObjectProvider.class, fieldType(ChatServerLifecycleGateway.class, "chatServerRuntimeProvider"));
         assertEquals(ObjectProvider.class, fieldType(ChatServerLifecycleGateway.class, "runtimeBridgeProvider"));
+        assertEquals(ObjectProvider.class, fieldType(ChatServerRuntimeBridge.class, "chatServerRuntimeProvider"));
         assertEquals(null, findFieldType(ChatServerLifecycleGateway.class, "chatServerRuntime"));
     }
 
@@ -110,6 +111,20 @@ class ChatServiceLifecycleTest {
         gateway.stop();
 
         assertEquals(List.of("bridge:start:1", "shutdown:false"), events);
+    }
+
+    @Test
+    void chatRuntimeBridgeUsesRuntimeProviderWhenAvailable() {
+        List<String> events = new ArrayList<>();
+        ChatServerRuntimeBridge runtimeBridge = new ChatServerRuntimeBridge();
+        runtimeBridge.setChatServerRuntimeProvider(provider(
+            ChatServerRuntime.class,
+            new RecordingChatServerRuntime(events)
+        ));
+
+        runtimeBridge.start(new String[] {"--chat=true"});
+
+        assertEquals(List.of("runtime:start:1"), events);
     }
 
     @Test
