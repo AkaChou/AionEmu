@@ -75,6 +75,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Added DAOManager initialization-state checks and moved login server stats cleanup before DAO/database shutdown.
 - [x] Made login shutdown cleanup use a Spring-instantiable `Shutdown` bean instead of the legacy singleton fallback in the boot-managed bridge.
 - [x] Made login player-transfer startup use a Spring-instantiable service bean while retaining the legacy singleton only as a lazy fallback.
+- [x] Made login premium-controller startup use a Spring-instantiable controller bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Made login `NetConnector` discard its transport on shutdown so later embedded lifecycles create a fresh transport.
 - [x] Added a reusable Netty 4 client connector and moved game-to-chat outbound connections to Netty when Netty transport mode is enabled.
 - [x] Moved game-to-login outbound connections to Netty when Netty transport mode is enabled.

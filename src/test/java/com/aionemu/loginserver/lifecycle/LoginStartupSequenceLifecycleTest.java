@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.commons.utils.AionRuntimeMode;
+import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.service.PlayerTransferService;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -243,6 +244,15 @@ class LoginStartupSequenceLifecycleTest {
         runtimeBridge.setPlayerTransferServiceProvider(throwingProvider(providerUsed));
 
         assertSame(providerUsed, assertThrows(ProviderUsedException.class, runtimeBridge::playerTransferService));
+    }
+
+    @Test
+    void startupRuntimeBridgeUsesPremiumControllerProviderBeforeLegacySingletonFallback() {
+        ProviderUsedException providerUsed = new ProviderUsedException();
+        LoginStartupRuntimeBridge runtimeBridge = new LoginStartupRuntimeBridge();
+        runtimeBridge.setPremiumControllerProvider(throwingProvider(providerUsed));
+
+        assertSame(providerUsed, assertThrows(ProviderUsedException.class, runtimeBridge::initializePremiumController));
     }
 
     private static Class<?> fieldType(String name) {

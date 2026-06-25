@@ -1,6 +1,7 @@
 package com.aionemu.loginserver.service;
 
 import com.aionemu.loginserver.Shutdown;
+import com.aionemu.loginserver.controller.PremiumController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -12,6 +13,12 @@ public class LoginLegacyServiceBridgeConfiguration {
     @Lazy
     public PlayerTransferService loginPlayerTransferService() {
         return new PlayerTransferService();
+    }
+
+    @Bean
+    @Lazy
+    public PremiumController loginPremiumController() {
+        return new PremiumController();
     }
 
     @Bean

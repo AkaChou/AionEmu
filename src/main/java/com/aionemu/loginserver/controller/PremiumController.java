@@ -32,10 +32,10 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PREMIUM_RESPO
 public class PremiumController {
 
     private Logger log = LoggerFactory.getLogger("PREMIUM_CTRL");
-    private static PremiumController controller = new PremiumController();
 
+    @Deprecated(since = "boot-migration")
     public static PremiumController getController() {
-        return controller;
+        return SingletonHolder.CONTROLLER;
     }
     public static byte RESULT_FAIL = 1;
     public static byte RESULT_LOW_POINTS = 2;
@@ -78,5 +78,10 @@ public class PremiumController {
             server.getConnection().sendPacket(new SM_PREMIUM_RESPONSE(requestId, RESULT_FAIL, points, luna));
             log.info("Account " + accountId + " failed in purchasing lot #" + requestId + " for " + cost + " from server #" + serverId + ". !updatePoints");
         }
+    }
+
+    private static final class SingletonHolder {
+
+        private static final PremiumController CONTROLLER = new PremiumController();
     }
 }

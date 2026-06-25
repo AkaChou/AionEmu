@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.loginserver.Shutdown;
+import com.aionemu.loginserver.controller.PremiumController;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +21,15 @@ class LoginLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("loginPlayerTransferService"));
             assertEquals(PlayerTransferService.class, context.getType("loginPlayerTransferService"));
             assertTrue(context.getBeanFactory().getBeanDefinition("loginPlayerTransferService").isLazyInit());
+        }
+    }
+
+    @Test
+    void exposesLoginPremiumControllerAsLazySpringBean() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(LoginLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("loginPremiumController"));
+            assertEquals(PremiumController.class, context.getType("loginPremiumController"));
+            assertTrue(context.getBeanFactory().getBeanDefinition("loginPremiumController").isLazyInit());
         }
     }
 
@@ -42,5 +52,16 @@ class LoginLegacyServiceBridgeConfigurationTest {
         assertTrue(source.contains("return new PlayerTransferService();"));
         assertTrue(serviceSource.contains("SingletonHolder"));
         assertTrue(serviceSource.contains("@Deprecated(since = \"boot-migration\")"));
+    }
+
+    @Test
+    void loginPremiumControllerBeanUsesSpringInstantiationInsteadOfSingletonFallback() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
+        String controllerSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/controller/PremiumController.java"));
+
+        assertFalse(source.contains("PremiumController.getController()"));
+        assertTrue(source.contains("return new PremiumController();"));
+        assertTrue(controllerSource.contains("SingletonHolder"));
+        assertTrue(controllerSource.contains("@Deprecated(since = \"boot-migration\")"));
     }
 }
