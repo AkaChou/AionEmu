@@ -10,12 +10,19 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameRuntimeServicesLifecycleTest {
 
     @Test
     void usesRuntimeServicesGatewayCollaborator() {
         assertEquals(GameRuntimeServicesGateway.class, fieldType("runtimeServicesGateway"));
+    }
+
+    @Test
+    void runtimeGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "adminServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "playerTransferServiceProvider"));
     }
 
     @Test
@@ -103,8 +110,12 @@ class GameRuntimeServicesLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameRuntimeServicesLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameRuntimeServicesLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
