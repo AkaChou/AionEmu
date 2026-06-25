@@ -10,12 +10,18 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameProtectorConquerorLifecycleTest {
 
     @Test
     void usesProtectorConquerorGatewayCollaborator() {
         assertEquals(GameProtectorConquerorGateway.class, fieldType("protectorConquerorGateway"));
+    }
+
+    @Test
+    void protectorConquerorGatewayBridgesLegacyServiceThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameProtectorConquerorGateway.class, "protectorConquerorServiceProvider"));
     }
 
     @Test
@@ -56,8 +62,12 @@ class GameProtectorConquerorLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameProtectorConquerorLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameProtectorConquerorLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

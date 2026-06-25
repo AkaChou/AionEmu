@@ -8,6 +8,7 @@ import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerEventService;
+import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
@@ -153,5 +154,11 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public SeasonRankingUpdateService seasonRankingUpdateService() {
         return SeasonRankingUpdateService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ProtectorConquerorService protectorConquerorService() {
+        return ProtectorConquerorService.getInstance();
     }
 }

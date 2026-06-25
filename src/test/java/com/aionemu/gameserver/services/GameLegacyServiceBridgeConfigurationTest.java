@@ -11,6 +11,7 @@ import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerEventService;
+import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
@@ -148,6 +149,15 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("seasonRankingUpdateService"));
             assertEquals(SeasonRankingUpdateService.class, context.getType("seasonRankingUpdateService"));
             assertLazy(context.getBeanFactory(), "seasonRankingUpdateService");
+        }
+    }
+
+    @Test
+    void exposesProtectorConquerorServiceAsLazySpringBean() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("protectorConquerorService"));
+            assertEquals(ProtectorConquerorService.class, context.getType("protectorConquerorService"));
+            assertLazy(context.getBeanFactory(), "protectorConquerorService");
         }
     }
 
