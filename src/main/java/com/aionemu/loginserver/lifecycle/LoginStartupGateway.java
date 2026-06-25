@@ -23,11 +23,20 @@ import com.aionemu.loginserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 public class LoginStartupGateway {
+
+    private ObjectProvider<PlayerTransferService> playerTransferServiceProvider;
+
+    @Autowired(required = false)
+    void setPlayerTransferServiceProvider(ObjectProvider<PlayerTransferService> playerTransferServiceProvider) {
+        this.playerTransferServiceProvider = playerTransferServiceProvider;
+    }
 
     public void initializeLogger() {
         LoginServer.initializeLogger();
@@ -91,7 +100,7 @@ public class LoginStartupGateway {
     }
 
     public void initializePlayerTransferService() {
-        PlayerTransferService.getInstance();
+        playerTransferService();
     }
 
     public void initializeTaskManager() {
@@ -120,5 +129,12 @@ public class LoginStartupGateway {
 
     public long currentTimeMillis() {
         return System.currentTimeMillis();
+    }
+
+    private PlayerTransferService playerTransferService() {
+        if (playerTransferServiceProvider == null) {
+            return PlayerTransferService.getInstance();
+        }
+        return playerTransferServiceProvider.getIfAvailable(PlayerTransferService::getInstance);
     }
 }

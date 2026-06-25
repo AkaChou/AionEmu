@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class LoginStartupSequenceLifecycleTest {
 
@@ -150,9 +151,18 @@ class LoginStartupSequenceLifecycleTest {
         assertEquals(LoginStartupGateway.class, fieldType("startupGateway"));
     }
 
+    @Test
+    void startupGatewayBridgesPlayerTransferServiceThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(LoginStartupGateway.class, "playerTransferServiceProvider"));
+    }
+
     private static Class<?> fieldType(String name) {
+        return fieldType(LoginStartupSequenceLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            return LoginStartupSequenceLifecycle.class.getDeclaredField(name).getType();
+            return type.getDeclaredField(name).getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
         }
