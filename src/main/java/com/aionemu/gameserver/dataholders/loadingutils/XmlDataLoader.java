@@ -86,8 +86,8 @@ public class XmlDataLoader {
 
 		try {
 			long unmarshalStart = System.currentTimeMillis();
-			int totalSections = staticDataSectionCount();
 			Map<String, Integer> sectionEntryCounts = staticDataSectionEntryCounts(cachedXml);
+			int totalSections = sectionEntryCounts.size();
 			progressReporter.start(totalSections);
 			log.info("Unmarshalling static data from {}", cachedXml.getPath());
 			JAXBContext jc = JAXBContext.newInstance(StaticData.class);

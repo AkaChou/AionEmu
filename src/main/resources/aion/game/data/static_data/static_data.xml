@@ -140,9 +140,6 @@
 	<import file="locations/windstreams/windstreams.xml"/>
 	<import file="cosmetic_items/cosmetic_items.xml"/>
 	<import file="npc_shouts/npc_shouts.xml"/>
-	<npc_drops>
-		<import file="npc_drops" skipRoot="true"/>
-	</npc_drops>
 	<import file="auto_group/auto_group.xml"/>
 	<events_config>
 		<import file="events_config/events_config.xml" skipRoot="true"/>

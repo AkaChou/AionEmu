@@ -25,6 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.ai2.AiNames;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
@@ -247,7 +248,10 @@ public class NpcTemplate extends VisibleObjectTemplate {
 	}
 
 	public NpcDrop getNpcDrop() {
-		return npcDrop;
+		if (npcDrop != null) {
+			return npcDrop;
+		}
+		return DataManager.NPC_DROP_DATA == null ? null : DataManager.NPC_DROP_DATA.getDrop(npcId);
 	}
 
 	public void setNpcDrop(NpcDrop npcDrop) {

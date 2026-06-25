@@ -355,7 +355,11 @@ public class StaticData {
 		DataManager.log.info("Loaded " + windstreamsData.size() + " Windstream");
 		DataManager.log.info("Loaded " + assembledNpcData.size() + " Assembled Npc");
 		DataManager.log.info("Loaded " + cosmeticItemsData.size() + " Cosmetics Item");
-		DataManager.log.info("Loaded " + npcDropData.size() + " Npc Drop");
+		if (npcDropData != null) {
+			DataManager.log.info("Loaded " + npcDropData.size() + " Npc Drop");
+		} else {
+			DataManager.log.info("Loaded Npc Drop lazy index");
+		}
 		DataManager.log.info("Loaded " + autoGroupData.size() + " Auto Group");
 		DataManager.log.info("Loaded " + spawnsData2.size() + " Spawn Map");
 		DataManager.log.info("Loaded " + eventData.size() + " Event");
