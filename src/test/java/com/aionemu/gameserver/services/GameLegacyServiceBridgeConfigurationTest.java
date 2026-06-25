@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -98,6 +99,24 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "playerLimitService");
             assertLazy(context.getBeanFactory(), "npcShoutsService");
             assertLazy(context.getBeanFactory(), "shieldService");
+        }
+    }
+
+    @Test
+    void exposesHousingServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("housingBidService"));
+            assertTrue(context.containsBeanDefinition("maintenanceTask"));
+            assertTrue(context.containsBeanDefinition("townService"));
+            assertTrue(context.containsBeanDefinition("challengeTaskService"));
+            assertEquals(HousingBidService.class, context.getType("housingBidService"));
+            assertEquals(MaintenanceTask.class, context.getType("maintenanceTask"));
+            assertEquals(TownService.class, context.getType("townService"));
+            assertEquals(ChallengeTaskService.class, context.getType("challengeTaskService"));
+            assertLazy(context.getBeanFactory(), "housingBidService");
+            assertLazy(context.getBeanFactory(), "maintenanceTask");
+            assertLazy(context.getBeanFactory(), "townService");
+            assertLazy(context.getBeanFactory(), "challengeTaskService");
         }
     }
 

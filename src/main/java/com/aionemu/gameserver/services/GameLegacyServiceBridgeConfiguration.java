@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ShutdownHook;
+import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.BGService;
@@ -113,6 +114,30 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public ShieldService shieldService() {
         return ShieldService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public HousingBidService housingBidService() {
+        return HousingBidService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public MaintenanceTask maintenanceTask() {
+        return MaintenanceTask.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public TownService townService() {
+        return TownService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ChallengeTaskService challengeTaskService() {
+        return ChallengeTaskService.getInstance();
     }
 
     @Bean
