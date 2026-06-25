@@ -15,6 +15,15 @@ import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
+import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
+import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
+import com.aionemu.gameserver.services.instance.HallOfTenacityService;
+import com.aionemu.gameserver.services.instance.IDRunService;
+import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
+import com.aionemu.gameserver.services.instance.IdgelDomeService;
+import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
+import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
+import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
@@ -117,6 +126,39 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "maintenanceTask");
             assertLazy(context.getBeanFactory(), "townService");
             assertLazy(context.getBeanFactory(), "challengeTaskService");
+        }
+    }
+
+    @Test
+    void exposesBattlefieldServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("kamarBattlefieldService"));
+            assertTrue(context.containsBeanDefinition("engulfedOphidanBridgeService"));
+            assertTrue(context.containsBeanDefinition("suspiciousOphidanBridgeService"));
+            assertTrue(context.containsBeanDefinition("ironWallWarfrontService"));
+            assertTrue(context.containsBeanDefinition("idgelDomeService"));
+            assertTrue(context.containsBeanDefinition("idgelDomeLandmarkService"));
+            assertTrue(context.containsBeanDefinition("hallOfTenacityService"));
+            assertTrue(context.containsBeanDefinition("grandArenaTrainingCampService"));
+            assertTrue(context.containsBeanDefinition("idRunService"));
+            assertEquals(KamarBattlefieldService.class, context.getType("kamarBattlefieldService"));
+            assertEquals(EngulfedOphidanBridgeService.class, context.getType("engulfedOphidanBridgeService"));
+            assertEquals(SuspiciousOphidanBridgeService.class, context.getType("suspiciousOphidanBridgeService"));
+            assertEquals(IronWallWarfrontService.class, context.getType("ironWallWarfrontService"));
+            assertEquals(IdgelDomeService.class, context.getType("idgelDomeService"));
+            assertEquals(IdgelDomeLandmarkService.class, context.getType("idgelDomeLandmarkService"));
+            assertEquals(HallOfTenacityService.class, context.getType("hallOfTenacityService"));
+            assertEquals(GrandArenaTrainingCampService.class, context.getType("grandArenaTrainingCampService"));
+            assertEquals(IDRunService.class, context.getType("idRunService"));
+            assertLazy(context.getBeanFactory(), "kamarBattlefieldService");
+            assertLazy(context.getBeanFactory(), "engulfedOphidanBridgeService");
+            assertLazy(context.getBeanFactory(), "suspiciousOphidanBridgeService");
+            assertLazy(context.getBeanFactory(), "ironWallWarfrontService");
+            assertLazy(context.getBeanFactory(), "idgelDomeService");
+            assertLazy(context.getBeanFactory(), "idgelDomeLandmarkService");
+            assertLazy(context.getBeanFactory(), "hallOfTenacityService");
+            assertLazy(context.getBeanFactory(), "grandArenaTrainingCampService");
+            assertLazy(context.getBeanFactory(), "idRunService");
         }
     }
 

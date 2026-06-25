@@ -13,6 +13,15 @@ import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
+import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
+import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
+import com.aionemu.gameserver.services.instance.HallOfTenacityService;
+import com.aionemu.gameserver.services.instance.IDRunService;
+import com.aionemu.gameserver.services.instance.IdgelDomeLandmarkService;
+import com.aionemu.gameserver.services.instance.IdgelDomeService;
+import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
+import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
+import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
@@ -138,6 +147,60 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public ChallengeTaskService challengeTaskService() {
         return ChallengeTaskService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public KamarBattlefieldService kamarBattlefieldService() {
+        return KamarBattlefieldService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
+        return EngulfedOphidanBridgeService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
+        return SuspiciousOphidanBridgeService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public IronWallWarfrontService ironWallWarfrontService() {
+        return IronWallWarfrontService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public IdgelDomeService idgelDomeService() {
+        return IdgelDomeService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public IdgelDomeLandmarkService idgelDomeLandmarkService() {
+        return IdgelDomeLandmarkService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public HallOfTenacityService hallOfTenacityService() {
+        return HallOfTenacityService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public GrandArenaTrainingCampService grandArenaTrainingCampService() {
+        return GrandArenaTrainingCampService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public IDRunService idRunService() {
+        return IDRunService.getInstance();
     }
 
     @Bean

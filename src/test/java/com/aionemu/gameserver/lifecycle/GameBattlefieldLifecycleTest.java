@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameBattlefieldLifecycleTest {
 
@@ -30,6 +31,19 @@ class GameBattlefieldLifecycleTest {
     @Test
     void usesBattlefieldGatewayCollaborator() {
         assertEquals(GameBattlefieldGateway.class, fieldType("battlefieldGateway"));
+    }
+
+    @Test
+    void battlefieldGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "kamarBattlefieldServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "engulfedOphidanBridgeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "suspiciousOphidanBridgeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "ironWallWarfrontServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idgelDomeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idgelDomeLandmarkServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "hallOfTenacityServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "grandArenaTrainingCampServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameBattlefieldGateway.class, "idRunServiceProvider"));
     }
 
     @Test
@@ -105,6 +119,15 @@ class GameBattlefieldLifecycleTest {
     private static Class<?> fieldType(String name) {
         try {
             Field field = GameBattlefieldLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
+        try {
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
