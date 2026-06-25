@@ -1,5 +1,6 @@
 package com.aionemu.chatserver.service;
 
+import com.aionemu.chatserver.ChatProcessRuntimeBridge;
 import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
@@ -15,14 +16,18 @@ final class ChatRestartRequest {
     }
 
     static void requestRestart() {
+        requestRestart(new ChatProcessRuntimeBridge());
+    }
+
+    static void requestRestart(ChatProcessRuntimeBridge processBridge) {
         ShutdownHook.setRestartOnly(true);
         if (!AionRuntimeMode.isBootEmbedded()) {
-            ShutdownHook.getInstance().start();
+            processBridge.shutdownHook().start();
             return;
         }
         if (!AionEmbeddedShutdownHandler.requestShutdown(AionEmbeddedShutdownMode.RESTART)) {
             log.warn("Embedded shutdown handler is not registered; stopping ChatServer directly.");
-            ShutdownHook.getInstance().shutdown(false);
+            processBridge.shutdown(false);
         }
     }
 }
