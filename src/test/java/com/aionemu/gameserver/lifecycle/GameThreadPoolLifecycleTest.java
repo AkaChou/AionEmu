@@ -7,12 +7,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameThreadPoolLifecycleTest {
 
     @Test
     void usesThreadPoolGatewayCollaborator() {
         assertEquals(GameThreadPoolGateway.class, fieldType("threadPoolGateway"));
+    }
+
+    @Test
+    void threadPoolGatewayBridgesLegacyManagerThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameThreadPoolGateway.class, "threadPoolManagerProvider"));
+    }
+
+    @Test
+    void threadPoolGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameThreadPoolGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -48,6 +59,15 @@ class GameThreadPoolLifecycleTest {
     private static Class<?> fieldType(String name) {
         try {
             Field field = GameThreadPoolLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
+        try {
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

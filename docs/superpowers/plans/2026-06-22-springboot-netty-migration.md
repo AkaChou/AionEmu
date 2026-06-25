@@ -19,7 +19,7 @@
 ## Current File Structure
 
 - `pom.xml`: single Maven module for the combined application.
-- `src/main/java/com/aionemu/boot/AionBootApplication.java`: only Spring Boot process entrypoint.
+- `src/main/java/com/aionemu/AionBootApplication.java`: only Spring Boot process entrypoint.
 - `src/main/java/com/aionemu/boot/config/AionServicesProperties.java`: binds `aion.services.*`.
 - `src/main/java/com/aionemu/boot/lifecycle/*ServiceLifecycle.java`: login, chat, and game lifecycle wrappers.
 - `src/main/java/com/aionemu/boot/transport/*`: boot-managed transport boundary.
@@ -64,6 +64,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Removed standalone production `main` entrypoints outside `AionBootApplication`.
 - [x] Added boot-managed lifecycle ordering: login phase 100, chat phase 200, game phase 300.
 - [x] Made chat disabled by default and configurable.
+- [x] Guarded chat runtime and Spring configuration beans so chat internals only load when `aion.services.chat.enabled=true`.
 - [x] Made Netty the default transport mode with explicit `legacy-nio` fallback.
 - [x] Migrated the chat client acceptor to a Netty 4 adapter while preserving the existing chat packet handlers.
 - [x] Shared boot-managed Netty 4 event loops across migrated service endpoints.
@@ -119,9 +120,13 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=NetConnectorTest,DAOManagerTest,AionServiceLauncherTest test`
   - Result: 11 tests, 0 failures, 0 errors.
 - `rtk rg -n "public static void main\\(|static void main\\(" src/main/java src/test/java`
-  - Result: only `src/main/java/com/aionemu/boot/AionBootApplication.java` remains in production source.
+  - Result: only `src/main/java/com/aionemu/AionBootApplication.java` remains in production source.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionBootApplicationTest,AionServicesPropertiesTest,AionServiceLauncherTest,AionTransportBoundaryTest test`
   - Result: 13 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionBootApplicationTest,AionServicesPropertiesTest test`
+  - Result: 11 tests, 0 failures, 0 errors.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=ChatServiceLifecycleTest,AionBootApplicationTest,AionServicesPropertiesTest test`
+  - Result: 14 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=LoginTaskShutdownHandlerTest,ChatRestartRequestTest,ShutdownHookTest,AionServiceLauncherTest,GameServerAuthFailureTest test`
   - Result: 13 tests, 0 failures, 0 errors.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -Dtest=AionEmbeddedShutdownHandlerTest,AionServiceLauncherTest,ShutdownHookTest,LoginTaskShutdownHandlerTest,ChatRestartRequestTest test`

@@ -11,12 +11,23 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameWorldActivationLifecycleTest {
 
     @Test
     void usesWorldActivationGatewayCollaborator() {
         assertEquals(GameWorldActivationGateway.class, fieldType("worldActivationGateway"));
+    }
+
+    @Test
+    void worldActivationGatewayBridgesDropRegistrationThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameWorldActivationGateway.class, "dropRegistrationServiceProvider"));
+    }
+
+    @Test
+    void worldActivationGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameWorldActivationGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -68,6 +79,15 @@ class GameWorldActivationLifecycleTest {
     private static Class<?> fieldType(String name) {
         try {
             Field field = GameWorldActivationLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
+        try {
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

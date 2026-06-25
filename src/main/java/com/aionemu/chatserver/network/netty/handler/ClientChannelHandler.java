@@ -39,7 +39,6 @@ import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.network.aion.AbstractClientPacket;
 import com.aionemu.chatserver.network.aion.AbstractServerPacket;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
-import com.google.inject.Inject;
 
 /**
  * @author ATracer
@@ -52,7 +51,6 @@ public class ClientChannelHandler extends AbstractChannelHandler {
     private ChatClient chatClient;
     private io.netty.channel.Channel nettyChannel;
 
-    @Inject
     public ClientChannelHandler(ClientPacketHandler clientPacketHandler) {
         this.clientPacketHandler = clientPacketHandler;
     }

@@ -34,15 +34,7 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.joran.spi.JoranException;
 
-import com.aionemu.chatserver.configs.Config;
-import com.aionemu.chatserver.network.netty.NettyServer;
-import com.aionemu.chatserver.service.BroadcastService;
-import com.aionemu.chatserver.service.ChatService;
-import com.aionemu.chatserver.service.GameServerService;
-import com.aionemu.chatserver.service.RestartService;
-import com.aionemu.chatserver.utils.IdFactory;
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
-import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import org.slf4j.Logger;
 
@@ -56,7 +48,7 @@ public class ChatServer {
      */
     private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
 
-    private static void initalizeLoggger() {
+    static void initializeLogger() {
         if (AionRuntimeMode.isBootEmbedded()) {
             return;
         }
@@ -105,22 +97,27 @@ public class ChatServer {
      * @param args startup arguments
      */
     public static void start(String[] args) {
-        long start = System.currentTimeMillis();
+        start(args, ChatServerDependencies.legacy());
+    }
 
-        initalizeLoggger();
+    static void start(String[] args, ChatServerDependencies dependencies) {
+        ChatServerStartupBridge startupBridge = dependencies.startupBridge();
+        long start = startupBridge.currentTimeMillis();
 
-        Config.load();
-        AEInfos.printAllInfos();
-        IdFactory.getInstance();
-        GameServerService.getInstance();
-        BroadcastService.getInstance();
-        ChatService.getInstance();
-        NettyServer.getInstance();
-        RestartService.getInstance();
+        startupBridge.initializeLogger();
 
-        if (!AionRuntimeMode.isBootEmbedded()) {
-            Runtime.getRuntime().addShutdownHook(ShutdownHook.getInstance());
+        startupBridge.loadConfig();
+        startupBridge.printInfos();
+        dependencies.idFactory();
+        dependencies.gameServerService();
+        dependencies.broadcastService();
+        dependencies.chatService();
+        dependencies.nettyServer();
+        dependencies.restartService();
+
+        if (!startupBridge.isBootEmbedded()) {
+            startupBridge.registerShutdownHook();
         }
-        log.info("AL Chat Server started in " + (System.currentTimeMillis() - start) / 1000 + " seconds.");
+        log.info("AL Chat Server started in " + (startupBridge.currentTimeMillis() - start) / 1000 + " seconds.");
     }
 }

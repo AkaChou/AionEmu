@@ -10,12 +10,24 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameGeoNavLifecycleTest {
 
     @Test
     void usesGeoNavGatewayCollaborator() {
         assertEquals(GameGeoNavGateway.class, fieldType("geoNavGateway"));
+    }
+
+    @Test
+    void geoNavGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameGeoNavGateway.class, "geoServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameGeoNavGateway.class, "navServiceProvider"));
+    }
+
+    @Test
+    void geoNavGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameGeoNavGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -54,8 +66,12 @@ class GameGeoNavLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameGeoNavLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameGeoNavLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

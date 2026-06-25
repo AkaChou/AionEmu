@@ -5,12 +5,20 @@ import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.toypet.MinionService;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameEventBootstrapGateway {
 
     private final StartupProgressReporter progressReporter;
+    private ObjectProvider<LunaShopService> lunaShopServiceProvider;
+    private ObjectProvider<MinionService> minionServiceProvider;
+    private ObjectProvider<ShugoSweepService> shugoSweepServiceProvider;
+    private ObjectProvider<AtreianPassportService> atreianPassportServiceProvider;
+    private ObjectProvider<EventWindowService> eventWindowServiceProvider;
+    private ObjectProvider<GameEventBootstrapRuntimeBridge> runtimeBridgeProvider;
 
     public GameEventBootstrapGateway() {
         this(ConsoleStartupProgressReporter.forCurrentConsole());
@@ -18,6 +26,36 @@ public class GameEventBootstrapGateway {
 
     GameEventBootstrapGateway(StartupProgressReporter progressReporter) {
         this.progressReporter = progressReporter;
+    }
+
+    @Autowired(required = false)
+    void setLunaShopServiceProvider(ObjectProvider<LunaShopService> lunaShopServiceProvider) {
+        this.lunaShopServiceProvider = lunaShopServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setMinionServiceProvider(ObjectProvider<MinionService> minionServiceProvider) {
+        this.minionServiceProvider = minionServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setShugoSweepServiceProvider(ObjectProvider<ShugoSweepService> shugoSweepServiceProvider) {
+        this.shugoSweepServiceProvider = shugoSweepServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setAtreianPassportServiceProvider(ObjectProvider<AtreianPassportService> atreianPassportServiceProvider) {
+        this.atreianPassportServiceProvider = atreianPassportServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setEventWindowServiceProvider(ObjectProvider<EventWindowService> eventWindowServiceProvider) {
+        this.eventWindowServiceProvider = eventWindowServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameEventBootstrapRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     public void bootstrap() {
@@ -37,23 +75,65 @@ public class GameEventBootstrapGateway {
     }
 
     protected void initializeLunaShopSystem() {
-        LunaShopService.getInstance().init();
+        lunaShopService().init();
     }
 
     protected void initializeMinionSystem() {
-        MinionService.getInstance().init();
+        minionService().init();
     }
 
     protected void initializeShugoSweepSystem() {
-        ShugoSweepService.getInstance().initShugoSweep();
+        shugoSweepService().initShugoSweep();
     }
 
     protected void initializeAtreianPassportSystem() {
-        AtreianPassportService.getInstance().onStart();
+        atreianPassportService().onStart();
     }
 
     protected void initializeEventWindowSystem() {
-        EventWindowService.getInstance().initialize();
+        eventWindowService().initialize();
+    }
+
+    private LunaShopService lunaShopService() {
+        if (lunaShopServiceProvider == null) {
+            return runtimeBridge().lunaShopService();
+        }
+        return lunaShopServiceProvider.getIfAvailable(() -> runtimeBridge().lunaShopService());
+    }
+
+    private MinionService minionService() {
+        if (minionServiceProvider == null) {
+            return runtimeBridge().minionService();
+        }
+        return minionServiceProvider.getIfAvailable(() -> runtimeBridge().minionService());
+    }
+
+    private ShugoSweepService shugoSweepService() {
+        if (shugoSweepServiceProvider == null) {
+            return runtimeBridge().shugoSweepService();
+        }
+        return shugoSweepServiceProvider.getIfAvailable(() -> runtimeBridge().shugoSweepService());
+    }
+
+    private AtreianPassportService atreianPassportService() {
+        if (atreianPassportServiceProvider == null) {
+            return runtimeBridge().atreianPassportService();
+        }
+        return atreianPassportServiceProvider.getIfAvailable(() -> runtimeBridge().atreianPassportService());
+    }
+
+    private EventWindowService eventWindowService() {
+        if (eventWindowServiceProvider == null) {
+            return runtimeBridge().eventWindowService();
+        }
+        return eventWindowServiceProvider.getIfAvailable(() -> runtimeBridge().eventWindowService());
+    }
+
+    private GameEventBootstrapRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameEventBootstrapRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameEventBootstrapRuntimeBridge::new);
     }
 
     private void loadStep(String stepName, Runnable loader) {

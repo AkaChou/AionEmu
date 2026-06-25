@@ -10,12 +10,22 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameHousingLifecycleTest {
 
     @Test
     void usesHousingGatewayCollaborator() {
         assertEquals(GameHousingGateway.class, fieldType("housingGateway"));
+    }
+
+    @Test
+    void housingGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "housingBidServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "maintenanceTaskProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "townServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "challengeTaskServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -67,6 +77,15 @@ class GameHousingLifecycleTest {
     private static Class<?> fieldType(String name) {
         try {
             Field field = GameHousingLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
+        try {
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

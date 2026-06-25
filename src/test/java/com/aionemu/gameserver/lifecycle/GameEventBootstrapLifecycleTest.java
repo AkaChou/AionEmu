@@ -10,12 +10,23 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameEventBootstrapLifecycleTest {
 
     @Test
     void usesEventBootstrapGatewayCollaborator() {
         assertEquals(GameEventBootstrapGateway.class, fieldType("eventBootstrapGateway"));
+    }
+
+    @Test
+    void eventBootstrapGatewayBridgesEventServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "lunaShopServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "minionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "shugoSweepServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "atreianPassportServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "eventWindowServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -65,8 +76,12 @@ class GameEventBootstrapLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameEventBootstrapLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameEventBootstrapLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

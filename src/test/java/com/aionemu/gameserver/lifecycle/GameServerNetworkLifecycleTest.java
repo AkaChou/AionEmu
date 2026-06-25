@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameServerNetworkLifecycleTest {
 
@@ -92,9 +93,21 @@ class GameServerNetworkLifecycleTest {
         assertEquals(GameServerNetworkGateway.class, fieldType("networkGateway"));
     }
 
+    @Test
+    void networkGatewayBridgesNetworkServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "bannedMacManagerProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "loginServerProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "chatServerProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameServerNetworkGateway.class, "runtimeBridgeProvider"));
+    }
+
     private static Class<?> fieldType(String name) {
+        return fieldType(GameServerNetworkLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            return GameServerNetworkLifecycle.class.getDeclaredField(name).getType();
+            return type.getDeclaredField(name).getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
         }

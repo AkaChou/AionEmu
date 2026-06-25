@@ -12,12 +12,24 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameDredgionLifecycleTest {
 
     @Test
     void usesDredgionGatewayCollaborator() {
         assertEquals(GameDredgionGateway.class, fieldType("dredgionGateway"));
+    }
+
+    @Test
+    void dredgionGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameDredgionGateway.class, "dredgionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameDredgionGateway.class, "asyunatarServiceProvider"));
+    }
+
+    @Test
+    void dredgionGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameDredgionGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -89,8 +101,12 @@ class GameDredgionLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameDredgionLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameDredgionLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

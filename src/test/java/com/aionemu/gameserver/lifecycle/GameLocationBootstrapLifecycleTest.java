@@ -10,12 +10,40 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameLocationBootstrapLifecycleTest {
 
     @Test
     void usesLocationBootstrapGatewayCollaborator() {
         assertEquals(GameLocationBootstrapGateway.class, fieldType("locationBootstrapGateway"));
+    }
+
+    @Test
+    void locationBootstrapGatewayBridgesLocationServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "siegeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "baseServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "outpostServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "vortexServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "beritraServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "agentServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "anohaServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "svsServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "rvrServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "iuServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "nightmareCircusServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "dynamicRiftServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "instanceRiftServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "zorshivDredgionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "moltenusServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "riftServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "conquestServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "idianDepthsServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "towerOfEternityServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "abyssLandingServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "landingUpdateServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "abyssLandingSpecialServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -54,8 +82,12 @@ class GameLocationBootstrapLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameLocationBootstrapLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameLocationBootstrapLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

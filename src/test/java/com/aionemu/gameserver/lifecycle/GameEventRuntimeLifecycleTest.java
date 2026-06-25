@@ -10,12 +10,23 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameEventRuntimeLifecycleTest {
 
     @Test
     void usesEventRuntimeGatewayCollaborator() {
         assertEquals(GameEventRuntimeGateway.class, fieldType("eventRuntimeGateway"));
+    }
+
+    @Test
+    void eventRuntimeGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "eventServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "playerEventServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "crazyDaevaServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "abyssRankUpdateServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "packetBroadcasterProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -126,8 +137,12 @@ class GameEventRuntimeLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameEventRuntimeLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameEventRuntimeLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

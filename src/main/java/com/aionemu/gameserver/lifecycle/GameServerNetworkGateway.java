@@ -9,14 +9,40 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.network.BannedMacManager;
-import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameServerNetworkGateway {
+
+    private ObjectProvider<BannedMacManager> bannedMacManagerProvider;
+    private ObjectProvider<LoginServer> loginServerProvider;
+    private ObjectProvider<ChatServer> chatServerProvider;
+    private ObjectProvider<GameServerNetworkRuntimeBridge> runtimeBridgeProvider;
+
+    @Autowired(required = false)
+    void setBannedMacManagerProvider(ObjectProvider<BannedMacManager> bannedMacManagerProvider) {
+        this.bannedMacManagerProvider = bannedMacManagerProvider;
+    }
+
+    @Autowired(required = false)
+    void setLoginServerProvider(ObjectProvider<LoginServer> loginServerProvider) {
+        this.loginServerProvider = loginServerProvider;
+    }
+
+    @Autowired(required = false)
+    void setChatServerProvider(ObjectProvider<ChatServer> chatServerProvider) {
+        this.chatServerProvider = chatServerProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameServerNetworkRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
 
     public boolean isNettyTransportEnabled() {
         return Boolean.getBoolean("aion.transport.netty");
@@ -31,27 +57,55 @@ public class GameServerNetworkGateway {
     }
 
     public ServerTransport createNettyTransport() {
-        return new NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
+        return new NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", runtimeBridge().gameConnectionFactory()));
     }
 
     public NioServer createNioServer() {
-        return new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
+        return new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", runtimeBridge().gameConnectionFactory()));
     }
 
     public void initializeBannedMacManager() {
-        BannedMacManager.getInstance();
+        bannedMacManager();
     }
 
     public GameServerNetworkLifecycle.NetworkPeer loginServer() {
-        return new LoginServerPeer(LoginServer.getInstance());
+        return new LoginServerPeer(loginServerInstance());
     }
 
     public GameServerNetworkLifecycle.NetworkPeer chatServer() {
-        return new ChatServerPeer(ChatServer.getInstance());
+        return new ChatServerPeer(chatServerInstance());
     }
 
     public long currentTimeMillis() {
         return System.currentTimeMillis();
+    }
+
+    private BannedMacManager bannedMacManager() {
+        if (bannedMacManagerProvider == null) {
+            return runtimeBridge().bannedMacManager();
+        }
+        return bannedMacManagerProvider.getIfAvailable(() -> runtimeBridge().bannedMacManager());
+    }
+
+    private LoginServer loginServerInstance() {
+        if (loginServerProvider == null) {
+            return runtimeBridge().loginServer();
+        }
+        return loginServerProvider.getIfAvailable(() -> runtimeBridge().loginServer());
+    }
+
+    private ChatServer chatServerInstance() {
+        if (chatServerProvider == null) {
+            return runtimeBridge().chatServer();
+        }
+        return chatServerProvider.getIfAvailable(() -> runtimeBridge().chatServer());
+    }
+
+    private GameServerNetworkRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameServerNetworkRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameServerNetworkRuntimeBridge::new);
     }
 
     @RequiredArgsConstructor

@@ -9,12 +9,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameWorldBootstrapLifecycleTest {
 
     @Test
     void usesWorldBootstrapGatewayCollaborator() {
         assertEquals(GameWorldBootstrapGateway.class, fieldType("worldBootstrapGateway"));
+    }
+
+    @Test
+    void worldBootstrapGatewayBridgesWorldServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "idFactoryProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "zoneServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "hotspotTeleportServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "roadServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "worldProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -70,8 +81,12 @@ class GameWorldBootstrapLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameWorldBootstrapLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            return GameWorldBootstrapLifecycle.class.getDeclaredField(name).getType();
+            return type.getDeclaredField(name).getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
         }

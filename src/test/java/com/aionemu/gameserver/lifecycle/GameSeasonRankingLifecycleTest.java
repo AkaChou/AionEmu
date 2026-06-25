@@ -10,12 +10,23 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameSeasonRankingLifecycleTest {
 
     @Test
     void usesSeasonRankingGatewayCollaborator() {
         assertEquals(GameSeasonRankingGateway.class, fieldType("seasonRankingGateway"));
+    }
+
+    @Test
+    void seasonRankingGatewayBridgesLegacyServiceThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameSeasonRankingGateway.class, "seasonRankingUpdateServiceProvider"));
+    }
+
+    @Test
+    void seasonRankingGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameSeasonRankingGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -56,8 +67,12 @@ class GameSeasonRankingLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameSeasonRankingLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameSeasonRankingLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

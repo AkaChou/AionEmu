@@ -10,12 +10,36 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameRuntimeServicesLifecycleTest {
 
     @Test
     void usesRuntimeServicesGatewayCollaborator() {
         assertEquals(GameRuntimeServicesGateway.class, fieldType("runtimeServicesGateway"));
+    }
+
+    @Test
+    void runtimeGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "adminServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "playerTransferServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "periodicSaveServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "territoryServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "gameTimeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "announcementServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "debugServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "weatherServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "brokerServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "influenceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "exchangeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "petitionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "flyRingServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "curingZoneServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "springZoneServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "boostEventServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "taskManagerFromDBProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "limitedItemTradeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "runtimeServiceBridgeProvider"));
     }
 
     @Test
@@ -103,8 +127,12 @@ class GameRuntimeServicesLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameRuntimeServicesLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameRuntimeServicesLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

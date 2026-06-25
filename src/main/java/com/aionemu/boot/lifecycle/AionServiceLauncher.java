@@ -45,9 +45,18 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     public AionServiceLauncher(
         AionServicesProperties services,
         AionTransportBoundary transportBoundary,
+        List<AionServiceLifecycle> serviceLifecycles,
+        AionProcessRuntimeBridge runtimeBridge
+    ) {
+        this(services, transportBoundary, serviceLifecycles, runtimeBridge::halt);
+    }
+
+    AionServiceLauncher(
+        AionServicesProperties services,
+        AionTransportBoundary transportBoundary,
         List<AionServiceLifecycle> serviceLifecycles
     ) {
-        this(services, transportBoundary, serviceLifecycles, Runtime.getRuntime()::halt);
+        this(services, transportBoundary, serviceLifecycles, new AionProcessRuntimeBridge()::halt);
     }
 
     AionServiceLauncher(

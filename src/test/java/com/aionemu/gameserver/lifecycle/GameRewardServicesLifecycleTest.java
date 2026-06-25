@@ -12,12 +12,25 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameRewardServicesLifecycleTest {
 
     @Test
     void usesRewardServicesGatewayCollaborator() {
         assertEquals(GameRewardServicesGateway.class, fieldType("rewardServicesGateway"));
+    }
+
+    @Test
+    void rewardGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "rewardServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "weddingServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "veteranRewardsServiceProvider"));
+    }
+
+    @Test
+    void rewardGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameRewardServicesGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -113,8 +126,12 @@ class GameRewardServicesLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameRewardServicesLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameRewardServicesLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

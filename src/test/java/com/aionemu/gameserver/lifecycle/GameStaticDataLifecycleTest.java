@@ -6,14 +6,26 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameStaticDataLifecycleTest {
 
     @Test
     void usesStaticDataGatewayCollaborator() {
         assertEquals(GameStaticDataGateway.class, fieldType("staticDataGateway"));
+    }
+
+    @Test
+    void staticDataGatewayBridgesLegacyDataManagerThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameStaticDataGateway.class, "dataManagerProvider"));
+    }
+
+    @Test
+    void staticDataGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameStaticDataGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -68,8 +80,13 @@ class GameStaticDataLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameStaticDataLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            return GameStaticDataLifecycle.class.getDeclaredField(name).getType();
+            Field field = type.getDeclaredField(name);
+            return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
         }

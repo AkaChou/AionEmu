@@ -10,12 +10,23 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameScheduledServicesLifecycleTest {
 
     @Test
     void usesScheduledServicesGatewayCollaborator() {
         assertEquals(GameScheduledServicesGateway.class, fieldType("scheduledServicesGateway"));
+    }
+
+    @Test
+    void scheduledServicesGatewayBridgesImperialTombThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameScheduledServicesGateway.class, "shugoImperialTombSpawnManagerProvider"));
+    }
+
+    @Test
+    void scheduledServicesGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameScheduledServicesGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
@@ -87,8 +98,12 @@ class GameScheduledServicesLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameScheduledServicesLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameScheduledServicesLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

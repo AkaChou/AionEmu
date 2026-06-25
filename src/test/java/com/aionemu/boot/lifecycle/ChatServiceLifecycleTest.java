@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.chatserver.ChatServerRuntime;
+import com.aionemu.chatserver.ChatServerStartupBridge;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.DefaultApplicationArguments;
 
 class ChatServiceLifecycleTest {
@@ -28,6 +32,9 @@ class ChatServiceLifecycleTest {
         assertEquals(ChatServerLifecycleGateway.class, fieldType("chatServerLifecycleGateway"));
         assertEquals(null, findFieldType("startAction"));
         assertEquals(null, findFieldType("stopAction"));
+        assertEquals(ObjectProvider.class, fieldType(ChatServerLifecycleGateway.class, "chatServerRuntimeProvider"));
+        assertEquals(ObjectProvider.class, fieldType(ChatServerLifecycleGateway.class, "runtimeBridgeProvider"));
+        assertEquals(null, findFieldType(ChatServerLifecycleGateway.class, "chatServerRuntime"));
     }
 
     @Test
@@ -70,6 +77,62 @@ class ChatServiceLifecycleTest {
         assertEquals(List.of("start:1", "stop"), events);
     }
 
+    @Test
+    void chatGatewayUsesRuntimeProviderWhenAvailableAndShutdownBridge() {
+        List<String> events = new ArrayList<>();
+        ChatServerLifecycleGateway gateway = new ChatServerLifecycleGateway();
+        gateway.setChatServerRuntimeProvider(provider(
+            ChatServerRuntime.class,
+            new RecordingChatServerRuntime(events)
+        ));
+        gateway.setRuntimeBridgeProvider(provider(
+            ChatServerRuntimeBridge.class,
+            new RecordingChatServerRuntimeBridge(events)
+        ));
+
+        gateway.start(new String[] {"--chat=true"});
+        gateway.stop();
+
+        assertEquals(List.of("runtime:start:1", "shutdown:false"), events);
+    }
+
+    @Test
+    void chatGatewayUsesRuntimeBridgeWhenChatRuntimeBeanIsUnavailable() {
+        List<String> events = new ArrayList<>();
+        ChatServerLifecycleGateway gateway = new ChatServerLifecycleGateway();
+        gateway.setChatServerRuntimeProvider(emptyProvider(ChatServerRuntime.class));
+        gateway.setRuntimeBridgeProvider(provider(
+            ChatServerRuntimeBridge.class,
+            new RecordingChatServerRuntimeBridge(events)
+        ));
+
+        gateway.start(new String[] {"--chat=true"});
+        gateway.stop();
+
+        assertEquals(List.of("bridge:start:1", "shutdown:false"), events);
+    }
+
+    @Test
+    void chatRuntimeUsesStartupBridgeProvider() {
+        List<String> events = new ArrayList<>();
+        ChatServerRuntime runtime = new ChatServerRuntime(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            provider(ChatServerStartupBridge.class, new RecordingChatServerStartupBridge(events))
+        );
+
+        runtime.startupBridge().initializeLogger();
+        runtime.startupBridge().loadConfig();
+        runtime.startupBridge().printInfos();
+        runtime.startupBridge().registerShutdownHook();
+
+        assertEquals(List.of("logger:init", "config:load", "infos:print", "shutdownHook"), events);
+    }
+
     private static final class RecordingChatServerLifecycleGateway extends ChatServerLifecycleGateway {
 
         private final List<String> events;
@@ -94,20 +157,101 @@ class ChatServiceLifecycleTest {
         }
     }
 
+    private static final class RecordingChatServerRuntime extends ChatServerRuntime {
+
+        private final List<String> events;
+
+        private RecordingChatServerRuntime(List<String> events) {
+            super(null, null, null, null, null, null, null);
+            this.events = events;
+        }
+
+        @Override
+        public void start(String[] args) {
+            events.add("runtime:start:" + args.length);
+        }
+    }
+
+    private static final class RecordingChatServerStartupBridge extends ChatServerStartupBridge {
+
+        private final List<String> events;
+
+        private RecordingChatServerStartupBridge(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void initializeLogger() {
+            events.add("logger:init");
+        }
+
+        @Override
+        public void loadConfig() {
+            events.add("config:load");
+        }
+
+        @Override
+        public void printInfos() {
+            events.add("infos:print");
+        }
+
+        @Override
+        public void registerShutdownHook() {
+            events.add("shutdownHook");
+        }
+    }
+
+    private static final class RecordingChatServerRuntimeBridge extends ChatServerRuntimeBridge {
+
+        private final List<String> events;
+
+        private RecordingChatServerRuntimeBridge(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void start(String[] args) {
+            events.add("bridge:start:" + args.length);
+        }
+
+        @Override
+        public void shutdown(boolean restart) {
+            events.add("shutdown:" + restart);
+        }
+    }
+
     private static Class<?> fieldType(String name) {
+        return fieldType(ChatServiceLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            return ChatServiceLifecycle.class.getDeclaredField(name).getType();
+            return type.getDeclaredField(name).getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
         }
     }
 
     private static Class<?> findFieldType(String name) {
+        return findFieldType(ChatServiceLifecycle.class, name);
+    }
+
+    private static Class<?> findFieldType(Class<?> type, String name) {
         try {
-            Field field = ChatServiceLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             return null;
         }
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
+    }
+
+    private static <T> ObjectProvider<T> emptyProvider(Class<T> type) {
+        return new DefaultListableBeanFactory().getBeanProvider(type);
     }
 }
