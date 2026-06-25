@@ -9,9 +9,11 @@ import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
 import com.aionemu.boot.lifecycle.AionServiceLauncher;
 import com.aionemu.boot.lifecycle.ChatServerLifecycleGateway;
+import com.aionemu.boot.lifecycle.ChatServerRuntimeBridge;
 import com.aionemu.boot.lifecycle.ChatServiceLifecycle;
 import com.aionemu.boot.lifecycle.GameServiceLifecycle;
 import com.aionemu.boot.lifecycle.LoginServerLifecycleGateway;
+import com.aionemu.boot.lifecycle.LoginServerRuntimeBridge;
 import com.aionemu.boot.lifecycle.LoginServiceLifecycle;
 import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.boot.transport.LegacyNioTransportLifecycle;
@@ -171,6 +173,16 @@ class AionBootApplicationTest {
             assertEquals(GameRuntimeServiceBridge.class, context.getType("gameRuntimeServiceBridge"));
             assertLazy(context.getBeanFactory(), "adminService");
             assertLazy(context.getBeanFactory(), "gameRuntimeServiceBridge");
+        }
+    }
+
+    @Test
+    void bootApplicationScansServerRuntimeBridgeBeansLazily() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
+            assertEquals(LoginServerRuntimeBridge.class, context.getType("loginServerRuntimeBridge"));
+            assertEquals(ChatServerRuntimeBridge.class, context.getType("chatServerRuntimeBridge"));
+            assertLazy(context.getBeanFactory(), "loginServerRuntimeBridge");
+            assertLazy(context.getBeanFactory(), "chatServerRuntimeBridge");
         }
     }
 
