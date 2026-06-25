@@ -10,10 +10,16 @@ import org.springframework.stereotype.Component;
 public class GameSeasonRankingGateway {
 
     private ObjectProvider<SeasonRankingUpdateService> seasonRankingUpdateServiceProvider;
+    private ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setSeasonRankingUpdateServiceProvider(ObjectProvider<SeasonRankingUpdateService> seasonRankingUpdateServiceProvider) {
         this.seasonRankingUpdateServiceProvider = seasonRankingUpdateServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     public void start() {
@@ -23,8 +29,15 @@ public class GameSeasonRankingGateway {
 
     private SeasonRankingUpdateService seasonRankingUpdateService() {
         if (seasonRankingUpdateServiceProvider == null) {
-            return SeasonRankingUpdateService.getInstance();
+            return runtimeBridge().seasonRankingUpdateService();
         }
-        return seasonRankingUpdateServiceProvider.getIfAvailable(SeasonRankingUpdateService::getInstance);
+        return seasonRankingUpdateServiceProvider.getIfAvailable(() -> runtimeBridge().seasonRankingUpdateService());
+    }
+
+    private GameMaintenanceServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameMaintenanceServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameMaintenanceServicesRuntimeBridge::new);
     }
 }

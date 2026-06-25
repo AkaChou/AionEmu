@@ -25,6 +25,11 @@ class GameSeasonRankingLifecycleTest {
     }
 
     @Test
+    void seasonRankingGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameSeasonRankingGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameSeasonRankingLifecycle lifecycle = new GameSeasonRankingLifecycle(

@@ -1,8 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.configs.main.EventsConfig;
-import com.aionemu.gameserver.services.events.PigPoppyEventService;
-import com.aionemu.gameserver.services.events.TreasureAbyssService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
@@ -13,29 +10,43 @@ import org.springframework.stereotype.Component;
 public class GameScheduledServicesGateway {
 
     private ObjectProvider<ShugoImperialTombSpawnManager> shugoImperialTombSpawnManagerProvider;
+    private ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setShugoImperialTombSpawnManagerProvider(ObjectProvider<ShugoImperialTombSpawnManager> shugoImperialTombSpawnManagerProvider) {
         this.shugoImperialTombSpawnManagerProvider = shugoImperialTombSpawnManagerProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void start() {
         Util.printSection(" *** Scheduled Services *** ");
-        if (EventsConfig.ENABLE_PIG_POPPY_EVENT) {
-            PigPoppyEventService.ScheduleCron();
+        GameMaintenanceServicesRuntimeBridge runtimeBridge = runtimeBridge();
+        if (runtimeBridge.isPigPoppyEventEnabled()) {
+            runtimeBridge.schedulePigPoppyEvent();
         }
-        if (EventsConfig.ENABLE_ABYSS_EVENT) {
-            TreasureAbyssService.ScheduleCron();
+        if (runtimeBridge.isAbyssEventEnabled()) {
+            runtimeBridge.scheduleAbyssEvent();
         }
-        if (EventsConfig.IMPERIAL_TOMB_ENABLE) {
-            shugoImperialTombSpawnManager().start();
+        if (runtimeBridge.isImperialTombEnabled()) {
+            shugoImperialTombSpawnManager(runtimeBridge).start();
         }
     }
 
-    private ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
+    private ShugoImperialTombSpawnManager shugoImperialTombSpawnManager(GameMaintenanceServicesRuntimeBridge runtimeBridge) {
         if (shugoImperialTombSpawnManagerProvider == null) {
-            return ShugoImperialTombSpawnManager.getInstance();
+            return runtimeBridge.shugoImperialTombSpawnManager();
         }
-        return shugoImperialTombSpawnManagerProvider.getIfAvailable(ShugoImperialTombSpawnManager::getInstance);
+        return shugoImperialTombSpawnManagerProvider.getIfAvailable(runtimeBridge::shugoImperialTombSpawnManager);
+    }
+
+    private GameMaintenanceServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameMaintenanceServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameMaintenanceServicesRuntimeBridge::new);
     }
 }

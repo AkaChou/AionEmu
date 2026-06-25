@@ -26,6 +26,11 @@ class GameCleaningLifecycleTest {
     }
 
     @Test
+    void cleaningGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameCleaningGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsCleanersOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameCleaningLifecycle lifecycle = new GameCleaningLifecycle(

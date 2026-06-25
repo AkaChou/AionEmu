@@ -11,6 +11,7 @@ public class GameCleaningGateway {
 
     private ObjectProvider<DatabaseCleaningService> databaseCleaningServiceProvider;
     private ObjectProvider<AbyssRankCleaningService> abyssRankCleaningServiceProvider;
+    private ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setDatabaseCleaningServiceProvider(ObjectProvider<DatabaseCleaningService> databaseCleaningServiceProvider) {
@@ -22,6 +23,11 @@ public class GameCleaningGateway {
         this.abyssRankCleaningServiceProvider = abyssRankCleaningServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameMaintenanceServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void clean() {
         databaseCleaningService();
         abyssRankCleaningService();
@@ -29,15 +35,22 @@ public class GameCleaningGateway {
 
     private DatabaseCleaningService databaseCleaningService() {
         if (databaseCleaningServiceProvider == null) {
-            return DatabaseCleaningService.getInstance();
+            return runtimeBridge().databaseCleaningService();
         }
-        return databaseCleaningServiceProvider.getIfAvailable(DatabaseCleaningService::getInstance);
+        return databaseCleaningServiceProvider.getIfAvailable(() -> runtimeBridge().databaseCleaningService());
     }
 
     private AbyssRankCleaningService abyssRankCleaningService() {
         if (abyssRankCleaningServiceProvider == null) {
-            return AbyssRankCleaningService.getInstance();
+            return runtimeBridge().abyssRankCleaningService();
         }
-        return abyssRankCleaningServiceProvider.getIfAvailable(AbyssRankCleaningService::getInstance);
+        return abyssRankCleaningServiceProvider.getIfAvailable(() -> runtimeBridge().abyssRankCleaningService());
+    }
+
+    private GameMaintenanceServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameMaintenanceServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameMaintenanceServicesRuntimeBridge::new);
     }
 }

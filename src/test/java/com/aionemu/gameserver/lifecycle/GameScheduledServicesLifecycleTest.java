@@ -25,6 +25,11 @@ class GameScheduledServicesLifecycleTest {
     }
 
     @Test
+    void scheduledServicesGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameScheduledServicesGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsEnabledSchedulersOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameScheduledServicesLifecycle lifecycle = newLifecycle(events, true, true, true);
