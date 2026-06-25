@@ -8,6 +8,8 @@ import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.nav.NavService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -85,5 +87,17 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public AbyssRankCleaningService abyssRankCleaningService() {
         return AbyssRankCleaningService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public GeoService geoService() {
+        return GeoService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public NavService navService() {
+        return NavService.getInstance();
     }
 }

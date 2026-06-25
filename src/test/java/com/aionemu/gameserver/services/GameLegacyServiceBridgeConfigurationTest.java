@@ -11,6 +11,8 @@ import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.nav.NavService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -74,6 +76,18 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(AbyssRankCleaningService.class, context.getType("abyssRankCleaningService"));
             assertLazy(context.getBeanFactory(), "databaseCleaningService");
             assertLazy(context.getBeanFactory(), "abyssRankCleaningService");
+        }
+    }
+
+    @Test
+    void exposesGeoNavServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("geoService"));
+            assertTrue(context.containsBeanDefinition("navService"));
+            assertEquals(GeoService.class, context.getType("geoService"));
+            assertEquals(NavService.class, context.getType("navService"));
+            assertLazy(context.getBeanFactory(), "geoService");
+            assertLazy(context.getBeanFactory(), "navService");
         }
     }
 
