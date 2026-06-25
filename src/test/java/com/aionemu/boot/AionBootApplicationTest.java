@@ -61,6 +61,7 @@ import com.aionemu.gameserver.lifecycle.GameHtmlGateway;
 import com.aionemu.gameserver.lifecycle.GameHtmlLifecycle;
 import com.aionemu.gameserver.lifecycle.GameHousingGateway;
 import com.aionemu.gameserver.lifecycle.GameHousingLifecycle;
+import com.aionemu.gameserver.lifecycle.GameHousingRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameLoggingGateway;
@@ -200,6 +201,7 @@ class AionBootApplicationTest {
             assertEquals(GameWorldBootstrapRuntimeBridge.class, context.getType("gameWorldBootstrapRuntimeBridge"));
             assertEquals(GameEventBootstrapRuntimeBridge.class, context.getType("gameEventBootstrapRuntimeBridge"));
             assertEquals(GameFeatureServicesRuntimeBridge.class, context.getType("gameFeatureServicesRuntimeBridge"));
+            assertEquals(GameHousingRuntimeBridge.class, context.getType("gameHousingRuntimeBridge"));
             assertEquals(GameEventRuntimeBridge.class, context.getType("gameEventRuntimeBridge"));
             assertEquals(GameEnginesRuntimeBridge.class, context.getType("gameEnginesRuntimeBridge"));
             assertEquals(GameUtilityServicesRuntimeBridge.class, context.getType("gameUtilityServicesRuntimeBridge"));
@@ -212,6 +214,7 @@ class AionBootApplicationTest {
             assertLazy(context.getBeanFactory(), "gameWorldBootstrapRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameEventBootstrapRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameFeatureServicesRuntimeBridge");
+            assertLazy(context.getBeanFactory(), "gameHousingRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameEventRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameEnginesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameUtilityServicesRuntimeBridge");
@@ -328,6 +331,7 @@ class AionBootApplicationTest {
             context.registerBean(GameWorldBootstrapRuntimeBridge.class);
             context.registerBean(GameEventBootstrapRuntimeBridge.class);
             context.registerBean(GameFeatureServicesRuntimeBridge.class);
+            context.registerBean(GameHousingRuntimeBridge.class);
             context.registerBean(GameEventRuntimeBridge.class);
             context.registerBean(GameEnginesRuntimeBridge.class);
             context.registerBean(GameLoggingGateway.class);

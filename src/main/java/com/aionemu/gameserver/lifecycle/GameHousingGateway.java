@@ -4,7 +4,6 @@ import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.services.ChallengeTaskService;
 import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.TownService;
-import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +15,7 @@ public class GameHousingGateway {
     private ObjectProvider<MaintenanceTask> maintenanceTaskProvider;
     private ObjectProvider<TownService> townServiceProvider;
     private ObjectProvider<ChallengeTaskService> challengeTaskServiceProvider;
+    private ObjectProvider<GameHousingRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setHousingBidServiceProvider(ObjectProvider<HousingBidService> housingBidServiceProvider) {
@@ -37,8 +37,13 @@ public class GameHousingGateway {
         this.challengeTaskServiceProvider = challengeTaskServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameHousingRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void start() {
-        Util.printSection(" *** Housing *** ");
+        runtimeBridge().printHousingSection();
         housingBidService().start();
         maintenanceTask();
         townService();
@@ -47,29 +52,36 @@ public class GameHousingGateway {
 
     private HousingBidService housingBidService() {
         if (housingBidServiceProvider == null) {
-            return HousingBidService.getInstance();
+            return runtimeBridge().housingBidService();
         }
-        return housingBidServiceProvider.getIfAvailable(HousingBidService::getInstance);
+        return housingBidServiceProvider.getIfAvailable(() -> runtimeBridge().housingBidService());
     }
 
     private MaintenanceTask maintenanceTask() {
         if (maintenanceTaskProvider == null) {
-            return MaintenanceTask.getInstance();
+            return runtimeBridge().maintenanceTask();
         }
-        return maintenanceTaskProvider.getIfAvailable(MaintenanceTask::getInstance);
+        return maintenanceTaskProvider.getIfAvailable(() -> runtimeBridge().maintenanceTask());
     }
 
     private TownService townService() {
         if (townServiceProvider == null) {
-            return TownService.getInstance();
+            return runtimeBridge().townService();
         }
-        return townServiceProvider.getIfAvailable(TownService::getInstance);
+        return townServiceProvider.getIfAvailable(() -> runtimeBridge().townService());
     }
 
     private ChallengeTaskService challengeTaskService() {
         if (challengeTaskServiceProvider == null) {
-            return ChallengeTaskService.getInstance();
+            return runtimeBridge().challengeTaskService();
         }
-        return challengeTaskServiceProvider.getIfAvailable(ChallengeTaskService::getInstance);
+        return challengeTaskServiceProvider.getIfAvailable(() -> runtimeBridge().challengeTaskService());
+    }
+
+    private GameHousingRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameHousingRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameHousingRuntimeBridge::new);
     }
 }

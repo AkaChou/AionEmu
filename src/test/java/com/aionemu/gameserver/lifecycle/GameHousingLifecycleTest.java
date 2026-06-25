@@ -25,6 +25,7 @@ class GameHousingLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "maintenanceTaskProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "townServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "challengeTaskServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
