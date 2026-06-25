@@ -18,8 +18,8 @@
 
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
-import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
+import com.aionemu.loginserver.service.LoginPremiumServices;
 
 /**
  * @author KID
@@ -41,6 +41,6 @@ public class CM_PREMIUM_CONTROL extends GsClientPacket {
 
     @Override
     protected void runImpl() {
-        PremiumController.getController().requestBuy(accountId, requestId, requiredCost, serverId);
+        LoginPremiumServices.premiumController().requestBuy(accountId, requestId, requiredCost, serverId);
     }
 }

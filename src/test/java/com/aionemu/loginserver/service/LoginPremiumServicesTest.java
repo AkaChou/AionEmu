@@ -38,6 +38,14 @@ class LoginPremiumServicesTest {
         assertTrue(source.contains("LoginPremiumServices.premiumController()"));
     }
 
+    @Test
+    void premiumPacketUsesPremiumBridgeInsteadOfDirectSingleton() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/gameserver/clientpackets/CM_PREMIUM_CONTROL.java"));
+
+        assertFalse(source.contains("PremiumController.getController()"));
+        assertTrue(source.contains("LoginPremiumServices.premiumController().requestBuy"));
+    }
+
     private static <T> T instance(Class<T> type) {
         return new ObjenesisStd().newInstance(type);
     }
