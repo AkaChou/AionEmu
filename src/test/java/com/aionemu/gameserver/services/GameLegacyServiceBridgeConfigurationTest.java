@@ -36,6 +36,7 @@ import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import org.junit.jupiter.api.Test;
@@ -159,6 +160,15 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "hallOfTenacityService");
             assertLazy(context.getBeanFactory(), "grandArenaTrainingCampService");
             assertLazy(context.getBeanFactory(), "idRunService");
+        }
+    }
+
+    @Test
+    void exposesThreadPoolManagerAsLazySpringBean() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("threadPoolManager"));
+            assertEquals(ThreadPoolManager.class, context.getType("threadPoolManager"));
+            assertLazy(context.getBeanFactory(), "threadPoolManager");
         }
     }
 

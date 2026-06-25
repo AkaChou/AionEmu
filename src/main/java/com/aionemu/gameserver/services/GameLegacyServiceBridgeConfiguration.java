@@ -32,6 +32,7 @@ import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import org.springframework.context.annotation.Bean;
@@ -201,6 +202,12 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public IDRunService idRunService() {
         return IDRunService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ThreadPoolManager threadPoolManager() {
+        return ThreadPoolManager.getInstance();
     }
 
     @Bean
