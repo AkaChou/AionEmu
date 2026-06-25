@@ -220,6 +220,21 @@ class LoginStartupSequenceLifecycleTest {
         }
     }
 
+    @Test
+    void startupRuntimeBridgeBridgesProcessCallsThroughSpringProvider() {
+        List<String> events = new ArrayList<>();
+        LoginStartupRuntimeBridge runtimeBridge = new LoginStartupRuntimeBridge();
+        runtimeBridge.setProcessBridgeProvider(provider(
+            LoginProcessRuntimeBridge.class,
+            new RecordingLoginProcessRuntimeBridge(events)
+        ));
+
+        runtimeBridge.registerShutdownHook();
+        runtimeBridge.exitWithError();
+
+        assertEquals(List.of("shutdownHook:get", "shutdownHook:register", "exit:error"), events);
+    }
+
     private static Class<?> fieldType(String name) {
         return fieldType(LoginStartupSequenceLifecycle.class, name);
     }
@@ -456,6 +471,31 @@ class LoginStartupSequenceLifecycleTest {
         @Override
         public void initializePremiumController() {
             events.add("premium:init");
+        }
+
+        @Override
+        public void exitWithError() {
+            events.add("exit:error");
+        }
+    }
+
+    private static final class RecordingLoginProcessRuntimeBridge extends LoginProcessRuntimeBridge {
+
+        private final List<String> events;
+
+        private RecordingLoginProcessRuntimeBridge(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public Thread shutdownHook() {
+            events.add("shutdownHook:get");
+            return new Thread("recording-login-shutdown");
+        }
+
+        @Override
+        public void registerShutdownHook(Thread shutdownHook) {
+            events.add("shutdownHook:register");
         }
 
         @Override
