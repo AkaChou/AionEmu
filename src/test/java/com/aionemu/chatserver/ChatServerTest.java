@@ -107,7 +107,9 @@ class ChatServerTest {
 
         assertFalse(source.contains("Runtime.getRuntime().halt"));
         assertFalse(source.contains("RestartService.getInstance().shutdown()"));
+        assertFalse(source.contains("GameServerService.getInstance()"));
         assertTrue(source.contains("restartService().shutdown()"));
+        assertTrue(source.contains("gameServerService().setOffline()"));
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_RESTART)"));
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_NORMAL)"));
     }
@@ -118,7 +120,7 @@ class ChatServerTest {
 
         assertFalse(source.contains("return RestartService.getInstance();"));
         assertTrue(source.contains("return new RestartService();"));
-        assertTrue(source.contains("ShutdownHook.getInstance(processBridge, restartService)"));
+        assertTrue(source.contains("ShutdownHook.getInstance(processBridge, restartService, gameServerService)"));
     }
 
     @Test

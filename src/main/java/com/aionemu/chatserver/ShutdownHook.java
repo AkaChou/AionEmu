@@ -19,6 +19,7 @@
 package com.aionemu.chatserver;
 
 import com.aionemu.chatserver.network.netty.NettyServer;
+import com.aionemu.chatserver.service.ChatCoreServices;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.commons.utils.ExitCode;
@@ -34,6 +35,7 @@ public class ShutdownHook extends Thread {
     private static final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
     private volatile ChatProcessRuntimeBridge processBridge = new ChatProcessRuntimeBridge();
     private volatile RestartService restartService;
+    private volatile GameServerService gameServerService;
     /**
      * Indicates wether the loginserver should shut dpwn or only restart
      */
@@ -52,12 +54,18 @@ public class ShutdownHook extends Thread {
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge) {
         instance.setProcessBridge(processBridge);
         instance.setRestartService(null);
+        instance.setGameServerService(null);
         return instance;
     }
 
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge, RestartService restartService) {
+        return getInstance(processBridge, restartService, null);
+    }
+
+    public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
         instance.setProcessBridge(processBridge);
         instance.setRestartService(restartService);
+        instance.setGameServerService(gameServerService);
         return instance;
     }
 
@@ -69,6 +77,10 @@ public class ShutdownHook extends Thread {
 
     private void setRestartService(RestartService restartService) {
         this.restartService = restartService;
+    }
+
+    private void setGameServerService(GameServerService gameServerService) {
+        this.gameServerService = gameServerService;
     }
 
     /**
@@ -92,7 +104,7 @@ public class ShutdownHook extends Thread {
         }
         restartService().shutdown();
         NettyServer.shutdownIfInitialized();
-        GameServerService.getInstance().setOffline();
+        gameServerService().setOffline();
         com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown();
 
         if (!haltJvm) {
@@ -113,5 +125,13 @@ public class ShutdownHook extends Thread {
             return configuredRestartService;
         }
         return RestartService.getInstance();
+    }
+
+    private GameServerService gameServerService() {
+        GameServerService configuredGameServerService = gameServerService;
+        if (configuredGameServerService != null) {
+            return configuredGameServerService;
+        }
+        return ChatCoreServices.gameServerService();
     }
 }

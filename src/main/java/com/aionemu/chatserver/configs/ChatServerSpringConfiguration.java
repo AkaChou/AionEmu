@@ -65,7 +65,7 @@ public class ChatServerSpringConfiguration {
 
     @Bean
     @Lazy
-    public ShutdownHook chatShutdownHook(ChatProcessRuntimeBridge processBridge, RestartService restartService) {
-        return ShutdownHook.getInstance(processBridge, restartService);
+    public ShutdownHook chatShutdownHook(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
+        return ShutdownHook.getInstance(processBridge, restartService, gameServerService);
     }
 }
