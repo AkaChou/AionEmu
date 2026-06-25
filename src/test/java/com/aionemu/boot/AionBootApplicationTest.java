@@ -100,6 +100,8 @@ import com.aionemu.gameserver.lifecycle.GameWorldActivationGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
+import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.loginserver.LoginServer;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -111,6 +113,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 
@@ -158,6 +161,16 @@ class AionBootApplicationTest {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
             assertTrue(context.containsBean("aionServiceLauncher"));
             assertTrue(context.containsBean("gameStartupSequenceLifecycle"));
+        }
+    }
+
+    @Test
+    void bootApplicationScansGameLegacyBridgeBeansLazily() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
+            assertEquals(AdminService.class, context.getType("adminService"));
+            assertEquals(GameRuntimeServiceBridge.class, context.getType("gameRuntimeServiceBridge"));
+            assertLazy(context.getBeanFactory(), "adminService");
+            assertLazy(context.getBeanFactory(), "gameRuntimeServiceBridge");
         }
     }
 
@@ -355,6 +368,10 @@ class AionBootApplicationTest {
             context.getBeanNamesForType(type, true, false).length,
             () -> "Unexpected Spring bean for " + type.getName()
         );
+    }
+
+    private static void assertLazy(ConfigurableListableBeanFactory beanFactory, String beanName) {
+        Assertions.assertTrue(beanFactory.getBeanDefinition(beanName).isLazyInit(), beanName + " should be lazy");
     }
 
     private static AnnotationConfigApplicationContext chatEnabledBootContext() {
