@@ -34,9 +34,9 @@ public class EquipmentSetting {
 			int earringsLeft, int earringsRight, int ringLeft, int ringRight, int necklace, int shoulder, int pants,
 			int powershardLeft, int powershardRight, int wings, int waist, int mOffHand, int sOffHand, int plume,
 			int bracelet) {
-		this(slot, "", display, mHand, sHand, helmet, torso, glove, boots, earringsLeft, earringsRight, ringLeft,
-				ringRight, necklace, shoulder, pants, powershardLeft, powershardRight, wings, waist, mOffHand, sOffHand,
-				plume, bracelet);
+		this(slot, defaultName(slot), display, mHand, sHand, helmet, torso, glove, boots, earringsLeft, earringsRight,
+				ringLeft, ringRight, necklace, shoulder, pants, powershardLeft, powershardRight, wings, waist, mOffHand,
+				sOffHand, plume, bracelet);
 	}
 
 	public EquipmentSetting(int slot, String name, int display, int mHand, int sHand, int helmet, int torso, int glove,
@@ -44,7 +44,7 @@ public class EquipmentSetting {
 			int pants, int powershardLeft, int powershardRight, int wings, int waist, int mOffHand, int sOffHand,
 			int plume, int bracelet) {
 		this.slot = slot;
-		this.name = name == null ? "" : name;
+		this.name = name == null || name.isBlank() ? defaultName(slot) : name;
 		this.display = display;
 		this.mHand = mHand;
 		this.sHand = sHand;
@@ -67,6 +67,10 @@ public class EquipmentSetting {
 		this.sOffHand = sOffHand;
 		this.plume = plume;
 		this.bracelet = bracelet;
+	}
+
+	public static String defaultName(int slot) {
+		return "Equipment Set " + (slot + 1);
 	}
 
 	public PersistentState getPersistentState() {

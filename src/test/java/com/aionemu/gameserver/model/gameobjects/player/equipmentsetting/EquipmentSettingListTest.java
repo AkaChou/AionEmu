@@ -29,6 +29,27 @@ class EquipmentSettingListTest {
 	}
 
 	@Test
+	void addNewSettingUsesDefaultName() {
+		EquipmentSettingList list = new EquipmentSettingList(null);
+
+		EquipmentSetting setting = list.add(0, 1, 301, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, true);
+
+		assertEquals("Equipment Set 1", setting.getName());
+	}
+
+	@Test
+	void addLoadedSettingKeepsStoredName() {
+		EquipmentSettingList list = new EquipmentSettingList(null);
+
+		EquipmentSetting setting = list.add(1, "Saved Set", 2, 101, 102, 103, 104, 105, 106, 107, 108,
+				109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, false);
+
+		assertEquals("Saved Set", setting.getName());
+		assertEquals(PersistentState.UPDATED, setting.getPersistentState());
+	}
+
+	@Test
 	void addSettingForSameSlotReplacesPreviousValue() {
 		EquipmentSettingList list = new EquipmentSettingList(null);
 

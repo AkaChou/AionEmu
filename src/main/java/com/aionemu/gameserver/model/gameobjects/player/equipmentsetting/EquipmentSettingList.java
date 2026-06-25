@@ -21,7 +21,16 @@ public class EquipmentSettingList {
 			int boots, int earringsLeft, int earringsRight, int ringLeft, int ringRight, int necklace, int shoulder,
 			int pants, int powershardLeft, int powershardRight, int wings, int waist, int mOffHand, int sOffHand,
 			int plume, int bracelet, boolean isNew) {
-		EquipmentSetting setting = new EquipmentSetting(slot, display, mHand, sHand, helmet, torso, glove, boots,
+		return add(slot, EquipmentSetting.defaultName(slot), display, mHand, sHand, helmet, torso, glove, boots,
+				earringsLeft, earringsRight, ringLeft, ringRight, necklace, shoulder, pants, powershardLeft,
+				powershardRight, wings, waist, mOffHand, sOffHand, plume, bracelet, isNew);
+	}
+
+	public EquipmentSetting add(int slot, String name, int display, int mHand, int sHand, int helmet, int torso,
+			int glove, int boots, int earringsLeft, int earringsRight, int ringLeft, int ringRight, int necklace,
+			int shoulder, int pants, int powershardLeft, int powershardRight, int wings, int waist, int mOffHand,
+			int sOffHand, int plume, int bracelet, boolean isNew) {
+		EquipmentSetting setting = new EquipmentSetting(slot, name, display, mHand, sHand, helmet, torso, glove, boots,
 				earringsLeft, earringsRight, ringLeft, ringRight, necklace, shoulder, pants, powershardLeft,
 				powershardRight, wings, waist, mOffHand, sOffHand, plume, bracelet);
 		setting.setPersistentState(isNew ? PersistentState.UPDATE_REQUIRED : PersistentState.UPDATED);

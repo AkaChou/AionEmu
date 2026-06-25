@@ -18,7 +18,7 @@ public class MySQL8PlayerEquipmentSettingDAO extends PlayerEquipmentSettingDAO {
 
 	private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerEquipmentSettingDAO.class);
 
-	static final String INSERT_QUERY = "INSERT INTO `player_equipment_setting` (`player_id`, `slot`, `name`, `display`, `m_hand`, `s_hand`, `helmet`, `torso`, `glove`, `boots`, `earrings_left`, `earrings_right`, `ring_left`, `ring_right`, `necklace`, `shoulder`, `pants`, `powershard_left`, `powershard_right`, `wings`, `waist`, `m_off_hand`, `s_off_hand`, `plume`, `bracelet`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `display` = VALUES(`display`), `m_hand` = VALUES(`m_hand`), `s_hand` = VALUES(`s_hand`), `helmet` = VALUES(`helmet`), `torso` = VALUES(`torso`), `glove` = VALUES(`glove`), `boots` = VALUES(`boots`), `earrings_left` = VALUES(`earrings_left`), `earrings_right` = VALUES(`earrings_right`), `ring_left` = VALUES(`ring_left`), `ring_right` = VALUES(`ring_right`), `necklace` = VALUES(`necklace`), `shoulder` = VALUES(`shoulder`), `pants` = VALUES(`pants`), `powershard_left` = VALUES(`powershard_left`), `powershard_right` = VALUES(`powershard_right`), `wings` = VALUES(`wings`), `waist` = VALUES(`waist`), `m_off_hand` = VALUES(`m_off_hand`), `s_off_hand` = VALUES(`s_off_hand`), `plume` = VALUES(`plume`), `bracelet` = VALUES(`bracelet`)";
+	static final String INSERT_QUERY = "INSERT INTO `player_equipment_setting` (`player_id`, `slot`, `name`, `display`, `m_hand`, `s_hand`, `helmet`, `torso`, `glove`, `boots`, `earrings_left`, `earrings_right`, `ring_left`, `ring_right`, `necklace`, `shoulder`, `pants`, `powershard_left`, `powershard_right`, `wings`, `waist`, `m_off_hand`, `s_off_hand`, `plume`, `bracelet`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `name` = IF(`name` = '', VALUES(`name`), `name`), `display` = VALUES(`display`), `m_hand` = VALUES(`m_hand`), `s_hand` = VALUES(`s_hand`), `helmet` = VALUES(`helmet`), `torso` = VALUES(`torso`), `glove` = VALUES(`glove`), `boots` = VALUES(`boots`), `earrings_left` = VALUES(`earrings_left`), `earrings_right` = VALUES(`earrings_right`), `ring_left` = VALUES(`ring_left`), `ring_right` = VALUES(`ring_right`), `necklace` = VALUES(`necklace`), `shoulder` = VALUES(`shoulder`), `pants` = VALUES(`pants`), `powershard_left` = VALUES(`powershard_left`), `powershard_right` = VALUES(`powershard_right`), `wings` = VALUES(`wings`), `waist` = VALUES(`waist`), `m_off_hand` = VALUES(`m_off_hand`), `s_off_hand` = VALUES(`s_off_hand`), `plume` = VALUES(`plume`), `bracelet` = VALUES(`bracelet`)";
 	private static final String SELECT_QUERY = "SELECT * FROM `player_equipment_setting` WHERE `player_id` = ?";
 
 	@Override
@@ -29,14 +29,14 @@ public class MySQL8PlayerEquipmentSettingDAO extends PlayerEquipmentSettingDAO {
 			stmt.setInt(1, player.getObjectId());
 			try (ResultSet rset = stmt.executeQuery()) {
 				while (rset.next()) {
-					equipmentSettingList.add(rset.getInt("slot"), rset.getInt("display"), rset.getInt("m_hand"),
-							rset.getInt("s_hand"), rset.getInt("helmet"), rset.getInt("torso"), rset.getInt("glove"),
-							rset.getInt("boots"), rset.getInt("earrings_left"), rset.getInt("earrings_right"),
-							rset.getInt("ring_left"), rset.getInt("ring_right"), rset.getInt("necklace"),
-							rset.getInt("shoulder"), rset.getInt("pants"), rset.getInt("powershard_left"),
-							rset.getInt("powershard_right"), rset.getInt("wings"), rset.getInt("waist"),
-							rset.getInt("m_off_hand"), rset.getInt("s_off_hand"), rset.getInt("plume"),
-							rset.getInt("bracelet"), false);
+					equipmentSettingList.add(rset.getInt("slot"), rset.getString("name"), rset.getInt("display"),
+							rset.getInt("m_hand"), rset.getInt("s_hand"), rset.getInt("helmet"),
+							rset.getInt("torso"), rset.getInt("glove"), rset.getInt("boots"),
+							rset.getInt("earrings_left"), rset.getInt("earrings_right"), rset.getInt("ring_left"),
+							rset.getInt("ring_right"), rset.getInt("necklace"), rset.getInt("shoulder"),
+							rset.getInt("pants"), rset.getInt("powershard_left"), rset.getInt("powershard_right"),
+							rset.getInt("wings"), rset.getInt("waist"), rset.getInt("m_off_hand"),
+							rset.getInt("s_off_hand"), rset.getInt("plume"), rset.getInt("bracelet"), false);
 				}
 			}
 		} catch (Exception e) {
