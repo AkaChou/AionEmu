@@ -114,4 +114,16 @@ public class GameLegacyServiceBridgeConfiguration {
     public HTMLCache htmlCache() {
         return HTMLCache.getInstance();
     }
+
+    @Bean
+    @Lazy
+    public DisputeLandService disputeLandService() {
+        return DisputeLandService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public OutpostService outpostService() {
+        return OutpostService.getInstance();
+    }
 }

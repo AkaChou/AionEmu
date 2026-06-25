@@ -105,6 +105,18 @@ class GameLegacyServiceBridgeConfigurationTest {
         }
     }
 
+    @Test
+    void exposesDisputeLandServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("disputeLandService"));
+            assertTrue(context.containsBeanDefinition("outpostService"));
+            assertEquals(DisputeLandService.class, context.getType("disputeLandService"));
+            assertEquals(OutpostService.class, context.getType("outpostService"));
+            assertLazy(context.getBeanFactory(), "disputeLandService");
+            assertLazy(context.getBeanFactory(), "outpostService");
+        }
+    }
+
     private static void assertLazy(ConfigurableListableBeanFactory beanFactory, String beanName) {
         assertTrue(beanFactory.getBeanDefinition(beanName).isLazyInit());
     }

@@ -10,12 +10,19 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameDisputeLandLifecycleTest {
 
     @Test
     void usesDisputeLandGatewayCollaborator() {
         assertEquals(GameDisputeLandGateway.class, fieldType("disputeLandGateway"));
+    }
+
+    @Test
+    void disputeLandGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameDisputeLandGateway.class, "disputeLandServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameDisputeLandGateway.class, "outpostServiceProvider"));
     }
 
     @Test
@@ -56,8 +63,12 @@ class GameDisputeLandLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameDisputeLandLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameDisputeLandLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
