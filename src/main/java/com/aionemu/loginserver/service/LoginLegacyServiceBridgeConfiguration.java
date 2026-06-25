@@ -37,7 +37,7 @@ public class LoginLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public ThreadPoolManager loginThreadPoolManager() {
-        return ThreadPoolManager.getInstance();
+        return new ThreadPoolManager();
     }
 
     @Bean

@@ -30,6 +30,17 @@ class LoginThreadPoolServicesTest {
     }
 
     @Test
+    void threadPoolBridgeUsesLocalFallbackInsteadOfDirectLegacySingleton() throws IOException {
+        String servicesSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginThreadPoolServices.java"));
+        String managerSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/utils/ThreadPoolManager.java"));
+
+        assertFalse(servicesSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(servicesSource.contains("fallbackThreadPoolManager()"));
+        assertTrue(servicesSource.contains("new ThreadPoolManager()"));
+        assertTrue(managerSource.contains("@Deprecated(since = \"boot-migration\")"));
+    }
+
+    @Test
     void gameServerConnectionCodeUsesThreadPoolBridgeInsteadOfDirectSingleton() throws IOException {
         String connectionSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/gameserver/GsConnection.java"));
         String authPacketSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/gameserver/clientpackets/CM_GS_AUTH.java"));

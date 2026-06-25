@@ -85,6 +85,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Routed login cron runner and task trigger scheduling through the Spring-provided thread-pool manager before the legacy singleton fallback.
 - [x] Routed login shutdown thread-pool cleanup through the Spring-provided thread-pool manager before the legacy singleton fallback.
 - [x] Routed commons Netty packet executor and common-network shutdown cleanup through a Spring-provided thread-pool manager before the legacy singleton fallback.
+- [x] Made the login thread-pool manager Spring-instantiable and moved its non-Spring fallback into the shared service wrapper.
 - [x] Made login premium-controller startup use a Spring-instantiable controller bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Routed the login startup runtime bridge through the shared premium-controller wrapper instead of keeping its own singleton fallback.
 - [x] Routed login premium packet access through the shared premium-controller wrapper.

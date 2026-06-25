@@ -141,11 +141,14 @@ class LoginLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
-    void loginThreadPoolManagerBeanUsesLegacySingletonInsteadOfCreatingSecondPool() throws IOException {
+    void loginThreadPoolManagerBeanUsesSpringInstantiationInsteadOfSingletonFallback() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
+        String managerSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/utils/ThreadPoolManager.java"));
 
-        assertTrue(source.contains("return ThreadPoolManager.getInstance();"));
-        assertFalse(source.contains("return new ThreadPoolManager();"));
+        assertFalse(source.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(source.contains("return new ThreadPoolManager();"));
+        assertTrue(managerSource.contains("public ThreadPoolManager()"));
+        assertTrue(managerSource.contains("@Deprecated(since = \"boot-migration\")"));
     }
 
     @Test
