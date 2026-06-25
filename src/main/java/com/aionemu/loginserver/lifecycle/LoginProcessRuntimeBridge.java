@@ -1,5 +1,6 @@
 package com.aionemu.loginserver.lifecycle;
 
+import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.Shutdown;
 import org.springframework.beans.factory.ObjectProvider;
@@ -40,7 +41,7 @@ public class LoginProcessRuntimeBridge {
     }
 
     public void exit(int status) {
-        System.exit(status);
+        AionProcessExit.exit(status);
     }
 
     private synchronized Shutdown shutdown() {
