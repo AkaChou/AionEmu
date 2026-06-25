@@ -9,7 +9,6 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.network.BannedMacManager;
-import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +22,7 @@ public class GameServerNetworkGateway {
     private ObjectProvider<BannedMacManager> bannedMacManagerProvider;
     private ObjectProvider<LoginServer> loginServerProvider;
     private ObjectProvider<ChatServer> chatServerProvider;
+    private ObjectProvider<GameServerNetworkRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setBannedMacManagerProvider(ObjectProvider<BannedMacManager> bannedMacManagerProvider) {
@@ -39,6 +39,11 @@ public class GameServerNetworkGateway {
         this.chatServerProvider = chatServerProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameServerNetworkRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public boolean isNettyTransportEnabled() {
         return Boolean.getBoolean("aion.transport.netty");
     }
@@ -52,11 +57,11 @@ public class GameServerNetworkGateway {
     }
 
     public ServerTransport createNettyTransport() {
-        return new NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
+        return new NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", runtimeBridge().gameConnectionFactory()));
     }
 
     public NioServer createNioServer() {
-        return new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", new GameConnectionFactoryImpl()));
+        return new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", runtimeBridge().gameConnectionFactory()));
     }
 
     public void initializeBannedMacManager() {
@@ -77,23 +82,30 @@ public class GameServerNetworkGateway {
 
     private BannedMacManager bannedMacManager() {
         if (bannedMacManagerProvider == null) {
-            return BannedMacManager.getInstance();
+            return runtimeBridge().bannedMacManager();
         }
-        return bannedMacManagerProvider.getIfAvailable(BannedMacManager::getInstance);
+        return bannedMacManagerProvider.getIfAvailable(() -> runtimeBridge().bannedMacManager());
     }
 
     private LoginServer loginServerInstance() {
         if (loginServerProvider == null) {
-            return LoginServer.getInstance();
+            return runtimeBridge().loginServer();
         }
-        return loginServerProvider.getIfAvailable(LoginServer::getInstance);
+        return loginServerProvider.getIfAvailable(() -> runtimeBridge().loginServer());
     }
 
     private ChatServer chatServerInstance() {
         if (chatServerProvider == null) {
-            return ChatServer.getInstance();
+            return runtimeBridge().chatServer();
         }
-        return chatServerProvider.getIfAvailable(ChatServer::getInstance);
+        return chatServerProvider.getIfAvailable(() -> runtimeBridge().chatServer());
+    }
+
+    private GameServerNetworkRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameServerNetworkRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameServerNetworkRuntimeBridge::new);
     }
 
     @RequiredArgsConstructor

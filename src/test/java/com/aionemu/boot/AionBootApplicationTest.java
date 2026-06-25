@@ -105,6 +105,7 @@ import com.aionemu.gameserver.lifecycle.GameSystemPropertiesGateway;
 import com.aionemu.gameserver.lifecycle.GameSystemPropertiesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolGateway;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesRuntimeBridge;
@@ -202,6 +203,7 @@ class AionBootApplicationTest {
             assertEquals(GameEventBootstrapRuntimeBridge.class, context.getType("gameEventBootstrapRuntimeBridge"));
             assertEquals(GameFeatureServicesRuntimeBridge.class, context.getType("gameFeatureServicesRuntimeBridge"));
             assertEquals(GameHousingRuntimeBridge.class, context.getType("gameHousingRuntimeBridge"));
+            assertEquals(GameServerNetworkRuntimeBridge.class, context.getType("gameServerNetworkRuntimeBridge"));
             assertEquals(GameEventRuntimeBridge.class, context.getType("gameEventRuntimeBridge"));
             assertEquals(GameEnginesRuntimeBridge.class, context.getType("gameEnginesRuntimeBridge"));
             assertEquals(GameUtilityServicesRuntimeBridge.class, context.getType("gameUtilityServicesRuntimeBridge"));
@@ -215,6 +217,7 @@ class AionBootApplicationTest {
             assertLazy(context.getBeanFactory(), "gameEventBootstrapRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameFeatureServicesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameHousingRuntimeBridge");
+            assertLazy(context.getBeanFactory(), "gameServerNetworkRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameEventRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameEnginesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameUtilityServicesRuntimeBridge");
@@ -332,6 +335,7 @@ class AionBootApplicationTest {
             context.registerBean(GameEventBootstrapRuntimeBridge.class);
             context.registerBean(GameFeatureServicesRuntimeBridge.class);
             context.registerBean(GameHousingRuntimeBridge.class);
+            context.registerBean(GameServerNetworkRuntimeBridge.class);
             context.registerBean(GameEventRuntimeBridge.class);
             context.registerBean(GameEnginesRuntimeBridge.class);
             context.registerBean(GameLoggingGateway.class);
