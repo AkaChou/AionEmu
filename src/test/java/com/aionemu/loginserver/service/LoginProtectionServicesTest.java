@@ -17,14 +17,17 @@ class LoginProtectionServicesTest {
 
     @Test
     void usesSpringProvidersBeforeLegacySingletonFallbacks() {
+        LoginBannedIpService bannedIpService = new LoginBannedIpService();
         BruteForceProtector bruteForceProtector = new BruteForceProtector();
         FloodProtector floodProtector = new FloodProtector();
         LoginProtectionServices services = new LoginProtectionServices(
+            provider(LoginBannedIpService.class, bannedIpService),
             provider(BruteForceProtector.class, bruteForceProtector),
             provider(FloodProtector.class, floodProtector)
         );
 
         try {
+            assertSame(bannedIpService, LoginProtectionServices.bannedIpService());
             assertSame(bruteForceProtector, LoginProtectionServices.bruteForceProtector());
             assertSame(floodProtector, LoginProtectionServices.floodProtector());
         } finally {
@@ -41,6 +44,32 @@ class LoginProtectionServicesTest {
         assertTrue(connectionFactorySource.contains("LoginProtectionServices.floodProtector()"));
         assertFalse(loginPacketSource.contains("BruteForceProtector.getInstance()"));
         assertTrue(loginPacketSource.contains("LoginProtectionServices.bruteForceProtector()"));
+    }
+
+    @Test
+    void bannedIpAccessUsesProtectionBridgeInsteadOfDirectControllerCalls() throws IOException {
+        String startupBridgeSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/lifecycle/LoginStartupRuntimeBridge.java"));
+        String accountControllerSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/controller/AccountController.java"));
+        String loginPacketSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/aion/clientpackets/CM_LOGIN.java"));
+        String banPacketSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/gameserver/clientpackets/CM_BAN.java"));
+        String floodProtectorSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/utils/FloodProtector.java"));
+
+        assertFalse(startupBridgeSource.contains("BannedIpController."));
+        assertTrue(startupBridgeSource.contains("LoginProtectionServices.bannedIpService().start()"));
+
+        assertFalse(accountControllerSource.contains("BannedIpController."));
+        assertTrue(accountControllerSource.contains("LoginProtectionServices.bannedIpService().isBanned"));
+
+        assertFalse(loginPacketSource.contains("BannedIpController."));
+        assertTrue(loginPacketSource.contains("LoginProtectionServices.bannedIpService().banIp"));
+
+        assertFalse(banPacketSource.contains("BannedIpController."));
+        assertTrue(banPacketSource.contains("LoginProtectionServices.bannedIpService().unbanIp"));
+        assertTrue(banPacketSource.contains("LoginProtectionServices.bannedIpService().banIp"));
+
+        assertFalse(floodProtectorSource.contains("BannedIpController."));
+        assertTrue(floodProtectorSource.contains("LoginProtectionServices.bannedIpService().isBanned"));
+        assertTrue(floodProtectorSource.contains("LoginProtectionServices.bannedIpService().banIp"));
     }
 
     private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {

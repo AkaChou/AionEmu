@@ -66,6 +66,15 @@ class LoginLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void exposesLoginBannedIpServiceAsLazySpringBean() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(LoginLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("loginBannedIpService"));
+            assertEquals(LoginBannedIpService.class, context.getType("loginBannedIpService"));
+            assertTrue(context.getBeanFactory().getBeanDefinition("loginBannedIpService").isLazyInit());
+        }
+    }
+
+    @Test
     void exposesLoginProtectionServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(LoginLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("loginBruteForceProtector"));
@@ -121,6 +130,14 @@ class LoginLegacyServiceBridgeConfigurationTest {
         assertTrue(managerSource.contains("SingletonHolder"));
         assertTrue(managerSource.contains("@Deprecated(since = \"boot-migration\")"));
         assertFalse(managerSource.contains("private static BannedMacManager manager = new BannedMacManager();"));
+    }
+
+    @Test
+    void loginBannedIpServiceBeanUsesSpringInstantiationInsteadOfSingletonFallback() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
+
+        assertFalse(source.contains("BannedIpController"));
+        assertTrue(source.contains("return new LoginBannedIpService();"));
     }
 
     @Test

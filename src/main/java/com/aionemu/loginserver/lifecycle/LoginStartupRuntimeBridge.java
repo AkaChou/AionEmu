@@ -7,11 +7,11 @@ import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.LoginServer;
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.controller.BannedIpController;
 import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
+import com.aionemu.loginserver.service.LoginProtectionServices;
 import com.aionemu.loginserver.service.PlayerTransferService;
 import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.DeadLockDetector;
@@ -94,7 +94,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void startBannedIpController() {
-        BannedIpController.start();
+        LoginProtectionServices.bannedIpService().start();
     }
 
     public void cleanExpiredMacBans() {

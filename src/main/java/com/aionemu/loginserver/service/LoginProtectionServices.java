@@ -9,15 +9,26 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LoginProtectionServices implements DisposableBean {
 
+    private static volatile ObjectProvider<LoginBannedIpService> bannedIpServiceProvider;
     private static volatile ObjectProvider<BruteForceProtector> bruteForceProtectorProvider;
     private static volatile ObjectProvider<FloodProtector> floodProtectorProvider;
 
     public LoginProtectionServices(
+        ObjectProvider<LoginBannedIpService> bannedIpServiceProvider,
         ObjectProvider<BruteForceProtector> bruteForceProtectorProvider,
         ObjectProvider<FloodProtector> floodProtectorProvider
     ) {
+        LoginProtectionServices.bannedIpServiceProvider = bannedIpServiceProvider;
         LoginProtectionServices.bruteForceProtectorProvider = bruteForceProtectorProvider;
         LoginProtectionServices.floodProtectorProvider = floodProtectorProvider;
+    }
+
+    public static LoginBannedIpService bannedIpService() {
+        ObjectProvider<LoginBannedIpService> provider = bannedIpServiceProvider;
+        if (provider == null) {
+            return new LoginBannedIpService();
+        }
+        return provider.getIfAvailable(LoginBannedIpService::new);
     }
 
     public static BruteForceProtector bruteForceProtector() {
@@ -38,6 +49,7 @@ public final class LoginProtectionServices implements DisposableBean {
 
     @Override
     public void destroy() {
+        bannedIpServiceProvider = null;
         bruteForceProtectorProvider = null;
         floodProtectorProvider = null;
     }

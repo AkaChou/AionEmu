@@ -42,6 +42,7 @@ import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_ACCOUNT_AUTH_RESPONSE;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_GS_CHARACTER_RESPONSE;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_ACCOUNT;
+import com.aionemu.loginserver.service.LoginProtectionServices;
 import com.aionemu.loginserver.utils.AccountUtils;
 
 /**
@@ -162,7 +163,7 @@ public class AccountController {
      */
     public static AionAuthResponse login(String name, String password, LoginConnection connection) {
         // if ip is banned
-        if (BannedIpController.isBanned(connection.getIP())) {
+        if (LoginProtectionServices.bannedIpService().isBanned(connection.getIP())) {
             return AionAuthResponse.BAN_IP;
         }
 

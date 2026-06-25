@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.controller.AccountController;
-import com.aionemu.loginserver.controller.BannedIpController;
 import com.aionemu.loginserver.network.aion.AionAuthResponse;
 import com.aionemu.loginserver.network.aion.AionClientPacket;
 import com.aionemu.loginserver.network.aion.LoginConnection;
@@ -109,7 +108,7 @@ public class CM_LOGIN extends AionClientPacket {
                     String ip = client.getIP();
                     if (LoginProtectionServices.bruteForceProtector().addFailedConnect(ip)) {
                         Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000);
-                        BannedIpController.banIp(ip, newTime);
+                        LoginProtectionServices.bannedIpService().banIp(ip, newTime);
                         log.debug(user + " on " + ip + " banned for " + Config.WRONG_LOGIN_BAN_TIME + " min. bruteforce");
                         client.close(new SM_LOGIN_FAIL(AionAuthResponse.BAN_IP), false);
                     } else {

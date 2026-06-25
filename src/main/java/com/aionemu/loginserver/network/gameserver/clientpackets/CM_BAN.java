@@ -24,9 +24,9 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.controller.AccountController;
-import com.aionemu.loginserver.controller.BannedIpController;
 import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.loginserver.dao.AccountTimeDAO;
+import com.aionemu.loginserver.service.LoginProtectionServices;
 import com.aionemu.loginserver.model.Account;
 import com.aionemu.loginserver.model.AccountTime;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
@@ -120,14 +120,14 @@ public class CM_BAN extends GsClientPacket {
             }
             if (!ip.isEmpty()) {
                 // Unban first. For banning it needs to update time
-                if (BannedIpController.isBanned(ip)) {
+                if (LoginProtectionServices.bannedIpService().isBanned(ip)) {
                     // Result set for unban request
-                    result = BannedIpController.unbanIp(ip);
+                    result = LoginProtectionServices.bannedIpService().unbanIp(ip);
                 }
                 if (time >= 0) // Ban
                 {
                     Timestamp newTime = time != 0 ? new Timestamp(System.currentTimeMillis() + time * 60000) : null;
-                    result = BannedIpController.banIp(ip, newTime);
+                    result = LoginProtectionServices.bannedIpService().banIp(ip, newTime);
                 }
             }
         }

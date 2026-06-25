@@ -39,6 +39,12 @@ public class LoginLegacyServiceBridgeConfiguration {
 
     @Bean
     @Lazy
+    public LoginBannedIpService loginBannedIpService() {
+        return new LoginBannedIpService();
+    }
+
+    @Bean
+    @Lazy
     public BruteForceProtector loginBruteForceProtector() {
         return new BruteForceProtector();
     }
