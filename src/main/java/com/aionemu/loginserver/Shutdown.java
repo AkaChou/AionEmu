@@ -19,6 +19,7 @@
 package com.aionemu.loginserver;
 
 import com.aionemu.commons.services.CronService;
+import com.aionemu.commons.utils.AionProcessExit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -143,9 +144,9 @@ public class Shutdown extends Thread {
 
         // Do system exit
         if (restartOnly) {
-            Runtime.getRuntime().halt(ExitCode.CODE_RESTART);
+            AionProcessExit.halt(ExitCode.CODE_RESTART);
         } else {
-            Runtime.getRuntime().halt(ExitCode.CODE_NORMAL);
+            AionProcessExit.halt(ExitCode.CODE_NORMAL);
         }
     }
 }

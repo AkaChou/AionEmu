@@ -17,14 +17,14 @@ import com.aionemu.boot.lifecycle.LoginServerLifecycleGateway;
 import com.aionemu.boot.lifecycle.LoginServerRuntimeBridge;
 import com.aionemu.boot.lifecycle.LoginServiceLifecycle;
 import com.aionemu.boot.transport.AionTransportBoundary;
-import com.aionemu.boot.transport.LegacyNioTransportLifecycle;
 import com.aionemu.boot.transport.NettyTransportLifecycle;
+import com.aionemu.chatserver.ChatProcessRuntimeBridge;
 import com.aionemu.chatserver.ChatServer;
 import com.aionemu.chatserver.ChatServerRuntime;
 import com.aionemu.chatserver.ChatServerStartupBridge;
+import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.NettyServer;
-import com.aionemu.chatserver.network.netty.pipeline.LoginToClientPipeLineFactory;
 import com.aionemu.chatserver.service.BroadcastService;
 import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
@@ -121,6 +121,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldServicesRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.loginserver.LoginServer;
+import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
 import com.aionemu.loginserver.lifecycle.LoginStartupRuntimeBridge;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import java.io.IOException;
@@ -146,7 +147,6 @@ class AionBootApplicationTest {
     @AfterEach
     void clearBootRuntimeFlags() {
         System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
-        System.clearProperty("aion.transport.netty");
     }
 
     @Test
@@ -238,10 +238,12 @@ class AionBootApplicationTest {
             assertEquals(LoginServerRuntimeBridge.class, context.getType("loginServerRuntimeBridge"));
             assertEquals(ChatServerRuntimeBridge.class, context.getType("chatServerRuntimeBridge"));
             assertEquals(LoginStartupRuntimeBridge.class, context.getType("loginStartupRuntimeBridge"));
+            assertEquals(LoginProcessRuntimeBridge.class, context.getType("loginProcessRuntimeBridge"));
             assertEquals(AionProcessRuntimeBridge.class, context.getType("aionProcessRuntimeBridge"));
             assertLazy(context.getBeanFactory(), "loginServerRuntimeBridge");
             assertLazy(context.getBeanFactory(), "chatServerRuntimeBridge");
             assertLazy(context.getBeanFactory(), "loginStartupRuntimeBridge");
+            assertLazy(context.getBeanFactory(), "loginProcessRuntimeBridge");
             assertLazy(context.getBeanFactory(), "aionProcessRuntimeBridge");
         }
     }
@@ -259,7 +261,6 @@ class AionBootApplicationTest {
             )) {
             assertTrue(context.isActive());
             assertTrue(AionRuntimeMode.isBootEmbedded());
-            assertEquals("true", System.getProperty("aion.transport.netty"));
         }
     }
 
@@ -268,35 +269,45 @@ class AionBootApplicationTest {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
             assertHasBean(context, ChatServiceLifecycle.class);
             assertHasBean(context, ChatServerLifecycleGateway.class);
+            assertDoesNotHaveBean(context, ChatProcessRuntimeBridge.class);
             assertDoesNotHaveBean(context, ChatServerRuntime.class);
             assertDoesNotHaveBean(context, ChatServerStartupBridge.class);
             assertDoesNotHaveBean(context, IdFactory.class);
             assertDoesNotHaveBean(context, ClientPacketHandler.class);
-            assertDoesNotHaveBean(context, LoginToClientPipeLineFactory.class);
             assertDoesNotHaveBean(context, NettyServer.class);
             assertDoesNotHaveBean(context, GameServerService.class);
             assertDoesNotHaveBean(context, BroadcastService.class);
             assertDoesNotHaveBean(context, ChatService.class);
             assertDoesNotHaveBean(context, RestartService.class);
+            assertDoesNotHaveBean(context, ShutdownHook.class);
         }
     }
 
     @Test
     void chatServerGuiceBindingsAreSpringBeansWhenChatIsEnabled() {
         try (AnnotationConfigApplicationContext context = chatEnabledBootContext()) {
+            assertHasBean(context, ChatProcessRuntimeBridge.class);
             assertHasBean(context, ChatServerRuntime.class);
             assertHasBean(context, ChatServerStartupBridge.class);
             assertHasBean(context, IdFactory.class);
             assertHasBean(context, ClientPacketHandler.class);
-            assertHasBean(context, LoginToClientPipeLineFactory.class);
             assertHasBean(context, NettyServer.class);
             assertHasBean(context, GameServerService.class);
             assertHasBean(context, BroadcastService.class);
             assertHasBean(context, ChatService.class);
             assertHasBean(context, RestartService.class);
+            assertHasBean(context, ShutdownHook.class);
 
+            assertTrue(context.getBeanFactory().getBeanDefinition("chatServerRuntime").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("idFactory").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("clientPacketHandler").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("nettyServer").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("gameServerService").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("broadcastService").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("chatService").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("restartService").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("chatShutdownHook").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("chatProcessRuntimeBridge").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("chatServerStartupBridge").isLazyInit());
         }
     }
@@ -333,7 +344,6 @@ class AionBootApplicationTest {
     void serviceLauncherCanBeCreatedAsSpringBean() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
             context.registerBean(AionServicesProperties.class);
-            context.registerBean(LegacyNioTransportLifecycle.class);
             context.registerBean(NettyTransportLifecycle.class);
             context.registerBean(AionTransportBoundary.class);
             context.registerBean(LegacyConfigOverrides.class);

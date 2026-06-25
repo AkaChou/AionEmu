@@ -7,6 +7,8 @@ import com.aionemu.gameserver.services.events.PigPoppyEventService;
 import com.aionemu.gameserver.services.events.TreasureAbyssService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -14,12 +16,43 @@ import org.springframework.stereotype.Component;
 @Lazy
 public class GameMaintenanceServicesRuntimeBridge {
 
+    private ObjectProvider<DatabaseCleaningService> databaseCleaningServiceProvider;
+    private ObjectProvider<AbyssRankCleaningService> abyssRankCleaningServiceProvider;
+    private ObjectProvider<ShugoImperialTombSpawnManager> shugoImperialTombSpawnManagerProvider;
+    private ObjectProvider<SeasonRankingUpdateService> seasonRankingUpdateServiceProvider;
+
+    @Autowired(required = false)
+    void setDatabaseCleaningServiceProvider(ObjectProvider<DatabaseCleaningService> databaseCleaningServiceProvider) {
+        this.databaseCleaningServiceProvider = databaseCleaningServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setAbyssRankCleaningServiceProvider(ObjectProvider<AbyssRankCleaningService> abyssRankCleaningServiceProvider) {
+        this.abyssRankCleaningServiceProvider = abyssRankCleaningServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setShugoImperialTombSpawnManagerProvider(ObjectProvider<ShugoImperialTombSpawnManager> shugoImperialTombSpawnManagerProvider) {
+        this.shugoImperialTombSpawnManagerProvider = shugoImperialTombSpawnManagerProvider;
+    }
+
+    @Autowired(required = false)
+    void setSeasonRankingUpdateServiceProvider(ObjectProvider<SeasonRankingUpdateService> seasonRankingUpdateServiceProvider) {
+        this.seasonRankingUpdateServiceProvider = seasonRankingUpdateServiceProvider;
+    }
+
     public DatabaseCleaningService databaseCleaningService() {
-        return DatabaseCleaningService.getInstance();
+        if (databaseCleaningServiceProvider == null) {
+            return DatabaseCleaningService.getInstance();
+        }
+        return databaseCleaningServiceProvider.getIfAvailable(DatabaseCleaningService::getInstance);
     }
 
     public AbyssRankCleaningService abyssRankCleaningService() {
-        return AbyssRankCleaningService.getInstance();
+        if (abyssRankCleaningServiceProvider == null) {
+            return AbyssRankCleaningService.getInstance();
+        }
+        return abyssRankCleaningServiceProvider.getIfAvailable(AbyssRankCleaningService::getInstance);
     }
 
     public boolean isPigPoppyEventEnabled() {
@@ -43,10 +76,16 @@ public class GameMaintenanceServicesRuntimeBridge {
     }
 
     public ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
-        return ShugoImperialTombSpawnManager.getInstance();
+        if (shugoImperialTombSpawnManagerProvider == null) {
+            return ShugoImperialTombSpawnManager.getInstance();
+        }
+        return shugoImperialTombSpawnManagerProvider.getIfAvailable(ShugoImperialTombSpawnManager::getInstance);
     }
 
     public SeasonRankingUpdateService seasonRankingUpdateService() {
-        return SeasonRankingUpdateService.getInstance();
+        if (seasonRankingUpdateServiceProvider == null) {
+            return SeasonRankingUpdateService.getInstance();
+        }
+        return seasonRankingUpdateServiceProvider.getIfAvailable(SeasonRankingUpdateService::getInstance);
     }
 }

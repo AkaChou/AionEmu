@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.chatserver.ChatProcessRuntimeBridge;
 import com.aionemu.chatserver.ChatServerRuntime;
 import com.aionemu.chatserver.ChatServerStartupBridge;
 import java.lang.reflect.Field;
@@ -34,6 +35,8 @@ class ChatServiceLifecycleTest {
         assertEquals(null, findFieldType("stopAction"));
         assertEquals(ObjectProvider.class, fieldType(ChatServerLifecycleGateway.class, "chatServerRuntimeProvider"));
         assertEquals(ObjectProvider.class, fieldType(ChatServerLifecycleGateway.class, "runtimeBridgeProvider"));
+        assertEquals(ObjectProvider.class, fieldType(ChatServerRuntimeBridge.class, "chatServerRuntimeProvider"));
+        assertEquals(ObjectProvider.class, fieldType(ChatServerRuntimeBridge.class, "processBridgeProvider"));
         assertEquals(null, findFieldType(ChatServerLifecycleGateway.class, "chatServerRuntime"));
     }
 
@@ -110,6 +113,34 @@ class ChatServiceLifecycleTest {
         gateway.stop();
 
         assertEquals(List.of("bridge:start:1", "shutdown:false"), events);
+    }
+
+    @Test
+    void chatRuntimeBridgeUsesRuntimeProviderWhenAvailable() {
+        List<String> events = new ArrayList<>();
+        ChatServerRuntimeBridge runtimeBridge = new ChatServerRuntimeBridge();
+        runtimeBridge.setChatServerRuntimeProvider(provider(
+            ChatServerRuntime.class,
+            new RecordingChatServerRuntime(events)
+        ));
+
+        runtimeBridge.start(new String[] {"--chat=true"});
+
+        assertEquals(List.of("runtime:start:1"), events);
+    }
+
+    @Test
+    void chatRuntimeBridgeRoutesShutdownThroughProcessBridgeProvider() {
+        List<String> events = new ArrayList<>();
+        ChatServerRuntimeBridge runtimeBridge = new ChatServerRuntimeBridge();
+        runtimeBridge.setProcessBridgeProvider(provider(
+            ChatProcessRuntimeBridge.class,
+            new RecordingChatProcessRuntimeBridge(events)
+        ));
+
+        runtimeBridge.shutdown(true);
+
+        assertEquals(List.of("process:shutdown:true"), events);
     }
 
     @Test
@@ -198,6 +229,20 @@ class ChatServiceLifecycleTest {
         @Override
         public void registerShutdownHook() {
             events.add("shutdownHook");
+        }
+    }
+
+    private static final class RecordingChatProcessRuntimeBridge extends ChatProcessRuntimeBridge {
+
+        private final List<String> events;
+
+        private RecordingChatProcessRuntimeBridge(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void shutdown(boolean restart) {
+            events.add("process:shutdown:" + restart);
         }
     }
 

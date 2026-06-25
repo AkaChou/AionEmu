@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
 import com.aionemu.loginserver.lifecycle.LoginStartupSequenceLifecycle;
+import java.lang.reflect.Proxy;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -34,6 +37,7 @@ class LoginServiceLifecycleTest {
         assertEquals(LoginServerLifecycleGateway.class, fieldType("loginServerLifecycleGateway"));
         assertEquals(ObjectProvider.class, fieldType(LoginServerLifecycleGateway.class, "startupSequenceLifecycleProvider"));
         assertEquals(ObjectProvider.class, fieldType(LoginServerLifecycleGateway.class, "runtimeBridgeProvider"));
+        assertEquals(ObjectProvider.class, fieldType(LoginServerRuntimeBridge.class, "processBridgeProvider"));
         assertEquals(null, findFieldType(LoginServerLifecycleGateway.class, "startupSequenceLifecycle"));
     }
 
@@ -90,6 +94,45 @@ class LoginServiceLifecycleTest {
         assertEquals(List.of("start:1:true", "shutdown:false", "reset"), events);
     }
 
+    @Test
+    void loginRuntimeBridgeRoutesShutdownThroughProcessBridgeProvider() {
+        List<String> events = new ArrayList<>();
+        LoginServerRuntimeBridge runtimeBridge = new LoginServerRuntimeBridge();
+        runtimeBridge.setProcessBridgeProvider(provider(
+            LoginProcessRuntimeBridge.class,
+            new RecordingLoginProcessRuntimeBridge(events)
+        ));
+
+        runtimeBridge.shutdown(true);
+
+        assertEquals(List.of("process:shutdown:true"), events);
+    }
+
+    @Test
+    void loginRuntimeBridgePreparesProcessBridgeBeforeStartingServer() {
+        List<String> events = new ArrayList<>();
+        LoginServerRuntimeBridge runtimeBridge = new LoginServerRuntimeBridge() {
+            @Override
+            protected void doStart(String[] args) {
+                events.add("start:" + args.length + ":false");
+            }
+
+            @Override
+            protected void doStart(String[] args, LoginStartupSequenceLifecycle startupSequenceLifecycle) {
+                events.add("start:" + args.length + ":" + (startupSequenceLifecycle != null));
+            }
+        };
+        runtimeBridge.setProcessBridgeProvider(oneShotProvider(new RecordingLoginProcessRuntimeBridge(events)));
+
+        runtimeBridge.start(
+            new String[] {"--login=true"},
+            new RecordingLoginStartupSequenceLifecycle(new ArrayList<>())
+        );
+        runtimeBridge.shutdown(false);
+
+        assertEquals(List.of("process:prepare", "start:1:true", "process:shutdown:false"), events);
+    }
+
     private void configureLoginPaths() {
         System.setProperty("aion.login.config.dir", loginConfig.toString());
         System.setProperty("aion.login.data.dir", loginData.toString());
@@ -143,6 +186,25 @@ class LoginServiceLifecycleTest {
         }
     }
 
+    private static final class RecordingLoginProcessRuntimeBridge extends LoginProcessRuntimeBridge {
+
+        private final List<String> events;
+
+        private RecordingLoginProcessRuntimeBridge(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void shutdown(boolean restart) {
+            events.add("process:shutdown:" + restart);
+        }
+
+        @Override
+        public void prepareShutdown() {
+            events.add("process:prepare");
+        }
+    }
+
     private static final class RecordingLoginStartupSequenceLifecycle extends LoginStartupSequenceLifecycle {
 
         private final List<String> events;
@@ -182,5 +244,33 @@ class LoginServiceLifecycleTest {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
         return beanFactory.getBeanProvider(type);
+    }
+
+    private static <T> ObjectProvider<T> oneShotProvider(T instance) {
+        AtomicBoolean used = new AtomicBoolean();
+        return ObjectProvider.class.cast(Proxy.newProxyInstance(
+            ObjectProvider.class.getClassLoader(),
+            new Class<?>[] { ObjectProvider.class },
+            (proxy, method, args) -> {
+                if (method.getDeclaringClass() == Object.class) {
+                    return switch (method.getName()) {
+                        case "toString" -> "oneShotProvider";
+                        case "hashCode" -> System.identityHashCode(proxy);
+                        case "equals" -> proxy == args[0];
+                        default -> null;
+                    };
+                }
+                if ("getIfAvailable".equals(method.getName())) {
+                    if (!used.compareAndSet(false, true)) {
+                        throw new ProviderUsedAfterPreparationException();
+                    }
+                    return instance;
+                }
+                throw new UnsupportedOperationException(method.toString());
+            }
+        ));
+    }
+
+    private static final class ProviderUsedAfterPreparationException extends RuntimeException {
     }
 }

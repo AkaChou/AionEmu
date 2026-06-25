@@ -97,7 +97,7 @@ public class ChatServer {
      * @param args startup arguments
      */
     public static void start(String[] args) {
-        start(args, ChatServerDependencies.legacy());
+        start(args, new ChatServerLegacyDependencies());
     }
 
     static void start(String[] args, ChatServerDependencies dependencies) {

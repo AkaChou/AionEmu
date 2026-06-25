@@ -31,10 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
-import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameAdminPanelShutdownRequest;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUIT_RESPONSE;
 import com.aionemu.gameserver.services.PunishmentService;
@@ -129,19 +128,11 @@ public class ServerCommandProcessor {
 
 	ActionListener al_shutdown = new ActionListener() {
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (AionRuntimeMode.isBootEmbedded()) {
-				if (!AionEmbeddedShutdownHandler.requestShutdown()) {
-					log.warn("Embedded shutdown handler is not registered; stopping GameServer directly.");
-					GameServer.stop();
-				}
-				return;
-			}
-			System.exit(0);
-
-		}
-	};
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		GameAdminPanelShutdownRequest.shutdown();
+	}
+};
 
 	ActionListener al_online = new ActionListener() {
 

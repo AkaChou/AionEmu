@@ -18,10 +18,8 @@
 
 package com.aionemu.loginserver.network;
 
-import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.NettyServer;
 import com.aionemu.commons.network.NettyServerCfg;
-import com.aionemu.commons.network.ServerCfg;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.aion.AionConnectionFactoryImpl;
@@ -35,31 +33,20 @@ import java.util.function.Supplier;
  */
 public class NetConnector {
 
-    /**
-     * NioServer instance that will handle io.
-     */
     private static final Object lifecycleLock = new Object();
     private static Supplier<ServerTransport> transportFactory = NetConnector::createTransport;
     private static ServerTransport transport;
     private static boolean initialized;
 
     private static ServerTransport createTransport() {
-        ServerCfg aion = new ServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new AionConnectionFactoryImpl());
-
-        ServerCfg gs = new ServerCfg(Config.GAME_BIND_ADDRESS, Config.GAME_PORT, "Gs Connections", new GsConnectionFactoryImpl());
-
-        if (Boolean.getBoolean("aion.transport.netty")) {
-            return new NettyServer(
-                new NettyServerCfg(Config.GAME_BIND_ADDRESS, Config.GAME_PORT, "Gs Connections", new GsConnectionFactoryImpl()),
-                new NettyServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new AionConnectionFactoryImpl())
-            );
-        }
-
-        return new NioServer(Config.NIO_READ_THREADS, gs, aion);
+        return new NettyServer(
+            new NettyServerCfg(Config.GAME_BIND_ADDRESS, Config.GAME_PORT, "Gs Connections", new GsConnectionFactoryImpl()),
+            new NettyServerCfg(Config.LOGIN_BIND_ADDRESS, Config.LOGIN_PORT, "Aion Connections", new AionConnectionFactoryImpl())
+        );
     }
 
     /**
-     * @return NioServer instance.
+     * @return server transport instance.
      */
     public static ServerTransport getInstance() {
         synchronized (lifecycleLock) {

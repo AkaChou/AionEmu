@@ -19,7 +19,6 @@ package com.aionemu.gameserver.services.drop;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,10 +32,8 @@ import com.aionemu.gameserver.configs.main.DropConfig;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.GlobalDropData;
-import com.aionemu.gameserver.dataholders.NpcDropData;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.Drop;
-import com.aionemu.gameserver.model.drop.DropGroup;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.drop.NpcDrop;
 import com.aionemu.gameserver.model.gameobjects.DropNpc;
@@ -91,54 +88,9 @@ public class DropRegistrationService {
 		}
 	}
 
-    public final void init() {
-        NpcDropData npcDrop = DataManager.NPC_DROP_DATA;
-        for (NpcDrop drop : npcDrop.getNpcDrop()) {
-            NpcTemplate npcTemplate = DataManager.NPC_DATA.getNpcTemplate(drop.getNpcId());
-            if (npcTemplate == null) {
-                continue;
-            }
-            if (npcTemplate.getNpcDrop() != null) {
-                NpcDrop currentDrop = npcTemplate.getNpcDrop();
-                for (DropGroup dg : currentDrop.getDropGroup()) {
-                    // 创建一个临时列表来存储需要删除的元素
-                    // Create a temporary list to store elements that need to be removed
-                    List<Drop> dropsToRemove = new ArrayList<Drop>();
-                    for (Drop d : dg.getDrop()) {
-                        for (DropGroup dg2 : drop.getDropGroup()) {
-                            for (Drop d2 : dg2.getDrop()) {
-                                if (d.getItemId() == d2.getItemId()) {
-                                    dropsToRemove.add(d);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    // 在迭代完成后删除元素
-                    // Remove elements after iteration is complete
-                    dg.getDrop().removeAll(dropsToRemove);
-                }
-                List<DropGroup> list = new ArrayList<DropGroup>();
-                for (DropGroup dg : drop.getDropGroup()) {
-                    boolean added = false;
-                    for (DropGroup dg2 : currentDrop.getDropGroup()) {
-                        if (dg2.getGroupName().equals(dg.getGroupName())) {
-                            dg2.getDrop().addAll(dg.getDrop());
-                            added = true;
-                        }
-                    }
-                    if (!added) {
-                        list.add(dg);
-                    }
-                }
-                if (!list.isEmpty()) {
-                    currentDrop.getDropGroup().addAll(list);
-                }
-            } else {
-                npcTemplate.setNpcDrop(drop);
-            }
-        }
-    }
+	public final void init() {
+		// Drops are loaded on demand by NpcTemplate#getNpcDrop().
+	}
 
 	/**
 	 * After NPC dies, it can register arbitrary drop

@@ -8,9 +8,11 @@ import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.chatserver.utils.IdFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
+@Lazy
 @ConditionalOnProperty(prefix = "aion.services.chat", name = "enabled", havingValue = "true")
 public class ChatServerRuntime implements ChatServerDependencies {
 

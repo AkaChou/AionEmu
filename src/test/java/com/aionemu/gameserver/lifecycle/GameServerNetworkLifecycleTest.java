@@ -3,7 +3,6 @@ package com.aionemu.gameserver.lifecycle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.gameserver.GameServer;
 import java.lang.reflect.Field;
@@ -17,11 +16,10 @@ class GameServerNetworkLifecycleTest {
     @Test
     void stopDisconnectsPeersAndShutsDownStartedTransport() {
         List<String> events = new ArrayList<>();
-        RecordingNioServer nioServer = new RecordingNioServer(events);
         RecordingNetworkPeer loginServer = new RecordingNetworkPeer("login", events);
         RecordingNetworkPeer chatServer = new RecordingNetworkPeer("chat", events);
         GameServerNetworkLifecycle lifecycle = new GameServerNetworkLifecycle(
-            new RecordingGameServerNetworkGateway(events, true, false, true, nioServer, loginServer, chatServer)
+            new RecordingGameServerNetworkGateway(events, false, true, loginServer, chatServer)
         );
 
         lifecycle.start(new GameServer());
@@ -39,25 +37,22 @@ class GameServerNetworkLifecycleTest {
     }
 
     @Test
-    void startInitializesNioTransportAndConnectsPeersInLegacyOrder() {
+    void startInitializesNettyTransportAndPreparesPeers() {
         List<String> events = new ArrayList<>();
-        RecordingNioServer nioServer = new RecordingNioServer(events);
         RecordingNetworkPeer loginServer = new RecordingNetworkPeer("login", events);
         RecordingNetworkPeer chatServer = new RecordingNetworkPeer("chat", events);
         GameServerNetworkLifecycle lifecycle = new GameServerNetworkLifecycle(
-            new RecordingGameServerNetworkGateway(events, false, false, true, nioServer, loginServer, chatServer)
+            new RecordingGameServerNetworkGateway(events, false, true, loginServer, chatServer)
         );
 
         lifecycle.start(new GameServer());
 
-        assertSame(nioServer, loginServer.nioServer);
-        assertSame(nioServer, chatServer.nioServer);
         assertEquals(
             List.of(
                 "bannedMac:init",
-                "login:setNioServer",
-                "chat:setNioServer",
-                "transport:connect:nio",
+                "login:prepareForConnect",
+                "chat:prepareForConnect",
+                "transport:connect:netty",
                 "login:connect",
                 "chat:connect"
             ),
@@ -72,10 +67,8 @@ class GameServerNetworkLifecycleTest {
         GameServerNetworkLifecycle lifecycle = new GameServerNetworkLifecycle(
             new RecordingGameServerNetworkGateway(
                 events,
-                true,
                 false,
                 false,
-                new RecordingNioServer(events),
                 new RecordingNetworkPeer("login", events),
                 new RecordingNetworkPeer("chat", events)
             )
@@ -116,35 +109,24 @@ class GameServerNetworkLifecycleTest {
     private static final class RecordingGameServerNetworkGateway extends GameServerNetworkGateway {
 
         private final List<String> events;
-        private final boolean nettyTransportEnabled;
         private final boolean bootEmbedded;
         private final boolean chatServerEnabled;
-        private final RecordingNioServer nioServer;
         private final RecordingNetworkPeer loginServer;
         private final RecordingNetworkPeer chatServer;
         private final IncrementingClock clock = new IncrementingClock();
 
         private RecordingGameServerNetworkGateway(
             List<String> events,
-            boolean nettyTransportEnabled,
             boolean bootEmbedded,
             boolean chatServerEnabled,
-            RecordingNioServer nioServer,
             RecordingNetworkPeer loginServer,
             RecordingNetworkPeer chatServer
         ) {
             this.events = events;
-            this.nettyTransportEnabled = nettyTransportEnabled;
             this.bootEmbedded = bootEmbedded;
             this.chatServerEnabled = chatServerEnabled;
-            this.nioServer = nioServer;
             this.loginServer = loginServer;
             this.chatServer = chatServer;
-        }
-
-        @Override
-        public boolean isNettyTransportEnabled() {
-            return nettyTransportEnabled;
         }
 
         @Override
@@ -160,11 +142,6 @@ class GameServerNetworkLifecycleTest {
         @Override
         public ServerTransport createNettyTransport() {
             return new RecordingTransport("netty", events);
-        }
-
-        @Override
-        public NioServer createNioServer() {
-            return nioServer;
         }
 
         @Override
@@ -192,17 +169,14 @@ class GameServerNetworkLifecycleTest {
 
         private final String name;
         private final List<String> events;
-        private NioServer nioServer;
-
         private RecordingNetworkPeer(String name, List<String> events) {
             this.name = name;
             this.events = events;
         }
 
         @Override
-        public void setNioServer(NioServer nioServer) {
-            this.nioServer = nioServer;
-            events.add(name + ":setNioServer");
+        public void prepareForConnect() {
+            events.add(name + ":prepareForConnect");
         }
 
         @Override
@@ -218,21 +192,6 @@ class GameServerNetworkLifecycleTest {
         @Override
         public void disconnect() {
             events.add(name + ":disconnect");
-        }
-    }
-
-    private static final class RecordingNioServer extends NioServer {
-
-        private final List<String> events;
-
-        private RecordingNioServer(List<String> events) {
-            super(1);
-            this.events = events;
-        }
-
-        @Override
-        public void connect() {
-            events.add("transport:connect:nio");
         }
     }
 

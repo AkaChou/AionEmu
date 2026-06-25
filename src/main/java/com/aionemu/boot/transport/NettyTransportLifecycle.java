@@ -1,5 +1,6 @@
 package com.aionemu.boot.transport;
 
+import com.aionemu.boot.config.AionServicesProperties.TransportMode;
 import com.aionemu.commons.network.NettyEventLoopProvider;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -13,13 +14,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class NettyTransportLifecycle {
+public class NettyTransportLifecycle implements AionTransportLifecycle {
 
     private static final Logger log = LoggerFactory.getLogger(NettyTransportLifecycle.class);
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
 
+    @Override
+    public TransportMode mode() {
+        return TransportMode.NETTY;
+    }
+
+    @Override
     public synchronized void start() {
         if (bossGroup != null) {
             return;
@@ -42,6 +49,7 @@ public class NettyTransportLifecycle {
         return bootstrap.bind(endpoint.getAddress()).sync();
     }
 
+    @Override
     public synchronized void stop() {
         if (bossGroup == null) {
             return;

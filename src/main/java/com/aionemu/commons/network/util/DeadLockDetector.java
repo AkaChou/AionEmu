@@ -27,10 +27,12 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.util.function.IntConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.utils.ExitCode;
 
 /**
@@ -82,6 +84,7 @@ public class DeadLockDetector extends Thread {
      * Deadlock handling strategy
      */
     private final byte doWhenDL;
+    private final IntConsumer exitHandler;
     
     /**
      * 创建新的死锁检测器
@@ -91,10 +94,15 @@ public class DeadLockDetector extends Thread {
      * @param doWhenDL 处理策略 / Handling strategy
      */
     public DeadLockDetector(final int sleepTime, final byte doWhenDL) {
+        this(sleepTime, doWhenDL, AionProcessExit::exit);
+    }
+
+    public DeadLockDetector(final int sleepTime, final byte doWhenDL, IntConsumer exitHandler) {
         super("DeadLockDetector");
         this.sleepTime = sleepTime * 1000;
         this.tmx = ManagementFactory.getThreadMXBean();
         this.doWhenDL = doWhenDL;
+        this.exitHandler = exitHandler;
     }
     
     /**
@@ -137,14 +145,18 @@ public class DeadLockDetector extends Thread {
                     }
                     log.warn(info);
                     
-                    if (doWhenDL == RESTART) {
-                        System.exit(ExitCode.CODE_RESTART);
-                    }
+                    handleDeadlock();
                 }
                 Thread.sleep(sleepTime);
             } catch (Exception e) {
                 log.warn("DeadLockDetector: " + e, e);
             }
+        }
+    }
+
+    void handleDeadlock() {
+        if (doWhenDL == RESTART) {
+            exitHandler.accept(ExitCode.CODE_RESTART);
         }
     }
     

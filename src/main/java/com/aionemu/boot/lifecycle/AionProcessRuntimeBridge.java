@@ -1,5 +1,6 @@
 package com.aionemu.boot.lifecycle;
 
+import com.aionemu.commons.utils.AionProcessExit;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -7,7 +8,11 @@ import org.springframework.stereotype.Component;
 @Lazy
 public class AionProcessRuntimeBridge {
 
+    public void exit(int status) {
+        AionProcessExit.exit(status);
+    }
+
     public void halt(int status) {
-        Runtime.getRuntime().halt(status);
+        AionProcessExit.halt(status);
     }
 }

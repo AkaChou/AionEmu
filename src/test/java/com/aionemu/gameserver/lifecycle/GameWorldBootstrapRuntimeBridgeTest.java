@@ -1,0 +1,50 @@
+package com.aionemu.gameserver.lifecycle;
+
+import static org.junit.jupiter.api.Assertions.assertSame;
+
+import com.aionemu.gameserver.services.RoadService;
+import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
+import com.aionemu.gameserver.world.zone.ZoneService;
+import org.junit.jupiter.api.Test;
+import org.objenesis.ObjenesisStd;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+
+class GameWorldBootstrapRuntimeBridgeTest {
+
+    private final ObjenesisStd objenesis = new ObjenesisStd();
+
+    @Test
+    void usesSpringProvidersBeforeLegacySingletonFallbacks() {
+        IDFactory idFactory = instance(IDFactory.class);
+        ZoneService zoneService = instance(ZoneService.class);
+        HotspotTeleportService hotspotTeleportService = instance(HotspotTeleportService.class);
+        RoadService roadService = instance(RoadService.class);
+        World world = instance(World.class);
+        GameWorldBootstrapRuntimeBridge runtimeBridge = new GameWorldBootstrapRuntimeBridge();
+
+        runtimeBridge.setIdFactoryProvider(provider(IDFactory.class, idFactory));
+        runtimeBridge.setZoneServiceProvider(provider(ZoneService.class, zoneService));
+        runtimeBridge.setHotspotTeleportServiceProvider(provider(HotspotTeleportService.class, hotspotTeleportService));
+        runtimeBridge.setRoadServiceProvider(provider(RoadService.class, roadService));
+        runtimeBridge.setWorldProvider(provider(World.class, world));
+
+        assertSame(idFactory, runtimeBridge.idFactory());
+        assertSame(zoneService, runtimeBridge.zoneService());
+        assertSame(hotspotTeleportService, runtimeBridge.hotspotTeleportService());
+        assertSame(roadService, runtimeBridge.roadService());
+        assertSame(world, runtimeBridge.world());
+    }
+
+    private <T> T instance(Class<T> type) {
+        return objenesis.newInstance(type);
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
+    }
+}

@@ -6,6 +6,8 @@ import java.security.ProtectionDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.aionemu.commons.utils.AionProcessExit;
+
 /**
  * 字节码转换器基类，用于实现回调功能的字节码增强
  * Base class for bytecode transformer that implements callback functionality enhancement
@@ -56,7 +58,7 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
             // AppClassLoader加载失败时强制退出
             // Force exit when AppClassLoader fails to load
             if (loader.getClass().getName().equals("sun.misc.Launcher$AppClassLoader")) {
-                Runtime.getRuntime().halt(1);
+                AionProcessExit.halt(1);
             }
             throw e1;
         }

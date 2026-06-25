@@ -4,10 +4,8 @@ import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
-import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.LoginServer;
-import com.aionemu.loginserver.Shutdown;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.controller.BannedIpController;
 import com.aionemu.loginserver.controller.PremiumController;
@@ -19,12 +17,27 @@ import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.DeadLockDetector;
 import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.loginserver.utils.cron.ThreadPoolManagerRunnableRunner;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 @Lazy
 public class LoginStartupRuntimeBridge {
+
+    private ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider;
+    private ObjectProvider<PlayerTransferService> playerTransferServiceProvider;
+
+    @Autowired(required = false)
+    void setProcessBridgeProvider(ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider) {
+        this.processBridgeProvider = processBridgeProvider;
+    }
+
+    @Autowired(required = false)
+    void setPlayerTransferServiceProvider(ObjectProvider<PlayerTransferService> playerTransferServiceProvider) {
+        this.playerTransferServiceProvider = playerTransferServiceProvider;
+    }
 
     public void initializeLogger() {
         LoginServer.initializeLogger();
@@ -49,7 +62,8 @@ public class LoginStartupRuntimeBridge {
     public void startDeadlockDetector(boolean bootEmbedded) {
         DeadLockDetector deadLockDetector = new DeadLockDetector(
             60,
-            bootEmbedded ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART
+            bootEmbedded ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART,
+            status -> processBridge().exit(status)
         );
         deadLockDetector.setDaemon(bootEmbedded);
         deadLockDetector.start();
@@ -80,7 +94,10 @@ public class LoginStartupRuntimeBridge {
     }
 
     public PlayerTransferService playerTransferService() {
-        return PlayerTransferService.getInstance();
+        if (playerTransferServiceProvider == null) {
+            return PlayerTransferService.getInstance();
+        }
+        return playerTransferServiceProvider.getIfAvailable(PlayerTransferService::getInstance);
     }
 
     public void initializeTaskManager() {
@@ -88,7 +105,8 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void registerShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
+        LoginProcessRuntimeBridge processBridge = processBridge();
+        processBridge.registerShutdownHook(processBridge.shutdownHook());
     }
 
     public void printInfos() {
@@ -100,6 +118,13 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void exitWithError() {
-        System.exit(ExitCode.CODE_ERROR);
+        processBridge().exitWithError();
+    }
+
+    private LoginProcessRuntimeBridge processBridge() {
+        if (processBridgeProvider == null) {
+            return new LoginProcessRuntimeBridge();
+        }
+        return processBridgeProvider.getIfAvailable(LoginProcessRuntimeBridge::new);
     }
 }

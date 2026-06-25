@@ -18,9 +18,7 @@
 
 package com.aionemu.loginserver.network.aion;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -32,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
-import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.commons.network.PacketProcessor;
 import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.controller.AccountTimeController;
@@ -111,24 +108,12 @@ public class LoginConnection extends AConnection {
         AUTHED_LOGIN
     }
 
-    /**
-     * Constructor
-     *
-     * @param sc
-     * @param d
-     * @throws IOException
-     */
-    public LoginConnection(SocketChannel sc, Dispatcher d) throws IOException {
-        super(sc, d, 8192 * 2, 8192 * 2);
-
-    }
-
     public LoginConnection(ConnectionTransport transport) {
         super(transport, 8192 * 2, 8192 * 2);
     }
 
     /**
-     * Called by Dispatcher. ByteBuffer data contains one packet that should be
+     * Called by the transport frame handler. ByteBuffer data contains one packet that should be
      * processed.
      *
      * @param data
@@ -154,7 +139,7 @@ public class LoginConnection extends AConnection {
     }
 
     /**
-     * This method will be called by Dispatcher, and will be repeated till
+     * This method will be called by the transport frame handler, and will be repeated till
      * return false.
      *
      * @param data
@@ -176,7 +161,7 @@ public class LoginConnection extends AConnection {
     }
 
     /**
-     * This method is called by Dispatcher when connection is ready to be
+     * This method is called by the transport when connection is ready to be
      * closed.
      *
      * @return time in ms after witch onDisconnect() method will be called.
@@ -264,8 +249,8 @@ public class LoginConnection extends AConnection {
 
     /**
      * Its guaranted that closePacket will be sent before closing connection,
-     * but all past and future packets wont. Connection will be closed [by
-     * Dispatcher Thread], and onDisconnect() method will be called to clear all
+     * but all past and future packets wont. Connection will be closed by
+     * the transport, and onDisconnect() method will be called to clear all
      * other things. forced means that server shouldn't wait with removing this
      * connection.
      *

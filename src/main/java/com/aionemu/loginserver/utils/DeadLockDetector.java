@@ -23,11 +23,13 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.util.function.IntConsumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.ExitCode;
+import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
 
 /**
  * @author -Nemesiss-
@@ -58,6 +60,7 @@ public class DeadLockDetector extends Thread {
      * What should we do on DeadLock
      */
     private final byte doWhenDL;
+    private final IntConsumer exitHandler;
 
     /**
      * Create new DeadLockDetector with given values.
@@ -65,11 +68,17 @@ public class DeadLockDetector extends Thread {
      * @param sleepTime
      * @param doWhenDL
      */
+    @Deprecated(since = "1.0", forRemoval = false)
     public DeadLockDetector(int sleepTime, byte doWhenDL) {
+        this(sleepTime, doWhenDL, status -> new LoginProcessRuntimeBridge().exit(status));
+    }
+
+    public DeadLockDetector(int sleepTime, byte doWhenDL, IntConsumer exitHandler) {
         super("DeadLockDetector");
         this.sleepTime = sleepTime * 1000;
         this.tmx = ManagementFactory.getThreadMXBean();
         this.doWhenDL = doWhenDL;
+        this.exitHandler = exitHandler;
     }
 
     /**
@@ -112,14 +121,18 @@ public class DeadLockDetector extends Thread {
                     }
                     log.warn(info);
 
-                    if (doWhenDL == RESTART) {
-                        System.exit(ExitCode.CODE_RESTART);
-                    }
+                    handleDeadlock();
                 }
                 Thread.sleep(sleepTime);
             } catch (Exception e) {
                 log.warn("DeadLockDetector: " + e, e);
             }
+        }
+    }
+
+    void handleDeadlock() {
+        if (doWhenDL == RESTART) {
+            exitHandler.accept(ExitCode.CODE_RESTART);
         }
     }
 }

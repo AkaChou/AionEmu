@@ -19,8 +19,8 @@ package com.aionemu.gameserver.taskmanager.tasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
+import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -71,7 +71,7 @@ public class ShutdownTask extends TaskFromDBHandler {
 
 			@Override
 			public void run() {
-				ShutdownHook.getInstance().doShutdown(countDown, announceInterval, ShutdownMode.SHUTDOWN);
+				GameShutdownRequest.doShutdown(countDown, announceInterval, ShutdownMode.SHUTDOWN);
 			}
 		}, warnCountDown * 1000);
 	}

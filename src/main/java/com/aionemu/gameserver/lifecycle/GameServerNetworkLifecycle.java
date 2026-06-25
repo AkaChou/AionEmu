@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Component;
 public class GameServerNetworkLifecycle {
 
     private final GameServerNetworkGateway networkGateway;
-    private NioServer nioServer;
     private ServerTransport gameClientTransport;
 
     public void start(GameServer server) {
@@ -25,27 +23,20 @@ public class GameServerNetworkLifecycle {
     public void start() {
         log.info("Network Config - Bind: {}, Port: {}, Threads: {}", NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, NetworkConfig.NIO_READ_WRITE_THREADS);
 
-        boolean netty = networkGateway.isNettyTransportEnabled();
-        if (netty) {
-            nioServer = null;
-            gameClientTransport = networkGateway.createNettyTransport();
-        } else {
-            nioServer = networkGateway.createNioServer();
-            gameClientTransport = nioServer;
-        }
+        gameClientTransport = networkGateway.createNettyTransport();
 
         networkGateway.initializeBannedMacManager();
 
         NetworkPeer loginServer = networkGateway.loginServer();
         NetworkPeer chatServer = networkGateway.chatServer();
 
-        loginServer.setNioServer(nioServer);
-        chatServer.setNioServer(nioServer);
+        loginServer.prepareForConnect();
+        chatServer.prepareForConnect();
 
         long transportStart = networkGateway.currentTimeMillis();
         gameClientTransport.connect();
         long transportTime = networkGateway.currentTimeMillis() - transportStart;
-        log.info("{} server transport started in {} ms", netty ? "Netty" : "NIO", transportTime);
+        log.info("Netty server transport started in {} ms", transportTime);
 
         System.out.println("");
 
@@ -76,15 +67,7 @@ public class GameServerNetworkLifecycle {
         } catch (Exception e) {
             log.warn("Failed to stop game client transport cleanly.", e);
         }
-        try {
-            if (nioServer != null && nioServer != gameClientTransport) {
-                nioServer.shutdown();
-            }
-        } catch (Exception e) {
-            log.warn("Failed to stop game connector dispatcher cleanly.", e);
-        }
         gameClientTransport = null;
-        nioServer = null;
     }
 
     private void connectPeer(String peerName, NetworkPeer peer) {
@@ -101,7 +84,7 @@ public class GameServerNetworkLifecycle {
 
     interface NetworkPeer {
 
-        void setNioServer(NioServer nioServer);
+        void prepareForConnect();
 
         void connect();
 

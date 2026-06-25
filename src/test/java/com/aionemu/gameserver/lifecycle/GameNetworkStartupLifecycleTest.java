@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -100,6 +101,15 @@ class GameNetworkStartupLifecycleTest {
     @Test
     void networkStartupGatewayBridgesRuntimeBoundaryThroughSpringProviders() {
         assertEquals(ObjectProvider.class, fieldType(GameNetworkStartupGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
+    void networkStartupRuntimeBridgeUsesShutdownHookProviderBeforeLegacySingletonFallback() {
+        ProviderUsedException providerUsed = new ProviderUsedException();
+        GameNetworkStartupRuntimeBridge runtimeBridge = new GameNetworkStartupRuntimeBridge();
+        runtimeBridge.setShutdownHookProvider(throwingProvider(providerUsed));
+
+        assertSame(providerUsed, assertThrows(ProviderUsedException.class, runtimeBridge::shutdownHook));
     }
 
     private static Class<?> fieldType(String name) {
@@ -202,5 +212,26 @@ class GameNetworkStartupLifecycleTest {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
         return beanFactory.getBeanProvider(type);
+    }
+
+    private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
+        return ObjectProvider.class.cast(Proxy.newProxyInstance(
+            ObjectProvider.class.getClassLoader(),
+            new Class<?>[] { ObjectProvider.class },
+            (proxy, method, args) -> {
+                if (method.getDeclaringClass() == Object.class) {
+                    return switch (method.getName()) {
+                        case "toString" -> "throwingProvider";
+                        case "hashCode" -> System.identityHashCode(proxy);
+                        case "equals" -> proxy == args[0];
+                        default -> null;
+                    };
+                }
+                throw exception;
+            }
+        ));
+    }
+
+    private static final class ProviderUsedException extends RuntimeException {
     }
 }

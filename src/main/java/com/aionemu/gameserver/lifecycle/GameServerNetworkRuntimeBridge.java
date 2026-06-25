@@ -4,6 +4,8 @@ import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
@@ -11,16 +13,44 @@ import org.springframework.stereotype.Component;
 @Lazy
 public class GameServerNetworkRuntimeBridge {
 
+    private ObjectProvider<BannedMacManager> bannedMacManagerProvider;
+    private ObjectProvider<LoginServer> loginServerProvider;
+    private ObjectProvider<ChatServer> chatServerProvider;
+
+    @Autowired(required = false)
+    void setBannedMacManagerProvider(ObjectProvider<BannedMacManager> bannedMacManagerProvider) {
+        this.bannedMacManagerProvider = bannedMacManagerProvider;
+    }
+
+    @Autowired(required = false)
+    void setLoginServerProvider(ObjectProvider<LoginServer> loginServerProvider) {
+        this.loginServerProvider = loginServerProvider;
+    }
+
+    @Autowired(required = false)
+    void setChatServerProvider(ObjectProvider<ChatServer> chatServerProvider) {
+        this.chatServerProvider = chatServerProvider;
+    }
+
     public BannedMacManager bannedMacManager() {
-        return BannedMacManager.getInstance();
+        if (bannedMacManagerProvider == null) {
+            return BannedMacManager.getInstance();
+        }
+        return bannedMacManagerProvider.getIfAvailable(BannedMacManager::getInstance);
     }
 
     public LoginServer loginServer() {
-        return LoginServer.getInstance();
+        if (loginServerProvider == null) {
+            return LoginServer.getInstance();
+        }
+        return loginServerProvider.getIfAvailable(LoginServer::getInstance);
     }
 
     public ChatServer chatServer() {
-        return ChatServer.getInstance();
+        if (chatServerProvider == null) {
+            return ChatServer.getInstance();
+        }
+        return chatServerProvider.getIfAvailable(ChatServer::getInstance);
     }
 
     public GameConnectionFactoryImpl gameConnectionFactory() {
