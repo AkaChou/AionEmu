@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aionemu.AionBootApplication;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.boot.lifecycle.AionProcessRuntimeBridge;
 import com.aionemu.boot.lifecycle.AionServiceLauncher;
 import com.aionemu.boot.lifecycle.ChatServerLifecycleGateway;
 import com.aionemu.boot.lifecycle.ChatServerRuntimeBridge;
@@ -237,9 +238,11 @@ class AionBootApplicationTest {
             assertEquals(LoginServerRuntimeBridge.class, context.getType("loginServerRuntimeBridge"));
             assertEquals(ChatServerRuntimeBridge.class, context.getType("chatServerRuntimeBridge"));
             assertEquals(LoginStartupRuntimeBridge.class, context.getType("loginStartupRuntimeBridge"));
+            assertEquals(AionProcessRuntimeBridge.class, context.getType("aionProcessRuntimeBridge"));
             assertLazy(context.getBeanFactory(), "loginServerRuntimeBridge");
             assertLazy(context.getBeanFactory(), "chatServerRuntimeBridge");
             assertLazy(context.getBeanFactory(), "loginStartupRuntimeBridge");
+            assertLazy(context.getBeanFactory(), "aionProcessRuntimeBridge");
         }
     }
 
@@ -334,6 +337,7 @@ class AionBootApplicationTest {
             context.registerBean(NettyTransportLifecycle.class);
             context.registerBean(AionTransportBoundary.class);
             context.registerBean(LegacyConfigOverrides.class);
+            context.registerBean(AionProcessRuntimeBridge.class);
             context.registerBean(GameCoreServicesRuntimeBridge.class);
             context.registerBean(GameMaintenanceServicesRuntimeBridge.class);
             context.registerBean(GameWorldServicesRuntimeBridge.class);
