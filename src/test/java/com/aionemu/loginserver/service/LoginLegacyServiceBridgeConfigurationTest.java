@@ -1,10 +1,14 @@
 package com.aionemu.loginserver.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.loginserver.Shutdown;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -27,5 +31,16 @@ class LoginLegacyServiceBridgeConfigurationTest {
             assertTrue(context.getBeanFactory().getBeanDefinition("loginShutdown").isLazyInit());
             assertNotSame(Shutdown.getInstance(), context.getBean(Shutdown.class));
         }
+    }
+
+    @Test
+    void loginPlayerTransferBeanUsesSpringInstantiationInsteadOfSingletonFallback() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
+        String serviceSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/PlayerTransferService.java"));
+
+        assertFalse(source.contains("PlayerTransferService.getInstance()"));
+        assertTrue(source.contains("return new PlayerTransferService();"));
+        assertTrue(serviceSource.contains("SingletonHolder"));
+        assertTrue(serviceSource.contains("@Deprecated(since = \"boot-migration\")"));
     }
 }

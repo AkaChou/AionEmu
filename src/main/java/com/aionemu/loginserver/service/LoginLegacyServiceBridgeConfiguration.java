@@ -11,7 +11,7 @@ public class LoginLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public PlayerTransferService loginPlayerTransferService() {
-        return PlayerTransferService.getInstance();
+        return new PlayerTransferService();
     }
 
     @Bean

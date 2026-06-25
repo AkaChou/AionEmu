@@ -46,11 +46,11 @@ import com.aionemu.loginserver.utils.ThreadPoolManager;
  */
 public class PlayerTransferService {
 
-    private static PlayerTransferService instance = new PlayerTransferService();
     private final Logger log = LoggerFactory.getLogger(PlayerTransferService.class);
 
+    @Deprecated(since = "boot-migration")
     public static PlayerTransferService getInstance() {
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
     private Map<Integer, PlayerTransferRequest> transfers = FastMap.newInstance();
     private Map<Integer, PlayerTransferTask> tasks = FastMap.newInstance();
@@ -219,5 +219,10 @@ public class PlayerTransferService {
         DAOManager.getDAO(AccountDAO.class).updateAccount(request.saccount);
         log.info("transfer #" + taskId + " went onOK!");
         sourceServer.getConnection().sendPacket(new SM_PTRANSFER_RESPONSE(PlayerTransferResultStatus.OK, request));
+    }
+
+    private static final class SingletonHolder {
+
+        private static final PlayerTransferService INSTANCE = new PlayerTransferService();
     }
 }
