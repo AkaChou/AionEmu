@@ -18,13 +18,24 @@ public final class LoginNetworkServices implements DisposableBean {
     public static ServerTransport serverTransport() {
         ObjectProvider<ServerTransport> provider = serverTransportProvider;
         if (provider == null) {
-            return NetConnector.getInstance();
+            return fallbackServerTransport();
         }
-        return provider.getIfAvailable(NetConnector::getInstance);
+        return provider.getIfAvailable(LoginNetworkServices::fallbackServerTransport);
     }
 
     @Override
     public void destroy() {
         serverTransportProvider = null;
+    }
+
+    private static ServerTransport fallbackServerTransport() {
+        return Fallbacks.currentTransport();
+    }
+
+    private static final class Fallbacks {
+
+        private static ServerTransport currentTransport() {
+            return NetConnector.currentTransport();
+        }
     }
 }

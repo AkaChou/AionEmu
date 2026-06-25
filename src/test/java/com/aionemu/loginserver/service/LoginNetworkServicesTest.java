@@ -29,6 +29,17 @@ class LoginNetworkServicesTest {
     }
 
     @Test
+    void networkBridgeUsesLocalFallbackInsteadOfDirectLegacySingleton() throws IOException {
+        String servicesSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginNetworkServices.java"));
+        String connectorSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/NetConnector.java"));
+
+        assertFalse(servicesSource.contains("NetConnector.getInstance()"));
+        assertTrue(servicesSource.contains("fallbackServerTransport()"));
+        assertTrue(servicesSource.contains("NetConnector.currentTransport()"));
+        assertTrue(connectorSource.contains("@Deprecated(since = \"boot-migration\")"));
+    }
+
+    @Test
     void startupNetworkConnectUsesTransportBridgeInsteadOfDirectSingleton() throws IOException {
         String startupBridgeSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/lifecycle/LoginStartupRuntimeBridge.java"));
 

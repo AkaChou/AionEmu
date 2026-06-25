@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.commons.network.ServerTransport;
+import com.aionemu.loginserver.service.LoginNetworkServices;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -34,12 +35,30 @@ class NetConnectorTest {
         AtomicInteger shutdowns = new AtomicInteger();
         NetConnector.useTransportFactory(() -> new RecordingTransport(shutdowns));
 
-        ServerTransport firstTransport = NetConnector.getInstance();
+        ServerTransport firstTransport = NetConnector.currentTransport();
         assertTrue(NetConnector.shutdownIfInitialized());
-        ServerTransport secondTransport = NetConnector.getInstance();
+        ServerTransport secondTransport = NetConnector.currentTransport();
 
         assertEquals(1, shutdowns.get());
         assertNotSame(firstTransport, secondTransport);
+    }
+
+    @Test
+    void loginNetworkFallbackUsesCurrentTransportAfterShutdown() {
+        AtomicInteger shutdowns = new AtomicInteger();
+        NetConnector.useTransportFactory(() -> new RecordingTransport(shutdowns));
+        new LoginNetworkServices(null);
+
+        try {
+            ServerTransport firstTransport = LoginNetworkServices.serverTransport();
+            assertTrue(NetConnector.shutdownIfInitialized());
+            ServerTransport secondTransport = LoginNetworkServices.serverTransport();
+
+            assertEquals(1, shutdowns.get());
+            assertNotSame(firstTransport, secondTransport);
+        } finally {
+            new LoginNetworkServices(null).destroy();
+        }
     }
 
     private static final class RecordingTransport implements ServerTransport {

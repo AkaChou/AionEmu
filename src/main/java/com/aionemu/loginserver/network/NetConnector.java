@@ -48,7 +48,7 @@ public class NetConnector {
     /**
      * @return server transport instance.
      */
-    public static ServerTransport getInstance() {
+    public static ServerTransport currentTransport() {
         synchronized (lifecycleLock) {
             if (transport == null) {
                 transport = transportFactory.get();
@@ -56,6 +56,14 @@ public class NetConnector {
             initialized = true;
             return transport;
         }
+    }
+
+    /**
+     * @return server transport instance.
+     */
+    @Deprecated(since = "boot-migration")
+    public static ServerTransport getInstance() {
+        return currentTransport();
     }
 
     public static boolean shutdownIfInitialized() {

@@ -152,11 +152,14 @@ class LoginLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
-    void loginServerTransportBeanUsesLegacyConnectorInsteadOfCreatingSecondTransport() throws IOException {
+    void loginServerTransportBeanUsesConnectorLifecycleInsteadOfLegacyAccessor() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
+        String connectorSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/network/NetConnector.java"));
 
-        assertTrue(source.contains("return NetConnector.getInstance();"));
+        assertFalse(source.contains("NetConnector.getInstance()"));
+        assertTrue(source.contains("return NetConnector.currentTransport();"));
         assertFalse(source.contains("return new NetConnector();"));
+        assertTrue(connectorSource.contains("@Deprecated(since = \"boot-migration\")"));
     }
 
     @Test

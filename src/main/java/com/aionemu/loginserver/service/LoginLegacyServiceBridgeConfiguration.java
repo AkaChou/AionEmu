@@ -43,7 +43,7 @@ public class LoginLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public ServerTransport loginServerTransport() {
-        return NetConnector.getInstance();
+        return NetConnector.currentTransport();
     }
 
     @Bean
