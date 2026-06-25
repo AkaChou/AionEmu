@@ -41,6 +41,7 @@ import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCoreServicesRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsGateway;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
+import com.aionemu.gameserver.lifecycle.GameEnginesRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandGateway;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDredgionGateway;
@@ -196,6 +197,7 @@ class AionBootApplicationTest {
             assertEquals(GameWorldServicesRuntimeBridge.class, context.getType("gameWorldServicesRuntimeBridge"));
             assertEquals(GameFeatureServicesRuntimeBridge.class, context.getType("gameFeatureServicesRuntimeBridge"));
             assertEquals(GameEventRuntimeBridge.class, context.getType("gameEventRuntimeBridge"));
+            assertEquals(GameEnginesRuntimeBridge.class, context.getType("gameEnginesRuntimeBridge"));
             assertEquals(GameUtilityServicesRuntimeBridge.class, context.getType("gameUtilityServicesRuntimeBridge"));
             assertEquals(GameNetworkStartupRuntimeBridge.class, context.getType("gameNetworkStartupRuntimeBridge"));
             assertLazy(context.getBeanFactory(), "adminService");
@@ -205,6 +207,7 @@ class AionBootApplicationTest {
             assertLazy(context.getBeanFactory(), "gameWorldServicesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameFeatureServicesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameEventRuntimeBridge");
+            assertLazy(context.getBeanFactory(), "gameEnginesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameUtilityServicesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameNetworkStartupRuntimeBridge");
         }
@@ -318,6 +321,7 @@ class AionBootApplicationTest {
             context.registerBean(GameWorldServicesRuntimeBridge.class);
             context.registerBean(GameFeatureServicesRuntimeBridge.class);
             context.registerBean(GameEventRuntimeBridge.class);
+            context.registerBean(GameEnginesRuntimeBridge.class);
             context.registerBean(GameLoggingGateway.class);
             context.registerBean(GameLoggingLifecycle.class);
             context.registerBean(GameStaticDataGateway.class);

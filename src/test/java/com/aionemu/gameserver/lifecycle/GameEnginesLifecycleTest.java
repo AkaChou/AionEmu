@@ -29,6 +29,7 @@ class GameEnginesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "ai2EngineProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "chatProcessorProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "threadPoolManagerProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test

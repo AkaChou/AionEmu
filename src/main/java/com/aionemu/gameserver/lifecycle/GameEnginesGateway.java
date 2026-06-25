@@ -20,6 +20,7 @@ public class GameEnginesGateway {
     private ObjectProvider<AI2Engine> ai2EngineProvider;
     private ObjectProvider<ChatProcessor> chatProcessorProvider;
     private ObjectProvider<ThreadPoolManager> threadPoolManagerProvider;
+    private ObjectProvider<GameEnginesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setQuestEngineProvider(ObjectProvider<QuestEngine> questEngineProvider) {
@@ -46,6 +47,11 @@ public class GameEnginesGateway {
         this.threadPoolManagerProvider = threadPoolManagerProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameEnginesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void printSection() {
         Util.printSection(" *** Engines *** ");
     }
@@ -65,36 +71,43 @@ public class GameEnginesGateway {
 
     private QuestEngine questEngine() {
         if (questEngineProvider == null) {
-            return QuestEngine.getInstance();
+            return runtimeBridge().questEngine();
         }
-        return questEngineProvider.getIfAvailable(QuestEngine::getInstance);
+        return questEngineProvider.getIfAvailable(() -> runtimeBridge().questEngine());
     }
 
     private InstanceEngine instanceEngine() {
         if (instanceEngineProvider == null) {
-            return InstanceEngine.getInstance();
+            return runtimeBridge().instanceEngine();
         }
-        return instanceEngineProvider.getIfAvailable(InstanceEngine::getInstance);
+        return instanceEngineProvider.getIfAvailable(() -> runtimeBridge().instanceEngine());
     }
 
     private AI2Engine ai2Engine() {
         if (ai2EngineProvider == null) {
-            return AI2Engine.getInstance();
+            return runtimeBridge().ai2Engine();
         }
-        return ai2EngineProvider.getIfAvailable(AI2Engine::getInstance);
+        return ai2EngineProvider.getIfAvailable(() -> runtimeBridge().ai2Engine());
     }
 
     private ChatProcessor chatProcessor() {
         if (chatProcessorProvider == null) {
-            return ChatProcessor.getInstance();
+            return runtimeBridge().chatProcessor();
         }
-        return chatProcessorProvider.getIfAvailable(ChatProcessor::getInstance);
+        return chatProcessorProvider.getIfAvailable(() -> runtimeBridge().chatProcessor());
     }
 
     private ThreadPoolManager threadPoolManager() {
         if (threadPoolManagerProvider == null) {
-            return ThreadPoolManager.getInstance();
+            return runtimeBridge().threadPoolManager();
         }
-        return threadPoolManagerProvider.getIfAvailable(ThreadPoolManager::getInstance);
+        return threadPoolManagerProvider.getIfAvailable(() -> runtimeBridge().threadPoolManager());
+    }
+
+    private GameEnginesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameEnginesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameEnginesRuntimeBridge::new);
     }
 }
