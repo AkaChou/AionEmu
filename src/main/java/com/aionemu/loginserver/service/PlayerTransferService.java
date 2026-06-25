@@ -39,7 +39,6 @@ import com.aionemu.loginserver.service.ptransfer.PlayerTransferRequest;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferResultStatus;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferStatus;
 import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
-import com.aionemu.loginserver.utils.ThreadPoolManager;
 
 /**
  * @author KID
@@ -58,7 +57,7 @@ public class PlayerTransferService {
     private PlayerTransferDAO dao;
 
     public PlayerTransferService() {
-        veryfyTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+        veryfyTask = LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 verifyNewTasks();

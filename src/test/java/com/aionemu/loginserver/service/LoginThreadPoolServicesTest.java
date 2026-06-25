@@ -42,6 +42,18 @@ class LoginThreadPoolServicesTest {
         assertTrue(authPacketSource.contains("LoginThreadPoolServices.threadPoolManager().schedule"));
     }
 
+    @Test
+    void startupAndTransferSchedulingUseThreadPoolBridgeInsteadOfDirectSingleton() throws IOException {
+        String startupBridgeSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/lifecycle/LoginStartupRuntimeBridge.java"));
+        String transferServiceSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/PlayerTransferService.java"));
+
+        assertFalse(startupBridgeSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(startupBridgeSource.contains("LoginThreadPoolServices.threadPoolManager()"));
+
+        assertFalse(transferServiceSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(transferServiceSource.contains("LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate"));
+    }
+
     private static <T> T instance(Class<T> type) {
         return new ObjenesisStd().newInstance(type);
     }
