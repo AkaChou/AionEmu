@@ -32,6 +32,7 @@ public class ServerPacketsOpcodes {
 		addPacketOpcode(SM_VERSION_CHECK.class, 0x00, idSet); // 5.8
 		addPacketOpcode(SM_TIME_CHECK.class, 0x27, idSet); // 5.8
 		addPacketOpcode(SM_MAC_INFO.class, 0x166, idSet); // 5.8
+		addPacketOpcode(SM_EQUIPMENT_SETTING.class, 0x165, idSet); // 5.8
 		addPacketOpcode(SM_L2AUTH_LOGIN_CHECK.class, 0xc7, idSet); // 5.8
 		addPacketOpcode(SM_ACCOUNT_PROPERTIES.class, 0xf0, idSet); // 5.8
 		addPacketOpcode(SM_CHARACTER_LIST.class, 0xc8, idSet); // 5.8

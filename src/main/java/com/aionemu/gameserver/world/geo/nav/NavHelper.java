@@ -20,6 +20,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.scene.NavGeometry;
 import com.aionemu.gameserver.world.geo.nav.NavService.NavPathway;
 
@@ -45,7 +46,7 @@ class NavHelper {
 	 * If this value is too large, then entities that are traversing to targets that are not on
 	 * the Nav Mesh may clip through walls or other geometry in strange ways.
 	 */
-	public final static float ARBITRARY_SMALL_VALUE = 5; //TODO: Make config
+	public final static float ARBITRARY_SMALL_VALUE = 5;
 	
 	/**
 	 * A value used when retracing or opening the list of nodes to create a pathway corridor.
@@ -60,7 +61,7 @@ class NavHelper {
 	 * that corrupts the data structure and forces an infinite loop, but is also used as a limit
 	 * of operations while pathing.
 	 */
-	public final static int ARBITRARY_LARGE_VALUE = 800; //TODO: Make config
+	public final static int ARBITRARY_LARGE_VALUE = 800;
 	
 	/**
 	 * A percentage of pathCost to add onto the basic path cost calculation
@@ -70,14 +71,14 @@ class NavHelper {
 	 * the target from the vertex opposite the edge the path passes through does not pass through
 	 * said edge. See {@link NavGeometry#isTowardsEdge(byte, float[])}.
 	 */
-	public final static float PATH_WEIGHT = 0.2F; //TODO: Make config
+	public final static float PATH_WEIGHT = 0.2F;
 	
 	/**
 	 * A multiplier for {@link NavHeapNode#targetDist}. When the target distance is estimated,
 	 * it will be multiplied by this value. This is to give nodes that are closer to the target
 	 * a higher priority than nodes that are further away.
 	 */
-	public final static float TARGET_WEIGHT = 20; //TODO: Make config
+	public final static float TARGET_WEIGHT = 20;
 	
 	/**
 	 * A node designed to be stored in an array treated like a heap data structure.
@@ -124,7 +125,7 @@ class NavHelper {
 			if (tile == endTile) {
 				targetDist = 0;
 			} else {
-				targetDist = node.getPriority(x2, y2, z2)*TARGET_WEIGHT;
+				targetDist = node.getPriority(x2, y2, z2) * targetWeight();
 			}
 		}
 		
@@ -143,7 +144,7 @@ class NavHelper {
 			this.parent = parent;
 			float basePriority = parent.pathCost + parent.tile.getInRad();
 			if (useWeight) {
-				pathCost = basePriority + basePriority*PATH_WEIGHT;
+				pathCost = basePriority + basePriority * pathWeight();
 			} else {
 				pathCost = basePriority;
 			}
@@ -166,7 +167,7 @@ class NavHelper {
 				parent = newParent;
 				if (useWeight) {
 					pathCost = parent.pathCost + parent.tile.getInRad();
-					pathCost += pathCost*PATH_WEIGHT;
+					pathCost += pathCost * pathWeight();
 					onUpdateNode(this);
 				} else {
 					pathCost = parent.pathCost + parent.tile.getInRad();
@@ -365,22 +366,23 @@ class NavHelper {
 	 */
 	public NavPathway[] createPathway() {
 		boolean finished = false;
+		int maxNodes = maxNodes();
 		if (endTile == null) {
 			NavHeapNode current;
-			short opCount = 0;
+			int opCount = 0;
 			do {
 				current = removeFirst();
-				if (current.targetDist < ARBITRARY_SMALL_VALUE*TARGET_WEIGHT) {
+				if (current.targetDist < targetThreshold() * targetWeight()) {
 					finished = true;
 					break;
 				}
 				current.open();
-				if (opCount++ > ARBITRARY_LARGE_VALUE) break;
+				if (opCount++ > maxNodes) break;
 			} while (currentHeapCount > 0);
 			if (finished) return retrace(current);
 		} else {
 			NavHeapNode current;
-			short opCount = 0;
+			int opCount = 0;
 			do {
 				current = removeFirst();
 				if (current.tile == endTile) {
@@ -388,7 +390,7 @@ class NavHelper {
 					break;
 				}
 				current.open();
-				if (opCount++ > ARBITRARY_LARGE_VALUE) break;
+				if (opCount++ > maxNodes) break;
 			} while (currentHeapCount > 0);
 			if (finished) return retrace(current);
 		}
@@ -405,6 +407,7 @@ class NavHelper {
 	 */
 	private NavPathway[] retrace(NavHeapNode node) {
 		ArrayList<NavPathway> ret = new ArrayList<NavPathway>();
+		int corridorLength = corridorLength();
 		NavHeapNode child = node;
 		NavHeapNode parent = node;
 		while (parent.parent != null) {
@@ -425,7 +428,7 @@ class NavHelper {
 			 * This method is looping until all memory is consumed by the ArrayList in some odd edge case.
 			 * Could be related to pathCost.
 			 */
-			if (ret.size() > ARBITRARY_LARGE_VALUE) {
+			if (ret.size() > corridorLength) {
 				LOG.error("Retracing path produced too many portals: (" + x1 + ", " + y1 + ", " + z1 + ") --> (" + x2 + ", " + y2 + ", " + z2 + ")");
 				return new NavPathway[0];
 			}
@@ -561,6 +564,26 @@ class NavHelper {
 		int heapIndex1 = node1.heapIndex;
 		node1.heapIndex = node2.heapIndex;
 		node2.heapIndex = heapIndex1;
+	}
+
+	private static int maxNodes() {
+		return Math.max(1, GeoDataConfig.GEO_NAV_MAX_NODES);
+	}
+
+	private static int corridorLength() {
+		return Math.max(1, GeoDataConfig.GEO_NAV_CORRIDOR_LENGTH);
+	}
+
+	private static float targetThreshold() {
+		return Math.max(0F, GeoDataConfig.GEO_NAV_TARGET_THRESHOLD);
+	}
+
+	private static float pathWeight() {
+		return Math.max(0F, GeoDataConfig.GEO_NAV_PATH_WEIGHT);
+	}
+
+	private static float targetWeight() {
+		return Math.max(0F, GeoDataConfig.GEO_NAV_TARGET_WEIGHT);
 	}
 	
 }

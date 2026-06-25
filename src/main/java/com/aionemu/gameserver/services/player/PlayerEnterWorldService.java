@@ -65,6 +65,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CUBE_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ENTER_WORLD_CHECK;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_EQUIPMENT_SETTING;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EVERGALE_CANYON;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_STATUS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_GAME_TIME;
@@ -378,6 +379,9 @@ public final class PlayerEnterWorldService {
 			}
 			CreativityEssenceService.getInstance().onLogin(player);
 			sendItemInfos(client, player);
+			if (!player.getEquipmentSettingList().getEquipmentSetting().isEmpty()) {
+				client.sendPacket(new SM_EQUIPMENT_SETTING(player.getEquipmentSettingList().getEquipmentSetting()));
+			}
 			if (AStationConfig.A_STATION_ENABLE) {
 				AStationService.getInstance().checkAuthorizationRequest(player);
 			}

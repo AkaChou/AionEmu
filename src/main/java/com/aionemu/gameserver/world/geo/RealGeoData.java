@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import com.aionemu.gameserver.geoEngine.GeoWorldLoader;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
-import com.aionemu.gameserver.utils.Util;
+import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 
@@ -41,7 +42,9 @@ public class RealGeoData implements GeoData {
 
     protected void loadWorldMaps(final Map<String, Spatial> models) {
         log.info("Loading geo maps..");
-        Util.printProgressBarHeader(DataManager.WORLD_MAPS_DATA.size());
+        int totalMaps = DataManager.WORLD_MAPS_DATA.size();
+        ConsoleProgressLineRenderer progressRenderer = new ConsoleProgressLineRenderer(System.out, true);
+        AtomicInteger completedMaps = new AtomicInteger();
         final List<Integer> mapsWithErrors = new ArrayList<>();
         List<Callable<Void>> tasks = new ArrayList<>();
 
@@ -64,7 +67,7 @@ public class RealGeoData implements GeoData {
                             geoMaps.put(mapId, DummyGeoData.DUMMY_MAP);
                         }
                     }
-                    Util.printCurrentProgress();
+                    progressRenderer.progress("GeoMaps", completedMaps.incrementAndGet(), totalMaps);
                     return null;
                 }
             });
@@ -79,7 +82,7 @@ public class RealGeoData implements GeoData {
             log.error("Error during geo map loading", e);
         }
 
-        Util.printEndProgress();
+        progressRenderer.finished("GeoMaps", totalMaps);
         if (!mapsWithErrors.isEmpty()) {
             log.warn("Some maps were not loaded correctly and reverted to dummy implementation: {}", mapsWithErrors);
         }

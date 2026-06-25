@@ -3,19 +3,20 @@ package com.aionemu.gameserver.lifecycle;
 import java.io.PrintStream;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
 
 final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 
-	private static final int BAR_WIDTH = 20;
 	private static final String SECTION_SEPARATOR = "────────────────────────────────────────────────────────";
 
 	private final PrintStream out;
 	private final boolean enabled;
-	private int lastLineLength;
+	private final ConsoleProgressLineRenderer progressRenderer;
 
 	ConsoleStartupProgressReporter(PrintStream out, boolean enabled) {
 		this.out = out;
 		this.enabled = enabled;
+		this.progressRenderer = new ConsoleProgressLineRenderer(out, enabled);
 	}
 
 	static StartupProgressReporter forCurrentConsole() {
@@ -39,13 +40,7 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 
 	@Override
 	public void stepFinished(String stepName) {
-		if (!enabled) {
-			return;
-		}
-		render(stepLine(stepName, 1, 1));
-		out.println();
-		out.flush();
-		lastLineLength = 0;
+		progressRenderer.finished(stepName, 1);
 	}
 
 	@Override
@@ -55,38 +50,10 @@ final class ConsoleStartupProgressReporter implements StartupProgressReporter {
 		}
 		out.printf("Loaded %s in %d ms%n", groupName, elapsedMillis);
 		out.flush();
-		lastLineLength = 0;
 	}
 
 	@Override
 	public void failed() {
-		if (!enabled) {
-			return;
-		}
-		out.println();
-		out.flush();
-		lastLineLength = 0;
-	}
-
-	private void render(String line) {
-		out.print('\r');
-		out.print(line);
-		int padding = lastLineLength - line.length();
-		if (padding > 0) {
-			out.print(" ".repeat(padding));
-		}
-		out.flush();
-		lastLineLength = line.length();
-	}
-
-	private String progressBar(int current, int total) {
-		int boundedTotal = Math.max(1, total);
-		int boundedCurrent = Math.min(boundedTotal, Math.max(0, current));
-		int filled = boundedCurrent * BAR_WIDTH / boundedTotal;
-		return "█".repeat(filled) + "░".repeat(BAR_WIDTH - filled);
-	}
-
-	private String stepLine(String stepName, int current, int total) {
-		return String.format("%s | \"%s\" | %d/%d", progressBar(current, total), stepName, current, total);
+		progressRenderer.clearLine();
 	}
 }

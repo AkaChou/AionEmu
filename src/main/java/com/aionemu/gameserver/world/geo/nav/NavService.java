@@ -15,6 +15,8 @@
 package com.aionemu.gameserver.world.geo.nav;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,7 @@ public final class NavService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(NavService.class);
 	private final NavData navData = NavData.getInstance();
+	private final ConcurrentHashMap<GroundCacheKey, GroundCacheEntry> groundCache = new ConcurrentHashMap<>();
 	
 	private NavService() {};
 	
@@ -72,7 +75,7 @@ public final class NavService {
 	 * @return true if the target can be pulled, false otherwise.
 	 */
 	public boolean canPullTarget(Creature creature, Creature target) {
-		if (!GeoDataConfig.GEO_NAV_ENABLE) return true;
+		if (!GeoDataConfig.GEO_NAV_ENABLE || !GeoDataConfig.GEO_NAV_PULL_ENABLE) return true;
 		if (target.isFlying()) return true;
 		float x1 = creature.getX(), y1 = creature.getY(), z1 = creature.getZ();
 		NavGeometry tile1 = getNavTile(creature.getWorldId(), x1, y1, z1);
@@ -111,7 +114,7 @@ public final class NavService {
 			return null;
 		}
 		int triCount = 0;
-		while (triCount < 50 && current != tile2 && current != null) {
+		while (triCount < GeoDataConfig.GEO_NAV_MAX_NODES && current != tile2 && current != null) {
 			triCount++;
 			switch (current.getEdgeMatching(last)) {
 				case 0:
@@ -236,6 +239,9 @@ public final class NavService {
 		if (pathway == null) return null; //Mob will ignore all obstacles
 		if (pathway.length == 0) return new float[][] {{x1, y1, z1}}; //Mob will not move
 		if (pathway.length == 1 && pathway[0].edge == 0) return new float[][] {{x2, y2, z2}}; //Mob will move directly to target
+		if (!GeoDataConfig.GEO_NAV_SMOOTH_PATH) {
+			return rawPathway(pathway, includeTargetPoint, x2, y2, z2);
+		}
 		ArrayList<float[]> ret = new ArrayList<float[]>();
 		for (int i = pathway.length - 1; i >= 0;) {
 			float[][] endpoints = pathway[i--].getEndpoints();
@@ -362,6 +368,27 @@ public final class NavService {
 		}
 		return ret.toArray(new float[0][]);
 	}
+
+	private static float[][] rawPathway(NavPathway[] pathway, boolean includeTargetPoint, float x2, float y2, float z2) {
+		ArrayList<float[]> ret = new ArrayList<float[]>();
+		int limit = Math.max(1, GeoDataConfig.GEO_NAV_CORRIDOR_LENGTH);
+		for (int i = pathway.length - 1; i >= 0 && ret.size() < limit; i--) {
+			float[][] endpoints = pathway[i].getEndpoints();
+			if (endpoints != null) {
+				ret.add(new float[] {
+					(endpoints[0][0] + endpoints[1][0]) / 2F,
+					(endpoints[0][1] + endpoints[1][1]) / 2F,
+					(endpoints[0][2] + endpoints[1][2]) / 2F
+				});
+			}
+		}
+		if (includeTargetPoint && ret.size() < limit) {
+			ret.add(new float[] {x2, y2, z2});
+		} else if (!includeTargetPoint && ret.size() < limit) {
+			ret.add(pathway[0].tile.getClosestPoint(x2, y2, z2));
+		}
+		return ret.toArray(new float[0][]);
+	}
 	
 	private static boolean areEqualPoints(float[] p1, float[] p2) {
 		assert p1.length == 3 && p2.length == 3;
@@ -383,12 +410,16 @@ public final class NavService {
 	}
 	
 	private NavGeometry getNavTile(int worldId, float x, float y, float z) {
+		return getCachedGround(worldId, x, y, z, false, () -> findNavTile(worldId, x, y, z));
+	}
+
+	private NavGeometry findNavTile(int worldId, float x, float y, float z) {
 		GeoMap navMap = navData.getNavMap(worldId);
 		if (navMap == null) return null;
 		Vector3f pos = Vector3f.newInstance().set(x, y, z + 1F),
 				 dir = Vector3f.newInstance().set(0, 0, -1F);
 		Ray ray = new Ray(pos, dir);
-		ray.setLimit(5F);
+		ray.setLimit(GeoDataConfig.GEO_NAV_GROUND_SEARCH_DISTANCE);
 		CollisionResults results = new CollisionResults((byte) 1, false, 0); //Instance ID shouldn't be needed
 		int collisionCount = navMap.collideWith(ray, results);
 		Vector3f.recycle(pos);
@@ -405,11 +436,16 @@ public final class NavService {
 	}
 	
 	private NavGeometry getNavTileWithBox(int worldId, float x, float y, float z) {
+		return getCachedGround(worldId, x, y, z, true, () -> findNavTileWithBox(worldId, x, y, z));
+	}
+
+	private NavGeometry findNavTileWithBox(int worldId, float x, float y, float z) {
 		GeoMap navMap = navData.getNavMap(worldId);
 		if (navMap == null) return null;
-		Vector3f min = Vector3f.newInstance().set(x - 0.8F, y - 0.8F, z - 1),
-				 max = Vector3f.newInstance().set(x + 0.8F, y + 0.8F, z + 4),
-				center = Vector3f.newInstance().set(x, y, z + 0.2F);
+		float extent = GeoDataConfig.GEO_NAV_BOX_EXTENT_XY;
+		Vector3f min = Vector3f.newInstance().set(x - extent, y - extent, z + GeoDataConfig.GEO_NAV_BOX_OFFSET_Z_MIN),
+				 max = Vector3f.newInstance().set(x + extent, y + extent, z + GeoDataConfig.GEO_NAV_BOX_OFFSET_Z_MAX),
+				center = Vector3f.newInstance().set(x, y, z + GeoDataConfig.GEO_NAV_BOX_CENTER_Z);
 		BoundingBox box = new BoundingBox(min,max);
 		box.setCenter(center);
 		CollisionResults results = new CollisionResults((byte) 1, false, 0); //Instance ID shouldn't be needed
@@ -426,6 +462,67 @@ public final class NavService {
 			LOG.error(e.toString());
 		}
 		return null;
+	}
+
+	private NavGeometry getCachedGround(int worldId, float x, float y, float z, boolean box, Supplier<NavGeometry> lookup) {
+		if (!GeoDataConfig.GEO_NAV_CACHE_GROUND || GeoDataConfig.GEO_NAV_CACHE_TTL <= 0) {
+			return lookup.get();
+		}
+		long now = System.currentTimeMillis();
+		GroundCacheKey key = new GroundCacheKey(worldId, x, y, z, box);
+		GroundCacheEntry cached = groundCache.get(key);
+		if (cached != null) {
+			if (cached.expiresAt >= now) {
+				return cached.tile;
+			}
+			groundCache.remove(key, cached);
+		}
+		NavGeometry tile = lookup.get();
+		groundCache.put(key, new GroundCacheEntry(tile, now + GeoDataConfig.GEO_NAV_CACHE_TTL));
+		return tile;
+	}
+
+	private static final class GroundCacheEntry {
+		private final NavGeometry tile;
+		private final long expiresAt;
+
+		private GroundCacheEntry(NavGeometry tile, long expiresAt) {
+			this.tile = tile;
+			this.expiresAt = expiresAt;
+		}
+	}
+
+	private static final class GroundCacheKey {
+		private final int worldId;
+		private final int x;
+		private final int y;
+		private final int z;
+		private final boolean box;
+
+		private GroundCacheKey(int worldId, float x, float y, float z, boolean box) {
+			this.worldId = worldId;
+			this.x = Float.floatToIntBits(x);
+			this.y = Float.floatToIntBits(y);
+			this.z = Float.floatToIntBits(z);
+			this.box = box;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) return true;
+			if (!(obj instanceof GroundCacheKey other)) return false;
+			return worldId == other.worldId && x == other.x && y == other.y && z == other.z && box == other.box;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = worldId;
+			result = 31 * result + x;
+			result = 31 * result + y;
+			result = 31 * result + z;
+			result = 31 * result + (box ? 1 : 0);
+			return result;
+		}
 	}
 	
 	static class NavPathway {
