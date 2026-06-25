@@ -2,6 +2,8 @@ package com.aionemu.chatserver;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.chatserver.network.netty.NettyServer;
@@ -11,6 +13,7 @@ import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.chatserver.utils.IdFactory;
 import java.io.IOException;
+import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -78,6 +81,24 @@ class ChatServerTest {
         startupBridge.registerShutdownHook();
 
         assertEquals(List.of("shutdownHook:get", "shutdownHook:register"), events);
+    }
+
+    @Test
+    void processRuntimeBridgeUsesShutdownHookProviderBeforeLegacySingletonFallbackForShutdownHook() {
+        ProviderUsedException providerUsed = new ProviderUsedException();
+        ChatProcessRuntimeBridge runtimeBridge = new ChatProcessRuntimeBridge();
+        runtimeBridge.setShutdownHookProvider(throwingProvider(providerUsed));
+
+        assertSame(providerUsed, assertThrows(ProviderUsedException.class, runtimeBridge::shutdownHook));
+    }
+
+    @Test
+    void processRuntimeBridgeUsesShutdownHookProviderBeforeLegacySingletonFallbackForShutdown() {
+        ProviderUsedException providerUsed = new ProviderUsedException();
+        ChatProcessRuntimeBridge runtimeBridge = new ChatProcessRuntimeBridge();
+        runtimeBridge.setShutdownHookProvider(throwingProvider(providerUsed));
+
+        assertSame(providerUsed, assertThrows(ProviderUsedException.class, () -> runtimeBridge.shutdown(true)));
     }
 
     @Test
@@ -218,5 +239,26 @@ class ChatServerTest {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
         return beanFactory.getBeanProvider(type);
+    }
+
+    private static ObjectProvider<ShutdownHook> throwingProvider(ProviderUsedException exception) {
+        return ObjectProvider.class.cast(Proxy.newProxyInstance(
+            ObjectProvider.class.getClassLoader(),
+            new Class<?>[] { ObjectProvider.class },
+            (proxy, method, args) -> {
+                if (method.getDeclaringClass() == Object.class) {
+                    return switch (method.getName()) {
+                        case "toString" -> "throwingProvider";
+                        case "hashCode" -> System.identityHashCode(proxy);
+                        case "equals" -> proxy == args[0];
+                        default -> null;
+                    };
+                }
+                throw exception;
+            }
+        ));
+    }
+
+    private static final class ProviderUsedException extends RuntimeException {
     }
 }

@@ -48,7 +48,7 @@ public class ShutdownHook extends Thread {
         return instance;
     }
 
-    static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge) {
+    public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge) {
         instance.setProcessBridge(processBridge);
         return instance;
     }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 public class LoginProcessRuntimeBridge {
 
     private ObjectProvider<Shutdown> shutdownProvider;
+    private Shutdown shutdown;
 
     @Autowired(required = false)
     void setShutdownProvider(ObjectProvider<Shutdown> shutdownProvider) {
@@ -30,14 +31,22 @@ public class LoginProcessRuntimeBridge {
         shutdown().shutdown(restart);
     }
 
+    public void prepareShutdown() {
+        shutdown();
+    }
+
     public void exitWithError() {
         System.exit(ExitCode.CODE_ERROR);
     }
 
-    private Shutdown shutdown() {
-        if (shutdownProvider == null) {
-            return Shutdown.getInstance();
+    private synchronized Shutdown shutdown() {
+        if (shutdown == null) {
+            if (shutdownProvider == null) {
+                shutdown = Shutdown.getInstance();
+            } else {
+                shutdown = shutdownProvider.getIfAvailable(Shutdown::getInstance);
+            }
         }
-        return shutdownProvider.getIfAvailable(Shutdown::getInstance);
+        return shutdown;
     }
 }

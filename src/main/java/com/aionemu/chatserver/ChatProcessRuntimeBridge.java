@@ -1,5 +1,7 @@
 package com.aionemu.chatserver;
 
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -9,8 +11,15 @@ import org.springframework.stereotype.Component;
 @ConditionalOnProperty(prefix = "aion.services.chat", name = "enabled", havingValue = "true")
 public class ChatProcessRuntimeBridge {
 
+    private ObjectProvider<ShutdownHook> shutdownHookProvider;
+
+    @Autowired(required = false)
+    void setShutdownHookProvider(ObjectProvider<ShutdownHook> shutdownHookProvider) {
+        this.shutdownHookProvider = shutdownHookProvider;
+    }
+
     public Thread shutdownHook() {
-        return ShutdownHook.getInstance(this);
+        return shutdownHookInstance();
     }
 
     public void registerShutdownHook(Thread shutdownHook) {
@@ -18,10 +27,17 @@ public class ChatProcessRuntimeBridge {
     }
 
     public void shutdown(boolean restart) {
-        ShutdownHook.getInstance(this).shutdown(restart);
+        shutdownHookInstance().shutdown(restart);
     }
 
     public void halt(int status) {
         Runtime.getRuntime().halt(status);
+    }
+
+    private ShutdownHook shutdownHookInstance() {
+        if (shutdownHookProvider == null) {
+            return ShutdownHook.getInstance(this);
+        }
+        return shutdownHookProvider.getIfAvailable(() -> ShutdownHook.getInstance(this));
     }
 }

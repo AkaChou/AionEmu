@@ -23,6 +23,7 @@ import com.aionemu.chatserver.ChatProcessRuntimeBridge;
 import com.aionemu.chatserver.ChatServer;
 import com.aionemu.chatserver.ChatServerRuntime;
 import com.aionemu.chatserver.ChatServerStartupBridge;
+import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.network.netty.pipeline.LoginToClientPipeLineFactory;
@@ -283,6 +284,7 @@ class AionBootApplicationTest {
             assertDoesNotHaveBean(context, BroadcastService.class);
             assertDoesNotHaveBean(context, ChatService.class);
             assertDoesNotHaveBean(context, RestartService.class);
+            assertDoesNotHaveBean(context, ShutdownHook.class);
         }
     }
 
@@ -300,6 +302,7 @@ class AionBootApplicationTest {
             assertHasBean(context, BroadcastService.class);
             assertHasBean(context, ChatService.class);
             assertHasBean(context, RestartService.class);
+            assertHasBean(context, ShutdownHook.class);
 
             assertTrue(context.getBeanFactory().getBeanDefinition("chatServerRuntime").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("idFactory").isLazyInit());
@@ -310,6 +313,7 @@ class AionBootApplicationTest {
             assertTrue(context.getBeanFactory().getBeanDefinition("broadcastService").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("chatService").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("restartService").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("chatShutdownHook").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("chatProcessRuntimeBridge").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("chatServerStartupBridge").isLazyInit());
         }

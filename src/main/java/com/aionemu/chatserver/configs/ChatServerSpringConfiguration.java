@@ -1,5 +1,7 @@
 package com.aionemu.chatserver.configs;
 
+import com.aionemu.chatserver.ChatProcessRuntimeBridge;
+import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.network.netty.pipeline.LoginToClientPipeLineFactory;
@@ -66,5 +68,11 @@ public class ChatServerSpringConfiguration {
     @Lazy
     public RestartService restartService() {
         return RestartService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ShutdownHook chatShutdownHook(ChatProcessRuntimeBridge processBridge) {
+        return ShutdownHook.getInstance(processBridge);
     }
 }
