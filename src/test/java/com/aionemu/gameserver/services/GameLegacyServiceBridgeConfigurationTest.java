@@ -3,6 +3,8 @@ package com.aionemu.gameserver.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.gameserver.cache.HTMLCache;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -88,6 +90,18 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(NavService.class, context.getType("navService"));
             assertLazy(context.getBeanFactory(), "geoService");
             assertLazy(context.getBeanFactory(), "navService");
+        }
+    }
+
+    @Test
+    void exposesStaticResourceServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("dataManager"));
+            assertTrue(context.containsBeanDefinition("htmlCache"));
+            assertEquals(DataManager.class, context.getType("dataManager"));
+            assertEquals(HTMLCache.class, context.getType("htmlCache"));
+            assertLazy(context.getBeanFactory(), "dataManager");
+            assertLazy(context.getBeanFactory(), "htmlCache");
         }
     }
 

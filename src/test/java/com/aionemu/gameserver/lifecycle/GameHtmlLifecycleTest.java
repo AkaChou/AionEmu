@@ -10,12 +10,18 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameHtmlLifecycleTest {
 
     @Test
     void usesHtmlGatewayCollaborator() {
         assertEquals(GameHtmlGateway.class, fieldType("htmlGateway"));
+    }
+
+    @Test
+    void htmlGatewayBridgesLegacyCacheThroughSpringProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameHtmlGateway.class, "htmlCacheProvider"));
     }
 
     @Test
@@ -54,8 +60,12 @@ class GameHtmlLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameHtmlLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameHtmlLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

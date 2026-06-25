@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.cache.HTMLCache;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -99,5 +101,17 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public NavService navService() {
         return NavService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public DataManager dataManager() {
+        return DataManager.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public HTMLCache htmlCache() {
+        return HTMLCache.getInstance();
     }
 }
