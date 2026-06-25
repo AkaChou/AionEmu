@@ -12,10 +12,10 @@ import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
 import com.aionemu.loginserver.service.LoginNetworkServices;
 import com.aionemu.loginserver.service.LoginProtectionServices;
+import com.aionemu.loginserver.service.LoginTaskManagerServices;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.loginserver.service.LoginTransferServices;
 import com.aionemu.loginserver.service.PlayerTransferService;
-import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.DeadLockDetector;
 import com.aionemu.loginserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import org.springframework.beans.factory.ObjectProvider;
@@ -29,7 +29,6 @@ public class LoginStartupRuntimeBridge {
 
     private ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider;
     private ObjectProvider<PremiumController> premiumControllerProvider;
-    private ObjectProvider<TaskFromDBManager> taskFromDBManagerProvider;
 
     @Autowired(required = false)
     void setProcessBridgeProvider(ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider) {
@@ -39,11 +38,6 @@ public class LoginStartupRuntimeBridge {
     @Autowired(required = false)
     void setPremiumControllerProvider(ObjectProvider<PremiumController> premiumControllerProvider) {
         this.premiumControllerProvider = premiumControllerProvider;
-    }
-
-    @Autowired(required = false)
-    void setTaskFromDBManagerProvider(ObjectProvider<TaskFromDBManager> taskFromDBManagerProvider) {
-        this.taskFromDBManagerProvider = taskFromDBManagerProvider;
     }
 
     public void initializeLogger() {
@@ -105,7 +99,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void initializeTaskManager() {
-        taskFromDBManager();
+        LoginTaskManagerServices.taskFromDBManager();
     }
 
     public void registerShutdownHook() {
@@ -137,12 +131,5 @@ public class LoginStartupRuntimeBridge {
             return PremiumController.getController();
         }
         return premiumControllerProvider.getIfAvailable(PremiumController::getController);
-    }
-
-    private TaskFromDBManager taskFromDBManager() {
-        if (taskFromDBManagerProvider == null) {
-            return TaskFromDBManager.getInstance();
-        }
-        return taskFromDBManagerProvider.getIfAvailable(TaskFromDBManager::getInstance);
     }
 }

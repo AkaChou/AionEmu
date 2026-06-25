@@ -84,6 +84,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Routed commons Netty packet executor and common-network shutdown cleanup through a Spring-provided thread-pool manager before the legacy singleton fallback.
 - [x] Made login premium-controller startup use a Spring-instantiable controller bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Made login task-from-db startup use a Spring-instantiable manager bean while retaining the legacy singleton only as a lazy fallback.
+- [x] Routed the login startup runtime bridge through the shared task-from-db manager wrapper instead of keeping its own singleton fallback.
 - [x] Made login banned-MAC management Spring-instantiable while replacing its eager singleton with a lazy fallback.
 - [x] Routed login banned-MAC packet access through a Spring-provided manager before the legacy singleton fallback.
 - [x] Routed login flood/brute-force protection access through Spring-provided services before legacy singleton fallbacks.
