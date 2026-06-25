@@ -13,10 +13,31 @@ import com.aionemu.gameserver.network.aion.GameConnectionFactoryImpl;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class GameServerNetworkGateway {
+
+    private ObjectProvider<BannedMacManager> bannedMacManagerProvider;
+    private ObjectProvider<LoginServer> loginServerProvider;
+    private ObjectProvider<ChatServer> chatServerProvider;
+
+    @Autowired(required = false)
+    void setBannedMacManagerProvider(ObjectProvider<BannedMacManager> bannedMacManagerProvider) {
+        this.bannedMacManagerProvider = bannedMacManagerProvider;
+    }
+
+    @Autowired(required = false)
+    void setLoginServerProvider(ObjectProvider<LoginServer> loginServerProvider) {
+        this.loginServerProvider = loginServerProvider;
+    }
+
+    @Autowired(required = false)
+    void setChatServerProvider(ObjectProvider<ChatServer> chatServerProvider) {
+        this.chatServerProvider = chatServerProvider;
+    }
 
     public boolean isNettyTransportEnabled() {
         return Boolean.getBoolean("aion.transport.netty");
@@ -39,19 +60,40 @@ public class GameServerNetworkGateway {
     }
 
     public void initializeBannedMacManager() {
-        BannedMacManager.getInstance();
+        bannedMacManager();
     }
 
     public GameServerNetworkLifecycle.NetworkPeer loginServer() {
-        return new LoginServerPeer(LoginServer.getInstance());
+        return new LoginServerPeer(loginServerInstance());
     }
 
     public GameServerNetworkLifecycle.NetworkPeer chatServer() {
-        return new ChatServerPeer(ChatServer.getInstance());
+        return new ChatServerPeer(chatServerInstance());
     }
 
     public long currentTimeMillis() {
         return System.currentTimeMillis();
+    }
+
+    private BannedMacManager bannedMacManager() {
+        if (bannedMacManagerProvider == null) {
+            return BannedMacManager.getInstance();
+        }
+        return bannedMacManagerProvider.getIfAvailable(BannedMacManager::getInstance);
+    }
+
+    private LoginServer loginServerInstance() {
+        if (loginServerProvider == null) {
+            return LoginServer.getInstance();
+        }
+        return loginServerProvider.getIfAvailable(LoginServer::getInstance);
+    }
+
+    private ChatServer chatServerInstance() {
+        if (chatServerProvider == null) {
+            return ChatServer.getInstance();
+        }
+        return chatServerProvider.getIfAvailable(ChatServer::getInstance);
     }
 
     @RequiredArgsConstructor

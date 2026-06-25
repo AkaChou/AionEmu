@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
+import com.aionemu.gameserver.network.BannedMacManager;
+import com.aionemu.gameserver.network.chatserver.ChatServer;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -289,6 +292,21 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("shutdownHook"));
             assertEquals(ShutdownHook.class, context.getType("shutdownHook"));
             assertLazy(context.getBeanFactory(), "shutdownHook");
+        }
+    }
+
+    @Test
+    void exposesNetworkPeerServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("bannedMacManager"));
+            assertTrue(context.containsBeanDefinition("loginServer"));
+            assertTrue(context.containsBeanDefinition("chatServer"));
+            assertEquals(BannedMacManager.class, context.getType("bannedMacManager"));
+            assertEquals(LoginServer.class, context.getType("loginServer"));
+            assertEquals(ChatServer.class, context.getType("chatServer"));
+            assertLazy(context.getBeanFactory(), "bannedMacManager");
+            assertLazy(context.getBeanFactory(), "loginServer");
+            assertLazy(context.getBeanFactory(), "chatServer");
         }
     }
 

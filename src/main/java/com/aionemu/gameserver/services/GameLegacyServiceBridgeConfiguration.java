@@ -4,6 +4,9 @@ import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
+import com.aionemu.gameserver.network.BannedMacManager;
+import com.aionemu.gameserver.network.chatserver.ChatServer;
+import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.BGService;
@@ -316,6 +319,24 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public ShutdownHook shutdownHook() {
         return ShutdownHook.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public BannedMacManager bannedMacManager() {
+        return BannedMacManager.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public LoginServer loginServer() {
+        return LoginServer.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ChatServer chatServer() {
+        return ChatServer.getInstance();
     }
 
     @Bean
