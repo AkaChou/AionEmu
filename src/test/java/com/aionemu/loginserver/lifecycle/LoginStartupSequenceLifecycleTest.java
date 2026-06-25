@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -159,7 +160,9 @@ class LoginStartupSequenceLifecycleTest {
     }
 
     @Test
-    void startupGatewayBridgesRuntimeStaticServicesThroughSpringProvider() {
+    void startupGatewayBridgesRuntimeStaticServicesThroughSpringProvider() throws Exception {
+        String previousBootMode = System.getProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
+        System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
         List<String> events = new ArrayList<>();
         LoginStartupGateway gateway = new LoginStartupGateway();
         gateway.setRuntimeBridgeProvider(provider(
@@ -167,12 +170,51 @@ class LoginStartupSequenceLifecycleTest {
             new RecordingLoginStartupRuntimeBridge(events)
         ));
 
-        gateway.initializeThreadPool();
-        gateway.connectNetwork();
-        gateway.initializeTaskManager();
-        gateway.registerShutdownHook();
+        try {
+            gateway.initializeLogger();
+            gateway.initializeCronService();
+            gateway.loadConfig();
+            gateway.initializeDatabase();
+            gateway.initializeDaos();
+            gateway.startDeadlockDetector();
+            gateway.initializeThreadPool();
+            gateway.initializeKeyGenerator();
+            gateway.loadGameServers();
+            gateway.startBannedIpController();
+            gateway.cleanExpiredMacBans();
+            gateway.connectNetwork();
+            gateway.initializeTaskManager();
+            gateway.registerShutdownHook();
+            gateway.printInfos();
+            gateway.initializePremiumController();
+            gateway.exitWithError();
 
-        assertEquals(List.of("threadpool:init", "network:connect", "tasks:init", "shutdownHook"), events);
+            assertEquals(List.of(
+                "logger:init",
+                "cron:init",
+                "config:load",
+                "database:init",
+                "dao:init",
+                "deadlock:start:false",
+                "threadpool:init",
+                "keygen:init",
+                "gameservers:load",
+                "bannedIp:start",
+                "bannedMac:clean",
+                "network:connect",
+                "tasks:init",
+                "shutdownHook",
+                "infos:print",
+                "premium:init",
+                "exit:error"
+            ), events);
+        } finally {
+            if (previousBootMode == null) {
+                System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
+            } else {
+                System.setProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY, previousBootMode);
+            }
+        }
     }
 
     private static Class<?> fieldType(String name) {
@@ -328,8 +370,58 @@ class LoginStartupSequenceLifecycleTest {
         }
 
         @Override
+        public void initializeLogger() {
+            events.add("logger:init");
+        }
+
+        @Override
+        public void initializeCronService() {
+            events.add("cron:init");
+        }
+
+        @Override
+        public void loadConfig() {
+            events.add("config:load");
+        }
+
+        @Override
+        public void initializeDatabase() {
+            events.add("database:init");
+        }
+
+        @Override
+        public void initializeDaos() {
+            events.add("dao:init");
+        }
+
+        @Override
+        public void startDeadlockDetector(boolean bootEmbedded) {
+            events.add("deadlock:start:" + bootEmbedded);
+        }
+
+        @Override
         public void initializeThreadPool() {
             events.add("threadpool:init");
+        }
+
+        @Override
+        public void initializeKeyGenerator() {
+            events.add("keygen:init");
+        }
+
+        @Override
+        public void loadGameServers() {
+            events.add("gameservers:load");
+        }
+
+        @Override
+        public void startBannedIpController() {
+            events.add("bannedIp:start");
+        }
+
+        @Override
+        public void cleanExpiredMacBans() {
+            events.add("bannedMac:clean");
         }
 
         @Override
@@ -345,6 +437,21 @@ class LoginStartupSequenceLifecycleTest {
         @Override
         public void registerShutdownHook() {
             events.add("shutdownHook");
+        }
+
+        @Override
+        public void printInfos() {
+            events.add("infos:print");
+        }
+
+        @Override
+        public void initializePremiumController() {
+            events.add("premium:init");
+        }
+
+        @Override
+        public void exitWithError() {
+            events.add("exit:error");
         }
     }
 

@@ -1,21 +1,7 @@
 package com.aionemu.loginserver.lifecycle;
 
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
-import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import com.aionemu.commons.utils.ExitCode;
-import com.aionemu.loginserver.GameServerTable;
-import com.aionemu.loginserver.LoginServer;
-import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.controller.BannedIpController;
-import com.aionemu.loginserver.controller.PremiumController;
-import com.aionemu.loginserver.dao.BannedMacDAO;
-import com.aionemu.loginserver.network.ncrypt.KeyGen;
 import com.aionemu.loginserver.service.PlayerTransferService;
-import com.aionemu.loginserver.utils.DeadLockDetector;
-import com.aionemu.loginserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
@@ -41,11 +27,11 @@ public class LoginStartupGateway {
     }
 
     public void initializeLogger() {
-        LoginServer.initializeLogger();
+        runtimeBridge().initializeLogger();
     }
 
     public void initializeCronService() {
-        CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
+        runtimeBridge().initializeCronService();
     }
 
     public void logStartupTimestamp() {
@@ -53,24 +39,19 @@ public class LoginStartupGateway {
     }
 
     public void loadConfig() {
-        Config.load();
+        runtimeBridge().loadConfig();
     }
 
     public void initializeDatabase() {
-        DatabaseFactory.init();
+        runtimeBridge().initializeDatabase();
     }
 
     public void initializeDaos() {
-        DAOManager.init();
+        runtimeBridge().initializeDaos();
     }
 
     public void startDeadlockDetector() {
-        DeadLockDetector deadLockDetector = new DeadLockDetector(
-            60,
-            isBootEmbedded() ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART
-        );
-        deadLockDetector.setDaemon(isBootEmbedded());
-        deadLockDetector.start();
+        runtimeBridge().startDeadlockDetector(isBootEmbedded());
     }
 
     public void initializeThreadPool() {
@@ -78,7 +59,7 @@ public class LoginStartupGateway {
     }
 
     public void initializeKeyGenerator() throws Exception {
-        KeyGen.init();
+        runtimeBridge().initializeKeyGenerator();
     }
 
     public void logKeyGeneratorFailure(Exception e) {
@@ -86,15 +67,15 @@ public class LoginStartupGateway {
     }
 
     public void loadGameServers() {
-        GameServerTable.load();
+        runtimeBridge().loadGameServers();
     }
 
     public void startBannedIpController() {
-        BannedIpController.start();
+        runtimeBridge().startBannedIpController();
     }
 
     public void cleanExpiredMacBans() {
-        DAOManager.getDAO(BannedMacDAO.class).cleanExpiredBans();
+        runtimeBridge().cleanExpiredMacBans();
     }
 
     public void connectNetwork() {
@@ -118,15 +99,15 @@ public class LoginStartupGateway {
     }
 
     public void printInfos() {
-        AEInfos.printAllInfos();
+        runtimeBridge().printInfos();
     }
 
     public void initializePremiumController() {
-        PremiumController.getController();
+        runtimeBridge().initializePremiumController();
     }
 
     public void exitWithError() {
-        System.exit(ExitCode.CODE_ERROR);
+        runtimeBridge().exitWithError();
     }
 
     public long currentTimeMillis() {
