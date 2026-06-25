@@ -18,6 +18,7 @@ public class GameEventBootstrapGateway {
     private ObjectProvider<ShugoSweepService> shugoSweepServiceProvider;
     private ObjectProvider<AtreianPassportService> atreianPassportServiceProvider;
     private ObjectProvider<EventWindowService> eventWindowServiceProvider;
+    private ObjectProvider<GameEventBootstrapRuntimeBridge> runtimeBridgeProvider;
 
     public GameEventBootstrapGateway() {
         this(ConsoleStartupProgressReporter.forCurrentConsole());
@@ -50,6 +51,11 @@ public class GameEventBootstrapGateway {
     @Autowired(required = false)
     void setEventWindowServiceProvider(ObjectProvider<EventWindowService> eventWindowServiceProvider) {
         this.eventWindowServiceProvider = eventWindowServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameEventBootstrapRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     public void bootstrap() {
@@ -90,37 +96,44 @@ public class GameEventBootstrapGateway {
 
     private LunaShopService lunaShopService() {
         if (lunaShopServiceProvider == null) {
-            return LunaShopService.getInstance();
+            return runtimeBridge().lunaShopService();
         }
-        return lunaShopServiceProvider.getIfAvailable(LunaShopService::getInstance);
+        return lunaShopServiceProvider.getIfAvailable(() -> runtimeBridge().lunaShopService());
     }
 
     private MinionService minionService() {
         if (minionServiceProvider == null) {
-            return MinionService.getInstance();
+            return runtimeBridge().minionService();
         }
-        return minionServiceProvider.getIfAvailable(MinionService::getInstance);
+        return minionServiceProvider.getIfAvailable(() -> runtimeBridge().minionService());
     }
 
     private ShugoSweepService shugoSweepService() {
         if (shugoSweepServiceProvider == null) {
-            return ShugoSweepService.getInstance();
+            return runtimeBridge().shugoSweepService();
         }
-        return shugoSweepServiceProvider.getIfAvailable(ShugoSweepService::getInstance);
+        return shugoSweepServiceProvider.getIfAvailable(() -> runtimeBridge().shugoSweepService());
     }
 
     private AtreianPassportService atreianPassportService() {
         if (atreianPassportServiceProvider == null) {
-            return AtreianPassportService.getInstance();
+            return runtimeBridge().atreianPassportService();
         }
-        return atreianPassportServiceProvider.getIfAvailable(AtreianPassportService::getInstance);
+        return atreianPassportServiceProvider.getIfAvailable(() -> runtimeBridge().atreianPassportService());
     }
 
     private EventWindowService eventWindowService() {
         if (eventWindowServiceProvider == null) {
-            return EventWindowService.getInstance();
+            return runtimeBridge().eventWindowService();
         }
-        return eventWindowServiceProvider.getIfAvailable(EventWindowService::getInstance);
+        return eventWindowServiceProvider.getIfAvailable(() -> runtimeBridge().eventWindowService());
+    }
+
+    private GameEventBootstrapRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameEventBootstrapRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameEventBootstrapRuntimeBridge::new);
     }
 
     private void loadStep(String stepName, Runnable loader) {

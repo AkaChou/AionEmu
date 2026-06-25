@@ -26,6 +26,7 @@ class GameEventBootstrapLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "shugoSweepServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "atreianPassportServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "eventWindowServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventBootstrapGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
