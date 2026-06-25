@@ -8,6 +8,7 @@ import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerEventService;
+import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
@@ -146,5 +147,11 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
         return ShugoImperialTombSpawnManager.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public SeasonRankingUpdateService seasonRankingUpdateService() {
+        return SeasonRankingUpdateService.getInstance();
     }
 }
