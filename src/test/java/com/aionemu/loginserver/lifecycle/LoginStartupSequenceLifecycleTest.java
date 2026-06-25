@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class LoginStartupSequenceLifecycleTest {
 
@@ -154,6 +155,24 @@ class LoginStartupSequenceLifecycleTest {
     @Test
     void startupGatewayBridgesPlayerTransferServiceThroughSpringProvider() {
         assertEquals(ObjectProvider.class, fieldType(LoginStartupGateway.class, "playerTransferServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(LoginStartupGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
+    void startupGatewayBridgesRuntimeStaticServicesThroughSpringProvider() {
+        List<String> events = new ArrayList<>();
+        LoginStartupGateway gateway = new LoginStartupGateway();
+        gateway.setRuntimeBridgeProvider(provider(
+            LoginStartupRuntimeBridge.class,
+            new RecordingLoginStartupRuntimeBridge(events)
+        ));
+
+        gateway.initializeThreadPool();
+        gateway.connectNetwork();
+        gateway.initializeTaskManager();
+        gateway.registerShutdownHook();
+
+        assertEquals(List.of("threadpool:init", "network:connect", "tasks:init", "shutdownHook"), events);
     }
 
     private static Class<?> fieldType(String name) {
@@ -298,5 +317,40 @@ class LoginStartupSequenceLifecycleTest {
         public long currentTimeMillis() {
             return currentTimeMillis++;
         }
+    }
+
+    private static final class RecordingLoginStartupRuntimeBridge extends LoginStartupRuntimeBridge {
+
+        private final List<String> events;
+
+        private RecordingLoginStartupRuntimeBridge(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void initializeThreadPool() {
+            events.add("threadpool:init");
+        }
+
+        @Override
+        public void connectNetwork() {
+            events.add("network:connect");
+        }
+
+        @Override
+        public void initializeTaskManager() {
+            events.add("tasks:init");
+        }
+
+        @Override
+        public void registerShutdownHook() {
+            events.add("shutdownHook");
+        }
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
     }
 }

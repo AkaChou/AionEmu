@@ -8,17 +8,13 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.LoginServer;
-import com.aionemu.loginserver.Shutdown;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.controller.BannedIpController;
 import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.dao.BannedMacDAO;
-import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
 import com.aionemu.loginserver.service.PlayerTransferService;
-import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.DeadLockDetector;
-import com.aionemu.loginserver.utils.ThreadPoolManager;
 import com.aionemu.loginserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,10 +28,16 @@ import org.springframework.stereotype.Component;
 public class LoginStartupGateway {
 
     private ObjectProvider<PlayerTransferService> playerTransferServiceProvider;
+    private ObjectProvider<LoginStartupRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setPlayerTransferServiceProvider(ObjectProvider<PlayerTransferService> playerTransferServiceProvider) {
         this.playerTransferServiceProvider = playerTransferServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<LoginStartupRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     public void initializeLogger() {
@@ -72,7 +74,7 @@ public class LoginStartupGateway {
     }
 
     public void initializeThreadPool() {
-        ThreadPoolManager.getInstance();
+        runtimeBridge().initializeThreadPool();
     }
 
     public void initializeKeyGenerator() throws Exception {
@@ -96,7 +98,7 @@ public class LoginStartupGateway {
     }
 
     public void connectNetwork() {
-        NetConnector.getInstance().connect();
+        runtimeBridge().connectNetwork();
     }
 
     public void initializePlayerTransferService() {
@@ -104,7 +106,7 @@ public class LoginStartupGateway {
     }
 
     public void initializeTaskManager() {
-        TaskFromDBManager.getInstance();
+        runtimeBridge().initializeTaskManager();
     }
 
     public boolean isBootEmbedded() {
@@ -112,7 +114,7 @@ public class LoginStartupGateway {
     }
 
     public void registerShutdownHook() {
-        Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
+        runtimeBridge().registerShutdownHook();
     }
 
     public void printInfos() {
@@ -136,5 +138,12 @@ public class LoginStartupGateway {
             return PlayerTransferService.getInstance();
         }
         return playerTransferServiceProvider.getIfAvailable(PlayerTransferService::getInstance);
+    }
+
+    private LoginStartupRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new LoginStartupRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(LoginStartupRuntimeBridge::new);
     }
 }

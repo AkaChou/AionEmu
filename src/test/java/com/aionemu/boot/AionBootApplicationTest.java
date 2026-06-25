@@ -105,6 +105,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.loginserver.LoginServer;
+import com.aionemu.loginserver.lifecycle.LoginStartupRuntimeBridge;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -192,8 +193,10 @@ class AionBootApplicationTest {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
             assertEquals(LoginServerRuntimeBridge.class, context.getType("loginServerRuntimeBridge"));
             assertEquals(ChatServerRuntimeBridge.class, context.getType("chatServerRuntimeBridge"));
+            assertEquals(LoginStartupRuntimeBridge.class, context.getType("loginStartupRuntimeBridge"));
             assertLazy(context.getBeanFactory(), "loginServerRuntimeBridge");
             assertLazy(context.getBeanFactory(), "chatServerRuntimeBridge");
+            assertLazy(context.getBeanFactory(), "loginStartupRuntimeBridge");
         }
     }
 
