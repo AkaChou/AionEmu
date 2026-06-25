@@ -62,7 +62,8 @@ public class LoginStartupRuntimeBridge {
     public void startDeadlockDetector(boolean bootEmbedded) {
         DeadLockDetector deadLockDetector = new DeadLockDetector(
             60,
-            bootEmbedded ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART
+            bootEmbedded ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART,
+            status -> processBridge().exit(status)
         );
         deadLockDetector.setDaemon(bootEmbedded);
         deadLockDetector.start();

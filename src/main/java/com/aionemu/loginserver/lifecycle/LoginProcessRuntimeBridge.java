@@ -36,7 +36,11 @@ public class LoginProcessRuntimeBridge {
     }
 
     public void exitWithError() {
-        System.exit(ExitCode.CODE_ERROR);
+        exit(ExitCode.CODE_ERROR);
+    }
+
+    public void exit(int status) {
+        System.exit(status);
     }
 
     private synchronized Shutdown shutdown() {
