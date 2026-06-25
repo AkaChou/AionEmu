@@ -75,6 +75,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Added DAOManager initialization-state checks and moved login server stats cleanup before DAO/database shutdown.
 - [x] Made login shutdown cleanup use a Spring-instantiable `Shutdown` bean instead of the legacy singleton fallback in the boot-managed bridge.
 - [x] Routed login shutdown requests and process runtime shutdown hooks through a shared shutdown service wrapper instead of duplicate singleton fallbacks.
+- [x] Made the shared login shutdown service wrapper own its lazy fallback instead of calling the legacy shutdown singleton directly.
 - [x] Made login player-transfer startup use a Spring-instantiable service bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Routed login player-transfer packet access through a Spring-provided service before the legacy singleton fallback.
 - [x] Routed the login startup runtime bridge through the shared player-transfer service wrapper instead of keeping its own singleton fallback.

@@ -21,13 +21,22 @@ public final class LoginShutdownServices implements DisposableBean {
     public static Shutdown shutdown() {
         ObjectProvider<Shutdown> provider = shutdownProvider;
         if (provider == null) {
-            return Shutdown.getInstance();
+            return fallbackShutdown();
         }
-        return provider.getIfAvailable(Shutdown::getInstance);
+        return provider.getIfAvailable(LoginShutdownServices::fallbackShutdown);
     }
 
     @Override
     public void destroy() {
         shutdownProvider = null;
+    }
+
+    private static Shutdown fallbackShutdown() {
+        return Fallbacks.SHUTDOWN;
+    }
+
+    private static final class Fallbacks {
+
+        private static final Shutdown SHUTDOWN = new Shutdown();
     }
 }

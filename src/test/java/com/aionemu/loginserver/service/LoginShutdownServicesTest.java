@@ -15,7 +15,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 class LoginShutdownServicesTest {
 
     @Test
-    void usesSpringProviderBeforeLegacySingletonFallback() {
+    void usesSpringProviderBeforeLocalFallback() {
         RecordingShutdown shutdown = new RecordingShutdown();
         LoginShutdownServices services = new LoginShutdownServices(provider(Shutdown.class, shutdown));
 
@@ -24,6 +24,14 @@ class LoginShutdownServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void shutdownBridgeUsesLocalFallbackInsteadOfDirectLegacySingleton() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginShutdownServices.java"));
+
+        assertFalse(source.contains("Shutdown.getInstance()"));
+        assertTrue(source.contains("Fallbacks.SHUTDOWN"));
     }
 
     @Test
