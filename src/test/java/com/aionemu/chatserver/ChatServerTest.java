@@ -11,6 +11,8 @@ import com.aionemu.chatserver.utils.IdFactory;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class ChatServerTest {
 
@@ -57,6 +59,20 @@ class ChatServerTest {
             "shutdownHook",
             "time"
         ), events);
+    }
+
+    @Test
+    void startupBridgeBridgesProcessCallsThroughSpringProvider() {
+        List<String> events = new ArrayList<>();
+        ChatServerStartupBridge startupBridge = new ChatServerStartupBridge();
+        startupBridge.setProcessBridgeProvider(provider(
+            ChatProcessRuntimeBridge.class,
+            new RecordingChatProcessRuntimeBridge(events)
+        ));
+
+        startupBridge.registerShutdownHook();
+
+        assertEquals(List.of("shutdownHook:get", "shutdownHook:register"), events);
     }
 
     private static final class RecordingChatServerDependencies implements ChatServerDependencies {
@@ -152,5 +168,31 @@ class ChatServerTest {
             events.add("time");
             return events.size();
         }
+    }
+
+    private static final class RecordingChatProcessRuntimeBridge extends ChatProcessRuntimeBridge {
+
+        private final List<String> events;
+
+        private RecordingChatProcessRuntimeBridge(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public Thread shutdownHook() {
+            events.add("shutdownHook:get");
+            return new Thread("recording-chat-shutdown");
+        }
+
+        @Override
+        public void registerShutdownHook(Thread shutdownHook) {
+            events.add("shutdownHook:register");
+        }
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
     }
 }
