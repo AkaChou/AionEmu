@@ -17,6 +17,10 @@ public class LoginProcessRuntimeBridge {
         Runtime.getRuntime().addShutdownHook(shutdownHook);
     }
 
+    public void shutdown(boolean restart) {
+        Shutdown.getInstance().shutdown(restart);
+    }
+
     public void exitWithError() {
         System.exit(ExitCode.CODE_ERROR);
     }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
 import com.aionemu.loginserver.lifecycle.LoginStartupSequenceLifecycle;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ class LoginServiceLifecycleTest {
         assertEquals(LoginServerLifecycleGateway.class, fieldType("loginServerLifecycleGateway"));
         assertEquals(ObjectProvider.class, fieldType(LoginServerLifecycleGateway.class, "startupSequenceLifecycleProvider"));
         assertEquals(ObjectProvider.class, fieldType(LoginServerLifecycleGateway.class, "runtimeBridgeProvider"));
+        assertEquals(ObjectProvider.class, fieldType(LoginServerRuntimeBridge.class, "processBridgeProvider"));
         assertEquals(null, findFieldType(LoginServerLifecycleGateway.class, "startupSequenceLifecycle"));
     }
 
@@ -90,6 +92,20 @@ class LoginServiceLifecycleTest {
         assertEquals(List.of("start:1:true", "shutdown:false", "reset"), events);
     }
 
+    @Test
+    void loginRuntimeBridgeRoutesShutdownThroughProcessBridgeProvider() {
+        List<String> events = new ArrayList<>();
+        LoginServerRuntimeBridge runtimeBridge = new LoginServerRuntimeBridge();
+        runtimeBridge.setProcessBridgeProvider(provider(
+            LoginProcessRuntimeBridge.class,
+            new RecordingLoginProcessRuntimeBridge(events)
+        ));
+
+        runtimeBridge.shutdown(true);
+
+        assertEquals(List.of("process:shutdown:true"), events);
+    }
+
     private void configureLoginPaths() {
         System.setProperty("aion.login.config.dir", loginConfig.toString());
         System.setProperty("aion.login.data.dir", loginData.toString());
@@ -140,6 +156,20 @@ class LoginServiceLifecycleTest {
         @Override
         public void shutdown(boolean restart) {
             events.add("shutdown:" + restart);
+        }
+    }
+
+    private static final class RecordingLoginProcessRuntimeBridge extends LoginProcessRuntimeBridge {
+
+        private final List<String> events;
+
+        private RecordingLoginProcessRuntimeBridge(List<String> events) {
+            this.events = events;
+        }
+
+        @Override
+        public void shutdown(boolean restart) {
+            events.add("process:shutdown:" + restart);
         }
     }
 
