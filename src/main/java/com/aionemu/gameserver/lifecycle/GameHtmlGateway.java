@@ -10,10 +10,16 @@ import org.springframework.stereotype.Component;
 public class GameHtmlGateway {
 
     private ObjectProvider<HTMLCache> htmlCacheProvider;
+    private ObjectProvider<GameCoreServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setHtmlCacheProvider(ObjectProvider<HTMLCache> htmlCacheProvider) {
         this.htmlCacheProvider = htmlCacheProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameCoreServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     public void start() {
@@ -23,8 +29,15 @@ public class GameHtmlGateway {
 
     private HTMLCache htmlCache() {
         if (htmlCacheProvider == null) {
-            return HTMLCache.getInstance();
+            return runtimeBridge().htmlCache();
         }
-        return htmlCacheProvider.getIfAvailable(HTMLCache::getInstance);
+        return htmlCacheProvider.getIfAvailable(() -> runtimeBridge().htmlCache());
+    }
+
+    private GameCoreServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameCoreServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameCoreServicesRuntimeBridge::new);
     }
 }

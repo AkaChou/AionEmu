@@ -38,6 +38,7 @@ import com.aionemu.gameserver.lifecycle.GameChatServerOverrideGateway;
 import com.aionemu.gameserver.lifecycle.GameChatServerOverrideLifecycle;
 import com.aionemu.gameserver.lifecycle.GameCleaningGateway;
 import com.aionemu.gameserver.lifecycle.GameCleaningLifecycle;
+import com.aionemu.gameserver.lifecycle.GameCoreServicesRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsGateway;
 import com.aionemu.gameserver.lifecycle.GameCustomEventsLifecycle;
 import com.aionemu.gameserver.lifecycle.GameDisputeLandGateway;
@@ -186,10 +187,12 @@ class AionBootApplicationTest {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
             assertEquals(AdminService.class, context.getType("adminService"));
             assertEquals(GameRuntimeServiceBridge.class, context.getType("gameRuntimeServiceBridge"));
+            assertEquals(GameCoreServicesRuntimeBridge.class, context.getType("gameCoreServicesRuntimeBridge"));
             assertEquals(GameUtilityServicesRuntimeBridge.class, context.getType("gameUtilityServicesRuntimeBridge"));
             assertEquals(GameNetworkStartupRuntimeBridge.class, context.getType("gameNetworkStartupRuntimeBridge"));
             assertLazy(context.getBeanFactory(), "adminService");
             assertLazy(context.getBeanFactory(), "gameRuntimeServiceBridge");
+            assertLazy(context.getBeanFactory(), "gameCoreServicesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameUtilityServicesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameNetworkStartupRuntimeBridge");
         }
@@ -298,6 +301,7 @@ class AionBootApplicationTest {
             context.registerBean(NettyTransportLifecycle.class);
             context.registerBean(AionTransportBoundary.class);
             context.registerBean(LegacyConfigOverrides.class);
+            context.registerBean(GameCoreServicesRuntimeBridge.class);
             context.registerBean(GameLoggingGateway.class);
             context.registerBean(GameLoggingLifecycle.class);
             context.registerBean(GameStaticDataGateway.class);

@@ -9,10 +9,16 @@ import org.springframework.stereotype.Component;
 public class GameThreadPoolGateway {
 
     private ObjectProvider<ThreadPoolManager> threadPoolManagerProvider;
+    private ObjectProvider<GameCoreServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setThreadPoolManagerProvider(ObjectProvider<ThreadPoolManager> threadPoolManagerProvider) {
         this.threadPoolManagerProvider = threadPoolManagerProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameCoreServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     public void start() {
@@ -25,8 +31,15 @@ public class GameThreadPoolGateway {
 
     private ThreadPoolManager threadPoolManager() {
         if (threadPoolManagerProvider == null) {
-            return ThreadPoolManager.getInstance();
+            return runtimeBridge().threadPoolManager();
         }
-        return threadPoolManagerProvider.getIfAvailable(ThreadPoolManager::getInstance);
+        return threadPoolManagerProvider.getIfAvailable(() -> runtimeBridge().threadPoolManager());
+    }
+
+    private GameCoreServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameCoreServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameCoreServicesRuntimeBridge::new);
     }
 }

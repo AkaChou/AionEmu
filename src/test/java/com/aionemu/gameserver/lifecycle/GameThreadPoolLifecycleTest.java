@@ -22,6 +22,11 @@ class GameThreadPoolLifecycleTest {
     }
 
     @Test
+    void threadPoolGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameThreadPoolGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startAndStopAreIdempotent() {
         AtomicInteger starts = new AtomicInteger();
         AtomicInteger stops = new AtomicInteger();

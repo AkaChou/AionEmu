@@ -25,6 +25,11 @@ class GameHtmlLifecycleTest {
     }
 
     @Test
+    void htmlGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameHtmlGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsInitializerOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameHtmlLifecycle lifecycle = new GameHtmlLifecycle(

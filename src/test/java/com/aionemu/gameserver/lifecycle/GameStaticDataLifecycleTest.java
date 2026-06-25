@@ -24,6 +24,11 @@ class GameStaticDataLifecycleTest {
     }
 
     @Test
+    void staticDataGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameStaticDataGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startLoadsStaticDataOnceAndRecordsLoadTime() {
         AtomicInteger loads = new AtomicInteger();
         GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, null));
