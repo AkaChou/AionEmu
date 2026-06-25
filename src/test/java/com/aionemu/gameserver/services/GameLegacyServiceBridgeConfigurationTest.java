@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
+import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
+import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -44,6 +46,21 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "crazyDaevaService");
             assertLazy(context.getBeanFactory(), "abyssRankUpdateService");
             assertLazy(context.getBeanFactory(), "packetBroadcaster");
+        }
+    }
+
+    @Test
+    void exposesRewardServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("rewardService"));
+            assertTrue(context.containsBeanDefinition("weddingService"));
+            assertTrue(context.containsBeanDefinition("veteranRewardsService"));
+            assertEquals(RewardService.class, context.getType("rewardService"));
+            assertEquals(WeddingService.class, context.getType("weddingService"));
+            assertEquals(VeteranRewardsService.class, context.getType("veteranRewardsService"));
+            assertLazy(context.getBeanFactory(), "rewardService");
+            assertLazy(context.getBeanFactory(), "weddingService");
+            assertLazy(context.getBeanFactory(), "veteranRewardsService");
         }
     }
 

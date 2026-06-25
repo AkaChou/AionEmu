@@ -3,7 +3,9 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
+import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
+import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,5 +54,23 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public PacketBroadcaster packetBroadcaster() {
         return PacketBroadcaster.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public RewardService rewardService() {
+        return RewardService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public WeddingService weddingService() {
+        return WeddingService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public VeteranRewardsService veteranRewardsService() {
+        return VeteranRewardsService.getInstance();
     }
 }
