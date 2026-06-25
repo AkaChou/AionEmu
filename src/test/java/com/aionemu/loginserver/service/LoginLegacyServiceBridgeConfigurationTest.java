@@ -1,6 +1,7 @@
 package com.aionemu.loginserver.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.loginserver.Shutdown;
@@ -24,6 +25,7 @@ class LoginLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("loginShutdown"));
             assertEquals(Shutdown.class, context.getType("loginShutdown"));
             assertTrue(context.getBeanFactory().getBeanDefinition("loginShutdown").isLazyInit());
+            assertNotSame(Shutdown.getInstance(), context.getBean(Shutdown.class));
         }
     }
 }

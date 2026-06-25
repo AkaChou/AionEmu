@@ -17,6 +17,6 @@ public class LoginLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public Shutdown loginShutdown() {
-        return Shutdown.getInstance();
+        return new Shutdown();
     }
 }
