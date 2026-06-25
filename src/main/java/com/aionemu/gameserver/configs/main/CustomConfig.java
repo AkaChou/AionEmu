@@ -122,6 +122,8 @@ public class CustomConfig {
 	public static boolean CHALLENGE_TASKS_ENABLED;
 	@Property(key = "gameserver.commands.admin.dot.enable", defaultValue = "false")
 	public static boolean ENABLE_ADMIN_DOT_COMMANDS;
+	@Property(key = "gameserver.magicboost.cap", defaultValue = "6500")
+	public static int MAGICBOOST_CAP;
 	@Property(key = "gameserver.rift.enable", defaultValue = "true")
 	public static boolean RIFT_ENABLED;
 	@Property(key = "gameserver.rift.duration", defaultValue = "1")
