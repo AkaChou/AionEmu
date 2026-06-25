@@ -18,7 +18,6 @@ import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
-import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -142,7 +141,7 @@ public class GameRuntimeServicesGateway {
     }
 
     public void start() {
-        Util.printSection(" *** Services *** ");
+        runtimeServiceBridge().printServicesSection();
         periodicSaveService();
         adminService();
         playerTransferService();
@@ -167,128 +166,128 @@ public class GameRuntimeServicesGateway {
 
     private PeriodicSaveService periodicSaveService() {
         if (periodicSaveServiceProvider == null) {
-            return PeriodicSaveService.getInstance();
+            return runtimeServiceBridge().periodicSaveService();
         }
-        return periodicSaveServiceProvider.getIfAvailable(PeriodicSaveService::getInstance);
+        return periodicSaveServiceProvider.getIfAvailable(() -> runtimeServiceBridge().periodicSaveService());
     }
 
     private AdminService adminService() {
         if (adminServiceProvider == null) {
-            return AdminService.getInstance();
+            return runtimeServiceBridge().adminService();
         }
-        return adminServiceProvider.getIfAvailable(AdminService::getInstance);
+        return adminServiceProvider.getIfAvailable(() -> runtimeServiceBridge().adminService());
     }
 
     private PlayerTransferService playerTransferService() {
         if (playerTransferServiceProvider == null) {
-            return PlayerTransferService.getInstance();
+            return runtimeServiceBridge().playerTransferService();
         }
-        return playerTransferServiceProvider.getIfAvailable(PlayerTransferService::getInstance);
+        return playerTransferServiceProvider.getIfAvailable(() -> runtimeServiceBridge().playerTransferService());
     }
 
     private TerritoryService territoryService() {
         if (territoryServiceProvider == null) {
-            return TerritoryService.getInstance();
+            return runtimeServiceBridge().territoryService();
         }
-        return territoryServiceProvider.getIfAvailable(TerritoryService::getInstance);
+        return territoryServiceProvider.getIfAvailable(() -> runtimeServiceBridge().territoryService());
     }
 
     private GameTimeService gameTimeService() {
         if (gameTimeServiceProvider == null) {
-            return GameTimeService.getInstance();
+            return runtimeServiceBridge().gameTimeService();
         }
-        return gameTimeServiceProvider.getIfAvailable(GameTimeService::getInstance);
+        return gameTimeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().gameTimeService());
     }
 
     private AnnouncementService announcementService() {
         if (announcementServiceProvider == null) {
-            return AnnouncementService.getInstance();
+            return runtimeServiceBridge().announcementService();
         }
-        return announcementServiceProvider.getIfAvailable(AnnouncementService::getInstance);
+        return announcementServiceProvider.getIfAvailable(() -> runtimeServiceBridge().announcementService());
     }
 
     private DebugService debugService() {
         if (debugServiceProvider == null) {
-            return DebugService.getInstance();
+            return runtimeServiceBridge().debugService();
         }
-        return debugServiceProvider.getIfAvailable(DebugService::getInstance);
+        return debugServiceProvider.getIfAvailable(() -> runtimeServiceBridge().debugService());
     }
 
     private WeatherService weatherService() {
         if (weatherServiceProvider == null) {
-            return WeatherService.getInstance();
+            return runtimeServiceBridge().weatherService();
         }
-        return weatherServiceProvider.getIfAvailable(WeatherService::getInstance);
+        return weatherServiceProvider.getIfAvailable(() -> runtimeServiceBridge().weatherService());
     }
 
     private BrokerService brokerService() {
         if (brokerServiceProvider == null) {
-            return BrokerService.getInstance();
+            return runtimeServiceBridge().brokerService();
         }
-        return brokerServiceProvider.getIfAvailable(BrokerService::getInstance);
+        return brokerServiceProvider.getIfAvailable(() -> runtimeServiceBridge().brokerService());
     }
 
     private Influence influence() {
         if (influenceProvider == null) {
-            return Influence.getInstance();
+            return runtimeServiceBridge().influence();
         }
-        return influenceProvider.getIfAvailable(Influence::getInstance);
+        return influenceProvider.getIfAvailable(() -> runtimeServiceBridge().influence());
     }
 
     private ExchangeService exchangeService() {
         if (exchangeServiceProvider == null) {
-            return ExchangeService.getInstance();
+            return runtimeServiceBridge().exchangeService();
         }
-        return exchangeServiceProvider.getIfAvailable(ExchangeService::getInstance);
+        return exchangeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().exchangeService());
     }
 
     private PetitionService petitionService() {
         if (petitionServiceProvider == null) {
-            return PetitionService.getInstance();
+            return runtimeServiceBridge().petitionService();
         }
-        return petitionServiceProvider.getIfAvailable(PetitionService::getInstance);
+        return petitionServiceProvider.getIfAvailable(() -> runtimeServiceBridge().petitionService());
     }
 
     private FlyRingService flyRingService() {
         if (flyRingServiceProvider == null) {
-            return FlyRingService.getInstance();
+            return runtimeServiceBridge().flyRingService();
         }
-        return flyRingServiceProvider.getIfAvailable(FlyRingService::getInstance);
+        return flyRingServiceProvider.getIfAvailable(() -> runtimeServiceBridge().flyRingService());
     }
 
     private CuringZoneService curingZoneService() {
         if (curingZoneServiceProvider == null) {
-            return CuringZoneService.getInstance();
+            return runtimeServiceBridge().curingZoneService();
         }
-        return curingZoneServiceProvider.getIfAvailable(CuringZoneService::getInstance);
+        return curingZoneServiceProvider.getIfAvailable(() -> runtimeServiceBridge().curingZoneService());
     }
 
     private SpringZoneService springZoneService() {
         if (springZoneServiceProvider == null) {
-            return SpringZoneService.getInstance();
+            return runtimeServiceBridge().springZoneService();
         }
-        return springZoneServiceProvider.getIfAvailable(SpringZoneService::getInstance);
+        return springZoneServiceProvider.getIfAvailable(() -> runtimeServiceBridge().springZoneService());
     }
 
     private BoostEventService boostEventService() {
         if (boostEventServiceProvider == null) {
-            return BoostEventService.getInstance();
+            return runtimeServiceBridge().boostEventService();
         }
-        return boostEventServiceProvider.getIfAvailable(BoostEventService::getInstance);
+        return boostEventServiceProvider.getIfAvailable(() -> runtimeServiceBridge().boostEventService());
     }
 
     private TaskManagerFromDB taskManagerFromDB() {
         if (taskManagerFromDBProvider == null) {
-            return TaskManagerFromDB.getInstance();
+            return runtimeServiceBridge().taskManagerFromDB();
         }
-        return taskManagerFromDBProvider.getIfAvailable(TaskManagerFromDB::getInstance);
+        return taskManagerFromDBProvider.getIfAvailable(() -> runtimeServiceBridge().taskManagerFromDB());
     }
 
     private LimitedItemTradeService limitedItemTradeService() {
         if (limitedItemTradeServiceProvider == null) {
-            return LimitedItemTradeService.getInstance();
+            return runtimeServiceBridge().limitedItemTradeService();
         }
-        return limitedItemTradeServiceProvider.getIfAvailable(LimitedItemTradeService::getInstance);
+        return limitedItemTradeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().limitedItemTradeService());
     }
 
     private GameRuntimeServiceBridge runtimeServiceBridge() {
