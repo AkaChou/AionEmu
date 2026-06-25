@@ -24,14 +24,22 @@ public class AionServicesProperties {
     }
 
     @Getter
-    @Setter
     public static class Transport {
-        private TransportMode mode = TransportMode.NETTY;
+        private String mode = TransportMode.NETTY.name();
+
+        public TransportMode getMode() {
+            if (mode == null || mode.isBlank() || "LEGACY_NIO".equalsIgnoreCase(mode)) {
+                return TransportMode.NETTY;
+            }
+            return TransportMode.valueOf(mode.toUpperCase().replace('-', '_'));
+        }
+
+        public void setMode(String mode) {
+            this.mode = mode;
+        }
     }
 
     public enum TransportMode {
-        @Deprecated(forRemoval = true)
-        LEGACY_NIO,
         NETTY
     }
 }

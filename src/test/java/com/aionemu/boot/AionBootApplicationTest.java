@@ -17,7 +17,6 @@ import com.aionemu.boot.lifecycle.LoginServerLifecycleGateway;
 import com.aionemu.boot.lifecycle.LoginServerRuntimeBridge;
 import com.aionemu.boot.lifecycle.LoginServiceLifecycle;
 import com.aionemu.boot.transport.AionTransportBoundary;
-import com.aionemu.boot.transport.LegacyNioTransportLifecycle;
 import com.aionemu.boot.transport.NettyTransportLifecycle;
 import com.aionemu.chatserver.ChatProcessRuntimeBridge;
 import com.aionemu.chatserver.ChatServer;
@@ -351,7 +350,6 @@ class AionBootApplicationTest {
     void serviceLauncherCanBeCreatedAsSpringBean() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
             context.registerBean(AionServicesProperties.class);
-            context.registerBean(LegacyNioTransportLifecycle.class);
             context.registerBean(NettyTransportLifecycle.class);
             context.registerBean(AionTransportBoundary.class);
             context.registerBean(LegacyConfigOverrides.class);

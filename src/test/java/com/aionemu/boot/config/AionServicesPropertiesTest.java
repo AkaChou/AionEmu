@@ -55,6 +55,15 @@ class AionServicesPropertiesTest {
         assertSame(TransportMode.NETTY, properties.getTransport().getMode());
     }
 
+    @Test
+    void legacyNioModeIsAcceptedAsNettyAlias() {
+        AionServicesProperties properties = new AionServicesProperties();
+
+        properties.getTransport().setMode("LEGACY_NIO");
+
+        assertSame(TransportMode.NETTY, properties.getTransport().getMode());
+    }
+
     private AionServicesProperties bindFromYaml(String... resources) throws IOException {
         StandardEnvironment environment = new StandardEnvironment();
         MutablePropertySources propertySources = environment.getPropertySources();

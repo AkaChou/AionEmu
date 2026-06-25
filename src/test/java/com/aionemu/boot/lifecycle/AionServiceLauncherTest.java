@@ -195,7 +195,7 @@ class AionServiceLauncherTest {
         private final List<String> events;
 
         private RecordingTransportBoundary(List<String> events) {
-            super(new AionServicesProperties(), null, null);
+            super(new AionServicesProperties(), List.of());
             this.events = events;
         }
 
@@ -214,7 +214,7 @@ class AionServiceLauncherTest {
         private final List<String> events;
 
         private FailingTransportBoundary(List<String> events) {
-            super(new AionServicesProperties(), null, null);
+            super(new AionServicesProperties(), List.of());
             this.events = events;
         }
 

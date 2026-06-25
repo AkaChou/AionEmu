@@ -2,7 +2,6 @@ package com.aionemu.boot.transport;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.AionServicesProperties.TransportMode;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -32,10 +31,9 @@ public class AionTransportBoundary implements DisposableBean {
 
     public AionTransportBoundary(
         AionServicesProperties services,
-        LegacyNioTransportLifecycle legacyNioTransport,
         NettyTransportLifecycle nettyTransport
     ) {
-        this(services, transportLifecycles(legacyNioTransport, nettyTransport));
+        this(services, List.of(nettyTransport));
     }
 
     public void prepare() {
@@ -74,19 +72,5 @@ public class AionTransportBoundary implements DisposableBean {
             }
         }
         return indexed;
-    }
-
-    private static List<AionTransportLifecycle> transportLifecycles(
-        LegacyNioTransportLifecycle legacyNioTransport,
-        NettyTransportLifecycle nettyTransport
-    ) {
-        List<AionTransportLifecycle> transportLifecycles = new ArrayList<>(2);
-        if (legacyNioTransport != null) {
-            transportLifecycles.add(legacyNioTransport);
-        }
-        if (nettyTransport != null) {
-            transportLifecycles.add(nettyTransport);
-        }
-        return transportLifecycles;
     }
 }
