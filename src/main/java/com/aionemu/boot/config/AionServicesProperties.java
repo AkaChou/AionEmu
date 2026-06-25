@@ -30,6 +30,7 @@ public class AionServicesProperties {
     }
 
     public enum TransportMode {
+        @Deprecated(forRemoval = true)
         LEGACY_NIO,
         NETTY
     }
