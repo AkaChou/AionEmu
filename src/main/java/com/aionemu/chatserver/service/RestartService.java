@@ -34,10 +34,9 @@ import org.slf4j.LoggerFactory;
 public class RestartService {
 
     private static final Logger log = LoggerFactory.getLogger(RestartService.class);
-    private static final RestartService instance = new RestartService();
     private Timer timer;
 
-    private RestartService() {
+    public RestartService() {
         RestartFrequency rf;
         try {
             rf = RestartFrequency.valueOf(Config.CHATSERVER_RESTART_FREQUENCY);
@@ -100,8 +99,9 @@ public class RestartService {
         return time;
     }
 
+    @Deprecated(since = "boot-migration")
     public static RestartService getInstance() {
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
 
     public synchronized void shutdown() {
@@ -110,5 +110,10 @@ public class RestartService {
         }
         timer.cancel();
         timer = null;
+    }
+
+    private static final class SingletonHolder {
+
+        private static final RestartService INSTANCE = new RestartService();
     }
 }

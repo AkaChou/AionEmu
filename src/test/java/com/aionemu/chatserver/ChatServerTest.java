@@ -106,8 +106,19 @@ class ChatServerTest {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ShutdownHook.java"));
 
         assertFalse(source.contains("Runtime.getRuntime().halt"));
+        assertFalse(source.contains("RestartService.getInstance().shutdown()"));
+        assertTrue(source.contains("restartService().shutdown()"));
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_RESTART)"));
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_NORMAL)"));
+    }
+
+    @Test
+    void springConfigurationCreatesRestartServiceBeanAndWiresShutdownHook() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/configs/ChatServerSpringConfiguration.java"));
+
+        assertFalse(source.contains("return RestartService.getInstance();"));
+        assertTrue(source.contains("return new RestartService();"));
+        assertTrue(source.contains("ShutdownHook.getInstance(processBridge, restartService)"));
     }
 
     @Test

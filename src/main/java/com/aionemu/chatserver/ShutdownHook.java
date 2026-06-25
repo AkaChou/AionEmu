@@ -33,6 +33,7 @@ public class ShutdownHook extends Thread {
     private static final ShutdownHook instance = new ShutdownHook();
     private static final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
     private volatile ChatProcessRuntimeBridge processBridge = new ChatProcessRuntimeBridge();
+    private volatile RestartService restartService;
     /**
      * Indicates wether the loginserver should shut dpwn or only restart
      */
@@ -50,6 +51,13 @@ public class ShutdownHook extends Thread {
 
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge) {
         instance.setProcessBridge(processBridge);
+        instance.setRestartService(null);
+        return instance;
+    }
+
+    public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge, RestartService restartService) {
+        instance.setProcessBridge(processBridge);
+        instance.setRestartService(restartService);
         return instance;
     }
 
@@ -57,6 +65,10 @@ public class ShutdownHook extends Thread {
         if (processBridge != null) {
             this.processBridge = processBridge;
         }
+    }
+
+    private void setRestartService(RestartService restartService) {
+        this.restartService = restartService;
     }
 
     /**
@@ -78,7 +90,7 @@ public class ShutdownHook extends Thread {
         if (!shutdownStarted.compareAndSet(false, true)) {
             return;
         }
-        RestartService.getInstance().shutdown();
+        restartService().shutdown();
         NettyServer.shutdownIfInitialized();
         GameServerService.getInstance().setOffline();
         com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown();
@@ -93,5 +105,13 @@ public class ShutdownHook extends Thread {
         } else {
             processBridge.halt(ExitCode.CODE_NORMAL);
         }
+    }
+
+    private RestartService restartService() {
+        RestartService configuredRestartService = restartService;
+        if (configuredRestartService != null) {
+            return configuredRestartService;
+        }
+        return RestartService.getInstance();
     }
 }

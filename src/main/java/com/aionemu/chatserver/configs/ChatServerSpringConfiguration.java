@@ -60,12 +60,12 @@ public class ChatServerSpringConfiguration {
     @Lazy
     public RestartService restartService(ObjectProvider<ChatProcessRuntimeBridge> processBridgeProvider) {
         ChatRestartRequest.setProcessBridgeProvider(processBridgeProvider);
-        return RestartService.getInstance();
+        return new RestartService();
     }
 
     @Bean
     @Lazy
-    public ShutdownHook chatShutdownHook(ChatProcessRuntimeBridge processBridge) {
-        return ShutdownHook.getInstance(processBridge);
+    public ShutdownHook chatShutdownHook(ChatProcessRuntimeBridge processBridge, RestartService restartService) {
+        return ShutdownHook.getInstance(processBridge, restartService);
     }
 }

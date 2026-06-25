@@ -84,6 +84,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made the boot launcher stop the active transport boundary after stopping service lifecycles or transport preparation failure.
 - [x] Made launcher and transport shutdown idempotent across repeated Spring destroy callbacks.
 - [x] Routed embedded login task shutdown/restart, chat scheduled restart, and game scheduled/admin shutdown requests through the boot-managed shutdown handler.
+- [x] Made chat restart scheduling Spring-instantiable and wired shutdown cleanup through the boot-provided restart service before falling back to the legacy singleton.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
