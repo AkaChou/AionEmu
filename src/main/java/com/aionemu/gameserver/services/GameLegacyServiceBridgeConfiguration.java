@@ -40,8 +40,13 @@ import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.services.RoadService;
+import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.zone.ZoneService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -341,6 +346,36 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public DropRegistrationService dropRegistrationService() {
         return DropRegistrationService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public IDFactory gameIdFactory() {
+        return IDFactory.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ZoneService zoneService() {
+        return ZoneService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public HotspotTeleportService hotspotTeleportService() {
+        return HotspotTeleportService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public RoadService roadService() {
+        return RoadService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public World world() {
+        return World.getInstance();
     }
 
     @Bean

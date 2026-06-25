@@ -38,14 +38,19 @@ import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
+import com.aionemu.gameserver.services.RoadService;
+import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
+import com.aionemu.gameserver.utils.idfactory.IDFactory;
+import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.zone.ZoneService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -305,6 +310,27 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("dropRegistrationService"));
             assertEquals(DropRegistrationService.class, context.getType("dropRegistrationService"));
             assertLazy(context.getBeanFactory(), "dropRegistrationService");
+        }
+    }
+
+    @Test
+    void exposesWorldBootstrapServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("gameIdFactory"));
+            assertTrue(context.containsBeanDefinition("zoneService"));
+            assertTrue(context.containsBeanDefinition("hotspotTeleportService"));
+            assertTrue(context.containsBeanDefinition("roadService"));
+            assertTrue(context.containsBeanDefinition("world"));
+            assertEquals(IDFactory.class, context.getType("gameIdFactory"));
+            assertEquals(ZoneService.class, context.getType("zoneService"));
+            assertEquals(HotspotTeleportService.class, context.getType("hotspotTeleportService"));
+            assertEquals(RoadService.class, context.getType("roadService"));
+            assertEquals(World.class, context.getType("world"));
+            assertLazy(context.getBeanFactory(), "gameIdFactory");
+            assertLazy(context.getBeanFactory(), "zoneService");
+            assertLazy(context.getBeanFactory(), "hotspotTeleportService");
+            assertLazy(context.getBeanFactory(), "roadService");
+            assertLazy(context.getBeanFactory(), "world");
         }
     }
 
