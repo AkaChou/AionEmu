@@ -19,7 +19,7 @@
 package com.aionemu.loginserver.taskmanager.trigger.implementations;
 
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
-import com.aionemu.loginserver.utils.ThreadPoolManager;
+import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +69,6 @@ public class FixedInTimeTrigger extends TaskFromDBTrigger {
             delay += DAY_IN_MSEC;
         }
 
-        ThreadPoolManager.getInstance().scheduleAtFixedRate(this, delay, DAY_IN_MSEC);
+        LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this, delay, DAY_IN_MSEC);
     }
 }

@@ -18,7 +18,7 @@
 
 package com.aionemu.loginserver.taskmanager.trigger.implementations;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
+import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +50,7 @@ public class AfterRestartTrigger extends TaskFromDBTrigger {
     @Override
     public void initTrigger() {
         if (!isBlocking) {
-            ThreadPoolManager.getInstance().schedule(this, 5000);
+            LoginThreadPoolServices.threadPoolManager().schedule(this, 5000);
         } else {
             this.run();
         }

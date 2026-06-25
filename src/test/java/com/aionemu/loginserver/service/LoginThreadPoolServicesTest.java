@@ -54,6 +54,23 @@ class LoginThreadPoolServicesTest {
         assertTrue(transferServiceSource.contains("LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate"));
     }
 
+    @Test
+    void cronAndTaskTriggersUseThreadPoolBridgeInsteadOfDirectSingleton() throws IOException {
+        String cronRunnerSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/utils/cron/ThreadPoolManagerRunnableRunner.java"));
+        String afterRestartTriggerSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/taskmanager/trigger/implementations/AfterRestartTrigger.java"));
+        String fixedInTimeTriggerSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/taskmanager/trigger/implementations/FixedInTimeTrigger.java"));
+
+        assertFalse(cronRunnerSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(cronRunnerSource.contains("LoginThreadPoolServices.threadPoolManager().execute(r)"));
+        assertTrue(cronRunnerSource.contains("LoginThreadPoolServices.threadPoolManager().executeLongRunning(r)"));
+
+        assertFalse(afterRestartTriggerSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(afterRestartTriggerSource.contains("LoginThreadPoolServices.threadPoolManager().schedule(this, 5000)"));
+
+        assertFalse(fixedInTimeTriggerSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(fixedInTimeTriggerSource.contains("LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate"));
+    }
+
     private static <T> T instance(Class<T> type) {
         return new ObjenesisStd().newInstance(type);
     }
