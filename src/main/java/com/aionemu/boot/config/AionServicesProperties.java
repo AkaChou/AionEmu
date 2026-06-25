@@ -28,7 +28,7 @@ public class AionServicesProperties {
         private String mode = TransportMode.NETTY.name();
 
         public TransportMode getMode() {
-            if (mode == null || mode.isBlank() || "LEGACY_NIO".equalsIgnoreCase(mode)) {
+            if (mode == null || mode.isBlank()) {
                 return TransportMode.NETTY;
             }
             return TransportMode.valueOf(mode.toUpperCase().replace('-', '_'));

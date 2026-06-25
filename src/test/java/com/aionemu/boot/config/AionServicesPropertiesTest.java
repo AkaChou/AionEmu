@@ -2,6 +2,7 @@ package com.aionemu.boot.config;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.boot.config.AionServicesProperties.TransportMode;
@@ -56,12 +57,12 @@ class AionServicesPropertiesTest {
     }
 
     @Test
-    void legacyNioModeIsAcceptedAsNettyAlias() {
+    void legacyNioModeIsRejectedAfterFallbackRemoval() {
         AionServicesProperties properties = new AionServicesProperties();
 
         properties.getTransport().setMode("LEGACY_NIO");
 
-        assertSame(TransportMode.NETTY, properties.getTransport().getMode());
+        assertThrows(IllegalArgumentException.class, () -> properties.getTransport().getMode());
     }
 
     private AionServicesProperties bindFromYaml(String... resources) throws IOException {

@@ -65,7 +65,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Added boot-managed lifecycle ordering: login phase 100, chat phase 200, game phase 300.
 - [x] Made chat disabled by default and configurable.
 - [x] Guarded chat runtime and Spring configuration beans so chat internals only load when `aion.services.chat.enabled=true`.
-- [x] Made Netty the default transport mode with explicit `legacy-nio` fallback.
+- [x] Made Netty the boot-managed transport mode and retired the explicit `legacy-nio` fallback.
 - [x] Migrated the chat client acceptor to a Netty 4 adapter while preserving the existing chat packet handlers.
 - [x] Shared boot-managed Netty 4 event loops across migrated service endpoints.
 - [x] Made the chat Netty server lazy so loading the class does not bind ports when chat is disabled.
@@ -155,7 +155,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Existing IntelliJ process still owned `2106/9014`, so smoke used temporary config ports.
   - Default Netty + chat disabled logged `Aion service startup: login=true, chat=false, game=true`, `Using Netty transport mode`, `Chat service is disabled by boot configuration`, and Netty listeners on `127.0.0.1:19014` and `127.0.0.1:12106`.
   - Chat profile + Netty logged `Aion service startup: login=true, chat=true, game=true`, `AL Chat Server started`, Netty chat listeners on `127.0.0.1:12041` and `127.0.0.1:19021`, and game-side chat connector enabled.
-  - Explicit `legacy-nio` fallback logged `Using legacy NIO transport managed by existing game/login/chat startup code` and legacy listeners on `127.0.0.1:19014` and `127.0.0.1:12106`, without boot-managed Netty event loop startup.
+  - The earlier explicit `legacy-nio` fallback smoke is historical; the fallback has since been retired and `LEGACY_NIO` is rejected as an unsupported transport mode.
 - Login + game smoke with temporary `aion.home` reached `Server initialization COMPLETE`.
 - Earlier fat jar smoke on Java 25 required `--add-opens java.base/java.lang=ALL-UNNAMED` for legacy reflective proxy access; current code no longer depends on that workaround.
 - Fat jar smoke with temporary `aion.home`, temporary ports, geodata disabled, svstats disabled, Netty transport, and chat disabled reached `=== Server initialization COMPLETE ===`; it logged Netty listeners on `127.0.0.1:19014`, `127.0.0.1:12106`, and `127.0.0.1:17777`, plus `Chat Server is disabled by configuration`.
@@ -165,6 +165,6 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 
 ## Remaining Technical Debt
 
-- Legacy NIO transport remains available as an explicit fallback mode.
+- The low-level commons NIO transport classes still exist for now, but they are no longer a boot-managed service fallback.
 - Login service startup still has large static initialization blocks; shutdown is guarded for partially initialized DAO/transport/service state, but finer-grained startup components would make failure cleanup easier to test.
 - Full protocol parity still needs client-side runtime validation after the structural migration.

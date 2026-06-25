@@ -1,6 +1,7 @@
 package com.aionemu.boot.transport;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import org.junit.jupiter.api.Test;
@@ -32,17 +33,16 @@ class AionTransportBoundaryTest {
     }
 
     @Test
-    void legacyNioModeIsAcceptedAsNettyAlias() {
+    void unsupportedTransportModeIsRejected() {
         AionServicesProperties properties = new AionServicesProperties();
         properties.getTransport().setMode("LEGACY_NIO");
         RecordingNettyTransport netty = new RecordingNettyTransport();
         AionTransportBoundary boundary = new AionTransportBoundary(properties, netty);
 
-        boundary.prepare();
-        boundary.destroy();
+        assertThrows(IllegalArgumentException.class, boundary::prepare);
 
-        assertEquals(1, netty.starts);
-        assertEquals(1, netty.stops);
+        assertEquals(0, netty.starts);
+        assertEquals(0, netty.stops);
     }
 
     private static final class RecordingNettyTransport extends NettyTransportLifecycle {
