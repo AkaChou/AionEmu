@@ -7,6 +7,7 @@ import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
@@ -160,5 +161,11 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public ProtectorConquerorService protectorConquerorService() {
         return ProtectorConquerorService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public DropRegistrationService dropRegistrationService() {
+        return DropRegistrationService.getInstance();
     }
 }
