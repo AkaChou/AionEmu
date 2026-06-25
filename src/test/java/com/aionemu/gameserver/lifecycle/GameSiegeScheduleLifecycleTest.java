@@ -10,12 +10,19 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameSiegeScheduleLifecycleTest {
 
     @Test
     void usesSiegeScheduleGatewayCollaborator() {
         assertEquals(GameSiegeScheduleGateway.class, fieldType("siegeScheduleGateway"));
+    }
+
+    @Test
+    void siegeScheduleGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameSiegeScheduleGateway.class, "siegeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameSiegeScheduleGateway.class, "baseServiceProvider"));
     }
 
     @Test
@@ -56,6 +63,15 @@ class GameSiegeScheduleLifecycleTest {
     private static Class<?> fieldType(String name) {
         try {
             Field field = GameSiegeScheduleLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
+        try {
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

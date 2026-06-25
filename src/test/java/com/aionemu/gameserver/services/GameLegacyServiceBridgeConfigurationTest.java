@@ -13,6 +13,8 @@ import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.services.BaseService;
+import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
@@ -178,6 +180,18 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("shutdownHook"));
             assertEquals(ShutdownHook.class, context.getType("shutdownHook"));
             assertLazy(context.getBeanFactory(), "shutdownHook");
+        }
+    }
+
+    @Test
+    void exposesSiegeScheduleServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("siegeService"));
+            assertTrue(context.containsBeanDefinition("baseService"));
+            assertEquals(SiegeService.class, context.getType("siegeService"));
+            assertEquals(BaseService.class, context.getType("baseService"));
+            assertLazy(context.getBeanFactory(), "siegeService");
+            assertLazy(context.getBeanFactory(), "baseService");
         }
     }
 

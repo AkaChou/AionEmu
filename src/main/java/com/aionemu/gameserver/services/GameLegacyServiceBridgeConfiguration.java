@@ -175,4 +175,16 @@ public class GameLegacyServiceBridgeConfiguration {
     public ShutdownHook shutdownHook() {
         return ShutdownHook.getInstance();
     }
+
+    @Bean
+    @Lazy
+    public SiegeService siegeService() {
+        return SiegeService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public BaseService baseService() {
+        return BaseService.getInstance();
+    }
 }
