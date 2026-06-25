@@ -8,6 +8,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
+import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
@@ -18,6 +19,7 @@ import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
+import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
@@ -44,10 +46,12 @@ import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
+import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
+import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
@@ -225,6 +229,60 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "shugoSweepService");
             assertLazy(context.getBeanFactory(), "atreianPassportService");
             assertLazy(context.getBeanFactory(), "eventWindowService");
+        }
+    }
+
+    @Test
+    void exposesRuntimeServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("periodicSaveService"));
+            assertTrue(context.containsBeanDefinition("territoryService"));
+            assertTrue(context.containsBeanDefinition("gameTimeService"));
+            assertTrue(context.containsBeanDefinition("announcementService"));
+            assertTrue(context.containsBeanDefinition("debugService"));
+            assertTrue(context.containsBeanDefinition("weatherService"));
+            assertTrue(context.containsBeanDefinition("brokerService"));
+            assertTrue(context.containsBeanDefinition("influence"));
+            assertTrue(context.containsBeanDefinition("exchangeService"));
+            assertTrue(context.containsBeanDefinition("petitionService"));
+            assertTrue(context.containsBeanDefinition("flyRingService"));
+            assertTrue(context.containsBeanDefinition("curingZoneService"));
+            assertTrue(context.containsBeanDefinition("springZoneService"));
+            assertTrue(context.containsBeanDefinition("boostEventService"));
+            assertTrue(context.containsBeanDefinition("taskManagerFromDB"));
+            assertTrue(context.containsBeanDefinition("limitedItemTradeService"));
+            assertEquals(PeriodicSaveService.class, context.getType("periodicSaveService"));
+            assertEquals(TerritoryService.class, context.getType("territoryService"));
+            assertEquals(GameTimeService.class, context.getType("gameTimeService"));
+            assertEquals(AnnouncementService.class, context.getType("announcementService"));
+            assertEquals(DebugService.class, context.getType("debugService"));
+            assertEquals(WeatherService.class, context.getType("weatherService"));
+            assertEquals(BrokerService.class, context.getType("brokerService"));
+            assertEquals(Influence.class, context.getType("influence"));
+            assertEquals(ExchangeService.class, context.getType("exchangeService"));
+            assertEquals(PetitionService.class, context.getType("petitionService"));
+            assertEquals(FlyRingService.class, context.getType("flyRingService"));
+            assertEquals(CuringZoneService.class, context.getType("curingZoneService"));
+            assertEquals(SpringZoneService.class, context.getType("springZoneService"));
+            assertEquals(BoostEventService.class, context.getType("boostEventService"));
+            assertEquals(TaskManagerFromDB.class, context.getType("taskManagerFromDB"));
+            assertEquals(LimitedItemTradeService.class, context.getType("limitedItemTradeService"));
+            assertLazy(context.getBeanFactory(), "periodicSaveService");
+            assertLazy(context.getBeanFactory(), "territoryService");
+            assertLazy(context.getBeanFactory(), "gameTimeService");
+            assertLazy(context.getBeanFactory(), "announcementService");
+            assertLazy(context.getBeanFactory(), "debugService");
+            assertLazy(context.getBeanFactory(), "weatherService");
+            assertLazy(context.getBeanFactory(), "brokerService");
+            assertLazy(context.getBeanFactory(), "influence");
+            assertLazy(context.getBeanFactory(), "exchangeService");
+            assertLazy(context.getBeanFactory(), "petitionService");
+            assertLazy(context.getBeanFactory(), "flyRingService");
+            assertLazy(context.getBeanFactory(), "curingZoneService");
+            assertLazy(context.getBeanFactory(), "springZoneService");
+            assertLazy(context.getBeanFactory(), "boostEventService");
+            assertLazy(context.getBeanFactory(), "taskManagerFromDB");
+            assertLazy(context.getBeanFactory(), "limitedItemTradeService");
         }
     }
 

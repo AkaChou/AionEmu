@@ -6,6 +6,7 @@ import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
+import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
@@ -15,6 +16,7 @@ import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
+import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
@@ -38,10 +40,12 @@ import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
+import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
+import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
@@ -279,6 +283,102 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public EventWindowService eventWindowService() {
         return EventWindowService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public PeriodicSaveService periodicSaveService() {
+        return PeriodicSaveService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public TerritoryService territoryService() {
+        return TerritoryService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public GameTimeService gameTimeService() {
+        return GameTimeService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public AnnouncementService announcementService() {
+        return AnnouncementService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public DebugService debugService() {
+        return DebugService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public WeatherService weatherService() {
+        return WeatherService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public BrokerService brokerService() {
+        return BrokerService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public Influence influence() {
+        return Influence.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ExchangeService exchangeService() {
+        return ExchangeService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public PetitionService petitionService() {
+        return PetitionService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public FlyRingService flyRingService() {
+        return FlyRingService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public CuringZoneService curingZoneService() {
+        return CuringZoneService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public SpringZoneService springZoneService() {
+        return SpringZoneService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public BoostEventService boostEventService() {
+        return BoostEventService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public TaskManagerFromDB taskManagerFromDB() {
+        return TaskManagerFromDB.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public LimitedItemTradeService limitedItemTradeService() {
+        return LimitedItemTradeService.getInstance();
     }
 
     @Bean

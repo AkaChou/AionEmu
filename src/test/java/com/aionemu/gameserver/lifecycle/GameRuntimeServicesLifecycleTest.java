@@ -23,6 +23,22 @@ class GameRuntimeServicesLifecycleTest {
     void runtimeGatewayBridgesLegacyServicesThroughSpringProviders() {
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "adminServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "playerTransferServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "periodicSaveServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "territoryServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "gameTimeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "announcementServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "debugServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "weatherServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "brokerServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "influenceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "exchangeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "petitionServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "flyRingServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "curingZoneServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "springZoneServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "boostEventServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "taskManagerFromDBProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "limitedItemTradeServiceProvider"));
     }
 
     @Test
