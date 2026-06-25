@@ -105,6 +105,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.loginserver.LoginServer;
+import com.aionemu.commons.utils.AionRuntimeMode;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -113,13 +114,23 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 
 class AionBootApplicationTest {
+
+    @AfterEach
+    void clearBootRuntimeFlags() {
+        System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
+        System.clearProperty("aion.transport.netty");
+    }
 
     @Test
     void bootApplicationIsTheOnlyServerEntrypoint() {
@@ -183,6 +194,23 @@ class AionBootApplicationTest {
             assertEquals(ChatServerRuntimeBridge.class, context.getType("chatServerRuntimeBridge"));
             assertLazy(context.getBeanFactory(), "loginServerRuntimeBridge");
             assertLazy(context.getBeanFactory(), "chatServerRuntimeBridge");
+        }
+    }
+
+    @Test
+    void springApplicationStartsWithServicesDisabled() {
+        try (ConfigurableApplicationContext context = new SpringApplicationBuilder(AionBootApplication.class)
+            .web(WebApplicationType.NONE)
+            .bannerMode(org.springframework.boot.Banner.Mode.OFF)
+            .run(
+                "--boot-smoke=true",
+                "--aion.services.login.enabled=false",
+                "--aion.services.chat.enabled=false",
+                "--aion.services.game.enabled=false"
+            )) {
+            assertTrue(context.isActive());
+            assertTrue(AionRuntimeMode.isBootEmbedded());
+            assertEquals("true", System.getProperty("aion.transport.netty"));
         }
     }
 
