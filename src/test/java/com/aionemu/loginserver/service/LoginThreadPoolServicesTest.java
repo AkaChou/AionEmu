@@ -71,6 +71,15 @@ class LoginThreadPoolServicesTest {
         assertTrue(fixedInTimeTriggerSource.contains("LoginThreadPoolServices.threadPoolManager().scheduleAtFixedRate"));
     }
 
+    @Test
+    void shutdownUsesThreadPoolBridgeForLoginThreadPoolCleanup() throws IOException {
+        String shutdownSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/Shutdown.java"));
+
+        assertFalse(shutdownSource.contains("import com.aionemu.loginserver.utils.ThreadPoolManager;"));
+        assertFalse(shutdownSource.contains("            ThreadPoolManager.getInstance().shutdown();"));
+        assertTrue(shutdownSource.contains("LoginThreadPoolServices.threadPoolManager().shutdown()"));
+    }
+
     private static <T> T instance(Class<T> type) {
         return new ObjenesisStd().newInstance(type);
     }

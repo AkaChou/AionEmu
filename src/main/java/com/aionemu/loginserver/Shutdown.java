@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.network.NetConnector;
-import com.aionemu.loginserver.utils.ThreadPoolManager;
+import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.dao.SvStatsDAO;
@@ -107,7 +107,7 @@ public class Shutdown extends Thread {
 
         /* Shuting down threadpools */
         try {
-            ThreadPoolManager.getInstance().shutdown();
+            LoginThreadPoolServices.threadPoolManager().shutdown();
         } catch (Throwable t) {
             log.error("Can't shutdown ThreadPoolManager", t);
         }
