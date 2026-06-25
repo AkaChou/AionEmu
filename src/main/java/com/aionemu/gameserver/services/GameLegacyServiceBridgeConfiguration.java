@@ -3,10 +3,13 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ShutdownHook;
+import com.aionemu.gameserver.ai2.AI2Engine;
+import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.BGService;
@@ -36,6 +39,7 @@ import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import org.springframework.context.annotation.Bean;
@@ -211,6 +215,30 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public ThreadPoolManager threadPoolManager() {
         return ThreadPoolManager.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public QuestEngine questEngine() {
+        return QuestEngine.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public InstanceEngine instanceEngine() {
+        return InstanceEngine.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public AI2Engine ai2Engine() {
+        return AI2Engine.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ChatProcessor chatProcessor() {
+        return ChatProcessor.getInstance();
     }
 
     @Bean

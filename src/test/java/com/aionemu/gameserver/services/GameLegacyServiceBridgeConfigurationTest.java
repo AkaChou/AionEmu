@@ -5,10 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.ai2.AI2Engine;
+import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
+import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -40,6 +43,7 @@ import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import org.junit.jupiter.api.Test;
@@ -172,6 +176,24 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("threadPoolManager"));
             assertEquals(ThreadPoolManager.class, context.getType("threadPoolManager"));
             assertLazy(context.getBeanFactory(), "threadPoolManager");
+        }
+    }
+
+    @Test
+    void exposesGameEnginesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("questEngine"));
+            assertTrue(context.containsBeanDefinition("instanceEngine"));
+            assertTrue(context.containsBeanDefinition("ai2Engine"));
+            assertTrue(context.containsBeanDefinition("chatProcessor"));
+            assertEquals(QuestEngine.class, context.getType("questEngine"));
+            assertEquals(InstanceEngine.class, context.getType("instanceEngine"));
+            assertEquals(AI2Engine.class, context.getType("ai2Engine"));
+            assertEquals(ChatProcessor.class, context.getType("chatProcessor"));
+            assertLazy(context.getBeanFactory(), "questEngine");
+            assertLazy(context.getBeanFactory(), "instanceEngine");
+            assertLazy(context.getBeanFactory(), "ai2Engine");
+            assertLazy(context.getBeanFactory(), "chatProcessor");
         }
     }
 

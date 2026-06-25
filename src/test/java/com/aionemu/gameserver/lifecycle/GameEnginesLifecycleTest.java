@@ -13,12 +13,22 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameEnginesLifecycleTest {
 
     @Test
     void usesEnginesGatewayCollaborator() {
         assertEquals(GameEnginesGateway.class, fieldType("enginesGateway"));
+    }
+
+    @Test
+    void enginesGatewayBridgesEnginesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "questEngineProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "instanceEngineProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "ai2EngineProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "chatProcessorProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEnginesGateway.class, "threadPoolManagerProvider"));
     }
 
     @Test
@@ -87,8 +97,12 @@ class GameEnginesLifecycleTest {
     }
 
     private static Class<?> fieldType(String name) {
+        return fieldType(GameEnginesLifecycle.class, name);
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
         try {
-            Field field = GameEnginesLifecycle.class.getDeclaredField(name);
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
