@@ -88,6 +88,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Routed login flood/brute-force protection access through Spring-provided services before legacy singleton fallbacks.
 - [x] Routed login banned-IP startup and packet access through a Spring-provided service wrapper.
 - [x] Made login `NetConnector` discard its transport on shutdown so later embedded lifecycles create a fresh transport.
+- [x] Routed login startup network connect through a Spring-provided server transport before the legacy `NetConnector` fallback.
 - [x] Added a reusable Netty 4 client connector and moved game-to-chat outbound connections to Netty when Netty transport mode is enabled.
 - [x] Moved game-to-login outbound connections to Netty when Netty transport mode is enabled.
 - [x] Removed the extra legacy NIO dispatcher from GameServer startup when Netty transport mode is enabled.

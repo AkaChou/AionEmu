@@ -1,8 +1,10 @@
 package com.aionemu.loginserver.service;
 
+import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.loginserver.Shutdown;
 import com.aionemu.loginserver.controller.BannedMacManager;
 import com.aionemu.loginserver.controller.PremiumController;
+import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.BruteForceProtector;
 import com.aionemu.loginserver.utils.FloodProtector;
@@ -36,6 +38,12 @@ public class LoginLegacyServiceBridgeConfiguration {
     @Lazy
     public ThreadPoolManager loginThreadPoolManager() {
         return ThreadPoolManager.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ServerTransport loginServerTransport() {
+        return NetConnector.getInstance();
     }
 
     @Bean

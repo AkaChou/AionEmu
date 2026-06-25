@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.loginserver.Shutdown;
 import com.aionemu.loginserver.controller.BannedMacManager;
 import com.aionemu.loginserver.controller.PremiumController;
@@ -63,6 +64,15 @@ class LoginLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("loginThreadPoolManager"));
             assertEquals(ThreadPoolManager.class, context.getType("loginThreadPoolManager"));
             assertTrue(context.getBeanFactory().getBeanDefinition("loginThreadPoolManager").isLazyInit());
+        }
+    }
+
+    @Test
+    void exposesLoginServerTransportAsLazySpringBean() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(LoginLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("loginServerTransport"));
+            assertEquals(ServerTransport.class, context.getType("loginServerTransport"));
+            assertTrue(context.getBeanFactory().getBeanDefinition("loginServerTransport").isLazyInit());
         }
     }
 
@@ -136,6 +146,14 @@ class LoginLegacyServiceBridgeConfigurationTest {
 
         assertTrue(source.contains("return ThreadPoolManager.getInstance();"));
         assertFalse(source.contains("return new ThreadPoolManager();"));
+    }
+
+    @Test
+    void loginServerTransportBeanUsesLegacyConnectorInsteadOfCreatingSecondTransport() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
+
+        assertTrue(source.contains("return NetConnector.getInstance();"));
+        assertFalse(source.contains("return new NetConnector();"));
     }
 
     @Test
