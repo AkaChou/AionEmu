@@ -19,7 +19,7 @@
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
-import com.aionemu.loginserver.service.PlayerTransferService;
+import com.aionemu.loginserver.service.LoginTransferServices;
 
 /**
  * @author KID
@@ -38,28 +38,28 @@ public class CM_PTRANSFER_CONTROL extends GsClientPacket {
                 String name = readS();
                 int bytes = this.getRemainingBytes();
                 byte[] db = this.readB(bytes);
-                PlayerTransferService.getInstance().requestTransfer(taskId, name, db);
+                LoginTransferServices.playerTransferService().requestTransfer(taskId, name, db);
             }
             break;
             case 2: // ERROR
             {
                 int taskId = readD();
                 String reason = readS();
-                PlayerTransferService.getInstance().onError(taskId, reason);
+                LoginTransferServices.playerTransferService().onError(taskId, reason);
             }
             break;
             case 3: // ok
             {
                 int taskId = readD();
                 int playerId = readD();
-                PlayerTransferService.getInstance().onOk(taskId, playerId);
+                LoginTransferServices.playerTransferService().onOk(taskId, playerId);
             }
             break;
             case 4: // Task stop
             {
                 int taskId = readD();
                 String reason = readS();
-                PlayerTransferService.getInstance().onTaskStop(taskId, reason);
+                LoginTransferServices.playerTransferService().onTaskStop(taskId, reason);
             }
         }
     }
