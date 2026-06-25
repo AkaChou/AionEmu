@@ -5,6 +5,8 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
+import com.aionemu.gameserver.services.instance.AsyunatarService;
+import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
@@ -125,5 +127,17 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public OutpostService outpostService() {
         return OutpostService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public DredgionService2 dredgionService() {
+        return DredgionService2.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public AsyunatarService asyunatarService() {
+        return AsyunatarService.getInstance();
     }
 }

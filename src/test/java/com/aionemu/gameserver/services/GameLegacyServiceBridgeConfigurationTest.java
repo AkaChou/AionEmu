@@ -8,6 +8,8 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
+import com.aionemu.gameserver.services.instance.AsyunatarService;
+import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
@@ -114,6 +116,18 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(OutpostService.class, context.getType("outpostService"));
             assertLazy(context.getBeanFactory(), "disputeLandService");
             assertLazy(context.getBeanFactory(), "outpostService");
+        }
+    }
+
+    @Test
+    void exposesDredgionServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("dredgionService"));
+            assertTrue(context.containsBeanDefinition("asyunatarService"));
+            assertEquals(DredgionService2.class, context.getType("dredgionService"));
+            assertEquals(AsyunatarService.class, context.getType("asyunatarService"));
+            assertLazy(context.getBeanFactory(), "dredgionService");
+            assertLazy(context.getBeanFactory(), "asyunatarService");
         }
     }
 
