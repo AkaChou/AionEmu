@@ -12,12 +12,20 @@ import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameOptionalServicesLifecycleTest {
 
     @Test
     void usesOptionalServicesGatewayCollaborator() {
         assertEquals(GameOptionalServicesGateway.class, fieldType("optionalServicesGateway"));
+    }
+
+    @Test
+    void optionalServicesGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesGateway.class, "playerLimitServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesGateway.class, "npcShoutsServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameOptionalServicesGateway.class, "shieldServiceProvider"));
     }
 
     @Test
@@ -115,6 +123,15 @@ class GameOptionalServicesLifecycleTest {
     private static Class<?> fieldType(String name) {
         try {
             Field field = GameOptionalServicesLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
+        try {
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);

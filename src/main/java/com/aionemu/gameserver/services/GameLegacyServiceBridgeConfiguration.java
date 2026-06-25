@@ -14,6 +14,7 @@ import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
+import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
@@ -94,6 +95,24 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public BanditService banditService() {
         return BanditService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public PlayerLimitService playerLimitService() {
+        return PlayerLimitService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public NpcShoutsService npcShoutsService() {
+        return NpcShoutsService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ShieldService shieldService() {
+        return ShieldService.getInstance();
     }
 
     @Bean

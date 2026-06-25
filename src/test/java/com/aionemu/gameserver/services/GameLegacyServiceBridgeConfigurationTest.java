@@ -15,6 +15,7 @@ import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerEventService;
+import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.BaseService;
@@ -82,6 +83,21 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "ladderService");
             assertLazy(context.getBeanFactory(), "bgService");
             assertLazy(context.getBeanFactory(), "banditService");
+        }
+    }
+
+    @Test
+    void exposesOptionalServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("playerLimitService"));
+            assertTrue(context.containsBeanDefinition("npcShoutsService"));
+            assertTrue(context.containsBeanDefinition("shieldService"));
+            assertEquals(PlayerLimitService.class, context.getType("playerLimitService"));
+            assertEquals(NpcShoutsService.class, context.getType("npcShoutsService"));
+            assertEquals(ShieldService.class, context.getType("shieldService"));
+            assertLazy(context.getBeanFactory(), "playerLimitService");
+            assertLazy(context.getBeanFactory(), "npcShoutsService");
+            assertLazy(context.getBeanFactory(), "shieldService");
         }
     }
 
