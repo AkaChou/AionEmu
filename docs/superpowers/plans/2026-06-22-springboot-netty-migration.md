@@ -78,6 +78,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made login premium-controller startup use a Spring-instantiable controller bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Made login task-from-db startup use a Spring-instantiable manager bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Made login banned-MAC management Spring-instantiable while replacing its eager singleton with a lazy fallback.
+- [x] Routed login flood/brute-force protection access through Spring-provided services before legacy singleton fallbacks.
 - [x] Made login `NetConnector` discard its transport on shutdown so later embedded lifecycles create a fresh transport.
 - [x] Added a reusable Netty 4 client connector and moved game-to-chat outbound connections to Netty when Netty transport mode is enabled.
 - [x] Moved game-to-login outbound connections to Netty when Netty transport mode is enabled.

@@ -42,6 +42,7 @@ public class FloodProtector {
     private FastMap<String, Long> flood = new FastMap<String, Long>();
     private FastMap<String, Long> ban = new FastMap<String, Long>();
 
+    @Deprecated(since = "boot-migration")
     public static final FloodProtector getInstance() {
         return SingletonHolder.instance;
     }

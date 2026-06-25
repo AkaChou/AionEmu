@@ -64,6 +64,7 @@ public class BruteForceProtector {
         }
     }
 
+    @Deprecated(since = "boot-migration")
     public static final BruteForceProtector getInstance() {
         return SingletonHolder.instance;
     }

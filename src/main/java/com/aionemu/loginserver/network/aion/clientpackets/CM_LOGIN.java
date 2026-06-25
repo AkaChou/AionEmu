@@ -37,7 +37,7 @@ import com.aionemu.loginserver.network.aion.LoginConnection.State;
 import com.aionemu.loginserver.network.aion.SessionKey;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_FAIL;
 import com.aionemu.loginserver.network.aion.serverpackets.SM_LOGIN_OK;
-import com.aionemu.loginserver.utils.BruteForceProtector;
+import com.aionemu.loginserver.service.LoginProtectionServices;
 
 /**
  * @author -Nemesiss-, KID, Lyahim
@@ -107,7 +107,7 @@ public class CM_LOGIN extends AionClientPacket {
             case INVALID_PASSWORD:
                 if (Config.ENABLE_BRUTEFORCE_PROTECTION) {
                     String ip = client.getIP();
-                    if (BruteForceProtector.getInstance().addFailedConnect(ip)) {
+                    if (LoginProtectionServices.bruteForceProtector().addFailedConnect(ip)) {
                         Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000);
                         BannedIpController.banIp(ip, newTime);
                         log.debug(user + " on " + ip + " banned for " + Config.WRONG_LOGIN_BAN_TIME + " min. bruteforce");

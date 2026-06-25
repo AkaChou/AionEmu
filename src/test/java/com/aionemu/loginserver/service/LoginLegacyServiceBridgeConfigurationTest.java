@@ -9,6 +9,8 @@ import com.aionemu.loginserver.Shutdown;
 import com.aionemu.loginserver.controller.BannedMacManager;
 import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
+import com.aionemu.loginserver.utils.BruteForceProtector;
+import com.aionemu.loginserver.utils.FloodProtector;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -64,6 +66,19 @@ class LoginLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void exposesLoginProtectionServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(LoginLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("loginBruteForceProtector"));
+            assertEquals(BruteForceProtector.class, context.getType("loginBruteForceProtector"));
+            assertTrue(context.getBeanFactory().getBeanDefinition("loginBruteForceProtector").isLazyInit());
+
+            assertTrue(context.containsBeanDefinition("loginFloodProtector"));
+            assertEquals(FloodProtector.class, context.getType("loginFloodProtector"));
+            assertTrue(context.getBeanFactory().getBeanDefinition("loginFloodProtector").isLazyInit());
+        }
+    }
+
+    @Test
     void loginPlayerTransferBeanUsesSpringInstantiationInsteadOfSingletonFallback() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
         String serviceSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/PlayerTransferService.java"));
@@ -106,5 +121,19 @@ class LoginLegacyServiceBridgeConfigurationTest {
         assertTrue(managerSource.contains("SingletonHolder"));
         assertTrue(managerSource.contains("@Deprecated(since = \"boot-migration\")"));
         assertFalse(managerSource.contains("private static BannedMacManager manager = new BannedMacManager();"));
+    }
+
+    @Test
+    void loginProtectionBeansUseSpringInstantiationInsteadOfSingletonFallbacks() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
+        String bruteForceSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/utils/BruteForceProtector.java"));
+        String floodSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/utils/FloodProtector.java"));
+
+        assertFalse(source.contains("BruteForceProtector.getInstance()"));
+        assertFalse(source.contains("FloodProtector.getInstance()"));
+        assertTrue(source.contains("return new BruteForceProtector();"));
+        assertTrue(source.contains("return new FloodProtector();"));
+        assertTrue(bruteForceSource.contains("@Deprecated(since = \"boot-migration\")"));
+        assertTrue(floodSource.contains("@Deprecated(since = \"boot-migration\")"));
     }
 }
