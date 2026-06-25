@@ -12,6 +12,7 @@ public class GameGeoNavGateway {
 
     private ObjectProvider<GeoService> geoServiceProvider;
     private ObjectProvider<NavService> navServiceProvider;
+    private ObjectProvider<GameWorldServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setGeoServiceProvider(ObjectProvider<GeoService> geoServiceProvider) {
@@ -23,6 +24,11 @@ public class GameGeoNavGateway {
         this.navServiceProvider = navServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameWorldServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void initialize() {
         Util.printSection(" *** Geodata *** ");
         geoService().initializeGeo();
@@ -31,15 +37,22 @@ public class GameGeoNavGateway {
 
     private GeoService geoService() {
         if (geoServiceProvider == null) {
-            return GeoService.getInstance();
+            return runtimeBridge().geoService();
         }
-        return geoServiceProvider.getIfAvailable(GeoService::getInstance);
+        return geoServiceProvider.getIfAvailable(() -> runtimeBridge().geoService());
     }
 
     private NavService navService() {
         if (navServiceProvider == null) {
-            return NavService.getInstance();
+            return runtimeBridge().navService();
         }
-        return navServiceProvider.getIfAvailable(NavService::getInstance);
+        return navServiceProvider.getIfAvailable(() -> runtimeBridge().navService());
+    }
+
+    private GameWorldServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameWorldServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameWorldServicesRuntimeBridge::new);
     }
 }

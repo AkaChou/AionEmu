@@ -26,6 +26,11 @@ class GameGeoNavLifecycleTest {
     }
 
     @Test
+    void geoNavGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameGeoNavGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startInitializesGeoThenNavOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameGeoNavLifecycle lifecycle = new GameGeoNavLifecycle(

@@ -26,6 +26,11 @@ class GameWorldActivationLifecycleTest {
     }
 
     @Test
+    void worldActivationGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameWorldActivationGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsDropRegistrationServerActivationAndOfflineMarkerOnce() {
         List<String> events = new ArrayList<>();
         GameServer server = new GameServer();
