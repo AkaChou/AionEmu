@@ -17,8 +17,8 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.commons.utils.AEInfos;
-import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
+import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -96,7 +96,7 @@ public class Sys extends AdminCommand {
 			try {
 				int val = Integer.parseInt(params[1]);
 				int announceInterval = Integer.parseInt(params[2]);
-				ShutdownHook.getInstance().doShutdown(val, announceInterval, ShutdownMode.SHUTDOWN);
+				GameShutdownRequest.doShutdown(val, announceInterval, ShutdownMode.SHUTDOWN);
 				PacketSendUtility.sendMessage(player, "Server will shutdown in " + val + " seconds.");
 			}
 			catch (ArrayIndexOutOfBoundsException e) {
@@ -110,7 +110,7 @@ public class Sys extends AdminCommand {
 			try {
 				int val = Integer.parseInt(params[1]);
 				int announceInterval = Integer.parseInt(params[2]);
-				ShutdownHook.getInstance().doShutdown(val, announceInterval, ShutdownMode.RESTART);
+				GameShutdownRequest.doShutdown(val, announceInterval, ShutdownMode.RESTART);
 				PacketSendUtility.sendMessage(player, "Server will restart in " + val + " seconds.");
 			}
 			catch (ArrayIndexOutOfBoundsException e) {

@@ -21,7 +21,7 @@ package com.aionemu.loginserver.taskmanager.handler.implementations;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import com.aionemu.loginserver.Shutdown;
+import com.aionemu.loginserver.service.LoginShutdownRequest;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,14 +40,12 @@ public class RestartHandler extends TaskFromDBHandler {
         if (AionRuntimeMode.isBootEmbedded()) {
             if (!AionEmbeddedShutdownHandler.requestShutdown(AionEmbeddedShutdownMode.RESTART)) {
                 log.warn("Embedded shutdown handler is not registered; stopping LoginServer directly.");
-                Shutdown.getInstance().shutdown(false);
+                LoginShutdownRequest.shutdownWithoutHalt();
             }
             return;
         }
 
-        Shutdown shutdown = Shutdown.getInstance();
-        shutdown.setRestartOnly(true);
-        shutdown.start();
+        LoginShutdownRequest.startShutdown(true);
     }
 
     @Override

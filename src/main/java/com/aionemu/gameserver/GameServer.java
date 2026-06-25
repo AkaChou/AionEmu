@@ -77,6 +77,7 @@ import com.aionemu.gameserver.lifecycle.GameLoggingGateway;
 import com.aionemu.gameserver.lifecycle.GameLoggingLifecycle;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupGateway;
 import com.aionemu.gameserver.lifecycle.GameNetworkStartupLifecycle;
+import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameOptionalServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameProtectorConquerorGateway;
@@ -1324,7 +1325,7 @@ public class GameServer {
 		if (server != null) {
 			try {
 				server.stopServers();
-				ShutdownHook.getInstance().completeShutdown(mode, false);
+				GameShutdownRequest.completeShutdown(mode, false);
 			} finally {
 				activeServer = null;
 			}
