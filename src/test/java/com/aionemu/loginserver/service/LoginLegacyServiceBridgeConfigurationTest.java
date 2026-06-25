@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.loginserver.Shutdown;
+import com.aionemu.loginserver.controller.BannedMacManager;
 import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import java.io.IOException;
@@ -54,6 +55,15 @@ class LoginLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void exposesLoginBannedMacManagerAsLazySpringBean() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(LoginLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("loginBannedMacManager"));
+            assertEquals(BannedMacManager.class, context.getType("loginBannedMacManager"));
+            assertTrue(context.getBeanFactory().getBeanDefinition("loginBannedMacManager").isLazyInit());
+        }
+    }
+
+    @Test
     void loginPlayerTransferBeanUsesSpringInstantiationInsteadOfSingletonFallback() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
         String serviceSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/PlayerTransferService.java"));
@@ -84,5 +94,17 @@ class LoginLegacyServiceBridgeConfigurationTest {
         assertTrue(source.contains("return new TaskFromDBManager();"));
         assertTrue(managerSource.contains("SingletonHolder"));
         assertTrue(managerSource.contains("@Deprecated(since = \"boot-migration\")"));
+    }
+
+    @Test
+    void loginBannedMacManagerBeanUsesSpringInstantiationInsteadOfSingletonFallback() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
+        String managerSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/controller/BannedMacManager.java"));
+
+        assertFalse(source.contains("BannedMacManager.getInstance()"));
+        assertTrue(source.contains("return new BannedMacManager();"));
+        assertTrue(managerSource.contains("SingletonHolder"));
+        assertTrue(managerSource.contains("@Deprecated(since = \"boot-migration\")"));
+        assertFalse(managerSource.contains("private static BannedMacManager manager = new BannedMacManager();"));
     }
 }

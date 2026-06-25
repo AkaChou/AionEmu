@@ -34,13 +34,13 @@ import com.aionemu.loginserver.model.base.BannedMacEntry;
  */
 public class BannedMacManager {
 
-    private static BannedMacManager manager = new BannedMacManager();
+    private BannedMacDAO dao = DAOManager.getDAO(BannedMacDAO.class);
     private Map<String, BannedMacEntry> bannedList = new FastMap<String, BannedMacEntry>();
 
+    @Deprecated(since = "boot-migration")
     public static BannedMacManager getInstance() {
-        return manager;
+        return SingletonHolder.INSTANCE;
     }
-    private BannedMacDAO dao = DAOManager.getDAO(BannedMacDAO.class);
 
     public BannedMacManager() {
         bannedList = dao.load();
@@ -61,5 +61,10 @@ public class BannedMacManager {
 
     public final Map<String, BannedMacEntry> getMap() {
         return this.bannedList;
+    }
+
+    private static final class SingletonHolder {
+
+        private static final BannedMacManager INSTANCE = new BannedMacManager();
     }
 }

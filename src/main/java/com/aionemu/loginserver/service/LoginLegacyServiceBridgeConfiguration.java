@@ -1,6 +1,7 @@
 package com.aionemu.loginserver.service;
 
 import com.aionemu.loginserver.Shutdown;
+import com.aionemu.loginserver.controller.BannedMacManager;
 import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,12 @@ public class LoginLegacyServiceBridgeConfiguration {
     @Lazy
     public TaskFromDBManager loginTaskFromDBManager() {
         return new TaskFromDBManager();
+    }
+
+    @Bean
+    @Lazy
+    public BannedMacManager loginBannedMacManager() {
+        return new BannedMacManager();
     }
 
     @Bean
