@@ -20,6 +20,7 @@ package com.aionemu.loginserver;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AionProcessExit;
+import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,7 +113,7 @@ public class Shutdown extends Thread {
             log.error("Can't shutdown ThreadPoolManager", t);
         }
         try {
-            com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown();
+            CommonsNetworkThreadPoolServices.threadPoolManager().shutdown();
         } catch (Throwable t) {
             log.error("Can't shutdown common network ThreadPoolManager", t);
         }
