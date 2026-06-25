@@ -32,7 +32,7 @@ import com.aionemu.loginserver.network.gameserver.GsConnection;
 import com.aionemu.loginserver.network.gameserver.GsConnection.State;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_GS_AUTH_RESPONSE;
 import com.aionemu.loginserver.network.gameserver.serverpackets.SM_MACBAN_LIST;
-import com.aionemu.loginserver.utils.ThreadPoolManager;
+import com.aionemu.loginserver.service.LoginThreadPoolServices;
 
 /**
  * This is authentication packet that gs will send to login server for
@@ -101,7 +101,7 @@ public class CM_GS_AUTH extends GsClientPacket {
                 log.info("Gameserver #" + gameServerId + " is now online.");
                 client.setState(State.AUTHED);
                 client.sendPacket(new SM_GS_AUTH_RESPONSE(resp));
-                ThreadPoolManager.getInstance().schedule(new Runnable() {
+                LoginThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                     @Override
                     public void run() {
                         client.sendPacket(new SM_MACBAN_LIST());

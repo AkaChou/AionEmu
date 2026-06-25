@@ -31,7 +31,7 @@ import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.PingPongThread;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.factories.GsPacketHandlerFactory;
-import com.aionemu.loginserver.utils.ThreadPoolManager;
+import com.aionemu.loginserver.service.LoginThreadPoolServices;
 
 /**
  * Object representing connection between LoginServer and GameServer.
@@ -90,7 +90,7 @@ public class GsConnection extends AConnection {
         GsClientPacket pck = GsPacketHandlerFactory.handle(data, this);
 
         if (pck != null && pck.read()) {
-            ThreadPoolManager.getInstance().executeLsPacket(pck);
+            LoginThreadPoolServices.threadPoolManager().executeLsPacket(pck);
         }
 
         return true;
@@ -212,7 +212,7 @@ public class GsConnection extends AConnection {
         this.state = state;
         if (state == State.AUTHED) {
             if (Config.ENABLE_PINGPONG) {
-                ThreadPoolManager.getInstance().schedule(pingThread, 5000);
+                LoginThreadPoolServices.threadPoolManager().schedule(pingThread, 5000);
             }
         }
     }

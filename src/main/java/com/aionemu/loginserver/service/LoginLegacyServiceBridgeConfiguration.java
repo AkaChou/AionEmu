@@ -6,6 +6,7 @@ import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.BruteForceProtector;
 import com.aionemu.loginserver.utils.FloodProtector;
+import com.aionemu.loginserver.utils.ThreadPoolManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -29,6 +30,12 @@ public class LoginLegacyServiceBridgeConfiguration {
     @Lazy
     public TaskFromDBManager loginTaskFromDBManager() {
         return new TaskFromDBManager();
+    }
+
+    @Bean
+    @Lazy
+    public ThreadPoolManager loginThreadPoolManager() {
+        return ThreadPoolManager.getInstance();
     }
 
     @Bean
