@@ -3,7 +3,6 @@ package com.aionemu.gameserver.lifecycle;
 import com.aionemu.commons.network.NettyServer;
 import com.aionemu.commons.network.NettyServerCfg;
 import com.aionemu.commons.network.NioServer;
-import com.aionemu.commons.network.ServerCfg;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
@@ -44,10 +43,6 @@ public class GameServerNetworkGateway {
         this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
-    public boolean isNettyTransportEnabled() {
-        return Boolean.getBoolean("aion.transport.netty");
-    }
-
     public boolean isBootEmbedded() {
         return AionRuntimeMode.isBootEmbedded();
     }
@@ -58,10 +53,6 @@ public class GameServerNetworkGateway {
 
     public ServerTransport createNettyTransport() {
         return new NettyServer(new NettyServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", runtimeBridge().gameConnectionFactory()));
-    }
-
-    public NioServer createNioServer() {
-        return new NioServer(NetworkConfig.NIO_READ_WRITE_THREADS, new ServerCfg(NetworkConfig.GAME_BIND_ADDRESS, NetworkConfig.GAME_PORT, "Game Connections", runtimeBridge().gameConnectionFactory()));
     }
 
     public void initializeBannedMacManager() {
