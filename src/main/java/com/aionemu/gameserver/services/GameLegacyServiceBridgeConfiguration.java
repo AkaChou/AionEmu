@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
+import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.reward.RewardService;
@@ -72,5 +73,17 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public VeteranRewardsService veteranRewardsService() {
         return VeteranRewardsService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public DatabaseCleaningService databaseCleaningService() {
+        return DatabaseCleaningService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public AbyssRankCleaningService abyssRankCleaningService() {
+        return AbyssRankCleaningService.getInstance();
     }
 }

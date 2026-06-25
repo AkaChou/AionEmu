@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
@@ -61,6 +62,18 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "rewardService");
             assertLazy(context.getBeanFactory(), "weddingService");
             assertLazy(context.getBeanFactory(), "veteranRewardsService");
+        }
+    }
+
+    @Test
+    void exposesCleaningServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("databaseCleaningService"));
+            assertTrue(context.containsBeanDefinition("abyssRankCleaningService"));
+            assertEquals(DatabaseCleaningService.class, context.getType("databaseCleaningService"));
+            assertEquals(AbyssRankCleaningService.class, context.getType("abyssRankCleaningService"));
+            assertLazy(context.getBeanFactory(), "databaseCleaningService");
+            assertLazy(context.getBeanFactory(), "abyssRankCleaningService");
         }
     }
 
