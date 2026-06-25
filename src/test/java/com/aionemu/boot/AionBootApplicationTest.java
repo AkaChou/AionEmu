@@ -301,7 +301,14 @@ class AionBootApplicationTest {
             assertHasBean(context, ChatService.class);
             assertHasBean(context, RestartService.class);
 
+            assertTrue(context.getBeanFactory().getBeanDefinition("chatServerRuntime").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("idFactory").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("clientPacketHandler").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("loginToClientPipeLineFactory").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("nettyServer").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("gameServerService").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("broadcastService").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("chatService").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("restartService").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("chatProcessRuntimeBridge").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("chatServerStartupBridge").isLazyInit());

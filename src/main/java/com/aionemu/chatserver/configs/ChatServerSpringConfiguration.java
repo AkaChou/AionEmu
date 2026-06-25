@@ -18,16 +18,19 @@ import org.springframework.context.annotation.Lazy;
 public class ChatServerSpringConfiguration {
 
     @Bean
+    @Lazy
     public IdFactory idFactory() {
         return IdFactory.getInstance();
     }
 
     @Bean
+    @Lazy
     public ClientPacketHandler clientPacketHandler(BroadcastService broadcastService, ChatService chatService) {
         return new ClientPacketHandler(broadcastService, chatService);
     }
 
     @Bean
+    @Lazy
     public LoginToClientPipeLineFactory loginToClientPipeLineFactory(ClientPacketHandler clientPacketHandler) {
         return new LoginToClientPipeLineFactory(clientPacketHandler);
     }
@@ -42,16 +45,19 @@ public class ChatServerSpringConfiguration {
     }
 
     @Bean
+    @Lazy
     public GameServerService gameServerService() {
         return GameServerService.getInstance();
     }
 
     @Bean
+    @Lazy
     public BroadcastService broadcastService() {
         return BroadcastService.getInstance();
     }
 
     @Bean
+    @Lazy
     public ChatService chatService() {
         return ChatService.getInstance();
     }
