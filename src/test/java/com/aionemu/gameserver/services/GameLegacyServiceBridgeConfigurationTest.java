@@ -8,6 +8,10 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
+import com.aionemu.gameserver.services.events.BGService;
+import com.aionemu.gameserver.services.events.BanditService;
+import com.aionemu.gameserver.services.events.FFAService;
+import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerEventService;
@@ -60,6 +64,24 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "crazyDaevaService");
             assertLazy(context.getBeanFactory(), "abyssRankUpdateService");
             assertLazy(context.getBeanFactory(), "packetBroadcaster");
+        }
+    }
+
+    @Test
+    void exposesCustomEventServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("ffaService"));
+            assertTrue(context.containsBeanDefinition("ladderService"));
+            assertTrue(context.containsBeanDefinition("bgService"));
+            assertTrue(context.containsBeanDefinition("banditService"));
+            assertEquals(FFAService.class, context.getType("ffaService"));
+            assertEquals(LadderService.class, context.getType("ladderService"));
+            assertEquals(BGService.class, context.getType("bgService"));
+            assertEquals(BanditService.class, context.getType("banditService"));
+            assertLazy(context.getBeanFactory(), "ffaService");
+            assertLazy(context.getBeanFactory(), "ladderService");
+            assertLazy(context.getBeanFactory(), "bgService");
+            assertLazy(context.getBeanFactory(), "banditService");
         }
     }
 

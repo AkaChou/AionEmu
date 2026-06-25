@@ -5,7 +5,11 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
+import com.aionemu.gameserver.services.events.BGService;
+import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
+import com.aionemu.gameserver.services.events.FFAService;
+import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
@@ -66,6 +70,30 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public PacketBroadcaster packetBroadcaster() {
         return PacketBroadcaster.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public FFAService ffaService() {
+        return FFAService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public LadderService ladderService() {
+        return LadderService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public BGService bgService() {
+        return BGService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public BanditService banditService() {
+        return BanditService.getInstance();
     }
 
     @Bean

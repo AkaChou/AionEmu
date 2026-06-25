@@ -10,12 +10,21 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 
 class GameCustomEventsLifecycleTest {
 
     @Test
     void usesCustomEventsGatewayCollaborator() {
         assertEquals(GameCustomEventsGateway.class, fieldType("customEventsGateway"));
+    }
+
+    @Test
+    void customEventsGatewayBridgesLegacyServicesThroughSpringProviders() {
+        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "ffaServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "ladderServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "bgServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "banditServiceProvider"));
     }
 
     @Test
@@ -89,6 +98,15 @@ class GameCustomEventsLifecycleTest {
     private static Class<?> fieldType(String name) {
         try {
             Field field = GameCustomEventsLifecycle.class.getDeclaredField(name);
+            return field.getType();
+        } catch (NoSuchFieldException e) {
+            throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static Class<?> fieldType(Class<?> type, String name) {
+        try {
+            Field field = type.getDeclaredField(name);
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
