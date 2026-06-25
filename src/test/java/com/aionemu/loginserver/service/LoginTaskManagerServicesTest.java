@@ -16,7 +16,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 class LoginTaskManagerServicesTest {
 
     @Test
-    void usesSpringProviderBeforeLegacySingletonFallback() {
+    void usesSpringProviderBeforeLocalFallback() {
         TaskFromDBManager taskFromDBManager = instance(TaskFromDBManager.class);
         LoginTaskManagerServices services = new LoginTaskManagerServices(
             provider(TaskFromDBManager.class, taskFromDBManager)
@@ -27,6 +27,14 @@ class LoginTaskManagerServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void taskManagerBridgeUsesLocalFallbackInsteadOfDirectLegacySingleton() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginTaskManagerServices.java"));
+
+        assertFalse(source.contains("TaskFromDBManager.getInstance()"));
+        assertTrue(source.contains("Fallbacks.TASK_FROM_DB_MANAGER"));
     }
 
     @Test

@@ -16,7 +16,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 class LoginPremiumServicesTest {
 
     @Test
-    void usesSpringProviderBeforeLegacySingletonFallback() {
+    void usesSpringProviderBeforeLocalFallback() {
         PremiumController premiumController = instance(PremiumController.class);
         LoginPremiumServices services = new LoginPremiumServices(
             provider(PremiumController.class, premiumController)
@@ -27,6 +27,14 @@ class LoginPremiumServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void premiumBridgeUsesLocalFallbackInsteadOfDirectLegacySingleton() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginPremiumServices.java"));
+
+        assertFalse(source.contains("PremiumController.getController()"));
+        assertTrue(source.contains("Fallbacks.PREMIUM_CONTROLLER"));
     }
 
     @Test

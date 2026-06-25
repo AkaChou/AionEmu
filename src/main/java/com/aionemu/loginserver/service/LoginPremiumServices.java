@@ -17,13 +17,22 @@ public final class LoginPremiumServices implements DisposableBean {
     public static PremiumController premiumController() {
         ObjectProvider<PremiumController> provider = premiumControllerProvider;
         if (provider == null) {
-            return PremiumController.getController();
+            return fallbackPremiumController();
         }
-        return provider.getIfAvailable(PremiumController::getController);
+        return provider.getIfAvailable(LoginPremiumServices::fallbackPremiumController);
     }
 
     @Override
     public void destroy() {
         premiumControllerProvider = null;
+    }
+
+    private static PremiumController fallbackPremiumController() {
+        return Fallbacks.PREMIUM_CONTROLLER;
+    }
+
+    private static final class Fallbacks {
+
+        private static final PremiumController PREMIUM_CONTROLLER = new PremiumController();
     }
 }

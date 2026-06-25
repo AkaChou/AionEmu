@@ -15,7 +15,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 class LoginTransferServicesTest {
 
     @Test
-    void usesSpringProviderBeforeLegacySingletonFallback() {
+    void usesSpringProviderBeforeLocalFallback() {
         PlayerTransferService playerTransferService = instance(PlayerTransferService.class);
         LoginTransferServices services = new LoginTransferServices(
             provider(PlayerTransferService.class, playerTransferService)
@@ -26,6 +26,14 @@ class LoginTransferServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void transferBridgeUsesLocalFallbackInsteadOfDirectLegacySingleton() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginTransferServices.java"));
+
+        assertFalse(source.contains("PlayerTransferService.getInstance()"));
+        assertTrue(source.contains("Fallbacks.PLAYER_TRANSFER_SERVICE"));
     }
 
     @Test

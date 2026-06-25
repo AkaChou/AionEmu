@@ -16,13 +16,22 @@ public final class LoginTransferServices implements DisposableBean {
     public static PlayerTransferService playerTransferService() {
         ObjectProvider<PlayerTransferService> provider = playerTransferServiceProvider;
         if (provider == null) {
-            return PlayerTransferService.getInstance();
+            return fallbackPlayerTransferService();
         }
-        return provider.getIfAvailable(PlayerTransferService::getInstance);
+        return provider.getIfAvailable(LoginTransferServices::fallbackPlayerTransferService);
     }
 
     @Override
     public void destroy() {
         playerTransferServiceProvider = null;
+    }
+
+    private static PlayerTransferService fallbackPlayerTransferService() {
+        return Fallbacks.PLAYER_TRANSFER_SERVICE;
+    }
+
+    private static final class Fallbacks {
+
+        private static final PlayerTransferService PLAYER_TRANSFER_SERVICE = new PlayerTransferService();
     }
 }

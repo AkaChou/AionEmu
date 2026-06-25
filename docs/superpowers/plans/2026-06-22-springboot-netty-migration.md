@@ -79,6 +79,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made login player-transfer startup use a Spring-instantiable service bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Routed login player-transfer packet access through a Spring-provided service before the legacy singleton fallback.
 - [x] Routed the login startup runtime bridge through the shared player-transfer service wrapper instead of keeping its own singleton fallback.
+- [x] Made the login player-transfer service wrapper own its lazy fallback instead of calling the legacy transfer singleton directly.
 - [x] Routed login game-server packet execution and delayed MAC-ban-list dispatch through a Spring-provided thread-pool manager before the legacy singleton fallback.
 - [x] Routed login startup thread-pool initialization and player-transfer scheduling through the Spring-provided thread-pool manager before the legacy singleton fallback.
 - [x] Routed login cron runner and task trigger scheduling through the Spring-provided thread-pool manager before the legacy singleton fallback.
@@ -87,8 +88,10 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made login premium-controller startup use a Spring-instantiable controller bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Routed the login startup runtime bridge through the shared premium-controller wrapper instead of keeping its own singleton fallback.
 - [x] Routed login premium packet access through the shared premium-controller wrapper.
+- [x] Made the login premium-controller wrapper own its lazy fallback instead of calling the legacy premium singleton directly.
 - [x] Made login task-from-db startup use a Spring-instantiable manager bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Routed the login startup runtime bridge through the shared task-from-db manager wrapper instead of keeping its own singleton fallback.
+- [x] Made the login task-from-db wrapper own its lazy fallback instead of calling the legacy task-manager singleton directly.
 - [x] Made login banned-MAC management Spring-instantiable while replacing its eager singleton with a lazy fallback.
 - [x] Routed login banned-MAC packet access through a Spring-provided manager before the legacy singleton fallback.
 - [x] Routed login flood/brute-force protection access through Spring-provided services before legacy singleton fallbacks.

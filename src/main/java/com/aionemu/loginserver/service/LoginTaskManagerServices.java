@@ -17,13 +17,22 @@ public final class LoginTaskManagerServices implements DisposableBean {
     public static TaskFromDBManager taskFromDBManager() {
         ObjectProvider<TaskFromDBManager> provider = taskFromDBManagerProvider;
         if (provider == null) {
-            return TaskFromDBManager.getInstance();
+            return fallbackTaskFromDBManager();
         }
-        return provider.getIfAvailable(TaskFromDBManager::getInstance);
+        return provider.getIfAvailable(LoginTaskManagerServices::fallbackTaskFromDBManager);
     }
 
     @Override
     public void destroy() {
         taskFromDBManagerProvider = null;
+    }
+
+    private static TaskFromDBManager fallbackTaskFromDBManager() {
+        return Fallbacks.TASK_FROM_DB_MANAGER;
+    }
+
+    private static final class Fallbacks {
+
+        private static final TaskFromDBManager TASK_FROM_DB_MANAGER = new TaskFromDBManager();
     }
 }
