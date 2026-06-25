@@ -12,11 +12,14 @@ import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
+import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
+import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
+import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
@@ -31,11 +34,13 @@ import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
+import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
+import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
@@ -244,6 +249,36 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public ChatProcessor chatProcessor() {
         return ChatProcessor.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public LunaShopService lunaShopService() {
+        return LunaShopService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public MinionService minionService() {
+        return MinionService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ShugoSweepService shugoSweepService() {
+        return ShugoSweepService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public AtreianPassportService atreianPassportService() {
+        return AtreianPassportService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public EventWindowService eventWindowService() {
+        return EventWindowService.getInstance();
     }
 
     @Bean

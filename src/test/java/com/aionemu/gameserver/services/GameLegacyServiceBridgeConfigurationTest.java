@@ -14,11 +14,14 @@ import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
+import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
+import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
+import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
@@ -32,6 +35,7 @@ import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
+import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.BaseService;
@@ -42,6 +46,7 @@ import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
+import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
@@ -199,6 +204,27 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "instanceEngine");
             assertLazy(context.getBeanFactory(), "ai2Engine");
             assertLazy(context.getBeanFactory(), "chatProcessor");
+        }
+    }
+
+    @Test
+    void exposesEventBootstrapServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("lunaShopService"));
+            assertTrue(context.containsBeanDefinition("minionService"));
+            assertTrue(context.containsBeanDefinition("shugoSweepService"));
+            assertTrue(context.containsBeanDefinition("atreianPassportService"));
+            assertTrue(context.containsBeanDefinition("eventWindowService"));
+            assertEquals(LunaShopService.class, context.getType("lunaShopService"));
+            assertEquals(MinionService.class, context.getType("minionService"));
+            assertEquals(ShugoSweepService.class, context.getType("shugoSweepService"));
+            assertEquals(AtreianPassportService.class, context.getType("atreianPassportService"));
+            assertEquals(EventWindowService.class, context.getType("eventWindowService"));
+            assertLazy(context.getBeanFactory(), "lunaShopService");
+            assertLazy(context.getBeanFactory(), "minionService");
+            assertLazy(context.getBeanFactory(), "shugoSweepService");
+            assertLazy(context.getBeanFactory(), "atreianPassportService");
+            assertLazy(context.getBeanFactory(), "eventWindowService");
         }
     }
 
