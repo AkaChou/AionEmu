@@ -14,6 +14,7 @@ import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
+import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
@@ -128,6 +129,15 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(AsyunatarService.class, context.getType("asyunatarService"));
             assertLazy(context.getBeanFactory(), "dredgionService");
             assertLazy(context.getBeanFactory(), "asyunatarService");
+        }
+    }
+
+    @Test
+    void exposesScheduledServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("shugoImperialTombSpawnManager"));
+            assertEquals(ShugoImperialTombSpawnManager.class, context.getType("shugoImperialTombSpawnManager"));
+            assertLazy(context.getBeanFactory(), "shugoImperialTombSpawnManager");
         }
     }
 

@@ -11,6 +11,7 @@ import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
+import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
@@ -139,5 +140,11 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public AsyunatarService asyunatarService() {
         return AsyunatarService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
+        return ShugoImperialTombSpawnManager.getInstance();
     }
 }
