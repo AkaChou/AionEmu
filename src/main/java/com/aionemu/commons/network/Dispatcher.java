@@ -161,40 +161,6 @@ public abstract class Dispatcher extends Thread {
     }
     
     /**
-     * 注册新的接收器到此调度器并返回注册结果(SelectionKey)
-     * Register new acceptor to this dispatcher and return registration result (SelectionKey)
-     *
-     * @param ch 可选择通道 / Selectable channel
-     * @param ops 操作集 / Operation set
-     * @param att 附件对象 / Attachment object
-     * @return 代表此注册的SelectionKey / SelectionKey representing this registration
-     * @throws IOException 如果注册失败 / If registration fails
-     */
-    public final SelectionKey register(SelectableChannel ch, int ops, Acceptor att) throws IOException {
-        synchronized (gate) {
-            if (!running) {
-                throw new ClosedSelectorException();
-            }
-            selector.wakeup();
-            return ch.register(selector, ops, att);
-        }
-    }
-    
-    /**
-     * 接受新连接
-     * Accept new connection
-     *
-     * @param key 选择键 / Selection key
-     */
-    final void accept(SelectionKey key) {
-        try {
-            ((Acceptor) key.attachment()).accept(key);
-        } catch (Exception e) {
-            log.error("Error while accepting connection: " + e, e);
-        }
-    }
-    
-    /**
      * 从SelectionKey表示的socketChannel读取数据,解析并处理数据,为下次读取准备缓冲区
      * Read data from socketChannel represented by SelectionKey, parse and process data, prepare buffer for next read
      *

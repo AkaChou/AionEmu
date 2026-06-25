@@ -66,6 +66,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made chat disabled by default and configurable.
 - [x] Guarded chat runtime and Spring configuration beans so chat internals only load when `aion.services.chat.enabled=true`.
 - [x] Made Netty the boot-managed transport mode and retired the explicit `legacy-nio` fallback.
+- [x] Removed the unused commons NIO server acceptor layer after retiring the boot fallback.
 - [x] Migrated the chat client acceptor to a Netty 4 adapter while preserving the existing chat packet handlers.
 - [x] Shared boot-managed Netty 4 event loops across migrated service endpoints.
 - [x] Made the chat Netty server lazy so loading the class does not bind ports when chat is disabled.
@@ -165,6 +166,6 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 
 ## Remaining Technical Debt
 
-- The low-level commons NIO transport classes still exist for now, but they are no longer a boot-managed service fallback.
+- Legacy NIO connection constructors and factory compatibility paths still exist in packet connection classes, but the commons NIO server acceptor layer has been removed.
 - Login service startup still has large static initialization blocks; shutdown is guarded for partially initialized DAO/transport/service state, but finer-grained startup components would make failure cleanup easier to test.
 - Full protocol parity still needs client-side runtime validation after the structural migration.
