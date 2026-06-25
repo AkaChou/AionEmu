@@ -35,24 +35,10 @@ import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.joran.spi.JoranException;
 
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
-import com.aionemu.commons.services.CronService;
-import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import com.aionemu.commons.utils.ExitCode;
-import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.controller.BannedIpController;
-import com.aionemu.loginserver.controller.PremiumController;
-import com.aionemu.loginserver.dao.BannedMacDAO;
-import com.aionemu.loginserver.network.NetConnector;
-import com.aionemu.loginserver.network.ncrypt.KeyGen;
-import com.aionemu.loginserver.service.PlayerTransferService;
-import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
-import com.aionemu.loginserver.utils.DeadLockDetector;
-import com.aionemu.loginserver.utils.ThreadPoolManager;
-import com.aionemu.loginserver.utils.cron.ThreadPoolManagerRunnableRunner;
+import com.aionemu.loginserver.lifecycle.LoginStartupGateway;
+import com.aionemu.loginserver.lifecycle.LoginStartupSequenceLifecycle;
 
 /**
  * @author -Nemesiss-
@@ -107,62 +93,21 @@ public class LoginServer {
         }
     }
 
+    public static void initializeLogger() {
+        initalizeLoggger();
+    }
+
     /**
      * Starts LoginServer from the boot-managed service lifecycle.
      *
      * @param args startup arguments
      */
     public static void start(final String[] args) {
-        long start = System.currentTimeMillis();
+        start(args, new LoginStartupSequenceLifecycle(new LoginStartupGateway()));
+    }
 
-        initalizeLoggger();
-        CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
-
-        //write a timestamp that can be used by TruncateToZipFileAppender
-        log.info("\f" + new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date(System.currentTimeMillis())) + "\f");
-        Config.load();
-        DatabaseFactory.init();
-        DAOManager.init();
-
-        /**
-         * Start deadlock detector that will restart server if deadlock happened
-         */
-        DeadLockDetector deadLockDetector = new DeadLockDetector(
-            60,
-            AionRuntimeMode.isBootEmbedded() ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART
-        );
-        deadLockDetector.setDaemon(AionRuntimeMode.isBootEmbedded());
-        deadLockDetector.start();
-        ThreadPoolManager.getInstance();
-
-        /**
-         * Initialize Key Generator
-         */
-        try {
-            KeyGen.init();
-        } catch (Exception e) {
-            log.error("Failed initializing Key Generator. Reason: " + e.getMessage(), e);
-            if (AionRuntimeMode.isBootEmbedded()) {
-                throw new IllegalStateException("Failed initializing Key Generator", e);
-            }
-            System.exit(ExitCode.CODE_ERROR);
-        }
-
-        GameServerTable.load();
-        BannedIpController.start();
-        DAOManager.getDAO(BannedMacDAO.class).cleanExpiredBans();
-
-        NetConnector.getInstance().connect();
-        PlayerTransferService.getInstance();
-        TaskFromDBManager.getInstance();
-
-        if (!AionRuntimeMode.isBootEmbedded()) {
-            Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
-        }
-
-        AEInfos.printAllInfos();
-
-        PremiumController.getController();
-        log.info("AL Login Server started in " + (System.currentTimeMillis() - start) / 1000 + " seconds.");
+    public static void start(final String[] args, LoginStartupSequenceLifecycle startupSequenceLifecycle) {
+        startupSequenceLifecycle.start();
+        log.info("AL Login Server started in " + startupSequenceLifecycle.getLoadTimeMillis() / 1000 + " seconds.");
     }
 }
