@@ -19,10 +19,7 @@ public class SM_EQUIPMENT_SETTING extends AionServerPacket {
 		writeH(equipmentSettings.size());
 		for (EquipmentSetting setting : equipmentSettings) {
 			writeD(setting.getSlot());
-			writeC(1);
-			writeC(1);
-			writeC(1);
-			writeC(1);
+			writeD(setting.getDisplay());
 			writeD(setting.getmHand());
 			writeD(setting.getsHand());
 			writeD(setting.getHelmet());
