@@ -1,11 +1,17 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.DisputeLandService;
+import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.ShieldService;
+import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.WeddingService;
+import com.aionemu.gameserver.services.events.BGService;
+import com.aionemu.gameserver.services.events.BanditService;
+import com.aionemu.gameserver.services.events.FFAService;
+import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
@@ -60,5 +66,29 @@ public class GameFeatureServicesRuntimeBridge {
 
     public AsyunatarService asyunatarService() {
         return AsyunatarService.getInstance();
+    }
+
+    public FFAService ffaService() {
+        return FFAService.getInstance();
+    }
+
+    public LadderService ladderService() {
+        return LadderService.getInstance();
+    }
+
+    public BGService bgService() {
+        return BGService.getInstance();
+    }
+
+    public BanditService banditService() {
+        return BanditService.getInstance();
+    }
+
+    public SiegeService siegeService() {
+        return SiegeService.getInstance();
+    }
+
+    public BaseService baseService() {
+        return BaseService.getInstance();
     }
 }

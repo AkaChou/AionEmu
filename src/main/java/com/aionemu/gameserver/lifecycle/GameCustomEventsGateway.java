@@ -18,6 +18,7 @@ public class GameCustomEventsGateway {
     private ObjectProvider<LadderService> ladderServiceProvider;
     private ObjectProvider<BGService> bgServiceProvider;
     private ObjectProvider<BanditService> banditServiceProvider;
+    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setFfaServiceProvider(ObjectProvider<FFAService> ffaServiceProvider) {
@@ -39,6 +40,11 @@ public class GameCustomEventsGateway {
         this.banditServiceProvider = banditServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void start() {
         Util.printSection(" *** Custom Events *** ");
         if (FFAConfig.FFA_ENABLED) {
@@ -53,29 +59,36 @@ public class GameCustomEventsGateway {
 
     private FFAService ffaService() {
         if (ffaServiceProvider == null) {
-            return FFAService.getInstance();
+            return runtimeBridge().ffaService();
         }
-        return ffaServiceProvider.getIfAvailable(FFAService::getInstance);
+        return ffaServiceProvider.getIfAvailable(() -> runtimeBridge().ffaService());
     }
 
     private LadderService ladderService() {
         if (ladderServiceProvider == null) {
-            return LadderService.getInstance();
+            return runtimeBridge().ladderService();
         }
-        return ladderServiceProvider.getIfAvailable(LadderService::getInstance);
+        return ladderServiceProvider.getIfAvailable(() -> runtimeBridge().ladderService());
     }
 
     private BGService bgService() {
         if (bgServiceProvider == null) {
-            return BGService.getInstance();
+            return runtimeBridge().bgService();
         }
-        return bgServiceProvider.getIfAvailable(BGService::getInstance);
+        return bgServiceProvider.getIfAvailable(() -> runtimeBridge().bgService());
     }
 
     private BanditService banditService() {
         if (banditServiceProvider == null) {
-            return BanditService.getInstance();
+            return runtimeBridge().banditService();
         }
-        return banditServiceProvider.getIfAvailable(BanditService::getInstance);
+        return banditServiceProvider.getIfAvailable(() -> runtimeBridge().banditService());
+    }
+
+    private GameFeatureServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameFeatureServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
     }
 }

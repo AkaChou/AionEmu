@@ -12,6 +12,7 @@ public class GameSiegeScheduleGateway {
 
     private ObjectProvider<SiegeService> siegeServiceProvider;
     private ObjectProvider<BaseService> baseServiceProvider;
+    private ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setSiegeServiceProvider(ObjectProvider<SiegeService> siegeServiceProvider) {
@@ -23,6 +24,11 @@ public class GameSiegeScheduleGateway {
         this.baseServiceProvider = baseServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameFeatureServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void start() {
         Util.printSection(" *** Sieges *** ");
         siegeService().initSieges();
@@ -31,15 +37,22 @@ public class GameSiegeScheduleGateway {
 
     private SiegeService siegeService() {
         if (siegeServiceProvider == null) {
-            return SiegeService.getInstance();
+            return runtimeBridge().siegeService();
         }
-        return siegeServiceProvider.getIfAvailable(SiegeService::getInstance);
+        return siegeServiceProvider.getIfAvailable(() -> runtimeBridge().siegeService());
     }
 
     private BaseService baseService() {
         if (baseServiceProvider == null) {
-            return BaseService.getInstance();
+            return runtimeBridge().baseService();
         }
-        return baseServiceProvider.getIfAvailable(BaseService::getInstance);
+        return baseServiceProvider.getIfAvailable(() -> runtimeBridge().baseService());
+    }
+
+    private GameFeatureServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameFeatureServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameFeatureServicesRuntimeBridge::new);
     }
 }

@@ -28,6 +28,11 @@ class GameCustomEventsLifecycleTest {
     }
 
     @Test
+    void customEventsGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
+        assertEquals(ObjectProvider.class, fieldType(GameCustomEventsGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
     void startRunsEnabledCustomEventsOnceAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameCustomEventsLifecycle lifecycle = newLifecycle(events, true, true);
