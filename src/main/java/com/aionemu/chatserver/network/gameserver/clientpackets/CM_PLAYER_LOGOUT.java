@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.chatserver.network.gameserver.GsClientPacket;
 import com.aionemu.chatserver.network.gameserver.GsConnection;
-import com.aionemu.chatserver.service.ChatService;
+import com.aionemu.chatserver.service.ChatCoreServices;
 
 /**
  * @author ATracer
@@ -46,7 +46,7 @@ public class CM_PLAYER_LOGOUT extends GsClientPacket {
 
     @Override
     protected void runImpl() {
-        ChatService.getInstance().playerLogout(playerId);
+        ChatCoreServices.chatService().playerLogout(playerId);
         log.info("Player logout " + playerId);
     }
 }

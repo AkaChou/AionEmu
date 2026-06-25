@@ -112,6 +112,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Routed embedded login task shutdown/restart, chat scheduled restart, and game scheduled/admin shutdown requests through the boot-managed shutdown handler.
 - [x] Made chat restart scheduling Spring-instantiable and wired shutdown cleanup through the boot-provided restart service before falling back to the legacy singleton.
 - [x] Made chat core services Spring-instantiable in the chat Spring configuration while keeping legacy singleton accessors as deprecated compatibility fallbacks.
+- [x] Routed chat core service access from legacy dependencies, channel IDs, client packet handlers, and game-server packets through a Spring-provider bridge.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.

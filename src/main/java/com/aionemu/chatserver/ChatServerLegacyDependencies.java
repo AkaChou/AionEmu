@@ -2,6 +2,7 @@ package com.aionemu.chatserver;
 
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.service.BroadcastService;
+import com.aionemu.chatserver.service.ChatCoreServices;
 import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
@@ -11,22 +12,22 @@ final class ChatServerLegacyDependencies implements ChatServerDependencies {
 
     @Override
     public IdFactory idFactory() {
-        return IdFactory.getInstance();
+        return ChatCoreServices.idFactory();
     }
 
     @Override
     public GameServerService gameServerService() {
-        return GameServerService.getInstance();
+        return ChatCoreServices.gameServerService();
     }
 
     @Override
     public BroadcastService broadcastService() {
-        return BroadcastService.getInstance();
+        return ChatCoreServices.broadcastService();
     }
 
     @Override
     public ChatService chatService() {
-        return ChatService.getInstance();
+        return ChatCoreServices.chatService();
     }
 
     @Override

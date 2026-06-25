@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.chatserver.network.factories.GsPacketHandlerFactory;
-import com.aionemu.chatserver.service.GameServerService;
+import com.aionemu.chatserver.service.ChatCoreServices;
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -81,7 +81,7 @@ public class GsConnection extends AConnection {
 
     @Override
     protected final void onDisconnect() {
-        GameServerService.getInstance().setOffline();
+        ChatCoreServices.gameServerService().setOffline();
     }
 
     @Override

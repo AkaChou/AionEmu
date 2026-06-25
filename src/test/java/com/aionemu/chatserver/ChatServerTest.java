@@ -142,10 +142,15 @@ class ChatServerTest {
     void dependenciesInterfaceDoesNotConstructLegacySingletons() throws IOException {
         String dependenciesSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServerDependencies.java"));
         String serverSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServer.java"));
+        String legacyDependenciesSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServerLegacyDependencies.java"));
 
         assertFalse(dependenciesSource.contains("getInstance()"));
         assertFalse(dependenciesSource.contains("static ChatServerDependencies legacy()"));
         assertTrue(serverSource.contains("new ChatServerLegacyDependencies()"));
+        assertTrue(legacyDependenciesSource.contains("ChatCoreServices.idFactory()"));
+        assertTrue(legacyDependenciesSource.contains("ChatCoreServices.gameServerService()"));
+        assertTrue(legacyDependenciesSource.contains("ChatCoreServices.broadcastService()"));
+        assertTrue(legacyDependenciesSource.contains("ChatCoreServices.chatService()"));
     }
 
     private static final class RecordingChatServerDependencies implements ChatServerDependencies {

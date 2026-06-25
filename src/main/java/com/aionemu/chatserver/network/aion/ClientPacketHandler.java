@@ -27,6 +27,7 @@ import com.aionemu.chatserver.network.aion.clientpackets.CM_PLAYER_AUTH;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler.State;
 import com.aionemu.chatserver.service.BroadcastService;
+import com.aionemu.chatserver.service.ChatCoreServices;
 import com.aionemu.chatserver.service.ChatService;
 
 /**
@@ -38,7 +39,7 @@ public class ClientPacketHandler extends AbstractPacketHandler {
     private final ChatService chatService;
 
     public ClientPacketHandler() {
-        this(BroadcastService.getInstance(), ChatService.getInstance());
+        this(ChatCoreServices.broadcastService(), ChatCoreServices.chatService());
     }
 
     public ClientPacketHandler(BroadcastService broadcastService, ChatService chatService) {

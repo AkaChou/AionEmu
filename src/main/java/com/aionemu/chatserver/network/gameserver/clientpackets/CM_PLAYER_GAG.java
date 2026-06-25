@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.chatserver.network.gameserver.GsClientPacket;
 import com.aionemu.chatserver.network.gameserver.GsConnection;
-import com.aionemu.chatserver.service.ChatService;
+import com.aionemu.chatserver.service.ChatCoreServices;
 
 /**
  * @author ViAl
@@ -49,7 +49,7 @@ public class CM_PLAYER_GAG extends GsClientPacket {
 
     @Override
     protected void runImpl() {
-        ChatService.getInstance().gagPlayer(playerId, gagTime);
+        ChatCoreServices.chatService().gagPlayer(playerId, gagTime);
         log.info("Player was gagged " + playerId + " for " + (gagTime / 1000 / 60) + " minutes");
     }
 }

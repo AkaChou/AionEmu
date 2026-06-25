@@ -50,7 +50,7 @@ public class ChatService {
     private final BroadcastService broadcastService;
 
     public ChatService() {
-        this(BroadcastService.getInstance());
+        this(ChatCoreServices.broadcastService());
     }
 
     public ChatService(BroadcastService broadcastService) {

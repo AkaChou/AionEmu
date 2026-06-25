@@ -29,7 +29,7 @@ import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.network.gameserver.GsClientPacket;
 import com.aionemu.chatserver.network.gameserver.GsConnection;
 import com.aionemu.chatserver.network.gameserver.serverpackets.SM_PLAYER_AUTH_RESPONSE;
-import com.aionemu.chatserver.service.ChatService;
+import com.aionemu.chatserver.service.ChatCoreServices;
 
 /**
  * @author ATracer
@@ -56,7 +56,7 @@ public class CM_PLAYER_AUTH extends GsClientPacket {
     protected void runImpl() {
         ChatClient chatClient = null;
         try {
-            chatClient = ChatService.getInstance().registerPlayer(playerId, playerLogin, nick);
+            chatClient = ChatCoreServices.chatService().registerPlayer(playerId, playerLogin, nick);
         } catch (NoSuchAlgorithmException e) {
             log.error("Error registering player on ChatServer: " + e.getMessage());
         } catch (UnsupportedEncodingException e) {

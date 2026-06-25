@@ -28,7 +28,7 @@ import com.aionemu.chatserver.network.gameserver.GsClientPacket;
 import com.aionemu.chatserver.network.gameserver.GsConnection;
 import com.aionemu.chatserver.network.gameserver.GsConnection.State;
 import com.aionemu.chatserver.network.gameserver.serverpackets.SM_GS_AUTH_RESPONSE;
-import com.aionemu.chatserver.service.GameServerService;
+import com.aionemu.chatserver.service.ChatCoreServices;
 
 /**
  * @author ATracer
@@ -62,7 +62,7 @@ public class CM_CS_AUTH extends GsClientPacket {
 
     @Override
     protected void runImpl() {
-        GsAuthResponse resp = GameServerService.getInstance().registerGameServer(gameServerId, defaultAddress, password);
+        GsAuthResponse resp = ChatCoreServices.gameServerService().registerGameServer(gameServerId, defaultAddress, password);
 
         switch (resp) {
             case AUTHED:
