@@ -7,9 +7,11 @@ import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.chatserver.utils.IdFactory;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
+@ConditionalOnProperty(prefix = "aion.services.chat", name = "enabled", havingValue = "true")
 public class ChatServerRuntime implements ChatServerDependencies {
 
     private final ObjectProvider<IdFactory> idFactory;

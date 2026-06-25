@@ -1,8 +1,8 @@
 package com.aionemu.boot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.AionBootApplication;
 import com.aionemu.boot.config.AionServicesProperties;
@@ -17,6 +17,7 @@ import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.boot.transport.LegacyNioTransportLifecycle;
 import com.aionemu.boot.transport.NettyTransportLifecycle;
 import com.aionemu.chatserver.ChatServer;
+import com.aionemu.chatserver.ChatServerRuntime;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.network.netty.pipeline.LoginToClientPipeLineFactory;
@@ -107,9 +108,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.core.env.MapPropertySource;
 
 class AionBootApplicationTest {
 
@@ -159,8 +162,26 @@ class AionBootApplicationTest {
     }
 
     @Test
-    void chatServerGuiceBindingsAreSpringBeans() {
+    void chatRuntimeBeansStayOptionalByDefault() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
+            assertHasBean(context, ChatServiceLifecycle.class);
+            assertHasBean(context, ChatServerLifecycleGateway.class);
+            assertDoesNotHaveBean(context, ChatServerRuntime.class);
+            assertDoesNotHaveBean(context, IdFactory.class);
+            assertDoesNotHaveBean(context, ClientPacketHandler.class);
+            assertDoesNotHaveBean(context, LoginToClientPipeLineFactory.class);
+            assertDoesNotHaveBean(context, NettyServer.class);
+            assertDoesNotHaveBean(context, GameServerService.class);
+            assertDoesNotHaveBean(context, BroadcastService.class);
+            assertDoesNotHaveBean(context, ChatService.class);
+            assertDoesNotHaveBean(context, RestartService.class);
+        }
+    }
+
+    @Test
+    void chatServerGuiceBindingsAreSpringBeansWhenChatIsEnabled() {
+        try (AnnotationConfigApplicationContext context = chatEnabledBootContext()) {
+            assertHasBean(context, ChatServerRuntime.class);
             assertHasBean(context, IdFactory.class);
             assertHasBean(context, ClientPacketHandler.class);
             assertHasBean(context, LoginToClientPipeLineFactory.class);
@@ -326,6 +347,25 @@ class AionBootApplicationTest {
             context.getBeanNamesForType(type, true, false).length > 0,
             () -> "Missing Spring bean for " + type.getName()
         );
+    }
+
+    private static void assertDoesNotHaveBean(AnnotationConfigApplicationContext context, Class<?> type) {
+        Assertions.assertEquals(
+            0,
+            context.getBeanNamesForType(type, true, false).length,
+            () -> "Unexpected Spring bean for " + type.getName()
+        );
+    }
+
+    private static AnnotationConfigApplicationContext chatEnabledBootContext() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.getEnvironment().getPropertySources().addFirst(new MapPropertySource(
+            "chatEnabledTestProperties",
+            Map.of("aion.services.chat.enabled", "true")
+        ));
+        context.register(AionBootApplication.class);
+        context.refresh();
+        return context;
     }
 
     private static boolean sourceContains(Path path, String needle) {
