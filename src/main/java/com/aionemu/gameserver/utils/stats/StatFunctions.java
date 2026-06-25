@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.FallDamageConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
@@ -611,14 +612,7 @@ public class StatFunctions {
 		int magicBoost = useMagicBoost ? sgs.getMBoost().getCurrent() : 0;
 		int mBResist = tgs.getMBResist().getCurrent();
 		int knowledge = useKnowledge ? sgs.getKnowledge().getCurrent() : 100;
-		if ((magicBoost - mBResist) > 6400) {
-			magicBoost = 6401;
-		} else {
-			magicBoost = magicBoost - mBResist;
-		}
-		if (magicBoost < 0) {
-			magicBoost = 0;
-		}
+		magicBoost = capMagicBoostForDamage(magicBoost - mBResist);
 		float damages = baseDamages * (knowledge / 100f + magicBoost / 1000f);
 
 		// 在这里应用伤害倍率，确保技能伤害也受到倍率影响
@@ -657,6 +651,13 @@ public class StatFunctions {
 			return target.getAi2().modifyDamage((int) damages);
 		}
 		return Math.round(damages);
+	}
+
+	static int capMagicBoostForDamage(int magicBoost) {
+		if (magicBoost < 0) {
+			return 0;
+		}
+		return Math.min(magicBoost, CustomConfig.MAGICBOOST_CAP);
 	}
 
 	/**
