@@ -16,8 +16,6 @@
  */
 package com.aionemu.gameserver.network.loginserver;
 
-import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.commons.network.NettyClient;
-import com.aionemu.commons.network.NioServer;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.account.AccountTime;
@@ -75,7 +71,6 @@ public class LoginServer {
 	private volatile LoginServerConnection loginServer;
 	private volatile NettyClient nettyClient;
 
-	private NioServer nioServer;
 	private volatile boolean serverShutdown = false;
 	private final AtomicBoolean connectionTaskQueued = new AtomicBoolean(false);
 	private volatile ScheduledFuture<?> connectionTask;
@@ -88,8 +83,7 @@ public class LoginServer {
 
 	}
 
-	public void setNioServer(NioServer nioServer) {
-		this.nioServer = nioServer;
+	public void prepareForConnect() {
 		serverShutdown = false;
 	}
 
@@ -142,33 +136,7 @@ public class LoginServer {
 	private boolean connectOnce() {
 		loginServer = null;
 		log.info("Connecting to LoginServer: " + NetworkConfig.LOGIN_ADDRESS);
-		if (Boolean.getBoolean("aion.transport.netty")) {
-			return connectWithNetty();
-		}
-		SocketChannel sc = null;
-		try {
-			sc = SocketChannel.open(NetworkConfig.LOGIN_ADDRESS);
-			sc.configureBlocking(false);
-			Dispatcher d = nioServer.getReadWriteDispatcher();
-			loginServer = new LoginServerConnection(sc, d);
-
-			// register
-			d.register(sc, SelectionKey.OP_READ, loginServer);
-
-			// initialized
-			loginServer.initialized();
-			return true;
-		} catch (Exception e) {
-			loginServer = null;
-			if (sc != null) {
-				try {
-					sc.close();
-				} catch (Exception ignored) {
-				}
-			}
-			log.info("Cant connect to LoginServer: " + e.getMessage());
-			return false;
-		}
+		return connectWithNetty();
 	}
 
 	private boolean connectWithNetty() {

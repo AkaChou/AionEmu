@@ -5,7 +5,6 @@ import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.chatserver.service.ChatRestartRequest;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.NettyServer;
-import com.aionemu.chatserver.network.netty.pipeline.LoginToClientPipeLineFactory;
 import com.aionemu.chatserver.service.BroadcastService;
 import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
@@ -35,17 +34,8 @@ public class ChatServerSpringConfiguration {
 
     @Bean
     @Lazy
-    public LoginToClientPipeLineFactory loginToClientPipeLineFactory(ClientPacketHandler clientPacketHandler) {
-        return new LoginToClientPipeLineFactory(clientPacketHandler);
-    }
-
-    @Bean
-    @Lazy
-    public NettyServer nettyServer(
-        ClientPacketHandler clientPacketHandler,
-        LoginToClientPipeLineFactory loginToClientPipeLineFactory
-    ) {
-        return NettyServer.getInstance(clientPacketHandler, loginToClientPipeLineFactory);
+    public NettyServer nettyServer(ClientPacketHandler clientPacketHandler) {
+        return NettyServer.getInstance(clientPacketHandler);
     }
 
     @Bean

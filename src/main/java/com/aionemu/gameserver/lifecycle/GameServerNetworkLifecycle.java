@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -31,8 +30,8 @@ public class GameServerNetworkLifecycle {
         NetworkPeer loginServer = networkGateway.loginServer();
         NetworkPeer chatServer = networkGateway.chatServer();
 
-        loginServer.setNioServer(null);
-        chatServer.setNioServer(null);
+        loginServer.prepareForConnect();
+        chatServer.prepareForConnect();
 
         long transportStart = networkGateway.currentTimeMillis();
         gameClientTransport.connect();
@@ -85,7 +84,7 @@ public class GameServerNetworkLifecycle {
 
     interface NetworkPeer {
 
-        void setNioServer(NioServer nioServer);
+        void prepareForConnect();
 
         void connect();
 

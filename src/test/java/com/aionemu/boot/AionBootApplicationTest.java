@@ -25,7 +25,6 @@ import com.aionemu.chatserver.ChatServerStartupBridge;
 import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.NettyServer;
-import com.aionemu.chatserver.network.netty.pipeline.LoginToClientPipeLineFactory;
 import com.aionemu.chatserver.service.BroadcastService;
 import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
@@ -277,7 +276,6 @@ class AionBootApplicationTest {
             assertDoesNotHaveBean(context, ChatServerStartupBridge.class);
             assertDoesNotHaveBean(context, IdFactory.class);
             assertDoesNotHaveBean(context, ClientPacketHandler.class);
-            assertDoesNotHaveBean(context, LoginToClientPipeLineFactory.class);
             assertDoesNotHaveBean(context, NettyServer.class);
             assertDoesNotHaveBean(context, GameServerService.class);
             assertDoesNotHaveBean(context, BroadcastService.class);
@@ -295,7 +293,6 @@ class AionBootApplicationTest {
             assertHasBean(context, ChatServerStartupBridge.class);
             assertHasBean(context, IdFactory.class);
             assertHasBean(context, ClientPacketHandler.class);
-            assertHasBean(context, LoginToClientPipeLineFactory.class);
             assertHasBean(context, NettyServer.class);
             assertHasBean(context, GameServerService.class);
             assertHasBean(context, BroadcastService.class);
@@ -306,7 +303,6 @@ class AionBootApplicationTest {
             assertTrue(context.getBeanFactory().getBeanDefinition("chatServerRuntime").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("idFactory").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("clientPacketHandler").isLazyInit());
-            assertTrue(context.getBeanFactory().getBeanDefinition("loginToClientPipeLineFactory").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("nettyServer").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("gameServerService").isLazyInit());
             assertTrue(context.getBeanFactory().getBeanDefinition("broadcastService").isLazyInit());

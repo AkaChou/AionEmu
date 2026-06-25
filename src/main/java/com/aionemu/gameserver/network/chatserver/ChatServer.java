@@ -16,17 +16,13 @@
  */
 package com.aionemu.gameserver.network.chatserver;
 
-import java.nio.channels.SelectionKey;
-import java.nio.channels.SocketChannel;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.network.Dispatcher;
 import com.aionemu.commons.network.NettyClient;
-import com.aionemu.commons.network.NioServer;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_PLAYER_AUTH;
@@ -38,7 +34,6 @@ public class ChatServer {
 	private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
 	private volatile ChatServerConnection chatServer;
 	private volatile NettyClient nettyClient;
-	private NioServer nioServer;
 	private volatile boolean serverShutdown = false;
 	private final AtomicBoolean connectionTaskQueued = new AtomicBoolean(false);
 	private volatile ScheduledFuture<?> connectionTask;
@@ -50,8 +45,7 @@ public class ChatServer {
 	private ChatServer() {
 	}
 
-	public void setNioServer(NioServer nioServer) {
-		this.nioServer = nioServer;
+	public void prepareForConnect() {
 		serverShutdown = false;
 	}
 
@@ -95,30 +89,7 @@ public class ChatServer {
 	private boolean connectOnce() {
 		chatServer = null;
 		log.info("Connecting to ChatServer: " + NetworkConfig.CHAT_ADDRESS);
-		if (Boolean.getBoolean("aion.transport.netty")) {
-			return connectWithNetty();
-		}
-		SocketChannel sc = null;
-		try {
-			sc = SocketChannel.open(NetworkConfig.CHAT_ADDRESS);
-			sc.configureBlocking(false);
-			Dispatcher d = nioServer.getReadWriteDispatcher();
-			CsPacketHandlerFactory csPacketHandlerFactory = new CsPacketHandlerFactory();
-			chatServer = new ChatServerConnection(sc, d, csPacketHandlerFactory.getPacketHandler());
-			d.register(sc, SelectionKey.OP_READ, chatServer);
-			chatServer.initialized();
-			return true;
-		} catch (Exception e) {
-			chatServer = null;
-			if (sc != null) {
-				try {
-					sc.close();
-				} catch (Exception ignored) {
-				}
-			}
-			log.info("Cant connect to ChatServer: " + e.getMessage());
-			return false;
-		}
+		return connectWithNetty();
 	}
 
 	private boolean connectWithNetty() {

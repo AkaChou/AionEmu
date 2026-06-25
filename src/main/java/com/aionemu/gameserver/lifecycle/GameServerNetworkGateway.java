@@ -2,7 +2,6 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.commons.network.NettyServer;
 import com.aionemu.commons.network.NettyServerCfg;
-import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.configs.main.GSConfig;
@@ -105,8 +104,8 @@ public class GameServerNetworkGateway {
         private final LoginServer loginServer;
 
         @Override
-        public void setNioServer(NioServer nioServer) {
-            loginServer.setNioServer(nioServer);
+        public void prepareForConnect() {
+            loginServer.prepareForConnect();
         }
 
         @Override
@@ -131,8 +130,8 @@ public class GameServerNetworkGateway {
         private final ChatServer chatServer;
 
         @Override
-        public void setNioServer(NioServer nioServer) {
-            chatServer.setNioServer(nioServer);
+        public void prepareForConnect() {
+            chatServer.prepareForConnect();
         }
 
         @Override

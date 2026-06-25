@@ -1,10 +1,8 @@
 package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-import com.aionemu.commons.network.NioServer;
 import com.aionemu.commons.network.ServerTransport;
 import com.aionemu.gameserver.GameServer;
 import java.lang.reflect.Field;
@@ -39,7 +37,7 @@ class GameServerNetworkLifecycleTest {
     }
 
     @Test
-    void startInitializesNettyTransportAndClearsLegacyPeerDispatcher() {
+    void startInitializesNettyTransportAndPreparesPeers() {
         List<String> events = new ArrayList<>();
         RecordingNetworkPeer loginServer = new RecordingNetworkPeer("login", events);
         RecordingNetworkPeer chatServer = new RecordingNetworkPeer("chat", events);
@@ -49,13 +47,11 @@ class GameServerNetworkLifecycleTest {
 
         lifecycle.start(new GameServer());
 
-        assertNull(loginServer.nioServer);
-        assertNull(chatServer.nioServer);
         assertEquals(
             List.of(
                 "bannedMac:init",
-                "login:setNioServer",
-                "chat:setNioServer",
+                "login:prepareForConnect",
+                "chat:prepareForConnect",
                 "transport:connect:netty",
                 "login:connect",
                 "chat:connect"
@@ -173,17 +169,14 @@ class GameServerNetworkLifecycleTest {
 
         private final String name;
         private final List<String> events;
-        private NioServer nioServer;
-
         private RecordingNetworkPeer(String name, List<String> events) {
             this.name = name;
             this.events = events;
         }
 
         @Override
-        public void setNioServer(NioServer nioServer) {
-            this.nioServer = nioServer;
-            events.add(name + ":setNioServer");
+        public void prepareForConnect() {
+            events.add(name + ":prepareForConnect");
         }
 
         @Override
