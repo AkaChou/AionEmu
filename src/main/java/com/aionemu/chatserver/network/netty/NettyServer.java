@@ -59,7 +59,18 @@ public class NettyServer {
 
     public static synchronized NettyServer getInstance() {
         if (instance == null) {
-            instance = new NettyServer();
+            ClientPacketHandler clientPacketHandler = new ClientPacketHandler();
+            instance = new NettyServer(clientPacketHandler, new LoginToClientPipeLineFactory(clientPacketHandler));
+        }
+        return instance;
+    }
+
+    public static synchronized NettyServer getInstance(
+        ClientPacketHandler clientPacketHandler,
+        LoginToClientPipeLineFactory loginToClientPipeLineFactory
+    ) {
+        if (instance == null) {
+            instance = new NettyServer(clientPacketHandler, loginToClientPipeLineFactory);
         }
         return instance;
     }
@@ -80,17 +91,27 @@ public class NettyServer {
     }
 
     public NettyServer() {
-        this.loginToClientPipeLineFactory = new LoginToClientPipeLineFactory(new ClientPacketHandler());
-        initialize();
+        ClientPacketHandler clientPacketHandler = new ClientPacketHandler();
+        this.loginToClientPipeLineFactory = new LoginToClientPipeLineFactory(clientPacketHandler);
+        initialize(clientPacketHandler);
+    }
+
+    NettyServer(ClientPacketHandler clientPacketHandler, LoginToClientPipeLineFactory loginToClientPipeLineFactory) {
+        this.loginToClientPipeLineFactory = loginToClientPipeLineFactory;
+        initialize(clientPacketHandler);
     }
 
     /**
      * Initialize listening on login port
      */
     public void initialize() {
+        initialize(new ClientPacketHandler());
+    }
+
+    private void initialize(ClientPacketHandler clientPacketHandler) {
         boolean nettyTransport = Boolean.getBoolean("aion.transport.netty");
         if (nettyTransport) {
-            netty4ChatClientServer = new Netty4ChatClientServer(Config.CHAT_ADDRESS, new ClientPacketHandler());
+            netty4ChatClientServer = new Netty4ChatClientServer(Config.CHAT_ADDRESS, clientPacketHandler);
             netty4ChatClientServer.connect();
         } else {
             loginToClientChannelFactory = initChannelFactory();

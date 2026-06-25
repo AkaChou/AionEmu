@@ -34,8 +34,17 @@ import com.aionemu.chatserver.service.ChatService;
  */
 public class ClientPacketHandler extends AbstractPacketHandler {
 
-    private BroadcastService broadcastService = BroadcastService.getInstance();
-    private ChatService chatService = ChatService.getInstance();
+    private final BroadcastService broadcastService;
+    private final ChatService chatService;
+
+    public ClientPacketHandler() {
+        this(BroadcastService.getInstance(), ChatService.getInstance());
+    }
+
+    public ClientPacketHandler(BroadcastService broadcastService, ChatService chatService) {
+        this.broadcastService = broadcastService;
+        this.chatService = chatService;
+    }
 
     /**
      * Reads one packet from PacketReader

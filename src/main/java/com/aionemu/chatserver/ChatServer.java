@@ -35,12 +35,6 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.joran.spi.JoranException;
 
 import com.aionemu.chatserver.configs.Config;
-import com.aionemu.chatserver.network.netty.NettyServer;
-import com.aionemu.chatserver.service.BroadcastService;
-import com.aionemu.chatserver.service.ChatService;
-import com.aionemu.chatserver.service.GameServerService;
-import com.aionemu.chatserver.service.RestartService;
-import com.aionemu.chatserver.utils.IdFactory;
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.utils.AionRuntimeMode;
@@ -105,18 +99,22 @@ public class ChatServer {
      * @param args startup arguments
      */
     public static void start(String[] args) {
+        start(args, ChatServerDependencies.legacy());
+    }
+
+    static void start(String[] args, ChatServerDependencies dependencies) {
         long start = System.currentTimeMillis();
 
         initalizeLoggger();
 
         Config.load();
         AEInfos.printAllInfos();
-        IdFactory.getInstance();
-        GameServerService.getInstance();
-        BroadcastService.getInstance();
-        ChatService.getInstance();
-        NettyServer.getInstance();
-        RestartService.getInstance();
+        dependencies.idFactory();
+        dependencies.gameServerService();
+        dependencies.broadcastService();
+        dependencies.chatService();
+        dependencies.nettyServer();
+        dependencies.restartService();
 
         if (!AionRuntimeMode.isBootEmbedded()) {
             Runtime.getRuntime().addShutdownHook(ShutdownHook.getInstance());

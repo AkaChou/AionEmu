@@ -17,6 +17,14 @@ import com.aionemu.boot.transport.AionTransportBoundary;
 import com.aionemu.boot.transport.LegacyNioTransportLifecycle;
 import com.aionemu.boot.transport.NettyTransportLifecycle;
 import com.aionemu.chatserver.ChatServer;
+import com.aionemu.chatserver.network.aion.ClientPacketHandler;
+import com.aionemu.chatserver.network.netty.NettyServer;
+import com.aionemu.chatserver.network.netty.pipeline.LoginToClientPipeLineFactory;
+import com.aionemu.chatserver.service.BroadcastService;
+import com.aionemu.chatserver.service.ChatService;
+import com.aionemu.chatserver.service.GameServerService;
+import com.aionemu.chatserver.service.RestartService;
+import com.aionemu.chatserver.utils.IdFactory;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelGateway;
@@ -99,6 +107,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -147,6 +156,51 @@ class AionBootApplicationTest {
             assertTrue(context.containsBean("aionServiceLauncher"));
             assertTrue(context.containsBean("gameStartupSequenceLifecycle"));
         }
+    }
+
+    @Test
+    void chatServerGuiceBindingsAreSpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
+            assertHasBean(context, IdFactory.class);
+            assertHasBean(context, ClientPacketHandler.class);
+            assertHasBean(context, LoginToClientPipeLineFactory.class);
+            assertHasBean(context, NettyServer.class);
+            assertHasBean(context, GameServerService.class);
+            assertHasBean(context, BroadcastService.class);
+            assertHasBean(context, ChatService.class);
+            assertHasBean(context, RestartService.class);
+
+            assertTrue(context.getBeanFactory().getBeanDefinition("nettyServer").isLazyInit());
+            assertTrue(context.getBeanFactory().getBeanDefinition("restartService").isLazyInit());
+        }
+    }
+
+    @Test
+    void productionSourcesDoNotUseGuice() throws IOException {
+        String pom = Files.readString(Path.of("pom.xml"));
+        assertFalse(pom.contains("<guice.version>"), "pom.xml must not declare guice.version");
+        assertFalse(pom.contains("com.google.inject"), "pom.xml must not depend on com.google.inject");
+        assertFalse(pom.contains("<artifactId>guice</artifactId>"), "pom.xml must not depend on guice");
+
+        Path mainSource = Path.of("src/main/java");
+        try (var paths = Files.walk(mainSource)) {
+            List<Path> guicePaths = paths
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> path.toString().toLowerCase().contains("guice"))
+                .sorted()
+                .toList();
+            assertEquals(List.of(), guicePaths);
+        }
+
+        List<Path> guiceImports;
+        try (var paths = Files.walk(mainSource)) {
+            guiceImports = paths
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> sourceContains(path, "com.google.inject"))
+                .sorted()
+                .toList();
+        }
+        assertEquals(List.of(), guiceImports);
     }
 
     @Test
@@ -265,6 +319,21 @@ class AionBootApplicationTest {
             }
         }
         return false;
+    }
+
+    private static void assertHasBean(AnnotationConfigApplicationContext context, Class<?> type) {
+        Assertions.assertTrue(
+            context.getBeanNamesForType(type, true, false).length > 0,
+            () -> "Missing Spring bean for " + type.getName()
+        );
+    }
+
+    private static boolean sourceContains(Path path, String needle) {
+        try {
+            return Files.readString(path).contains(needle);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read " + path, e);
+        }
     }
 
 }
