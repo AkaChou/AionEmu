@@ -34,7 +34,7 @@ public class TaskFromDBManager {
     private static final Logger log = LoggerFactory.getLogger(TaskFromDBManager.class);
     private ArrayList<TaskFromDBTrigger> tasksList;
 
-    private TaskFromDBManager() {
+    public TaskFromDBManager() {
         tasksList = getDAO().getAllTasks();
         log.info("Loaded " + tasksList.size() + " task" + (tasksList.size() > 1 ? "s" : "") + " from the database");
 
@@ -69,6 +69,7 @@ public class TaskFromDBManager {
      *
      * @return
      */
+    @Deprecated(since = "boot-migration")
     public static TaskFromDBManager getInstance() {
         return TaskFromDBManager.SingletonHolder.instance;
     }

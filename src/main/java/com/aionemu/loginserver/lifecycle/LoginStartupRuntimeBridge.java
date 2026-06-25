@@ -29,6 +29,7 @@ public class LoginStartupRuntimeBridge {
     private ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider;
     private ObjectProvider<PlayerTransferService> playerTransferServiceProvider;
     private ObjectProvider<PremiumController> premiumControllerProvider;
+    private ObjectProvider<TaskFromDBManager> taskFromDBManagerProvider;
 
     @Autowired(required = false)
     void setProcessBridgeProvider(ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider) {
@@ -43,6 +44,11 @@ public class LoginStartupRuntimeBridge {
     @Autowired(required = false)
     void setPremiumControllerProvider(ObjectProvider<PremiumController> premiumControllerProvider) {
         this.premiumControllerProvider = premiumControllerProvider;
+    }
+
+    @Autowired(required = false)
+    void setTaskFromDBManagerProvider(ObjectProvider<TaskFromDBManager> taskFromDBManagerProvider) {
+        this.taskFromDBManagerProvider = taskFromDBManagerProvider;
     }
 
     public void initializeLogger() {
@@ -107,7 +113,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void initializeTaskManager() {
-        TaskFromDBManager.getInstance();
+        taskFromDBManager();
     }
 
     public void registerShutdownHook() {
@@ -139,5 +145,12 @@ public class LoginStartupRuntimeBridge {
             return PremiumController.getController();
         }
         return premiumControllerProvider.getIfAvailable(PremiumController::getController);
+    }
+
+    private TaskFromDBManager taskFromDBManager() {
+        if (taskFromDBManagerProvider == null) {
+            return TaskFromDBManager.getInstance();
+        }
+        return taskFromDBManagerProvider.getIfAvailable(TaskFromDBManager::getInstance);
     }
 }

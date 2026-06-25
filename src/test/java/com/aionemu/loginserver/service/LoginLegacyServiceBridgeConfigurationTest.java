@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.loginserver.Shutdown;
 import com.aionemu.loginserver.controller.PremiumController;
+import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +45,15 @@ class LoginLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void exposesLoginTaskFromDBManagerAsLazySpringBean() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(LoginLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("loginTaskFromDBManager"));
+            assertEquals(TaskFromDBManager.class, context.getType("loginTaskFromDBManager"));
+            assertTrue(context.getBeanFactory().getBeanDefinition("loginTaskFromDBManager").isLazyInit());
+        }
+    }
+
+    @Test
     void loginPlayerTransferBeanUsesSpringInstantiationInsteadOfSingletonFallback() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
         String serviceSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/PlayerTransferService.java"));
@@ -63,5 +73,16 @@ class LoginLegacyServiceBridgeConfigurationTest {
         assertTrue(source.contains("return new PremiumController();"));
         assertTrue(controllerSource.contains("SingletonHolder"));
         assertTrue(controllerSource.contains("@Deprecated(since = \"boot-migration\")"));
+    }
+
+    @Test
+    void loginTaskFromDBManagerBeanUsesSpringInstantiationInsteadOfSingletonFallback() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginLegacyServiceBridgeConfiguration.java"));
+        String managerSource = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/taskmanager/TaskFromDBManager.java"));
+
+        assertFalse(source.contains("TaskFromDBManager.getInstance()"));
+        assertTrue(source.contains("return new TaskFromDBManager();"));
+        assertTrue(managerSource.contains("SingletonHolder"));
+        assertTrue(managerSource.contains("@Deprecated(since = \"boot-migration\")"));
     }
 }

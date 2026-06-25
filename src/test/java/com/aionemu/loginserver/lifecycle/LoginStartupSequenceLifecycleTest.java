@@ -255,6 +255,15 @@ class LoginStartupSequenceLifecycleTest {
         assertSame(providerUsed, assertThrows(ProviderUsedException.class, runtimeBridge::initializePremiumController));
     }
 
+    @Test
+    void startupRuntimeBridgeUsesTaskFromDBManagerProviderBeforeLegacySingletonFallback() {
+        ProviderUsedException providerUsed = new ProviderUsedException();
+        LoginStartupRuntimeBridge runtimeBridge = new LoginStartupRuntimeBridge();
+        runtimeBridge.setTaskFromDBManagerProvider(throwingProvider(providerUsed));
+
+        assertSame(providerUsed, assertThrows(ProviderUsedException.class, runtimeBridge::initializeTaskManager));
+    }
+
     private static Class<?> fieldType(String name) {
         return fieldType(LoginStartupSequenceLifecycle.class, name);
     }
