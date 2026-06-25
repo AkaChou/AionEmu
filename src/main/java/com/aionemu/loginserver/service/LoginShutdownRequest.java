@@ -9,15 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public final class LoginShutdownRequest implements DisposableBean {
 
-    private static volatile ObjectProvider<Shutdown> shutdownProvider;
-
     @Autowired
     public LoginShutdownRequest(ObjectProvider<Shutdown> shutdownProvider) {
         setShutdownProvider(shutdownProvider);
     }
 
+    @Deprecated(since = "boot-migration")
     public static void setShutdownProvider(ObjectProvider<Shutdown> shutdownProvider) {
-        LoginShutdownRequest.shutdownProvider = shutdownProvider;
+        LoginShutdownServices.setShutdownProvider(shutdownProvider);
     }
 
     public static void shutdownWithoutHalt() {
@@ -32,14 +31,10 @@ public final class LoginShutdownRequest implements DisposableBean {
 
     @Override
     public void destroy() {
-        shutdownProvider = null;
+        LoginShutdownServices.setShutdownProvider(null);
     }
 
     private static Shutdown shutdown() {
-        ObjectProvider<Shutdown> provider = shutdownProvider;
-        if (provider == null) {
-            return Shutdown.getInstance();
-        }
-        return provider.getIfAvailable(Shutdown::getInstance);
+        return LoginShutdownServices.shutdown();
     }
 }

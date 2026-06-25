@@ -3,6 +3,7 @@ package com.aionemu.loginserver.lifecycle;
 import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.Shutdown;
+import com.aionemu.loginserver.service.LoginShutdownServices;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -12,12 +13,11 @@ import org.springframework.stereotype.Component;
 @Lazy
 public class LoginProcessRuntimeBridge {
 
-    private ObjectProvider<Shutdown> shutdownProvider;
     private Shutdown shutdown;
 
     @Autowired(required = false)
     void setShutdownProvider(ObjectProvider<Shutdown> shutdownProvider) {
-        this.shutdownProvider = shutdownProvider;
+        LoginShutdownServices.setShutdownProvider(shutdownProvider);
     }
 
     public Thread shutdownHook() {
@@ -46,11 +46,7 @@ public class LoginProcessRuntimeBridge {
 
     private synchronized Shutdown shutdown() {
         if (shutdown == null) {
-            if (shutdownProvider == null) {
-                shutdown = Shutdown.getInstance();
-            } else {
-                shutdown = shutdownProvider.getIfAvailable(Shutdown::getInstance);
-            }
+            shutdown = LoginShutdownServices.shutdown();
         }
         return shutdown;
     }
