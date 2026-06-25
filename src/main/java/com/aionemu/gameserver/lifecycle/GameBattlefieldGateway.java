@@ -1,6 +1,5 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
 import com.aionemu.gameserver.services.instance.GrandArenaTrainingCampService;
 import com.aionemu.gameserver.services.instance.HallOfTenacityService;
@@ -10,7 +9,6 @@ import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
-import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +25,7 @@ public class GameBattlefieldGateway {
     private ObjectProvider<HallOfTenacityService> hallOfTenacityServiceProvider;
     private ObjectProvider<GrandArenaTrainingCampService> grandArenaTrainingCampServiceProvider;
     private ObjectProvider<IDRunService> idRunServiceProvider;
+    private ObjectProvider<GameBattlefieldRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setKamarBattlefieldServiceProvider(ObjectProvider<KamarBattlefieldService> kamarBattlefieldServiceProvider) {
@@ -73,8 +72,13 @@ public class GameBattlefieldGateway {
         this.idRunServiceProvider = idRunServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameBattlefieldRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void start() {
-        Util.printSection(" *** Battlefield *** ");
+        runtimeBridge().printBattlefieldSection();
         runIfAutoGroupEnabled(() -> kamarBattlefieldService().initKamarBattlefield());
         runIfAutoGroupEnabled(() -> engulfedOphidanBridgeService().initEngulfedOphidan());
         runIfAutoGroupEnabled(() -> suspiciousOphidanBridgeService().initSuspiciousOphidan());
@@ -88,70 +92,77 @@ public class GameBattlefieldGateway {
 
     private KamarBattlefieldService kamarBattlefieldService() {
         if (kamarBattlefieldServiceProvider == null) {
-            return KamarBattlefieldService.getInstance();
+            return runtimeBridge().kamarBattlefieldService();
         }
-        return kamarBattlefieldServiceProvider.getIfAvailable(KamarBattlefieldService::getInstance);
+        return kamarBattlefieldServiceProvider.getIfAvailable(() -> runtimeBridge().kamarBattlefieldService());
     }
 
     private EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
         if (engulfedOphidanBridgeServiceProvider == null) {
-            return EngulfedOphidanBridgeService.getInstance();
+            return runtimeBridge().engulfedOphidanBridgeService();
         }
-        return engulfedOphidanBridgeServiceProvider.getIfAvailable(EngulfedOphidanBridgeService::getInstance);
+        return engulfedOphidanBridgeServiceProvider.getIfAvailable(() -> runtimeBridge().engulfedOphidanBridgeService());
     }
 
     private SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
         if (suspiciousOphidanBridgeServiceProvider == null) {
-            return SuspiciousOphidanBridgeService.getInstance();
+            return runtimeBridge().suspiciousOphidanBridgeService();
         }
-        return suspiciousOphidanBridgeServiceProvider.getIfAvailable(SuspiciousOphidanBridgeService::getInstance);
+        return suspiciousOphidanBridgeServiceProvider.getIfAvailable(() -> runtimeBridge().suspiciousOphidanBridgeService());
     }
 
     private IronWallWarfrontService ironWallWarfrontService() {
         if (ironWallWarfrontServiceProvider == null) {
-            return IronWallWarfrontService.getInstance();
+            return runtimeBridge().ironWallWarfrontService();
         }
-        return ironWallWarfrontServiceProvider.getIfAvailable(IronWallWarfrontService::getInstance);
+        return ironWallWarfrontServiceProvider.getIfAvailable(() -> runtimeBridge().ironWallWarfrontService());
     }
 
     private IdgelDomeService idgelDomeService() {
         if (idgelDomeServiceProvider == null) {
-            return IdgelDomeService.getInstance();
+            return runtimeBridge().idgelDomeService();
         }
-        return idgelDomeServiceProvider.getIfAvailable(IdgelDomeService::getInstance);
+        return idgelDomeServiceProvider.getIfAvailable(() -> runtimeBridge().idgelDomeService());
     }
 
     private IdgelDomeLandmarkService idgelDomeLandmarkService() {
         if (idgelDomeLandmarkServiceProvider == null) {
-            return IdgelDomeLandmarkService.getInstance();
+            return runtimeBridge().idgelDomeLandmarkService();
         }
-        return idgelDomeLandmarkServiceProvider.getIfAvailable(IdgelDomeLandmarkService::getInstance);
+        return idgelDomeLandmarkServiceProvider.getIfAvailable(() -> runtimeBridge().idgelDomeLandmarkService());
     }
 
     private HallOfTenacityService hallOfTenacityService() {
         if (hallOfTenacityServiceProvider == null) {
-            return HallOfTenacityService.getInstance();
+            return runtimeBridge().hallOfTenacityService();
         }
-        return hallOfTenacityServiceProvider.getIfAvailable(HallOfTenacityService::getInstance);
+        return hallOfTenacityServiceProvider.getIfAvailable(() -> runtimeBridge().hallOfTenacityService());
     }
 
     private GrandArenaTrainingCampService grandArenaTrainingCampService() {
         if (grandArenaTrainingCampServiceProvider == null) {
-            return GrandArenaTrainingCampService.getInstance();
+            return runtimeBridge().grandArenaTrainingCampService();
         }
-        return grandArenaTrainingCampServiceProvider.getIfAvailable(GrandArenaTrainingCampService::getInstance);
+        return grandArenaTrainingCampServiceProvider.getIfAvailable(() -> runtimeBridge().grandArenaTrainingCampService());
     }
 
     private IDRunService idRunService() {
         if (idRunServiceProvider == null) {
-            return IDRunService.getInstance();
+            return runtimeBridge().idRunService();
         }
-        return idRunServiceProvider.getIfAvailable(IDRunService::getInstance);
+        return idRunServiceProvider.getIfAvailable(() -> runtimeBridge().idRunService());
     }
 
     private void runIfAutoGroupEnabled(Runnable initializer) {
-        if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
+        if (runtimeBridge().isAutoGroupEnabled()) {
             initializer.run();
         }
+    }
+
+    private GameBattlefieldRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameBattlefieldRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameBattlefieldRuntimeBridge::new);
     }
 }
