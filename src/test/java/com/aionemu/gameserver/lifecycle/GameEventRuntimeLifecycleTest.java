@@ -26,6 +26,7 @@ class GameEventRuntimeLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "crazyDaevaServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "abyssRankUpdateServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "packetBroadcasterProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameEventRuntimeGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test

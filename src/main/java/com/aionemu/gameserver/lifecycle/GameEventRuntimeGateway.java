@@ -1,14 +1,10 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.gameserver.configs.main.EventsConfig;
-import com.aionemu.gameserver.configs.main.RankingConfig;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
-import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
-import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +17,7 @@ public class GameEventRuntimeGateway {
     private ObjectProvider<CrazyDaevaService> crazyDaevaServiceProvider;
     private ObjectProvider<AbyssRankUpdateService> abyssRankUpdateServiceProvider;
     private ObjectProvider<PacketBroadcaster> packetBroadcasterProvider;
+    private ObjectProvider<GameEventRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setEventServiceProvider(ObjectProvider<EventService> eventServiceProvider) {
@@ -47,60 +44,73 @@ public class GameEventRuntimeGateway {
         this.packetBroadcasterProvider = packetBroadcasterProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameEventRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void start() {
-        Util.printSection(" *** Events *** ");
-        if (EventsConfig.ENABLE_EVENT_SERVICE) {
+        GameEventRuntimeBridge runtimeBridge = runtimeBridge();
+        runtimeBridge.printEventsSection();
+        if (runtimeBridge.isEventServiceEnabled()) {
             eventService().start();
         }
-        if (EventsConfig.EVENT_ENABLED) {
+        if (runtimeBridge.isPlayerEventEnabled()) {
             playerEventService();
         }
-        if (EventsConfig.ENABLE_CRAZY) {
+        if (runtimeBridge.isCrazyDaevaEnabled()) {
             crazyDaevaService().startTimer();
         }
         AbyssRankUpdateService abyssRankUpdateService = abyssRankUpdateService();
-        if (RankingConfig.TOP_RANKING_UPDATE_SETTING) {
+        if (runtimeBridge.isTopRankingUpdateEnabled()) {
             abyssRankUpdateService.scheduleUpdateHour();
         } else {
             abyssRankUpdateService.scheduleUpdateMinute();
         }
         abyssRankUpdateService.initRewardWeeklyManager();
         packetBroadcaster();
-        TemporarySpawnEngine.spawnAll();
+        runtimeBridge.spawnTemporarySpawns();
     }
 
     private EventService eventService() {
         if (eventServiceProvider == null) {
-            return EventService.getInstance();
+            return runtimeBridge().eventService();
         }
-        return eventServiceProvider.getIfAvailable(EventService::getInstance);
+        return eventServiceProvider.getIfAvailable(() -> runtimeBridge().eventService());
     }
 
     private PlayerEventService playerEventService() {
         if (playerEventServiceProvider == null) {
-            return PlayerEventService.getInstance();
+            return runtimeBridge().playerEventService();
         }
-        return playerEventServiceProvider.getIfAvailable(PlayerEventService::getInstance);
+        return playerEventServiceProvider.getIfAvailable(() -> runtimeBridge().playerEventService());
     }
 
     private CrazyDaevaService crazyDaevaService() {
         if (crazyDaevaServiceProvider == null) {
-            return CrazyDaevaService.getInstance();
+            return runtimeBridge().crazyDaevaService();
         }
-        return crazyDaevaServiceProvider.getIfAvailable(CrazyDaevaService::getInstance);
+        return crazyDaevaServiceProvider.getIfAvailable(() -> runtimeBridge().crazyDaevaService());
     }
 
     private AbyssRankUpdateService abyssRankUpdateService() {
         if (abyssRankUpdateServiceProvider == null) {
-            return AbyssRankUpdateService.getInstance();
+            return runtimeBridge().abyssRankUpdateService();
         }
-        return abyssRankUpdateServiceProvider.getIfAvailable(AbyssRankUpdateService::getInstance);
+        return abyssRankUpdateServiceProvider.getIfAvailable(() -> runtimeBridge().abyssRankUpdateService());
     }
 
     private PacketBroadcaster packetBroadcaster() {
         if (packetBroadcasterProvider == null) {
-            return PacketBroadcaster.getInstance();
+            return runtimeBridge().packetBroadcaster();
         }
-        return packetBroadcasterProvider.getIfAvailable(PacketBroadcaster::getInstance);
+        return packetBroadcasterProvider.getIfAvailable(() -> runtimeBridge().packetBroadcaster());
+    }
+
+    private GameEventRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameEventRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameEventRuntimeBridge::new);
     }
 }
