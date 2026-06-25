@@ -18,6 +18,7 @@ public class GameWorldBootstrapGateway {
     private ObjectProvider<HotspotTeleportService> hotspotTeleportServiceProvider;
     private ObjectProvider<RoadService> roadServiceProvider;
     private ObjectProvider<World> worldProvider;
+    private ObjectProvider<GameWorldBootstrapRuntimeBridge> runtimeBridgeProvider;
 
     public GameWorldBootstrapGateway() {
         this(ConsoleStartupProgressReporter.forCurrentConsole());
@@ -50,6 +51,11 @@ public class GameWorldBootstrapGateway {
     @Autowired(required = false)
     void setWorldProvider(ObjectProvider<World> worldProvider) {
         this.worldProvider = worldProvider;
+    }
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameWorldBootstrapRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
     }
 
     public void bootstrap() {
@@ -90,37 +96,44 @@ public class GameWorldBootstrapGateway {
 
     private IDFactory idFactory() {
         if (idFactoryProvider == null) {
-            return IDFactory.getInstance();
+            return runtimeBridge().idFactory();
         }
-        return idFactoryProvider.getIfAvailable(IDFactory::getInstance);
+        return idFactoryProvider.getIfAvailable(() -> runtimeBridge().idFactory());
     }
 
     private ZoneService zoneService() {
         if (zoneServiceProvider == null) {
-            return ZoneService.getInstance();
+            return runtimeBridge().zoneService();
         }
-        return zoneServiceProvider.getIfAvailable(ZoneService::getInstance);
+        return zoneServiceProvider.getIfAvailable(() -> runtimeBridge().zoneService());
     }
 
     private HotspotTeleportService hotspotTeleportService() {
         if (hotspotTeleportServiceProvider == null) {
-            return HotspotTeleportService.getInstance();
+            return runtimeBridge().hotspotTeleportService();
         }
-        return hotspotTeleportServiceProvider.getIfAvailable(HotspotTeleportService::getInstance);
+        return hotspotTeleportServiceProvider.getIfAvailable(() -> runtimeBridge().hotspotTeleportService());
     }
 
     private RoadService roadService() {
         if (roadServiceProvider == null) {
-            return RoadService.getInstance();
+            return runtimeBridge().roadService();
         }
-        return roadServiceProvider.getIfAvailable(RoadService::getInstance);
+        return roadServiceProvider.getIfAvailable(() -> runtimeBridge().roadService());
     }
 
     private World world() {
         if (worldProvider == null) {
-            return World.getInstance();
+            return runtimeBridge().world();
         }
-        return worldProvider.getIfAvailable(World::getInstance);
+        return worldProvider.getIfAvailable(() -> runtimeBridge().world());
+    }
+
+    private GameWorldBootstrapRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameWorldBootstrapRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameWorldBootstrapRuntimeBridge::new);
     }
 
     private void loadStep(String stepName, Runnable loader) {

@@ -25,6 +25,7 @@ class GameWorldBootstrapLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "hotspotTeleportServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "roadServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "worldProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameWorldBootstrapGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test

@@ -108,6 +108,7 @@ import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldServicesRuntimeBridge;
@@ -195,6 +196,7 @@ class AionBootApplicationTest {
             assertEquals(GameCoreServicesRuntimeBridge.class, context.getType("gameCoreServicesRuntimeBridge"));
             assertEquals(GameMaintenanceServicesRuntimeBridge.class, context.getType("gameMaintenanceServicesRuntimeBridge"));
             assertEquals(GameWorldServicesRuntimeBridge.class, context.getType("gameWorldServicesRuntimeBridge"));
+            assertEquals(GameWorldBootstrapRuntimeBridge.class, context.getType("gameWorldBootstrapRuntimeBridge"));
             assertEquals(GameFeatureServicesRuntimeBridge.class, context.getType("gameFeatureServicesRuntimeBridge"));
             assertEquals(GameEventRuntimeBridge.class, context.getType("gameEventRuntimeBridge"));
             assertEquals(GameEnginesRuntimeBridge.class, context.getType("gameEnginesRuntimeBridge"));
@@ -205,6 +207,7 @@ class AionBootApplicationTest {
             assertLazy(context.getBeanFactory(), "gameCoreServicesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameMaintenanceServicesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameWorldServicesRuntimeBridge");
+            assertLazy(context.getBeanFactory(), "gameWorldBootstrapRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameFeatureServicesRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameEventRuntimeBridge");
             assertLazy(context.getBeanFactory(), "gameEnginesRuntimeBridge");
@@ -319,6 +322,7 @@ class AionBootApplicationTest {
             context.registerBean(GameCoreServicesRuntimeBridge.class);
             context.registerBean(GameMaintenanceServicesRuntimeBridge.class);
             context.registerBean(GameWorldServicesRuntimeBridge.class);
+            context.registerBean(GameWorldBootstrapRuntimeBridge.class);
             context.registerBean(GameFeatureServicesRuntimeBridge.class);
             context.registerBean(GameEventRuntimeBridge.class);
             context.registerBean(GameEnginesRuntimeBridge.class);
