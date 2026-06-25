@@ -7,10 +7,10 @@ import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.LoginServer;
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
 import com.aionemu.loginserver.service.LoginNetworkServices;
+import com.aionemu.loginserver.service.LoginPremiumServices;
 import com.aionemu.loginserver.service.LoginProtectionServices;
 import com.aionemu.loginserver.service.LoginTaskManagerServices;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
@@ -28,16 +28,10 @@ import org.springframework.stereotype.Component;
 public class LoginStartupRuntimeBridge {
 
     private ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider;
-    private ObjectProvider<PremiumController> premiumControllerProvider;
 
     @Autowired(required = false)
     void setProcessBridgeProvider(ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider) {
         this.processBridgeProvider = processBridgeProvider;
-    }
-
-    @Autowired(required = false)
-    void setPremiumControllerProvider(ObjectProvider<PremiumController> premiumControllerProvider) {
-        this.premiumControllerProvider = premiumControllerProvider;
     }
 
     public void initializeLogger() {
@@ -112,7 +106,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void initializePremiumController() {
-        premiumController();
+        LoginPremiumServices.premiumController();
     }
 
     public void exitWithError() {
@@ -124,12 +118,5 @@ public class LoginStartupRuntimeBridge {
             return new LoginProcessRuntimeBridge();
         }
         return processBridgeProvider.getIfAvailable(LoginProcessRuntimeBridge::new);
-    }
-
-    private PremiumController premiumController() {
-        if (premiumControllerProvider == null) {
-            return PremiumController.getController();
-        }
-        return premiumControllerProvider.getIfAvailable(PremiumController::getController);
     }
 }
