@@ -9,12 +9,45 @@ import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.spawnengine.TemporarySpawnEngine;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import com.aionemu.gameserver.utils.Util;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
 @Lazy
 public class GameEventRuntimeBridge {
+
+    private ObjectProvider<EventService> eventServiceProvider;
+    private ObjectProvider<PlayerEventService> playerEventServiceProvider;
+    private ObjectProvider<CrazyDaevaService> crazyDaevaServiceProvider;
+    private ObjectProvider<AbyssRankUpdateService> abyssRankUpdateServiceProvider;
+    private ObjectProvider<PacketBroadcaster> packetBroadcasterProvider;
+
+    @Autowired(required = false)
+    void setEventServiceProvider(ObjectProvider<EventService> eventServiceProvider) {
+        this.eventServiceProvider = eventServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setPlayerEventServiceProvider(ObjectProvider<PlayerEventService> playerEventServiceProvider) {
+        this.playerEventServiceProvider = playerEventServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setCrazyDaevaServiceProvider(ObjectProvider<CrazyDaevaService> crazyDaevaServiceProvider) {
+        this.crazyDaevaServiceProvider = crazyDaevaServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setAbyssRankUpdateServiceProvider(ObjectProvider<AbyssRankUpdateService> abyssRankUpdateServiceProvider) {
+        this.abyssRankUpdateServiceProvider = abyssRankUpdateServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setPacketBroadcasterProvider(ObjectProvider<PacketBroadcaster> packetBroadcasterProvider) {
+        this.packetBroadcasterProvider = packetBroadcasterProvider;
+    }
 
     public void printEventsSection() {
         Util.printSection(" *** Events *** ");
@@ -37,23 +70,38 @@ public class GameEventRuntimeBridge {
     }
 
     public EventService eventService() {
-        return EventService.getInstance();
+        if (eventServiceProvider == null) {
+            return EventService.getInstance();
+        }
+        return eventServiceProvider.getIfAvailable(EventService::getInstance);
     }
 
     public PlayerEventService playerEventService() {
-        return PlayerEventService.getInstance();
+        if (playerEventServiceProvider == null) {
+            return PlayerEventService.getInstance();
+        }
+        return playerEventServiceProvider.getIfAvailable(PlayerEventService::getInstance);
     }
 
     public CrazyDaevaService crazyDaevaService() {
-        return CrazyDaevaService.getInstance();
+        if (crazyDaevaServiceProvider == null) {
+            return CrazyDaevaService.getInstance();
+        }
+        return crazyDaevaServiceProvider.getIfAvailable(CrazyDaevaService::getInstance);
     }
 
     public AbyssRankUpdateService abyssRankUpdateService() {
-        return AbyssRankUpdateService.getInstance();
+        if (abyssRankUpdateServiceProvider == null) {
+            return AbyssRankUpdateService.getInstance();
+        }
+        return abyssRankUpdateServiceProvider.getIfAvailable(AbyssRankUpdateService::getInstance);
     }
 
     public PacketBroadcaster packetBroadcaster() {
-        return PacketBroadcaster.getInstance();
+        if (packetBroadcasterProvider == null) {
+            return PacketBroadcaster.getInstance();
+        }
+        return packetBroadcasterProvider.getIfAvailable(PacketBroadcaster::getInstance);
     }
 
     public void spawnTemporarySpawns() {
