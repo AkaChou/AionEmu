@@ -15,12 +15,10 @@ import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.SpringZoneService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.events.BoostEventService;
-import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -46,6 +44,7 @@ public class GameRuntimeServicesGateway {
     private ObjectProvider<BoostEventService> boostEventServiceProvider;
     private ObjectProvider<TaskManagerFromDB> taskManagerFromDBProvider;
     private ObjectProvider<LimitedItemTradeService> limitedItemTradeServiceProvider;
+    private ObjectProvider<GameRuntimeServiceBridge> runtimeServiceBridgeProvider;
 
     @Autowired(required = false)
     void setAdminServiceProvider(ObjectProvider<AdminService> adminServiceProvider) {
@@ -137,6 +136,11 @@ public class GameRuntimeServicesGateway {
         this.limitedItemTradeServiceProvider = limitedItemTradeServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeServiceBridgeProvider(ObjectProvider<GameRuntimeServiceBridge> runtimeServiceBridgeProvider) {
+        this.runtimeServiceBridgeProvider = runtimeServiceBridgeProvider;
+    }
+
     public void start() {
         Util.printSection(" *** Services *** ");
         periodicSaveService();
@@ -151,14 +155,14 @@ public class GameRuntimeServicesGateway {
         influence();
         exchangeService();
         petitionService();
-        InstanceService.load();
+        runtimeServiceBridge().loadInstances();
         flyRingService();
         curingZoneService();
         springZoneService();
         boostEventService().onStart();
         taskManagerFromDB();
         limitedItemTradeService().start();
-        GameTimeManager.startClock();
+        runtimeServiceBridge().startGameTimeClock();
     }
 
     private PeriodicSaveService periodicSaveService() {
@@ -285,5 +289,12 @@ public class GameRuntimeServicesGateway {
             return LimitedItemTradeService.getInstance();
         }
         return limitedItemTradeServiceProvider.getIfAvailable(LimitedItemTradeService::getInstance);
+    }
+
+    private GameRuntimeServiceBridge runtimeServiceBridge() {
+        if (runtimeServiceBridgeProvider == null) {
+            return new GameRuntimeServiceBridge();
+        }
+        return runtimeServiceBridgeProvider.getIfAvailable(GameRuntimeServiceBridge::new);
     }
 }

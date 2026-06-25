@@ -7,6 +7,7 @@ import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
@@ -252,6 +253,7 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("boostEventService"));
             assertTrue(context.containsBeanDefinition("taskManagerFromDB"));
             assertTrue(context.containsBeanDefinition("limitedItemTradeService"));
+            assertTrue(context.containsBeanDefinition("gameRuntimeServiceBridge"));
             assertEquals(PeriodicSaveService.class, context.getType("periodicSaveService"));
             assertEquals(TerritoryService.class, context.getType("territoryService"));
             assertEquals(GameTimeService.class, context.getType("gameTimeService"));
@@ -268,6 +270,7 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(BoostEventService.class, context.getType("boostEventService"));
             assertEquals(TaskManagerFromDB.class, context.getType("taskManagerFromDB"));
             assertEquals(LimitedItemTradeService.class, context.getType("limitedItemTradeService"));
+            assertEquals(GameRuntimeServiceBridge.class, context.getType("gameRuntimeServiceBridge"));
             assertLazy(context.getBeanFactory(), "periodicSaveService");
             assertLazy(context.getBeanFactory(), "territoryService");
             assertLazy(context.getBeanFactory(), "gameTimeService");
@@ -284,6 +287,7 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "boostEventService");
             assertLazy(context.getBeanFactory(), "taskManagerFromDB");
             assertLazy(context.getBeanFactory(), "limitedItemTradeService");
+            assertLazy(context.getBeanFactory(), "gameRuntimeServiceBridge");
         }
     }
 

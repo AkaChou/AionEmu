@@ -5,6 +5,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
@@ -380,6 +381,12 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public LimitedItemTradeService limitedItemTradeService() {
         return LimitedItemTradeService.getInstance();
+    }
+
+    @Bean
+    @Lazy
+    public GameRuntimeServiceBridge gameRuntimeServiceBridge() {
+        return new GameRuntimeServiceBridge();
     }
 
     @Bean

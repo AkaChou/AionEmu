@@ -39,6 +39,7 @@ class GameRuntimeServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "boostEventServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "taskManagerFromDBProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "limitedItemTradeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "runtimeServiceBridgeProvider"));
     }
 
     @Test
