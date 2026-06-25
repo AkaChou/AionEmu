@@ -13,6 +13,6 @@ public class AionProcessRuntimeBridge {
     }
 
     public void halt(int status) {
-        Runtime.getRuntime().halt(status);
+        AionProcessExit.halt(status);
     }
 }

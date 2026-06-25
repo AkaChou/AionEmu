@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
+import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
@@ -238,9 +239,9 @@ public class ShutdownHook extends Thread {
 			return;
 		}
 		if (mode == ShutdownMode.RESTART) {
-			Runtime.getRuntime().halt(ExitCode.CODE_RESTART);
+			AionProcessExit.halt(ExitCode.CODE_RESTART);
 		} else {
-			Runtime.getRuntime().halt(ExitCode.CODE_NORMAL);
+			AionProcessExit.halt(ExitCode.CODE_NORMAL);
 		}
 	}
 

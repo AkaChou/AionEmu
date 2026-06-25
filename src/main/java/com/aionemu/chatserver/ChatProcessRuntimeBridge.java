@@ -1,5 +1,6 @@
 package com.aionemu.chatserver;
 
+import com.aionemu.commons.utils.AionProcessExit;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,7 +32,7 @@ public class ChatProcessRuntimeBridge {
     }
 
     public void halt(int status) {
-        Runtime.getRuntime().halt(status);
+        AionProcessExit.halt(status);
     }
 
     private ShutdownHook shutdownHookInstance() {
