@@ -76,6 +76,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made login shutdown cleanup use a Spring-instantiable `Shutdown` bean instead of the legacy singleton fallback in the boot-managed bridge.
 - [x] Made login player-transfer startup use a Spring-instantiable service bean while retaining the legacy singleton only as a lazy fallback.
 - [x] Routed login player-transfer packet access through a Spring-provided service before the legacy singleton fallback.
+- [x] Routed the login startup runtime bridge through the shared player-transfer service wrapper instead of keeping its own singleton fallback.
 - [x] Routed login game-server packet execution and delayed MAC-ban-list dispatch through a Spring-provided thread-pool manager before the legacy singleton fallback.
 - [x] Routed login startup thread-pool initialization and player-transfer scheduling through the Spring-provided thread-pool manager before the legacy singleton fallback.
 - [x] Routed login cron runner and task trigger scheduling through the Spring-provided thread-pool manager before the legacy singleton fallback.

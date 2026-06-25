@@ -13,6 +13,7 @@ import com.aionemu.loginserver.network.ncrypt.KeyGen;
 import com.aionemu.loginserver.service.LoginNetworkServices;
 import com.aionemu.loginserver.service.LoginProtectionServices;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
+import com.aionemu.loginserver.service.LoginTransferServices;
 import com.aionemu.loginserver.service.PlayerTransferService;
 import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.DeadLockDetector;
@@ -27,18 +28,12 @@ import org.springframework.stereotype.Component;
 public class LoginStartupRuntimeBridge {
 
     private ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider;
-    private ObjectProvider<PlayerTransferService> playerTransferServiceProvider;
     private ObjectProvider<PremiumController> premiumControllerProvider;
     private ObjectProvider<TaskFromDBManager> taskFromDBManagerProvider;
 
     @Autowired(required = false)
     void setProcessBridgeProvider(ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider) {
         this.processBridgeProvider = processBridgeProvider;
-    }
-
-    @Autowired(required = false)
-    void setPlayerTransferServiceProvider(ObjectProvider<PlayerTransferService> playerTransferServiceProvider) {
-        this.playerTransferServiceProvider = playerTransferServiceProvider;
     }
 
     @Autowired(required = false)
@@ -106,10 +101,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public PlayerTransferService playerTransferService() {
-        if (playerTransferServiceProvider == null) {
-            return PlayerTransferService.getInstance();
-        }
-        return playerTransferServiceProvider.getIfAvailable(PlayerTransferService::getInstance);
+        return LoginTransferServices.playerTransferService();
     }
 
     public void initializeTaskManager() {
