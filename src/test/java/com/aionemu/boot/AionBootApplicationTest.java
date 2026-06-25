@@ -98,6 +98,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolGateway;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolLifecycle;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesGateway;
 import com.aionemu.gameserver.lifecycle.GameUtilityServicesLifecycle;
+import com.aionemu.gameserver.lifecycle.GameUtilityServicesRuntimeBridge;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationGateway;
 import com.aionemu.gameserver.lifecycle.GameWorldActivationLifecycle;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapGateway;
@@ -183,8 +184,10 @@ class AionBootApplicationTest {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
             assertEquals(AdminService.class, context.getType("adminService"));
             assertEquals(GameRuntimeServiceBridge.class, context.getType("gameRuntimeServiceBridge"));
+            assertEquals(GameUtilityServicesRuntimeBridge.class, context.getType("gameUtilityServicesRuntimeBridge"));
             assertLazy(context.getBeanFactory(), "adminService");
             assertLazy(context.getBeanFactory(), "gameRuntimeServiceBridge");
+            assertLazy(context.getBeanFactory(), "gameUtilityServicesRuntimeBridge");
         }
     }
 

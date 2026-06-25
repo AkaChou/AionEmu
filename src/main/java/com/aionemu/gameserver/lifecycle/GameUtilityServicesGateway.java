@@ -1,36 +1,30 @@
 package com.aionemu.gameserver.lifecycle;
 
-import com.aionemu.commons.database.DatabaseFactory;
-import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
-import com.aionemu.gameserver.configs.Config;
-import com.aionemu.gameserver.configs.main.ThreadConfig;
-import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
 import com.aionemu.gameserver.utils.Util;
-import com.aionemu.gameserver.utils.cron.ThreadPoolManagerRunnableRunner;
-import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
-import com.aionemu.gameserver.utils.javaagent.JavaAgentUtils;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@Slf4j
 public class GameUtilityServicesGateway {
 
+    private ObjectProvider<GameUtilityServicesRuntimeBridge> runtimeBridgeProvider;
+
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameUtilityServicesRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void initializeExceptionHandler() {
-        Thread.setDefaultUncaughtExceptionHandler(new ThreadUncaughtExceptionHandler());
+        runtimeBridge().initializeExceptionHandler();
     }
 
     public void reportCallbackSupport() {
-        if (JavaAgentUtils.isConfigured()) {
-            log.info("Callback support is configured.");
-        } else {
-            log.warn("Callback support is NOT configured. Gameplay callback behavior may be affected.");
-        }
+        runtimeBridge().reportCallbackSupport();
     }
 
     public void initializeCronService() {
-        CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
+        runtimeBridge().initializeCronService();
     }
 
     public void printConfigSection() {
@@ -38,11 +32,11 @@ public class GameUtilityServicesGateway {
     }
 
     public void loadConfig() {
-        Config.load();
+        runtimeBridge().loadConfig();
     }
 
     public void initializeDateTime() {
-        DateTimeUtil.init();
+        runtimeBridge().initializeDateTime();
     }
 
     public void printDatabaseSection() {
@@ -50,18 +44,25 @@ public class GameUtilityServicesGateway {
     }
 
     public void initializeDatabaseFactory() {
-        DatabaseFactory.init();
+        runtimeBridge().initializeDatabaseFactory();
     }
 
     public void initializeDaoManager() {
-        DAOManager.init();
+        runtimeBridge().initializeDaoManager();
     }
 
     public void loadThreadConfig() {
-        ThreadConfig.load();
+        runtimeBridge().loadThreadConfig();
     }
 
     public long currentTimeMillis() {
         return System.currentTimeMillis();
+    }
+
+    private GameUtilityServicesRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameUtilityServicesRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameUtilityServicesRuntimeBridge::new);
     }
 }
