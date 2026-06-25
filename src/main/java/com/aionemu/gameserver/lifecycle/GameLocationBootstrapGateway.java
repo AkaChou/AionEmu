@@ -22,7 +22,6 @@ import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.services.ZorshivDredgionService;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
-import com.aionemu.gameserver.utils.Util;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -52,6 +51,7 @@ public class GameLocationBootstrapGateway {
     private ObjectProvider<AbyssLandingService> abyssLandingServiceProvider;
     private ObjectProvider<LandingUpdateService> landingUpdateServiceProvider;
     private ObjectProvider<AbyssLandingSpecialService> abyssLandingSpecialServiceProvider;
+    private ObjectProvider<GameLocationBootstrapRuntimeBridge> runtimeBridgeProvider;
 
     @Autowired(required = false)
     void setSiegeServiceProvider(ObjectProvider<SiegeService> siegeServiceProvider) {
@@ -163,8 +163,13 @@ public class GameLocationBootstrapGateway {
         this.abyssLandingSpecialServiceProvider = abyssLandingSpecialServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setRuntimeBridgeProvider(ObjectProvider<GameLocationBootstrapRuntimeBridge> runtimeBridgeProvider) {
+        this.runtimeBridgeProvider = runtimeBridgeProvider;
+    }
+
     public void bootstrap() {
-        Util.printSection(" *** Siege & Battlefield Locations *** ");
+        runtimeBridge().printSiegeAndBattlefieldLocationsSection();
         siegeService().initSiegeLocations();
         BaseService baseService = baseService();
         baseService.initBaseLocations();
@@ -172,7 +177,7 @@ public class GameLocationBootstrapGateway {
         OutpostService outpostService = outpostService();
         outpostService.initOutpostLocations();
         outpostService.initOupostReset();
-        Util.printSection(" *** Vortex & World Boss Locations *** ");
+        runtimeBridge().printVortexAndWorldBossLocationsSection();
         VortexService vortexService = vortexService();
         vortexService.initVortex();
         vortexService.initVortexLocations();
@@ -188,7 +193,7 @@ public class GameLocationBootstrapGateway {
         SvsService svsService = svsService();
         svsService.initSvs();
         svsService.initSvsLocations();
-        Util.printSection(" *** PvP & RvR Locations *** ");
+        runtimeBridge().printPvpAndRvrLocationsSection();
         RvrService rvrService = rvrService();
         rvrService.initRvr();
         rvrService.initRvrLocations();
@@ -201,7 +206,7 @@ public class GameLocationBootstrapGateway {
         DynamicRiftService dynamicRiftService = dynamicRiftService();
         dynamicRiftService.initDynamicRift();
         dynamicRiftService.initDynamicRiftLocations();
-        Util.printSection(" *** Instance & Dungeon Locations *** ");
+        runtimeBridge().printInstanceAndDungeonLocationsSection();
         InstanceRiftService instanceRiftService = instanceRiftService();
         instanceRiftService.initInstance();
         instanceRiftService.initInstanceLocations();
@@ -223,7 +228,7 @@ public class GameLocationBootstrapGateway {
         TowerOfEternityService towerOfEternityService = towerOfEternityService();
         towerOfEternityService.initTowerOfEternity();
         towerOfEternityService.initTowerOfEternityLocation();
-        Util.printSection(" *** Abyss & Landing Locations *** ");
+        runtimeBridge().printAbyssAndLandingLocationsSection();
         abyssLandingService().initLandingLocations();
         LandingUpdateService landingUpdateService = landingUpdateService();
         landingUpdateService.initResetQuestPoints();
@@ -233,155 +238,162 @@ public class GameLocationBootstrapGateway {
 
     private SiegeService siegeService() {
         if (siegeServiceProvider == null) {
-            return SiegeService.getInstance();
+            return runtimeBridge().siegeService();
         }
-        return siegeServiceProvider.getIfAvailable(SiegeService::getInstance);
+        return siegeServiceProvider.getIfAvailable(() -> runtimeBridge().siegeService());
     }
 
     private BaseService baseService() {
         if (baseServiceProvider == null) {
-            return BaseService.getInstance();
+            return runtimeBridge().baseService();
         }
-        return baseServiceProvider.getIfAvailable(BaseService::getInstance);
+        return baseServiceProvider.getIfAvailable(() -> runtimeBridge().baseService());
     }
 
     private OutpostService outpostService() {
         if (outpostServiceProvider == null) {
-            return OutpostService.getInstance();
+            return runtimeBridge().outpostService();
         }
-        return outpostServiceProvider.getIfAvailable(OutpostService::getInstance);
+        return outpostServiceProvider.getIfAvailable(() -> runtimeBridge().outpostService());
     }
 
     private VortexService vortexService() {
         if (vortexServiceProvider == null) {
-            return VortexService.getInstance();
+            return runtimeBridge().vortexService();
         }
-        return vortexServiceProvider.getIfAvailable(VortexService::getInstance);
+        return vortexServiceProvider.getIfAvailable(() -> runtimeBridge().vortexService());
     }
 
     private BeritraService beritraService() {
         if (beritraServiceProvider == null) {
-            return BeritraService.getInstance();
+            return runtimeBridge().beritraService();
         }
-        return beritraServiceProvider.getIfAvailable(BeritraService::getInstance);
+        return beritraServiceProvider.getIfAvailable(() -> runtimeBridge().beritraService());
     }
 
     private AgentService agentService() {
         if (agentServiceProvider == null) {
-            return AgentService.getInstance();
+            return runtimeBridge().agentService();
         }
-        return agentServiceProvider.getIfAvailable(AgentService::getInstance);
+        return agentServiceProvider.getIfAvailable(() -> runtimeBridge().agentService());
     }
 
     private AnohaService anohaService() {
         if (anohaServiceProvider == null) {
-            return AnohaService.getInstance();
+            return runtimeBridge().anohaService();
         }
-        return anohaServiceProvider.getIfAvailable(AnohaService::getInstance);
+        return anohaServiceProvider.getIfAvailable(() -> runtimeBridge().anohaService());
     }
 
     private SvsService svsService() {
         if (svsServiceProvider == null) {
-            return SvsService.getInstance();
+            return runtimeBridge().svsService();
         }
-        return svsServiceProvider.getIfAvailable(SvsService::getInstance);
+        return svsServiceProvider.getIfAvailable(() -> runtimeBridge().svsService());
     }
 
     private RvrService rvrService() {
         if (rvrServiceProvider == null) {
-            return RvrService.getInstance();
+            return runtimeBridge().rvrService();
         }
-        return rvrServiceProvider.getIfAvailable(RvrService::getInstance);
+        return rvrServiceProvider.getIfAvailable(() -> runtimeBridge().rvrService());
     }
 
     private IuService iuService() {
         if (iuServiceProvider == null) {
-            return IuService.getInstance();
+            return runtimeBridge().iuService();
         }
-        return iuServiceProvider.getIfAvailable(IuService::getInstance);
+        return iuServiceProvider.getIfAvailable(() -> runtimeBridge().iuService());
     }
 
     private NightmareCircusService nightmareCircusService() {
         if (nightmareCircusServiceProvider == null) {
-            return NightmareCircusService.getInstance();
+            return runtimeBridge().nightmareCircusService();
         }
-        return nightmareCircusServiceProvider.getIfAvailable(NightmareCircusService::getInstance);
+        return nightmareCircusServiceProvider.getIfAvailable(() -> runtimeBridge().nightmareCircusService());
     }
 
     private DynamicRiftService dynamicRiftService() {
         if (dynamicRiftServiceProvider == null) {
-            return DynamicRiftService.getInstance();
+            return runtimeBridge().dynamicRiftService();
         }
-        return dynamicRiftServiceProvider.getIfAvailable(DynamicRiftService::getInstance);
+        return dynamicRiftServiceProvider.getIfAvailable(() -> runtimeBridge().dynamicRiftService());
     }
 
     private InstanceRiftService instanceRiftService() {
         if (instanceRiftServiceProvider == null) {
-            return InstanceRiftService.getInstance();
+            return runtimeBridge().instanceRiftService();
         }
-        return instanceRiftServiceProvider.getIfAvailable(InstanceRiftService::getInstance);
+        return instanceRiftServiceProvider.getIfAvailable(() -> runtimeBridge().instanceRiftService());
     }
 
     private ZorshivDredgionService zorshivDredgionService() {
         if (zorshivDredgionServiceProvider == null) {
-            return ZorshivDredgionService.getInstance();
+            return runtimeBridge().zorshivDredgionService();
         }
-        return zorshivDredgionServiceProvider.getIfAvailable(ZorshivDredgionService::getInstance);
+        return zorshivDredgionServiceProvider.getIfAvailable(() -> runtimeBridge().zorshivDredgionService());
     }
 
     private MoltenusService moltenusService() {
         if (moltenusServiceProvider == null) {
-            return MoltenusService.getInstance();
+            return runtimeBridge().moltenusService();
         }
-        return moltenusServiceProvider.getIfAvailable(MoltenusService::getInstance);
+        return moltenusServiceProvider.getIfAvailable(() -> runtimeBridge().moltenusService());
     }
 
     private RiftService riftService() {
         if (riftServiceProvider == null) {
-            return RiftService.getInstance();
+            return runtimeBridge().riftService();
         }
-        return riftServiceProvider.getIfAvailable(RiftService::getInstance);
+        return riftServiceProvider.getIfAvailable(() -> runtimeBridge().riftService());
     }
 
     private ConquestService conquestService() {
         if (conquestServiceProvider == null) {
-            return ConquestService.getInstance();
+            return runtimeBridge().conquestService();
         }
-        return conquestServiceProvider.getIfAvailable(ConquestService::getInstance);
+        return conquestServiceProvider.getIfAvailable(() -> runtimeBridge().conquestService());
     }
 
     private IdianDepthsService idianDepthsService() {
         if (idianDepthsServiceProvider == null) {
-            return IdianDepthsService.getInstance();
+            return runtimeBridge().idianDepthsService();
         }
-        return idianDepthsServiceProvider.getIfAvailable(IdianDepthsService::getInstance);
+        return idianDepthsServiceProvider.getIfAvailable(() -> runtimeBridge().idianDepthsService());
     }
 
     private TowerOfEternityService towerOfEternityService() {
         if (towerOfEternityServiceProvider == null) {
-            return TowerOfEternityService.getInstance();
+            return runtimeBridge().towerOfEternityService();
         }
-        return towerOfEternityServiceProvider.getIfAvailable(TowerOfEternityService::getInstance);
+        return towerOfEternityServiceProvider.getIfAvailable(() -> runtimeBridge().towerOfEternityService());
     }
 
     private AbyssLandingService abyssLandingService() {
         if (abyssLandingServiceProvider == null) {
-            return AbyssLandingService.getInstance();
+            return runtimeBridge().abyssLandingService();
         }
-        return abyssLandingServiceProvider.getIfAvailable(AbyssLandingService::getInstance);
+        return abyssLandingServiceProvider.getIfAvailable(() -> runtimeBridge().abyssLandingService());
     }
 
     private LandingUpdateService landingUpdateService() {
         if (landingUpdateServiceProvider == null) {
-            return LandingUpdateService.getInstance();
+            return runtimeBridge().landingUpdateService();
         }
-        return landingUpdateServiceProvider.getIfAvailable(LandingUpdateService::getInstance);
+        return landingUpdateServiceProvider.getIfAvailable(() -> runtimeBridge().landingUpdateService());
     }
 
     private AbyssLandingSpecialService abyssLandingSpecialService() {
         if (abyssLandingSpecialServiceProvider == null) {
-            return AbyssLandingSpecialService.getInstance();
+            return runtimeBridge().abyssLandingSpecialService();
         }
-        return abyssLandingSpecialServiceProvider.getIfAvailable(AbyssLandingSpecialService::getInstance);
+        return abyssLandingSpecialServiceProvider.getIfAvailable(() -> runtimeBridge().abyssLandingSpecialService());
+    }
+
+    private GameLocationBootstrapRuntimeBridge runtimeBridge() {
+        if (runtimeBridgeProvider == null) {
+            return new GameLocationBootstrapRuntimeBridge();
+        }
+        return runtimeBridgeProvider.getIfAvailable(GameLocationBootstrapRuntimeBridge::new);
     }
 }

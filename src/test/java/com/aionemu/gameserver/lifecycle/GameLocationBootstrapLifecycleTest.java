@@ -43,6 +43,7 @@ class GameLocationBootstrapLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "abyssLandingServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "landingUpdateServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "abyssLandingSpecialServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameLocationBootstrapGateway.class, "runtimeBridgeProvider"));
     }
 
     @Test
