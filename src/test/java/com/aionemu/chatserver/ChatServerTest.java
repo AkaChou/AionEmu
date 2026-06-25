@@ -1,6 +1,8 @@
 package com.aionemu.chatserver;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.service.BroadcastService;
@@ -8,6 +10,9 @@ import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.chatserver.utils.IdFactory;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -73,6 +78,15 @@ class ChatServerTest {
         startupBridge.registerShutdownHook();
 
         assertEquals(List.of("shutdownHook:get", "shutdownHook:register"), events);
+    }
+
+    @Test
+    void shutdownHookDelegatesJvmHaltToProcessBridge() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ShutdownHook.java"));
+
+        assertFalse(source.contains("Runtime.getRuntime().halt"));
+        assertTrue(source.contains("processBridge.halt(ExitCode.CODE_RESTART)"));
+        assertTrue(source.contains("processBridge.halt(ExitCode.CODE_NORMAL)"));
     }
 
     private static final class RecordingChatServerDependencies implements ChatServerDependencies {

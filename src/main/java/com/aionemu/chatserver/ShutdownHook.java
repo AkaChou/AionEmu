@@ -32,6 +32,7 @@ public class ShutdownHook extends Thread {
 
     private static final ShutdownHook instance = new ShutdownHook();
     private static final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
+    private volatile ChatProcessRuntimeBridge processBridge = new ChatProcessRuntimeBridge();
     /**
      * Indicates wether the loginserver should shut dpwn or only restart
      */
@@ -45,6 +46,17 @@ public class ShutdownHook extends Thread {
      */
     public static ShutdownHook getInstance() {
         return instance;
+    }
+
+    static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge) {
+        instance.setProcessBridge(processBridge);
+        return instance;
+    }
+
+    private void setProcessBridge(ChatProcessRuntimeBridge processBridge) {
+        if (processBridge != null) {
+            this.processBridge = processBridge;
+        }
     }
 
     /**
@@ -77,9 +89,9 @@ public class ShutdownHook extends Thread {
 
         // Do system exit
         if (restartOnly) {
-            Runtime.getRuntime().halt(ExitCode.CODE_RESTART);
+            processBridge.halt(ExitCode.CODE_RESTART);
         } else {
-            Runtime.getRuntime().halt(ExitCode.CODE_NORMAL);
+            processBridge.halt(ExitCode.CODE_NORMAL);
         }
     }
 }

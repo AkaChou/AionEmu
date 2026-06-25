@@ -10,10 +10,14 @@ import org.springframework.stereotype.Component;
 public class ChatProcessRuntimeBridge {
 
     public Thread shutdownHook() {
-        return ShutdownHook.getInstance();
+        return ShutdownHook.getInstance(this);
     }
 
     public void registerShutdownHook(Thread shutdownHook) {
         Runtime.getRuntime().addShutdownHook(shutdownHook);
+    }
+
+    public void halt(int status) {
+        Runtime.getRuntime().halt(status);
     }
 }
