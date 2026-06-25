@@ -30,9 +30,9 @@ public final class LoginProtectionServices implements DisposableBean {
     public static BannedMacManager bannedMacManager() {
         ObjectProvider<BannedMacManager> provider = bannedMacManagerProvider;
         if (provider == null) {
-            return BannedMacManager.getInstance();
+            return fallbackBannedMacManager();
         }
-        return provider.getIfAvailable(BannedMacManager::getInstance);
+        return provider.getIfAvailable(LoginProtectionServices::fallbackBannedMacManager);
     }
 
     public static LoginBannedIpService bannedIpService() {
@@ -46,17 +46,17 @@ public final class LoginProtectionServices implements DisposableBean {
     public static BruteForceProtector bruteForceProtector() {
         ObjectProvider<BruteForceProtector> provider = bruteForceProtectorProvider;
         if (provider == null) {
-            return BruteForceProtector.getInstance();
+            return fallbackBruteForceProtector();
         }
-        return provider.getIfAvailable(BruteForceProtector::getInstance);
+        return provider.getIfAvailable(LoginProtectionServices::fallbackBruteForceProtector);
     }
 
     public static FloodProtector floodProtector() {
         ObjectProvider<FloodProtector> provider = floodProtectorProvider;
         if (provider == null) {
-            return FloodProtector.getInstance();
+            return fallbackFloodProtector();
         }
-        return provider.getIfAvailable(FloodProtector::getInstance);
+        return provider.getIfAvailable(LoginProtectionServices::fallbackFloodProtector);
     }
 
     @Override
@@ -65,5 +65,24 @@ public final class LoginProtectionServices implements DisposableBean {
         bannedIpServiceProvider = null;
         bruteForceProtectorProvider = null;
         floodProtectorProvider = null;
+    }
+
+    private static BannedMacManager fallbackBannedMacManager() {
+        return Fallbacks.BANNED_MAC_MANAGER;
+    }
+
+    private static BruteForceProtector fallbackBruteForceProtector() {
+        return Fallbacks.BRUTE_FORCE_PROTECTOR;
+    }
+
+    private static FloodProtector fallbackFloodProtector() {
+        return Fallbacks.FLOOD_PROTECTOR;
+    }
+
+    private static final class Fallbacks {
+
+        private static final BannedMacManager BANNED_MAC_MANAGER = new BannedMacManager();
+        private static final BruteForceProtector BRUTE_FORCE_PROTECTOR = new BruteForceProtector();
+        private static final FloodProtector FLOOD_PROTECTOR = new FloodProtector();
     }
 }

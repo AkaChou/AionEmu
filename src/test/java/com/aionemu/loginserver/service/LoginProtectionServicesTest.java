@@ -18,7 +18,7 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 class LoginProtectionServicesTest {
 
     @Test
-    void usesSpringProvidersBeforeLegacySingletonFallbacks() {
+    void usesSpringProvidersBeforeLocalFallbacks() {
         BannedMacManager bannedMacManager = instance(BannedMacManager.class);
         LoginBannedIpService bannedIpService = new LoginBannedIpService();
         BruteForceProtector bruteForceProtector = new BruteForceProtector();
@@ -38,6 +38,18 @@ class LoginProtectionServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void protectionBridgeUsesLocalFallbacksInsteadOfDirectLegacySingletons() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/service/LoginProtectionServices.java"));
+
+        assertFalse(source.contains("BannedMacManager.getInstance()"));
+        assertFalse(source.contains("BruteForceProtector.getInstance()"));
+        assertFalse(source.contains("FloodProtector.getInstance()"));
+        assertTrue(source.contains("Fallbacks.BANNED_MAC_MANAGER"));
+        assertTrue(source.contains("Fallbacks.BRUTE_FORCE_PROTECTOR"));
+        assertTrue(source.contains("Fallbacks.FLOOD_PROTECTOR"));
     }
 
     @Test
