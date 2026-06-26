@@ -229,10 +229,16 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 
 ## Remaining Tasks
 
-- [ ] Continue reducing `GameLegacyServiceBridgeConfiguration` legacy singleton beans; refresh the exact `return Xxx.getInstance();` count before each slice. Current remaining core beans: `ThreadPoolManager`, `DataManager`, `IDFactory`, `World`, `LoginServer`, `ChatServer`.
+- [ ] Continue reducing `GameLegacyServiceBridgeConfiguration` legacy singleton beans; refresh the exact `return Xxx.getInstance();` count before each slice.
+- [ ] Use 10-service batches for similar simple `GameLegacyServiceBridgeConfiguration` bean reductions. Do not split similar simple conversions into three-service commits; only use a smaller commit when fewer than 10 same-kind simple candidates remain.
 - [ ] Treat the remaining six core beans as dedicated ownership refactors instead of ordinary `new` conversions: avoid duplicate thread pools, duplicate static-data loads, duplicate world state, duplicate ID allocation state, or duplicate login/chat server transports.
+- [ ] Migrate `ThreadPoolManager` ownership safely so Spring owns the runtime thread-pool bean without creating duplicate executor pools or duplicate purge scheduling.
+- [ ] Migrate `DataManager` ownership safely so Spring owns static-data initialization without duplicate loads, static-field races, or cache regressions.
+- [ ] Migrate `IDFactory` ownership safely so Spring owns ID allocation state without duplicate used-ID locking or split BitSet state.
+- [ ] Migrate `World` ownership safely so Spring owns world containers and map state without creating a second in-memory world.
+- [ ] Migrate `LoginServer` ownership safely so Spring owns login-server state and lifecycle without duplicate request maps or duplicate login transport connections.
+- [ ] Migrate `ChatServer` ownership safely so Spring owns chat-server state and lifecycle without duplicate chat connection state or duplicate connector scheduling.
 - [ ] Replace each reduced legacy bean with Spring-instantiable construction only when the constructor and initialization behavior are safe under lazy Spring ownership.
-- [ ] Group similar simple `GameLegacyServiceBridgeConfiguration` bean reductions into roughly 10-service narrow commits instead of committing each service separately.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage and focused tests.
 - [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components with partial-startup cleanup coverage.
 - [ ] Defer tests for simple mechanical Spring-migration slices; run one final unified test pass before declaring the migration complete.
