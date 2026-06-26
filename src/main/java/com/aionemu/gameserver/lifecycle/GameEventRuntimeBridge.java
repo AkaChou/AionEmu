@@ -71,37 +71,37 @@ public class GameEventRuntimeBridge {
 
     public EventService eventService() {
         if (eventServiceProvider == null) {
-            return EventService.getInstance();
+            return GameEventRuntimeFallbacks.eventService();
         }
-        return eventServiceProvider.getIfAvailable(EventService::getInstance);
+        return eventServiceProvider.getIfAvailable(GameEventRuntimeFallbacks::eventService);
     }
 
     public PlayerEventService playerEventService() {
         if (playerEventServiceProvider == null) {
-            return PlayerEventService.getInstance();
+            return GameEventRuntimeFallbacks.playerEventService();
         }
-        return playerEventServiceProvider.getIfAvailable(PlayerEventService::getInstance);
+        return playerEventServiceProvider.getIfAvailable(GameEventRuntimeFallbacks::playerEventService);
     }
 
     public CrazyDaevaService crazyDaevaService() {
         if (crazyDaevaServiceProvider == null) {
-            return CrazyDaevaService.getInstance();
+            return GameEventRuntimeFallbacks.crazyDaevaService();
         }
-        return crazyDaevaServiceProvider.getIfAvailable(CrazyDaevaService::getInstance);
+        return crazyDaevaServiceProvider.getIfAvailable(GameEventRuntimeFallbacks::crazyDaevaService);
     }
 
     public AbyssRankUpdateService abyssRankUpdateService() {
         if (abyssRankUpdateServiceProvider == null) {
-            return AbyssRankUpdateService.getInstance();
+            return GameEventRuntimeFallbacks.abyssRankUpdateService();
         }
-        return abyssRankUpdateServiceProvider.getIfAvailable(AbyssRankUpdateService::getInstance);
+        return abyssRankUpdateServiceProvider.getIfAvailable(GameEventRuntimeFallbacks::abyssRankUpdateService);
     }
 
     public PacketBroadcaster packetBroadcaster() {
         if (packetBroadcasterProvider == null) {
-            return PacketBroadcaster.getInstance();
+            return GameEventRuntimeFallbacks.packetBroadcaster();
         }
-        return packetBroadcasterProvider.getIfAvailable(PacketBroadcaster::getInstance);
+        return packetBroadcasterProvider.getIfAvailable(GameEventRuntimeFallbacks::packetBroadcaster);
     }
 
     public void spawnTemporarySpawns() {

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.services.EventService;
@@ -7,6 +8,9 @@ import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -36,6 +40,17 @@ class GameEventRuntimeBridgeTest {
         assertSame(crazyDaevaService, runtimeBridge.crazyDaevaService());
         assertSame(abyssRankUpdateService, runtimeBridge.abyssRankUpdateService());
         assertSame(packetBroadcaster, runtimeBridge.packetBroadcaster());
+    }
+
+    @Test
+    void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameEventRuntimeBridge.java"));
+
+        assertFalse(source.contains("EventService.getInstance()"));
+        assertFalse(source.contains("PlayerEventService.getInstance()"));
+        assertFalse(source.contains("CrazyDaevaService.getInstance()"));
+        assertFalse(source.contains("AbyssRankUpdateService.getInstance()"));
+        assertFalse(source.contains("PacketBroadcaster.getInstance()"));
     }
 
     private <T> T instance(Class<T> type) {
