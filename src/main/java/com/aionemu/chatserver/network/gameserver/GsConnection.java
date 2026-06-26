@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.chatserver.network.factories.GsPacketHandlerFactory;
 import com.aionemu.chatserver.service.ChatCoreServices;
 import com.aionemu.commons.network.AConnection;
+import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import com.aionemu.commons.network.ConnectionTransport;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 
 /**
  * @author KID
@@ -55,7 +55,7 @@ public class GsConnection extends AConnection {
         GsClientPacket pck = GsPacketHandlerFactory.handle(data, this);
 
         if (pck != null && pck.read()) {
-            ThreadPoolManager.getInstance().execute(pck);
+            CommonsNetworkThreadPoolServices.threadPoolManager().execute(pck);
         }
 
         return true;

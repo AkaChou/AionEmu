@@ -57,6 +57,14 @@ class ChatCoreServicesTest {
         assertTrue(source.contains("this(ChatCoreServices.broadcastService())"));
     }
 
+    @Test
+    void gameServerConnectionUsesThreadPoolBridgeInsteadOfDirectSingleton() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/network/gameserver/GsConnection.java"));
+
+        assertFalse(source.contains("ThreadPoolManager.getInstance().execute(pck)"));
+        assertTrue(source.contains("CommonsNetworkThreadPoolServices.threadPoolManager().execute(pck)"));
+    }
+
     private static void assertBridged(String path) throws IOException {
         String source = Files.readString(Path.of(path));
 
