@@ -130,7 +130,6 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import javolution.util.FastMap;
 
-import javax.annotation.Nonnull;
 
 /**
  * This class is for controlling players.
@@ -653,7 +652,7 @@ public class PlayerController extends CreatureController<Player> {
 		sendDieFromCreature(getOwner(), true);
 	}
 
-	private void sendDieFromCreature(@Nonnull Creature lastAttacker, boolean showPacket) {
+	private void sendDieFromCreature(Creature lastAttacker, boolean showPacket) {
 		Player player = this.getOwner();
 		PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.DIE, 0, player.equals(lastAttacker) ? 0 : lastAttacker.getObjectId()), true);
 		if (showPacket) {

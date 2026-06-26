@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
 
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
@@ -227,7 +226,7 @@ public class SiegeService {
 		Map<Runnable, JobDetail> siegeStartRunables = CronService.getInstance().getRunnables();
 		siegeStartRunables = Maps.filterKeys(siegeStartRunables, new Predicate<Runnable>() {
 			@Override
-			public boolean apply(@Nullable Runnable runnable) {
+			public boolean apply(Runnable runnable) {
 				return (runnable instanceof SiegeStartRunnable);
 			}
 		});
@@ -327,7 +326,7 @@ public class SiegeService {
 	public Map<Integer, ArtifactLocation> getStandaloneArtifacts() {
 		return Maps.filterValues(artifacts, new Predicate<ArtifactLocation>() {
 			@Override
-			public boolean apply(@Nullable ArtifactLocation input) {
+			public boolean apply(ArtifactLocation input) {
 				return input != null && input.isStandAlone();
 			}
 		});
@@ -336,7 +335,7 @@ public class SiegeService {
 	public Map<Integer, ArtifactLocation> getFortressArtifacts() {
 		return Maps.filterValues(artifacts, new Predicate<ArtifactLocation>() {
 			@Override
-			public boolean apply(@Nullable ArtifactLocation input) {
+			public boolean apply(ArtifactLocation input) {
 				return input != null && input.getOwningFortress() != null;
 			}
 		});

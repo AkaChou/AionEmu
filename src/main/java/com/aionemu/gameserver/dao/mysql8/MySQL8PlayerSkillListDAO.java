@@ -13,7 +13,6 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,21 +39,21 @@ public class MySQL8PlayerSkillListDAO extends PlayerSkillListDAO {
 
     private static final Predicate<PlayerSkillEntry> skillsToInsertPredicate = new Predicate<PlayerSkillEntry>() {
         @Override
-        public boolean apply(@Nullable PlayerSkillEntry input) {
+        public boolean apply(PlayerSkillEntry input) {
             return input != null && PersistentState.NEW == input.getPersistentState();
         }
     };
 
     private static final Predicate<PlayerSkillEntry> skillsToUpdatePredicate = new Predicate<PlayerSkillEntry>() {
         @Override
-        public boolean apply(@Nullable PlayerSkillEntry input) {
+        public boolean apply(PlayerSkillEntry input) {
             return input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
         }
     };
 
     private static final Predicate<PlayerSkillEntry> skillsToDeletePredicate = new Predicate<PlayerSkillEntry>() {
         @Override
-        public boolean apply(@Nullable PlayerSkillEntry input) {
+        public boolean apply(PlayerSkillEntry input) {
             return input != null && PersistentState.DELETED == input.getPersistentState();
         }
     };

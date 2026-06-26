@@ -13,7 +13,6 @@ import com.google.common.collect.Collections2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.Collection;
 
@@ -37,21 +36,21 @@ public class MySQL8PlayerQuestListDAO extends PlayerQuestListDAO {
 
 	private static final Predicate<QuestState> questsToAddPredicate = new Predicate<QuestState>() {
 		@Override
-		public boolean apply(@Nullable QuestState input) {
+		public boolean apply(QuestState input) {
 			return input != null && PersistentState.NEW == input.getPersistentState();
 		}
 	};
 
 	private static final Predicate<QuestState> questsToUpdatePredicate = new Predicate<QuestState>() {
 		@Override
-		public boolean apply(@Nullable QuestState input) {
+		public boolean apply(QuestState input) {
 			return input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
 		}
 	};
 
 	private static final Predicate<QuestState> questsToDeletePredicate = new Predicate<QuestState>() {
 		@Override
-		public boolean apply(@Nullable QuestState input) {
+		public boolean apply(QuestState input) {
 			return input != null && PersistentState.DELETED == input.getPersistentState();
 		}
 	};

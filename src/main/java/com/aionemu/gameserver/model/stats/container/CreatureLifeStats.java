@@ -20,7 +20,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +73,7 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		return alreadyDead;
 	}
 
-	public int reduceHp(int value, @Nonnull Creature attacker) {
+	public int reduceHp(int value, Creature attacker) {
 		if (attacker == null) {
 			throw new IllegalArgumentException("attacker");
 		}

@@ -13,7 +13,6 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,21 +32,21 @@ public class MySQL8PlayerStigmasEquippedDAO extends PlayerStigmasEquippedDAO {
     
     private static final Predicate<EquippedStigmasEntry> itemsToInsertPredicate = new Predicate<EquippedStigmasEntry>() {
         @Override
-        public boolean apply(@Nullable EquippedStigmasEntry input) {
+        public boolean apply(EquippedStigmasEntry input) {
             return input != null && PersistentState.NEW == input.getPersistentState();
         }
     };
     
     private static final Predicate<EquippedStigmasEntry> itemsToUpdatePredicate = new Predicate<EquippedStigmasEntry>() {
         @Override
-        public boolean apply(@Nullable EquippedStigmasEntry input) {
+        public boolean apply(EquippedStigmasEntry input) {
             return input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
         }
     };
     
     private static final Predicate<EquippedStigmasEntry> itemsToDeletePredicate = new Predicate<EquippedStigmasEntry>() {
         @Override
-        public boolean apply(@Nullable EquippedStigmasEntry input) {
+        public boolean apply(EquippedStigmasEntry input) {
             return input != null && PersistentState.DELETED == input.getPersistentState();
         }
     };

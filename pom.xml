@@ -105,11 +105,6 @@
                 <version>${slf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>3.0.2</version>
-            </dependency>
-            <dependency>
                 <groupId>net.sf.trove4j</groupId>
                 <artifactId>trove4j</artifactId>
                 <version>3.0.3</version>
@@ -205,10 +200,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
         </dependency>
         <dependency>
             <groupId>net.sf.trove4j</groupId>
