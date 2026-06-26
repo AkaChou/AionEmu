@@ -17,6 +17,7 @@ import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
+import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.BoostEventService;
@@ -36,19 +37,23 @@ import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
+import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
+import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.services.toypet.MinionService;
+import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
@@ -727,5 +732,35 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public SystemMailService systemMailService() {
         return new SystemMailService();
+    }
+
+    @Bean
+    @Lazy
+    public BonusService bonusService() {
+        return new BonusService();
+    }
+
+    @Bean
+    @Lazy
+    public PetService petService() {
+        return new PetService();
+    }
+
+    @Bean
+    @Lazy
+    public ArcadeUpgradeService arcadeUpgradeService() {
+        return new ArcadeUpgradeService();
+    }
+
+    @Bean
+    @Lazy
+    public AtreianBestiaryService atreianBestiaryService() {
+        return new AtreianBestiaryService();
+    }
+
+    @Bean
+    @Lazy
+    public CoalescenceService coalescenceService() {
+        return new CoalescenceService();
     }
 }

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.cache.HTMLCache;
@@ -46,6 +47,7 @@ import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
+import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.BoostEventService;
@@ -65,16 +67,20 @@ import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
+import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
+import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.toypet.MinionService;
+import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
@@ -162,6 +168,11 @@ class GameServiceProviderCompatibilityTest {
         RepurchaseService repurchaseService = instance(RepurchaseService.class);
         DropDistributionService dropDistributionService = instance(DropDistributionService.class);
         SystemMailService systemMailService = instance(SystemMailService.class);
+        BonusService bonusService = instance(BonusService.class);
+        PetService petService = instance(PetService.class);
+        ArcadeUpgradeService arcadeUpgradeService = instance(ArcadeUpgradeService.class);
+        AtreianBestiaryService atreianBestiaryService = instance(AtreianBestiaryService.class);
+        CoalescenceService coalescenceService = instance(CoalescenceService.class);
         HousingBidService housingBidService = instance(HousingBidService.class);
         MaintenanceTask maintenanceTask = instance(MaintenanceTask.class);
         TownService townService = instance(TownService.class);
@@ -245,6 +256,11 @@ class GameServiceProviderCompatibilityTest {
             RepurchaseService.setInstanceProvider(provider(RepurchaseService.class, repurchaseService));
             DropDistributionService.setInstanceProvider(provider(DropDistributionService.class, dropDistributionService));
             SystemMailService.setInstanceProvider(provider(SystemMailService.class, systemMailService));
+            BonusService.setInstanceProvider(provider(BonusService.class, bonusService));
+            PetService.setInstanceProvider(provider(PetService.class, petService));
+            ArcadeUpgradeService.setInstanceProvider(provider(ArcadeUpgradeService.class, arcadeUpgradeService));
+            AtreianBestiaryService.setInstanceProvider(provider(AtreianBestiaryService.class, atreianBestiaryService));
+            CoalescenceService.setInstanceProvider(provider(CoalescenceService.class, coalescenceService));
             HousingBidService.setInstanceProvider(provider(HousingBidService.class, housingBidService));
             MaintenanceTask.setInstanceProvider(provider(MaintenanceTask.class, maintenanceTask));
             TownService.setInstanceProvider(provider(TownService.class, townService));
@@ -327,6 +343,11 @@ class GameServiceProviderCompatibilityTest {
             assertSame(repurchaseService, RepurchaseService.getInstance());
             assertSame(dropDistributionService, DropDistributionService.getInstance());
             assertSame(systemMailService, SystemMailService.getInstance());
+            assertSame(bonusService, BonusService.getInstance());
+            assertSame(petService, PetService.getInstance());
+            assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
+            assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
+            assertSame(coalescenceService, CoalescenceService.getInstance());
             assertSame(housingBidService, HousingBidService.getInstance());
             assertSame(maintenanceTask, MaintenanceTask.getInstance());
             assertSame(townService, TownService.getInstance());
@@ -409,6 +430,11 @@ class GameServiceProviderCompatibilityTest {
             RepurchaseService.setInstanceProvider(null);
             DropDistributionService.setInstanceProvider(null);
             SystemMailService.setInstanceProvider(null);
+            BonusService.setInstanceProvider(null);
+            PetService.setInstanceProvider(null);
+            ArcadeUpgradeService.setInstanceProvider(null);
+            AtreianBestiaryService.setInstanceProvider(null);
+            CoalescenceService.setInstanceProvider(null);
             HousingBidService.setInstanceProvider(null);
             MaintenanceTask.setInstanceProvider(null);
             TownService.setInstanceProvider(null);
@@ -422,6 +448,71 @@ class GameServiceProviderCompatibilityTest {
             HallOfTenacityService.setInstanceProvider(null);
             GrandArenaTrainingCampService.setInstanceProvider(null);
             IDRunService.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void gameFeatureServicesRegistersAndClearsPlayerActionProviders() throws Exception {
+        BonusService bonusService = instance(BonusService.class);
+        PetService petService = instance(PetService.class);
+        ArcadeUpgradeService arcadeUpgradeService = instance(ArcadeUpgradeService.class);
+        AtreianBestiaryService atreianBestiaryService = instance(AtreianBestiaryService.class);
+        CoalescenceService coalescenceService = instance(CoalescenceService.class);
+
+        GameFeatureServices featureServices = new GameFeatureServices(
+                provider(DisputeLandService.class, instance(DisputeLandService.class)),
+                provider(DredgionService2.class, instance(DredgionService2.class)),
+                provider(AsyunatarService.class, instance(AsyunatarService.class)),
+                provider(PlayerLimitService.class, instance(PlayerLimitService.class)),
+                provider(NpcShoutsService.class, instance(NpcShoutsService.class)),
+                provider(ShieldService.class, instance(ShieldService.class)),
+                provider(RewardService.class, instance(RewardService.class)),
+                provider(WeddingService.class, instance(WeddingService.class)),
+                provider(VeteranRewardsService.class, instance(VeteranRewardsService.class)),
+                provider(ProtectorConquerorService.class, instance(ProtectorConquerorService.class)),
+                provider(FFAService.class, instance(FFAService.class)),
+                provider(LadderService.class, instance(LadderService.class)),
+                provider(BGService.class, instance(BGService.class)),
+                provider(BanditService.class, instance(BanditService.class)),
+                provider(AStationService.class, instance(AStationService.class)),
+                provider(F2pService.class, instance(F2pService.class)),
+                provider(WindyGorgeService.class, instance(WindyGorgeService.class)),
+                provider(MotionLoggingService.class, instance(MotionLoggingService.class)),
+                provider(StaticDoorService.class, instance(StaticDoorService.class)),
+                provider(KiskService.class, instance(KiskService.class)),
+                provider(RepurchaseService.class, instance(RepurchaseService.class)),
+                provider(DropDistributionService.class, instance(DropDistributionService.class)),
+                provider(SystemMailService.class, instance(SystemMailService.class)),
+                provider(BonusService.class, bonusService),
+                provider(PetService.class, petService),
+                provider(ArcadeUpgradeService.class, arcadeUpgradeService),
+                provider(AtreianBestiaryService.class, atreianBestiaryService),
+                provider(CoalescenceService.class, coalescenceService));
+
+        try {
+            assertSame(bonusService, BonusService.getInstance());
+            assertSame(petService, PetService.getInstance());
+            assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
+            assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
+            assertSame(coalescenceService, CoalescenceService.getInstance());
+
+            featureServices.destroy();
+            featureServices = null;
+
+            assertNotSame(bonusService, BonusService.getInstance());
+            assertNotSame(petService, PetService.getInstance());
+            assertNotSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
+            assertNotSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
+            assertNotSame(coalescenceService, CoalescenceService.getInstance());
+        } finally {
+            if (featureServices != null) {
+                featureServices.destroy();
+            }
+            BonusService.setInstanceProvider(null);
+            PetService.setInstanceProvider(null);
+            ArcadeUpgradeService.setInstanceProvider(null);
+            AtreianBestiaryService.setInstanceProvider(null);
+            CoalescenceService.setInstanceProvider(null);
         }
     }
 

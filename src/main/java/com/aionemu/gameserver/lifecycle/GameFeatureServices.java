@@ -13,15 +13,20 @@ import com.aionemu.gameserver.services.StaticDoorService;
 import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.services.WindyGorgeService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
+import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
+import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
+import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.services.reward.RewardService;
+import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectProvider;
@@ -52,7 +57,12 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<KiskService> kiskServiceProvider,
             ObjectProvider<RepurchaseService> repurchaseServiceProvider,
             ObjectProvider<DropDistributionService> dropDistributionServiceProvider,
-            ObjectProvider<SystemMailService> systemMailServiceProvider) {
+            ObjectProvider<SystemMailService> systemMailServiceProvider,
+            ObjectProvider<BonusService> bonusServiceProvider,
+            ObjectProvider<PetService> petServiceProvider,
+            ObjectProvider<ArcadeUpgradeService> arcadeUpgradeServiceProvider,
+            ObjectProvider<AtreianBestiaryService> atreianBestiaryServiceProvider,
+            ObjectProvider<CoalescenceService> coalescenceServiceProvider) {
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
         DredgionService2.setInstanceProvider(dredgionServiceProvider);
         AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
@@ -76,6 +86,11 @@ public final class GameFeatureServices implements DisposableBean {
         RepurchaseService.setInstanceProvider(repurchaseServiceProvider);
         DropDistributionService.setInstanceProvider(dropDistributionServiceProvider);
         SystemMailService.setInstanceProvider(systemMailServiceProvider);
+        BonusService.setInstanceProvider(bonusServiceProvider);
+        PetService.setInstanceProvider(petServiceProvider);
+        ArcadeUpgradeService.setInstanceProvider(arcadeUpgradeServiceProvider);
+        AtreianBestiaryService.setInstanceProvider(atreianBestiaryServiceProvider);
+        CoalescenceService.setInstanceProvider(coalescenceServiceProvider);
     }
 
     @Override
@@ -103,5 +118,10 @@ public final class GameFeatureServices implements DisposableBean {
         RepurchaseService.setInstanceProvider(null);
         DropDistributionService.setInstanceProvider(null);
         SystemMailService.setInstanceProvider(null);
+        BonusService.setInstanceProvider(null);
+        PetService.setInstanceProvider(null);
+        ArcadeUpgradeService.setInstanceProvider(null);
+        AtreianBestiaryService.setInstanceProvider(null);
+        CoalescenceService.setInstanceProvider(null);
     }
 }

@@ -20,6 +20,7 @@ import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
+import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
@@ -39,7 +40,9 @@ import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
+import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.LunaShopService;
@@ -49,6 +52,7 @@ import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
+import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
@@ -56,6 +60,7 @@ import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.services.toypet.MinionService;
+import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
@@ -597,6 +602,27 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "repurchaseService");
             assertLazy(context.getBeanFactory(), "dropDistributionService");
             assertLazy(context.getBeanFactory(), "systemMailService");
+        }
+    }
+
+    @Test
+    void exposesPlayerActionCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("bonusService"));
+            assertTrue(context.containsBeanDefinition("petService"));
+            assertTrue(context.containsBeanDefinition("arcadeUpgradeService"));
+            assertTrue(context.containsBeanDefinition("atreianBestiaryService"));
+            assertTrue(context.containsBeanDefinition("coalescenceService"));
+            assertEquals(BonusService.class, context.getType("bonusService"));
+            assertEquals(PetService.class, context.getType("petService"));
+            assertEquals(ArcadeUpgradeService.class, context.getType("arcadeUpgradeService"));
+            assertEquals(AtreianBestiaryService.class, context.getType("atreianBestiaryService"));
+            assertEquals(CoalescenceService.class, context.getType("coalescenceService"));
+            assertLazy(context.getBeanFactory(), "bonusService");
+            assertLazy(context.getBeanFactory(), "petService");
+            assertLazy(context.getBeanFactory(), "arcadeUpgradeService");
+            assertLazy(context.getBeanFactory(), "atreianBestiaryService");
+            assertLazy(context.getBeanFactory(), "coalescenceService");
         }
     }
 

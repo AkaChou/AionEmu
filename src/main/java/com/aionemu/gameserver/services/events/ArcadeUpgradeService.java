@@ -18,6 +18,8 @@ package com.aionemu.gameserver.services.events;
 
 import java.util.List;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -36,6 +38,7 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
  * @author Rinzler (Encom)
  */
 public class ArcadeUpgradeService {
+	private static volatile ObjectProvider<ArcadeUpgradeService> instanceProvider;
 	private final int frenzyTime = 90;
 
 	public ArcadeUpgradeService() {
@@ -82,7 +85,15 @@ public class ArcadeUpgradeService {
 	}
 
 	public static ArcadeUpgradeService getInstance() {
+		ObjectProvider<ArcadeUpgradeService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ArcadeUpgradeService> provider) {
+		instanceProvider = provider;
 	}
 
 	public void closeWindow(Player player) {
