@@ -250,6 +250,13 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: reached `=== Server initialization COMPLETE ===`.
   - Evidence log: `/tmp/aion-boot-smoke-log.22n1Id`; temp home: `/tmp/aion-boot-smoke.97YOiQ`.
   - Observed Netty listeners on `*:9014`, `*:2106`, and `*:7777`; chat disabled by boot configuration.
+- Chat-enabled Netty Spring Boot smoke:
+  - Command shape: `rtk proxy sh -c 'JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-Daion.home=$home" -Dspring-boot.run.arguments="--aion.services.chat.enabled=true --aion.services.transport.mode=netty --aion.game.startup.progress.enabled=false --aion.legacy.game.property.gameserver.geodata.enable=false --aion.legacy.game.property.gameserver.geo.npc.move=false --aion.legacy.game.property.gameserver.geo.npc.aggro=false"'`.
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-chat-smoke-log.i0l9rI`; temp home: `/tmp/aion-chat-smoke.cPPLOM`.
+  - Observed Netty listeners on `*:9014`, `*:2106`, `127.0.0.1:10241`, `127.0.0.1:9021`, and `*:7777`; game connected to ChatServer over Netty.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0.
 - Database schema verification:
   - `al_server_gs` has 98 tables.
   - `al_server_ls` has 10 tables.
@@ -263,6 +270,6 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components with partial-startup cleanup coverage.
 - [ ] Defer tests for simple mechanical Spring-migration slices; run one final unified test pass before declaring the migration complete.
 - [x] Run focused boot/runtime smoke checks after larger startup or behavior-changing slices, including login + game with temporary `aion.home`, Netty transport, and chat disabled by default.
-- [ ] Run chat-enabled smoke after chat-affecting slices to preserve optional chat startup and game-side chat connector behavior.
+- [x] Run chat-enabled smoke after chat-affecting slices to preserve optional chat startup and game-side chat connector behavior.
 - [ ] Validate full client protocol parity after the structural migration, covering login, character entry, game networking, chat-enabled mode, shutdown/restart requests, and representative gameplay flows.
 - [ ] Keep the migration status evidence current by appending focused test commands, smoke commands, and observed results for each committed slice.
