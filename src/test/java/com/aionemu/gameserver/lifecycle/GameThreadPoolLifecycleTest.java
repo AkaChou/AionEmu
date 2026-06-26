@@ -2,14 +2,20 @@ package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class GameThreadPoolLifecycleTest {
+
+    private final ObjenesisStd objenesis = new ObjenesisStd();
 
     @Test
     void usesThreadPoolGatewayCollaborator() {
@@ -24,6 +30,19 @@ class GameThreadPoolLifecycleTest {
     @Test
     void threadPoolGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
         assertEquals(ObjectProvider.class, fieldType(GameThreadPoolGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
+    void threadPoolSingletonAccessorUsesSpringProviderBeforeLegacyFallback() {
+        ThreadPoolManager threadPoolManager = objenesis.newInstance(ThreadPoolManager.class);
+
+        try {
+            ThreadPoolManager.setInstanceProvider(provider(ThreadPoolManager.class, threadPoolManager));
+
+            assertSame(threadPoolManager, ThreadPoolManager.getInstance());
+        } finally {
+            ThreadPoolManager.setInstanceProvider(null);
+        }
     }
 
     @Test
@@ -72,6 +91,12 @@ class GameThreadPoolLifecycleTest {
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
         }
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
     }
 
     private static final class RecordingGameThreadPoolGateway extends GameThreadPoolGateway {

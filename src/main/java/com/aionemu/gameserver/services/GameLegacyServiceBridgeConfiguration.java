@@ -232,7 +232,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public ThreadPoolManager threadPoolManager() {
-        return ThreadPoolManager.getInstance();
+        return new ThreadPoolManager();
     }
 
     @Bean

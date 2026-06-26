@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadUncaughtExceptionHandler;
 import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
@@ -40,12 +41,13 @@ public final class ThreadPoolManager {
 	private static final Logger log = LoggerFactory.getLogger(ThreadPoolManager.class);
 	public static final long MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING = 5000;
 	private static final long MAX_DELAY = TimeUnit.NANOSECONDS.toMillis(Long.MAX_VALUE - System.nanoTime()) / 2;
+	private static volatile ObjectProvider<ThreadPoolManager> instanceProvider;
 	private final ScheduledThreadPoolExecutor scheduledPool;
 	private final ThreadPoolExecutor instantPool;
 	private final ThreadPoolExecutor longRunningPool;
 	private final ForkJoinPool workStealingPool;
 
-	private ThreadPoolManager() {
+	public ThreadPoolManager() {
 		final int instantPoolSize = Math.max(1, ThreadConfig.THREAD_POOL_SIZE)
 				* Runtime.getRuntime().availableProcessors();
 		instantPool = new ThreadPoolExecutor(instantPoolSize, instantPoolSize, 0, TimeUnit.SECONDS,
@@ -237,6 +239,14 @@ public final class ThreadPoolManager {
 	}
 
 	public static ThreadPoolManager getInstance() {
-		return SingletonHolder.INSTANCE;
+		ObjectProvider<ThreadPoolManager> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ThreadPoolManager> instanceProvider) {
+		ThreadPoolManager.instanceProvider = instanceProvider;
 	}
 }
