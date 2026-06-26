@@ -76,7 +76,10 @@ import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
+import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
+import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
@@ -89,6 +92,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import com.aionemu.gameserver.world.zone.ZoneService;
+import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import java.text.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -940,5 +944,29 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     public AbyssRankingCache abyssRankingCache() {
         return new AbyssRankingCache();
+    }
+
+    @Bean
+    @Lazy
+    public MovementNotifyTask movementNotifyTask() {
+        return new MovementNotifyTask();
+    }
+
+    @Bean
+    @Lazy
+    public MoveTaskManager moveTaskManager() {
+        return new MoveTaskManager();
+    }
+
+    @Bean
+    @Lazy
+    public PlayerMoveTaskManager playerMoveTaskManager() {
+        return new PlayerMoveTaskManager();
+    }
+
+    @Bean
+    @Lazy
+    public ZoneUpdateService zoneUpdateService() {
+        return new ZoneUpdateService();
     }
 }

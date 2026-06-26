@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -36,6 +38,7 @@ import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
 import com.aionemu.gameserver.world.knownlist.VisitorWithOwner;
 
 public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature> {
+	private static volatile ObjectProvider<MovementNotifyTask> instanceProvider;
 	private static Map<Integer, int[]> moveBroadcastCounts = new HashMap<Integer, int[]>();
 
 	static {
@@ -50,7 +53,15 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	}
 
 	public static MovementNotifyTask getInstance() {
+		ObjectProvider<MovementNotifyTask> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<MovementNotifyTask> provider) {
+		instanceProvider = provider;
 	}
 
 	private final MoveNotifier MOVE_NOTIFIER = new MoveNotifier();

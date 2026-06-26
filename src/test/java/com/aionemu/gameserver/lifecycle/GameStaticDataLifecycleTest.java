@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class GameStaticDataLifecycleTest {
 
@@ -29,9 +30,24 @@ class GameStaticDataLifecycleTest {
     }
 
     @Test
+    void staticDataLifecycleInitializesMovementLoopsAfterStaticData() {
+        AtomicInteger loads = new AtomicInteger();
+        AtomicInteger movementLoops = new AtomicInteger();
+        GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, null));
+        lifecycle.setMovementLoopGatewayProvider(provider(GameMovementLoopGateway.class, new RecordingGameMovementLoopGateway(movementLoops)));
+
+        lifecycle.start();
+        lifecycle.start();
+
+        assertEquals(1, loads.get());
+        assertEquals(1, movementLoops.get());
+    }
+
+    @Test
     void startLoadsStaticDataOnceAndRecordsLoadTime() {
         AtomicInteger loads = new AtomicInteger();
         GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, null));
+        lifecycle.setMovementLoopGatewayProvider(provider(GameMovementLoopGateway.class, new RecordingGameMovementLoopGateway(new AtomicInteger())));
 
         lifecycle.start();
         lifecycle.start();
@@ -47,6 +63,7 @@ class GameStaticDataLifecycleTest {
         AtomicInteger loads = new AtomicInteger();
         IllegalStateException failure = new IllegalStateException("static data failed");
         GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, failure));
+        lifecycle.setMovementLoopGatewayProvider(provider(GameMovementLoopGateway.class, new RecordingGameMovementLoopGateway(new AtomicInteger())));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -77,6 +94,26 @@ class GameStaticDataLifecycleTest {
                 throw firstFailure;
             }
         }
+    }
+
+    private static final class RecordingGameMovementLoopGateway extends GameMovementLoopGateway {
+
+        private final AtomicInteger starts;
+
+        private RecordingGameMovementLoopGateway(AtomicInteger starts) {
+            this.starts = starts;
+        }
+
+        @Override
+        public void initialize() {
+            starts.incrementAndGet();
+        }
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
     }
 
     private static Class<?> fieldType(String name) {

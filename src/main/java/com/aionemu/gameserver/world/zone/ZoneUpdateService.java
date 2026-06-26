@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.world.zone;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
@@ -24,8 +26,9 @@ import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
  * @author ATracer
  */
 public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature> {
+	private static volatile ObjectProvider<ZoneUpdateService> instanceProvider;
 
-	private ZoneUpdateService() {
+	public ZoneUpdateService() {
 		super(500);
 	}
 
@@ -43,7 +46,15 @@ public class ZoneUpdateService extends AbstractFIFOPeriodicTaskManager<Creature>
 	}
 
 	public static ZoneUpdateService getInstance() {
+		ObjectProvider<ZoneUpdateService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ZoneUpdateService> provider) {
+		instanceProvider = provider;
 	}
 
 	@SuppressWarnings("synthetic-access")

@@ -85,7 +85,10 @@ import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
+import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
+import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
@@ -96,6 +99,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import com.aionemu.gameserver.world.zone.ZoneService;
+import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -759,6 +763,24 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEager(context.getBeanFactory(), "pvpService");
             assertEager(context.getBeanFactory(), "autoGroupService");
             assertEager(context.getBeanFactory(), "abyssRankingCache");
+        }
+    }
+
+    @Test
+    void exposesMovementLoopServicesAsPhaseLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("movementNotifyTask"));
+            assertTrue(context.containsBeanDefinition("moveTaskManager"));
+            assertTrue(context.containsBeanDefinition("playerMoveTaskManager"));
+            assertTrue(context.containsBeanDefinition("zoneUpdateService"));
+            assertEquals(MovementNotifyTask.class, context.getType("movementNotifyTask"));
+            assertEquals(MoveTaskManager.class, context.getType("moveTaskManager"));
+            assertEquals(PlayerMoveTaskManager.class, context.getType("playerMoveTaskManager"));
+            assertEquals(ZoneUpdateService.class, context.getType("zoneUpdateService"));
+            assertLazy(context.getBeanFactory(), "movementNotifyTask");
+            assertLazy(context.getBeanFactory(), "moveTaskManager");
+            assertLazy(context.getBeanFactory(), "playerMoveTaskManager");
+            assertLazy(context.getBeanFactory(), "zoneUpdateService");
         }
     }
 

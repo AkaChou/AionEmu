@@ -167,6 +167,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made craft compatibility services `CraftSkillUpdateService` and `RelinquishCraftStatus` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Made gameplay runtime compatibility services `DuelService`, `LifeStatsRestoreService`, `SeasonRankingService`, and `RiftManager` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks; `LifeStatsRestoreService` remains eager as a core HP/MP/FP restoration facility.
 - [x] Made core online gameplay services `DropService`, `MailService`, `PvpService`, `AutoGroupService`, and `AbyssRankingCache` Spring-instantiable eager beans and routed their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made movement loop services `MovementNotifyTask`, `MoveTaskManager`, `PlayerMoveTaskManager`, and `ZoneUpdateService` Spring-provider aware; they remain phase-lazy bean definitions and are explicitly initialized after static data loads so their startup hooks are registered before `GameStartupHooksLifecycle` runs without touching `DataManager.WORLD_MAPS_DATA` during bare Spring context creation.
 - [x] Made 9 battlefield instance-entry services route static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
@@ -287,6 +288,8 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: exit code 0 after adding provider compatibility for gameplay runtime services; `LifeStatsRestoreService` is kept eager because HP/MP/FP restoration is a core online gameplay facility, while duel, season ranking, and rift manager compatibility beans stay lazy until their gameplay paths request them.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest test`
   - Result: exit code 0 after adding provider compatibility for core online gameplay services; loot, mail, PvP rewards, auto-group queues, and abyss ranking cache are kept eager because they are part of the base online gameplay surface and have no constructor-side thread, DAO, cache, or callback startup work.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameStaticDataLifecycleTest,GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after adding provider compatibility for movement loop services and initializing them from the static-data lifecycle, after `DataManager.WORLD_MAPS_DATA` is available and before startup hooks execute.
 - Remaining static accessor scan after the player-entry and utility compatibility batch:
   - The remaining no-provider static accessors are concentrated in larger gameplay/stateful areas such as survey/webshop scheduling, duel/PvP/group logic, legion, mail, craft, creativity-panel, and ranking/cache services.
 - Remaining static accessor scan after the player-action compatibility batch:
@@ -301,6 +304,8 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - 19 no-provider static accessor files remain, concentrated in heavier gameplay/stateful or scheduler-backed areas: legion, movement pathing managers, zone updates, nav-data, Pvp/group logic, webshop/survey scheduling, abyss ranking cache, housing, siege side services, mail, and drop services.
 - Remaining static accessor scan after the core online gameplay compatibility batch:
   - 14 no-provider static accessor files remain: legion, movement notification and move managers, zone updates, nav-data, webshop/survey scheduling, in-game shop loading, thieves guild captcha scheduling, housing, find-group callback registration, and siege side services.
+- Remaining static accessor scan after the movement loop compatibility batch:
+  - 10 no-provider static accessor files remain: legion, nav-data, webshop/survey scheduling, in-game shop loading, thieves guild captcha scheduling, housing, find-group callback registration, and siege side services.
 - Spring migration residual scans after the provider batches:
   - `GameLegacyServiceBridgeConfiguration` / login / chat bridge configurations contain no `return Xxx.getInstance();` bean factories.
   - Production and test sources contain no Guice dependency usage except tests that assert `pom.xml` and production sources stay free of `com.google.inject`.

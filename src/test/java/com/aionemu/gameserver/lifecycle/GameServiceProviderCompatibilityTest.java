@@ -4,12 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.List;
 import java.lang.reflect.Field;
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
+import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.gameserver.services.AnnouncementService;
@@ -110,18 +114,23 @@ import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
+import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
+import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
+import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import com.aionemu.gameserver.world.zone.ZoneService;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 class GameServiceProviderCompatibilityTest {
 
@@ -848,6 +857,46 @@ class GameServiceProviderCompatibilityTest {
         }
     }
 
+    @Test
+    void gameMovementLoopServicesRegistersAndClearsMovementLoopProviders() throws Exception {
+        WorldMapsData oldWorldMapsData = DataManager.WORLD_MAPS_DATA;
+        GameMovementLoopServices movementLoopServices = null;
+        try {
+            DataManager.WORLD_MAPS_DATA = worldMaps(1001);
+            MovementNotifyTask movementNotifyTask = instance(MovementNotifyTask.class);
+            MoveTaskManager moveTaskManager = instance(MoveTaskManager.class);
+            PlayerMoveTaskManager playerMoveTaskManager = instance(PlayerMoveTaskManager.class);
+            ZoneUpdateService zoneUpdateService = instance(ZoneUpdateService.class);
+            movementLoopServices = new GameMovementLoopServices(
+                    provider(MovementNotifyTask.class, movementNotifyTask),
+                    provider(MoveTaskManager.class, moveTaskManager),
+                    provider(PlayerMoveTaskManager.class, playerMoveTaskManager),
+                    provider(ZoneUpdateService.class, zoneUpdateService));
+
+            assertSame(movementNotifyTask, MovementNotifyTask.getInstance());
+            assertSame(moveTaskManager, MoveTaskManager.getInstance());
+            assertSame(playerMoveTaskManager, PlayerMoveTaskManager.getInstance());
+            assertSame(zoneUpdateService, ZoneUpdateService.getInstance());
+
+            movementLoopServices.destroy();
+            movementLoopServices = null;
+
+            assertProviderCleared(MovementNotifyTask.class);
+            assertProviderCleared(MoveTaskManager.class);
+            assertProviderCleared(PlayerMoveTaskManager.class);
+            assertProviderCleared(ZoneUpdateService.class);
+        } finally {
+            if (movementLoopServices != null) {
+                movementLoopServices.destroy();
+            }
+            MovementNotifyTask.setInstanceProvider(null);
+            MoveTaskManager.setInstanceProvider(null);
+            PlayerMoveTaskManager.setInstanceProvider(null);
+            ZoneUpdateService.setInstanceProvider(null);
+            DataManager.WORLD_MAPS_DATA = oldWorldMapsData;
+        }
+    }
+
     private <T> T instance(Class<T> type) {
         return objenesis.newInstance(type);
     }
@@ -862,5 +911,27 @@ class GameServiceProviderCompatibilityTest {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
         return beanFactory.getBeanProvider(type);
+    }
+
+    private static WorldMapsData worldMaps(int... mapIds) throws ReflectiveOperationException {
+        List<WorldMapTemplate> templates = new java.util.ArrayList<>();
+        TIntObjectHashMap<WorldMapTemplate> index = new TIntObjectHashMap<>();
+        for (int mapId : mapIds) {
+            WorldMapTemplate template = new WorldMapTemplate();
+            setField(template, "mapId", mapId);
+            templates.add(template);
+            index.put(mapId, template);
+        }
+
+        WorldMapsData data = new WorldMapsData();
+        setField(data, "worldMaps", templates);
+        setField(data, "worldIdMap", index);
+        return data;
+    }
+
+    private static void setField(Object target, String name, Object value) throws ReflectiveOperationException {
+        Field field = target.getClass().getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(target, value);
     }
 }
