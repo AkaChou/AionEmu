@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.NettyClient;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -53,6 +54,7 @@ public class LoginServer {
 	 * Logger for this class.
 	 */
 	private static final Logger log = LoggerFactory.getLogger(LoginServer.class);
+	private static volatile ObjectProvider<LoginServer> instanceProvider;
 
 	/**
 	 * Map<accountId,Connection> for waiting request. This request is send to
@@ -76,10 +78,18 @@ public class LoginServer {
 	private volatile ScheduledFuture<?> connectionTask;
 
 	public static final LoginServer getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<LoginServer> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
-	private LoginServer() {
+	public static void setInstanceProvider(ObjectProvider<LoginServer> instanceProvider) {
+		LoginServer.instanceProvider = instanceProvider;
+	}
+
+	public LoginServer() {
 
 	}
 

@@ -144,6 +144,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made 10 scheduled player-event, announcement, debug, house-maintenance, and veteran-reward service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
 - [x] Made 10 business data, broker, petition, weather, and world-object service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
 - [x] Made 10 housing, town, cleaning, html-cache, zone, hotspot, road, and landing-update service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made gameserver `LoginServer` and `ChatServer` Spring-instantiable while routing their static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
@@ -223,21 +224,21 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - Fat jar smoke with temporary `aion.home`, temporary ports, geodata disabled, svstats disabled, Netty transport, and chat disabled reached `=== Server initialization COMPLETE ===`; it logged Netty listeners on `127.0.0.1:19014`, `127.0.0.1:12106`, and `127.0.0.1:17777`, plus `Chat Server is disabled by configuration`.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameLegacyServiceBridgeConfigurationTest,GameNetworkStartupLifecycleTest,GameShutdownRequestTest,ShutdownHookTest,AionBootApplicationTest test`
   - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServerNetworkRuntimeBridgeTest test`
+  - Result: exit code 0.
 - Database schema verification:
   - `al_server_gs` has 98 tables.
   - `al_server_ls` has 10 tables.
 
 ## Remaining Tasks
 
-- [ ] Continue reducing `GameLegacyServiceBridgeConfiguration` legacy singleton beans; refresh the exact `return Xxx.getInstance();` count before each slice.
+- [ ] Continue reducing `GameLegacyServiceBridgeConfiguration` legacy singleton beans; refresh the exact `return Xxx.getInstance();` count before each slice. Current remaining core beans: `ThreadPoolManager`, `DataManager`, `IDFactory`, `World`.
 - [ ] Use 10-service batches for similar simple `GameLegacyServiceBridgeConfiguration` bean reductions. Do not split similar simple conversions into three-service commits; only use a smaller commit when fewer than 10 same-kind simple candidates remain.
-- [ ] Treat the remaining six core beans as dedicated ownership refactors instead of ordinary `new` conversions: avoid duplicate thread pools, duplicate static-data loads, duplicate world state, duplicate ID allocation state, or duplicate login/chat server transports.
+- [ ] Treat the remaining four core beans as dedicated ownership refactors instead of ordinary `new` conversions: avoid duplicate thread pools, duplicate static-data loads, duplicate world state, or duplicate ID allocation state.
 - [ ] Migrate `ThreadPoolManager` ownership safely so Spring owns the runtime thread-pool bean without creating duplicate executor pools or duplicate purge scheduling.
 - [ ] Migrate `DataManager` ownership safely so Spring owns static-data initialization without duplicate loads, static-field races, or cache regressions.
 - [ ] Migrate `IDFactory` ownership safely so Spring owns ID allocation state without duplicate used-ID locking or split BitSet state.
 - [ ] Migrate `World` ownership safely so Spring owns world containers and map state without creating a second in-memory world.
-- [ ] Migrate `LoginServer` ownership safely so Spring owns login-server state and lifecycle without duplicate request maps or duplicate login transport connections.
-- [ ] Migrate `ChatServer` ownership safely so Spring owns chat-server state and lifecycle without duplicate chat connection state or duplicate connector scheduling.
 - [ ] Replace each reduced legacy bean with Spring-instantiable construction only when the constructor and initialization behavior are safe under lazy Spring ownership.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage and focused tests.
 - [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components with partial-startup cleanup coverage.

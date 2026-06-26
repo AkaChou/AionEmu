@@ -538,13 +538,13 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public LoginServer loginServer() {
-        return LoginServer.getInstance();
+        return new LoginServer();
     }
 
     @Bean
     @Lazy
     public ChatServer chatServer() {
-        return ChatServer.getInstance();
+        return new ChatServer();
     }
 
     @Bean

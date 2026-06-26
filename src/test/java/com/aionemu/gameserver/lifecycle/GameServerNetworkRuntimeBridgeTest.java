@@ -35,6 +35,23 @@ class GameServerNetworkRuntimeBridgeTest {
     }
 
     @Test
+    void networkSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() {
+        LoginServer loginServer = instance(LoginServer.class);
+        ChatServer chatServer = instance(ChatServer.class);
+
+        try {
+            LoginServer.setInstanceProvider(provider(LoginServer.class, loginServer));
+            ChatServer.setInstanceProvider(provider(ChatServer.class, chatServer));
+
+            assertSame(loginServer, LoginServer.getInstance());
+            assertSame(chatServer, ChatServer.getInstance());
+        } finally {
+            LoginServer.setInstanceProvider(null);
+            ChatServer.setInstanceProvider(null);
+        }
+    }
+
+    @Test
     void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameServerNetworkRuntimeBridge.java"));
 
