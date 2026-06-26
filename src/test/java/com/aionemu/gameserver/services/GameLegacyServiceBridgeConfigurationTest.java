@@ -322,6 +322,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedRewardServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(RewardService.getInstance(), context.getBean(RewardService.class));
+        }
+    }
+
+    @Test
     void exposesCleaningServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("databaseCleaningService"));
@@ -378,6 +385,14 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(AsyunatarService.class, context.getType("asyunatarService"));
             assertLazy(context.getBeanFactory(), "dredgionService");
             assertLazy(context.getBeanFactory(), "asyunatarService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedDredgionServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(DredgionService2.getInstance(), context.getBean(DredgionService2.class));
+            assertNotSame(AsyunatarService.getInstance(), context.getBean(AsyunatarService.class));
         }
     }
 
@@ -548,6 +563,19 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "abyssLandingService");
             assertLazy(context.getBeanFactory(), "landingUpdateService");
             assertLazy(context.getBeanFactory(), "abyssLandingSpecialService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedLocationBootstrapServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(VortexService.getInstance(), context.getBean(VortexService.class));
+            assertNotSame(BeritraService.getInstance(), context.getBean(BeritraService.class));
+            assertNotSame(AgentService.getInstance(), context.getBean(AgentService.class));
+            assertNotSame(AnohaService.getInstance(), context.getBean(AnohaService.class));
+            assertNotSame(SvsService.getInstance(), context.getBean(SvsService.class));
+            assertNotSame(RvrService.getInstance(), context.getBean(RvrService.class));
+            assertNotSame(IuService.getInstance(), context.getBean(IuService.class));
         }
     }
 

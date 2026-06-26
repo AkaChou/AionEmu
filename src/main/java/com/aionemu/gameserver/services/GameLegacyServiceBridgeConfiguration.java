@@ -392,7 +392,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public RewardService rewardService() {
-        return RewardService.getInstance();
+        return new RewardService();
     }
 
     @Bean
@@ -458,13 +458,13 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public DredgionService2 dredgionService() {
-        return DredgionService2.getInstance();
+        return new DredgionService2();
     }
 
     @Bean
     @Lazy
     public AsyunatarService asyunatarService() {
-        return AsyunatarService.getInstance();
+        return new AsyunatarService();
     }
 
     @Bean
@@ -560,43 +560,43 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public VortexService vortexService() {
-        return VortexService.getInstance();
+        return new VortexService();
     }
 
     @Bean
     @Lazy
     public BeritraService beritraService() {
-        return BeritraService.getInstance();
+        return new BeritraService();
     }
 
     @Bean
     @Lazy
     public AgentService agentService() {
-        return AgentService.getInstance();
+        return new AgentService();
     }
 
     @Bean
     @Lazy
     public AnohaService anohaService() {
-        return AnohaService.getInstance();
+        return new AnohaService();
     }
 
     @Bean
     @Lazy
     public SvsService svsService() {
-        return SvsService.getInstance();
+        return new SvsService();
     }
 
     @Bean
     @Lazy
     public RvrService rvrService() {
-        return RvrService.getInstance();
+        return new RvrService();
     }
 
     @Bean
     @Lazy
     public IuService iuService() {
-        return IuService.getInstance();
+        return new IuService();
     }
 
     @Bean
