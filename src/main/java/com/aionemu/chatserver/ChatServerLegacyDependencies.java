@@ -3,6 +3,7 @@ package com.aionemu.chatserver;
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.service.BroadcastService;
 import com.aionemu.chatserver.service.ChatCoreServices;
+import com.aionemu.chatserver.service.ChatRestartServices;
 import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
@@ -37,6 +38,6 @@ final class ChatServerLegacyDependencies implements ChatServerDependencies {
 
     @Override
     public RestartService restartService() {
-        return RestartService.getInstance();
+        return ChatRestartServices.restartService();
     }
 }

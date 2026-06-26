@@ -20,6 +20,7 @@ package com.aionemu.chatserver;
 
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.service.ChatCoreServices;
+import com.aionemu.chatserver.service.ChatRestartServices;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.commons.utils.ExitCode;
@@ -124,7 +125,7 @@ public class ShutdownHook extends Thread {
         if (configuredRestartService != null) {
             return configuredRestartService;
         }
-        return RestartService.getInstance();
+        return ChatRestartServices.restartService();
     }
 
     private GameServerService gameServerService() {

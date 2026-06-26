@@ -107,8 +107,10 @@ class ChatServerTest {
 
         assertFalse(source.contains("Runtime.getRuntime().halt"));
         assertFalse(source.contains("RestartService.getInstance().shutdown()"));
+        assertFalse(source.contains("return RestartService.getInstance();"));
         assertFalse(source.contains("GameServerService.getInstance()"));
         assertTrue(source.contains("restartService().shutdown()"));
+        assertTrue(source.contains("ChatRestartServices.restartService()"));
         assertTrue(source.contains("gameServerService().setOffline()"));
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_RESTART)"));
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_NORMAL)"));
@@ -153,6 +155,7 @@ class ChatServerTest {
         assertTrue(legacyDependenciesSource.contains("ChatCoreServices.gameServerService()"));
         assertTrue(legacyDependenciesSource.contains("ChatCoreServices.broadcastService()"));
         assertTrue(legacyDependenciesSource.contains("ChatCoreServices.chatService()"));
+        assertTrue(legacyDependenciesSource.contains("ChatRestartServices.restartService()"));
     }
 
     private static final class RecordingChatServerDependencies implements ChatServerDependencies {
