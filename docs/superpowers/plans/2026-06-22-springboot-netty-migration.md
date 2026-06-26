@@ -236,6 +236,8 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: exit code 0.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameCoreServicesRuntimeBridgeTest test`
   - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServerNetworkRuntimeBridgeTest,GameThreadPoolLifecycleTest,GameWorldBootstrapRuntimeBridgeTest,GameCoreServicesRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0.
 - Database schema verification:
   - `al_server_gs` has 98 tables.
   - `al_server_ls` has 10 tables.
