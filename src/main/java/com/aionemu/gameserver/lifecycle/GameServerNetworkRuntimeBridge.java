@@ -34,23 +34,23 @@ public class GameServerNetworkRuntimeBridge {
 
     public BannedMacManager bannedMacManager() {
         if (bannedMacManagerProvider == null) {
-            return BannedMacManager.getInstance();
+            return GameServerNetworkFallbacks.bannedMacManager();
         }
-        return bannedMacManagerProvider.getIfAvailable(BannedMacManager::getInstance);
+        return bannedMacManagerProvider.getIfAvailable(GameServerNetworkFallbacks::bannedMacManager);
     }
 
     public LoginServer loginServer() {
         if (loginServerProvider == null) {
-            return LoginServer.getInstance();
+            return GameServerNetworkFallbacks.loginServer();
         }
-        return loginServerProvider.getIfAvailable(LoginServer::getInstance);
+        return loginServerProvider.getIfAvailable(GameServerNetworkFallbacks::loginServer);
     }
 
     public ChatServer chatServer() {
         if (chatServerProvider == null) {
-            return ChatServer.getInstance();
+            return GameServerNetworkFallbacks.chatServer();
         }
-        return chatServerProvider.getIfAvailable(ChatServer::getInstance);
+        return chatServerProvider.getIfAvailable(GameServerNetworkFallbacks::chatServer);
     }
 
     public GameConnectionFactoryImpl gameConnectionFactory() {

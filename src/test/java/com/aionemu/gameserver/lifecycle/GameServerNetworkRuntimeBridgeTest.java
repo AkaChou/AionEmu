@@ -1,10 +1,14 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -28,6 +32,15 @@ class GameServerNetworkRuntimeBridgeTest {
         assertSame(bannedMacManager, runtimeBridge.bannedMacManager());
         assertSame(loginServer, runtimeBridge.loginServer());
         assertSame(chatServer, runtimeBridge.chatServer());
+    }
+
+    @Test
+    void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameServerNetworkRuntimeBridge.java"));
+
+        assertFalse(source.contains("BannedMacManager.getInstance()"));
+        assertFalse(source.contains("LoginServer.getInstance()"));
+        assertFalse(source.contains("ChatServer.getInstance()"));
     }
 
     private <T> T instance(Class<T> type) {
