@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 public final class ChatNettyServers implements DisposableBean {
 
     private static volatile ObjectProvider<NettyServer> nettyServerProvider;
+    private static volatile NettyServer currentNettyServer;
 
     public ChatNettyServers(ObjectProvider<NettyServer> nettyServerProvider) {
         ChatNettyServers.nettyServerProvider = nettyServerProvider;
@@ -24,8 +25,23 @@ public final class ChatNettyServers implements DisposableBean {
         return provider.getIfAvailable(ChatNettyServers::fallbackNettyServer);
     }
 
+    public static NettyServer register(NettyServer nettyServer) {
+        currentNettyServer = nettyServer;
+        return nettyServer;
+    }
+
+    public static void shutdownIfInitialized() {
+        NettyServer nettyServer = currentNettyServer;
+        currentNettyServer = null;
+        if (nettyServer != null) {
+            nettyServer.shutdownAll();
+        }
+        NettyServer.shutdownIfInitialized();
+    }
+
     @Override
     public void destroy() {
+        shutdownIfInitialized();
         nettyServerProvider = null;
     }
 

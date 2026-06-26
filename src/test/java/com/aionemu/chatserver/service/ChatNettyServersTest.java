@@ -34,9 +34,20 @@ class ChatNettyServersTest {
 
         assertFalse(configurationSource.contains("NettyServer.getInstance("));
         assertFalse(dependenciesSource.contains("NettyServer.getInstance()"));
-        assertTrue(configurationSource.contains("return new NettyServer(clientPacketHandler);"));
+        assertTrue(configurationSource.contains("return ChatNettyServers.register(new NettyServer(clientPacketHandler));"));
         assertTrue(dependenciesSource.contains("ChatNettyServers.nettyServer()"));
         assertTrue(NettyServer.class.getMethod("getInstance").isAnnotationPresent(Deprecated.class));
+    }
+
+    @Test
+    void shutdownHookRoutesNettyCleanupThroughBridgeWithoutProviderLookup() throws IOException {
+        String shutdownHookSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ShutdownHook.java"));
+        String nettyBridgeSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/service/ChatNettyServers.java"));
+
+        assertFalse(shutdownHookSource.contains("NettyServer.shutdownIfInitialized()"));
+        assertTrue(shutdownHookSource.contains("ChatNettyServers.shutdownIfInitialized()"));
+        assertTrue(nettyBridgeSource.contains("currentNettyServer"));
+        assertTrue(nettyBridgeSource.contains("NettyServer.shutdownIfInitialized()"));
     }
 
     private static ObjectProvider<NettyServer> throwingProvider(ProviderUsedException exception) {

@@ -18,11 +18,12 @@
 
 package com.aionemu.chatserver;
 
-import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.service.ChatCoreServices;
+import com.aionemu.chatserver.service.ChatNettyServers;
 import com.aionemu.chatserver.service.ChatRestartServices;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
+import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import com.aionemu.commons.utils.ExitCode;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -117,9 +118,9 @@ public class ShutdownHook extends Thread {
             return;
         }
         restartService().shutdown();
-        NettyServer.shutdownIfInitialized();
+        ChatNettyServers.shutdownIfInitialized();
         gameServerService().setOffline();
-        com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown();
+        CommonsNetworkThreadPoolServices.threadPoolManager().shutdown();
 
         if (!haltJvm) {
             return;

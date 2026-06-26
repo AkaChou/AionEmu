@@ -108,8 +108,12 @@ class ChatServerTest {
         assertFalse(source.contains("Runtime.getRuntime().halt"));
         assertFalse(source.contains("RestartService.getInstance().shutdown()"));
         assertFalse(source.contains("return RestartService.getInstance();"));
+        assertFalse(source.contains("NettyServer.shutdownIfInitialized()"));
+        assertFalse(source.contains("ThreadPoolManager.getInstance().shutdown()"));
         assertFalse(source.contains("GameServerService.getInstance()"));
         assertTrue(source.contains("restartService().shutdown()"));
+        assertTrue(source.contains("ChatNettyServers.shutdownIfInitialized()"));
+        assertTrue(source.contains("CommonsNetworkThreadPoolServices.threadPoolManager().shutdown()"));
         assertTrue(source.contains("ChatRestartServices.restartService()"));
         assertTrue(source.contains("gameServerService().setOffline()"));
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_RESTART)"));
@@ -140,7 +144,7 @@ class ChatServerTest {
         assertTrue(source.contains("return new GameServerService();"));
         assertTrue(source.contains("return new BroadcastService();"));
         assertTrue(source.contains("return new ChatService(broadcastService);"));
-        assertTrue(source.contains("return new NettyServer(clientPacketHandler);"));
+        assertTrue(source.contains("return ChatNettyServers.register(new NettyServer(clientPacketHandler));"));
         assertTrue(chatServiceSource.contains("public ChatService(BroadcastService broadcastService)"));
         assertTrue(chatServiceSource.contains("@Deprecated(since = \"boot-migration\")"));
     }

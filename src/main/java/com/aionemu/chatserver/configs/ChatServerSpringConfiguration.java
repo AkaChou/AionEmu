@@ -6,6 +6,7 @@ import com.aionemu.chatserver.service.ChatRestartRequest;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.service.BroadcastService;
+import com.aionemu.chatserver.service.ChatNettyServers;
 import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
@@ -35,7 +36,7 @@ public class ChatServerSpringConfiguration {
     @Bean
     @Lazy
     public NettyServer nettyServer(ClientPacketHandler clientPacketHandler) {
-        return new NettyServer(clientPacketHandler);
+        return ChatNettyServers.register(new NettyServer(clientPacketHandler));
     }
 
     @Bean
