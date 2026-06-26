@@ -436,7 +436,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public DataManager dataManager() {
-        return DataManager.getInstance();
+        return new DataManager();
     }
 
     @Bean

@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dataholders;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
@@ -16,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 public final class DataManager {
     static Logger log = LoggerFactory.getLogger(DataManager.class);
+    private static volatile ObjectProvider<DataManager> instanceProvider;
     public static NpcData NPC_DATA;
     public static NpcDropData NPC_DROP_DATA;
     public static NpcShoutData NPC_SHOUT_DATA;
@@ -156,12 +158,20 @@ public final class DataManager {
     // 获取DataManager的唯一实例
     // Get the singleton instance of DataManager
     public static final DataManager getInstance() {
-        return SingletonHolder.instance;
+        ObjectProvider<DataManager> provider = instanceProvider;
+        if (provider == null) {
+            return SingletonHolder.instance;
+        }
+        return provider.getIfAvailable(() -> SingletonHolder.instance);
+    }
+
+    public static void setInstanceProvider(ObjectProvider<DataManager> instanceProvider) {
+        DataManager.instanceProvider = instanceProvider;
     }
 
     // 私有构造函数，确保单例模式
     // Private constructor to ensure singleton pattern
-    private DataManager() {
+    public DataManager() {
 		Util.printSection(" *** Static Data *** ");
 		log.info("##### Start Loading Static Data 5.8 #####");
         this.loader = XmlDataLoader.getInstance();

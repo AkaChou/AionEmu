@@ -148,6 +148,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made gameserver `ThreadPoolManager` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
 - [x] Made gameserver `IDFactory` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
 - [x] Made gameserver `World` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
+- [x] Made gameserver `DataManager` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
@@ -233,16 +234,16 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: exit code 0.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameWorldBootstrapRuntimeBridgeTest test`
   - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameCoreServicesRuntimeBridgeTest test`
+  - Result: exit code 0.
 - Database schema verification:
   - `al_server_gs` has 98 tables.
   - `al_server_ls` has 10 tables.
 
 ## Remaining Tasks
 
-- [ ] Continue reducing `GameLegacyServiceBridgeConfiguration` legacy singleton beans; refresh the exact `return Xxx.getInstance();` count before each slice. Current remaining core bean: `DataManager`.
+- [ ] Confirm `GameLegacyServiceBridgeConfiguration` stays free of `return Xxx.getInstance();` bridge beans during subsequent migration slices.
 - [ ] Use 10-service batches for similar simple `GameLegacyServiceBridgeConfiguration` bean reductions. Do not split similar simple conversions into three-service commits; only use a smaller commit when fewer than 10 same-kind simple candidates remain.
-- [ ] Treat the remaining core bean as a dedicated ownership refactor instead of an ordinary `new` conversion: avoid duplicate static-data loads and static-field races.
-- [ ] Migrate `DataManager` ownership safely so Spring owns static-data initialization without duplicate loads, static-field races, or cache regressions.
 - [ ] Replace each reduced legacy bean with Spring-instantiable construction only when the constructor and initialization behavior are safe under lazy Spring ownership.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage and focused tests.
 - [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components with partial-startup cleanup coverage.
