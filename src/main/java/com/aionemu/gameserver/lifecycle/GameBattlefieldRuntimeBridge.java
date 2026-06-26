@@ -85,64 +85,64 @@ public class GameBattlefieldRuntimeBridge {
 
     public KamarBattlefieldService kamarBattlefieldService() {
         if (kamarBattlefieldServiceProvider == null) {
-            return KamarBattlefieldService.getInstance();
+            return GameBattlefieldFallbacks.kamarBattlefieldService();
         }
-        return kamarBattlefieldServiceProvider.getIfAvailable(KamarBattlefieldService::getInstance);
+        return kamarBattlefieldServiceProvider.getIfAvailable(GameBattlefieldFallbacks::kamarBattlefieldService);
     }
 
     public EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
         if (engulfedOphidanBridgeServiceProvider == null) {
-            return EngulfedOphidanBridgeService.getInstance();
+            return GameBattlefieldFallbacks.engulfedOphidanBridgeService();
         }
-        return engulfedOphidanBridgeServiceProvider.getIfAvailable(EngulfedOphidanBridgeService::getInstance);
+        return engulfedOphidanBridgeServiceProvider.getIfAvailable(GameBattlefieldFallbacks::engulfedOphidanBridgeService);
     }
 
     public SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
         if (suspiciousOphidanBridgeServiceProvider == null) {
-            return SuspiciousOphidanBridgeService.getInstance();
+            return GameBattlefieldFallbacks.suspiciousOphidanBridgeService();
         }
-        return suspiciousOphidanBridgeServiceProvider.getIfAvailable(SuspiciousOphidanBridgeService::getInstance);
+        return suspiciousOphidanBridgeServiceProvider.getIfAvailable(GameBattlefieldFallbacks::suspiciousOphidanBridgeService);
     }
 
     public IronWallWarfrontService ironWallWarfrontService() {
         if (ironWallWarfrontServiceProvider == null) {
-            return IronWallWarfrontService.getInstance();
+            return GameBattlefieldFallbacks.ironWallWarfrontService();
         }
-        return ironWallWarfrontServiceProvider.getIfAvailable(IronWallWarfrontService::getInstance);
+        return ironWallWarfrontServiceProvider.getIfAvailable(GameBattlefieldFallbacks::ironWallWarfrontService);
     }
 
     public IdgelDomeService idgelDomeService() {
         if (idgelDomeServiceProvider == null) {
-            return IdgelDomeService.getInstance();
+            return GameBattlefieldFallbacks.idgelDomeService();
         }
-        return idgelDomeServiceProvider.getIfAvailable(IdgelDomeService::getInstance);
+        return idgelDomeServiceProvider.getIfAvailable(GameBattlefieldFallbacks::idgelDomeService);
     }
 
     public IdgelDomeLandmarkService idgelDomeLandmarkService() {
         if (idgelDomeLandmarkServiceProvider == null) {
-            return IdgelDomeLandmarkService.getInstance();
+            return GameBattlefieldFallbacks.idgelDomeLandmarkService();
         }
-        return idgelDomeLandmarkServiceProvider.getIfAvailable(IdgelDomeLandmarkService::getInstance);
+        return idgelDomeLandmarkServiceProvider.getIfAvailable(GameBattlefieldFallbacks::idgelDomeLandmarkService);
     }
 
     public HallOfTenacityService hallOfTenacityService() {
         if (hallOfTenacityServiceProvider == null) {
-            return HallOfTenacityService.getInstance();
+            return GameBattlefieldFallbacks.hallOfTenacityService();
         }
-        return hallOfTenacityServiceProvider.getIfAvailable(HallOfTenacityService::getInstance);
+        return hallOfTenacityServiceProvider.getIfAvailable(GameBattlefieldFallbacks::hallOfTenacityService);
     }
 
     public GrandArenaTrainingCampService grandArenaTrainingCampService() {
         if (grandArenaTrainingCampServiceProvider == null) {
-            return GrandArenaTrainingCampService.getInstance();
+            return GameBattlefieldFallbacks.grandArenaTrainingCampService();
         }
-        return grandArenaTrainingCampServiceProvider.getIfAvailable(GrandArenaTrainingCampService::getInstance);
+        return grandArenaTrainingCampServiceProvider.getIfAvailable(GameBattlefieldFallbacks::grandArenaTrainingCampService);
     }
 
     public IDRunService idRunService() {
         if (idRunServiceProvider == null) {
-            return IDRunService.getInstance();
+            return GameBattlefieldFallbacks.idRunService();
         }
-        return idRunServiceProvider.getIfAvailable(IDRunService::getInstance);
+        return idRunServiceProvider.getIfAvailable(GameBattlefieldFallbacks::idRunService);
     }
 }
