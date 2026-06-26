@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.model.instance.instancereward;
 
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.Race;

@@ -23,7 +23,7 @@ import java.util.TreeSet;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;

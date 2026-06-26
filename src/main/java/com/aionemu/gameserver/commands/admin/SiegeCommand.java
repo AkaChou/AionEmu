@@ -31,8 +31,8 @@ import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
 import com.aionemu.gameserver.services.siegeservice.Siege;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 @SuppressWarnings("rawtypes")
 public class SiegeCommand extends AdminCommand {

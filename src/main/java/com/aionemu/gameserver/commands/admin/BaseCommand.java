@@ -23,7 +23,7 @@ import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.base.Base;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * @author Rinzler

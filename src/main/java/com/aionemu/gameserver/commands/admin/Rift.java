@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.RiftService;

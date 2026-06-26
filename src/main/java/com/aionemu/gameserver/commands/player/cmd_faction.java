@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.commands.player;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;

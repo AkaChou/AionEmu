@@ -18,7 +18,7 @@ package com.aionemu.gameserver.model.gameobjects;
 
 import java.util.Iterator;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.ai2.AITemplate;

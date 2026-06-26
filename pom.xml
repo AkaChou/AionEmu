@@ -14,7 +14,6 @@
         <maven.compiler.release>25</maven.compiler.release>
 
         <commons-io.version>2.22.0</commons-io.version>
-        <commons-lang.version>2.6</commons-lang.version>
         <commons-pool2.version>2.13.1</commons-pool2.version>
         <guava.version>33.6.0-jre</guava.version>
         <javassist.version>3.32.0-GA</javassist.version>
@@ -44,11 +43,6 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons-lang.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -180,8 +174,8 @@
             <artifactId>commons-io</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

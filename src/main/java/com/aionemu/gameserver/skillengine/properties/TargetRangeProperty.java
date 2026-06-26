@@ -18,7 +18,7 @@ package com.aionemu.gameserver.skillengine.properties;
 
 import java.util.List;
 
-import org.apache.commons.lang.math.FloatRange;
+import org.apache.commons.lang3.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,8 +96,8 @@ public class TargetRangeProperty {
 						if (properties.isBackDirection()) {
 							angle = 180.0F - angle;
 						}
-						FloatRange range = new FloatRange(angle, 360.0F - angle);
-						if (range.containsFloat(PositionUtil.getAngleToTarget(firstTarget, nextCreature))) {
+						Range<Float> range = Range.of(angle, 360.0F - angle);
+						if (range.contains(PositionUtil.getAngleToTarget(firstTarget, nextCreature))) {
 							float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
 							float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
 							if (MathUtil.isIn3dRange(firstTarget, nextCreature,

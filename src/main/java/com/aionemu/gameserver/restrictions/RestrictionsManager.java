@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;

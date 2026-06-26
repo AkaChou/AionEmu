@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.model.broker.filter;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 

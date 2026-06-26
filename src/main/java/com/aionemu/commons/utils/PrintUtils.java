@@ -1,8 +1,8 @@
 package com.aionemu.commons.utils;
 
 import java.nio.ByteBuffer;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * 打印工具类，提供各种格式化输出和数据转换功能

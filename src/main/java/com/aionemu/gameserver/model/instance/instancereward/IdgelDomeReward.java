@@ -18,7 +18,7 @@ package com.aionemu.gameserver.model.instance.instancereward;
 
 import java.util.List;
 
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;

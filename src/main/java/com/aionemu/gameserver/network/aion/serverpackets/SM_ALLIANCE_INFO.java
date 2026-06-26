@@ -18,7 +18,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;

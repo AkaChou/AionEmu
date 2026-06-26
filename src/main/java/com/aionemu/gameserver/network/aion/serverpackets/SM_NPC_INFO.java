@@ -19,7 +19,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.Race;

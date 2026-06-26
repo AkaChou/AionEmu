@@ -22,7 +22,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang.NullArgumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +76,7 @@ public abstract class CreatureLifeStats<T extends Creature> {
 
 	public int reduceHp(int value, @Nonnull Creature attacker) {
 		if (attacker == null) {
-			throw new NullArgumentException("attacker");
+			throw new IllegalArgumentException("attacker");
 		}
 		boolean isDied = false;
 		hpLock.lock();

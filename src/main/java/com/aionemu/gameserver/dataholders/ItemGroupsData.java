@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import org.apache.commons.lang.math.IntRange;
+import org.apache.commons.lang3.Range;
 
 import com.aionemu.gameserver.model.templates.itemgroups.BonusItemGroup;
 import com.aionemu.gameserver.model.templates.itemgroups.BossGroup;
@@ -203,10 +203,10 @@ public class ItemGroupsData {
 	@XmlElement(name = "high_craft_step")
 	protected FeedGroups.HighCraftStepGroup highCraftStep;
 
-	FastMap<Integer, FastMap<IntRange, List<CraftReward>>> craftMaterialsBySkill = new FastMap<Integer, FastMap<IntRange, List<CraftReward>>>();
-	FastMap<Integer, FastMap<IntRange, List<CraftReward>>> craftShopBySkill = new FastMap<Integer, FastMap<IntRange, List<CraftReward>>>();
-	FastMap<Integer, FastMap<IntRange, List<CraftReward>>> craftBundlesBySkill = new FastMap<Integer, FastMap<IntRange, List<CraftReward>>>();
-	FastMap<Integer, FastMap<IntRange, List<CraftReward>>> craftRecipesBySkill = new FastMap<Integer, FastMap<IntRange, List<CraftReward>>>();
+	FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>> craftMaterialsBySkill = new FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>>();
+	FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>> craftShopBySkill = new FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>>();
+	FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>> craftBundlesBySkill = new FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>>();
+	FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>> craftRecipesBySkill = new FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>>();
 
 	BonusItemGroup[] craftGroups;
 	BonusItemGroup[] manastoneGroups;
@@ -272,7 +272,7 @@ public class ItemGroupsData {
 		}
 	}
 
-	void MapCraftReward(FastMap<Integer, FastMap<IntRange, List<CraftReward>>> dataHolder, CraftReward reward) {
+	void MapCraftReward(FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>> dataHolder, CraftReward reward) {
 		int lowerBound = 0, upperBound = 0;
 		if (reward instanceof CraftRecipe) {
 			CraftRecipe recipe = (CraftRecipe) reward;
@@ -286,12 +286,12 @@ public class ItemGroupsData {
 			lowerBound = item.getMinLevel();
 			upperBound = item.getMaxLevel();
 		}
-		IntRange range = new IntRange(lowerBound, upperBound);
-		FastMap<IntRange, List<CraftReward>> ranges;
+		Range<Integer> range = Range.of(lowerBound, upperBound);
+		FastMap<Range<Integer>, List<CraftReward>> ranges;
 		if (dataHolder.containsKey(reward.getSkill())) {
 			ranges = dataHolder.get(reward.getSkill());
 		} else {
-			ranges = new FastMap<IntRange, List<CraftReward>>();
+			ranges = new FastMap<Range<Integer>, List<CraftReward>>();
 			dataHolder.put(reward.getSkill(), ranges);
 		}
 		List<CraftReward> items;

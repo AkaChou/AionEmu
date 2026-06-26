@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.world.geo;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 

@@ -26,7 +26,7 @@ import com.aionemu.gameserver.model.templates.housing.PartType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.LegionService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class SM_HOUSE_RENDER extends AionServerPacket {
 	private House house;

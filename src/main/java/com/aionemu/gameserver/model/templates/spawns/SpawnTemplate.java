@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.model.templates.spawns;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.event.EventTemplate;

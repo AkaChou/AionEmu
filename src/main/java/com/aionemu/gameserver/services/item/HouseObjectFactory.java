@@ -17,8 +17,6 @@ package com.aionemu.gameserver.services.item;
 
 import java.time.ZonedDateTime;
 
-import org.apache.commons.lang.IncompleteArgumentException;
-
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.ChairObject;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
@@ -77,11 +75,11 @@ public final class HouseObjectFactory {
 
 	public static HouseObject<?> createNew(House house, ItemTemplate itemTemplate) {
 		if (itemTemplate.getActions() == null) {
-			throw new IncompleteArgumentException("template actions null");
+			throw new IllegalArgumentException("template actions null");
 		}
 		SummonHouseObjectAction action = itemTemplate.getActions().getHouseObjectAction();
 		if (action == null) {
-			throw new IncompleteArgumentException("template actions miss SummonHouseObjectAction");
+			throw new IllegalArgumentException("template actions miss SummonHouseObjectAction");
 		}
 		int objectTemplateId = action.getTemplateId();
 		HouseObject<?> obj = createNew(house, IDFactory.getInstance().nextId(), objectTemplateId);

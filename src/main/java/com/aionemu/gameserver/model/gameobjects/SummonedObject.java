@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.controllers.NpcController;
 import com.aionemu.gameserver.model.Race;

@@ -16,8 +16,6 @@
  */
 package com.aionemu.gameserver.controllers;
 
-import org.apache.commons.lang.NullArgumentException;
-
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -143,7 +141,7 @@ public class SummonController extends CreatureController<Summon> {
 	@Override
 	public void onDie(final Creature lastAttacker) {
 		if (lastAttacker == null) {
-			throw new NullArgumentException("lastAttacker");
+			throw new IllegalArgumentException("lastAttacker");
 		}
 		super.onDie(lastAttacker);
 		SummonsService.release(getOwner(), UnsummonType.UNSPECIFIED, isAttacked);

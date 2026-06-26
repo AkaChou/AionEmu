@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.model.team2.common.events;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.TeamEvent;
