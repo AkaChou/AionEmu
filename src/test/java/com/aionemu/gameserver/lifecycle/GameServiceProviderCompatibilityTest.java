@@ -29,8 +29,11 @@ import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.services.F2pService;
 import com.aionemu.gameserver.services.FlyRingService;
 import com.aionemu.gameserver.services.GameTimeService;
+import com.aionemu.gameserver.services.FindGroupService;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.KiskService;
+import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.services.LimitedItemTradeService;
@@ -41,7 +44,9 @@ import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.RepurchaseService;
 import com.aionemu.gameserver.services.SpringZoneService;
 import com.aionemu.gameserver.services.StaticDoorService;
+import com.aionemu.gameserver.services.SurveyService;
 import com.aionemu.gameserver.services.TownService;
+import com.aionemu.gameserver.services.WebshopService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.DisputeLandService;
 import com.aionemu.gameserver.services.NpcShoutsService;
@@ -70,6 +75,7 @@ import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
+import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
@@ -84,6 +90,9 @@ import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
+import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
+import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService;
@@ -123,6 +132,7 @@ import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.nav.NavData;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import com.aionemu.gameserver.world.zone.ZoneService;
@@ -823,12 +833,20 @@ class GameServiceProviderCompatibilityTest {
         PvpService pvpService = instance(PvpService.class);
         AutoGroupService autoGroupService = instance(AutoGroupService.class);
         AbyssRankingCache abyssRankingCache = instance(AbyssRankingCache.class);
+        LegionService legionService = instance(LegionService.class);
+        ThievesGuildService thievesGuildService = instance(ThievesGuildService.class);
+        BalaurAssaultService balaurAssaultService = instance(BalaurAssaultService.class);
+        BattlefieldUnionService battlefieldUnionService = instance(BattlefieldUnionService.class);
         GameCoreGameplayServices coreGameplayServices = new GameCoreGameplayServices(
                 provider(DropService.class, dropService),
                 provider(MailService.class, mailService),
                 provider(PvpService.class, pvpService),
                 provider(AutoGroupService.class, autoGroupService),
-                provider(AbyssRankingCache.class, abyssRankingCache));
+                provider(AbyssRankingCache.class, abyssRankingCache),
+                provider(LegionService.class, legionService),
+                provider(ThievesGuildService.class, thievesGuildService),
+                provider(BalaurAssaultService.class, balaurAssaultService),
+                provider(BattlefieldUnionService.class, battlefieldUnionService));
 
         try {
             assertSame(dropService, DropService.getInstance());
@@ -836,6 +854,10 @@ class GameServiceProviderCompatibilityTest {
             assertSame(pvpService, PvpService.getInstance());
             assertSame(autoGroupService, AutoGroupService.getInstance());
             assertSame(abyssRankingCache, AbyssRankingCache.getInstance());
+            assertSame(legionService, LegionService.getInstance());
+            assertSame(thievesGuildService, ThievesGuildService.getInstance());
+            assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
+            assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
 
             coreGameplayServices.destroy();
             coreGameplayServices = null;
@@ -845,6 +867,10 @@ class GameServiceProviderCompatibilityTest {
             assertProviderCleared(PvpService.class);
             assertProviderCleared(AutoGroupService.class);
             assertProviderCleared(AbyssRankingCache.class);
+            assertProviderCleared(LegionService.class);
+            assertProviderCleared(ThievesGuildService.class);
+            assertProviderCleared(BalaurAssaultService.class);
+            assertProviderCleared(BattlefieldUnionService.class);
         } finally {
             if (coreGameplayServices != null) {
                 coreGameplayServices.destroy();
@@ -854,6 +880,10 @@ class GameServiceProviderCompatibilityTest {
             PvpService.setInstanceProvider(null);
             AutoGroupService.setInstanceProvider(null);
             AbyssRankingCache.setInstanceProvider(null);
+            LegionService.setInstanceProvider(null);
+            ThievesGuildService.setInstanceProvider(null);
+            BalaurAssaultService.setInstanceProvider(null);
+            BattlefieldUnionService.setInstanceProvider(null);
         }
     }
 
@@ -894,6 +924,55 @@ class GameServiceProviderCompatibilityTest {
             PlayerMoveTaskManager.setInstanceProvider(null);
             ZoneUpdateService.setInstanceProvider(null);
             DataManager.WORLD_MAPS_DATA = oldWorldMapsData;
+        }
+    }
+
+    @Test
+    void remainingSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() throws Exception {
+        LegionService legionService = instance(LegionService.class);
+        NavData navData = instance(NavData.class);
+        WebshopService webshopService = instance(WebshopService.class);
+        ThievesGuildService thievesGuildService = instance(ThievesGuildService.class);
+        InGameShopEn inGameShopEn = instance(InGameShopEn.class);
+        BalaurAssaultService balaurAssaultService = instance(BalaurAssaultService.class);
+        HousingService housingService = instance(HousingService.class);
+        BattlefieldUnionService battlefieldUnionService = instance(BattlefieldUnionService.class);
+        FindGroupService findGroupService = instance(FindGroupService.class);
+        SurveyService surveyService = instance(SurveyService.class);
+
+        try {
+            LegionService.setInstanceProvider(provider(LegionService.class, legionService));
+            NavData.setInstanceProvider(provider(NavData.class, navData));
+            WebshopService.setInstanceProvider(provider(WebshopService.class, webshopService));
+            ThievesGuildService.setInstanceProvider(provider(ThievesGuildService.class, thievesGuildService));
+            InGameShopEn.setInstanceProvider(provider(InGameShopEn.class, inGameShopEn));
+            BalaurAssaultService.setInstanceProvider(provider(BalaurAssaultService.class, balaurAssaultService));
+            HousingService.setInstanceProvider(provider(HousingService.class, housingService));
+            BattlefieldUnionService.setInstanceProvider(provider(BattlefieldUnionService.class, battlefieldUnionService));
+            FindGroupService.setInstanceProvider(provider(FindGroupService.class, findGroupService));
+            SurveyService.setInstanceProvider(provider(SurveyService.class, surveyService));
+
+            assertSame(legionService, LegionService.getInstance());
+            assertSame(navData, NavData.getInstance());
+            assertSame(webshopService, WebshopService.getInstance());
+            assertSame(thievesGuildService, ThievesGuildService.getInstance());
+            assertSame(inGameShopEn, InGameShopEn.getInstance());
+            assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
+            assertSame(housingService, HousingService.getInstance());
+            assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
+            assertSame(findGroupService, FindGroupService.getInstance());
+            assertSame(surveyService, SurveyService.getInstance());
+        } finally {
+            LegionService.setInstanceProvider(null);
+            NavData.setInstanceProvider(null);
+            WebshopService.setInstanceProvider(null);
+            ThievesGuildService.setInstanceProvider(null);
+            InGameShopEn.setInstanceProvider(null);
+            BalaurAssaultService.setInstanceProvider(null);
+            HousingService.setInstanceProvider(null);
+            BattlefieldUnionService.setInstanceProvider(null);
+            FindGroupService.setInstanceProvider(null);
+            SurveyService.setInstanceProvider(null);
         }
     }
 

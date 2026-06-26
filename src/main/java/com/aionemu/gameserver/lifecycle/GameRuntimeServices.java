@@ -1,19 +1,23 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.model.siege.Influence;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.gameserver.services.AnnouncementService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.CuringZoneService;
 import com.aionemu.gameserver.services.DebugService;
 import com.aionemu.gameserver.services.ExchangeService;
+import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.services.FlyRingService;
 import com.aionemu.gameserver.services.GameTimeService;
 import com.aionemu.gameserver.services.LimitedItemTradeService;
 import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.SpringZoneService;
+import com.aionemu.gameserver.services.SurveyService;
 import com.aionemu.gameserver.services.WeatherService;
+import com.aionemu.gameserver.services.WebshopService;
 import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
@@ -42,7 +46,11 @@ public final class GameRuntimeServices implements DisposableBean {
             ObjectProvider<SpringZoneService> springZoneServiceProvider,
             ObjectProvider<BoostEventService> boostEventServiceProvider,
             ObjectProvider<TaskManagerFromDB> taskManagerFromDBProvider,
-            ObjectProvider<LimitedItemTradeService> limitedItemTradeServiceProvider) {
+            ObjectProvider<LimitedItemTradeService> limitedItemTradeServiceProvider,
+            ObjectProvider<WebshopService> webshopServiceProvider,
+            ObjectProvider<SurveyService> surveyServiceProvider,
+            ObjectProvider<FindGroupService> findGroupServiceProvider,
+            ObjectProvider<InGameShopEn> inGameShopEnProvider) {
         PeriodicSaveService.setInstanceProvider(periodicSaveServiceProvider);
         AdminService.setInstanceProvider(adminServiceProvider);
         PlayerTransferService.setInstanceProvider(playerTransferServiceProvider);
@@ -61,6 +69,10 @@ public final class GameRuntimeServices implements DisposableBean {
         BoostEventService.setInstanceProvider(boostEventServiceProvider);
         TaskManagerFromDB.setInstanceProvider(taskManagerFromDBProvider);
         LimitedItemTradeService.setInstanceProvider(limitedItemTradeServiceProvider);
+        WebshopService.setInstanceProvider(webshopServiceProvider);
+        SurveyService.setInstanceProvider(surveyServiceProvider);
+        FindGroupService.setInstanceProvider(findGroupServiceProvider);
+        InGameShopEn.setInstanceProvider(inGameShopEnProvider);
     }
 
     @Override
@@ -83,5 +95,9 @@ public final class GameRuntimeServices implements DisposableBean {
         BoostEventService.setInstanceProvider(null);
         TaskManagerFromDB.setInstanceProvider(null);
         LimitedItemTradeService.setInstanceProvider(null);
+        WebshopService.setInstanceProvider(null);
+        SurveyService.setInstanceProvider(null);
+        FindGroupService.setInstanceProvider(null);
+        InGameShopEn.setInstanceProvider(null);
     }
 }

@@ -7,6 +7,7 @@ import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
@@ -29,6 +30,7 @@ import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
+import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
@@ -45,6 +47,8 @@ import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
+import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
+import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService;
@@ -90,6 +94,7 @@ import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.nav.NavData;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import com.aionemu.gameserver.world.zone.ZoneService;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
@@ -944,6 +949,63 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     public AbyssRankingCache abyssRankingCache() {
         return new AbyssRankingCache();
+    }
+
+    @Bean
+    @Lazy
+    public LegionService legionService() {
+        return new LegionService();
+    }
+
+    @Bean
+    public ThievesGuildService thievesGuildService() {
+        return new ThievesGuildService();
+    }
+
+    @Bean
+    public BalaurAssaultService balaurAssaultService() {
+        return new BalaurAssaultService();
+    }
+
+    @Bean
+    public BattlefieldUnionService battlefieldUnionService() {
+        return new BattlefieldUnionService();
+    }
+
+    @Bean
+    @Lazy
+    public NavData navData() {
+        return new NavData();
+    }
+
+    @Bean
+    @Lazy
+    public WebshopService webshopService() {
+        return new WebshopService();
+    }
+
+    @Bean
+    @Lazy
+    public SurveyService surveyService() {
+        return new SurveyService();
+    }
+
+    @Bean
+    @Lazy
+    public FindGroupService findGroupService() {
+        return new FindGroupService();
+    }
+
+    @Bean
+    @Lazy
+    public InGameShopEn inGameShopEn() {
+        return new InGameShopEn();
+    }
+
+    @Bean
+    @Lazy
+    public HousingService housingService() {
+        return new HousingService();
     }
 
     @Bean

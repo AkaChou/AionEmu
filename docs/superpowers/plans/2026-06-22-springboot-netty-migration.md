@@ -169,6 +169,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made core online gameplay services `DropService`, `MailService`, `PvpService`, `AutoGroupService`, and `AbyssRankingCache` Spring-instantiable eager beans and routed their static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Made movement loop services `MovementNotifyTask`, `MoveTaskManager`, `PlayerMoveTaskManager`, and `ZoneUpdateService` Spring-provider aware; they remain phase-lazy bean definitions and are explicitly initialized after static data loads so their startup hooks are registered before `GameStartupHooksLifecycle` runs without touching `DataManager.WORLD_MAPS_DATA` during bare Spring context creation.
 - [x] Made 9 battlefield instance-entry services route static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Finished the remaining game static singleton provider bridges for `LegionService`, `NavData`, `WebshopService`, `ThievesGuildService`, `InGameShopEn`, `BalaurAssaultService`, `HousingService`, `BattlefieldUnionService`, `FindGroupService`, and `SurveyService`; light no-side-effect services stay eager, while constructor-side-effect services are Spring beans initialized explicitly from the appropriate game startup phase.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
@@ -306,6 +307,12 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - 14 no-provider static accessor files remain: legion, movement notification and move managers, zone updates, nav-data, webshop/survey scheduling, in-game shop loading, thieves guild captcha scheduling, housing, find-group callback registration, and siege side services.
 - Remaining static accessor scan after the movement loop compatibility batch:
   - 10 no-provider static accessor files remain: legion, nav-data, webshop/survey scheduling, in-game shop loading, thieves guild captcha scheduling, housing, find-group callback registration, and siege side services.
+- Remaining static accessor scan after the final game provider batch:
+  - 0 no-provider static accessor files remain under the scanned game service/model/world/task/cache/engine paths.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest,GameRuntimeServicesLifecycleTest,GameHousingLifecycleTest test`
+  - Result: exit code 0 after finishing the remaining game provider bridges and classifying `LegionService` as phase-lazy because its constructor touches `World.getInstance()`.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the final game provider batch.
 - Spring migration residual scans after the provider batches:
   - `GameLegacyServiceBridgeConfiguration` / login / chat bridge configurations contain no `return Xxx.getInstance();` bean factories.
   - Production and test sources contain no Guice dependency usage except tests that assert `pom.xml` and production sources stay free of `com.google.inject`.
@@ -355,7 +362,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 ## Remaining Tasks
 
 - [ ] Confirm `GameLegacyServiceBridgeConfiguration` stays free of `return Xxx.getInstance();` bridge beans during subsequent migration slices.
-- [ ] Keep no-side-effect runtime bridge wiring eager, and replace each remaining legacy bean with Spring-instantiable construction only after classifying constructor side effects, startup ordering, and whether the real service instance must stay lazy until its lifecycle phase.
+- [ ] Keep no-side-effect runtime bridge wiring eager, and classify constructor side effects, startup ordering, and lifecycle phase before adding future legacy service beans.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage.
 - [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components.
 - [ ] Add partial-startup cleanup coverage for the login service decomposition.

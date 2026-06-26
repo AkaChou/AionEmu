@@ -7,15 +7,20 @@ import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.CuringZoneService;
 import com.aionemu.gameserver.services.DebugService;
 import com.aionemu.gameserver.services.ExchangeService;
+import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.services.FlyRingService;
 import com.aionemu.gameserver.services.GameTimeService;
+import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.LimitedItemTradeService;
 import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.SpringZoneService;
+import com.aionemu.gameserver.services.SurveyService;
 import com.aionemu.gameserver.services.WeatherService;
+import com.aionemu.gameserver.services.WebshopService;
 import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.instance.InstanceService;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
@@ -36,6 +41,7 @@ public class GameRuntimeServiceBridge {
     private ObjectProvider<DebugService> debugServiceProvider;
     private ObjectProvider<WeatherService> weatherServiceProvider;
     private ObjectProvider<BrokerService> brokerServiceProvider;
+    private ObjectProvider<LegionService> legionServiceProvider;
     private ObjectProvider<Influence> influenceProvider;
     private ObjectProvider<ExchangeService> exchangeServiceProvider;
     private ObjectProvider<PetitionService> petitionServiceProvider;
@@ -45,6 +51,10 @@ public class GameRuntimeServiceBridge {
     private ObjectProvider<BoostEventService> boostEventServiceProvider;
     private ObjectProvider<TaskManagerFromDB> taskManagerFromDBProvider;
     private ObjectProvider<LimitedItemTradeService> limitedItemTradeServiceProvider;
+    private ObjectProvider<WebshopService> webshopServiceProvider;
+    private ObjectProvider<SurveyService> surveyServiceProvider;
+    private ObjectProvider<FindGroupService> findGroupServiceProvider;
+    private ObjectProvider<InGameShopEn> inGameShopEnProvider;
 
     @Autowired(required = false)
     void setPeriodicSaveServiceProvider(ObjectProvider<PeriodicSaveService> periodicSaveServiceProvider) {
@@ -92,6 +102,11 @@ public class GameRuntimeServiceBridge {
     }
 
     @Autowired(required = false)
+    void setLegionServiceProvider(ObjectProvider<LegionService> legionServiceProvider) {
+        this.legionServiceProvider = legionServiceProvider;
+    }
+
+    @Autowired(required = false)
     void setInfluenceProvider(ObjectProvider<Influence> influenceProvider) {
         this.influenceProvider = influenceProvider;
     }
@@ -136,6 +151,26 @@ public class GameRuntimeServiceBridge {
         this.limitedItemTradeServiceProvider = limitedItemTradeServiceProvider;
     }
 
+    @Autowired(required = false)
+    void setWebshopServiceProvider(ObjectProvider<WebshopService> webshopServiceProvider) {
+        this.webshopServiceProvider = webshopServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setSurveyServiceProvider(ObjectProvider<SurveyService> surveyServiceProvider) {
+        this.surveyServiceProvider = surveyServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setFindGroupServiceProvider(ObjectProvider<FindGroupService> findGroupServiceProvider) {
+        this.findGroupServiceProvider = findGroupServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setInGameShopEnProvider(ObjectProvider<InGameShopEn> inGameShopEnProvider) {
+        this.inGameShopEnProvider = inGameShopEnProvider;
+    }
+
     public void printServicesSection() {
         Util.printSection(" *** Services *** ");
     }
@@ -176,6 +211,10 @@ public class GameRuntimeServiceBridge {
         return getIfAvailable(brokerServiceProvider, BrokerService::getInstance);
     }
 
+    public LegionService legionService() {
+        return getIfAvailable(legionServiceProvider, LegionService::getInstance);
+    }
+
     public Influence influence() {
         return getIfAvailable(influenceProvider, Influence::getInstance);
     }
@@ -214,6 +253,22 @@ public class GameRuntimeServiceBridge {
 
     public LimitedItemTradeService limitedItemTradeService() {
         return getIfAvailable(limitedItemTradeServiceProvider, LimitedItemTradeService::getInstance);
+    }
+
+    public WebshopService webshopService() {
+        return getIfAvailable(webshopServiceProvider, WebshopService::getInstance);
+    }
+
+    public SurveyService surveyService() {
+        return getIfAvailable(surveyServiceProvider, SurveyService::getInstance);
+    }
+
+    public FindGroupService findGroupService() {
+        return getIfAvailable(findGroupServiceProvider, FindGroupService::getInstance);
+    }
+
+    public InGameShopEn inGameShopEn() {
+        return getIfAvailable(inGameShopEnProvider, InGameShopEn::getInstance);
     }
 
     public void startGameTimeClock() {

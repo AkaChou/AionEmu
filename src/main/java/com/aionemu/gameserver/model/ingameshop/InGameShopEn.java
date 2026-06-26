@@ -24,6 +24,7 @@ import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.ingameshop.InGameShopProperty;
@@ -53,7 +54,7 @@ import javolution.util.FastMap;
  */
 public class InGameShopEn {
 
-	private static InGameShopEn instance = new InGameShopEn();
+	private static volatile ObjectProvider<InGameShopEn> instanceProvider;
 	private final Logger log = LoggerFactory.getLogger("INGAMESHOP_LOG");
 	private FastMap<Byte, List<IGItem>> items;
 	private InGameShopDAO dao;
@@ -63,7 +64,15 @@ public class InGameShopEn {
 	private static Map<Integer, Long> lastUsage = new FastMap<Integer, Long>();
 
 	public static InGameShopEn getInstance() {
-		return instance;
+		ObjectProvider<InGameShopEn> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
+		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<InGameShopEn> provider) {
+		instanceProvider = provider;
 	}
 
 	public InGameShopEn() {
@@ -294,5 +303,9 @@ public class InGameShopEn {
 			Integer i2 = (Integer) o2;
 			return -i1.compareTo(i2);
 		}
+	}
+
+	private static final class SingletonHolder {
+		private static final InGameShopEn instance = new InGameShopEn();
 	}
 }

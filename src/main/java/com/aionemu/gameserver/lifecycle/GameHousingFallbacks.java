@@ -2,6 +2,7 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.services.ChallengeTaskService;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.TownService;
 
@@ -22,6 +23,10 @@ final class GameHousingFallbacks {
         return TownServiceFallback.INSTANCE;
     }
 
+    static HousingService housingService() {
+        return HousingServiceFallback.INSTANCE;
+    }
+
     static ChallengeTaskService challengeTaskService() {
         return ChallengeTaskServiceFallback.INSTANCE;
     }
@@ -36,6 +41,10 @@ final class GameHousingFallbacks {
 
     private static final class TownServiceFallback {
         private static final TownService INSTANCE = TownService.getInstance();
+    }
+
+    private static final class HousingServiceFallback {
+        private static final HousingService INSTANCE = HousingService.getInstance();
     }
 
     private static final class ChallengeTaskServiceFallback {

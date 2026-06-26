@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.internal.chmv8.PlatformDependent;
@@ -61,6 +62,7 @@ import javolution.util.FastList;
 public class HousingService {
 
 	private static final Logger log = LoggerFactory.getLogger(HousingService.class);
+	private static volatile ObjectProvider<HousingService> instanceProvider;
 	private static final Map<Integer, List<House>> housesByMapId = new HashMap<Integer, List<House>>();
 	private final Map<Integer, House> customHouses;
 	private final Map<Integer, House> studios;
@@ -71,10 +73,18 @@ public class HousingService {
 	}
 
 	public static HousingService getInstance() {
+		ObjectProvider<HousingService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
 	}
 
-	private HousingService() {
+	public static void setInstanceProvider(ObjectProvider<HousingService> provider) {
+		instanceProvider = provider;
+	}
+
+	public HousingService() {
 		log.info("Loading housing data...");
 		customHouses = PlatformDependent.newConcurrentHashMap(
 				DAOManager.getDAO(HousesDAO.class).loadHouses(DataManager.HOUSE_DATA.getLands(), false));

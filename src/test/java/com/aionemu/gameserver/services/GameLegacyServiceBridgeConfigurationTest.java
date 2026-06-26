@@ -10,6 +10,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
@@ -31,6 +32,7 @@ import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
+import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
@@ -70,6 +72,8 @@ import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
+import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.BonusService;
@@ -97,6 +101,7 @@ import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.nav.NavData;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import com.aionemu.gameserver.world.zone.ZoneService;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
@@ -931,6 +936,38 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertNotSame(IdianDepthsService.getInstance(), context.getBean(IdianDepthsService.class));
             assertNotSame(TowerOfEternityService.getInstance(), context.getBean(TowerOfEternityService.class));
             assertNotSame(AbyssLandingService.getInstance(), context.getBean(AbyssLandingService.class));
+        }
+    }
+
+    @Test
+    void exposesRemainingCoreGameplayServicesAsEagerSpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertEquals(ThievesGuildService.class, context.getType("thievesGuildService"));
+            assertEquals(BalaurAssaultService.class, context.getType("balaurAssaultService"));
+            assertEquals(BattlefieldUnionService.class, context.getType("battlefieldUnionService"));
+            assertEager(context.getBeanFactory(), "thievesGuildService");
+            assertEager(context.getBeanFactory(), "balaurAssaultService");
+            assertEager(context.getBeanFactory(), "battlefieldUnionService");
+        }
+    }
+
+    @Test
+    void exposesRemainingPhaseInitializedServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertEquals(NavData.class, context.getType("navData"));
+            assertEquals(HousingService.class, context.getType("housingService"));
+            assertEquals(LegionService.class, context.getType("legionService"));
+            assertEquals(WebshopService.class, context.getType("webshopService"));
+            assertEquals(SurveyService.class, context.getType("surveyService"));
+            assertEquals(FindGroupService.class, context.getType("findGroupService"));
+            assertEquals(InGameShopEn.class, context.getType("inGameShopEn"));
+            assertLazy(context.getBeanFactory(), "navData");
+            assertLazy(context.getBeanFactory(), "housingService");
+            assertLazy(context.getBeanFactory(), "legionService");
+            assertLazy(context.getBeanFactory(), "webshopService");
+            assertLazy(context.getBeanFactory(), "surveyService");
+            assertLazy(context.getBeanFactory(), "findGroupService");
+            assertLazy(context.getBeanFactory(), "inGameShopEn");
         }
     }
 

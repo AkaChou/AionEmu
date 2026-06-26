@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.cache.HTMLCache;
@@ -46,6 +47,7 @@ import javolution.util.FastMap;
 public class SurveyService {
 
 	private static final Logger log = LoggerFactory.getLogger(SurveyService.class);
+	private static volatile ObjectProvider<SurveyService> instanceProvider;
 	private FastMap<Integer, SurveyItem> activeItems;
 	private final String htmlTemplate;
 
@@ -158,6 +160,14 @@ public class SurveyService {
 	}
 
 	public static final SurveyService getInstance() {
+		ObjectProvider<SurveyService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<SurveyService> provider) {
+		instanceProvider = provider;
 	}
 }

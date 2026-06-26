@@ -24,6 +24,7 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import org.springframework.beans.factory.ObjectProvider;
 
 /**
  * Created by wanke on 17/02/2017.
@@ -31,6 +32,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 public class BattlefieldUnionService {
 	private static final BattlefieldUnionService instance = new BattlefieldUnionService();
+	private static volatile ObjectProvider<BattlefieldUnionService> instanceProvider;
 
 	public int size = 0;
 	public int maxSize = 24;
@@ -102,6 +104,14 @@ public class BattlefieldUnionService {
 	}
 
 	public static BattlefieldUnionService getInstance() {
+		ObjectProvider<BattlefieldUnionService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> instance);
+		}
 		return instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<BattlefieldUnionService> provider) {
+		instanceProvider = provider;
 	}
 }

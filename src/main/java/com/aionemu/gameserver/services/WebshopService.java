@@ -2,6 +2,7 @@ package com.aionemu.gameserver.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -18,13 +19,22 @@ import javolution.util.FastList;
 
 public class WebshopService {
 	private static final Logger log = LoggerFactory.getLogger(WebshopService.class);
+	private static volatile ObjectProvider<WebshopService> instanceProvider;
 
-	private WebshopService() {
+	public WebshopService() {
 		this.load();
 	}
 
 	public static final WebshopService getInstance() {
+		ObjectProvider<WebshopService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<WebshopService> provider) {
+		instanceProvider = provider;
 	}
 
 	private void load() {

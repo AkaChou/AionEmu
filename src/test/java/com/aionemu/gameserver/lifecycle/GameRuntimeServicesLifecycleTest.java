@@ -30,6 +30,7 @@ class GameRuntimeServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "debugServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "weatherServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "brokerServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "legionServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "influenceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "exchangeServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "petitionServiceProvider"));
@@ -39,6 +40,10 @@ class GameRuntimeServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "boostEventServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "taskManagerFromDBProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "limitedItemTradeServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "webshopServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "surveyServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "findGroupServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "inGameShopEnProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "runtimeServiceBridgeProvider"));
     }
 
@@ -64,6 +69,7 @@ class GameRuntimeServicesLifecycleTest {
             "debug",
             "weather",
             "broker",
+            "legion",
             "influence",
             "exchange",
             "petition",
@@ -74,6 +80,10 @@ class GameRuntimeServicesLifecycleTest {
             "boostEvent",
             "taskManager",
             "limitedItemTrade",
+            "webshop",
+            "survey",
+            "findGroup",
+            "inGameShop",
             "gameTimeClock"
         ), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
@@ -112,6 +122,7 @@ class GameRuntimeServicesLifecycleTest {
             "debug",
             "weather",
             "broker",
+            "legion",
             "influence",
             "exchange",
             "petition",
@@ -122,6 +133,10 @@ class GameRuntimeServicesLifecycleTest {
             "boostEvent",
             "taskManager",
             "limitedItemTrade",
+            "webshop",
+            "survey",
+            "findGroup",
+            "inGameShop",
             "gameTimeClock"
         );
     }

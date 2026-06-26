@@ -2,6 +2,7 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.services.ChallengeTaskService;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.utils.Util;
@@ -15,6 +16,7 @@ public class GameHousingRuntimeBridge {
     private ObjectProvider<HousingBidService> housingBidServiceProvider;
     private ObjectProvider<MaintenanceTask> maintenanceTaskProvider;
     private ObjectProvider<TownService> townServiceProvider;
+    private ObjectProvider<HousingService> housingServiceProvider;
     private ObjectProvider<ChallengeTaskService> challengeTaskServiceProvider;
 
     @Autowired(required = false)
@@ -30,6 +32,11 @@ public class GameHousingRuntimeBridge {
     @Autowired(required = false)
     void setTownServiceProvider(ObjectProvider<TownService> townServiceProvider) {
         this.townServiceProvider = townServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setHousingServiceProvider(ObjectProvider<HousingService> housingServiceProvider) {
+        this.housingServiceProvider = housingServiceProvider;
     }
 
     @Autowired(required = false)
@@ -60,6 +67,13 @@ public class GameHousingRuntimeBridge {
             return GameHousingFallbacks.townService();
         }
         return townServiceProvider.getIfAvailable(GameHousingFallbacks::townService);
+    }
+
+    public HousingService housingService() {
+        if (housingServiceProvider == null) {
+            return GameHousingFallbacks.housingService();
+        }
+        return housingServiceProvider.getIfAvailable(GameHousingFallbacks::housingService);
     }
 
     public ChallengeTaskService challengeTaskService() {
