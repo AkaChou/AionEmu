@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -54,6 +55,7 @@ import javolution.util.FastMap;
  */
 
 public class SvsService {
+	private static volatile ObjectProvider<SvsService> instanceProvider;
 	private SvsSchedule svsSchedule;
 	private Map<Integer, SvsLocation> svs;
 	private static Logger log = LoggerFactory.getLogger(SvsService.class);
@@ -287,7 +289,15 @@ public class SvsService {
 	}
 
 	public static SvsService getInstance() {
-		return SvsServiceHolder.INSTANCE;
+		ObjectProvider<SvsService> provider = instanceProvider;
+		if (provider == null) {
+			return SvsServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> SvsServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<SvsService> instanceProvider) {
+		SvsService.instanceProvider = instanceProvider;
 	}
 
 	private static class SvsServiceHolder {

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -53,6 +54,7 @@ import javolution.util.FastMap;
  */
 
 public class InstanceRiftService {
+	private static volatile ObjectProvider<InstanceRiftService> instanceProvider;
 	private InstanceSchedule instanceSchedule;
 	private Map<Integer, InstanceRiftLocation> instanceRift;
 	private static final int duration = CustomConfig.INSTANCE_RIFT_DURATION;
@@ -182,7 +184,15 @@ public class InstanceRiftService {
 	}
 
 	public static InstanceRiftService getInstance() {
-		return InstanceRiftServiceHolder.INSTANCE;
+		ObjectProvider<InstanceRiftService> provider = instanceProvider;
+		if (provider == null) {
+			return InstanceRiftServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> InstanceRiftServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<InstanceRiftService> instanceProvider) {
+		InstanceRiftService.instanceProvider = instanceProvider;
 	}
 
 	private static class InstanceRiftServiceHolder {

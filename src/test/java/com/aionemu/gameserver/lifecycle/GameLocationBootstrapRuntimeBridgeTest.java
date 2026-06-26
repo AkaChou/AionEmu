@@ -3,11 +3,25 @@ package com.aionemu.gameserver.lifecycle;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.aionemu.gameserver.services.AgentService;
+import com.aionemu.gameserver.services.AnohaService;
+import com.aionemu.gameserver.services.BeritraService;
+import com.aionemu.gameserver.services.DynamicRiftService;
+import com.aionemu.gameserver.services.InstanceRiftService;
+import com.aionemu.gameserver.services.IuService;
+import com.aionemu.gameserver.services.NightmareCircusService;
+import com.aionemu.gameserver.services.RvrService;
+import com.aionemu.gameserver.services.SvsService;
+import com.aionemu.gameserver.services.VortexService;
 import java.lang.reflect.Proxy;
 import org.junit.jupiter.api.Test;
+import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class GameLocationBootstrapRuntimeBridgeTest {
+
+    private final ObjenesisStd objenesis = new ObjenesisStd();
 
     @Test
     void usesSpringProvidersBeforeLegacySingletonFallbacks() {
@@ -80,6 +94,65 @@ class GameLocationBootstrapRuntimeBridgeTest {
         assertSame(abyssLandingProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::abyssLandingService));
         assertSame(landingUpdateProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::landingUpdateService));
         assertSame(abyssLandingSpecialProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::abyssLandingSpecialService));
+    }
+
+    @Test
+    void locationBootstrapSingletonAccessorsUseSpringProvidersBeforeLegacyFallback() {
+        VortexService vortexService = instance(VortexService.class);
+        BeritraService beritraService = instance(BeritraService.class);
+        AgentService agentService = instance(AgentService.class);
+        AnohaService anohaService = instance(AnohaService.class);
+        SvsService svsService = instance(SvsService.class);
+        RvrService rvrService = instance(RvrService.class);
+        IuService iuService = instance(IuService.class);
+        NightmareCircusService nightmareCircusService = instance(NightmareCircusService.class);
+        DynamicRiftService dynamicRiftService = instance(DynamicRiftService.class);
+        InstanceRiftService instanceRiftService = instance(InstanceRiftService.class);
+
+        try {
+            VortexService.setInstanceProvider(provider(VortexService.class, vortexService));
+            BeritraService.setInstanceProvider(provider(BeritraService.class, beritraService));
+            AgentService.setInstanceProvider(provider(AgentService.class, agentService));
+            AnohaService.setInstanceProvider(provider(AnohaService.class, anohaService));
+            SvsService.setInstanceProvider(provider(SvsService.class, svsService));
+            RvrService.setInstanceProvider(provider(RvrService.class, rvrService));
+            IuService.setInstanceProvider(provider(IuService.class, iuService));
+            NightmareCircusService.setInstanceProvider(provider(NightmareCircusService.class, nightmareCircusService));
+            DynamicRiftService.setInstanceProvider(provider(DynamicRiftService.class, dynamicRiftService));
+            InstanceRiftService.setInstanceProvider(provider(InstanceRiftService.class, instanceRiftService));
+
+            assertSame(vortexService, VortexService.getInstance());
+            assertSame(beritraService, BeritraService.getInstance());
+            assertSame(agentService, AgentService.getInstance());
+            assertSame(anohaService, AnohaService.getInstance());
+            assertSame(svsService, SvsService.getInstance());
+            assertSame(rvrService, RvrService.getInstance());
+            assertSame(iuService, IuService.getInstance());
+            assertSame(nightmareCircusService, NightmareCircusService.getInstance());
+            assertSame(dynamicRiftService, DynamicRiftService.getInstance());
+            assertSame(instanceRiftService, InstanceRiftService.getInstance());
+        } finally {
+            VortexService.setInstanceProvider(null);
+            BeritraService.setInstanceProvider(null);
+            AgentService.setInstanceProvider(null);
+            AnohaService.setInstanceProvider(null);
+            SvsService.setInstanceProvider(null);
+            RvrService.setInstanceProvider(null);
+            IuService.setInstanceProvider(null);
+            NightmareCircusService.setInstanceProvider(null);
+            DynamicRiftService.setInstanceProvider(null);
+            InstanceRiftService.setInstanceProvider(null);
+        }
+    }
+
+    private <T> T instance(Class<T> type) {
+        return objenesis.newInstance(type);
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {

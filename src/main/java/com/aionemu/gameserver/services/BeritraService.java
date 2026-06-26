@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -54,6 +55,7 @@ import javolution.util.FastMap;
  */
 
 public class BeritraService {
+	private static volatile ObjectProvider<BeritraService> instanceProvider;
 	private BeritraSchedule beritraSchedule;
 	private Map<Integer, BeritraLocation> beritra;
 	private static Logger log = LoggerFactory.getLogger(BeritraService.class);
@@ -985,7 +987,15 @@ public class BeritraService {
 	}
 
 	public static BeritraService getInstance() {
-		return BeritraServiceHolder.INSTANCE;
+		ObjectProvider<BeritraService> provider = instanceProvider;
+		if (provider == null) {
+			return BeritraServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> BeritraServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<BeritraService> instanceProvider) {
+		BeritraService.instanceProvider = instanceProvider;
 	}
 
 	private static class BeritraServiceHolder {

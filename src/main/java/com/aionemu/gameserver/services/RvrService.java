@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -54,6 +55,7 @@ import javolution.util.FastMap;
  * @author Rinzler (Encom)
  */
 public class RvrService {
+	private static volatile ObjectProvider<RvrService> instanceProvider;
 	private RvrSchedule rvrSchedule;
 	private Map<Integer, RvrLocation> rvr;
 	private static final int duration = CustomConfig.RVR_DURATION;
@@ -711,7 +713,15 @@ public class RvrService {
 	}
 
 	public static RvrService getInstance() {
-		return RvrServiceHolder.INSTANCE;
+		ObjectProvider<RvrService> provider = instanceProvider;
+		if (provider == null) {
+			return RvrServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> RvrServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<RvrService> instanceProvider) {
+		RvrService.instanceProvider = instanceProvider;
 	}
 
 	private static class RvrServiceHolder {
