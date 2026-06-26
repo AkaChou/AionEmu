@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.model.bonus_service.F2pBonus;
 import com.aionemu.gameserver.model.bonus_service.ServiceBuff;
@@ -31,6 +33,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class F2pService {
+	private static volatile ObjectProvider<F2pService> instanceProvider;
 	private static F2pBonus f2p;
 	private static ServiceBuff boost;
 
@@ -76,7 +79,15 @@ public class F2pService {
 	}
 
 	public static F2pService getInstance() {
+		ObjectProvider<F2pService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<F2pService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class SingletonHolder {

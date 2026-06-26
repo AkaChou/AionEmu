@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.actions.PlayerMode;
@@ -36,10 +37,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class DropDistributionService {
 
+	private static volatile ObjectProvider<DropDistributionService> instanceProvider;
 	private static Logger log = LoggerFactory.getLogger(DropDistributionService.class);
 
 	public static DropDistributionService getInstance() {
+		ObjectProvider<DropDistributionService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<DropDistributionService> provider) {
+		instanceProvider = provider;
 	}
 
 	/**

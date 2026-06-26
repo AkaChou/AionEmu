@@ -36,6 +36,7 @@ import javax.xml.bind.Marshaller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.configs.Config;
@@ -58,6 +59,7 @@ import javolution.util.FastMap;
  */
 public class MotionLoggingService {
 
+	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
 	private static Logger log = LoggerFactory.getLogger(MotionLoggingService.class);
 
 	private FastMap<String, MotionLog> motionsMap = new FastMap<String, MotionLog>().shared();
@@ -67,7 +69,15 @@ public class MotionLoggingService {
 	private boolean started = false;
 
 	public static final MotionLoggingService getInstance() {
+		ObjectProvider<MotionLoggingService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<MotionLoggingService> provider) {
+		instanceProvider = provider;
 	}
 
 	public void start() {
@@ -509,7 +519,7 @@ public class MotionLoggingService {
 		return this.advancedLog;
 	}
 
-	private MotionLoggingService() {
+	public MotionLoggingService() {
 		log.info("MotionLoggingService started.");
 	}
 

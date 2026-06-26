@@ -1,16 +1,25 @@
 package com.aionemu.gameserver.lifecycle;
 
+import com.aionemu.gameserver.services.AStationService;
 import com.aionemu.gameserver.services.DisputeLandService;
+import com.aionemu.gameserver.services.F2pService;
+import com.aionemu.gameserver.services.KiskService;
+import com.aionemu.gameserver.services.MotionLoggingService;
 import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.services.RepurchaseService;
 import com.aionemu.gameserver.services.ShieldService;
+import com.aionemu.gameserver.services.StaticDoorService;
 import com.aionemu.gameserver.services.WeddingService;
+import com.aionemu.gameserver.services.WindyGorgeService;
+import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
+import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.reward.RewardService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
@@ -34,7 +43,16 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<FFAService> ffaServiceProvider,
             ObjectProvider<LadderService> ladderServiceProvider,
             ObjectProvider<BGService> bgServiceProvider,
-            ObjectProvider<BanditService> banditServiceProvider) {
+            ObjectProvider<BanditService> banditServiceProvider,
+            ObjectProvider<AStationService> aStationServiceProvider,
+            ObjectProvider<F2pService> f2pServiceProvider,
+            ObjectProvider<WindyGorgeService> windyGorgeServiceProvider,
+            ObjectProvider<MotionLoggingService> motionLoggingServiceProvider,
+            ObjectProvider<StaticDoorService> staticDoorServiceProvider,
+            ObjectProvider<KiskService> kiskServiceProvider,
+            ObjectProvider<RepurchaseService> repurchaseServiceProvider,
+            ObjectProvider<DropDistributionService> dropDistributionServiceProvider,
+            ObjectProvider<SystemMailService> systemMailServiceProvider) {
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
         DredgionService2.setInstanceProvider(dredgionServiceProvider);
         AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
@@ -49,6 +67,15 @@ public final class GameFeatureServices implements DisposableBean {
         LadderService.setInstanceProvider(ladderServiceProvider);
         BGService.setInstanceProvider(bgServiceProvider);
         BanditService.setInstanceProvider(banditServiceProvider);
+        AStationService.setInstanceProvider(aStationServiceProvider);
+        F2pService.setInstanceProvider(f2pServiceProvider);
+        WindyGorgeService.setInstanceProvider(windyGorgeServiceProvider);
+        MotionLoggingService.setInstanceProvider(motionLoggingServiceProvider);
+        StaticDoorService.setInstanceProvider(staticDoorServiceProvider);
+        KiskService.setInstanceProvider(kiskServiceProvider);
+        RepurchaseService.setInstanceProvider(repurchaseServiceProvider);
+        DropDistributionService.setInstanceProvider(dropDistributionServiceProvider);
+        SystemMailService.setInstanceProvider(systemMailServiceProvider);
     }
 
     @Override
@@ -67,5 +94,14 @@ public final class GameFeatureServices implements DisposableBean {
         LadderService.setInstanceProvider(null);
         BGService.setInstanceProvider(null);
         BanditService.setInstanceProvider(null);
+        AStationService.setInstanceProvider(null);
+        F2pService.setInstanceProvider(null);
+        WindyGorgeService.setInstanceProvider(null);
+        MotionLoggingService.setInstanceProvider(null);
+        StaticDoorService.setInstanceProvider(null);
+        KiskService.setInstanceProvider(null);
+        RepurchaseService.setInstanceProvider(null);
+        DropDistributionService.setInstanceProvider(null);
+        SystemMailService.setInstanceProvider(null);
     }
 }

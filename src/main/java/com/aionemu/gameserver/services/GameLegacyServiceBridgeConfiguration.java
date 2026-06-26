@@ -36,6 +36,8 @@ import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
+import com.aionemu.gameserver.services.drop.DropDistributionService;
+import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
@@ -671,5 +673,59 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public AbyssLandingSpecialService abyssLandingSpecialService() {
         return new AbyssLandingSpecialService();
+    }
+
+    @Bean
+    @Lazy
+    public AStationService aStationService() {
+        return new AStationService();
+    }
+
+    @Bean
+    @Lazy
+    public F2pService f2pService() {
+        return new F2pService();
+    }
+
+    @Bean
+    @Lazy
+    public WindyGorgeService windyGorgeService() {
+        return new WindyGorgeService();
+    }
+
+    @Bean
+    @Lazy
+    public MotionLoggingService motionLoggingService() {
+        return new MotionLoggingService();
+    }
+
+    @Bean
+    @Lazy
+    public StaticDoorService staticDoorService() {
+        return new StaticDoorService();
+    }
+
+    @Bean
+    @Lazy
+    public KiskService kiskService() {
+        return new KiskService();
+    }
+
+    @Bean
+    @Lazy
+    public RepurchaseService repurchaseService() {
+        return new RepurchaseService();
+    }
+
+    @Bean
+    @Lazy
+    public DropDistributionService dropDistributionService() {
+        return new DropDistributionService();
+    }
+
+    @Bean
+    @Lazy
+    public SystemMailService systemMailService() {
+        return new SystemMailService();
     }
 }

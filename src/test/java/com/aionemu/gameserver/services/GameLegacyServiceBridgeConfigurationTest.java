@@ -39,10 +39,12 @@ import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
+import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.SiegeService;
@@ -562,6 +564,39 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "hotspotTeleportService");
             assertLazy(context.getBeanFactory(), "roadService");
             assertLazy(context.getBeanFactory(), "world");
+        }
+    }
+
+    @Test
+    void exposesPlayerEntryCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("aStationService"));
+            assertTrue(context.containsBeanDefinition("f2pService"));
+            assertTrue(context.containsBeanDefinition("windyGorgeService"));
+            assertTrue(context.containsBeanDefinition("motionLoggingService"));
+            assertTrue(context.containsBeanDefinition("staticDoorService"));
+            assertTrue(context.containsBeanDefinition("kiskService"));
+            assertTrue(context.containsBeanDefinition("repurchaseService"));
+            assertTrue(context.containsBeanDefinition("dropDistributionService"));
+            assertTrue(context.containsBeanDefinition("systemMailService"));
+            assertEquals(AStationService.class, context.getType("aStationService"));
+            assertEquals(F2pService.class, context.getType("f2pService"));
+            assertEquals(WindyGorgeService.class, context.getType("windyGorgeService"));
+            assertEquals(MotionLoggingService.class, context.getType("motionLoggingService"));
+            assertEquals(StaticDoorService.class, context.getType("staticDoorService"));
+            assertEquals(KiskService.class, context.getType("kiskService"));
+            assertEquals(RepurchaseService.class, context.getType("repurchaseService"));
+            assertEquals(DropDistributionService.class, context.getType("dropDistributionService"));
+            assertEquals(SystemMailService.class, context.getType("systemMailService"));
+            assertLazy(context.getBeanFactory(), "aStationService");
+            assertLazy(context.getBeanFactory(), "f2pService");
+            assertLazy(context.getBeanFactory(), "windyGorgeService");
+            assertLazy(context.getBeanFactory(), "motionLoggingService");
+            assertLazy(context.getBeanFactory(), "staticDoorService");
+            assertLazy(context.getBeanFactory(), "kiskService");
+            assertLazy(context.getBeanFactory(), "repurchaseService");
+            assertLazy(context.getBeanFactory(), "dropDistributionService");
+            assertLazy(context.getBeanFactory(), "systemMailService");
         }
     }
 

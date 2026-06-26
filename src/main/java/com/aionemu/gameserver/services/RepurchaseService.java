@@ -20,6 +20,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
@@ -34,6 +36,7 @@ import com.google.common.collect.Multimap;
  */
 public class RepurchaseService {
 
+	private static volatile ObjectProvider<RepurchaseService> instanceProvider;
 	private Multimap<Integer, Item> repurchaseItems;
 
 	public RepurchaseService() {
@@ -97,7 +100,15 @@ public class RepurchaseService {
 	}
 
 	public static RepurchaseService getInstance() {
+		ObjectProvider<RepurchaseService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<RepurchaseService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class SingletonHolder {

@@ -159,6 +159,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made event-runtime and core services including `HTMLCache`, `EventService`, `PlayerEventService`, `CrazyDaevaService`, `AbyssRankUpdateService`, and `PacketBroadcaster` static compatibility accessors route through Spring providers before legacy fallbacks.
 - [x] Made housing services `HousingBidService`, `MaintenanceTask`, `TownService`, and `ChallengeTaskService` static compatibility accessors route through Spring providers before legacy fallbacks; `HousingBidService` and `MaintenanceTask` now create their cron-backed legacy instances lazily so provider registration does not trigger cron configuration parsing.
 - [x] Made maintenance and world-bootstrap services including `DatabaseCleaningService`, `AbyssRankCleaningService`, `ZoneService`, `HotspotTeleportService`, and `RoadService` static compatibility accessors route through Spring providers before legacy fallbacks; the cleaning services now create their legacy fallback instances lazily.
+- [x] Made player-entry and utility compatibility services including `AStationService`, `F2pService`, `WindyGorgeService`, `MotionLoggingService`, `StaticDoorService`, `KiskService`, `RepurchaseService`, `DropDistributionService`, and `SystemMailService` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Made 9 battlefield instance-entry services route static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
@@ -261,6 +262,10 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: exit code 0 after making `HousingBidService` and `MaintenanceTask` legacy instances lazy and provider-aware.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameMaintenanceServicesRuntimeBridgeTest,GameWorldBootstrapRuntimeBridgeTest,GameHousingRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
   - Result: exit code 0 after adding provider compatibility for maintenance and world-bootstrap services.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameFeatureServicesRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after adding provider compatibility for player-entry and utility compatibility services.
+- Remaining static accessor scan after the player-entry and utility compatibility batch:
+  - The remaining no-provider static accessors are concentrated in larger gameplay/stateful areas such as survey/webshop scheduling, duel/PvP/group logic, legion, mail, craft, creativity-panel, and ranking/cache services.
 - Spring migration residual scans after the provider batches:
   - `GameLegacyServiceBridgeConfiguration` / login / chat bridge configurations contain no `return Xxx.getInstance();` bean factories.
   - Production and test sources contain no Guice dependency usage except tests that assert `pom.xml` and production sources stay free of `com.google.inject`.
@@ -281,6 +286,14 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: exit code 0 after the provider-compatibility batch.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
   - Result: exit code 0 after the housing cron fix and maintenance/world-bootstrap provider batch.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the player-entry and utility compatibility provider batch.
+- Final default Netty + chat-disabled Spring Boot smoke after the player-entry and utility compatibility provider batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-entry-log.z7zQUn`; temp home: `/tmp/aion-boot-smoke-entry.8hGHdZ`.
+- Final chat-enabled Netty Spring Boot smoke after the player-entry and utility compatibility provider batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-entry-chat-log.cWN1lC`; temp home: `/tmp/aion-boot-smoke-entry-chat.cBDPX3`.
 - Final default Netty + chat-disabled Spring Boot smoke after the housing cron fix and provider batch:
   - Result: reached `=== Server initialization COMPLETE ===`.
   - Evidence log: `/tmp/aion-boot-smoke-final-log.f2OXoD`; temp home: `/tmp/aion-boot-smoke-final.WQhYIN`.

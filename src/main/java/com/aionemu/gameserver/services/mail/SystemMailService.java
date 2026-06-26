@@ -21,6 +21,7 @@ import java.util.Calendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.InventoryDAO;
@@ -45,13 +46,22 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 
 public class SystemMailService {
+	private static volatile ObjectProvider<SystemMailService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger("SYSMAIL_LOG");
 
 	public static final SystemMailService getInstance() {
+		ObjectProvider<SystemMailService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
 	}
 
-	private SystemMailService() {
+	public static void setInstanceProvider(ObjectProvider<SystemMailService> provider) {
+		instanceProvider = provider;
+	}
+
+	public SystemMailService() {
 		log.info("SystemMailService: Initialized.");
 	}
 
