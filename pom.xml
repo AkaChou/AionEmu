@@ -13,23 +13,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
 
-        <hikaricp.version>4.0.3</hikaricp.version>
-        <commons-io.version>2.18.0</commons-io.version>
+        <commons-io.version>2.22.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <commons-pool2.version>2.12.1</commons-pool2.version>
-        <guava.version>23.0</guava.version>
+        <commons-pool2.version>2.13.1</commons-pool2.version>
+        <guava.version>33.6.0-jre</guava.version>
         <javassist.version>3.32.0-GA</javassist.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <jaxb-runtime.version>2.3.9</jaxb-runtime.version>
         <javolution.version>5.5.1</javolution.version>
         <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <lombok.version>1.18.46</lombok.version>
-        <logback.version>1.5.34</logback.version>
-        <mysql-connector.version>8.0.33</mysql-connector.version>
+        <logback.version>1.5.37</logback.version>
+        <mysql-connector.version>9.7.0</mysql-connector.version>
         <netty.version>3.2.10.Final</netty.version>
-        <quartz.version>2.3.0</quartz.version>
-        <slf4j.version>2.0.17</slf4j.version>
-        <spring-boot.version>4.0.7</spring-boot.version>
+        <quartz.version>2.5.2</quartz.version>
+        <slf4j.version>2.0.18</slf4j.version>
+        <spring-boot.version>4.1.0</spring-boot.version>
     </properties>
 
     <dependencyManagement>
@@ -40,11 +39,6 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.zaxxer</groupId>
-                <artifactId>HikariCP</artifactId>
-                <version>${hikaricp.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -134,7 +128,7 @@
             <dependency>
                 <groupId>org.objenesis</groupId>
                 <artifactId>objenesis</artifactId>
-                <version>2.6</version>
+                <version>3.5</version>
             </dependency>
             <dependency>
                 <groupId>xerces</groupId>
@@ -275,7 +269,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>require-java-25</id>
@@ -299,7 +293,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.15.0</version>
                 <configuration>
                     <release>${maven.compiler.release}</release>
                     <encoding>${project.build.sourceEncoding}</encoding>
@@ -321,7 +315,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>weave-callbacks</id>
@@ -342,12 +336,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.2</version>
+                <version>3.5.6</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.0</version>
                 <configuration>
                     <forceCreation>true</forceCreation>
                     <archive>
