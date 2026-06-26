@@ -46,6 +46,8 @@ import com.aionemu.gameserver.services.WindyGorgeService;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
+import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
+import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
@@ -220,6 +222,8 @@ class GameServiceProviderCompatibilityTest {
         Power power = instance(Power.class);
         Precision precision = instance(Precision.class);
         Will will = instance(Will.class);
+        CraftSkillUpdateService craftSkillUpdateService = instance(CraftSkillUpdateService.class);
+        RelinquishCraftStatus relinquishCraftStatus = instance(RelinquishCraftStatus.class);
 
         try {
             GeoService.setInstanceProvider(provider(GeoService.class, geoService));
@@ -324,6 +328,8 @@ class GameServiceProviderCompatibilityTest {
             Power.setInstanceProvider(provider(Power.class, power));
             Precision.setInstanceProvider(provider(Precision.class, precision));
             Will.setInstanceProvider(provider(Will.class, will));
+            CraftSkillUpdateService.setInstanceProvider(provider(CraftSkillUpdateService.class, craftSkillUpdateService));
+            RelinquishCraftStatus.setInstanceProvider(provider(RelinquishCraftStatus.class, relinquishCraftStatus));
 
             assertSame(geoService, GeoService.getInstance());
             assertSame(navService, NavService.getInstance());
@@ -427,6 +433,8 @@ class GameServiceProviderCompatibilityTest {
             assertSame(power, Power.getInstance());
             assertSame(precision, Precision.getInstance());
             assertSame(will, Will.getInstance());
+            assertSame(craftSkillUpdateService, CraftSkillUpdateService.getInstance());
+            assertSame(relinquishCraftStatus, RelinquishCraftStatus.getInstance());
         } finally {
             GeoService.setInstanceProvider(null);
             NavService.setInstanceProvider(null);
@@ -530,6 +538,8 @@ class GameServiceProviderCompatibilityTest {
             Power.setInstanceProvider(null);
             Precision.setInstanceProvider(null);
             Will.setInstanceProvider(null);
+            CraftSkillUpdateService.setInstanceProvider(null);
+            RelinquishCraftStatus.setInstanceProvider(null);
         }
     }
 
@@ -707,6 +717,32 @@ class GameServiceProviderCompatibilityTest {
             Power.setInstanceProvider(null);
             Precision.setInstanceProvider(null);
             Will.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void gameCraftServicesRegistersAndClearsCraftProviders() throws Exception {
+        CraftSkillUpdateService craftSkillUpdateService = instance(CraftSkillUpdateService.class);
+        RelinquishCraftStatus relinquishCraftStatus = instance(RelinquishCraftStatus.class);
+        GameCraftServices craftServices = new GameCraftServices(
+                provider(CraftSkillUpdateService.class, craftSkillUpdateService),
+                provider(RelinquishCraftStatus.class, relinquishCraftStatus));
+
+        try {
+            assertSame(craftSkillUpdateService, CraftSkillUpdateService.getInstance());
+            assertSame(relinquishCraftStatus, RelinquishCraftStatus.getInstance());
+
+            craftServices.destroy();
+            craftServices = null;
+
+            assertProviderCleared(CraftSkillUpdateService.class);
+            assertProviderCleared(RelinquishCraftStatus.class);
+        } finally {
+            if (craftServices != null) {
+                craftServices.destroy();
+            }
+            CraftSkillUpdateService.setInstanceProvider(null);
+            RelinquishCraftStatus.setInstanceProvider(null);
         }
     }
 

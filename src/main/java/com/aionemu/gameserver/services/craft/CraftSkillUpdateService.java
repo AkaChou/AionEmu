@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CraftConfig;
@@ -46,16 +47,25 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class CraftSkillUpdateService {
 	private static final Logger log = LoggerFactory.getLogger(CraftSkillUpdateService.class);
+	private static volatile ObjectProvider<CraftSkillUpdateService> instanceProvider;
 
 	protected static final Map<Integer, CraftLearnTemplate> npcBySkill = new HashMap<Integer, CraftLearnTemplate>();
 	private static final Map<Integer, Integer> cost = new HashMap<Integer, Integer>();
 	private static final List<Integer> craftingSkillIds = new ArrayList<Integer>();
 
 	public static final CraftSkillUpdateService getInstance() {
+		ObjectProvider<CraftSkillUpdateService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
 	}
 
-	private CraftSkillUpdateService() {
+	public static void setInstanceProvider(ObjectProvider<CraftSkillUpdateService> provider) {
+		instanceProvider = provider;
+	}
+
+	public CraftSkillUpdateService() {
 		// CRAFT ASMODIANS.
 		npcBySkill.put(204096, new CraftLearnTemplate(30002, false, "Essencetapping")); // Essencetapping (You can obtain materials through extracting the vitality of objects)
 

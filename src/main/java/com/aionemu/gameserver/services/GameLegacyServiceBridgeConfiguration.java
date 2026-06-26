@@ -16,6 +16,8 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
+import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
+import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import com.aionemu.gameserver.services.events.BGService;
@@ -873,5 +875,17 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public Will will() {
         return new Will();
+    }
+
+    @Bean
+    @Lazy
+    public CraftSkillUpdateService craftSkillUpdateService() {
+        return new CraftSkillUpdateService();
+    }
+
+    @Bean
+    @Lazy
+    public RelinquishCraftStatus relinquishCraftStatus() {
+        return new RelinquishCraftStatus();
     }
 }

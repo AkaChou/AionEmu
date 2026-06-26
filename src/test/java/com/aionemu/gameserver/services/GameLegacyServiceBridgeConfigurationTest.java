@@ -19,6 +19,8 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
+import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
+import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
 import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -699,6 +701,18 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "power");
             assertLazy(context.getBeanFactory(), "precision");
             assertLazy(context.getBeanFactory(), "will");
+        }
+    }
+
+    @Test
+    void exposesCraftCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("craftSkillUpdateService"));
+            assertTrue(context.containsBeanDefinition("relinquishCraftStatus"));
+            assertEquals(CraftSkillUpdateService.class, context.getType("craftSkillUpdateService"));
+            assertEquals(RelinquishCraftStatus.class, context.getType("relinquishCraftStatus"));
+            assertLazy(context.getBeanFactory(), "craftSkillUpdateService");
+            assertLazy(context.getBeanFactory(), "relinquishCraftStatus");
         }
     }
 
