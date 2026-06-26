@@ -134,6 +134,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made the game shutdown hook Spring-instantiable while keeping the legacy singleton only as a fallback.
 - [x] Made the game banned-MAC manager Spring-instantiable while keeping the legacy singleton only as a fallback.
 - [x] Made the game admin service Spring-instantiable while keeping the legacy singleton only as a fallback.
+- [x] Made the game player-transfer service Spring-instantiable while keeping the legacy singleton only as a fallback.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
