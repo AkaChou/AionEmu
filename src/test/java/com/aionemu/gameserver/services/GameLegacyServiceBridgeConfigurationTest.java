@@ -456,6 +456,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedBannedMacManagerInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(BannedMacManager.getInstance(), context.getBean(BannedMacManager.class));
+        }
+    }
+
+    @Test
     void exposesSiegeScheduleServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("siegeService"));

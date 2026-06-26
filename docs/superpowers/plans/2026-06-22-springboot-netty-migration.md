@@ -132,6 +132,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Routed game housing fallback access through a local helper instead of direct singleton calls in the runtime bridge.
 - [x] Routed game battlefield fallback access through a local helper instead of direct singleton calls in the runtime bridge.
 - [x] Made the game shutdown hook Spring-instantiable while keeping the legacy singleton only as a fallback.
+- [x] Made the game banned-MAC manager Spring-instantiable while keeping the legacy singleton only as a fallback.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
@@ -221,7 +222,8 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [ ] Replace each reduced legacy bean with Spring-instantiable construction only when the constructor and initialization behavior are safe under lazy Spring ownership.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage and focused tests.
 - [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components with partial-startup cleanup coverage.
-- [ ] Run focused boot/runtime smoke checks after each larger startup slice, including login + game with temporary `aion.home`, Netty transport, and chat disabled by default.
+- [ ] Defer tests for simple mechanical Spring-migration slices; run one final unified test pass before declaring the migration complete.
+- [ ] Run focused boot/runtime smoke checks after larger startup or behavior-changing slices, including login + game with temporary `aion.home`, Netty transport, and chat disabled by default.
 - [ ] Run chat-enabled smoke after chat-affecting slices to preserve optional chat startup and game-side chat connector behavior.
 - [ ] Validate full client protocol parity after the structural migration, covering login, character entry, game networking, chat-enabled mode, shutdown/restart requests, and representative gameplay flows.
 - [ ] Keep the migration status evidence current by appending focused test commands, smoke commands, and observed results for each committed slice.

@@ -530,7 +530,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public BannedMacManager bannedMacManager() {
-        return BannedMacManager.getInstance();
+        return new BannedMacManager();
     }
 
     @Bean
