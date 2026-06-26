@@ -149,6 +149,9 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made gameserver `IDFactory` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
 - [x] Made gameserver `World` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
 - [x] Made gameserver `DataManager` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
+- [x] Made 10 location-bootstrap services route static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made 10 location/spawn services route static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made 10 world, feature, and maintenance support services route static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
@@ -238,6 +241,15 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: exit code 0.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServerNetworkRuntimeBridgeTest,GameThreadPoolLifecycleTest,GameWorldBootstrapRuntimeBridgeTest,GameCoreServicesRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
   - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameLocationBootstrapRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameWorldServicesRuntimeBridgeTest,GameLocationBootstrapRuntimeBridgeTest,GameFeatureServicesRuntimeBridgeTest,GameMaintenanceServicesRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0.
+- Default Netty + chat-disabled Spring Boot smoke:
+  - Command shape: `rtk proxy sh -c 'JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-Daion.home=$home" -Dspring-boot.run.arguments="--aion.services.chat.enabled=false --aion.services.transport.mode=netty --aion.game.startup.progress.enabled=false --aion.legacy.game.property.gameserver.geodata.enable=false --aion.legacy.game.property.gameserver.geo.npc.move=false --aion.legacy.game.property.gameserver.geo.npc.aggro=false"'`.
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-log.22n1Id`; temp home: `/tmp/aion-boot-smoke.97YOiQ`.
+  - Observed Netty listeners on `*:9014`, `*:2106`, and `*:7777`; chat disabled by boot configuration.
 - Database schema verification:
   - `al_server_gs` has 98 tables.
   - `al_server_ls` has 10 tables.
@@ -250,7 +262,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage and focused tests.
 - [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components with partial-startup cleanup coverage.
 - [ ] Defer tests for simple mechanical Spring-migration slices; run one final unified test pass before declaring the migration complete.
-- [ ] Run focused boot/runtime smoke checks after larger startup or behavior-changing slices, including login + game with temporary `aion.home`, Netty transport, and chat disabled by default.
+- [x] Run focused boot/runtime smoke checks after larger startup or behavior-changing slices, including login + game with temporary `aion.home`, Netty transport, and chat disabled by default.
 - [ ] Run chat-enabled smoke after chat-affecting slices to preserve optional chat startup and game-side chat connector behavior.
 - [ ] Validate full client protocol parity after the structural migration, covering login, character entry, game networking, chat-enabled mode, shutdown/restart requests, and representative gameplay flows.
 - [ ] Keep the migration status evidence current by appending focused test commands, smoke commands, and observed results for each committed slice.
