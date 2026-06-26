@@ -80,7 +80,7 @@ public class DropRegistrationService {
 		registerDrop(npc, player, player.getLevel(), groupMembers);
 	}
 
-	private DropRegistrationService() {
+	public DropRegistrationService() {
 		init();
 		noReductionMaps = new FastList<Integer>();
 		for (String zone : DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES.split(",")) {

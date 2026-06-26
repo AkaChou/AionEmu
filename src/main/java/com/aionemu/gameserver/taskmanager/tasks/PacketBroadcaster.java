@@ -34,7 +34,7 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 		return SingletonHolder.INSTANCE;
 	}
 
-	private PacketBroadcaster() {
+	public PacketBroadcaster() {
 		super(200);
 	}
 

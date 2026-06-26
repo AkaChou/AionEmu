@@ -80,7 +80,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public EventService eventService() {
-        return EventService.getInstance();
+        return new EventService();
     }
 
     @Bean
@@ -92,19 +92,19 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public CrazyDaevaService crazyDaevaService() {
-        return CrazyDaevaService.getInstance();
+        return new CrazyDaevaService();
     }
 
     @Bean
     @Lazy
     public AbyssRankUpdateService abyssRankUpdateService() {
-        return AbyssRankUpdateService.getInstance();
+        return new AbyssRankUpdateService();
     }
 
     @Bean
     @Lazy
     public PacketBroadcaster packetBroadcaster() {
-        return PacketBroadcaster.getInstance();
+        return new PacketBroadcaster();
     }
 
     @Bean
@@ -128,7 +128,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public BanditService banditService() {
-        return BanditService.getInstance();
+        return new BanditService();
     }
 
     @Bean
@@ -260,7 +260,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public LunaShopService lunaShopService() {
-        return LunaShopService.getInstance();
+        return new LunaShopService();
     }
 
     @Bean
@@ -284,7 +284,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public EventWindowService eventWindowService() {
-        return EventWindowService.getInstance();
+        return new EventWindowService();
     }
 
     @Bean
@@ -368,7 +368,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public BoostEventService boostEventService() {
-        return BoostEventService.getInstance();
+        return new BoostEventService();
     }
 
     @Bean
@@ -488,7 +488,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public DropRegistrationService dropRegistrationService() {
-        return DropRegistrationService.getInstance();
+        return new DropRegistrationService();
     }
 
     @Bean
@@ -668,6 +668,6 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public AbyssLandingSpecialService abyssLandingSpecialService() {
-        return AbyssLandingSpecialService.getInstance();
+        return new AbyssLandingSpecialService();
     }
 }

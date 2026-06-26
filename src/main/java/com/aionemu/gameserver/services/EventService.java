@@ -70,7 +70,7 @@ public class EventService {
 		return SingletonHolder.instance;
 	}
 
-	private EventService() {
+	public EventService() {
 		activeEvents = Collections.synchronizedList(DataManager.EVENT_DATA.getActiveEvents());
 		updateQuestMap();
 	}

@@ -50,7 +50,7 @@ public class AbyssRankUpdateService {
 
 	private static final Logger log = LoggerFactory.getLogger(AbyssRankUpdateService.class);
 
-	private AbyssRankUpdateService() {
+	public AbyssRankUpdateService() {
 	}
 
 	public static AbyssRankUpdateService getInstance() {

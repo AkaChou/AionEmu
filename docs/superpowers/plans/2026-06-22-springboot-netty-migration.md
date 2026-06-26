@@ -140,6 +140,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made 10 lightweight default-constructor game service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
 - [x] Made 10 lightweight engine, geo/nav, challenge, and trade service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
 - [x] Made 10 lightweight FFA and battlefield entrance services Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made 10 runtime event, packet-broadcast, drop-registration, and landing-special service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
