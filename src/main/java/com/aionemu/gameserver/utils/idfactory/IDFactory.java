@@ -22,6 +22,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.GenericValidator;
@@ -44,6 +45,7 @@ import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
 public class IDFactory {
 
 	private static final Logger log = LoggerFactory.getLogger(IDFactory.class);
+	private static volatile ObjectProvider<IDFactory> instanceProvider;
 	/**
 	 * Bitset that is used for all id's.<br>
 	 * We are allowing BitSet to grow over time, so in the end it can be as big as
@@ -68,7 +70,7 @@ public class IDFactory {
 	 * @throws IDFactoryError if there is no free id's
 	 */
 
-	private IDFactory() {
+	public IDFactory() {
 		idList = new BitSet();
 		lock = new ReentrantLock();
 		lockIds(0);
@@ -85,7 +87,15 @@ public class IDFactory {
 	}
 
 	public static final IDFactory getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<IDFactory> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<IDFactory> instanceProvider) {
+		IDFactory.instanceProvider = instanceProvider;
 	}
 
 	public int nextId() {

@@ -496,7 +496,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public IDFactory gameIdFactory() {
-        return IDFactory.getInstance();
+        return new IDFactory();
     }
 
     @Bean
