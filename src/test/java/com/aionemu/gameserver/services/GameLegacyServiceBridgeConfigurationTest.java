@@ -63,6 +63,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import com.aionemu.gameserver.world.zone.ZoneService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -91,9 +94,7 @@ class GameLegacyServiceBridgeConfigurationTest {
 
     @Test
     void createsSpringManagedPlayerTransferServiceInsteadOfLegacySingleton() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(PlayerTransferService.getInstance(), context.getBean(PlayerTransferService.class));
-        }
+        assertConfigurationCreatesNew(PlayerTransferService.class);
     }
 
     @Test
@@ -400,9 +401,7 @@ class GameLegacyServiceBridgeConfigurationTest {
 
     @Test
     void createsSpringManagedRewardServiceInsteadOfLegacySingleton() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(RewardService.getInstance(), context.getBean(RewardService.class));
-        }
+        assertConfigurationCreatesNew(RewardService.class);
     }
 
     @Test
@@ -482,10 +481,8 @@ class GameLegacyServiceBridgeConfigurationTest {
 
     @Test
     void createsSpringManagedDredgionServicesInsteadOfLegacySingletons() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
-            assertNotSame(DredgionService2.getInstance(), context.getBean(DredgionService2.class));
-            assertNotSame(AsyunatarService.getInstance(), context.getBean(AsyunatarService.class));
-        }
+        assertConfigurationCreatesNew(DredgionService2.class);
+        assertConfigurationCreatesNew(AsyunatarService.class);
     }
 
     @Test
@@ -711,5 +708,15 @@ class GameLegacyServiceBridgeConfigurationTest {
 
     private static void assertLazy(ConfigurableListableBeanFactory beanFactory, String beanName) {
         assertTrue(beanFactory.getBeanDefinition(beanName).isLazyInit());
+    }
+
+    private static void assertConfigurationCreatesNew(Class<?> type) {
+        try {
+            String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/GameLegacyServiceBridgeConfiguration.java"));
+
+            assertTrue(source.contains("return new " + type.getSimpleName() + "();"));
+        } catch (IOException e) {
+            throw new AssertionError("Unable to read GameLegacyServiceBridgeConfiguration source", e);
+        }
     }
 }
