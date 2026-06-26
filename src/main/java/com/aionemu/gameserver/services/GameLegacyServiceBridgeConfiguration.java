@@ -41,6 +41,17 @@ import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityStatsService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityTransfoService;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Accuracy;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Health;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Power;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
@@ -398,7 +409,6 @@ public class GameLegacyServiceBridgeConfiguration {
     }
 
     @Bean
-    @Lazy
     public GameRuntimeServiceBridge gameRuntimeServiceBridge() {
         return new GameRuntimeServiceBridge();
     }
@@ -797,5 +807,71 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public TemporaryTradeTimeTask temporaryTradeTimeTask() {
         return new TemporaryTradeTimeTask();
+    }
+
+    @Bean
+    @Lazy
+    public CreativityEssenceService creativityEssenceService() {
+        return new CreativityEssenceService();
+    }
+
+    @Bean
+    @Lazy
+    public CreativitySkillService creativitySkillService() {
+        return new CreativitySkillService();
+    }
+
+    @Bean
+    @Lazy
+    public CreativityStatsService creativityStatsService() {
+        return new CreativityStatsService();
+    }
+
+    @Bean
+    @Lazy
+    public CreativityTransfoService creativityTransfoService() {
+        return new CreativityTransfoService();
+    }
+
+    @Bean
+    @Lazy
+    public Accuracy accuracy() {
+        return new Accuracy();
+    }
+
+    @Bean
+    @Lazy
+    public Agility agility() {
+        return new Agility();
+    }
+
+    @Bean
+    @Lazy
+    public Health health() {
+        return new Health();
+    }
+
+    @Bean
+    @Lazy
+    public Knowledge knowledge() {
+        return new Knowledge();
+    }
+
+    @Bean
+    @Lazy
+    public Power power() {
+        return new Power();
+    }
+
+    @Bean
+    @Lazy
+    public Precision precision() {
+        return new Precision();
+    }
+
+    @Bean
+    @Lazy
+    public Will will() {
+        return new Will();
     }
 }

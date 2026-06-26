@@ -26,11 +26,9 @@ import com.aionemu.gameserver.utils.Util;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
 public class GameLocationBootstrapRuntimeBridge {
 
     private ObjectProvider<SiegeService> siegeServiceProvider;

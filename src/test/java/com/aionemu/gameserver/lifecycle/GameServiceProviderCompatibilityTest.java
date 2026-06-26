@@ -72,6 +72,17 @@ import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityStatsService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityTransfoService;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Accuracy;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Health;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Power;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
@@ -198,6 +209,17 @@ class GameServiceProviderCompatibilityTest {
         HallOfTenacityService hallOfTenacityService = instance(HallOfTenacityService.class);
         GrandArenaTrainingCampService grandArenaTrainingCampService = instance(GrandArenaTrainingCampService.class);
         IDRunService idRunService = instance(IDRunService.class);
+        CreativityEssenceService creativityEssenceService = instance(CreativityEssenceService.class);
+        CreativitySkillService creativitySkillService = instance(CreativitySkillService.class);
+        CreativityStatsService creativityStatsService = instance(CreativityStatsService.class);
+        CreativityTransfoService creativityTransfoService = instance(CreativityTransfoService.class);
+        Accuracy accuracy = instance(Accuracy.class);
+        Agility agility = instance(Agility.class);
+        Health health = instance(Health.class);
+        Knowledge knowledge = instance(Knowledge.class);
+        Power power = instance(Power.class);
+        Precision precision = instance(Precision.class);
+        Will will = instance(Will.class);
 
         try {
             GeoService.setInstanceProvider(provider(GeoService.class, geoService));
@@ -291,6 +313,17 @@ class GameServiceProviderCompatibilityTest {
             HallOfTenacityService.setInstanceProvider(provider(HallOfTenacityService.class, hallOfTenacityService));
             GrandArenaTrainingCampService.setInstanceProvider(provider(GrandArenaTrainingCampService.class, grandArenaTrainingCampService));
             IDRunService.setInstanceProvider(provider(IDRunService.class, idRunService));
+            CreativityEssenceService.setInstanceProvider(provider(CreativityEssenceService.class, creativityEssenceService));
+            CreativitySkillService.setInstanceProvider(provider(CreativitySkillService.class, creativitySkillService));
+            CreativityStatsService.setInstanceProvider(provider(CreativityStatsService.class, creativityStatsService));
+            CreativityTransfoService.setInstanceProvider(provider(CreativityTransfoService.class, creativityTransfoService));
+            Accuracy.setInstanceProvider(provider(Accuracy.class, accuracy));
+            Agility.setInstanceProvider(provider(Agility.class, agility));
+            Health.setInstanceProvider(provider(Health.class, health));
+            Knowledge.setInstanceProvider(provider(Knowledge.class, knowledge));
+            Power.setInstanceProvider(provider(Power.class, power));
+            Precision.setInstanceProvider(provider(Precision.class, precision));
+            Will.setInstanceProvider(provider(Will.class, will));
 
             assertSame(geoService, GeoService.getInstance());
             assertSame(navService, NavService.getInstance());
@@ -383,6 +416,17 @@ class GameServiceProviderCompatibilityTest {
             assertSame(hallOfTenacityService, HallOfTenacityService.getInstance());
             assertSame(grandArenaTrainingCampService, GrandArenaTrainingCampService.getInstance());
             assertSame(idRunService, IDRunService.getInstance());
+            assertSame(creativityEssenceService, CreativityEssenceService.getInstance());
+            assertSame(creativitySkillService, CreativitySkillService.getInstance());
+            assertSame(creativityStatsService, CreativityStatsService.getInstance());
+            assertSame(creativityTransfoService, CreativityTransfoService.getInstance());
+            assertSame(accuracy, Accuracy.getInstance());
+            assertSame(agility, Agility.getInstance());
+            assertSame(health, Health.getInstance());
+            assertSame(knowledge, Knowledge.getInstance());
+            assertSame(power, Power.getInstance());
+            assertSame(precision, Precision.getInstance());
+            assertSame(will, Will.getInstance());
         } finally {
             GeoService.setInstanceProvider(null);
             NavService.setInstanceProvider(null);
@@ -475,6 +519,17 @@ class GameServiceProviderCompatibilityTest {
             HallOfTenacityService.setInstanceProvider(null);
             GrandArenaTrainingCampService.setInstanceProvider(null);
             IDRunService.setInstanceProvider(null);
+            CreativityEssenceService.setInstanceProvider(null);
+            CreativitySkillService.setInstanceProvider(null);
+            CreativityStatsService.setInstanceProvider(null);
+            CreativityTransfoService.setInstanceProvider(null);
+            Accuracy.setInstanceProvider(null);
+            Agility.setInstanceProvider(null);
+            Health.setInstanceProvider(null);
+            Knowledge.setInstanceProvider(null);
+            Power.setInstanceProvider(null);
+            Precision.setInstanceProvider(null);
+            Will.setInstanceProvider(null);
         }
     }
 
@@ -581,6 +636,77 @@ class GameServiceProviderCompatibilityTest {
             TeamEffectUpdater.setInstanceProvider(null);
             TeamMoveUpdater.setInstanceProvider(null);
             TemporaryTradeTimeTask.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void gameCreativityServicesRegistersAndClearsCreativityProviders() throws Exception {
+        CreativityEssenceService creativityEssenceService = instance(CreativityEssenceService.class);
+        CreativitySkillService creativitySkillService = instance(CreativitySkillService.class);
+        CreativityStatsService creativityStatsService = instance(CreativityStatsService.class);
+        CreativityTransfoService creativityTransfoService = instance(CreativityTransfoService.class);
+        Accuracy accuracy = instance(Accuracy.class);
+        Agility agility = instance(Agility.class);
+        Health health = instance(Health.class);
+        Knowledge knowledge = instance(Knowledge.class);
+        Power power = instance(Power.class);
+        Precision precision = instance(Precision.class);
+        Will will = instance(Will.class);
+        GameCreativityServices creativityServices = new GameCreativityServices(
+                provider(CreativityEssenceService.class, creativityEssenceService),
+                provider(CreativitySkillService.class, creativitySkillService),
+                provider(CreativityStatsService.class, creativityStatsService),
+                provider(CreativityTransfoService.class, creativityTransfoService),
+                provider(Accuracy.class, accuracy),
+                provider(Agility.class, agility),
+                provider(Health.class, health),
+                provider(Knowledge.class, knowledge),
+                provider(Power.class, power),
+                provider(Precision.class, precision),
+                provider(Will.class, will));
+
+        try {
+            assertSame(creativityEssenceService, CreativityEssenceService.getInstance());
+            assertSame(creativitySkillService, CreativitySkillService.getInstance());
+            assertSame(creativityStatsService, CreativityStatsService.getInstance());
+            assertSame(creativityTransfoService, CreativityTransfoService.getInstance());
+            assertSame(accuracy, Accuracy.getInstance());
+            assertSame(agility, Agility.getInstance());
+            assertSame(health, Health.getInstance());
+            assertSame(knowledge, Knowledge.getInstance());
+            assertSame(power, Power.getInstance());
+            assertSame(precision, Precision.getInstance());
+            assertSame(will, Will.getInstance());
+
+            creativityServices.destroy();
+            creativityServices = null;
+
+            assertProviderCleared(CreativityEssenceService.class);
+            assertProviderCleared(CreativitySkillService.class);
+            assertProviderCleared(CreativityStatsService.class);
+            assertProviderCleared(CreativityTransfoService.class);
+            assertProviderCleared(Accuracy.class);
+            assertProviderCleared(Agility.class);
+            assertProviderCleared(Health.class);
+            assertProviderCleared(Knowledge.class);
+            assertProviderCleared(Power.class);
+            assertProviderCleared(Precision.class);
+            assertProviderCleared(Will.class);
+        } finally {
+            if (creativityServices != null) {
+                creativityServices.destroy();
+            }
+            CreativityEssenceService.setInstanceProvider(null);
+            CreativitySkillService.setInstanceProvider(null);
+            CreativityStatsService.setInstanceProvider(null);
+            CreativityTransfoService.setInstanceProvider(null);
+            Accuracy.setInstanceProvider(null);
+            Agility.setInstanceProvider(null);
+            Health.setInstanceProvider(null);
+            Knowledge.setInstanceProvider(null);
+            Power.setInstanceProvider(null);
+            Precision.setInstanceProvider(null);
+            Will.setInstanceProvider(null);
         }
     }
 

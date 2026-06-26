@@ -5,11 +5,9 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
 public class GameCoreServicesRuntimeBridge {
 
     private ObjectProvider<DataManager> dataManagerProvider;

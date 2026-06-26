@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.ArchDaevaConfig;
@@ -44,6 +45,8 @@ import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class CreativityEssenceService {
+
+	private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
 
 	Logger log = LoggerFactory.getLogger(CreativityEssenceService.class);
 	PlayerCreativityPointsDAO cpDAO = DAOManager.getDAO(PlayerCreativityPointsDAO.class);
@@ -536,7 +539,15 @@ public class CreativityEssenceService {
     }
 
 	public static CreativityEssenceService getInstance() {
+		ObjectProvider<CreativityEssenceService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<CreativityEssenceService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

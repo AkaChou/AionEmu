@@ -162,6 +162,8 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made player-entry and utility compatibility services including `AStationService`, `F2pService`, `WindyGorgeService`, `MotionLoggingService`, `StaticDoorService`, `KiskService`, `RepurchaseService`, `DropDistributionService`, and `SystemMailService` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Made player-action compatibility services including `BonusService`, `PetService`, `ArcadeUpgradeService`, `AtreianBestiaryService`, and `CoalescenceService` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Made growth-energy and lightweight task-manager compatibility services including `GrowthEnergy`, `ExpireTimerTask`, `TeamEffectUpdater`, `TeamMoveUpdater`, and `TemporaryTradeTimeTask` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made Creativity Panel services and stat owners including `CreativityEssenceService`, `CreativitySkillService`, `CreativityStatsService`, `CreativityTransfoService`, `Accuracy`, `Agility`, `Health`, `Knowledge`, `Power`, `Precision`, and `Will` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Kept runtime bridge components eager as Spring wiring while leaving resource-heavy or gameplay-service bean instances lazy until the ordered game startup lifecycle reaches their phase.
 - [x] Made 9 battlefield instance-entry services route static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
@@ -270,12 +272,18 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: exit code 0 after adding provider compatibility for player-action services.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest#exposesPlayerActionCompatibilityServicesAsLazySpringBeans,GameLegacyServiceBridgeConfigurationTest#exposesTaskManagerCompatibilityServicesAsLazySpringBeans test`
   - Result: exit code 0 after adding provider compatibility for growth-energy and lightweight task-manager services.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameRuntimeBridgeEagernessTest,GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest,GameThreadPoolLifecycleTest,LoginThreadPoolServicesTest test`
+  - Result: exit code 0 after adding Creativity Panel provider compatibility and ensuring runtime bridge components are eager Spring wiring rather than lazy service instances.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the Creativity Panel compatibility batch and runtime bridge eagerness adjustment.
 - Remaining static accessor scan after the player-entry and utility compatibility batch:
   - The remaining no-provider static accessors are concentrated in larger gameplay/stateful areas such as survey/webshop scheduling, duel/PvP/group logic, legion, mail, craft, creativity-panel, and ranking/cache services.
 - Remaining static accessor scan after the player-action compatibility batch:
   - The remaining no-provider static accessors are concentrated in heavier gameplay/stateful or scheduler-backed areas: survey/webshop scheduling, duel/PvP/group logic, legion, mail/drop/craft, creativity-panel, ranking/cache, movement/task-manager, nav-data, and zone-update services.
 - Remaining static accessor scan after the growth/task-manager compatibility batch:
   - 36 no-provider static accessor files remain, concentrated in heavier gameplay/stateful or scheduler-backed areas: survey/webshop scheduling, duel/PvP/group logic, legion, mail/drop/craft, creativity-panel, ranking/cache, movement pathing managers, nav-data, and zone-update services.
+- Remaining static accessor scan after the Creativity Panel compatibility batch:
+  - 25 no-provider static accessor files remain, concentrated in heavier gameplay/stateful or scheduler-backed areas: legion, movement pathing managers, zone updates, nav-data, duel/PvP/group logic, webshop/survey scheduling, craft, ranking/cache, housing, siege side services, mail, and drop services.
 - Spring migration residual scans after the provider batches:
   - `GameLegacyServiceBridgeConfiguration` / login / chat bridge configurations contain no `return Xxx.getInstance();` bean factories.
   - Production and test sources contain no Guice dependency usage except tests that assert `pom.xml` and production sources stay free of `com.google.inject`.
@@ -325,7 +333,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 ## Remaining Tasks
 
 - [ ] Confirm `GameLegacyServiceBridgeConfiguration` stays free of `return Xxx.getInstance();` bridge beans during subsequent migration slices.
-- [ ] Replace each remaining legacy bean with Spring-instantiable construction only when the constructor and initialization behavior are safe under lazy Spring ownership.
+- [ ] Keep no-side-effect runtime bridge wiring eager, and replace each remaining legacy bean with Spring-instantiable construction only after classifying constructor side effects, startup ordering, and whether the real service instance must stay lazy until its lifecycle phase.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage.
 - [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components.
 - [ ] Add partial-startup cleanup coverage for the login service decomposition.

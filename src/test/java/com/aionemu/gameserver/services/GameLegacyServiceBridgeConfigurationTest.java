@@ -43,6 +43,17 @@ import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityStatsService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityTransfoService;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Accuracy;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Health;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Power;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
@@ -334,7 +345,7 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
-    void exposesRuntimeServicesAsLazySpringBeans() {
+    void exposesRuntimeServicesAsSpringBeansWithEagerBridgeOnly() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("periodicSaveService"));
             assertTrue(context.containsBeanDefinition("territoryService"));
@@ -386,7 +397,7 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "boostEventService");
             assertLazy(context.getBeanFactory(), "taskManagerFromDB");
             assertLazy(context.getBeanFactory(), "limitedItemTradeService");
-            assertLazy(context.getBeanFactory(), "gameRuntimeServiceBridge");
+            assertEager(context.getBeanFactory(), "gameRuntimeServiceBridge");
         }
     }
 
@@ -653,6 +664,45 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void exposesCreativityCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("creativityEssenceService"));
+            assertTrue(context.containsBeanDefinition("creativitySkillService"));
+            assertTrue(context.containsBeanDefinition("creativityStatsService"));
+            assertTrue(context.containsBeanDefinition("creativityTransfoService"));
+            assertTrue(context.containsBeanDefinition("accuracy"));
+            assertTrue(context.containsBeanDefinition("agility"));
+            assertTrue(context.containsBeanDefinition("health"));
+            assertTrue(context.containsBeanDefinition("knowledge"));
+            assertTrue(context.containsBeanDefinition("power"));
+            assertTrue(context.containsBeanDefinition("precision"));
+            assertTrue(context.containsBeanDefinition("will"));
+            assertEquals(CreativityEssenceService.class, context.getType("creativityEssenceService"));
+            assertEquals(CreativitySkillService.class, context.getType("creativitySkillService"));
+            assertEquals(CreativityStatsService.class, context.getType("creativityStatsService"));
+            assertEquals(CreativityTransfoService.class, context.getType("creativityTransfoService"));
+            assertEquals(Accuracy.class, context.getType("accuracy"));
+            assertEquals(Agility.class, context.getType("agility"));
+            assertEquals(Health.class, context.getType("health"));
+            assertEquals(Knowledge.class, context.getType("knowledge"));
+            assertEquals(Power.class, context.getType("power"));
+            assertEquals(Precision.class, context.getType("precision"));
+            assertEquals(Will.class, context.getType("will"));
+            assertLazy(context.getBeanFactory(), "creativityEssenceService");
+            assertLazy(context.getBeanFactory(), "creativitySkillService");
+            assertLazy(context.getBeanFactory(), "creativityStatsService");
+            assertLazy(context.getBeanFactory(), "creativityTransfoService");
+            assertLazy(context.getBeanFactory(), "accuracy");
+            assertLazy(context.getBeanFactory(), "agility");
+            assertLazy(context.getBeanFactory(), "health");
+            assertLazy(context.getBeanFactory(), "knowledge");
+            assertLazy(context.getBeanFactory(), "power");
+            assertLazy(context.getBeanFactory(), "precision");
+            assertLazy(context.getBeanFactory(), "will");
+        }
+    }
+
+    @Test
     void exposesNetworkStartupServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("shutdownHook"));
@@ -804,6 +854,10 @@ class GameLegacyServiceBridgeConfigurationTest {
 
     private static void assertLazy(ConfigurableListableBeanFactory beanFactory, String beanName) {
         assertTrue(beanFactory.getBeanDefinition(beanName).isLazyInit());
+    }
+
+    private static void assertEager(ConfigurableListableBeanFactory beanFactory, String beanName) {
+        assertFalse(beanFactory.getBeanDefinition(beanName).isLazyInit());
     }
 
     private static void assertConfigurationCreatesNew(Class<?> type) {

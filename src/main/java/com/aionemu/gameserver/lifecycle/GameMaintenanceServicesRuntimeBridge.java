@@ -9,11 +9,9 @@ import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
 public class GameMaintenanceServicesRuntimeBridge {
 
     private ObjectProvider<DatabaseCleaningService> databaseCleaningServiceProvider;

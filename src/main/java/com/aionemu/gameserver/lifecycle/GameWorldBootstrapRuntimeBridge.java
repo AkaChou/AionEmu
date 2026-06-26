@@ -7,11 +7,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
 public class GameWorldBootstrapRuntimeBridge {
 
     private ObjectProvider<IDFactory> idFactoryProvider;
