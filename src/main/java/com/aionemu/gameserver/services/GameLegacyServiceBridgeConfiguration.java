@@ -110,7 +110,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public FFAService ffaService() {
-        return FFAService.getInstance();
+        return new FFAService();
     }
 
     @Bean
@@ -176,55 +176,55 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public KamarBattlefieldService kamarBattlefieldService() {
-        return KamarBattlefieldService.getInstance();
+        return new KamarBattlefieldService();
     }
 
     @Bean
     @Lazy
     public EngulfedOphidanBridgeService engulfedOphidanBridgeService() {
-        return EngulfedOphidanBridgeService.getInstance();
+        return new EngulfedOphidanBridgeService();
     }
 
     @Bean
     @Lazy
     public SuspiciousOphidanBridgeService suspiciousOphidanBridgeService() {
-        return SuspiciousOphidanBridgeService.getInstance();
+        return new SuspiciousOphidanBridgeService();
     }
 
     @Bean
     @Lazy
     public IronWallWarfrontService ironWallWarfrontService() {
-        return IronWallWarfrontService.getInstance();
+        return new IronWallWarfrontService();
     }
 
     @Bean
     @Lazy
     public IdgelDomeService idgelDomeService() {
-        return IdgelDomeService.getInstance();
+        return new IdgelDomeService();
     }
 
     @Bean
     @Lazy
     public IdgelDomeLandmarkService idgelDomeLandmarkService() {
-        return IdgelDomeLandmarkService.getInstance();
+        return new IdgelDomeLandmarkService();
     }
 
     @Bean
     @Lazy
     public HallOfTenacityService hallOfTenacityService() {
-        return HallOfTenacityService.getInstance();
+        return new HallOfTenacityService();
     }
 
     @Bean
     @Lazy
     public GrandArenaTrainingCampService grandArenaTrainingCampService() {
-        return GrandArenaTrainingCampService.getInstance();
+        return new GrandArenaTrainingCampService();
     }
 
     @Bean
     @Lazy
     public IDRunService idRunService() {
-        return IDRunService.getInstance();
+        return new IDRunService();
     }
 
     @Bean

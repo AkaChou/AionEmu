@@ -136,6 +136,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedFfaServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(FFAService.getInstance(), context.getBean(FFAService.class));
+        }
+    }
+
+    @Test
     void exposesOptionalServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("playerLimitService"));
@@ -219,6 +226,21 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "hallOfTenacityService");
             assertLazy(context.getBeanFactory(), "grandArenaTrainingCampService");
             assertLazy(context.getBeanFactory(), "idRunService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedBattlefieldServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(KamarBattlefieldService.getInstance(), context.getBean(KamarBattlefieldService.class));
+            assertNotSame(EngulfedOphidanBridgeService.getInstance(), context.getBean(EngulfedOphidanBridgeService.class));
+            assertNotSame(SuspiciousOphidanBridgeService.getInstance(), context.getBean(SuspiciousOphidanBridgeService.class));
+            assertNotSame(IronWallWarfrontService.getInstance(), context.getBean(IronWallWarfrontService.class));
+            assertNotSame(IdgelDomeService.getInstance(), context.getBean(IdgelDomeService.class));
+            assertNotSame(IdgelDomeLandmarkService.getInstance(), context.getBean(IdgelDomeLandmarkService.class));
+            assertNotSame(HallOfTenacityService.getInstance(), context.getBean(HallOfTenacityService.class));
+            assertNotSame(GrandArenaTrainingCampService.getInstance(), context.getBean(GrandArenaTrainingCampService.class));
+            assertNotSame(IDRunService.getInstance(), context.getBean(IDRunService.class));
         }
     }
 
