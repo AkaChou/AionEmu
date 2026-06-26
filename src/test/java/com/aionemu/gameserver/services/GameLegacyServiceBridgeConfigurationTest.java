@@ -151,6 +151,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedShieldServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(ShieldService.getInstance(), context.getBean(ShieldService.class));
+        }
+    }
+
+    @Test
     void createsSpringManagedPlayerLimitServiceInsteadOfLegacySingleton() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertNotSame(PlayerLimitService.getInstance(), context.getBean(PlayerLimitService.class));
@@ -172,6 +179,13 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "maintenanceTask");
             assertLazy(context.getBeanFactory(), "townService");
             assertLazy(context.getBeanFactory(), "challengeTaskService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedChallengeTaskServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(ChallengeTaskService.getInstance(), context.getBean(ChallengeTaskService.class));
         }
     }
 
@@ -232,6 +246,16 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "instanceEngine");
             assertLazy(context.getBeanFactory(), "ai2Engine");
             assertLazy(context.getBeanFactory(), "chatProcessor");
+        }
+    }
+
+    @Test
+    void createsSpringManagedGameEnginesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(QuestEngine.getInstance(), context.getBean(QuestEngine.class));
+            assertNotSame(InstanceEngine.getInstance(), context.getBean(InstanceEngine.class));
+            assertNotSame(AI2Engine.getInstance(), context.getBean(AI2Engine.class));
+            assertNotSame(ChatProcessor.getInstance(), context.getBean(ChatProcessor.class));
         }
     }
 
@@ -323,6 +347,14 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedTerritoryAndLimitedTradeServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(TerritoryService.getInstance(), context.getBean(TerritoryService.class));
+            assertNotSame(LimitedItemTradeService.getInstance(), context.getBean(LimitedItemTradeService.class));
+        }
+    }
+
+    @Test
     void exposesRewardServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("rewardService"));
@@ -372,6 +404,14 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(NavService.class, context.getType("navService"));
             assertLazy(context.getBeanFactory(), "geoService");
             assertLazy(context.getBeanFactory(), "navService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedGeoNavServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(GeoService.getInstance(), context.getBean(GeoService.class));
+            assertNotSame(NavService.getInstance(), context.getBean(NavService.class));
         }
     }
 

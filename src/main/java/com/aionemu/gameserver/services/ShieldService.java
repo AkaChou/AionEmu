@@ -52,7 +52,7 @@ public class ShieldService {
 		return SingletonHolder.instance;
 	}
 
-	private ShieldService() {
+	public ShieldService() {
 	}
 
 	public void load(int mapId) {

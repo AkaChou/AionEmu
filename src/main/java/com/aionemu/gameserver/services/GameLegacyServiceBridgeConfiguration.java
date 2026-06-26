@@ -146,7 +146,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public ShieldService shieldService() {
-        return ShieldService.getInstance();
+        return new ShieldService();
     }
 
     @Bean
@@ -170,7 +170,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public ChallengeTaskService challengeTaskService() {
-        return ChallengeTaskService.getInstance();
+        return new ChallengeTaskService();
     }
 
     @Bean
@@ -236,25 +236,25 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public QuestEngine questEngine() {
-        return QuestEngine.getInstance();
+        return new QuestEngine();
     }
 
     @Bean
     @Lazy
     public InstanceEngine instanceEngine() {
-        return InstanceEngine.getInstance();
+        return new InstanceEngine();
     }
 
     @Bean
     @Lazy
     public AI2Engine ai2Engine() {
-        return AI2Engine.getInstance();
+        return new AI2Engine();
     }
 
     @Bean
     @Lazy
     public ChatProcessor chatProcessor() {
-        return ChatProcessor.getInstance();
+        return new ChatProcessor();
     }
 
     @Bean
@@ -296,7 +296,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public TerritoryService territoryService() {
-        return TerritoryService.getInstance();
+        return new TerritoryService();
     }
 
     @Bean
@@ -380,7 +380,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public LimitedItemTradeService limitedItemTradeService() {
-        return LimitedItemTradeService.getInstance();
+        return new LimitedItemTradeService();
     }
 
     @Bean
@@ -422,13 +422,13 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public GeoService geoService() {
-        return GeoService.getInstance();
+        return new GeoService();
     }
 
     @Bean
     @Lazy
     public NavService navService() {
-        return NavService.getInstance();
+        return new NavService();
     }
 
     @Bean

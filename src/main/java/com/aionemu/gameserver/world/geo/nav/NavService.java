@@ -43,7 +43,7 @@ public final class NavService {
 	private final NavData navData = NavData.getInstance();
 	private final ConcurrentHashMap<GroundCacheKey, GroundCacheEntry> groundCache = new ConcurrentHashMap<>();
 	
-	private NavService() {};
+	public NavService() {};
 	
 	public void initializeNav() {
 		if (GeoDataConfig.GEO_NAV_ENABLE) {

@@ -111,7 +111,7 @@ public class QuestEngine implements GameEngine {
 	private TIntArrayList questRideAction = new TIntArrayList();
 	private TIntArrayList questOnCreativityPoint = new TIntArrayList();
 
-	private QuestEngine() {
+	public QuestEngine() {
 	}
 
 	public static final QuestEngine getInstance() {

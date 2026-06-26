@@ -62,7 +62,7 @@ public class ChallengeTaskService {
 		return SingletonHolder.instance;
 	}
 
-	private ChallengeTaskService() {
+	public ChallengeTaskService() {
 		cityTasks = new FastMap<Integer, Map<Integer, ChallengeTask>>().shared();
 		legionTasks = new FastMap<Integer, Map<Integer, ChallengeTask>>().shared();
 		log.info("ChallengeTaskService initialized.");

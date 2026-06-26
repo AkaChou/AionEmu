@@ -67,7 +67,7 @@ public class ChatProcessor implements GameEngine {
 	public void shutdown() {
 	}
 
-	private ChatProcessor() {
+	public ChatProcessor() {
 	}
 
 	private void init(ChatProcessor processor) {
