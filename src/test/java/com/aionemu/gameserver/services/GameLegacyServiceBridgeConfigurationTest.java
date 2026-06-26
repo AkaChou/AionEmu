@@ -83,6 +83,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedAdminServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(AdminService.getInstance(), context.getBean(AdminService.class));
+        }
+    }
+
+    @Test
     void exposesEventRuntimeServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("eventService"));

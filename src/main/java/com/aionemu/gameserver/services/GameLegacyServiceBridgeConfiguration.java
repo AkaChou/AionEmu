@@ -68,7 +68,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public AdminService adminService() {
-        return AdminService.getInstance();
+        return new AdminService();
     }
 
     @Bean
