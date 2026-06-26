@@ -63,7 +63,7 @@ public class ExchangeService {
 	/**
 	 * Default constructor
 	 */
-	private ExchangeService() {
+	public ExchangeService() {
 		saveManager = new ExchangePeriodicTaskManager(DELAY_EXCHANGE_SAVE);
 	}
 

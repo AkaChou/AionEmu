@@ -39,7 +39,7 @@ public class FlyRingService {
 		return SingletonHolder.instance;
 	}
 
-	private FlyRingService() {
+	public FlyRingService() {
 		for (FlyRingTemplate t : DataManager.FLY_RING_DATA.getFlyRingTemplates()) {
 			FlyRing f = new FlyRing(t, 0);
 			f.spawn();

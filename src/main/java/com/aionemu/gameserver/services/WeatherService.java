@@ -45,7 +45,7 @@ public class WeatherService {
 		return SingletonHolder.instance;
 	}
 
-	private WeatherService() {
+	public WeatherService() {
 		worldZoneWeathers = new HashMap<WeatherKey, WeatherEntry[]>();
 		GameTime gameTime = (GameTime) GameTimeManager.getGameTime().clone();
 		for (Iterator<WorldMapTemplate> mapIterator = DataManager.WORLD_MAPS_DATA.iterator(); mapIterator.hasNext();) {

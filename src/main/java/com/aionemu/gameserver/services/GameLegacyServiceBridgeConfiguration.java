@@ -322,49 +322,49 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public WeatherService weatherService() {
-        return WeatherService.getInstance();
+        return new WeatherService();
     }
 
     @Bean
     @Lazy
     public BrokerService brokerService() {
-        return BrokerService.getInstance();
+        return new BrokerService();
     }
 
     @Bean
     @Lazy
     public Influence influence() {
-        return Influence.getInstance();
+        return new Influence();
     }
 
     @Bean
     @Lazy
     public ExchangeService exchangeService() {
-        return ExchangeService.getInstance();
+        return new ExchangeService();
     }
 
     @Bean
     @Lazy
     public PetitionService petitionService() {
-        return PetitionService.getInstance();
+        return new PetitionService();
     }
 
     @Bean
     @Lazy
     public FlyRingService flyRingService() {
-        return FlyRingService.getInstance();
+        return new FlyRingService();
     }
 
     @Bean
     @Lazy
     public CuringZoneService curingZoneService() {
-        return CuringZoneService.getInstance();
+        return new CuringZoneService();
     }
 
     @Bean
     @Lazy
     public SpringZoneService springZoneService() {
-        return SpringZoneService.getInstance();
+        return new SpringZoneService();
     }
 
     @Bean
@@ -448,7 +448,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public DisputeLandService disputeLandService() {
-        return DisputeLandService.getInstance();
+        return new DisputeLandService();
     }
 
     @Bean
@@ -472,7 +472,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
-        return ShugoImperialTombSpawnManager.getInstance();
+        return new ShugoImperialTombSpawnManager();
     }
 
     @Bean

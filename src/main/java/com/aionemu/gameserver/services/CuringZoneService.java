@@ -35,7 +35,7 @@ public class CuringZoneService {
 	Logger log = LoggerFactory.getLogger(CuringZoneService.class);
 	private FastList<CuringObject> curingObjects = new FastList<CuringObject>();
 
-	private CuringZoneService() {
+	public CuringZoneService() {
 		for (CuringTemplate t : DataManager.CURING_OBJECTS_DATA.getCuringObject()) {
 			CuringObject obj = new CuringObject(t, 0);
 			obj.spawn();

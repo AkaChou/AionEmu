@@ -57,7 +57,7 @@ public class Influence {
 	private float global_a = 0;
 	private float global_b = 0;
 
-	private Influence() {
+	public Influence() {
 		calculateInfluence();
 	}
 

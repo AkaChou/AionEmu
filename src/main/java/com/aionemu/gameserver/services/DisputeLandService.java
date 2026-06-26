@@ -41,7 +41,7 @@ public class DisputeLandService {
 	private static final int duration = CustomConfig.DISPUTE_LAND_DURATION;
 	private static final Logger log = LoggerFactory.getLogger(DisputeLandService.class);
 
-	private DisputeLandService() {
+	public DisputeLandService() {
 	}
 
 	public static DisputeLandService getInstance() {

@@ -39,7 +39,7 @@ public class SpringZoneService {
 	Logger log = LoggerFactory.getLogger(SpringZoneService.class);
 	private FastList<SpringObject> springObjects = new FastList<SpringObject>();
 
-	private SpringZoneService() {
+	public SpringZoneService() {
 		for (SpringTemplate t : DataManager.SPRING_OBJECTS_DATA.getSpringObject()) {
 			SpringObject obj = new SpringObject(t, 0);
 			obj.spawn();
