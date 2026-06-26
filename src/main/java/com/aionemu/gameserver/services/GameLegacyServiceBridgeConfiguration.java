@@ -602,61 +602,61 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public NightmareCircusService nightmareCircusService() {
-        return NightmareCircusService.getInstance();
+        return new NightmareCircusService();
     }
 
     @Bean
     @Lazy
     public DynamicRiftService dynamicRiftService() {
-        return DynamicRiftService.getInstance();
+        return new DynamicRiftService();
     }
 
     @Bean
     @Lazy
     public InstanceRiftService instanceRiftService() {
-        return InstanceRiftService.getInstance();
+        return new InstanceRiftService();
     }
 
     @Bean
     @Lazy
     public ZorshivDredgionService zorshivDredgionService() {
-        return ZorshivDredgionService.getInstance();
+        return new ZorshivDredgionService();
     }
 
     @Bean
     @Lazy
     public MoltenusService moltenusService() {
-        return MoltenusService.getInstance();
+        return new MoltenusService();
     }
 
     @Bean
     @Lazy
     public RiftService riftService() {
-        return RiftService.getInstance();
+        return new RiftService();
     }
 
     @Bean
     @Lazy
     public ConquestService conquestService() {
-        return ConquestService.getInstance();
+        return new ConquestService();
     }
 
     @Bean
     @Lazy
     public IdianDepthsService idianDepthsService() {
-        return IdianDepthsService.getInstance();
+        return new IdianDepthsService();
     }
 
     @Bean
     @Lazy
     public TowerOfEternityService towerOfEternityService() {
-        return TowerOfEternityService.getInstance();
+        return new TowerOfEternityService();
     }
 
     @Bean
     @Lazy
     public AbyssLandingService abyssLandingService() {
-        return AbyssLandingService.getInstance();
+        return new AbyssLandingService();
     }
 
     @Bean

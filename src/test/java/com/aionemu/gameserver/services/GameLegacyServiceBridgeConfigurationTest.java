@@ -579,6 +579,22 @@ class GameLegacyServiceBridgeConfigurationTest {
         }
     }
 
+    @Test
+    void createsSpringManagedRiftAndLandingServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(NightmareCircusService.getInstance(), context.getBean(NightmareCircusService.class));
+            assertNotSame(DynamicRiftService.getInstance(), context.getBean(DynamicRiftService.class));
+            assertNotSame(InstanceRiftService.getInstance(), context.getBean(InstanceRiftService.class));
+            assertNotSame(ZorshivDredgionService.getInstance(), context.getBean(ZorshivDredgionService.class));
+            assertNotSame(MoltenusService.getInstance(), context.getBean(MoltenusService.class));
+            assertNotSame(RiftService.getInstance(), context.getBean(RiftService.class));
+            assertNotSame(ConquestService.getInstance(), context.getBean(ConquestService.class));
+            assertNotSame(IdianDepthsService.getInstance(), context.getBean(IdianDepthsService.class));
+            assertNotSame(TowerOfEternityService.getInstance(), context.getBean(TowerOfEternityService.class));
+            assertNotSame(AbyssLandingService.getInstance(), context.getBean(AbyssLandingService.class));
+        }
+    }
+
     private static void assertLazy(ConfigurableListableBeanFactory beanFactory, String beanName) {
         assertTrue(beanFactory.getBeanDefinition(beanName).isLazyInit());
     }
