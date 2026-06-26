@@ -19,6 +19,8 @@ package com.aionemu.gameserver.taskmanager.tasks;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
@@ -26,6 +28,7 @@ import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 import javolution.util.FastMap;
 
 public class ExpireTimerTask extends AbstractPeriodicTaskManager {
+	private static volatile ObjectProvider<ExpireTimerTask> instanceProvider;
 	private FastMap<IExpirable, Player> expirables = new FastMap<IExpirable, Player>();
 
 	public ExpireTimerTask() {
@@ -33,7 +36,15 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	}
 
 	public static ExpireTimerTask getInstance() {
+		ObjectProvider<ExpireTimerTask> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder._instance);
+		}
 		return SingletonHolder._instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ExpireTimerTask> provider) {
+		instanceProvider = provider;
 	}
 
 	public void addTask(IExpirable expirable, Player player) {

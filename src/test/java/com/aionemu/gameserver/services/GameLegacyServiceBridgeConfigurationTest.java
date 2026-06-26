@@ -43,6 +43,7 @@ import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.LunaShopService;
@@ -63,7 +64,11 @@ import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
+import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
+import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -613,16 +618,37 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("arcadeUpgradeService"));
             assertTrue(context.containsBeanDefinition("atreianBestiaryService"));
             assertTrue(context.containsBeanDefinition("coalescenceService"));
+            assertTrue(context.containsBeanDefinition("growthEnergy"));
             assertEquals(BonusService.class, context.getType("bonusService"));
             assertEquals(PetService.class, context.getType("petService"));
             assertEquals(ArcadeUpgradeService.class, context.getType("arcadeUpgradeService"));
             assertEquals(AtreianBestiaryService.class, context.getType("atreianBestiaryService"));
             assertEquals(CoalescenceService.class, context.getType("coalescenceService"));
+            assertEquals(GrowthEnergy.class, context.getType("growthEnergy"));
             assertLazy(context.getBeanFactory(), "bonusService");
             assertLazy(context.getBeanFactory(), "petService");
             assertLazy(context.getBeanFactory(), "arcadeUpgradeService");
             assertLazy(context.getBeanFactory(), "atreianBestiaryService");
             assertLazy(context.getBeanFactory(), "coalescenceService");
+            assertLazy(context.getBeanFactory(), "growthEnergy");
+        }
+    }
+
+    @Test
+    void exposesTaskManagerCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("expireTimerTask"));
+            assertTrue(context.containsBeanDefinition("teamEffectUpdater"));
+            assertTrue(context.containsBeanDefinition("teamMoveUpdater"));
+            assertTrue(context.containsBeanDefinition("temporaryTradeTimeTask"));
+            assertEquals(ExpireTimerTask.class, context.getType("expireTimerTask"));
+            assertEquals(TeamEffectUpdater.class, context.getType("teamEffectUpdater"));
+            assertEquals(TeamMoveUpdater.class, context.getType("teamMoveUpdater"));
+            assertEquals(TemporaryTradeTimeTask.class, context.getType("temporaryTradeTimeTask"));
+            assertLazy(context.getBeanFactory(), "expireTimerTask");
+            assertLazy(context.getBeanFactory(), "teamEffectUpdater");
+            assertLazy(context.getBeanFactory(), "teamMoveUpdater");
+            assertLazy(context.getBeanFactory(), "temporaryTradeTimeTask");
         }
     }
 

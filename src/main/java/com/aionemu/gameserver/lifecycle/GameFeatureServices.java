@@ -23,6 +23,7 @@ import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.services.reward.RewardService;
@@ -62,7 +63,8 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<PetService> petServiceProvider,
             ObjectProvider<ArcadeUpgradeService> arcadeUpgradeServiceProvider,
             ObjectProvider<AtreianBestiaryService> atreianBestiaryServiceProvider,
-            ObjectProvider<CoalescenceService> coalescenceServiceProvider) {
+            ObjectProvider<CoalescenceService> coalescenceServiceProvider,
+            ObjectProvider<GrowthEnergy> growthEnergyProvider) {
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
         DredgionService2.setInstanceProvider(dredgionServiceProvider);
         AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
@@ -91,6 +93,7 @@ public final class GameFeatureServices implements DisposableBean {
         ArcadeUpgradeService.setInstanceProvider(arcadeUpgradeServiceProvider);
         AtreianBestiaryService.setInstanceProvider(atreianBestiaryServiceProvider);
         CoalescenceService.setInstanceProvider(coalescenceServiceProvider);
+        GrowthEnergy.setInstanceProvider(growthEnergyProvider);
     }
 
     @Override
@@ -123,5 +126,6 @@ public final class GameFeatureServices implements DisposableBean {
         ArcadeUpgradeService.setInstanceProvider(null);
         AtreianBestiaryService.setInstanceProvider(null);
         CoalescenceService.setInstanceProvider(null);
+        GrowthEnergy.setInstanceProvider(null);
     }
 }

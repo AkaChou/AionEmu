@@ -2,7 +2,9 @@ package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.lang.reflect.Field;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.instance.InstanceEngine;
@@ -70,6 +72,7 @@ import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
@@ -84,7 +87,11 @@ import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
+import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
+import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
@@ -173,6 +180,11 @@ class GameServiceProviderCompatibilityTest {
         ArcadeUpgradeService arcadeUpgradeService = instance(ArcadeUpgradeService.class);
         AtreianBestiaryService atreianBestiaryService = instance(AtreianBestiaryService.class);
         CoalescenceService coalescenceService = instance(CoalescenceService.class);
+        GrowthEnergy growthEnergy = instance(GrowthEnergy.class);
+        ExpireTimerTask expireTimerTask = instance(ExpireTimerTask.class);
+        TeamEffectUpdater teamEffectUpdater = instance(TeamEffectUpdater.class);
+        TeamMoveUpdater teamMoveUpdater = instance(TeamMoveUpdater.class);
+        TemporaryTradeTimeTask temporaryTradeTimeTask = instance(TemporaryTradeTimeTask.class);
         HousingBidService housingBidService = instance(HousingBidService.class);
         MaintenanceTask maintenanceTask = instance(MaintenanceTask.class);
         TownService townService = instance(TownService.class);
@@ -261,6 +273,11 @@ class GameServiceProviderCompatibilityTest {
             ArcadeUpgradeService.setInstanceProvider(provider(ArcadeUpgradeService.class, arcadeUpgradeService));
             AtreianBestiaryService.setInstanceProvider(provider(AtreianBestiaryService.class, atreianBestiaryService));
             CoalescenceService.setInstanceProvider(provider(CoalescenceService.class, coalescenceService));
+            GrowthEnergy.setInstanceProvider(provider(GrowthEnergy.class, growthEnergy));
+            ExpireTimerTask.setInstanceProvider(provider(ExpireTimerTask.class, expireTimerTask));
+            TeamEffectUpdater.setInstanceProvider(provider(TeamEffectUpdater.class, teamEffectUpdater));
+            TeamMoveUpdater.setInstanceProvider(provider(TeamMoveUpdater.class, teamMoveUpdater));
+            TemporaryTradeTimeTask.setInstanceProvider(provider(TemporaryTradeTimeTask.class, temporaryTradeTimeTask));
             HousingBidService.setInstanceProvider(provider(HousingBidService.class, housingBidService));
             MaintenanceTask.setInstanceProvider(provider(MaintenanceTask.class, maintenanceTask));
             TownService.setInstanceProvider(provider(TownService.class, townService));
@@ -348,6 +365,11 @@ class GameServiceProviderCompatibilityTest {
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
             assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
             assertSame(coalescenceService, CoalescenceService.getInstance());
+            assertSame(growthEnergy, GrowthEnergy.getInstance());
+            assertSame(expireTimerTask, ExpireTimerTask.getInstance());
+            assertSame(teamEffectUpdater, TeamEffectUpdater.getInstance());
+            assertSame(teamMoveUpdater, TeamMoveUpdater.getInstance());
+            assertSame(temporaryTradeTimeTask, TemporaryTradeTimeTask.getInstance());
             assertSame(housingBidService, HousingBidService.getInstance());
             assertSame(maintenanceTask, MaintenanceTask.getInstance());
             assertSame(townService, TownService.getInstance());
@@ -435,6 +457,11 @@ class GameServiceProviderCompatibilityTest {
             ArcadeUpgradeService.setInstanceProvider(null);
             AtreianBestiaryService.setInstanceProvider(null);
             CoalescenceService.setInstanceProvider(null);
+            GrowthEnergy.setInstanceProvider(null);
+            ExpireTimerTask.setInstanceProvider(null);
+            TeamEffectUpdater.setInstanceProvider(null);
+            TeamMoveUpdater.setInstanceProvider(null);
+            TemporaryTradeTimeTask.setInstanceProvider(null);
             HousingBidService.setInstanceProvider(null);
             MaintenanceTask.setInstanceProvider(null);
             TownService.setInstanceProvider(null);
@@ -458,6 +485,7 @@ class GameServiceProviderCompatibilityTest {
         ArcadeUpgradeService arcadeUpgradeService = instance(ArcadeUpgradeService.class);
         AtreianBestiaryService atreianBestiaryService = instance(AtreianBestiaryService.class);
         CoalescenceService coalescenceService = instance(CoalescenceService.class);
+        GrowthEnergy growthEnergy = instance(GrowthEnergy.class);
 
         GameFeatureServices featureServices = new GameFeatureServices(
                 provider(DisputeLandService.class, instance(DisputeLandService.class)),
@@ -487,7 +515,8 @@ class GameServiceProviderCompatibilityTest {
                 provider(PetService.class, petService),
                 provider(ArcadeUpgradeService.class, arcadeUpgradeService),
                 provider(AtreianBestiaryService.class, atreianBestiaryService),
-                provider(CoalescenceService.class, coalescenceService));
+                provider(CoalescenceService.class, coalescenceService),
+                provider(GrowthEnergy.class, growthEnergy));
 
         try {
             assertSame(bonusService, BonusService.getInstance());
@@ -495,6 +524,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
             assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
             assertSame(coalescenceService, CoalescenceService.getInstance());
+            assertSame(growthEnergy, GrowthEnergy.getInstance());
 
             featureServices.destroy();
             featureServices = null;
@@ -504,6 +534,7 @@ class GameServiceProviderCompatibilityTest {
             assertNotSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
             assertNotSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
             assertNotSame(coalescenceService, CoalescenceService.getInstance());
+            assertNotSame(growthEnergy, GrowthEnergy.getInstance());
         } finally {
             if (featureServices != null) {
                 featureServices.destroy();
@@ -513,11 +544,54 @@ class GameServiceProviderCompatibilityTest {
             ArcadeUpgradeService.setInstanceProvider(null);
             AtreianBestiaryService.setInstanceProvider(null);
             CoalescenceService.setInstanceProvider(null);
+            GrowthEnergy.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void gameTaskManagerServicesRegistersAndClearsTaskProviders() throws Exception {
+        ExpireTimerTask expireTimerTask = instance(ExpireTimerTask.class);
+        TeamEffectUpdater teamEffectUpdater = instance(TeamEffectUpdater.class);
+        TeamMoveUpdater teamMoveUpdater = instance(TeamMoveUpdater.class);
+        TemporaryTradeTimeTask temporaryTradeTimeTask = instance(TemporaryTradeTimeTask.class);
+        GameTaskManagerServices taskManagerServices = new GameTaskManagerServices(
+                provider(ExpireTimerTask.class, expireTimerTask),
+                provider(TeamEffectUpdater.class, teamEffectUpdater),
+                provider(TeamMoveUpdater.class, teamMoveUpdater),
+                provider(TemporaryTradeTimeTask.class, temporaryTradeTimeTask));
+
+        try {
+            assertSame(expireTimerTask, ExpireTimerTask.getInstance());
+            assertSame(teamEffectUpdater, TeamEffectUpdater.getInstance());
+            assertSame(teamMoveUpdater, TeamMoveUpdater.getInstance());
+            assertSame(temporaryTradeTimeTask, TemporaryTradeTimeTask.getInstance());
+
+            taskManagerServices.destroy();
+            taskManagerServices = null;
+
+            assertProviderCleared(ExpireTimerTask.class);
+            assertProviderCleared(TeamEffectUpdater.class);
+            assertProviderCleared(TeamMoveUpdater.class);
+            assertProviderCleared(TemporaryTradeTimeTask.class);
+        } finally {
+            if (taskManagerServices != null) {
+                taskManagerServices.destroy();
+            }
+            ExpireTimerTask.setInstanceProvider(null);
+            TeamEffectUpdater.setInstanceProvider(null);
+            TeamMoveUpdater.setInstanceProvider(null);
+            TemporaryTradeTimeTask.setInstanceProvider(null);
         }
     }
 
     private <T> T instance(Class<T> type) {
         return objenesis.newInstance(type);
+    }
+
+    private static void assertProviderCleared(Class<?> type) throws ReflectiveOperationException {
+        Field field = type.getDeclaredField("instanceProvider");
+        field.setAccessible(true);
+        assertNull(field.get(null));
     }
 
     private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {

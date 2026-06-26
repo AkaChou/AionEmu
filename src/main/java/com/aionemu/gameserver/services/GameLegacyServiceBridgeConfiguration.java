@@ -41,6 +41,7 @@ import com.aionemu.gameserver.services.item.CoalescenceService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
@@ -56,7 +57,11 @@ import com.aionemu.gameserver.services.toypet.MinionService;
 import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
+import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
+import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -762,5 +767,35 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public CoalescenceService coalescenceService() {
         return new CoalescenceService();
+    }
+
+    @Bean
+    @Lazy
+    public GrowthEnergy growthEnergy() {
+        return new GrowthEnergy();
+    }
+
+    @Bean
+    @Lazy
+    public ExpireTimerTask expireTimerTask() {
+        return new ExpireTimerTask();
+    }
+
+    @Bean
+    @Lazy
+    public TeamEffectUpdater teamEffectUpdater() {
+        return new TeamEffectUpdater();
+    }
+
+    @Bean
+    @Lazy
+    public TeamMoveUpdater teamMoveUpdater() {
+        return new TeamMoveUpdater();
+    }
+
+    @Bean
+    @Lazy
+    public TemporaryTradeTimeTask temporaryTradeTimeTask() {
+        return new TemporaryTradeTimeTask();
     }
 }
