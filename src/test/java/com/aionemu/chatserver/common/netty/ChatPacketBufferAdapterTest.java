@@ -5,34 +5,32 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import java.nio.ByteOrder;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.jupiter.api.Test;
 
 class ChatPacketBufferAdapterTest {
 
     @Test
-    void channelBufferAndByteBufWritersProduceSameLittleEndianBytes() {
-        ChannelBuffer channelBuffer = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN, 128);
+    void byteBufWriterProducesLittleEndianBytes() {
         ByteBuf byteBuf = Unpooled.buffer(128);
 
-        writeSample(new ChannelBufferPacketWriter(channelBuffer));
         writeSample(new ByteBufPacketWriter(byteBuf));
 
-        assertArrayEquals(bytes(channelBuffer), bytes(byteBuf));
-        byteBuf.release();
+        try {
+            assertArrayEquals(expectedBytes(), bytes(byteBuf));
+        } finally {
+            byteBuf.release();
+        }
     }
 
     @Test
-    void channelBufferAndByteBufReadersReadSameLittleEndianValues() {
-        ChannelBuffer channelBuffer = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN, 128);
-        writeSample(new ChannelBufferPacketWriter(channelBuffer));
-        ByteBuf byteBuf = Unpooled.wrappedBuffer(bytes(channelBuffer));
+    void byteBufReaderReadsLittleEndianValues() {
+        ByteBuf byteBuf = Unpooled.wrappedBuffer(expectedBytes());
 
-        assertSample(new ChannelBufferPacketReader(channelBuffer));
-        assertSample(new ByteBufPacketReader(byteBuf));
-        byteBuf.release();
+        try {
+            assertSample(new ByteBufPacketReader(byteBuf));
+        } finally {
+            byteBuf.release();
+        }
     }
 
     private static void writeSample(PacketWriter writer) {
@@ -62,15 +60,23 @@ class ChatPacketBufferAdapterTest {
         assertEquals(0, reader.readableBytes());
     }
 
-    private static byte[] bytes(ChannelBuffer buffer) {
+    private static byte[] bytes(ByteBuf buffer) {
         byte[] bytes = new byte[buffer.readableBytes()];
         buffer.getBytes(0, bytes);
         return bytes;
     }
 
-    private static byte[] bytes(ByteBuf buffer) {
-        byte[] bytes = new byte[buffer.readableBytes()];
-        buffer.getBytes(0, bytes);
-        return bytes;
+    private static byte[] expectedBytes() {
+        return new byte[] {
+            0x11,
+            0x33, 0x22,
+            0x77, 0x66, 0x55, 0x44,
+            (byte) 0x88, 0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11,
+            0x00, 0x00, 0x60, 0x40,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1D, 0x40,
+            0x41, 0x00,
+            0x00, 0x00,
+            (byte) 0xFE, (byte) 0xDC
+        };
     }
 }

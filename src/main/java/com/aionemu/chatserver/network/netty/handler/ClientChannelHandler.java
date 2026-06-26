@@ -18,22 +18,16 @@
 
 package com.aionemu.chatserver.network.netty.handler;
 
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.nio.ByteOrder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelStateEvent;
-import org.jboss.netty.channel.MessageEvent;
+import io.netty.channel.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.chatserver.common.netty.ByteBufPacketWriter;
-import com.aionemu.chatserver.common.netty.ChannelBufferPacketReader;
-import com.aionemu.chatserver.common.netty.ChannelBufferPacketWriter;
 import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.network.aion.AbstractClientPacket;
@@ -43,36 +37,20 @@ import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 /**
  * @author ATracer
  */
-public class ClientChannelHandler extends AbstractChannelHandler {
+public class ClientChannelHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ClientChannelHandler.class);
     private final ClientPacketHandler clientPacketHandler;
     private State state;
     private ChatClient chatClient;
-    private io.netty.channel.Channel nettyChannel;
+    private InetAddress inetAddress;
+    private Channel nettyChannel;
 
     public ClientChannelHandler(ClientPacketHandler clientPacketHandler) {
         this.clientPacketHandler = clientPacketHandler;
     }
 
-    @Override
-    public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-        super.channelConnected(ctx, e);
-
-        state = State.CONNECTED;
-        inetAddress = ((InetSocketAddress) e.getChannel().getRemoteAddress()).getAddress();
-        channel = ctx.getChannel();
-        log.info("Channel connected Ip:" + inetAddress.getHostAddress());
-    }
-
-    @Override
-    public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        super.messageReceived(ctx, e);
-
-        handlePacket(new ChannelBufferPacketReader((ChannelBuffer) e.getMessage()));
-    }
-
-    public void nettyChannelActive(io.netty.channel.Channel channel) {
+    public void nettyChannelActive(Channel channel) {
         state = State.CONNECTED;
         inetAddress = ((InetSocketAddress) channel.remoteAddress()).getAddress();
         nettyChannel = channel;
@@ -109,25 +87,35 @@ public class ClientChannelHandler extends AbstractChannelHandler {
      * @param packet
      */
     public void sendPacket(AbstractServerPacket packet) {
-        if (nettyChannel != null) {
-            ByteBuf output = Unpooled.buffer(2 * 8192);
-            ByteBufPacketWriter writer = new ByteBufPacketWriter(output);
-            packet.write(this, writer);
-            writer.setH(0, writer.readableBytes());
-            nettyChannel.writeAndFlush(output);
-            if (log.isDebugEnabled()) {
-                log.debug("Sent packet: " + packet);
-            }
+        if (nettyChannel == null) {
+            log.warn("Cannot send chat packet without an active Netty channel: {}", packet);
             return;
         }
-        ChannelBuffer cb = ChannelBuffers.buffer(ByteOrder.LITTLE_ENDIAN, 2 * 8192);
-        ChannelBufferPacketWriter writer = new ChannelBufferPacketWriter(cb);
+
+        ByteBuf output = Unpooled.buffer(2 * 8192);
+        ByteBufPacketWriter writer = new ByteBufPacketWriter(output);
         packet.write(this, writer);
         writer.setH(0, writer.readableBytes());
-        channel.write(writer.buffer());
+        nettyChannel.writeAndFlush(output);
         if (log.isDebugEnabled()) {
             log.debug("Sent packet: " + packet);
         }
+    }
+
+    /**
+     * Closes the channel.
+     */
+    public void close() {
+        if (nettyChannel != null) {
+            nettyChannel.close();
+        }
+    }
+
+    /**
+     * @return the IP address string
+     */
+    public String getIP() {
+        return inetAddress.getHostAddress();
     }
 
     /**
