@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.services.CronService;
@@ -40,6 +41,7 @@ import javolution.util.FastList;
 
 public class AsyunatarService {
 	private static final Logger log = LoggerFactory.getLogger(AsyunatarService.class);
+	private static volatile ObjectProvider<AsyunatarService> instanceProvider;
 	private boolean registerAvailable;
 	private final FastList<Integer> playersWithCooldown = FastList.newInstance();
 	public static final byte minLevel = 66, capLevel = 76;
@@ -146,6 +148,14 @@ public class AsyunatarService {
 	}
 
 	public static AsyunatarService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<AsyunatarService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AsyunatarService> instanceProvider) {
+		AsyunatarService.instanceProvider = instanceProvider;
 	}
 }

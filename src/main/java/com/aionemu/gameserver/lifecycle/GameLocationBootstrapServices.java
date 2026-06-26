@@ -3,6 +3,7 @@ package com.aionemu.gameserver.lifecycle;
 import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.services.AnohaService;
 import com.aionemu.gameserver.services.AbyssLandingService;
+import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.BeritraService;
 import com.aionemu.gameserver.services.ConquestService;
@@ -20,6 +21,7 @@ import com.aionemu.gameserver.services.SvsService;
 import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.services.ZorshivDredgionService;
+import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
@@ -41,7 +43,9 @@ public final class GameLocationBootstrapServices implements DisposableBean {
             ObjectProvider<ConquestService> conquestServiceProvider,
             ObjectProvider<IdianDepthsService> idianDepthsServiceProvider,
             ObjectProvider<TowerOfEternityService> towerOfEternityServiceProvider,
-            ObjectProvider<AbyssLandingService> abyssLandingServiceProvider) {
+            ObjectProvider<AbyssLandingService> abyssLandingServiceProvider,
+            ObjectProvider<LandingUpdateService> landingUpdateServiceProvider,
+            ObjectProvider<AbyssLandingSpecialService> abyssLandingSpecialServiceProvider) {
         VortexService.setInstanceProvider(vortexServiceProvider);
         BeritraService.setInstanceProvider(beritraServiceProvider);
         AgentService.setInstanceProvider(agentServiceProvider);
@@ -62,6 +66,8 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         IdianDepthsService.setInstanceProvider(idianDepthsServiceProvider);
         TowerOfEternityService.setInstanceProvider(towerOfEternityServiceProvider);
         AbyssLandingService.setInstanceProvider(abyssLandingServiceProvider);
+        LandingUpdateService.setInstanceProvider(landingUpdateServiceProvider);
+        AbyssLandingSpecialService.setInstanceProvider(abyssLandingSpecialServiceProvider);
     }
 
     @Override
@@ -86,5 +92,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         IdianDepthsService.setInstanceProvider(null);
         TowerOfEternityService.setInstanceProvider(null);
         AbyssLandingService.setInstanceProvider(null);
+        LandingUpdateService.setInstanceProvider(null);
+        AbyssLandingSpecialService.setInstanceProvider(null);
     }
 }

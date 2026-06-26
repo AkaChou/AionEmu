@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.EventsConfig;
@@ -38,6 +39,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 public class ShugoImperialTombSpawnManager {
 	private static final Logger log = LoggerFactory.getLogger(ShugoImperialTombSpawnManager.class);
+	private static volatile ObjectProvider<ShugoImperialTombSpawnManager> instanceProvider;
 	private static final ConcurrentLinkedQueue<VisibleObject> tomb = new ConcurrentLinkedQueue<VisibleObject>();
 
 	public void start() {
@@ -161,6 +163,14 @@ public class ShugoImperialTombSpawnManager {
 	}
 
 	public static ShugoImperialTombSpawnManager getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<ShugoImperialTombSpawnManager> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ShugoImperialTombSpawnManager> instanceProvider) {
+		ShugoImperialTombSpawnManager.instanceProvider = instanceProvider;
 	}
 }

@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.SeasonRankingDAO;
@@ -36,6 +37,7 @@ import javolution.util.FastMap;
 
 public class SeasonRankingUpdateService {
 	private static final Logger log = LoggerFactory.getLogger(SeasonRankingService.class);
+	private static volatile ObjectProvider<SeasonRankingUpdateService> instanceProvider;
 	private int lastUpdate;
 	private final FastMap<Integer, List<SM_SEASON_RANKING>> players = new FastMap<Integer, List<SM_SEASON_RANKING>>();
 
@@ -79,7 +81,15 @@ public class SeasonRankingUpdateService {
 	}
 
 	public static final SeasonRankingUpdateService getInstance() {
-		return SingletonHolder.INSTANCE;
+		ObjectProvider<SeasonRankingUpdateService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<SeasonRankingUpdateService> instanceProvider) {
+		SeasonRankingUpdateService.instanceProvider = instanceProvider;
 	}
 
 	private static class SingletonHolder {
