@@ -134,10 +134,12 @@ class ChatServerTest {
         assertFalse(source.contains("return GameServerService.getInstance();"));
         assertFalse(source.contains("return BroadcastService.getInstance();"));
         assertFalse(source.contains("return ChatService.getInstance();"));
+        assertFalse(source.contains("return NettyServer.getInstance(clientPacketHandler);"));
         assertTrue(source.contains("return new IdFactory();"));
         assertTrue(source.contains("return new GameServerService();"));
         assertTrue(source.contains("return new BroadcastService();"));
         assertTrue(source.contains("return new ChatService(broadcastService);"));
+        assertTrue(source.contains("return new NettyServer(clientPacketHandler);"));
         assertTrue(chatServiceSource.contains("public ChatService(BroadcastService broadcastService)"));
         assertTrue(chatServiceSource.contains("@Deprecated(since = \"boot-migration\")"));
     }
@@ -155,6 +157,7 @@ class ChatServerTest {
         assertTrue(legacyDependenciesSource.contains("ChatCoreServices.gameServerService()"));
         assertTrue(legacyDependenciesSource.contains("ChatCoreServices.broadcastService()"));
         assertTrue(legacyDependenciesSource.contains("ChatCoreServices.chatService()"));
+        assertTrue(legacyDependenciesSource.contains("ChatNettyServers.nettyServer()"));
         assertTrue(legacyDependenciesSource.contains("ChatRestartServices.restartService()"));
     }
 

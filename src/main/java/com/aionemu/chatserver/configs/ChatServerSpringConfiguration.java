@@ -35,7 +35,7 @@ public class ChatServerSpringConfiguration {
     @Bean
     @Lazy
     public NettyServer nettyServer(ClientPacketHandler clientPacketHandler) {
-        return NettyServer.getInstance(clientPacketHandler);
+        return new NettyServer(clientPacketHandler);
     }
 
     @Bean
