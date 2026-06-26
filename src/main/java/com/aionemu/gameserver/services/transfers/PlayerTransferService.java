@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.GSConfig;
@@ -49,11 +50,22 @@ import javolution.util.FastMap;
 public class PlayerTransferService {
 	private final Logger log = LoggerFactory.getLogger(PlayerTransferService.class);
 	private final Logger textLog = LoggerFactory.getLogger("PLAYERTRANSFER");
-
-	private static PlayerTransferService instance = new PlayerTransferService();
+	private static volatile ObjectProvider<PlayerTransferService> instanceProvider;
 
 	public static PlayerTransferService getInstance() {
-		return instance;
+		ObjectProvider<PlayerTransferService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<PlayerTransferService> instanceProvider) {
+		PlayerTransferService.instanceProvider = instanceProvider;
+	}
+
+	private static class SingletonHolder {
+		protected static final PlayerTransferService instance = new PlayerTransferService();
 	}
 
 	private PlayerDAO dao;

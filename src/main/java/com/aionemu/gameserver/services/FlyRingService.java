@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.flyring.FlyRing;
@@ -28,6 +29,7 @@ import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
  */
 public class FlyRingService {
 
+	private static volatile ObjectProvider<FlyRingService> instanceProvider;
 	Logger log = LoggerFactory.getLogger(FlyRingService.class);
 
 	private static class SingletonHolder {
@@ -36,7 +38,15 @@ public class FlyRingService {
 	}
 
 	public static final FlyRingService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<FlyRingService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<FlyRingService> instanceProvider) {
+		FlyRingService.instanceProvider = instanceProvider;
 	}
 
 	public FlyRingService() {

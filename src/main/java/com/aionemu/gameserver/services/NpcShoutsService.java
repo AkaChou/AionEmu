@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AITemplate;
@@ -49,6 +50,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class NpcShoutsService {
 
 	private static final Logger log = LoggerFactory.getLogger(NpcShoutsService.class);
+	private static volatile ObjectProvider<NpcShoutsService> instanceProvider;
 
 	NpcShoutData shoutsCache = DataManager.NPC_SHOUT_DATA;
 
@@ -211,7 +213,15 @@ public class NpcShoutsService {
 	}
 
 	public static final NpcShoutsService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<NpcShoutsService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<NpcShoutsService> instanceProvider) {
+		NpcShoutsService.instanceProvider = instanceProvider;
 	}
 
 	@SuppressWarnings("synthetic-access")

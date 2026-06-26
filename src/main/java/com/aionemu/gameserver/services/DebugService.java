@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -32,11 +33,20 @@ import com.aionemu.gameserver.world.World;
 public class DebugService {
 
 	private static final Logger log = LoggerFactory.getLogger(DebugService.class);
+	private static volatile ObjectProvider<DebugService> instanceProvider;
 
 	private static final int ANALYZE_PLAYERS_INTERVAL = 30 * 60 * 1000;
 
 	public static final DebugService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<DebugService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<DebugService> instanceProvider) {
+		DebugService.instanceProvider = instanceProvider;
 	}
 
 	public DebugService() {

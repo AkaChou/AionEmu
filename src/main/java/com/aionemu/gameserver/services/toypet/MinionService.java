@@ -23,6 +23,7 @@ import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
@@ -63,6 +64,7 @@ import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
  */
 public class MinionService {
 
+	private static volatile ObjectProvider<MinionService> instanceProvider;
 	private static List<Integer> minions;
 	private MinionBuff minionbuff;
 	private Logger log = LoggerFactory.getLogger(MinionService.class);
@@ -846,7 +848,15 @@ public class MinionService {
 	}
 
 	public static MinionService getInstance() {
+		ObjectProvider<MinionService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<MinionService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class SingletonHolder {

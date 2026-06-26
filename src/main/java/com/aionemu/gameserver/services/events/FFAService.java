@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.FFAConfig;
@@ -63,6 +64,7 @@ import javolution.util.FastMap;
  * @author Rinzler (Encom)
  */
 public class FFAService {
+	private static volatile ObjectProvider<FFAService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(FFAService.class);
 	private Map<Integer, WorldPosition> previousLocations = new FastMap<Integer, WorldPosition>();
 	private WorldMapInstance activeInstance;
@@ -676,7 +678,15 @@ public class FFAService {
 	}
 
 	public static final FFAService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<FFAService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<FFAService> instanceProvider) {
+		FFAService.instanceProvider = instanceProvider;
 	}
 
 	@SuppressWarnings("synthetic-access")

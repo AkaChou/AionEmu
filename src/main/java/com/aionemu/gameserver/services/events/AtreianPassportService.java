@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerPassportsDAO;
@@ -41,6 +42,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 public class AtreianPassportService {
 
+	private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(AtreianPassportService.class);
 	private Map<Integer, AtreianPassport> basic = new HashMap<Integer, AtreianPassport>(1);
 	private Map<Integer, AtreianPassport> anny = new HashMap<Integer, AtreianPassport>(1);
@@ -181,6 +183,14 @@ public class AtreianPassportService {
 	}
 
 	public static AtreianPassportService getInstance() {
+		ObjectProvider<AtreianPassportService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AtreianPassportService> provider) {
+		instanceProvider = provider;
 	}
 }

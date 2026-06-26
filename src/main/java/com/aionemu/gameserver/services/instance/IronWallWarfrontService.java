@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.services.CronService;
@@ -39,6 +40,7 @@ import javolution.util.FastList;
  ****/
 
 public class IronWallWarfrontService {
+	private static volatile ObjectProvider<IronWallWarfrontService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(IronWallWarfrontService.class);
 
 	private boolean registerAvailable;
@@ -132,6 +134,14 @@ public class IronWallWarfrontService {
 	}
 
 	public static IronWallWarfrontService getInstance() {
+		ObjectProvider<IronWallWarfrontService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<IronWallWarfrontService> provider) {
+		instanceProvider = provider;
 	}
 }

@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services.player;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -29,6 +30,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 public class PlayerEventService {
+	private static volatile ObjectProvider<PlayerEventService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(PlayerEventService.class);
 
 	public PlayerEventService() {
@@ -89,7 +91,15 @@ public class PlayerEventService {
 	};
 
 	public static PlayerEventService getInstance() {
+		ObjectProvider<PlayerEventService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<PlayerEventService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class SingletonHolder {

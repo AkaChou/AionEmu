@@ -32,6 +32,7 @@ import java.util.Map.Entry;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
@@ -43,6 +44,7 @@ import javolution.util.FastMap;
  */
 public final class HTMLCache {
 
+	private static volatile ObjectProvider<HTMLCache> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(HTMLCache.class);
 
 	private static final FileFilter HTML_FILTER = new FileFilter() {
@@ -63,7 +65,15 @@ public final class HTMLCache {
 	}
 
 	public static HTMLCache getInstance() {
+		ObjectProvider<HTMLCache> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<HTMLCache> provider) {
+		instanceProvider = provider;
 	}
 
 	private FastMap<String, String> cache = new FastMap<String, String>(16000);

@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.bonus_service.BoostEventBonus;
@@ -38,6 +39,7 @@ public class BoostEventService implements StatOwner {
 	private static BoostEventBonus bonus;
 
 	private static final Logger log = LoggerFactory.getLogger(BoostEventService.class);
+	private static volatile ObjectProvider<BoostEventService> instanceProvider;
 
 	public Map<Integer, BoostEvents> data = new HashMap<Integer, BoostEvents>(1);
 
@@ -84,7 +86,15 @@ public class BoostEventService implements StatOwner {
 	}
 
 	public static final BoostEventService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<BoostEventService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<BoostEventService> instanceProvider) {
+		BoostEventService.instanceProvider = instanceProvider;
 	}
 
 	@SuppressWarnings("synthetic-access")

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.TreeMap;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.LegionDAO;
@@ -38,6 +39,7 @@ import com.aionemu.gameserver.world.WorldPosition;
 import javolution.util.FastMap;
 
 public class TerritoryService {
+	private static volatile ObjectProvider<TerritoryService> instanceProvider;
 	private TerritoryBuff territoryBuff;
 	private FastMap<Integer, TerritoryBuff> buffs = new FastMap<Integer, TerritoryBuff>();
 	private TreeMap<Integer, LegionTerritory> territories = new TreeMap<Integer, LegionTerritory>();
@@ -164,7 +166,15 @@ public class TerritoryService {
 	}
 
 	public static TerritoryService getInstance() {
-		return TerritoryService.SingletonHolder.instance;
+		ObjectProvider<TerritoryService> provider = instanceProvider;
+		if (provider == null) {
+			return TerritoryService.SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> TerritoryService.SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<TerritoryService> instanceProvider) {
+		TerritoryService.instanceProvider = instanceProvider;
 	}
 
 	private static class SingletonHolder {

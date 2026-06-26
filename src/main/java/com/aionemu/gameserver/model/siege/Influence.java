@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.model.siege;
 
 import java.util.Iterator;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -26,7 +27,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
 public class Influence {
-	private static final Influence instance = new Influence();
+	private static volatile ObjectProvider<Influence> instanceProvider;
 
 	// ======[ABYSS]=============
 	private float abyss_e = 0;
@@ -62,7 +63,19 @@ public class Influence {
 	}
 
 	public static Influence getInstance() {
-		return instance;
+		ObjectProvider<Influence> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<Influence> instanceProvider) {
+		Influence.instanceProvider = instanceProvider;
+	}
+
+	private static class SingletonHolder {
+		protected static final Influence instance = new Influence();
 	}
 
 	public void recalculateInfluence() {

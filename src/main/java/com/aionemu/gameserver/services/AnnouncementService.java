@@ -25,6 +25,7 @@ import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
@@ -49,6 +50,7 @@ public class AnnouncementService {
 	 * Logger for this class.
 	 */
 	private static final Logger log = LoggerFactory.getLogger(AnnouncementService.class);
+	private static volatile ObjectProvider<AnnouncementService> instanceProvider;
 
 	private Collection<Announcement> announcements;
 	private List<Future<?>> delays = new ArrayList<Future<?>>();
@@ -58,7 +60,15 @@ public class AnnouncementService {
 	}
 
 	public static final AnnouncementService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<AnnouncementService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AnnouncementService> instanceProvider) {
+		AnnouncementService.instanceProvider = instanceProvider;
 	}
 
 	/**

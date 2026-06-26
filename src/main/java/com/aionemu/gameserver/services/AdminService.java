@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -35,13 +36,25 @@ import javolution.util.FastList;
  * @author KID
  */
 public class AdminService {
+	private static volatile ObjectProvider<AdminService> instanceProvider;
 	private final Logger log = LoggerFactory.getLogger(AdminService.class);
 	private static final Logger itemLog = LoggerFactory.getLogger("GMITEMRESTRICTION");
 	private FastList<Integer> list;
-	private static AdminService instance = new AdminService();
 
 	public static AdminService getInstance() {
-		return instance;
+		ObjectProvider<AdminService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AdminService> instanceProvider) {
+		AdminService.instanceProvider = instanceProvider;
+	}
+
+	private static class SingletonHolder {
+		protected static final AdminService instance = new AdminService();
 	}
 
 	public AdminService() {

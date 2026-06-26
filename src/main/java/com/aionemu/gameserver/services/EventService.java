@@ -24,6 +24,7 @@ import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -47,6 +48,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
  */
 public class EventService {
 
+	private static volatile ObjectProvider<EventService> instanceProvider;
 	Logger log = LoggerFactory.getLogger(EventService.class);
 
 	private final int CHECK_TIME_PERIOD = 1000 * 60 * 5;
@@ -67,7 +69,15 @@ public class EventService {
 	}
 
 	public static final EventService getInstance() {
+		ObjectProvider<EventService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<EventService> provider) {
+		instanceProvider = provider;
 	}
 
 	public EventService() {

@@ -26,6 +26,7 @@ import java.util.concurrent.ScheduledFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
@@ -56,6 +57,7 @@ import javolution.util.FastMap;
  * @author Rinzler (Encom)
  */
 public class LadderService {
+	private static volatile ObjectProvider<LadderService> instanceProvider;
 	private static Logger log = LoggerFactory.getLogger(LadderService.class);
 	private List<AionObject> eventQueueList = new ArrayList<AionObject>();
 	private List<AionObject> normalQueueList = new ArrayList<AionObject>();
@@ -1150,6 +1152,14 @@ public class LadderService {
 	}
 
 	public static final LadderService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<LadderService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<LadderService> instanceProvider) {
+		LadderService.instanceProvider = instanceProvider;
 	}
 }

@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -36,6 +37,7 @@ import javolution.util.FastList;
  ****/
 
 public class SpringZoneService {
+	private static volatile ObjectProvider<SpringZoneService> instanceProvider;
 	Logger log = LoggerFactory.getLogger(SpringZoneService.class);
 	private FastList<SpringObject> springObjects = new FastList<SpringObject>();
 
@@ -66,7 +68,15 @@ public class SpringZoneService {
 	}
 
 	public static final SpringZoneService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<SpringZoneService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<SpringZoneService> instanceProvider) {
+		SpringZoneService.instanceProvider = instanceProvider;
 	}
 
 	private static class SingletonHolder {

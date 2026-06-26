@@ -19,6 +19,7 @@ package com.aionemu.gameserver.services;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.WeddingsConfig;
@@ -33,11 +34,20 @@ import com.aionemu.gameserver.world.World;
  * @author synchro2
  */
 public class WeddingService {
+	private static volatile ObjectProvider<WeddingService> instanceProvider;
 
 	private Map<Integer, Wedding> weddings = new HashMap<Integer, Wedding>();
 
 	public static final WeddingService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<WeddingService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<WeddingService> instanceProvider) {
+		WeddingService.instanceProvider = instanceProvider;
 	}
 
 	public void registerOffer(Player partner1, Player partner2, Player priest) {

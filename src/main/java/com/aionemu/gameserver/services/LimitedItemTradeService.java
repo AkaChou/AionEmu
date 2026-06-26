@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -33,6 +34,7 @@ import javolution.util.FastMap;
 
 public class LimitedItemTradeService {
 	private static final Logger log = LoggerFactory.getLogger(LimitedItemTradeService.class);
+	private static volatile ObjectProvider<LimitedItemTradeService> instanceProvider;
 	private GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 	private TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
 	private FastMap<Integer, LimitedTradeNpc> limitedTradeNpcs = new FastMap<Integer, LimitedTradeNpc>().shared();
@@ -88,7 +90,15 @@ public class LimitedItemTradeService {
 	}
 
 	public static LimitedItemTradeService getInstance() {
-		return SingletonHolder.INSTANCE;
+		ObjectProvider<LimitedItemTradeService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<LimitedItemTradeService> instanceProvider) {
+		LimitedItemTradeService.instanceProvider = instanceProvider;
 	}
 
 	private static class SingletonHolder {

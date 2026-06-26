@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.BrokerConfig;
@@ -80,9 +81,18 @@ public class BrokerService {
 			: 60000;
 	private BrokerPeriodicTaskManager saveManager;
 	private Map<Integer, BrokerPlayerCache> playerBrokerCache = new FastMap<Integer, BrokerPlayerCache>().shared();
+	private static volatile ObjectProvider<BrokerService> instanceProvider;
 
 	public static final BrokerService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<BrokerService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<BrokerService> instanceProvider) {
+		BrokerService.instanceProvider = instanceProvider;
 	}
 
 	public BrokerService() {

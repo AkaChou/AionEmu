@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -38,6 +39,7 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import javolution.util.FastMap;
 
 public class ShieldService {
+	private static volatile ObjectProvider<ShieldService> instanceProvider;
 	Logger log = LoggerFactory.getLogger(ShieldService.class);
 
 	@SuppressWarnings("synthetic-access")
@@ -49,7 +51,15 @@ public class ShieldService {
 	private final FastMap<Integer, List<SiegeShield>> registeredShields = new FastMap<Integer, List<SiegeShield>>(0);
 
 	public static final ShieldService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<ShieldService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ShieldService> instanceProvider) {
+		ShieldService.instanceProvider = instanceProvider;
 	}
 
 	public ShieldService() {

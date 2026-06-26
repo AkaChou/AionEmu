@@ -24,6 +24,7 @@ import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
@@ -65,6 +66,7 @@ import javolution.util.FastList;
 
 public class LunaShopService {
 
+	private static volatile ObjectProvider<LunaShopService> instanceProvider;
 	private Logger log = LoggerFactory.getLogger(LunaShopService.class);
 	PlayerWardrobeDAO wDAO = DAOManager.getDAO(PlayerWardrobeDAO.class);
 	private boolean dailyGenerated = true;
@@ -684,7 +686,15 @@ public class LunaShopService {
 	}
 
 	public static LunaShopService getInstance() {
+		ObjectProvider<LunaShopService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<LunaShopService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

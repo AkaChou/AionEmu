@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.services.CronService;
@@ -39,6 +40,7 @@ import javolution.util.FastList;
  ****/
 
 public class EngulfedOphidanBridgeService {
+	private static volatile ObjectProvider<EngulfedOphidanBridgeService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(EngulfedOphidanBridgeService.class);
 	private boolean registerAvailable;
 	private final FastList<Integer> playersWithCooldown = FastList.newInstance();
@@ -139,6 +141,14 @@ public class EngulfedOphidanBridgeService {
 	}
 
 	public static EngulfedOphidanBridgeService getInstance() {
+		ObjectProvider<EngulfedOphidanBridgeService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<EngulfedOphidanBridgeService> provider) {
+		instanceProvider = provider;
 	}
 }
