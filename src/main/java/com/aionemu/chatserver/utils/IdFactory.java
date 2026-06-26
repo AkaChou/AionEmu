@@ -32,7 +32,6 @@ public class IdFactory {
     private final BitSet idList = new BitSet();
     private final ReentrantLock lock = new ReentrantLock();
     private AtomicInteger nextMinId = new AtomicInteger(1);
-    protected static IdFactory instance = new IdFactory();
 
     public int nextId() {
         try {
@@ -46,7 +45,13 @@ public class IdFactory {
         }
     }
 
+    @Deprecated(since = "boot-migration")
     public static IdFactory getInstance() {
-        return instance;
+        return SingletonHolder.INSTANCE;
+    }
+
+    private static final class SingletonHolder {
+
+        private static final IdFactory INSTANCE = new IdFactory();
     }
 }

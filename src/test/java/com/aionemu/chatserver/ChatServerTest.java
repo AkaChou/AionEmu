@@ -107,7 +107,15 @@ class ChatServerTest {
 
         assertFalse(source.contains("Runtime.getRuntime().halt"));
         assertFalse(source.contains("RestartService.getInstance().shutdown()"));
+        assertFalse(source.contains("return RestartService.getInstance();"));
+        assertFalse(source.contains("NettyServer.shutdownIfInitialized()"));
+        assertFalse(source.contains("ThreadPoolManager.getInstance().shutdown()"));
+        assertFalse(source.contains("GameServerService.getInstance()"));
         assertTrue(source.contains("restartService().shutdown()"));
+        assertTrue(source.contains("ChatNettyServers.shutdownIfInitialized()"));
+        assertTrue(source.contains("CommonsNetworkThreadPoolServices.threadPoolManager().shutdown()"));
+        assertTrue(source.contains("ChatRestartServices.restartService()"));
+        assertTrue(source.contains("gameServerService().setOffline()"));
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_RESTART)"));
         assertTrue(source.contains("processBridge.halt(ExitCode.CODE_NORMAL)"));
     }
@@ -117,18 +125,45 @@ class ChatServerTest {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/configs/ChatServerSpringConfiguration.java"));
 
         assertFalse(source.contains("return RestartService.getInstance();"));
+        assertFalse(source.contains("ShutdownHook.getInstance(processBridge, restartService, gameServerService)"));
         assertTrue(source.contains("return new RestartService();"));
-        assertTrue(source.contains("ShutdownHook.getInstance(processBridge, restartService)"));
+        assertTrue(source.contains("return new ShutdownHook(processBridge, restartService, gameServerService);"));
+    }
+
+    @Test
+    void springConfigurationCreatesCoreServicesWithoutLegacySingletons() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/configs/ChatServerSpringConfiguration.java"));
+        String chatServiceSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/service/ChatService.java"));
+
+        assertFalse(source.contains("return IdFactory.getInstance();"));
+        assertFalse(source.contains("return GameServerService.getInstance();"));
+        assertFalse(source.contains("return BroadcastService.getInstance();"));
+        assertFalse(source.contains("return ChatService.getInstance();"));
+        assertFalse(source.contains("return NettyServer.getInstance(clientPacketHandler);"));
+        assertTrue(source.contains("return new IdFactory();"));
+        assertTrue(source.contains("return new GameServerService();"));
+        assertTrue(source.contains("return new BroadcastService();"));
+        assertTrue(source.contains("return new ChatService(broadcastService);"));
+        assertTrue(source.contains("return ChatNettyServers.register(new NettyServer(clientPacketHandler));"));
+        assertTrue(chatServiceSource.contains("public ChatService(BroadcastService broadcastService)"));
+        assertTrue(chatServiceSource.contains("@Deprecated(since = \"boot-migration\")"));
     }
 
     @Test
     void dependenciesInterfaceDoesNotConstructLegacySingletons() throws IOException {
         String dependenciesSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServerDependencies.java"));
         String serverSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServer.java"));
+        String legacyDependenciesSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServerLegacyDependencies.java"));
 
         assertFalse(dependenciesSource.contains("getInstance()"));
         assertFalse(dependenciesSource.contains("static ChatServerDependencies legacy()"));
         assertTrue(serverSource.contains("new ChatServerLegacyDependencies()"));
+        assertTrue(legacyDependenciesSource.contains("ChatCoreServices.idFactory()"));
+        assertTrue(legacyDependenciesSource.contains("ChatCoreServices.gameServerService()"));
+        assertTrue(legacyDependenciesSource.contains("ChatCoreServices.broadcastService()"));
+        assertTrue(legacyDependenciesSource.contains("ChatCoreServices.chatService()"));
+        assertTrue(legacyDependenciesSource.contains("ChatNettyServers.nettyServer()"));
+        assertTrue(legacyDependenciesSource.contains("ChatRestartServices.restartService()"));
     }
 
     private static final class RecordingChatServerDependencies implements ChatServerDependencies {

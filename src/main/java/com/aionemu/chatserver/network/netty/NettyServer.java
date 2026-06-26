@@ -38,6 +38,7 @@ public class NettyServer {
     private ServerTransport gameServerTransport;
     private static NettyServer instance;
 
+    @Deprecated(since = "boot-migration")
     public static synchronized NettyServer getInstance() {
         if (instance == null) {
             instance = new NettyServer(new ClientPacketHandler());
@@ -45,6 +46,7 @@ public class NettyServer {
         return instance;
     }
 
+    @Deprecated(since = "boot-migration")
     public static synchronized NettyServer getInstance(ClientPacketHandler clientPacketHandler) {
         if (instance == null) {
             instance = new NettyServer(clientPacketHandler);
@@ -71,7 +73,7 @@ public class NettyServer {
         initialize(new ClientPacketHandler());
     }
 
-    NettyServer(ClientPacketHandler clientPacketHandler) {
+    public NettyServer(ClientPacketHandler clientPacketHandler) {
         initialize(clientPacketHandler);
     }
 

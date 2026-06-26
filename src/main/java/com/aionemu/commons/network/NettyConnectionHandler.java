@@ -1,6 +1,5 @@
 package com.aionemu.commons.network;
 
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.services.ServiceContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -27,7 +26,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     private AConnection connection;
 
     public NettyConnectionHandler(NettyConnectionFactory connectionFactory) {
-        this(connectionFactory, ThreadPoolManager.getInstance());
+        this(connectionFactory, CommonsNetworkThreadPoolServices.threadPoolManager());
     }
 
     public NettyConnectionHandler(NettyConnectionFactory connectionFactory, Executor disconnectionExecutor) {

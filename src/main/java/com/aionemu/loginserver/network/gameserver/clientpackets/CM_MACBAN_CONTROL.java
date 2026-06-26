@@ -18,8 +18,8 @@
 
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
-import com.aionemu.loginserver.controller.BannedMacManager;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
+import com.aionemu.loginserver.service.LoginProtectionServices;
 
 /**
  *
@@ -43,13 +43,12 @@ public class CM_MACBAN_CONTROL extends GsClientPacket {
 
     @Override
     protected void runImpl() {
-        BannedMacManager bmm = BannedMacManager.getInstance();
         switch (type) {
             case 0://unban
-                bmm.unban(address, details);
+                LoginProtectionServices.bannedMacManager().unban(address, details);
                 break;
             case 1://ban
-                bmm.ban(address, time, details);
+                LoginProtectionServices.bannedMacManager().ban(address, time, details);
                 break;
         }
     }

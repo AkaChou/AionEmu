@@ -18,8 +18,8 @@
 
 package com.aionemu.loginserver;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AionProcessExit;
+import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,8 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.network.NetConnector;
-import com.aionemu.loginserver.utils.ThreadPoolManager;
+import com.aionemu.loginserver.service.LoginCronServices;
+import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.dao.SvStatsDAO;
@@ -98,21 +99,19 @@ public class Shutdown extends Thread {
 
         // shutdown cron service prior to threadpool shutdown
         try {
-            if (CronService.isInitialized()) {
-                CronService.getInstance().shutdown();
-            }
+            LoginCronServices.shutdownIfInitialized();
         } catch (Throwable t) {
             log.error("Can't shutdown CronService", t);
         }
 
         /* Shuting down threadpools */
         try {
-            ThreadPoolManager.getInstance().shutdown();
+            LoginThreadPoolServices.threadPoolManager().shutdown();
         } catch (Throwable t) {
             log.error("Can't shutdown ThreadPoolManager", t);
         }
         try {
-            com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown();
+            CommonsNetworkThreadPoolServices.threadPoolManager().shutdown();
         } catch (Throwable t) {
             log.error("Can't shutdown common network ThreadPoolManager", t);
         }

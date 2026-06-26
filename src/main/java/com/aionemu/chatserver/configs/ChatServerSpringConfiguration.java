@@ -6,6 +6,7 @@ import com.aionemu.chatserver.service.ChatRestartRequest;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.NettyServer;
 import com.aionemu.chatserver.service.BroadcastService;
+import com.aionemu.chatserver.service.ChatNettyServers;
 import com.aionemu.chatserver.service.ChatService;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
@@ -23,7 +24,7 @@ public class ChatServerSpringConfiguration {
     @Bean
     @Lazy
     public IdFactory idFactory() {
-        return IdFactory.getInstance();
+        return new IdFactory();
     }
 
     @Bean
@@ -35,25 +36,25 @@ public class ChatServerSpringConfiguration {
     @Bean
     @Lazy
     public NettyServer nettyServer(ClientPacketHandler clientPacketHandler) {
-        return NettyServer.getInstance(clientPacketHandler);
+        return ChatNettyServers.register(new NettyServer(clientPacketHandler));
     }
 
     @Bean
     @Lazy
     public GameServerService gameServerService() {
-        return GameServerService.getInstance();
+        return new GameServerService();
     }
 
     @Bean
     @Lazy
     public BroadcastService broadcastService() {
-        return BroadcastService.getInstance();
+        return new BroadcastService();
     }
 
     @Bean
     @Lazy
-    public ChatService chatService() {
-        return ChatService.getInstance();
+    public ChatService chatService(BroadcastService broadcastService) {
+        return new ChatService(broadcastService);
     }
 
     @Bean
@@ -65,7 +66,7 @@ public class ChatServerSpringConfiguration {
 
     @Bean
     @Lazy
-    public ShutdownHook chatShutdownHook(ChatProcessRuntimeBridge processBridge, RestartService restartService) {
-        return ShutdownHook.getInstance(processBridge, restartService);
+    public ShutdownHook chatShutdownHook(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
+        return new ShutdownHook(processBridge, restartService, gameServerService);
     }
 }

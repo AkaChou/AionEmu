@@ -73,7 +73,34 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made the chat Netty server lazy so loading the class does not bind ports when chat is disabled.
 - [x] Made login partial-startup cleanup avoid initializing NetConnector or CronService during shutdown.
 - [x] Added DAOManager initialization-state checks and moved login server stats cleanup before DAO/database shutdown.
+- [x] Made login shutdown cleanup use a Spring-instantiable `Shutdown` bean instead of the legacy singleton fallback in the boot-managed bridge.
+- [x] Routed login shutdown requests and process runtime shutdown hooks through a shared shutdown service wrapper instead of duplicate singleton fallbacks.
+- [x] Made the shared login shutdown service wrapper own its lazy fallback instead of calling the legacy shutdown singleton directly.
+- [x] Made login player-transfer startup use a Spring-instantiable service bean while retaining the legacy singleton only as a lazy fallback.
+- [x] Routed login player-transfer packet access through a Spring-provided service before the legacy singleton fallback.
+- [x] Routed the login startup runtime bridge through the shared player-transfer service wrapper instead of keeping its own singleton fallback.
+- [x] Made the login player-transfer service wrapper own its lazy fallback instead of calling the legacy transfer singleton directly.
+- [x] Routed login game-server packet execution and delayed MAC-ban-list dispatch through a Spring-provided thread-pool manager before the legacy singleton fallback.
+- [x] Routed login startup thread-pool initialization and player-transfer scheduling through the Spring-provided thread-pool manager before the legacy singleton fallback.
+- [x] Routed login cron runner and task trigger scheduling through the Spring-provided thread-pool manager before the legacy singleton fallback.
+- [x] Routed login shutdown thread-pool cleanup through the Spring-provided thread-pool manager before the legacy singleton fallback.
+- [x] Routed commons Netty packet executor and common-network shutdown cleanup through a Spring-provided thread-pool manager before the legacy singleton fallback.
+- [x] Made the login thread-pool manager Spring-instantiable and moved its non-Spring fallback into the shared service wrapper.
+- [x] Made login premium-controller startup use a Spring-instantiable controller bean while retaining the legacy singleton only as a lazy fallback.
+- [x] Routed the login startup runtime bridge through the shared premium-controller wrapper instead of keeping its own singleton fallback.
+- [x] Routed login premium packet access through the shared premium-controller wrapper.
+- [x] Made the login premium-controller wrapper own its lazy fallback instead of calling the legacy premium singleton directly.
+- [x] Made login task-from-db startup use a Spring-instantiable manager bean while retaining the legacy singleton only as a lazy fallback.
+- [x] Routed the login startup runtime bridge through the shared task-from-db manager wrapper instead of keeping its own singleton fallback.
+- [x] Made the login task-from-db wrapper own its lazy fallback instead of calling the legacy task-manager singleton directly.
+- [x] Made login banned-MAC management Spring-instantiable while replacing its eager singleton with a lazy fallback.
+- [x] Routed login banned-MAC packet access through a Spring-provided manager before the legacy singleton fallback.
+- [x] Routed login flood/brute-force protection access through Spring-provided services before legacy singleton fallbacks.
+- [x] Routed login banned-IP startup and packet access through a Spring-provided service wrapper.
 - [x] Made login `NetConnector` discard its transport on shutdown so later embedded lifecycles create a fresh transport.
+- [x] Routed login startup network connect through a Spring-provided server transport before the legacy `NetConnector` fallback.
+- [x] Moved login server transport bridges from the legacy `NetConnector.getInstance()` accessor to the named transport lifecycle accessor.
+- [x] Routed login cron initialization and shutdown cleanup through a dedicated cron service bridge.
 - [x] Added a reusable Netty 4 client connector and moved game-to-chat outbound connections to Netty when Netty transport mode is enabled.
 - [x] Moved game-to-login outbound connections to Netty when Netty transport mode is enabled.
 - [x] Removed the extra legacy NIO dispatcher from GameServer startup when Netty transport mode is enabled.
@@ -85,6 +112,14 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made launcher and transport shutdown idempotent across repeated Spring destroy callbacks.
 - [x] Routed embedded login task shutdown/restart, chat scheduled restart, and game scheduled/admin shutdown requests through the boot-managed shutdown handler.
 - [x] Made chat restart scheduling Spring-instantiable and wired shutdown cleanup through the boot-provided restart service before falling back to the legacy singleton.
+- [x] Made chat core services Spring-instantiable in the chat Spring configuration while keeping legacy singleton accessors as deprecated compatibility fallbacks.
+- [x] Routed chat core service access from legacy dependencies, channel IDs, client packet handlers, and game-server packets through a Spring-provider bridge.
+- [x] Routed chat shutdown game-server offline cleanup through the Spring-provided core service bridge.
+- [x] Routed chat restart-service fallback access through a Spring-provider bridge.
+- [x] Routed chat Netty server fallback access through a Spring-provider bridge.
+- [x] Routed chat shutdown-hook fallback access through a local bridge while Spring creates the configured hook directly.
+- [x] Routed chat shutdown Netty and commons thread-pool cleanup through bridge helpers.
+- [x] Routed chat game-server packet execution through the commons thread-pool bridge.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.

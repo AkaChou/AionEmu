@@ -24,7 +24,7 @@ import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.commons.network.NettyConnectionFactory;
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.utils.FloodProtector;
+import com.aionemu.loginserver.service.LoginProtectionServices;
 
 /**
  * NettyConnectionFactory implementation that will be creating AionConnections.
@@ -36,7 +36,7 @@ public class AionConnectionFactoryImpl implements NettyConnectionFactory {
     @Override
     public AConnection create(ConnectionTransport transport) throws IOException {
         if (Config.ENABLE_FLOOD_PROTECTION) {
-            if (FloodProtector.getInstance().tooFast(transport.getIP())) {
+            if (LoginProtectionServices.floodProtector().tooFast(transport.getIP())) {
                 transport.close(true);
                 return null;
             }

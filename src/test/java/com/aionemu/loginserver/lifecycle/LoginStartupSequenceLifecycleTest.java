@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.loginserver.service.PlayerTransferService;
-import java.lang.reflect.Proxy;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -237,12 +239,12 @@ class LoginStartupSequenceLifecycleTest {
     }
 
     @Test
-    void startupRuntimeBridgeUsesPlayerTransferProviderBeforeLegacySingletonFallback() {
-        ProviderUsedException providerUsed = new ProviderUsedException();
-        LoginStartupRuntimeBridge runtimeBridge = new LoginStartupRuntimeBridge();
-        runtimeBridge.setPlayerTransferServiceProvider(throwingProvider(providerUsed));
+    void startupRuntimeBridgeRoutesPlayerTransferThroughLoginTransferServices() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/loginserver/lifecycle/LoginStartupRuntimeBridge.java"));
 
-        assertSame(providerUsed, assertThrows(ProviderUsedException.class, runtimeBridge::playerTransferService));
+        assertFalse(source.contains("PlayerTransferService.getInstance()"));
+        assertFalse(source.contains("playerTransferServiceProvider"));
+        assertTrue(source.contains("LoginTransferServices.playerTransferService()"));
     }
 
     private static Class<?> fieldType(String name) {
@@ -520,24 +522,4 @@ class LoginStartupSequenceLifecycleTest {
         return beanFactory.getBeanProvider(type);
     }
 
-    private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "throwingProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                throw exception;
-            }
-        ));
-    }
-
-    private static final class ProviderUsedException extends RuntimeException {
-    }
 }

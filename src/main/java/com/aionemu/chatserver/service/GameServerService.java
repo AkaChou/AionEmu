@@ -30,10 +30,10 @@ import com.aionemu.chatserver.network.gameserver.GsAuthResponse;
 public class GameServerService {
 
     private Logger log = LoggerFactory.getLogger(GameServerService.class);
-    private static GameServerService instance = new GameServerService();
 
+    @Deprecated(since = "boot-migration")
     public static GameServerService getInstance() {
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
     public static byte GAMESERVER_ID;
     private boolean isOnline = false;
@@ -70,5 +70,10 @@ public class GameServerService {
     public void setOffline() {
         log.info("Gameserver #" + GAMESERVER_ID + " is disconnected");
         isOnline = false;
+    }
+
+    private static final class SingletonHolder {
+
+        private static final GameServerService INSTANCE = new GameServerService();
     }
 }

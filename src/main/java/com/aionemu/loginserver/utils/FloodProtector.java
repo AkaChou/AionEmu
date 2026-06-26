@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.controller.BannedIpController;
 import com.aionemu.loginserver.network.aion.clientpackets.CM_LOGIN;
+import com.aionemu.loginserver.service.LoginProtectionServices;
 
 /**
  * @author Mr. Poke
@@ -42,6 +42,7 @@ public class FloodProtector {
     private FastMap<String, Long> flood = new FastMap<String, Long>();
     private FastMap<String, Long> ban = new FastMap<String, Long>();
 
+    @Deprecated(since = "boot-migration")
     public static final FloodProtector getInstance() {
         return SingletonHolder.instance;
     }
@@ -54,9 +55,9 @@ public class FloodProtector {
             return false;
         }
         Timestamp newTime = new Timestamp(System.currentTimeMillis() + Config.WRONG_LOGIN_BAN_TIME * 60000);
-        if (!BannedIpController.isBanned(ip)) {
+        if (!LoginProtectionServices.bannedIpService().isBanned(ip)) {
             log.info("[AUDIT]FloodProtector:" + ip + " IP banned for " + Config.WRONG_LOGIN_BAN_TIME + " min");
-            return BannedIpController.banIp(ip, newTime);
+            return LoginProtectionServices.bannedIpService().banIp(ip, newTime);
         }
         //in this case this ip is already banned
 

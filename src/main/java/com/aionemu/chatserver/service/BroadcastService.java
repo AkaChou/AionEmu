@@ -31,10 +31,9 @@ import com.aionemu.commons.utils.internal.chmv8.PlatformDependent;
  */
 public class BroadcastService {
 
-    private static BroadcastService instance = new BroadcastService();
-
+    @Deprecated(since = "boot-migration")
     public static BroadcastService getInstance() {
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
     private Map<Integer, ChatClient> clients = PlatformDependent.newConcurrentHashMap();
 
@@ -70,5 +69,10 @@ public class BroadcastService {
     public void sendMessage(ChatClient chatClient, Message message) {
         ClientChannelHandler cch = chatClient.getChannelHandler();
         cch.sendPacket(new SM_CHANNEL_MESSAGE(message));
+    }
+
+    private static final class SingletonHolder {
+
+        private static final BroadcastService INSTANCE = new BroadcastService();
     }
 }

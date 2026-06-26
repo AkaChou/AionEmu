@@ -41,17 +41,20 @@ import com.aionemu.commons.utils.internal.chmv8.PlatformDependent;
  */
 public class ChatService {
 
-    private static ChatService instance = new ChatService();
-
+    @Deprecated(since = "boot-migration")
     public static ChatService getInstance() {
-        return instance;
+        return SingletonHolder.INSTANCE;
     }
     private static final Logger log = LoggerFactory.getLogger(ChatService.class);
     private Map<Integer, ChatClient> players = PlatformDependent.newConcurrentHashMap();
-    private BroadcastService broadcastService;
+    private final BroadcastService broadcastService;
 
     public ChatService() {
-        broadcastService = BroadcastService.getInstance();
+        this(ChatCoreServices.broadcastService());
+    }
+
+    public ChatService(BroadcastService broadcastService) {
+        this.broadcastService = broadcastService;
     }
 
     /**
@@ -168,5 +171,10 @@ public class ChatService {
             ChatClient client = players.get(playerId);
             client.setGagTime(gagTime);
         }
+    }
+
+    private static final class SingletonHolder {
+
+        private static final ChatService INSTANCE = new ChatService();
     }
 }

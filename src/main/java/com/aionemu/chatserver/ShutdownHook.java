@@ -18,9 +18,12 @@
 
 package com.aionemu.chatserver;
 
-import com.aionemu.chatserver.network.netty.NettyServer;
+import com.aionemu.chatserver.service.ChatCoreServices;
+import com.aionemu.chatserver.service.ChatNettyServers;
+import com.aionemu.chatserver.service.ChatRestartServices;
 import com.aionemu.chatserver.service.GameServerService;
 import com.aionemu.chatserver.service.RestartService;
+import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import com.aionemu.commons.utils.ExitCode;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -34,10 +37,18 @@ public class ShutdownHook extends Thread {
     private static final AtomicBoolean shutdownStarted = new AtomicBoolean(false);
     private volatile ChatProcessRuntimeBridge processBridge = new ChatProcessRuntimeBridge();
     private volatile RestartService restartService;
+    private volatile GameServerService gameServerService;
     /**
      * Indicates wether the loginserver should shut dpwn or only restart
      */
     private static boolean restartOnly = false;
+
+    public ShutdownHook() {
+    }
+
+    public ShutdownHook(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
+        configure(processBridge, restartService, gameServerService);
+    }
 
     /**
      * get the shutdown-hook instance the shutdown-hook instance is created by
@@ -45,20 +56,32 @@ public class ShutdownHook extends Thread {
      *
      * @return instance of Shutdown, to be used as shutdown hook
      */
+    @Deprecated(since = "boot-migration")
     public static ShutdownHook getInstance() {
         return instance;
     }
 
+    @Deprecated(since = "boot-migration")
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge) {
-        instance.setProcessBridge(processBridge);
-        instance.setRestartService(null);
+        instance.configure(processBridge, null, null);
         return instance;
     }
 
+    @Deprecated(since = "boot-migration")
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge, RestartService restartService) {
-        instance.setProcessBridge(processBridge);
-        instance.setRestartService(restartService);
+        return getInstance(processBridge, restartService, null);
+    }
+
+    @Deprecated(since = "boot-migration")
+    public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
+        instance.configure(processBridge, restartService, gameServerService);
         return instance;
+    }
+
+    void configure(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
+        setProcessBridge(processBridge);
+        setRestartService(restartService);
+        setGameServerService(gameServerService);
     }
 
     private void setProcessBridge(ChatProcessRuntimeBridge processBridge) {
@@ -69,6 +92,10 @@ public class ShutdownHook extends Thread {
 
     private void setRestartService(RestartService restartService) {
         this.restartService = restartService;
+    }
+
+    private void setGameServerService(GameServerService gameServerService) {
+        this.gameServerService = gameServerService;
     }
 
     /**
@@ -91,9 +118,9 @@ public class ShutdownHook extends Thread {
             return;
         }
         restartService().shutdown();
-        NettyServer.shutdownIfInitialized();
-        GameServerService.getInstance().setOffline();
-        com.aionemu.commons.network.util.ThreadPoolManager.getInstance().shutdown();
+        ChatNettyServers.shutdownIfInitialized();
+        gameServerService().setOffline();
+        CommonsNetworkThreadPoolServices.threadPoolManager().shutdown();
 
         if (!haltJvm) {
             return;
@@ -112,6 +139,14 @@ public class ShutdownHook extends Thread {
         if (configuredRestartService != null) {
             return configuredRestartService;
         }
-        return RestartService.getInstance();
+        return ChatRestartServices.restartService();
+    }
+
+    private GameServerService gameServerService() {
+        GameServerService configuredGameServerService = gameServerService;
+        if (configuredGameServerService != null) {
+            return configuredGameServerService;
+        }
+        return ChatCoreServices.gameServerService();
     }
 }

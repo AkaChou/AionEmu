@@ -2,21 +2,21 @@ package com.aionemu.loginserver.lifecycle;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.LoginServer;
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.controller.BannedIpController;
-import com.aionemu.loginserver.controller.PremiumController;
 import com.aionemu.loginserver.dao.BannedMacDAO;
-import com.aionemu.loginserver.network.NetConnector;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
+import com.aionemu.loginserver.service.LoginCronServices;
+import com.aionemu.loginserver.service.LoginNetworkServices;
+import com.aionemu.loginserver.service.LoginPremiumServices;
+import com.aionemu.loginserver.service.LoginProtectionServices;
+import com.aionemu.loginserver.service.LoginTaskManagerServices;
+import com.aionemu.loginserver.service.LoginThreadPoolServices;
+import com.aionemu.loginserver.service.LoginTransferServices;
 import com.aionemu.loginserver.service.PlayerTransferService;
-import com.aionemu.loginserver.taskmanager.TaskFromDBManager;
 import com.aionemu.loginserver.utils.DeadLockDetector;
-import com.aionemu.loginserver.utils.ThreadPoolManager;
-import com.aionemu.loginserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -27,16 +27,10 @@ import org.springframework.stereotype.Component;
 public class LoginStartupRuntimeBridge {
 
     private ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider;
-    private ObjectProvider<PlayerTransferService> playerTransferServiceProvider;
 
     @Autowired(required = false)
     void setProcessBridgeProvider(ObjectProvider<LoginProcessRuntimeBridge> processBridgeProvider) {
         this.processBridgeProvider = processBridgeProvider;
-    }
-
-    @Autowired(required = false)
-    void setPlayerTransferServiceProvider(ObjectProvider<PlayerTransferService> playerTransferServiceProvider) {
-        this.playerTransferServiceProvider = playerTransferServiceProvider;
     }
 
     public void initializeLogger() {
@@ -44,7 +38,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void initializeCronService() {
-        CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
+        LoginCronServices.initialize();
     }
 
     public void loadConfig() {
@@ -70,7 +64,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void initializeThreadPool() {
-        ThreadPoolManager.getInstance();
+        LoginThreadPoolServices.threadPoolManager();
     }
 
     public void initializeKeyGenerator() throws Exception {
@@ -82,7 +76,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void startBannedIpController() {
-        BannedIpController.start();
+        LoginProtectionServices.bannedIpService().start();
     }
 
     public void cleanExpiredMacBans() {
@@ -90,18 +84,15 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void connectNetwork() {
-        NetConnector.getInstance().connect();
+        LoginNetworkServices.serverTransport().connect();
     }
 
     public PlayerTransferService playerTransferService() {
-        if (playerTransferServiceProvider == null) {
-            return PlayerTransferService.getInstance();
-        }
-        return playerTransferServiceProvider.getIfAvailable(PlayerTransferService::getInstance);
+        return LoginTransferServices.playerTransferService();
     }
 
     public void initializeTaskManager() {
-        TaskFromDBManager.getInstance();
+        LoginTaskManagerServices.taskFromDBManager();
     }
 
     public void registerShutdownHook() {
@@ -114,7 +105,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void initializePremiumController() {
-        PremiumController.getController();
+        LoginPremiumServices.premiumController();
     }
 
     public void exitWithError() {

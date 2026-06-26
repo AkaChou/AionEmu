@@ -13,6 +13,8 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,12 +23,22 @@ public class NettyServer implements ServerTransport {
     private static final Logger log = LoggerFactory.getLogger(NettyServer.class);
 
     private final NettyServerCfg[] cfgs;
+    private final Supplier<Executor> connectionExecutor;
     private final List<Channel> serverChannels = new ArrayList<>();
     private final ChannelGroup clientChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     private NettyEventLoopProvider.Allocation eventLoops;
 
     public NettyServer(NettyServerCfg... cfgs) {
+        this(CommonsNetworkThreadPoolServices::threadPoolManager, cfgs);
+    }
+
+    public NettyServer(Executor connectionExecutor, NettyServerCfg... cfgs) {
+        this(() -> connectionExecutor, cfgs);
+    }
+
+    private NettyServer(Supplier<Executor> connectionExecutor, NettyServerCfg... cfgs) {
+        this.connectionExecutor = connectionExecutor;
         this.cfgs = cfgs;
     }
 
@@ -47,7 +59,7 @@ public class NettyServer implements ServerTransport {
                         @Override
                         protected void initChannel(SocketChannel channel) {
                             clientChannels.add(channel);
-                            channel.pipeline().addLast(new NettyConnectionHandler(cfg.factory()));
+                            channel.pipeline().addLast(new NettyConnectionHandler(cfg.factory(), connectionExecutor.get()));
                         }
                     })
                     .bind(address(cfg))

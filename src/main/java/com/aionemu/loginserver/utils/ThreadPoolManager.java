@@ -40,7 +40,7 @@ public final class ThreadPoolManager {
     private final ThreadPoolExecutor instantPool;
     private final ThreadPoolExecutor longRunningPool;
 
-    private ThreadPoolManager() {
+    public ThreadPoolManager() {
 
         int threadpoolsize = 2 + Runtime.getRuntime().availableProcessors() * 4;
         final int instantPoolSize = Math.max(1, threadpoolsize / 3);
@@ -265,6 +265,7 @@ public final class ThreadPoolManager {
         private static final ThreadPoolManager INSTANCE = new ThreadPoolManager();
     }
 
+    @Deprecated(since = "boot-migration")
     public static ThreadPoolManager getInstance() {
         return SingletonHolder.INSTANCE;
     }
