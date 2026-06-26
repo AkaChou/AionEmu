@@ -45,29 +45,29 @@ public class GameHousingRuntimeBridge {
 
     public HousingBidService housingBidService() {
         if (housingBidServiceProvider == null) {
-            return HousingBidService.getInstance();
+            return GameHousingFallbacks.housingBidService();
         }
-        return housingBidServiceProvider.getIfAvailable(HousingBidService::getInstance);
+        return housingBidServiceProvider.getIfAvailable(GameHousingFallbacks::housingBidService);
     }
 
     public MaintenanceTask maintenanceTask() {
         if (maintenanceTaskProvider == null) {
-            return MaintenanceTask.getInstance();
+            return GameHousingFallbacks.maintenanceTask();
         }
-        return maintenanceTaskProvider.getIfAvailable(MaintenanceTask::getInstance);
+        return maintenanceTaskProvider.getIfAvailable(GameHousingFallbacks::maintenanceTask);
     }
 
     public TownService townService() {
         if (townServiceProvider == null) {
-            return TownService.getInstance();
+            return GameHousingFallbacks.townService();
         }
-        return townServiceProvider.getIfAvailable(TownService::getInstance);
+        return townServiceProvider.getIfAvailable(GameHousingFallbacks::townService);
     }
 
     public ChallengeTaskService challengeTaskService() {
         if (challengeTaskServiceProvider == null) {
-            return ChallengeTaskService.getInstance();
+            return GameHousingFallbacks.challengeTaskService();
         }
-        return challengeTaskServiceProvider.getIfAvailable(ChallengeTaskService::getInstance);
+        return challengeTaskServiceProvider.getIfAvailable(GameHousingFallbacks::challengeTaskService);
     }
 }
