@@ -229,7 +229,8 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 
 ## Remaining Tasks
 
-- [ ] Continue reducing `GameLegacyServiceBridgeConfiguration` legacy singleton beans; refresh the exact `return Xxx.getInstance();` count before each slice.
+- [ ] Continue reducing `GameLegacyServiceBridgeConfiguration` legacy singleton beans; refresh the exact `return Xxx.getInstance();` count before each slice. Current remaining core beans: `ThreadPoolManager`, `DataManager`, `IDFactory`, `World`, `LoginServer`, `ChatServer`.
+- [ ] Treat the remaining six core beans as dedicated ownership refactors instead of ordinary `new` conversions: avoid duplicate thread pools, duplicate static-data loads, duplicate world state, duplicate ID allocation state, or duplicate login/chat server transports.
 - [ ] Replace each reduced legacy bean with Spring-instantiable construction only when the constructor and initialization behavior are safe under lazy Spring ownership.
 - [ ] Group similar simple `GameLegacyServiceBridgeConfiguration` bean reductions into roughly 10-service narrow commits instead of committing each service separately.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage and focused tests.
