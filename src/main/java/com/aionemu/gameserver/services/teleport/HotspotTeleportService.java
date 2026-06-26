@@ -44,7 +44,7 @@ public class HotspotTeleportService {
 		return SingletonHolder.instance;
 	}
 
-	private HotspotTeleportService() {
+	public HotspotTeleportService() {
 		int hotspotList = DataManager.HOTSPOT_LOCATION_DATA.size();
 		log.info(hotspotList + " <Hotspot Location 5.8> loaded.");
 	}

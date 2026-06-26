@@ -41,7 +41,7 @@ public class DatabaseCleaningService {
 	private List<Worker> workers;
 	private long startTime;
 
-	private DatabaseCleaningService() {
+	public DatabaseCleaningService() {
 		if (CleaningConfig.CLEANING_ENABLE) {
 			runCleaning();
 		}

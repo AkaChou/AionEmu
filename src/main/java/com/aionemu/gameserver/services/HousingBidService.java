@@ -89,7 +89,7 @@ public class HousingBidService extends AbstractCronTask {
 		}
 	}
 
-	private HousingBidService(String auctionTime) throws ParseException {
+	public HousingBidService(String auctionTime) throws ParseException {
 		super(auctionTime);
 	}
 
@@ -122,7 +122,7 @@ public class HousingBidService extends AbstractCronTask {
 		timeProlonged = dao.load("auctionProlonged");
 	}
 
-	private HousingBidService() throws ParseException {
+	public HousingBidService() throws ParseException {
 		super(HousingConfig.HOUSE_AUCTION_TIME);
 	}
 

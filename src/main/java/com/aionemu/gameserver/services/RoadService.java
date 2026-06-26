@@ -39,7 +39,7 @@ public class RoadService {
 		return SingletonHolder.instance;
 	}
 
-	private RoadService() {
+	public RoadService() {
 		for (RoadTemplate rt : DataManager.ROAD_DATA.getRoadTemplates()) {
 			Road r = new Road(rt);
 			r.spawn();

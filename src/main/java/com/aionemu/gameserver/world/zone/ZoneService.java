@@ -73,7 +73,7 @@ public final class ZoneService implements GameEngine {
 	private final FastMap<ZoneName, ZoneHandler> collidableHandlers = new FastMap<ZoneName, ZoneHandler>();
 	public static final ZoneHandler DUMMY_ZONE_HANDLER = new GeneralZoneHandler();
 
-	private ZoneService() {
+	public ZoneService() {
 		this.zoneByMapIdMap = DataManager.ZONE_DATA.getZones();
 	}
 

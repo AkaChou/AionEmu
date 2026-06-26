@@ -153,8 +153,8 @@ public class GameLegacyServiceBridgeConfiguration {
 
     @Bean
     @Lazy
-    public HousingBidService housingBidService() {
-        return HousingBidService.getInstance();
+    public HousingBidService housingBidService() throws ParseException {
+        return new HousingBidService();
     }
 
     @Bean
@@ -166,7 +166,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public TownService townService() {
-        return TownService.getInstance();
+        return new TownService();
     }
 
     @Bean
@@ -376,7 +376,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public TaskManagerFromDB taskManagerFromDB() {
-        return TaskManagerFromDB.getInstance();
+        return new TaskManagerFromDB();
     }
 
     @Bean
@@ -412,13 +412,13 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public DatabaseCleaningService databaseCleaningService() {
-        return DatabaseCleaningService.getInstance();
+        return new DatabaseCleaningService();
     }
 
     @Bean
     @Lazy
     public AbyssRankCleaningService abyssRankCleaningService() {
-        return AbyssRankCleaningService.getInstance();
+        return new AbyssRankCleaningService();
     }
 
     @Bean
@@ -442,7 +442,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public HTMLCache htmlCache() {
-        return HTMLCache.getInstance();
+        return new HTMLCache();
     }
 
     @Bean
@@ -502,19 +502,19 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public ZoneService zoneService() {
-        return ZoneService.getInstance();
+        return new ZoneService();
     }
 
     @Bean
     @Lazy
     public HotspotTeleportService hotspotTeleportService() {
-        return HotspotTeleportService.getInstance();
+        return new HotspotTeleportService();
     }
 
     @Bean
     @Lazy
     public RoadService roadService() {
-        return RoadService.getInstance();
+        return new RoadService();
     }
 
     @Bean
@@ -664,7 +664,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public LandingUpdateService landingUpdateService() {
-        return LandingUpdateService.getInstance();
+        return new LandingUpdateService();
     }
 
     @Bean

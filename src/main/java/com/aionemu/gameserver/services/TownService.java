@@ -52,7 +52,7 @@ public class TownService {
 		return SingletonHolder.instance;
 	}
 
-	private TownService() {
+	public TownService() {
 		elyosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ELYOS);
 		asmosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ASMODIANS);
 		if (elyosTowns.size() == 0 && asmosTowns.size() == 0) {

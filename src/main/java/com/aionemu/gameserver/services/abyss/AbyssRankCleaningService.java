@@ -41,7 +41,7 @@ public class AbyssRankCleaningService {
 
 	private long startTime;
 
-	private AbyssRankCleaningService() {
+	public AbyssRankCleaningService() {
 		if (CleaningConfig.ABYSS_CLEANING_ENABLE) {
 			runCleaning();
 		}

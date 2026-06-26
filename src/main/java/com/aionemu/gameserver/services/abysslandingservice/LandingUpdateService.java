@@ -47,7 +47,7 @@ public class LandingUpdateService {
 	final int redemptionPts3 = redemptionLanding.getCommanderPoints() - redemptionLanding.getCommanderPoints();
 	final int harbingerPts3 = harbingerLanding.getCommanderPoints() - harbingerLanding.getCommanderPoints();
 
-	private LandingUpdateService() {
+	public LandingUpdateService() {
 	}
 
 	public void initResetQuestPoints() {

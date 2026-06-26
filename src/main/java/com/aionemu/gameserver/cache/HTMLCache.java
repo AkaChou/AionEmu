@@ -71,7 +71,7 @@ public final class HTMLCache {
 	private int loadedFiles;
 	private int size;
 
-	private HTMLCache() {
+	public HTMLCache() {
 		reload(false);
 	}
 
