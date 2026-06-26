@@ -131,6 +131,7 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Routed game shutdown-hook fallback access through a local helper instead of direct singleton calls in network startup and shutdown request paths.
 - [x] Routed game housing fallback access through a local helper instead of direct singleton calls in the runtime bridge.
 - [x] Routed game battlefield fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Made the game shutdown hook Spring-instantiable while keeping the legacy singleton only as a fallback.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
@@ -208,13 +209,14 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - Login + game smoke with temporary `aion.home` reached `Server initialization COMPLETE`.
 - Earlier fat jar smoke on Java 25 required `--add-opens java.base/java.lang=ALL-UNNAMED` for legacy reflective proxy access; current code no longer depends on that workaround.
 - Fat jar smoke with temporary `aion.home`, temporary ports, geodata disabled, svstats disabled, Netty transport, and chat disabled reached `=== Server initialization COMPLETE ===`; it logged Netty listeners on `127.0.0.1:19014`, `127.0.0.1:12106`, and `127.0.0.1:17777`, plus `Chat Server is disabled by configuration`.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameLegacyServiceBridgeConfigurationTest,GameNetworkStartupLifecycleTest,GameShutdownRequestTest,ShutdownHookTest,AionBootApplicationTest test`
+  - Result: exit code 0.
 - Database schema verification:
   - `al_server_gs` has 98 tables.
   - `al_server_ls` has 10 tables.
 
 ## Remaining Tasks
 
-- [ ] Verify and commit the current game shutdown-hook Spring-instantiable slice, or revert it if focused tests expose a regression.
 - [ ] Continue reducing `GameLegacyServiceBridgeConfiguration` legacy singleton beans; refresh the exact `return Xxx.getInstance();` count before each slice.
 - [ ] Replace each reduced legacy bean with Spring-instantiable construction only when the constructor and initialization behavior are safe under lazy Spring ownership.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage and focused tests.

@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.cache.HTMLCache;
@@ -429,6 +430,13 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("shutdownHook"));
             assertEquals(ShutdownHook.class, context.getType("shutdownHook"));
             assertLazy(context.getBeanFactory(), "shutdownHook");
+        }
+    }
+
+    @Test
+    void createsSpringManagedShutdownHookInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(ShutdownHook.getInstance(), context.getBean(ShutdownHook.class));
         }
     }
 

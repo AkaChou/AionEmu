@@ -524,7 +524,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public ShutdownHook shutdownHook() {
-        return ShutdownHook.getInstance();
+        return new ShutdownHook();
     }
 
     @Bean
