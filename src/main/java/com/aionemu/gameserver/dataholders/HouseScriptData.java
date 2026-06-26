@@ -38,11 +38,15 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -116,19 +120,17 @@ public class HouseScriptData {
 		private static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		private static DocumentBuilder db;
 
-		@SuppressWarnings("restriction")
 		public static String format(String unformattedXml) {
 			try {
 				Document document = parseXmlFile(unformattedXml);
-				OutputFormat format = new OutputFormat(document);
-				format.setIndenting(true);
-				format.setIndent(2);
-				format.setEncoding("UTF-8");
 				Writer out = new StringWriter();
-				XMLSerializer serializer = new XMLSerializer(out, format);
-				serializer.serialize(document);
+				Transformer transformer = TransformerFactory.newInstance().newTransformer();
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+				transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+				transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+				transformer.transform(new DOMSource(document), new StreamResult(out));
 				return out.toString();
-			} catch (IOException e) {
+			} catch (TransformerException e) {
 			}
 			return null;
 		}
