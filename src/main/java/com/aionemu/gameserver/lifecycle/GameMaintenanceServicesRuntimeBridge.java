@@ -43,16 +43,16 @@ public class GameMaintenanceServicesRuntimeBridge {
 
     public DatabaseCleaningService databaseCleaningService() {
         if (databaseCleaningServiceProvider == null) {
-            return DatabaseCleaningService.getInstance();
+            return GameMaintenanceServiceFallbacks.databaseCleaningService();
         }
-        return databaseCleaningServiceProvider.getIfAvailable(DatabaseCleaningService::getInstance);
+        return databaseCleaningServiceProvider.getIfAvailable(GameMaintenanceServiceFallbacks::databaseCleaningService);
     }
 
     public AbyssRankCleaningService abyssRankCleaningService() {
         if (abyssRankCleaningServiceProvider == null) {
-            return AbyssRankCleaningService.getInstance();
+            return GameMaintenanceServiceFallbacks.abyssRankCleaningService();
         }
-        return abyssRankCleaningServiceProvider.getIfAvailable(AbyssRankCleaningService::getInstance);
+        return abyssRankCleaningServiceProvider.getIfAvailable(GameMaintenanceServiceFallbacks::abyssRankCleaningService);
     }
 
     public boolean isPigPoppyEventEnabled() {
@@ -77,15 +77,15 @@ public class GameMaintenanceServicesRuntimeBridge {
 
     public ShugoImperialTombSpawnManager shugoImperialTombSpawnManager() {
         if (shugoImperialTombSpawnManagerProvider == null) {
-            return ShugoImperialTombSpawnManager.getInstance();
+            return GameMaintenanceServiceFallbacks.shugoImperialTombSpawnManager();
         }
-        return shugoImperialTombSpawnManagerProvider.getIfAvailable(ShugoImperialTombSpawnManager::getInstance);
+        return shugoImperialTombSpawnManagerProvider.getIfAvailable(GameMaintenanceServiceFallbacks::shugoImperialTombSpawnManager);
     }
 
     public SeasonRankingUpdateService seasonRankingUpdateService() {
         if (seasonRankingUpdateServiceProvider == null) {
-            return SeasonRankingUpdateService.getInstance();
+            return GameMaintenanceServiceFallbacks.seasonRankingUpdateService();
         }
-        return seasonRankingUpdateServiceProvider.getIfAvailable(SeasonRankingUpdateService::getInstance);
+        return seasonRankingUpdateServiceProvider.getIfAvailable(GameMaintenanceServiceFallbacks::seasonRankingUpdateService);
     }
 }
