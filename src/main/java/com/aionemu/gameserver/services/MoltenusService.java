@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -55,6 +56,7 @@ import javolution.util.FastMap;
  */
 
 public class MoltenusService {
+	private static volatile ObjectProvider<MoltenusService> instanceProvider;
 	private MoltenusSchedule moltenusSchedule;
 	private Map<Integer, MoltenusLocation> moltenus;
 	private static final int duration = CustomConfig.MOLTENUS_DURATION;
@@ -240,7 +242,15 @@ public class MoltenusService {
 	}
 
 	public static MoltenusService getInstance() {
-		return MoltenusServiceHolder.INSTANCE;
+		ObjectProvider<MoltenusService> provider = instanceProvider;
+		if (provider == null) {
+			return MoltenusServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> MoltenusServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<MoltenusService> instanceProvider) {
+		MoltenusService.instanceProvider = instanceProvider;
 	}
 
 	private static class MoltenusServiceHolder {

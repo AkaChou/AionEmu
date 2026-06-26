@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -53,6 +54,7 @@ import javolution.util.FastMap;
  * @author Rinzler (Encom)
  */
 public class ZorshivDredgionService {
+	private static volatile ObjectProvider<ZorshivDredgionService> instanceProvider;
 	private DredgionSchedule dredgionSchedule;
 	private Map<Integer, ZorshivDredgionLocation> zorshivDredgion;
 	private static final int duration = CustomConfig.ZORSHIV_DREDGION_DURATION;
@@ -275,7 +277,15 @@ public class ZorshivDredgionService {
 	}
 
 	public static ZorshivDredgionService getInstance() {
-		return ZorshivDredgionServiceHolder.INSTANCE;
+		ObjectProvider<ZorshivDredgionService> provider = instanceProvider;
+		if (provider == null) {
+			return ZorshivDredgionServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> ZorshivDredgionServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ZorshivDredgionService> instanceProvider) {
+		ZorshivDredgionService.instanceProvider = instanceProvider;
 	}
 
 	private static class ZorshivDredgionServiceHolder {

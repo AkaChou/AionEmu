@@ -5,14 +5,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.services.AnohaService;
+import com.aionemu.gameserver.services.AbyssLandingService;
+import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.BeritraService;
+import com.aionemu.gameserver.services.ConquestService;
 import com.aionemu.gameserver.services.DynamicRiftService;
+import com.aionemu.gameserver.services.IdianDepthsService;
 import com.aionemu.gameserver.services.InstanceRiftService;
 import com.aionemu.gameserver.services.IuService;
+import com.aionemu.gameserver.services.MoltenusService;
 import com.aionemu.gameserver.services.NightmareCircusService;
+import com.aionemu.gameserver.services.OutpostService;
+import com.aionemu.gameserver.services.RiftService;
 import com.aionemu.gameserver.services.RvrService;
+import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.SvsService;
+import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.VortexService;
+import com.aionemu.gameserver.services.ZorshivDredgionService;
 import java.lang.reflect.Proxy;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -108,6 +118,16 @@ class GameLocationBootstrapRuntimeBridgeTest {
         NightmareCircusService nightmareCircusService = instance(NightmareCircusService.class);
         DynamicRiftService dynamicRiftService = instance(DynamicRiftService.class);
         InstanceRiftService instanceRiftService = instance(InstanceRiftService.class);
+        SiegeService siegeService = instance(SiegeService.class);
+        BaseService baseService = instance(BaseService.class);
+        OutpostService outpostService = instance(OutpostService.class);
+        ZorshivDredgionService zorshivDredgionService = instance(ZorshivDredgionService.class);
+        MoltenusService moltenusService = instance(MoltenusService.class);
+        RiftService riftService = instance(RiftService.class);
+        ConquestService conquestService = instance(ConquestService.class);
+        IdianDepthsService idianDepthsService = instance(IdianDepthsService.class);
+        TowerOfEternityService towerOfEternityService = instance(TowerOfEternityService.class);
+        AbyssLandingService abyssLandingService = instance(AbyssLandingService.class);
 
         try {
             VortexService.setInstanceProvider(provider(VortexService.class, vortexService));
@@ -120,6 +140,16 @@ class GameLocationBootstrapRuntimeBridgeTest {
             NightmareCircusService.setInstanceProvider(provider(NightmareCircusService.class, nightmareCircusService));
             DynamicRiftService.setInstanceProvider(provider(DynamicRiftService.class, dynamicRiftService));
             InstanceRiftService.setInstanceProvider(provider(InstanceRiftService.class, instanceRiftService));
+            SiegeService.setInstanceProvider(provider(SiegeService.class, siegeService));
+            BaseService.setInstanceProvider(provider(BaseService.class, baseService));
+            OutpostService.setInstanceProvider(provider(OutpostService.class, outpostService));
+            ZorshivDredgionService.setInstanceProvider(provider(ZorshivDredgionService.class, zorshivDredgionService));
+            MoltenusService.setInstanceProvider(provider(MoltenusService.class, moltenusService));
+            RiftService.setInstanceProvider(provider(RiftService.class, riftService));
+            ConquestService.setInstanceProvider(provider(ConquestService.class, conquestService));
+            IdianDepthsService.setInstanceProvider(provider(IdianDepthsService.class, idianDepthsService));
+            TowerOfEternityService.setInstanceProvider(provider(TowerOfEternityService.class, towerOfEternityService));
+            AbyssLandingService.setInstanceProvider(provider(AbyssLandingService.class, abyssLandingService));
 
             assertSame(vortexService, VortexService.getInstance());
             assertSame(beritraService, BeritraService.getInstance());
@@ -131,6 +161,16 @@ class GameLocationBootstrapRuntimeBridgeTest {
             assertSame(nightmareCircusService, NightmareCircusService.getInstance());
             assertSame(dynamicRiftService, DynamicRiftService.getInstance());
             assertSame(instanceRiftService, InstanceRiftService.getInstance());
+            assertSame(siegeService, SiegeService.getInstance());
+            assertSame(baseService, BaseService.getInstance());
+            assertSame(outpostService, OutpostService.getInstance());
+            assertSame(zorshivDredgionService, ZorshivDredgionService.getInstance());
+            assertSame(moltenusService, MoltenusService.getInstance());
+            assertSame(riftService, RiftService.getInstance());
+            assertSame(conquestService, ConquestService.getInstance());
+            assertSame(idianDepthsService, IdianDepthsService.getInstance());
+            assertSame(towerOfEternityService, TowerOfEternityService.getInstance());
+            assertSame(abyssLandingService, AbyssLandingService.getInstance());
         } finally {
             VortexService.setInstanceProvider(null);
             BeritraService.setInstanceProvider(null);
@@ -142,6 +182,16 @@ class GameLocationBootstrapRuntimeBridgeTest {
             NightmareCircusService.setInstanceProvider(null);
             DynamicRiftService.setInstanceProvider(null);
             InstanceRiftService.setInstanceProvider(null);
+            SiegeService.setInstanceProvider(null);
+            BaseService.setInstanceProvider(null);
+            OutpostService.setInstanceProvider(null);
+            ZorshivDredgionService.setInstanceProvider(null);
+            MoltenusService.setInstanceProvider(null);
+            RiftService.setInstanceProvider(null);
+            ConquestService.setInstanceProvider(null);
+            IdianDepthsService.setInstanceProvider(null);
+            TowerOfEternityService.setInstanceProvider(null);
+            AbyssLandingService.setInstanceProvider(null);
         }
     }
 

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -52,6 +53,7 @@ import javolution.util.FastMap;
  * @author Rinzler (Encom)
  */
 public class ConquestService {
+	private static volatile ObjectProvider<ConquestService> instanceProvider;
 	private ConquestSchedule conquestSchedule;
 	private Map<Integer, ConquestLocation> conquest;
 	private static final int duration = CustomConfig.CONQUEST_DURATION;
@@ -272,7 +274,15 @@ public class ConquestService {
 	}
 
 	public static ConquestService getInstance() {
-		return ConquestServiceHolder.INSTANCE;
+		ObjectProvider<ConquestService> provider = instanceProvider;
+		if (provider == null) {
+			return ConquestServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> ConquestServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ConquestService> instanceProvider) {
+		ConquestService.instanceProvider = instanceProvider;
 	}
 
 	private static class ConquestServiceHolder {
