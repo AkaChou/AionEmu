@@ -1,10 +1,14 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -28,6 +32,15 @@ class GameCoreServicesRuntimeBridgeTest {
         assertSame(dataManager, runtimeBridge.dataManager());
         assertSame(threadPoolManager, runtimeBridge.threadPoolManager());
         assertSame(htmlCache, runtimeBridge.htmlCache());
+    }
+
+    @Test
+    void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameCoreServicesRuntimeBridge.java"));
+
+        assertFalse(source.contains("DataManager.getInstance()"));
+        assertFalse(source.contains("ThreadPoolManager.getInstance()"));
+        assertFalse(source.contains("HTMLCache.getInstance()"));
     }
 
     private <T> T instance(Class<T> type) {
