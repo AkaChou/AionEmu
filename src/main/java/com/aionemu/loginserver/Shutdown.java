@@ -18,7 +18,6 @@
 
 package com.aionemu.loginserver;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.loginserver.network.NetConnector;
+import com.aionemu.loginserver.service.LoginCronServices;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.configs.SvStatsConfig;
@@ -99,9 +99,7 @@ public class Shutdown extends Thread {
 
         // shutdown cron service prior to threadpool shutdown
         try {
-            if (CronService.isInitialized()) {
-                CronService.getInstance().shutdown();
-            }
+            LoginCronServices.shutdownIfInitialized();
         } catch (Throwable t) {
             log.error("Can't shutdown CronService", t);
         }

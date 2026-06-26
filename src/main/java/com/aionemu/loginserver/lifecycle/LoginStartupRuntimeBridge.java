@@ -2,13 +2,13 @@ package com.aionemu.loginserver.lifecycle;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.loginserver.GameServerTable;
 import com.aionemu.loginserver.LoginServer;
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.dao.BannedMacDAO;
 import com.aionemu.loginserver.network.ncrypt.KeyGen;
+import com.aionemu.loginserver.service.LoginCronServices;
 import com.aionemu.loginserver.service.LoginNetworkServices;
 import com.aionemu.loginserver.service.LoginPremiumServices;
 import com.aionemu.loginserver.service.LoginProtectionServices;
@@ -17,7 +17,6 @@ import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.loginserver.service.LoginTransferServices;
 import com.aionemu.loginserver.service.PlayerTransferService;
 import com.aionemu.loginserver.utils.DeadLockDetector;
-import com.aionemu.loginserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -39,7 +38,7 @@ public class LoginStartupRuntimeBridge {
     }
 
     public void initializeCronService() {
-        CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
+        LoginCronServices.initialize();
     }
 
     public void loadConfig() {
