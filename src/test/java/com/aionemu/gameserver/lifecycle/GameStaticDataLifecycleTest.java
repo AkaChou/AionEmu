@@ -1,16 +1,21 @@
 package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.WorldMapsData;
+import com.aionemu.gameserver.services.GameLegacyServiceBridgeConfiguration;
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 class GameStaticDataLifecycleTest {
 
@@ -41,6 +46,22 @@ class GameStaticDataLifecycleTest {
 
         assertEquals(1, loads.get());
         assertEquals(1, movementLoops.get());
+    }
+
+    @Test
+    void movementLoopProviderRegistrationDoesNotReadWorldMapsBeforeStaticDataLoads() {
+        WorldMapsData oldWorldMapsData = DataManager.WORLD_MAPS_DATA;
+        DataManager.WORLD_MAPS_DATA = null;
+        try {
+            assertDoesNotThrow(() -> {
+                try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+                    context.register(GameLegacyServiceBridgeConfiguration.class, GameMovementLoopServices.class);
+                    context.refresh();
+                }
+            });
+        } finally {
+            DataManager.WORLD_MAPS_DATA = oldWorldMapsData;
+        }
     }
 
     @Test

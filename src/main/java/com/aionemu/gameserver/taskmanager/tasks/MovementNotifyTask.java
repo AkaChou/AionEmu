@@ -18,7 +18,6 @@ package com.aionemu.gameserver.taskmanager.tasks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -39,14 +38,8 @@ import com.aionemu.gameserver.world.knownlist.VisitorWithOwner;
 
 public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature> {
 	private static volatile ObjectProvider<MovementNotifyTask> instanceProvider;
-	private static Map<Integer, int[]> moveBroadcastCounts = new HashMap<Integer, int[]>();
-
-	static {
-		Iterator<WorldMapTemplate> iter = DataManager.WORLD_MAPS_DATA.iterator();
-		while (iter.hasNext()) {
-			moveBroadcastCounts.put(iter.next().getMapId(), new int[2]);
-		}
-	}
+	private static final Map<Integer, int[]> moveBroadcastCounts = new HashMap<Integer, int[]>();
+	private static boolean moveBroadcastCountsInitialized;
 
 	private static final class SingletonHolder {
 		private static final MovementNotifyTask INSTANCE = new MovementNotifyTask();
@@ -68,6 +61,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 
 	public MovementNotifyTask() {
 		super(500);
+		ensureMoveBroadcastCountsInitialized();
 	}
 
 	@Override
@@ -83,7 +77,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 				creature.getWorldId() == 400060000 ? 200 : Integer.MAX_VALUE; // Disillon.
 		int iterations = creature.getKnownList().doOnAllNpcsWithOwner(MOVE_NOTIFIER, limit);
 		if (!(creature instanceof Player)) {
-			int[] maxCounts = moveBroadcastCounts.get(creature.getWorldId());
+			int[] maxCounts = moveBroadcastCounts(creature.getWorldId());
 			synchronized (maxCounts) {
 				if (iterations > maxCounts[0]) {
 					maxCounts[0] = iterations;
@@ -94,6 +88,7 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	}
 
 	public String[] dumpBroadcastStats() {
+		ensureMoveBroadcastCountsInitialized();
 		List<String> lines = new ArrayList<String>();
 		lines.add("------- Movement broadcast counts -------");
 		for (Entry<Integer, int[]> entry : moveBroadcastCounts.entrySet()) {
@@ -107,6 +102,25 @@ public class MovementNotifyTask extends AbstractFIFOPeriodicTaskManager<Creature
 	@Override
 	protected String getCalledMethodName() {
 		return "notifyOnMove()";
+	}
+
+	private static int[] moveBroadcastCounts(int worldId) {
+		synchronized (moveBroadcastCounts) {
+			ensureMoveBroadcastCountsInitialized();
+			return moveBroadcastCounts.computeIfAbsent(worldId, key -> new int[2]);
+		}
+	}
+
+	private static void ensureMoveBroadcastCountsInitialized() {
+		synchronized (moveBroadcastCounts) {
+			if (moveBroadcastCountsInitialized || DataManager.WORLD_MAPS_DATA == null) {
+				return;
+			}
+			for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
+				moveBroadcastCounts.putIfAbsent(template.getMapId(), new int[2]);
+			}
+			moveBroadcastCountsInitialized = true;
+		}
 	}
 
 	private class MoveNotifier implements VisitorWithOwner<Npc, VisibleObject> {
