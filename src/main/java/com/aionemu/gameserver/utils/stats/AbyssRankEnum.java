@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.utils.stats;
 
-import javax.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnum;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

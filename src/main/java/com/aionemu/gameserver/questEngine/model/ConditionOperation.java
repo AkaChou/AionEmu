@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.questEngine.model;
 
-import javax.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnum;
 
 /**
  * @author Mr. Poke

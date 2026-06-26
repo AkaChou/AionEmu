@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.model;
 
-import javax.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnum;
 
 import org.apache.commons.lang3.NotImplementedException;
 
