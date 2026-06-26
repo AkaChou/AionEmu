@@ -24,9 +24,9 @@ public class GameNetworkStartupRuntimeBridge {
 
     public Thread shutdownHook() {
         if (shutdownHookProvider == null) {
-            return ShutdownHook.getInstance();
+            return GameShutdownHookFallbacks.shutdownHook();
         }
-        return shutdownHookProvider.getIfAvailable(ShutdownHook::getInstance);
+        return shutdownHookProvider.getIfAvailable(GameShutdownHookFallbacks::shutdownHook);
     }
 
     public void registerShutdownHook(Thread shutdownHook) {
