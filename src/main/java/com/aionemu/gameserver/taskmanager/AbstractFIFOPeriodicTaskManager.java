@@ -16,10 +16,13 @@
  */
 package com.aionemu.gameserver.taskmanager;
 
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.utils.AEFastSet;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 
 /**
@@ -29,9 +32,9 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 
 	protected static final Logger log = LoggerFactory.getLogger(AbstractFIFOPeriodicTaskManager.class);
 
-	private final AEFastSet<T> queue = new AEFastSet<T>();
+	private final Set<T> queue = new LinkedHashSet<T>();
 
-	private final AEFastSet<T> activeTasks = new AEFastSet<T>();
+	private final Set<T> activeTasks = new LinkedHashSet<T>();
 
 	public AbstractFIFOPeriodicTaskManager(int period) {
 		super(period);
@@ -57,7 +60,7 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 			writeUnlock();
 		}
 
-		for (T task; (task = activeTasks.removeFirst()) != null;) {
+		for (T task; (task = removeFirst(activeTasks)) != null;) {
 			final long begin = System.nanoTime();
 
 			try {
@@ -73,4 +76,14 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 	protected abstract void callTask(T task);
 
 	protected abstract String getCalledMethodName();
+
+	private T removeFirst(Set<T> tasks) {
+		Iterator<T> iterator = tasks.iterator();
+		if (!iterator.hasNext()) {
+			return null;
+		}
+		T task = iterator.next();
+		iterator.remove();
+		return task;
+	}
 }
