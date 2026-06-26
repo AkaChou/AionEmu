@@ -42,32 +42,45 @@ public class ShutdownHook extends Thread {
      */
     private static boolean restartOnly = false;
 
+    public ShutdownHook() {
+    }
+
+    public ShutdownHook(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
+        configure(processBridge, restartService, gameServerService);
+    }
+
     /**
      * get the shutdown-hook instance the shutdown-hook instance is created by
      * the first call of this function, but it has to be registrered externaly.
      *
      * @return instance of Shutdown, to be used as shutdown hook
      */
+    @Deprecated(since = "boot-migration")
     public static ShutdownHook getInstance() {
         return instance;
     }
 
+    @Deprecated(since = "boot-migration")
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge) {
-        instance.setProcessBridge(processBridge);
-        instance.setRestartService(null);
-        instance.setGameServerService(null);
+        instance.configure(processBridge, null, null);
         return instance;
     }
 
+    @Deprecated(since = "boot-migration")
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge, RestartService restartService) {
         return getInstance(processBridge, restartService, null);
     }
 
+    @Deprecated(since = "boot-migration")
     public static ShutdownHook getInstance(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
-        instance.setProcessBridge(processBridge);
-        instance.setRestartService(restartService);
-        instance.setGameServerService(gameServerService);
+        instance.configure(processBridge, restartService, gameServerService);
         return instance;
+    }
+
+    void configure(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
+        setProcessBridge(processBridge);
+        setRestartService(restartService);
+        setGameServerService(gameServerService);
     }
 
     private void setProcessBridge(ChatProcessRuntimeBridge processBridge) {

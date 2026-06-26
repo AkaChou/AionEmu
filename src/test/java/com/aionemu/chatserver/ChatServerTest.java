@@ -121,8 +121,9 @@ class ChatServerTest {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/configs/ChatServerSpringConfiguration.java"));
 
         assertFalse(source.contains("return RestartService.getInstance();"));
+        assertFalse(source.contains("ShutdownHook.getInstance(processBridge, restartService, gameServerService)"));
         assertTrue(source.contains("return new RestartService();"));
-        assertTrue(source.contains("ShutdownHook.getInstance(processBridge, restartService, gameServerService)"));
+        assertTrue(source.contains("return new ShutdownHook(processBridge, restartService, gameServerService);"));
     }
 
     @Test

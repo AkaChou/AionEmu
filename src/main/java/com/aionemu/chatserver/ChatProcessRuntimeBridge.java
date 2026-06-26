@@ -37,8 +37,8 @@ public class ChatProcessRuntimeBridge {
 
     private ShutdownHook shutdownHookInstance() {
         if (shutdownHookProvider == null) {
-            return ShutdownHook.getInstance(this);
+            return ChatShutdownHooks.shutdownHook(this);
         }
-        return shutdownHookProvider.getIfAvailable(() -> ShutdownHook.getInstance(this));
+        return shutdownHookProvider.getIfAvailable(() -> ChatShutdownHooks.shutdownHook(this));
     }
 }
