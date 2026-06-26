@@ -7,11 +7,9 @@ import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.toypet.MinionService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
 public class GameEventBootstrapRuntimeBridge {
 
     private ObjectProvider<LunaShopService> lunaShopServiceProvider;
@@ -47,36 +45,36 @@ public class GameEventBootstrapRuntimeBridge {
 
     public LunaShopService lunaShopService() {
         if (lunaShopServiceProvider == null) {
-            return LunaShopService.getInstance();
+            return GameEventBootstrapFallbacks.lunaShopService();
         }
-        return lunaShopServiceProvider.getIfAvailable(LunaShopService::getInstance);
+        return lunaShopServiceProvider.getIfAvailable(GameEventBootstrapFallbacks::lunaShopService);
     }
 
     public MinionService minionService() {
         if (minionServiceProvider == null) {
-            return MinionService.getInstance();
+            return GameEventBootstrapFallbacks.minionService();
         }
-        return minionServiceProvider.getIfAvailable(MinionService::getInstance);
+        return minionServiceProvider.getIfAvailable(GameEventBootstrapFallbacks::minionService);
     }
 
     public ShugoSweepService shugoSweepService() {
         if (shugoSweepServiceProvider == null) {
-            return ShugoSweepService.getInstance();
+            return GameEventBootstrapFallbacks.shugoSweepService();
         }
-        return shugoSweepServiceProvider.getIfAvailable(ShugoSweepService::getInstance);
+        return shugoSweepServiceProvider.getIfAvailable(GameEventBootstrapFallbacks::shugoSweepService);
     }
 
     public AtreianPassportService atreianPassportService() {
         if (atreianPassportServiceProvider == null) {
-            return AtreianPassportService.getInstance();
+            return GameEventBootstrapFallbacks.atreianPassportService();
         }
-        return atreianPassportServiceProvider.getIfAvailable(AtreianPassportService::getInstance);
+        return atreianPassportServiceProvider.getIfAvailable(GameEventBootstrapFallbacks::atreianPassportService);
     }
 
     public EventWindowService eventWindowService() {
         if (eventWindowServiceProvider == null) {
-            return EventWindowService.getInstance();
+            return GameEventBootstrapFallbacks.eventWindowService();
         }
-        return eventWindowServiceProvider.getIfAvailable(EventWindowService::getInstance);
+        return eventWindowServiceProvider.getIfAvailable(GameEventBootstrapFallbacks::eventWindowService);
     }
 }

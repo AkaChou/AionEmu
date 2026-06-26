@@ -24,6 +24,7 @@ class GameHousingLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "housingBidServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "maintenanceTaskProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "townServiceProvider"));
+        assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "housingServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "challengeTaskServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameHousingGateway.class, "runtimeBridgeProvider"));
     }
@@ -39,7 +40,7 @@ class GameHousingLifecycleTest {
         lifecycle.start();
 
         assertTrue(lifecycle.isLoaded());
-        assertEquals(List.of("section", "housingBid", "maintenance", "town", "challengeTask"), events);
+        assertEquals(List.of("section", "housingBid", "maintenance", "town", "housing", "challengeTask"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
     }
@@ -70,6 +71,7 @@ class GameHousingLifecycleTest {
             "housingBid",
             "maintenance",
             "town",
+            "housing",
             "challengeTask"
         );
     }

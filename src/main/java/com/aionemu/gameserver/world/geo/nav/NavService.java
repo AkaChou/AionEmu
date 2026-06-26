@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.bounding.BoundingBox;
@@ -40,10 +41,11 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 public final class NavService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(NavService.class);
+	private static volatile ObjectProvider<NavService> instanceProvider;
 	private final NavData navData = NavData.getInstance();
 	private final ConcurrentHashMap<GroundCacheKey, GroundCacheEntry> groundCache = new ConcurrentHashMap<>();
 	
-	private NavService() {};
+	public NavService() {};
 	
 	public void initializeNav() {
 		if (GeoDataConfig.GEO_NAV_ENABLE) {
@@ -554,7 +556,15 @@ public final class NavService {
 	}
 	
 	public static final NavService getInstance() {
-		return SingletonHolder.INSTANCE;
+		ObjectProvider<NavService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<NavService> instanceProvider) {
+		NavService.instanceProvider = instanceProvider;
 	}
 	
 	private static final class SingletonHolder {

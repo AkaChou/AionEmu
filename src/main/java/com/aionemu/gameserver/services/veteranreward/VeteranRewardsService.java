@@ -22,6 +22,7 @@ import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
@@ -53,6 +54,7 @@ import com.aionemu.gameserver.world.World;
 import javolution.util.FastSet;
 
 public class VeteranRewardsService {
+	private static volatile ObjectProvider<VeteranRewardsService> instanceProvider;
 
 	public enum RecipientType {
 
@@ -78,7 +80,7 @@ public class VeteranRewardsService {
 
 	private static final String VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE = "0 * * ? * *";
 
-	private VeteranRewardsService() {
+	public VeteranRewardsService() {
 		Init_VeteranRewardStatusLoop();
 	}
 
@@ -356,7 +358,15 @@ public class VeteranRewardsService {
 	}
 
 	public static final VeteranRewardsService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<VeteranRewardsService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<VeteranRewardsService> instanceProvider) {
+		VeteranRewardsService.instanceProvider = instanceProvider;
 	}
 
 	@SuppressWarnings("synthetic-access")

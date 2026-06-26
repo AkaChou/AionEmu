@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.model.Race;
@@ -49,12 +51,13 @@ import javolution.util.FastMap;
  */
 public class FindGroupService {
 
+	private static volatile ObjectProvider<FindGroupService> instanceProvider;
 	private FastMap<Integer, FindGroup> elyosRecruitFindGroups = new FastMap<Integer, FindGroup>().shared();
 	private FastMap<Integer, FindGroup> elyosApplyFindGroups = new FastMap<Integer, FindGroup>().shared();
 	private FastMap<Integer, FindGroup> asmodianRecruitFindGroups = new FastMap<Integer, FindGroup>().shared();
 	private FastMap<Integer, FindGroup> asmodianApplyFindGroups = new FastMap<Integer, FindGroup>().shared();
 
-	private FindGroupService() {
+	public FindGroupService() {
 
 		GlobalCallbackHelper.addCallback(new FindGroupOnAddPlayerToGroupListener());
 		GlobalCallbackHelper.addCallback(new FindGroupPlayerGroupdDisbandListener());
@@ -214,7 +217,15 @@ public class FindGroupService {
 	}
 
 	public static final FindGroupService getInstance() {
+		ObjectProvider<FindGroupService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<FindGroupService> provider) {
+		instanceProvider = provider;
 	}
 
 	@SuppressWarnings("synthetic-access")

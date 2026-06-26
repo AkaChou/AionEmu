@@ -22,6 +22,7 @@ import com.aionemu.gameserver.model.SellLimit;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import org.springframework.beans.factory.ObjectProvider;
 
 import javolution.util.FastMap;
 
@@ -31,6 +32,7 @@ import javolution.util.FastMap;
 public class PlayerLimitService {
 
 	private static FastMap<Integer, Long> sellLimit = new FastMap<Integer, Long>().shared();
+	private static volatile ObjectProvider<PlayerLimitService> instanceProvider;
 
 	public static boolean updateSellLimit(Player player, long reward) {
 		if (!CustomConfig.LIMITS_ENABLED) {
@@ -65,7 +67,15 @@ public class PlayerLimitService {
 	}
 
 	public static PlayerLimitService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<PlayerLimitService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<PlayerLimitService> instanceProvider) {
+		PlayerLimitService.instanceProvider = instanceProvider;
 	}
 
 	private static class SingletonHolder {

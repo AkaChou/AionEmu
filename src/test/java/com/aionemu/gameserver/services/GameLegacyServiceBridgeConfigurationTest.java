@@ -1,6 +1,8 @@
 package com.aionemu.gameserver.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.cache.HTMLCache;
@@ -8,6 +10,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
@@ -17,7 +20,10 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
+import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
+import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
+import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.events.BGService;
 import com.aionemu.gameserver.services.events.BanditService;
@@ -26,6 +32,7 @@ import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
+import com.aionemu.gameserver.services.events.ThievesGuildService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
 import com.aionemu.gameserver.services.instance.EngulfedOphidanBridgeService;
@@ -37,31 +44,70 @@ import com.aionemu.gameserver.services.instance.IdgelDomeService;
 import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
+import com.aionemu.gameserver.services.item.CoalescenceService;
+import com.aionemu.gameserver.services.mail.SystemMailService;
+import com.aionemu.gameserver.services.player.AtreianBestiaryService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityStatsService;
+import com.aionemu.gameserver.services.player.CreativityPanel.CreativityTransfoService;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Accuracy;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Health;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Knowledge;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Power;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
+import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
+import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.LunaShopService;
+import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.services.AutoGroupService;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
+import com.aionemu.gameserver.services.drop.DropDistributionService;
+import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
+import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
+import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
+import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.services.reward.RewardService;
+import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
 import com.aionemu.gameserver.services.toypet.MinionService;
+import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.spawnengine.ShugoImperialTombSpawnManager;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
+import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
+import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
+import com.aionemu.gameserver.taskmanager.tasks.MoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
+import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
+import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
+import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
+import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.world.geo.nav.NavData;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import com.aionemu.gameserver.world.zone.ZoneService;
+import com.aionemu.gameserver.world.zone.ZoneUpdateService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -79,6 +125,18 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "adminService");
             assertLazy(context.getBeanFactory(), "gamePlayerTransferService");
         }
+    }
+
+    @Test
+    void createsSpringManagedAdminServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(AdminService.getInstance(), context.getBean(AdminService.class));
+        }
+    }
+
+    @Test
+    void createsSpringManagedPlayerTransferServiceInsteadOfLegacySingleton() {
+        assertConfigurationCreatesNew(PlayerTransferService.class);
     }
 
     @Test
@@ -121,6 +179,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedFfaServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(FFAService.getInstance(), context.getBean(FFAService.class));
+        }
+    }
+
+    @Test
     void exposesOptionalServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("playerLimitService"));
@@ -132,6 +197,20 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "playerLimitService");
             assertLazy(context.getBeanFactory(), "npcShoutsService");
             assertLazy(context.getBeanFactory(), "shieldService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedShieldServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(ShieldService.getInstance(), context.getBean(ShieldService.class));
+        }
+    }
+
+    @Test
+    void createsSpringManagedPlayerLimitServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(PlayerLimitService.getInstance(), context.getBean(PlayerLimitService.class));
         }
     }
 
@@ -150,6 +229,21 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "maintenanceTask");
             assertLazy(context.getBeanFactory(), "townService");
             assertLazy(context.getBeanFactory(), "challengeTaskService");
+        }
+    }
+
+    @Test
+    void housingBidServiceReadsRegisterEndCronFromCurrentHousingConfig() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/HousingBidService.java"));
+
+        assertFalse(source.contains("static final String registerEndExpression = HousingConfig.HOUSE_REGISTER_END"));
+        assertTrue(source.contains("new CronExpression(HousingConfig.HOUSE_REGISTER_END)"));
+    }
+
+    @Test
+    void createsSpringManagedChallengeTaskServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(ChallengeTaskService.getInstance(), context.getBean(ChallengeTaskService.class));
         }
     }
 
@@ -187,6 +281,21 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedBattlefieldServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(KamarBattlefieldService.getInstance(), context.getBean(KamarBattlefieldService.class));
+            assertNotSame(EngulfedOphidanBridgeService.getInstance(), context.getBean(EngulfedOphidanBridgeService.class));
+            assertNotSame(SuspiciousOphidanBridgeService.getInstance(), context.getBean(SuspiciousOphidanBridgeService.class));
+            assertNotSame(IronWallWarfrontService.getInstance(), context.getBean(IronWallWarfrontService.class));
+            assertNotSame(IdgelDomeService.getInstance(), context.getBean(IdgelDomeService.class));
+            assertNotSame(IdgelDomeLandmarkService.getInstance(), context.getBean(IdgelDomeLandmarkService.class));
+            assertNotSame(HallOfTenacityService.getInstance(), context.getBean(HallOfTenacityService.class));
+            assertNotSame(GrandArenaTrainingCampService.getInstance(), context.getBean(GrandArenaTrainingCampService.class));
+            assertNotSame(IDRunService.getInstance(), context.getBean(IDRunService.class));
+        }
+    }
+
+    @Test
     void exposesThreadPoolManagerAsLazySpringBean() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("threadPoolManager"));
@@ -214,6 +323,16 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedGameEnginesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(QuestEngine.getInstance(), context.getBean(QuestEngine.class));
+            assertNotSame(InstanceEngine.getInstance(), context.getBean(InstanceEngine.class));
+            assertNotSame(AI2Engine.getInstance(), context.getBean(AI2Engine.class));
+            assertNotSame(ChatProcessor.getInstance(), context.getBean(ChatProcessor.class));
+        }
+    }
+
+    @Test
     void exposesEventBootstrapServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("lunaShopService"));
@@ -235,7 +354,16 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
-    void exposesRuntimeServicesAsLazySpringBeans() {
+    void createsSpringManagedLightweightEventBootstrapServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(MinionService.getInstance(), context.getBean(MinionService.class));
+            assertNotSame(ShugoSweepService.getInstance(), context.getBean(ShugoSweepService.class));
+            assertNotSame(AtreianPassportService.getInstance(), context.getBean(AtreianPassportService.class));
+        }
+    }
+
+    @Test
+    void exposesRuntimeServicesAsSpringBeansWithEagerBridgeOnly() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("periodicSaveService"));
             assertTrue(context.containsBeanDefinition("territoryService"));
@@ -287,7 +415,15 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "boostEventService");
             assertLazy(context.getBeanFactory(), "taskManagerFromDB");
             assertLazy(context.getBeanFactory(), "limitedItemTradeService");
-            assertLazy(context.getBeanFactory(), "gameRuntimeServiceBridge");
+            assertEager(context.getBeanFactory(), "gameRuntimeServiceBridge");
+        }
+    }
+
+    @Test
+    void createsSpringManagedTerritoryAndLimitedTradeServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(TerritoryService.getInstance(), context.getBean(TerritoryService.class));
+            assertNotSame(LimitedItemTradeService.getInstance(), context.getBean(LimitedItemTradeService.class));
         }
     }
 
@@ -304,6 +440,18 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "weddingService");
             assertLazy(context.getBeanFactory(), "veteranRewardsService");
         }
+    }
+
+    @Test
+    void createsSpringManagedWeddingServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(WeddingService.getInstance(), context.getBean(WeddingService.class));
+        }
+    }
+
+    @Test
+    void createsSpringManagedRewardServiceInsteadOfLegacySingleton() {
+        assertConfigurationCreatesNew(RewardService.class);
     }
 
     @Test
@@ -327,6 +475,14 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(NavService.class, context.getType("navService"));
             assertLazy(context.getBeanFactory(), "geoService");
             assertLazy(context.getBeanFactory(), "navService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedGeoNavServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(GeoService.getInstance(), context.getBean(GeoService.class));
+            assertNotSame(NavService.getInstance(), context.getBean(NavService.class));
         }
     }
 
@@ -355,6 +511,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedOutpostServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(OutpostService.getInstance(), context.getBean(OutpostService.class));
+        }
+    }
+
+    @Test
     void exposesDredgionServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("dredgionService"));
@@ -364,6 +527,12 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "dredgionService");
             assertLazy(context.getBeanFactory(), "asyunatarService");
         }
+    }
+
+    @Test
+    void createsSpringManagedDredgionServicesInsteadOfLegacySingletons() {
+        assertConfigurationCreatesNew(DredgionService2.class);
+        assertConfigurationCreatesNew(AsyunatarService.class);
     }
 
     @Test
@@ -385,11 +554,25 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedSeasonRankingUpdateServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(SeasonRankingUpdateService.getInstance(), context.getBean(SeasonRankingUpdateService.class));
+        }
+    }
+
+    @Test
     void exposesProtectorConquerorServiceAsLazySpringBean() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("protectorConquerorService"));
             assertEquals(ProtectorConquerorService.class, context.getType("protectorConquerorService"));
             assertLazy(context.getBeanFactory(), "protectorConquerorService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedProtectorConquerorServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(ProtectorConquerorService.getInstance(), context.getBean(ProtectorConquerorService.class));
         }
     }
 
@@ -424,11 +607,201 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void exposesPlayerEntryCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("aStationService"));
+            assertTrue(context.containsBeanDefinition("f2pService"));
+            assertTrue(context.containsBeanDefinition("windyGorgeService"));
+            assertTrue(context.containsBeanDefinition("motionLoggingService"));
+            assertTrue(context.containsBeanDefinition("staticDoorService"));
+            assertTrue(context.containsBeanDefinition("kiskService"));
+            assertTrue(context.containsBeanDefinition("repurchaseService"));
+            assertTrue(context.containsBeanDefinition("dropDistributionService"));
+            assertTrue(context.containsBeanDefinition("systemMailService"));
+            assertEquals(AStationService.class, context.getType("aStationService"));
+            assertEquals(F2pService.class, context.getType("f2pService"));
+            assertEquals(WindyGorgeService.class, context.getType("windyGorgeService"));
+            assertEquals(MotionLoggingService.class, context.getType("motionLoggingService"));
+            assertEquals(StaticDoorService.class, context.getType("staticDoorService"));
+            assertEquals(KiskService.class, context.getType("kiskService"));
+            assertEquals(RepurchaseService.class, context.getType("repurchaseService"));
+            assertEquals(DropDistributionService.class, context.getType("dropDistributionService"));
+            assertEquals(SystemMailService.class, context.getType("systemMailService"));
+            assertLazy(context.getBeanFactory(), "aStationService");
+            assertLazy(context.getBeanFactory(), "f2pService");
+            assertLazy(context.getBeanFactory(), "windyGorgeService");
+            assertLazy(context.getBeanFactory(), "motionLoggingService");
+            assertLazy(context.getBeanFactory(), "staticDoorService");
+            assertLazy(context.getBeanFactory(), "kiskService");
+            assertLazy(context.getBeanFactory(), "repurchaseService");
+            assertLazy(context.getBeanFactory(), "dropDistributionService");
+            assertLazy(context.getBeanFactory(), "systemMailService");
+        }
+    }
+
+    @Test
+    void exposesPlayerActionCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("bonusService"));
+            assertTrue(context.containsBeanDefinition("petService"));
+            assertTrue(context.containsBeanDefinition("arcadeUpgradeService"));
+            assertTrue(context.containsBeanDefinition("atreianBestiaryService"));
+            assertTrue(context.containsBeanDefinition("coalescenceService"));
+            assertTrue(context.containsBeanDefinition("growthEnergy"));
+            assertEquals(BonusService.class, context.getType("bonusService"));
+            assertEquals(PetService.class, context.getType("petService"));
+            assertEquals(ArcadeUpgradeService.class, context.getType("arcadeUpgradeService"));
+            assertEquals(AtreianBestiaryService.class, context.getType("atreianBestiaryService"));
+            assertEquals(CoalescenceService.class, context.getType("coalescenceService"));
+            assertEquals(GrowthEnergy.class, context.getType("growthEnergy"));
+            assertLazy(context.getBeanFactory(), "bonusService");
+            assertLazy(context.getBeanFactory(), "petService");
+            assertLazy(context.getBeanFactory(), "arcadeUpgradeService");
+            assertLazy(context.getBeanFactory(), "atreianBestiaryService");
+            assertLazy(context.getBeanFactory(), "coalescenceService");
+            assertLazy(context.getBeanFactory(), "growthEnergy");
+        }
+    }
+
+    @Test
+    void exposesTaskManagerCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("expireTimerTask"));
+            assertTrue(context.containsBeanDefinition("teamEffectUpdater"));
+            assertTrue(context.containsBeanDefinition("teamMoveUpdater"));
+            assertTrue(context.containsBeanDefinition("temporaryTradeTimeTask"));
+            assertEquals(ExpireTimerTask.class, context.getType("expireTimerTask"));
+            assertEquals(TeamEffectUpdater.class, context.getType("teamEffectUpdater"));
+            assertEquals(TeamMoveUpdater.class, context.getType("teamMoveUpdater"));
+            assertEquals(TemporaryTradeTimeTask.class, context.getType("temporaryTradeTimeTask"));
+            assertLazy(context.getBeanFactory(), "expireTimerTask");
+            assertLazy(context.getBeanFactory(), "teamEffectUpdater");
+            assertLazy(context.getBeanFactory(), "teamMoveUpdater");
+            assertLazy(context.getBeanFactory(), "temporaryTradeTimeTask");
+        }
+    }
+
+    @Test
+    void exposesCreativityCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("creativityEssenceService"));
+            assertTrue(context.containsBeanDefinition("creativitySkillService"));
+            assertTrue(context.containsBeanDefinition("creativityStatsService"));
+            assertTrue(context.containsBeanDefinition("creativityTransfoService"));
+            assertTrue(context.containsBeanDefinition("accuracy"));
+            assertTrue(context.containsBeanDefinition("agility"));
+            assertTrue(context.containsBeanDefinition("health"));
+            assertTrue(context.containsBeanDefinition("knowledge"));
+            assertTrue(context.containsBeanDefinition("power"));
+            assertTrue(context.containsBeanDefinition("precision"));
+            assertTrue(context.containsBeanDefinition("will"));
+            assertEquals(CreativityEssenceService.class, context.getType("creativityEssenceService"));
+            assertEquals(CreativitySkillService.class, context.getType("creativitySkillService"));
+            assertEquals(CreativityStatsService.class, context.getType("creativityStatsService"));
+            assertEquals(CreativityTransfoService.class, context.getType("creativityTransfoService"));
+            assertEquals(Accuracy.class, context.getType("accuracy"));
+            assertEquals(Agility.class, context.getType("agility"));
+            assertEquals(Health.class, context.getType("health"));
+            assertEquals(Knowledge.class, context.getType("knowledge"));
+            assertEquals(Power.class, context.getType("power"));
+            assertEquals(Precision.class, context.getType("precision"));
+            assertEquals(Will.class, context.getType("will"));
+            assertLazy(context.getBeanFactory(), "creativityEssenceService");
+            assertLazy(context.getBeanFactory(), "creativitySkillService");
+            assertLazy(context.getBeanFactory(), "creativityStatsService");
+            assertLazy(context.getBeanFactory(), "creativityTransfoService");
+            assertLazy(context.getBeanFactory(), "accuracy");
+            assertLazy(context.getBeanFactory(), "agility");
+            assertLazy(context.getBeanFactory(), "health");
+            assertLazy(context.getBeanFactory(), "knowledge");
+            assertLazy(context.getBeanFactory(), "power");
+            assertLazy(context.getBeanFactory(), "precision");
+            assertLazy(context.getBeanFactory(), "will");
+        }
+    }
+
+    @Test
+    void exposesCraftCompatibilityServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("craftSkillUpdateService"));
+            assertTrue(context.containsBeanDefinition("relinquishCraftStatus"));
+            assertEquals(CraftSkillUpdateService.class, context.getType("craftSkillUpdateService"));
+            assertEquals(RelinquishCraftStatus.class, context.getType("relinquishCraftStatus"));
+            assertLazy(context.getBeanFactory(), "craftSkillUpdateService");
+            assertLazy(context.getBeanFactory(), "relinquishCraftStatus");
+        }
+    }
+
+    @Test
+    void exposesRuntimeCompatibilityServicesWithCoreRestorationEager() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("duelService"));
+            assertTrue(context.containsBeanDefinition("lifeStatsRestoreService"));
+            assertTrue(context.containsBeanDefinition("seasonRankingService"));
+            assertTrue(context.containsBeanDefinition("riftManager"));
+            assertEquals(DuelService.class, context.getType("duelService"));
+            assertEquals(LifeStatsRestoreService.class, context.getType("lifeStatsRestoreService"));
+            assertEquals(SeasonRankingService.class, context.getType("seasonRankingService"));
+            assertEquals(RiftManager.class, context.getType("riftManager"));
+            assertLazy(context.getBeanFactory(), "duelService");
+            assertEager(context.getBeanFactory(), "lifeStatsRestoreService");
+            assertLazy(context.getBeanFactory(), "seasonRankingService");
+            assertLazy(context.getBeanFactory(), "riftManager");
+        }
+    }
+
+    @Test
+    void exposesCoreOnlineGameplayServicesAsEagerSpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("dropService"));
+            assertTrue(context.containsBeanDefinition("mailService"));
+            assertTrue(context.containsBeanDefinition("pvpService"));
+            assertTrue(context.containsBeanDefinition("autoGroupService"));
+            assertTrue(context.containsBeanDefinition("abyssRankingCache"));
+            assertEquals(DropService.class, context.getType("dropService"));
+            assertEquals(MailService.class, context.getType("mailService"));
+            assertEquals(PvpService.class, context.getType("pvpService"));
+            assertEquals(AutoGroupService.class, context.getType("autoGroupService"));
+            assertEquals(AbyssRankingCache.class, context.getType("abyssRankingCache"));
+            assertEager(context.getBeanFactory(), "dropService");
+            assertEager(context.getBeanFactory(), "mailService");
+            assertEager(context.getBeanFactory(), "pvpService");
+            assertEager(context.getBeanFactory(), "autoGroupService");
+            assertEager(context.getBeanFactory(), "abyssRankingCache");
+        }
+    }
+
+    @Test
+    void exposesMovementLoopServicesAsPhaseLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("movementNotifyTask"));
+            assertTrue(context.containsBeanDefinition("moveTaskManager"));
+            assertTrue(context.containsBeanDefinition("playerMoveTaskManager"));
+            assertTrue(context.containsBeanDefinition("zoneUpdateService"));
+            assertEquals(MovementNotifyTask.class, context.getType("movementNotifyTask"));
+            assertEquals(MoveTaskManager.class, context.getType("moveTaskManager"));
+            assertEquals(PlayerMoveTaskManager.class, context.getType("playerMoveTaskManager"));
+            assertEquals(ZoneUpdateService.class, context.getType("zoneUpdateService"));
+            assertLazy(context.getBeanFactory(), "movementNotifyTask");
+            assertLazy(context.getBeanFactory(), "moveTaskManager");
+            assertLazy(context.getBeanFactory(), "playerMoveTaskManager");
+            assertLazy(context.getBeanFactory(), "zoneUpdateService");
+        }
+    }
+
+    @Test
     void exposesNetworkStartupServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("shutdownHook"));
             assertEquals(ShutdownHook.class, context.getType("shutdownHook"));
             assertLazy(context.getBeanFactory(), "shutdownHook");
+        }
+    }
+
+    @Test
+    void createsSpringManagedShutdownHookInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(ShutdownHook.getInstance(), context.getBean(ShutdownHook.class));
         }
     }
 
@@ -448,6 +821,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedBannedMacManagerInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(BannedMacManager.getInstance(), context.getBean(BannedMacManager.class));
+        }
+    }
+
+    @Test
     void exposesSiegeScheduleServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("siegeService"));
@@ -456,6 +836,14 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(BaseService.class, context.getType("baseService"));
             assertLazy(context.getBeanFactory(), "siegeService");
             assertLazy(context.getBeanFactory(), "baseService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedSiegeScheduleServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(SiegeService.getInstance(), context.getBean(SiegeService.class));
+            assertNotSame(BaseService.getInstance(), context.getBean(BaseService.class));
         }
     }
 
@@ -522,7 +910,82 @@ class GameLegacyServiceBridgeConfigurationTest {
         }
     }
 
+    @Test
+    void createsSpringManagedLocationBootstrapServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(VortexService.getInstance(), context.getBean(VortexService.class));
+            assertNotSame(BeritraService.getInstance(), context.getBean(BeritraService.class));
+            assertNotSame(AgentService.getInstance(), context.getBean(AgentService.class));
+            assertNotSame(AnohaService.getInstance(), context.getBean(AnohaService.class));
+            assertNotSame(SvsService.getInstance(), context.getBean(SvsService.class));
+            assertNotSame(RvrService.getInstance(), context.getBean(RvrService.class));
+            assertNotSame(IuService.getInstance(), context.getBean(IuService.class));
+        }
+    }
+
+    @Test
+    void createsSpringManagedRiftAndLandingServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(NightmareCircusService.getInstance(), context.getBean(NightmareCircusService.class));
+            assertNotSame(DynamicRiftService.getInstance(), context.getBean(DynamicRiftService.class));
+            assertNotSame(InstanceRiftService.getInstance(), context.getBean(InstanceRiftService.class));
+            assertNotSame(ZorshivDredgionService.getInstance(), context.getBean(ZorshivDredgionService.class));
+            assertNotSame(MoltenusService.getInstance(), context.getBean(MoltenusService.class));
+            assertNotSame(RiftService.getInstance(), context.getBean(RiftService.class));
+            assertNotSame(ConquestService.getInstance(), context.getBean(ConquestService.class));
+            assertNotSame(IdianDepthsService.getInstance(), context.getBean(IdianDepthsService.class));
+            assertNotSame(TowerOfEternityService.getInstance(), context.getBean(TowerOfEternityService.class));
+            assertNotSame(AbyssLandingService.getInstance(), context.getBean(AbyssLandingService.class));
+        }
+    }
+
+    @Test
+    void exposesRemainingCoreGameplayServicesAsEagerSpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertEquals(ThievesGuildService.class, context.getType("thievesGuildService"));
+            assertEquals(BalaurAssaultService.class, context.getType("balaurAssaultService"));
+            assertEquals(BattlefieldUnionService.class, context.getType("battlefieldUnionService"));
+            assertEager(context.getBeanFactory(), "thievesGuildService");
+            assertEager(context.getBeanFactory(), "balaurAssaultService");
+            assertEager(context.getBeanFactory(), "battlefieldUnionService");
+        }
+    }
+
+    @Test
+    void exposesRemainingPhaseInitializedServicesAsLazySpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertEquals(NavData.class, context.getType("navData"));
+            assertEquals(HousingService.class, context.getType("housingService"));
+            assertEquals(LegionService.class, context.getType("legionService"));
+            assertEquals(WebshopService.class, context.getType("webshopService"));
+            assertEquals(SurveyService.class, context.getType("surveyService"));
+            assertEquals(FindGroupService.class, context.getType("findGroupService"));
+            assertEquals(InGameShopEn.class, context.getType("inGameShopEn"));
+            assertLazy(context.getBeanFactory(), "navData");
+            assertLazy(context.getBeanFactory(), "housingService");
+            assertLazy(context.getBeanFactory(), "legionService");
+            assertLazy(context.getBeanFactory(), "webshopService");
+            assertLazy(context.getBeanFactory(), "surveyService");
+            assertLazy(context.getBeanFactory(), "findGroupService");
+            assertLazy(context.getBeanFactory(), "inGameShopEn");
+        }
+    }
+
     private static void assertLazy(ConfigurableListableBeanFactory beanFactory, String beanName) {
         assertTrue(beanFactory.getBeanDefinition(beanName).isLazyInit());
+    }
+
+    private static void assertEager(ConfigurableListableBeanFactory beanFactory, String beanName) {
+        assertFalse(beanFactory.getBeanDefinition(beanName).isLazyInit());
+    }
+
+    private static void assertConfigurationCreatesNew(Class<?> type) {
+        try {
+            String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/GameLegacyServiceBridgeConfiguration.java"));
+
+            assertTrue(source.contains("return new " + type.getSimpleName() + "();"));
+        } catch (IOException e) {
+            throw new AssertionError("Unable to read GameLegacyServiceBridgeConfiguration source", e);
+        }
     }
 }

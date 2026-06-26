@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -50,6 +51,7 @@ import javolution.util.FastMap;
  */
 
 public class IdianDepthsService {
+	private static volatile ObjectProvider<IdianDepthsService> instanceProvider;
 	private Map<Integer, IdianDepthsLocation> idianDepths;
 	private static final int duration = CustomConfig.IDIAN_DEPTHS_DURATION;
 	private final Map<Integer, IdianDepths<?>> activeIdianDepths = new FastMap<Integer, IdianDepths<?>>().shared();
@@ -171,7 +173,15 @@ public class IdianDepthsService {
 	}
 
 	public static IdianDepthsService getInstance() {
-		return IdianDepthsServiceHolder.INSTANCE;
+		ObjectProvider<IdianDepthsService> provider = instanceProvider;
+		if (provider == null) {
+			return IdianDepthsServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> IdianDepthsServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<IdianDepthsService> instanceProvider) {
+		IdianDepthsService.instanceProvider = instanceProvider;
 	}
 
 	private static class IdianDepthsServiceHolder {

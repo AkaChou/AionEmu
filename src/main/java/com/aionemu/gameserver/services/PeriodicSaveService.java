@@ -21,6 +21,7 @@ import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.PeriodicSaveConfig;
@@ -38,14 +39,23 @@ import javolution.util.FastList;
 public class PeriodicSaveService {
 
 	private static final Logger log = LoggerFactory.getLogger(PeriodicSaveService.class);
+	private static volatile ObjectProvider<PeriodicSaveService> instanceProvider;
 
 	private Future<?> legionWhUpdateTask;
 
 	public static final PeriodicSaveService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<PeriodicSaveService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
-	private PeriodicSaveService() {
+	public static void setInstanceProvider(ObjectProvider<PeriodicSaveService> instanceProvider) {
+		PeriodicSaveService.instanceProvider = instanceProvider;
+	}
+
+	public PeriodicSaveService() {
 
 		int DELAY_LEGION_ITEM = PeriodicSaveConfig.LEGION_ITEMS * 1000;
 

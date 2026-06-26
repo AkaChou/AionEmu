@@ -5,11 +5,9 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
 public class GameCoreServicesRuntimeBridge {
 
     private ObjectProvider<DataManager> dataManagerProvider;
@@ -33,22 +31,22 @@ public class GameCoreServicesRuntimeBridge {
 
     public DataManager dataManager() {
         if (dataManagerProvider == null) {
-            return DataManager.getInstance();
+            return GameCoreServiceFallbacks.dataManager();
         }
-        return dataManagerProvider.getIfAvailable(DataManager::getInstance);
+        return dataManagerProvider.getIfAvailable(GameCoreServiceFallbacks::dataManager);
     }
 
     public ThreadPoolManager threadPoolManager() {
         if (threadPoolManagerProvider == null) {
-            return ThreadPoolManager.getInstance();
+            return GameCoreServiceFallbacks.threadPoolManager();
         }
-        return threadPoolManagerProvider.getIfAvailable(ThreadPoolManager::getInstance);
+        return threadPoolManagerProvider.getIfAvailable(GameCoreServiceFallbacks::threadPoolManager);
     }
 
     public HTMLCache htmlCache() {
         if (htmlCacheProvider == null) {
-            return HTMLCache.getInstance();
+            return GameCoreServiceFallbacks.htmlCache();
         }
-        return htmlCacheProvider.getIfAvailable(HTMLCache::getInstance);
+        return htmlCacheProvider.getIfAvailable(GameCoreServiceFallbacks::htmlCache);
     }
 }

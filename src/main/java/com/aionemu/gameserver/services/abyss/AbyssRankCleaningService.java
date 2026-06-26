@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CleaningConfig;
@@ -33,15 +34,14 @@ import com.aionemu.gameserver.world.World;
 
 public class AbyssRankCleaningService {
 
+	private static volatile ObjectProvider<AbyssRankCleaningService> instanceProvider;
 	private Logger log = LoggerFactory.getLogger(AbyssRankCleaningService.class);
 
 	private final int SECURITY_MINIMUM_PERIOD = 30;
 
-	private static AbyssRankCleaningService instance = new AbyssRankCleaningService();
-
 	private long startTime;
 
-	private AbyssRankCleaningService() {
+	public AbyssRankCleaningService() {
 		if (CleaningConfig.ABYSS_CLEANING_ENABLE) {
 			runCleaning();
 		}
@@ -103,6 +103,18 @@ public class AbyssRankCleaningService {
 	}
 
 	public static AbyssRankCleaningService getInstance() {
-		return instance;
+		ObjectProvider<AbyssRankCleaningService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
+		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AbyssRankCleaningService> provider) {
+		instanceProvider = provider;
+	}
+
+	private static class SingletonHolder {
+		private static final AbyssRankCleaningService instance = new AbyssRankCleaningService();
 	}
 }

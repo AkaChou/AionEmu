@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -54,6 +55,7 @@ import javolution.util.FastMap;
  */
 
 public class AgentService {
+	private static volatile ObjectProvider<AgentService> instanceProvider;
 	private AgentSchedule agentSchedule;
 	private Map<Integer, AgentLocation> agent;
 	private static final int duration = CustomConfig.AGENT_DURATION;
@@ -263,7 +265,15 @@ public class AgentService {
 	}
 
 	public static AgentService getInstance() {
-		return AgentServiceHolder.INSTANCE;
+		ObjectProvider<AgentService> provider = instanceProvider;
+		if (provider == null) {
+			return AgentServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> AgentServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AgentService> instanceProvider) {
+		AgentService.instanceProvider = instanceProvider;
 	}
 
 	private static class AgentServiceHolder {

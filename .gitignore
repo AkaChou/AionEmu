@@ -48,3 +48,4 @@ log
 /src/main/resources/aion/game/data/geo/*.geo
 /src/main/resources/aion/game/data/geo/models
 /src/main/resources/aion/game/data/nav/*.nav
+/src/main/resources/aion/game/data/static_data/npc_drops.zip

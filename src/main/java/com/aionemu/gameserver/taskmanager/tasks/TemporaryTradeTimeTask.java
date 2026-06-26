@@ -19,6 +19,8 @@ package com.aionemu.gameserver.taskmanager.tasks;
 import java.util.Collection;
 import java.util.Map;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -32,6 +34,7 @@ import javolution.util.FastMap;
  * @author Mr. Poke
  */
 public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
+	private static volatile ObjectProvider<TemporaryTradeTimeTask> instanceProvider;
 
 	private final FastMap<Item, Collection<Integer>> items = new FastMap<Item, Collection<Integer>>();
 	private final FastMap<Integer, Item> itemById = new FastMap<Integer, Item>();
@@ -44,7 +47,15 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	}
 
 	public static TemporaryTradeTimeTask getInstance() {
+		ObjectProvider<TemporaryTradeTimeTask> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder._instance);
+		}
 		return SingletonHolder._instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<TemporaryTradeTimeTask> provider) {
+		instanceProvider = provider;
 	}
 
 	public void addTask(Item item, Collection<Integer> players) {

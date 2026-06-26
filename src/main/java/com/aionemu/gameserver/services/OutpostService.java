@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
@@ -45,6 +46,7 @@ import javolution.util.FastMap;
  */
 
 public class OutpostService {
+	private static volatile ObjectProvider<OutpostService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(OutpostService.class);
 
 	private final Map<Integer, Outpost<?>> active = new FastMap<Integer, Outpost<?>>().shared();
@@ -205,7 +207,15 @@ public class OutpostService {
 	}
 
 	public static OutpostService getInstance() {
-		return OutpostServiceHolder.INSTANCE;
+		ObjectProvider<OutpostService> provider = instanceProvider;
+		if (provider == null) {
+			return OutpostServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> OutpostServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<OutpostService> instanceProvider) {
+		OutpostService.instanceProvider = instanceProvider;
 	}
 
 	private static class OutpostServiceHolder {

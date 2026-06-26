@@ -37,8 +37,8 @@ public final class GameShutdownRequest implements DisposableBean {
     private static ShutdownHook shutdownHook() {
         ObjectProvider<ShutdownHook> provider = shutdownHookProvider;
         if (provider == null) {
-            return ShutdownHook.getInstance();
+            return GameShutdownHookFallbacks.shutdownHook();
         }
-        return provider.getIfAvailable(ShutdownHook::getInstance);
+        return provider.getIfAvailable(GameShutdownHookFallbacks::shutdownHook);
     }
 }

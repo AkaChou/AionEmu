@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -39,13 +40,22 @@ import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.world.World;
 
 public class WeatherService {
+	private static volatile ObjectProvider<WeatherService> instanceProvider;
 	private Map<WeatherKey, WeatherEntry[]> worldZoneWeathers;
 
 	public static final WeatherService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<WeatherService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
-	private WeatherService() {
+	public static void setInstanceProvider(ObjectProvider<WeatherService> instanceProvider) {
+		WeatherService.instanceProvider = instanceProvider;
+	}
+
+	public WeatherService() {
 		worldZoneWeathers = new HashMap<WeatherKey, WeatherEntry[]>();
 		GameTime gameTime = (GameTime) GameTimeManager.getGameTime().clone();
 		for (Iterator<WorldMapTemplate> mapIterator = DataManager.WORLD_MAPS_DATA.iterator(); mapIterator.hasNext();) {

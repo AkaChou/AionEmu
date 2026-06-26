@@ -22,6 +22,7 @@ import java.util.concurrent.ScheduledFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
@@ -31,11 +32,12 @@ import com.aionemu.gameserver.services.EventService;
  * @author Rinzler (Encom)
  */
 public class BGService {
+	private static volatile ObjectProvider<BGService> instanceProvider;
 	Logger log = LoggerFactory.getLogger(EventService.class);
 	private static final int DELAY = 60 * 100;
 	private List<ScheduledFuture<?>> futures = new ArrayList<ScheduledFuture<?>>();
 
-	private BGService() {
+	public BGService() {
 		register(DELAY);
 		log.info("[BGService] is initialized...");
 	}
@@ -53,6 +55,14 @@ public class BGService {
 	}
 
 	public static final BGService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<BGService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<BGService> instanceProvider) {
+		BGService.instanceProvider = instanceProvider;
 	}
 }

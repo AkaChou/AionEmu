@@ -24,6 +24,7 @@ import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
@@ -51,6 +52,7 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
  */
 
 public class CoalescenceService {
+	private static volatile ObjectProvider<CoalescenceService> instanceProvider;
 	private Logger log = LoggerFactory.getLogger(CoalescenceService.class);
 
 	public void letsCoalescence(final Player player, int core_item_object_id, final List<Integer> material_item_object_id_collection) {
@@ -158,7 +160,15 @@ public class CoalescenceService {
     }
 
 	public static CoalescenceService getInstance() {
+		ObjectProvider<CoalescenceService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<CoalescenceService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

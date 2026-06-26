@@ -33,6 +33,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
@@ -52,6 +53,7 @@ import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
 public class NavData {
 
     private static final Logger LOG = LoggerFactory.getLogger(NavData.class);
+    private static volatile ObjectProvider<NavData> instanceProvider;
 
     /** Navigation data directory */
     private static final String NAV_DIR = "./data/nav/";
@@ -105,7 +107,7 @@ public class NavData {
      */
     private final ConcurrentHashMap<Integer, ReentrantLock> mapLocks = new ConcurrentHashMap<>();
 
-    private NavData() {}
+    public NavData() {}
 
     /**
      * Checks if navigation data index exists.
@@ -566,7 +568,15 @@ public class NavData {
      * Singleton holder.
      */
     public static NavData getInstance() {
+        ObjectProvider<NavData> provider = instanceProvider;
+        if (provider != null) {
+            return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+        }
         return SingletonHolder.INSTANCE;
+    }
+
+    public static void setInstanceProvider(ObjectProvider<NavData> provider) {
+        instanceProvider = provider;
     }
 
     private static final class SingletonHolder {

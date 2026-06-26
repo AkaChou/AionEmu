@@ -18,6 +18,8 @@ package com.aionemu.gameserver.services;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.Kisk;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_BIND_POINT_INFO;
@@ -29,7 +31,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import javolution.util.FastMap;
 
 public class KiskService {
-	private static final KiskService instance = new KiskService();
+	private static volatile ObjectProvider<KiskService> instanceProvider;
 	private final Map<Integer, Kisk> boundButOfflinePlayer = new FastMap<Integer, Kisk>().shared();
 	private final Map<Integer, Kisk> ownerPlayer = new FastMap<Integer, Kisk>().shared();
 
@@ -87,6 +89,18 @@ public class KiskService {
 	}
 
 	public static KiskService getInstance() {
-		return instance;
+		ObjectProvider<KiskService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
+		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<KiskService> provider) {
+		instanceProvider = provider;
+	}
+
+	private static class SingletonHolder {
+		private static final KiskService instance = new KiskService();
 	}
 }

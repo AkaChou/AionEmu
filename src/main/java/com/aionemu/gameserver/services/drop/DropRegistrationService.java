@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -69,6 +70,7 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 public class DropRegistrationService {
+	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
 
 	private Map<Integer, Set<DropItem>> currentDropMap = new FastMap<Integer, Set<DropItem>>().shared();
 	private Map<Integer, DropNpc> dropRegistrationMap = new FastMap<Integer, DropNpc>().shared();
@@ -80,7 +82,7 @@ public class DropRegistrationService {
 		registerDrop(npc, player, player.getLevel(), groupMembers);
 	}
 
-	private DropRegistrationService() {
+	public DropRegistrationService() {
 		init();
 		noReductionMaps = new FastList<Integer>();
 		for (String zone : DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES.split(",")) {
@@ -467,7 +469,15 @@ public class DropRegistrationService {
 	}
 
 	public static DropRegistrationService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<DropRegistrationService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<DropRegistrationService> instanceProvider) {
+		DropRegistrationService.instanceProvider = instanceProvider;
 	}
 
 	@SuppressWarnings("synthetic-access")

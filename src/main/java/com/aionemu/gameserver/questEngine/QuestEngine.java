@@ -27,6 +27,7 @@ import java.util.concurrent.CountDownLatch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
@@ -76,6 +77,7 @@ import javolution.util.FastMap;
  */
 public class QuestEngine implements GameEngine {
 
+	private static volatile ObjectProvider<QuestEngine> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(QuestEngine.class);
 	private static final FastMap<Integer, QuestHandler> questHandlers = new FastMap<Integer, QuestHandler>();
 	private TIntObjectHashMap<QuestNpc> questNpcs = new TIntObjectHashMap<QuestNpc>();
@@ -111,11 +113,19 @@ public class QuestEngine implements GameEngine {
 	private TIntArrayList questRideAction = new TIntArrayList();
 	private TIntArrayList questOnCreativityPoint = new TIntArrayList();
 
-	private QuestEngine() {
+	public QuestEngine() {
 	}
 
 	public static final QuestEngine getInstance() {
+		ObjectProvider<QuestEngine> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<QuestEngine> provider) {
+		instanceProvider = provider;
 	}
 
     public boolean onDialog(QuestEnv env) {

@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services.reward;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
@@ -31,11 +32,23 @@ import javolution.util.FastList;
 
 public class RewardService {
 	private RewardServiceDAO dao;
-	private static RewardService controller = new RewardService();
 	private static final Logger log = LoggerFactory.getLogger(RewardService.class);
+	private static volatile ObjectProvider<RewardService> instanceProvider;
 
 	public static RewardService getInstance() {
-		return controller;
+		ObjectProvider<RewardService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<RewardService> instanceProvider) {
+		RewardService.instanceProvider = instanceProvider;
+	}
+
+	private static class SingletonHolder {
+		protected static final RewardService instance = new RewardService();
 	}
 
 	public RewardService() {

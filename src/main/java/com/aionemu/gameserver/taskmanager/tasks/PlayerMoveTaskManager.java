@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 
@@ -25,10 +27,11 @@ import javolution.util.FastMap;
  * @author ATracer
  */
 public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
+	private static volatile ObjectProvider<PlayerMoveTaskManager> instanceProvider;
 
 	private final FastMap<Integer, Creature> movingPlayers = new FastMap<Integer, Creature>().shared();
 
-	private PlayerMoveTaskManager() {
+	public PlayerMoveTaskManager() {
 		super(200);
 	}
 
@@ -50,7 +53,15 @@ public class PlayerMoveTaskManager extends AbstractPeriodicTaskManager {
 	}
 
 	public static final PlayerMoveTaskManager getInstance() {
+		ObjectProvider<PlayerMoveTaskManager> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<PlayerMoveTaskManager> provider) {
+		instanceProvider = provider;
 	}
 
 	private static final class SingletonHolder {

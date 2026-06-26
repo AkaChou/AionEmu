@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerPetsDAO;
@@ -53,6 +54,7 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class PetService {
 
+	private static volatile ObjectProvider<PetService> instanceProvider;
 	Logger log = LoggerFactory.getLogger(PetService.class);
 
 	private PetBuff PetBuff;
@@ -60,10 +62,18 @@ public class PetService {
 	private boolean autoBuff = false;
 
 	public static final PetService getInstance() {
+		ObjectProvider<PetService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
 	}
 
-	private PetService() {
+	public PetService() {
+	}
+
+	public static void setInstanceProvider(ObjectProvider<PetService> provider) {
+		instanceProvider = provider;
 	}
 
 	public void renamePet(Player player, String name) {

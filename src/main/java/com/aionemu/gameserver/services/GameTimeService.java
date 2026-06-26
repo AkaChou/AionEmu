@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_GAME_TIME;
@@ -30,14 +31,23 @@ import com.aionemu.gameserver.world.World;
 
 public class GameTimeService {
 	private static Logger log = LoggerFactory.getLogger(GameTimeService.class);
+	private static volatile ObjectProvider<GameTimeService> instanceProvider;
 
 	public static final GameTimeService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<GameTimeService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<GameTimeService> instanceProvider) {
+		GameTimeService.instanceProvider = instanceProvider;
 	}
 
 	private final static int GAMETIME_UPDATE = 3 * 60000;
 
-	private GameTimeService() {
+	public GameTimeService() {
 		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {

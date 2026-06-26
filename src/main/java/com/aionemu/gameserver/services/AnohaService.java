@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -57,6 +58,7 @@ import javolution.util.FastMap;
  */
 
 public class AnohaService {
+	private static volatile ObjectProvider<AnohaService> instanceProvider;
 	private AnohaSchedule anohaSchedule;
 	private Map<Integer, AnohaLocation> anoha;
 	private static final int duration = CustomConfig.ANOHA_DURATION;
@@ -280,7 +282,15 @@ public class AnohaService {
 	}
 
 	public static AnohaService getInstance() {
-		return AnohaServiceHolder.INSTANCE;
+		ObjectProvider<AnohaService> provider = instanceProvider;
+		if (provider == null) {
+			return AnohaServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> AnohaServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AnohaService> instanceProvider) {
+		AnohaService.instanceProvider = instanceProvider;
 	}
 
 	private static class AnohaServiceHolder {

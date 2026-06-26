@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
@@ -43,6 +44,7 @@ import javolution.util.FastMap;
  */
 public class EventWindowService {
 
+	private static volatile ObjectProvider<EventWindowService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(EventWindowService.class);
 	private Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
 	private HashMap<Integer, EventsWindow> activeEvents = new HashMap<Integer, EventsWindow>();
@@ -187,6 +189,14 @@ public class EventWindowService {
 	}
 
 	public static final EventWindowService getInstance() {
+		ObjectProvider<EventWindowService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<EventWindowService> provider) {
+		instanceProvider = provider;
 	}
 }

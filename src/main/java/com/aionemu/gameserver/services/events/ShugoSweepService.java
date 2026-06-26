@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services.events;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
@@ -40,6 +41,7 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
  */
 public class ShugoSweepService {
 
+	private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(ShugoSweepService.class);
 	private final int boardId = EventsConfig.EVENT_SHUGOSWEEP_BOARD;
 
@@ -161,7 +163,15 @@ public class ShugoSweepService {
 	}
 
 	public static final ShugoSweepService getInstance() {
+		ObjectProvider<ShugoSweepService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ShugoSweepService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class SingletonHolder {

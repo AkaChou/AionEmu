@@ -1,9 +1,13 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
 import java.lang.reflect.Proxy;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -26,6 +30,16 @@ class GameHousingRuntimeBridgeTest {
         assertSame(maintenanceTaskProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::maintenanceTask));
         assertSame(townServiceProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::townService));
         assertSame(challengeTaskServiceProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::challengeTaskService));
+    }
+
+    @Test
+    void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameHousingRuntimeBridge.java"));
+
+        assertFalse(source.contains("HousingBidService.getInstance()"));
+        assertFalse(source.contains("MaintenanceTask.getInstance()"));
+        assertFalse(source.contains("TownService.getInstance()"));
+        assertFalse(source.contains("ChallengeTaskService.getInstance()"));
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {

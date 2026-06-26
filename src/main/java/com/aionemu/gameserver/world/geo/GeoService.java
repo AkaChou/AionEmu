@@ -10,6 +10,7 @@ package com.aionemu.gameserver.world.geo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
@@ -23,6 +24,7 @@ import javolution.util.FastList;
 
 public class GeoService {
 	private static final Logger log = LoggerFactory.getLogger(GeoService.class);
+	private static volatile ObjectProvider<GeoService> instanceProvider;
 	private static final FastList<Integer> npcsExclude = new FastList<>();
 	private GeoData geoData;
 
@@ -31,7 +33,15 @@ public class GeoService {
 	}
 
 	public static final GeoService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<GeoService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<GeoService> instanceProvider) {
+		GeoService.instanceProvider = instanceProvider;
 	}
 
 	public void initializeGeo() {

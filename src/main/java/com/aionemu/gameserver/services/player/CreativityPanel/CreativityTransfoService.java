@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATIVITY_POINTS_APPLY;
@@ -23,6 +25,7 @@ import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class CreativityTransfoService {
+	private static volatile ObjectProvider<CreativityTransfoService> instanceProvider;
 
 	public void onTransfoApply(Player player, int type, int size, int id, int point) {
 		if (id >= 7 && id <= 14 || id >= 401 && id <= 408) {
@@ -242,7 +245,15 @@ public class CreativityTransfoService {
 	}
 
 	public static CreativityTransfoService getInstance() {
+		ObjectProvider<CreativityTransfoService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<CreativityTransfoService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

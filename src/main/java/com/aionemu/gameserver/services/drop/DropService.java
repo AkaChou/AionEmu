@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.configs.main.DropConfig;
@@ -68,9 +69,18 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class DropService {
 
 	private static final Logger log = LoggerFactory.getLogger(DropService.class);
+	private static volatile ObjectProvider<DropService> instanceProvider;
 
 	public static DropService getInstance() {
+		ObjectProvider<DropService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<DropService> provider) {
+		instanceProvider = provider;
 	}
 
 	/**

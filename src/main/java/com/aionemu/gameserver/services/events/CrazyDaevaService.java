@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services.events;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
@@ -39,6 +40,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  */
 public class CrazyDaevaService {
 
+	private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(CrazyDaevaService.class);
 	int crazyCount = 0;
 
@@ -183,7 +185,15 @@ public class CrazyDaevaService {
 	}
 
 	public static final CrazyDaevaService getInstance() {
+		ObjectProvider<CrazyDaevaService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<CrazyDaevaService> provider) {
+		instanceProvider = provider;
 	}
 
 	@SuppressWarnings("synthetic-access")

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EVERGALE_CANYON;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -25,13 +27,23 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class WindyGorgeService {
+	private static volatile ObjectProvider<WindyGorgeService> instanceProvider;
+
 	public void onLogin(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_EVERGALE_CANYON(2));
 		PacketSendUtility.sendPacket(player, new SM_EVERGALE_CANYON(4));
 	}
 
 	public static final WindyGorgeService getInstance() {
+		ObjectProvider<WindyGorgeService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<WindyGorgeService> provider) {
+		instanceProvider = provider;
 	}
 
 	@SuppressWarnings("synthetic-access")

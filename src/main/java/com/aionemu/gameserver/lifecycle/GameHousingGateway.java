@@ -2,6 +2,7 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.services.ChallengeTaskService;
+import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.TownService;
 import org.springframework.beans.factory.ObjectProvider;
@@ -14,6 +15,7 @@ public class GameHousingGateway {
     private ObjectProvider<HousingBidService> housingBidServiceProvider;
     private ObjectProvider<MaintenanceTask> maintenanceTaskProvider;
     private ObjectProvider<TownService> townServiceProvider;
+    private ObjectProvider<HousingService> housingServiceProvider;
     private ObjectProvider<ChallengeTaskService> challengeTaskServiceProvider;
     private ObjectProvider<GameHousingRuntimeBridge> runtimeBridgeProvider;
 
@@ -33,6 +35,11 @@ public class GameHousingGateway {
     }
 
     @Autowired(required = false)
+    void setHousingServiceProvider(ObjectProvider<HousingService> housingServiceProvider) {
+        this.housingServiceProvider = housingServiceProvider;
+    }
+
+    @Autowired(required = false)
     void setChallengeTaskServiceProvider(ObjectProvider<ChallengeTaskService> challengeTaskServiceProvider) {
         this.challengeTaskServiceProvider = challengeTaskServiceProvider;
     }
@@ -47,6 +54,7 @@ public class GameHousingGateway {
         housingBidService().start();
         maintenanceTask();
         townService();
+        housingService();
         challengeTaskService();
     }
 
@@ -69,6 +77,13 @@ public class GameHousingGateway {
             return runtimeBridge().townService();
         }
         return townServiceProvider.getIfAvailable(() -> runtimeBridge().townService());
+    }
+
+    private HousingService housingService() {
+        if (housingServiceProvider == null) {
+            return runtimeBridge().housingService();
+        }
+        return housingServiceProvider.getIfAvailable(() -> runtimeBridge().housingService());
     }
 
     private ChallengeTaskService challengeTaskService() {

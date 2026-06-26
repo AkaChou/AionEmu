@@ -1,10 +1,14 @@
 package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
+import java.io.IOException;
 import java.lang.reflect.Proxy;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
@@ -36,6 +40,13 @@ class GameShutdownRequestTest {
         GameShutdownRequest.completeShutdown(ShutdownMode.SHUTDOWN, false);
 
         assertEquals(List.of("completeShutdown:SHUTDOWN:false"), events);
+    }
+
+    @Test
+    void shutdownRequestDoesNotCallLegacyShutdownHookDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameShutdownRequest.java"));
+
+        assertFalse(source.contains("ShutdownHook.getInstance()"));
     }
 
     private static ObjectProvider<ShutdownHook> provider(ShutdownHook shutdownHook) {

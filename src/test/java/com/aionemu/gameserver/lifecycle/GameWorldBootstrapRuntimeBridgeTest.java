@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.services.RoadService;
@@ -7,6 +8,9 @@ import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -36,6 +40,43 @@ class GameWorldBootstrapRuntimeBridgeTest {
         assertSame(hotspotTeleportService, runtimeBridge.hotspotTeleportService());
         assertSame(roadService, runtimeBridge.roadService());
         assertSame(world, runtimeBridge.world());
+    }
+
+    @Test
+    void idFactorySingletonAccessorUsesSpringProviderBeforeLegacyFallback() {
+        IDFactory idFactory = instance(IDFactory.class);
+
+        try {
+            IDFactory.setInstanceProvider(provider(IDFactory.class, idFactory));
+
+            assertSame(idFactory, IDFactory.getInstance());
+        } finally {
+            IDFactory.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void worldSingletonAccessorUsesSpringProviderBeforeLegacyFallback() {
+        World world = instance(World.class);
+
+        try {
+            World.setInstanceProvider(provider(World.class, world));
+
+            assertSame(world, World.getInstance());
+        } finally {
+            World.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameWorldBootstrapRuntimeBridge.java"));
+
+        assertFalse(source.contains("IDFactory.getInstance()"));
+        assertFalse(source.contains("ZoneService.getInstance()"));
+        assertFalse(source.contains("HotspotTeleportService.getInstance()"));
+        assertFalse(source.contains("RoadService.getInstance()"));
+        assertFalse(source.contains("World.getInstance()"));
     }
 
     private <T> T instance(Class<T> type) {

@@ -23,6 +23,7 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
@@ -43,23 +44,39 @@ import javolution.util.FastList;
 
 public class MaintenanceTask extends AbstractCronTask {
 
+	private static volatile ObjectProvider<MaintenanceTask> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(MaintenanceTask.class);
 	private static final FastList<House> maintainedHouses;
-	private static MaintenanceTask instance;
 
 	static {
 		maintainedHouses = FastList.newInstance();
-		try {
-			instance = new MaintenanceTask(HousingConfig.HOUSE_MAINTENANCE_TIME);
-		} catch (ParseException pe) {
-		}
 	}
 
 	public static final MaintenanceTask getInstance() {
-		return instance;
+		ObjectProvider<MaintenanceTask> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
+		return SingletonHolder.instance;
 	}
 
-	private MaintenanceTask(String maintainTime) throws ParseException {
+	public static void setInstanceProvider(ObjectProvider<MaintenanceTask> provider) {
+		instanceProvider = provider;
+	}
+
+	private static MaintenanceTask createLegacyInstance() {
+		try {
+			return new MaintenanceTask(HousingConfig.HOUSE_MAINTENANCE_TIME);
+		} catch (ParseException pe) {
+			return null;
+		}
+	}
+
+	private static class SingletonHolder {
+		private static final MaintenanceTask instance = createLegacyInstance();
+	}
+
+	public MaintenanceTask(String maintainTime) throws ParseException {
 		super(maintainTime);
 	}
 

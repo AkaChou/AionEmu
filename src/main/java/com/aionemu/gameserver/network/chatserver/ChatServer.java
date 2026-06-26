@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.NettyClient;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -32,6 +33,7 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class ChatServer {
 	private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
+	private static volatile ObjectProvider<ChatServer> instanceProvider;
 	private volatile ChatServerConnection chatServer;
 	private volatile NettyClient nettyClient;
 	private volatile boolean serverShutdown = false;
@@ -39,10 +41,18 @@ public class ChatServer {
 	private volatile ScheduledFuture<?> connectionTask;
 
 	public static final ChatServer getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<ChatServer> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
-	private ChatServer() {
+	public static void setInstanceProvider(ObjectProvider<ChatServer> instanceProvider) {
+		ChatServer.instanceProvider = instanceProvider;
+	}
+
+	public ChatServer() {
 	}
 
 	public void prepareForConnect() {

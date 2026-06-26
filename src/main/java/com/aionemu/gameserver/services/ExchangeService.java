@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.InventoryDAO;
@@ -55,15 +56,24 @@ public class ExchangeService {
 	private ExchangePeriodicTaskManager saveManager;
 
 	private final int DELAY_EXCHANGE_SAVE = 5000;
+	private static volatile ObjectProvider<ExchangeService> instanceProvider;
 
 	public static final ExchangeService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<ExchangeService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ExchangeService> instanceProvider) {
+		ExchangeService.instanceProvider = instanceProvider;
 	}
 
 	/**
 	 * Default constructor
 	 */
-	private ExchangeService() {
+	public ExchangeService() {
 		saveManager = new ExchangePeriodicTaskManager(DELAY_EXCHANGE_SAVE);
 	}
 

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
@@ -39,6 +40,7 @@ import javolution.util.FastMap;
 
 public class AbyssRankingCache {
 	private static final Logger log = LoggerFactory.getLogger(AbyssRankingCache.class);
+	private static volatile ObjectProvider<AbyssRankingCache> instanceProvider;
 	private int lastUpdate;
 	private final FastMap<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new FastMap<Race, List<SM_ABYSS_RANKING_PLAYERS>>();
 	private final FastMap<Race, SM_ABYSS_RANKING_LEGIONS> legions = new FastMap<Race, SM_ABYSS_RANKING_LEGIONS>();
@@ -114,7 +116,15 @@ public class AbyssRankingCache {
 	}
 
 	public static final AbyssRankingCache getInstance() {
+		ObjectProvider<AbyssRankingCache> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AbyssRankingCache> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class SingletonHolder {

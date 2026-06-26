@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
@@ -47,11 +48,20 @@ import javolution.util.FastMap;
 
 public class BalaurAssaultService {
 	private static final BalaurAssaultService instance = new BalaurAssaultService();
+	private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
 	private Logger log = LoggerFactory.getLogger("SIEGE_LOG");
 	private final Map<Integer, FortressAssault> fortressAssaults = new FastMap<Integer, FortressAssault>().shared();
 
 	public static BalaurAssaultService getInstance() {
+		ObjectProvider<BalaurAssaultService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> instance);
+		}
 		return instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<BalaurAssaultService> provider) {
+		instanceProvider = provider;
 	}
 
 	public void onSiegeStart(final Siege<?> siege) {

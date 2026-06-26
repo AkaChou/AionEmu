@@ -25,6 +25,7 @@ import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PetitionDAO;
@@ -40,11 +41,20 @@ import com.aionemu.gameserver.world.World;
 public class PetitionService {
 
 	private static Logger log = LoggerFactory.getLogger(PetitionService.class);
+	private static volatile ObjectProvider<PetitionService> instanceProvider;
 
 	private static SortedMap<Integer, Petition> registeredPetitions = new TreeMap<Integer, Petition>();
 
 	public static final PetitionService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<PetitionService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<PetitionService> instanceProvider) {
+		PetitionService.instanceProvider = instanceProvider;
 	}
 
 	public PetitionService() {

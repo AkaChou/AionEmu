@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
@@ -42,13 +43,22 @@ import javolution.util.FastMap;
  */
 public class ChatProcessor implements GameEngine {
 
+	private static volatile ObjectProvider<ChatProcessor> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger("ADMINAUDIT_LOG");
 	private static ChatProcessor instance = new ChatProcessor();
 	private Map<String, ChatCommand> commands = new FastMap<String, ChatCommand>();
 	private Map<String, Byte> accessLevel = new FastMap<String, Byte>();
 
 	public static ChatProcessor getInstance() {
+		ObjectProvider<ChatProcessor> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> instance);
+		}
 		return instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ChatProcessor> provider) {
+		instanceProvider = provider;
 	}
 
 	@Override
@@ -67,7 +77,7 @@ public class ChatProcessor implements GameEngine {
 	public void shutdown() {
 	}
 
-	private ChatProcessor() {
+	public ChatProcessor() {
 	}
 
 	private void init(ChatProcessor processor) {

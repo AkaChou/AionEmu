@@ -7,11 +7,9 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
 public class GameEnginesRuntimeBridge {
 
     private ObjectProvider<QuestEngine> questEngineProvider;
@@ -47,36 +45,36 @@ public class GameEnginesRuntimeBridge {
 
     public QuestEngine questEngine() {
         if (questEngineProvider == null) {
-            return QuestEngine.getInstance();
+            return GameEngineServiceFallbacks.questEngine();
         }
-        return questEngineProvider.getIfAvailable(QuestEngine::getInstance);
+        return questEngineProvider.getIfAvailable(GameEngineServiceFallbacks::questEngine);
     }
 
     public InstanceEngine instanceEngine() {
         if (instanceEngineProvider == null) {
-            return InstanceEngine.getInstance();
+            return GameEngineServiceFallbacks.instanceEngine();
         }
-        return instanceEngineProvider.getIfAvailable(InstanceEngine::getInstance);
+        return instanceEngineProvider.getIfAvailable(GameEngineServiceFallbacks::instanceEngine);
     }
 
     public AI2Engine ai2Engine() {
         if (ai2EngineProvider == null) {
-            return AI2Engine.getInstance();
+            return GameEngineServiceFallbacks.ai2Engine();
         }
-        return ai2EngineProvider.getIfAvailable(AI2Engine::getInstance);
+        return ai2EngineProvider.getIfAvailable(GameEngineServiceFallbacks::ai2Engine);
     }
 
     public ChatProcessor chatProcessor() {
         if (chatProcessorProvider == null) {
-            return ChatProcessor.getInstance();
+            return GameEngineServiceFallbacks.chatProcessor();
         }
-        return chatProcessorProvider.getIfAvailable(ChatProcessor::getInstance);
+        return chatProcessorProvider.getIfAvailable(GameEngineServiceFallbacks::chatProcessor);
     }
 
     public ThreadPoolManager threadPoolManager() {
         if (threadPoolManagerProvider == null) {
-            return ThreadPoolManager.getInstance();
+            return GameEngineServiceFallbacks.threadPoolManager();
         }
-        return threadPoolManagerProvider.getIfAvailable(ThreadPoolManager::getInstance);
+        return threadPoolManagerProvider.getIfAvailable(GameEngineServiceFallbacks::threadPoolManager);
     }
 }

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -53,6 +54,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import javolution.util.FastMap;
 
 public class VortexService {
+	private static volatile ObjectProvider<VortexService> instanceProvider;
 	private VortexSchedule vortexSchedule;
 	Logger log = LoggerFactory.getLogger(VortexService.class);
 	private Map<Integer, VortexLocation> vortex;
@@ -340,7 +342,15 @@ public class VortexService {
 	}
 
 	public static VortexService getInstance() {
-		return VortexServiceHolder.INSTANCE;
+		ObjectProvider<VortexService> provider = instanceProvider;
+		if (provider == null) {
+			return VortexServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> VortexServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<VortexService> instanceProvider) {
+		VortexService.instanceProvider = instanceProvider;
 	}
 
 	private static class VortexServiceHolder {

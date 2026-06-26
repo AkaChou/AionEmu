@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.AbyssSpecialLandingDAO;
@@ -40,6 +41,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import javolution.util.FastMap;
 
 public class AbyssLandingSpecialService {
+	private static volatile ObjectProvider<AbyssLandingSpecialService> instanceProvider;
 	private static Logger log = LoggerFactory.getLogger(AbyssLandingService.class);
 	private static Map<Integer, LandingSpecialLocation> abyssSpecialLanding;
 	private final Map<Integer, SpecialLanding<?>> activeSpecialLanding = new FastMap<Integer, SpecialLanding<?>>()
@@ -117,7 +119,15 @@ public class AbyssLandingSpecialService {
 	}
 
 	public static AbyssLandingSpecialService getInstance() {
-		return AbyssLandingSpecialService.SingletonHolder.instance;
+		ObjectProvider<AbyssLandingSpecialService> provider = instanceProvider;
+		if (provider == null) {
+			return AbyssLandingSpecialService.SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> AbyssLandingSpecialService.SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AbyssLandingSpecialService> instanceProvider) {
+		AbyssLandingSpecialService.instanceProvider = instanceProvider;
 	}
 
 	private static class SingletonHolder {

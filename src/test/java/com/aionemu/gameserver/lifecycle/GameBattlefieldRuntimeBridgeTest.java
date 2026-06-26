@@ -1,9 +1,13 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
 import java.lang.reflect.Proxy;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -41,6 +45,21 @@ class GameBattlefieldRuntimeBridgeTest {
         assertSame(hallOfTenacityProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::hallOfTenacityService));
         assertSame(grandArenaProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::grandArenaTrainingCampService));
         assertSame(idRunProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::idRunService));
+    }
+
+    @Test
+    void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameBattlefieldRuntimeBridge.java"));
+
+        assertFalse(source.contains("KamarBattlefieldService.getInstance()"));
+        assertFalse(source.contains("EngulfedOphidanBridgeService.getInstance()"));
+        assertFalse(source.contains("SuspiciousOphidanBridgeService.getInstance()"));
+        assertFalse(source.contains("IronWallWarfrontService.getInstance()"));
+        assertFalse(source.contains("IdgelDomeService.getInstance()"));
+        assertFalse(source.contains("IdgelDomeLandmarkService.getInstance()"));
+        assertFalse(source.contains("HallOfTenacityService.getInstance()"));
+        assertFalse(source.contains("GrandArenaTrainingCampService.getInstance()"));
+        assertFalse(source.contains("IDRunService.getInstance()"));
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {

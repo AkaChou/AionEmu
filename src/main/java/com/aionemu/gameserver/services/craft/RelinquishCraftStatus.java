@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.craft;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.configs.main.CraftConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.craft.ExpertQuestsList;
@@ -35,6 +37,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class RelinquishCraftStatus {
 
+	private static volatile ObjectProvider<RelinquishCraftStatus> instanceProvider;
+
 	private static final int expertMinValue = 399;
 	private static final int expertMaxValue = 499;
 	private static final int masterMinValue = 499;
@@ -45,7 +49,15 @@ public class RelinquishCraftStatus {
 	private static final int skillMessageId = 1401127;
 
 	public static final RelinquishCraftStatus getInstance() {
+		ObjectProvider<RelinquishCraftStatus> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<RelinquishCraftStatus> provider) {
+		instanceProvider = provider;
 	}
 
 	public static void relinquishExpertStatus(Player player, Npc npc) {

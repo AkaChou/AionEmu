@@ -25,6 +25,7 @@ import java.util.concurrent.CountDownLatch;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
@@ -43,6 +44,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
  */
 public class AI2Engine implements GameEngine {
 
+	private static volatile ObjectProvider<AI2Engine> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(AI2Engine.class);
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<String, Class<? extends AbstractAI>>();
 
@@ -116,7 +118,15 @@ public class AI2Engine implements GameEngine {
 	}
 
 	public static final AI2Engine getInstance() {
+		ObjectProvider<AI2Engine> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AI2Engine> provider) {
+		instanceProvider = provider;
 	}
 
 	@SuppressWarnings("synthetic-access")

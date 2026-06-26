@@ -29,6 +29,7 @@ import org.quartz.JobDetail;
 import org.quartz.Trigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.services.CronService;
@@ -83,6 +84,7 @@ public class SiegeService {
 	private static final Logger log = LoggerFactory.getLogger("SIEGE_LOG");
 
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
+	private static volatile ObjectProvider<SiegeService> instanceProvider;
 	private static final SiegeService instance = new SiegeService();
 	private final Map<Integer, Siege<?>> activeSieges = new FastMap<Integer, Siege<?>>().shared();
 	private SiegeSchedule siegeSchedule;
@@ -91,7 +93,15 @@ public class SiegeService {
 	private Map<Integer, SiegeLocation> locations;
 
 	public static SiegeService getInstance() {
-		return instance;
+		ObjectProvider<SiegeService> provider = instanceProvider;
+		if (provider == null) {
+			return instance;
+		}
+		return provider.getIfAvailable(() -> instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<SiegeService> instanceProvider) {
+		SiegeService.instanceProvider = instanceProvider;
 	}
 
 	public void initSiegeLocations() {

@@ -19,6 +19,8 @@ package com.aionemu.gameserver.services.player.CreativityPanel.stats;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
@@ -26,6 +28,8 @@ import com.aionemu.gameserver.model.stats.calc.functions.StatAddFunction;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 
 public class Agility implements StatOwner {
+
+	private static volatile ObjectProvider<Agility> instanceProvider;
 
 	private List<IStatFunction> agility = new ArrayList<IStatFunction>();
 
@@ -43,7 +47,15 @@ public class Agility implements StatOwner {
 	}
 
 	public static Agility getInstance() {
+		ObjectProvider<Agility> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<Agility> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

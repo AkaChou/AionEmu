@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -36,16 +37,25 @@ import javolution.util.FastList;
  */
 
 public class DisputeLandService {
+	private static volatile ObjectProvider<DisputeLandService> instanceProvider;
 	private boolean active;
 	private FastList<Integer> worlds = new FastList<Integer>();
 	private static final int duration = CustomConfig.DISPUTE_LAND_DURATION;
 	private static final Logger log = LoggerFactory.getLogger(DisputeLandService.class);
 
-	private DisputeLandService() {
+	public DisputeLandService() {
 	}
 
 	public static DisputeLandService getInstance() {
-		return DisputeLandServiceHolder.INSTANCE;
+		ObjectProvider<DisputeLandService> provider = instanceProvider;
+		if (provider == null) {
+			return DisputeLandServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> DisputeLandServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<DisputeLandService> instanceProvider) {
+		DisputeLandService.instanceProvider = instanceProvider;
 	}
 
 	public void initDisputeLand() {

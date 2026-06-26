@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
@@ -27,10 +28,19 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class StaticDoorService {
+	private static volatile ObjectProvider<StaticDoorService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(StaticDoorService.class);
 
 	public static StaticDoorService getInstance() {
+		ObjectProvider<StaticDoorService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<StaticDoorService> provider) {
+		instanceProvider = provider;
 	}
 
 	@SuppressWarnings("synthetic-access")

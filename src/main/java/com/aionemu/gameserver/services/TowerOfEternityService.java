@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
@@ -54,6 +55,7 @@ import javolution.util.FastMap;
  */
 
 public class TowerOfEternityService {
+	private static volatile ObjectProvider<TowerOfEternityService> instanceProvider;
 	private Map<Integer, TowerOfEternityLocation> towerOfEternity;
 	private static final int duration = CustomConfig.TOWER_OF_ETERNITY_DURATION;
 	private final Map<Integer, TowerOfEternity<?>> activeTowerOfEternity = new FastMap<Integer, TowerOfEternity<?>>()
@@ -278,7 +280,15 @@ public class TowerOfEternityService {
 	}
 
 	public static TowerOfEternityService getInstance() {
-		return TowerOfEternityServiceHolder.INSTANCE;
+		ObjectProvider<TowerOfEternityService> provider = instanceProvider;
+		if (provider == null) {
+			return TowerOfEternityServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> TowerOfEternityServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<TowerOfEternityService> instanceProvider) {
+		TowerOfEternityService.instanceProvider = instanceProvider;
 	}
 
 	private static class TowerOfEternityServiceHolder {

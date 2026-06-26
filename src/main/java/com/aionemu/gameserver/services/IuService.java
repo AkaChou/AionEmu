@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -49,6 +50,7 @@ import javolution.util.FastMap;
  */
 
 public class IuService {
+	private static volatile ObjectProvider<IuService> instanceProvider;
 	private Map<Integer, IuLocation> iu;
 	private static final int duration = CustomConfig.IU_DURATION;
 	private final Map<Integer, Iu<?>> activeConcert = new FastMap<Integer, Iu<?>>().shared();
@@ -209,7 +211,15 @@ public class IuService {
 	}
 
 	public static IuService getInstance() {
-		return IuServiceHolder.INSTANCE;
+		ObjectProvider<IuService> provider = instanceProvider;
+		if (provider == null) {
+			return IuServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> IuServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<IuService> instanceProvider) {
+		IuService.instanceProvider = instanceProvider;
 	}
 
 	private static class IuServiceHolder {

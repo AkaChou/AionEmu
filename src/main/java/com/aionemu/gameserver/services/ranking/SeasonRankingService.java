@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.ranking;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -32,6 +34,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class SeasonRankingService {
+	private static volatile ObjectProvider<SeasonRankingService> instanceProvider;
+
 	public void loadPacketPlayer(Player player, int tableid) {
 		if (tableid == 1) {
 			loadGoldArenaScore(player);
@@ -102,7 +106,15 @@ public class SeasonRankingService {
 	}
 
 	public static final SeasonRankingService getInstance() {
+		ObjectProvider<SeasonRankingService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<SeasonRankingService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class SingletonHolder {

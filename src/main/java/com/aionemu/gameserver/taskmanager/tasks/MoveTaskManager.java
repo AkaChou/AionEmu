@@ -18,6 +18,8 @@ package com.aionemu.gameserver.taskmanager.tasks;
 
 import static com.aionemu.gameserver.taskmanager.parallel.ForEach.forEach;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.commons.utils.internal.chmv8.ForkJoinTask;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
@@ -31,6 +33,7 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 public class MoveTaskManager extends AbstractPeriodicTaskManager {
+	private static volatile ObjectProvider<MoveTaskManager> instanceProvider;
 	private final FastMap<Integer, Creature> movingCreatures = new FastMap<Integer, Creature>().shared();
 
 	public static final int UPDATE_PERIOD = 100;
@@ -50,7 +53,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 		}
 	};
 
-	private MoveTaskManager() {
+	public MoveTaskManager() {
 		super(UPDATE_PERIOD);
 	}
 
@@ -76,7 +79,15 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	}
 
 	public static MoveTaskManager getInstance() {
+		ObjectProvider<MoveTaskManager> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<MoveTaskManager> provider) {
+		instanceProvider = provider;
 	}
 
 	private static final class SingletonHolder {

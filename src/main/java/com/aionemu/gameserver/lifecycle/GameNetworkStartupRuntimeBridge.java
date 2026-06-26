@@ -4,11 +4,9 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.gameserver.ShutdownHook;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
 public class GameNetworkStartupRuntimeBridge {
 
     private ObjectProvider<ShutdownHook> shutdownHookProvider;
@@ -24,9 +22,9 @@ public class GameNetworkStartupRuntimeBridge {
 
     public Thread shutdownHook() {
         if (shutdownHookProvider == null) {
-            return ShutdownHook.getInstance();
+            return GameShutdownHookFallbacks.shutdownHook();
         }
-        return shutdownHookProvider.getIfAvailable(ShutdownHook::getInstance);
+        return shutdownHookProvider.getIfAvailable(GameShutdownHookFallbacks::shutdownHook);
     }
 
     public void registerShutdownHook(Thread shutdownHook) {

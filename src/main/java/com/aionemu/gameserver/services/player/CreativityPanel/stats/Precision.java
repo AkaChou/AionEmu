@@ -19,6 +19,8 @@ package com.aionemu.gameserver.services.player.CreativityPanel.stats;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
@@ -26,6 +28,8 @@ import com.aionemu.gameserver.model.stats.calc.functions.StatAddFunction;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 
 public class Precision implements StatOwner {
+
+	private static volatile ObjectProvider<Precision> instanceProvider;
 
 	private List<IStatFunction> accuracy = new ArrayList<IStatFunction>();
 
@@ -43,7 +47,15 @@ public class Precision implements StatOwner {
 	}
 
 	public static Precision getInstance() {
+		ObjectProvider<Precision> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<Precision> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

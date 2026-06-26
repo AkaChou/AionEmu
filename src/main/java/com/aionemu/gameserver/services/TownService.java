@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.TownDAO;
@@ -40,6 +41,7 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 public class TownService {
+	private static volatile ObjectProvider<TownService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(TownService.class);
 	private Map<Integer, Town> elyosTowns;
 	private Map<Integer, Town> asmosTowns;
@@ -49,10 +51,18 @@ public class TownService {
 	}
 
 	public static final TownService getInstance() {
+		ObjectProvider<TownService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
 	}
 
-	private TownService() {
+	public static void setInstanceProvider(ObjectProvider<TownService> provider) {
+		instanceProvider = provider;
+	}
+
+	public TownService() {
 		elyosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ELYOS);
 		asmosTowns = DAOManager.getDAO(TownDAO.class).load(Race.ASMODIANS);
 		if (elyosTowns.size() == 0 && asmosTowns.size() == 0) {

@@ -21,6 +21,7 @@ import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -44,6 +45,7 @@ import com.aionemu.gameserver.utils.captcha.CAPTCHAUtil;
 public class ThievesGuildService {
 
 	private static final Logger log = LoggerFactory.getLogger(ThievesGuildService.class);
+	private static volatile ObjectProvider<ThievesGuildService> instanceProvider;
 
 	public void onEnterWorld(Player player) {
 		if (!CustomConfig.THIEVES_ENABLE) {
@@ -293,7 +295,15 @@ public class ThievesGuildService {
 	}
 
 	public static ThievesGuildService getInstance() {
+		ObjectProvider<ThievesGuildService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ThievesGuildService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class SingletonHolder {

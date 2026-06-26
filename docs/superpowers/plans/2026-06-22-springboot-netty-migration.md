@@ -120,6 +120,56 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Routed chat shutdown-hook fallback access through a local bridge while Spring creates the configured hook directly.
 - [x] Routed chat shutdown Netty and commons thread-pool cleanup through bridge helpers.
 - [x] Routed chat game-server packet execution through the commons thread-pool bridge.
+- [x] Routed game core service fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Routed game engine fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Routed game world-service fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Routed game world-bootstrap fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Routed game event-bootstrap fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Routed game event-runtime fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Routed game maintenance-service fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Routed game server-network fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Routed game shutdown-hook fallback access through a local helper instead of direct singleton calls in network startup and shutdown request paths.
+- [x] Routed game housing fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Routed game battlefield fallback access through a local helper instead of direct singleton calls in the runtime bridge.
+- [x] Made the game shutdown hook Spring-instantiable while keeping the legacy singleton only as a fallback.
+- [x] Made the game banned-MAC manager Spring-instantiable while keeping the legacy singleton only as a fallback.
+- [x] Made the game admin service Spring-instantiable while keeping the legacy singleton only as a fallback.
+- [x] Made the game player-transfer service Spring-instantiable while keeping the legacy singleton only as a fallback.
+- [x] Made 10 lightweight game reward, Dredgion, and location-bootstrap services Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made 10 lightweight game rift, location-bootstrap, and abyss landing services Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made 10 lightweight default-constructor game service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made 10 lightweight engine, geo/nav, challenge, and trade service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made 10 lightweight FFA and battlefield entrance services Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made 10 runtime event, packet-broadcast, drop-registration, and landing-special service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made 10 scheduled player-event, announcement, debug, house-maintenance, and veteran-reward service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made 10 business data, broker, petition, weather, and world-object service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made 10 housing, town, cleaning, html-cache, zone, hotspot, road, and landing-update service beans Spring-instantiable while keeping legacy singletons only as fallbacks.
+- [x] Made gameserver `LoginServer` and `ChatServer` Spring-instantiable while routing their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made gameserver `ThreadPoolManager` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
+- [x] Made gameserver `IDFactory` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
+- [x] Made gameserver `World` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
+- [x] Made gameserver `DataManager` Spring-instantiable while routing its static compatibility accessor through a Spring provider before the legacy fallback.
+- [x] Made 10 location-bootstrap services route static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made 10 location/spawn services route static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made 10 world, feature, and maintenance support services route static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made runtime services including admin, transfer, territory, time, announcement, debug, weather, broker, influence, exchange, petition, fly-ring, zone, boost-event, DB task, and limited-trade static compatibility accessors route through Spring providers before legacy fallbacks.
+- [x] Made feature services including player-limit, NPC shouts, shield, reward, wedding, veteran rewards, protector/conqueror, FFA, ladder, battleground, and bandit static compatibility accessors route through Spring providers before legacy fallbacks.
+- [x] Made event-bootstrap services including Luna shop, minion, Shugo Sweep, Atreian Passport, and Event Window static compatibility accessors route through Spring providers before legacy fallbacks.
+- [x] Made game engines and handlers including `QuestEngine`, `InstanceEngine`, `AI2Engine`, and `ChatProcessor` static compatibility accessors route through Spring providers before legacy fallbacks.
+- [x] Made event-runtime and core services including `HTMLCache`, `EventService`, `PlayerEventService`, `CrazyDaevaService`, `AbyssRankUpdateService`, and `PacketBroadcaster` static compatibility accessors route through Spring providers before legacy fallbacks.
+- [x] Made housing services `HousingBidService`, `MaintenanceTask`, `TownService`, and `ChallengeTaskService` static compatibility accessors route through Spring providers before legacy fallbacks; `HousingBidService` and `MaintenanceTask` now create their cron-backed legacy instances lazily so provider registration does not trigger cron configuration parsing.
+- [x] Made maintenance and world-bootstrap services including `DatabaseCleaningService`, `AbyssRankCleaningService`, `ZoneService`, `HotspotTeleportService`, and `RoadService` static compatibility accessors route through Spring providers before legacy fallbacks; the cleaning services now create their legacy fallback instances lazily.
+- [x] Made player-entry and utility compatibility services including `AStationService`, `F2pService`, `WindyGorgeService`, `MotionLoggingService`, `StaticDoorService`, `KiskService`, `RepurchaseService`, `DropDistributionService`, and `SystemMailService` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made player-action compatibility services including `BonusService`, `PetService`, `ArcadeUpgradeService`, `AtreianBestiaryService`, and `CoalescenceService` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made growth-energy and lightweight task-manager compatibility services including `GrowthEnergy`, `ExpireTimerTask`, `TeamEffectUpdater`, `TeamMoveUpdater`, and `TemporaryTradeTimeTask` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made Creativity Panel services and stat owners including `CreativityEssenceService`, `CreativitySkillService`, `CreativityStatsService`, `CreativityTransfoService`, `Accuracy`, `Agility`, `Health`, `Knowledge`, `Power`, `Precision`, and `Will` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Kept runtime bridge components eager as Spring wiring while leaving resource-heavy or gameplay-service bean instances lazy until the ordered game startup lifecycle reaches their phase.
+- [x] Made craft compatibility services `CraftSkillUpdateService` and `RelinquishCraftStatus` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made gameplay runtime compatibility services `DuelService`, `LifeStatsRestoreService`, `SeasonRankingService`, and `RiftManager` Spring-instantiable and routed their static compatibility accessors through Spring providers before legacy fallbacks; `LifeStatsRestoreService` remains eager as a core HP/MP/FP restoration facility.
+- [x] Made core online gameplay services `DropService`, `MailService`, `PvpService`, `AutoGroupService`, and `AbyssRankingCache` Spring-instantiable eager beans and routed their static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Made movement loop services `MovementNotifyTask`, `MoveTaskManager`, `PlayerMoveTaskManager`, and `ZoneUpdateService` Spring-provider aware; they remain phase-lazy bean definitions and are explicitly initialized after static data loads so their startup hooks are registered before `GameStartupHooksLifecycle` runs without touching `DataManager.WORLD_MAPS_DATA` during bare Spring context creation.
+- [x] Made 9 battlefield instance-entry services route static compatibility accessors through Spring providers before legacy fallbacks.
+- [x] Finished the remaining game static singleton provider bridges for `LegionService`, `NavData`, `WebshopService`, `ThievesGuildService`, `InGameShopEn`, `BalaurAssaultService`, `HousingService`, `BattlefieldUnionService`, `FindGroupService`, and `SurveyService`; light no-side-effect services stay eager, while constructor-side-effect services are Spring beans initialized explicitly from the appropriate game startup phase.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
 - [x] Made chat lifecycle cleanup run when chat startup fails before returning successfully.
@@ -197,12 +247,124 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - Login + game smoke with temporary `aion.home` reached `Server initialization COMPLETE`.
 - Earlier fat jar smoke on Java 25 required `--add-opens java.base/java.lang=ALL-UNNAMED` for legacy reflective proxy access; current code no longer depends on that workaround.
 - Fat jar smoke with temporary `aion.home`, temporary ports, geodata disabled, svstats disabled, Netty transport, and chat disabled reached `=== Server initialization COMPLETE ===`; it logged Netty listeners on `127.0.0.1:19014`, `127.0.0.1:12106`, and `127.0.0.1:17777`, plus `Chat Server is disabled by configuration`.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameLegacyServiceBridgeConfigurationTest,GameNetworkStartupLifecycleTest,GameShutdownRequestTest,ShutdownHookTest,AionBootApplicationTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServerNetworkRuntimeBridgeTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameThreadPoolLifecycleTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameWorldBootstrapRuntimeBridgeTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameCoreServicesRuntimeBridgeTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServerNetworkRuntimeBridgeTest,GameThreadPoolLifecycleTest,GameWorldBootstrapRuntimeBridgeTest,GameCoreServicesRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameLocationBootstrapRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameWorldServicesRuntimeBridgeTest,GameLocationBootstrapRuntimeBridgeTest,GameFeatureServicesRuntimeBridgeTest,GameMaintenanceServicesRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -DskipTests compile`
+  - Result: exit code 0 after the runtime, feature, event-bootstrap, engine, event-runtime, housing support, core, and battlefield provider batches.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameFeatureServicesRuntimeBridgeTest,GameRuntimeServiceBridgeTest,GameEventBootstrapRuntimeBridgeTest,GameEnginesRuntimeBridgeTest,GameEventRuntimeBridgeTest,GameHousingRuntimeBridgeTest,GameCoreServicesRuntimeBridgeTest,GameBattlefieldRuntimeBridgeTest test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameHousingRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after making `HousingBidService` and `MaintenanceTask` legacy instances lazy and provider-aware.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameMaintenanceServicesRuntimeBridgeTest,GameWorldBootstrapRuntimeBridgeTest,GameHousingRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after adding provider compatibility for maintenance and world-bootstrap services.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameFeatureServicesRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after adding provider compatibility for player-entry and utility compatibility services.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest#exposesPlayerActionCompatibilityServicesAsLazySpringBeans test`
+  - Result: exit code 0 after adding provider compatibility for player-action services.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest#exposesPlayerActionCompatibilityServicesAsLazySpringBeans,GameLegacyServiceBridgeConfigurationTest#exposesTaskManagerCompatibilityServicesAsLazySpringBeans test`
+  - Result: exit code 0 after adding provider compatibility for growth-energy and lightweight task-manager services.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameRuntimeBridgeEagernessTest,GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest,GameThreadPoolLifecycleTest,LoginThreadPoolServicesTest test`
+  - Result: exit code 0 after adding Creativity Panel provider compatibility and ensuring runtime bridge components are eager Spring wiring rather than lazy service instances.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the Creativity Panel compatibility batch and runtime bridge eagerness adjustment.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after adding provider compatibility for craft services.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the craft compatibility batch.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after adding provider compatibility for gameplay runtime services; `LifeStatsRestoreService` is kept eager because HP/MP/FP restoration is a core online gameplay facility, while duel, season ranking, and rift manager compatibility beans stay lazy until their gameplay paths request them.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after adding provider compatibility for core online gameplay services; loot, mail, PvP rewards, auto-group queues, and abyss ranking cache are kept eager because they are part of the base online gameplay surface and have no constructor-side thread, DAO, cache, or callback startup work.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameStaticDataLifecycleTest,GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after adding provider compatibility for movement loop services and initializing them from the static-data lifecycle, after `DataManager.WORLD_MAPS_DATA` is available and before startup hooks execute.
+- Remaining static accessor scan after the player-entry and utility compatibility batch:
+  - The remaining no-provider static accessors are concentrated in larger gameplay/stateful areas such as survey/webshop scheduling, duel/PvP/group logic, legion, mail, craft, creativity-panel, and ranking/cache services.
+- Remaining static accessor scan after the player-action compatibility batch:
+  - The remaining no-provider static accessors are concentrated in heavier gameplay/stateful or scheduler-backed areas: survey/webshop scheduling, duel/PvP/group logic, legion, mail/drop/craft, creativity-panel, ranking/cache, movement/task-manager, nav-data, and zone-update services.
+- Remaining static accessor scan after the growth/task-manager compatibility batch:
+  - 36 no-provider static accessor files remain, concentrated in heavier gameplay/stateful or scheduler-backed areas: survey/webshop scheduling, duel/PvP/group logic, legion, mail/drop/craft, creativity-panel, ranking/cache, movement pathing managers, nav-data, and zone-update services.
+- Remaining static accessor scan after the Creativity Panel compatibility batch:
+  - 25 no-provider static accessor files remain, concentrated in heavier gameplay/stateful or scheduler-backed areas: legion, movement pathing managers, zone updates, nav-data, duel/PvP/group logic, webshop/survey scheduling, craft, ranking/cache, housing, siege side services, mail, and drop services.
+- Remaining static accessor scan after the craft compatibility batch:
+  - 23 no-provider static accessor files remain, concentrated in heavier gameplay/stateful or scheduler-backed areas: legion, movement pathing managers, zone updates, nav-data, duel/PvP/group logic, webshop/survey scheduling, ranking/cache, housing, siege side services, mail, and drop services.
+- Remaining static accessor scan after the gameplay runtime compatibility batch:
+  - 19 no-provider static accessor files remain, concentrated in heavier gameplay/stateful or scheduler-backed areas: legion, movement pathing managers, zone updates, nav-data, Pvp/group logic, webshop/survey scheduling, abyss ranking cache, housing, siege side services, mail, and drop services.
+- Remaining static accessor scan after the core online gameplay compatibility batch:
+  - 14 no-provider static accessor files remain: legion, movement notification and move managers, zone updates, nav-data, webshop/survey scheduling, in-game shop loading, thieves guild captcha scheduling, housing, find-group callback registration, and siege side services.
+- Remaining static accessor scan after the movement loop compatibility batch:
+  - 10 no-provider static accessor files remain: legion, nav-data, webshop/survey scheduling, in-game shop loading, thieves guild captcha scheduling, housing, find-group callback registration, and siege side services.
+- Remaining static accessor scan after the final game provider batch:
+  - 0 no-provider static accessor files remain under the scanned game service/model/world/task/cache/engine paths.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameLegacyServiceBridgeConfigurationTest,GameRuntimeServicesLifecycleTest,GameHousingLifecycleTest test`
+  - Result: exit code 0 after finishing the remaining game provider bridges and classifying `LegionService` as phase-lazy because its constructor touches `World.getInstance()`.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the final game provider batch.
+- Spring migration residual scans after the provider batches:
+  - `GameLegacyServiceBridgeConfiguration` / login / chat bridge configurations contain no `return Xxx.getInstance();` bean factories.
+  - Production and test sources contain no Guice dependency usage except tests that assert `pom.xml` and production sources stay free of `com.google.inject`.
+  - `legacy-nio` remains only in documentation and tests that verify `LEGACY_NIO` is rejected as an unsupported transport mode.
+- Default Netty + chat-disabled Spring Boot smoke:
+  - Command shape: `rtk proxy sh -c 'JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-Daion.home=$home" -Dspring-boot.run.arguments="--aion.services.chat.enabled=false --aion.services.transport.mode=netty --aion.game.startup.progress.enabled=false --aion.legacy.game.property.gameserver.geodata.enable=false --aion.legacy.game.property.gameserver.geo.npc.move=false --aion.legacy.game.property.gameserver.geo.npc.aggro=false"'`.
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-log.22n1Id`; temp home: `/tmp/aion-boot-smoke.97YOiQ`.
+  - Observed Netty listeners on `*:9014`, `*:2106`, and `*:7777`; chat disabled by boot configuration.
+- Chat-enabled Netty Spring Boot smoke:
+  - Command shape: `rtk proxy sh -c 'JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-Daion.home=$home" -Dspring-boot.run.arguments="--aion.services.chat.enabled=true --aion.services.transport.mode=netty --aion.game.startup.progress.enabled=false --aion.legacy.game.property.gameserver.geodata.enable=false --aion.legacy.game.property.gameserver.geo.npc.move=false --aion.legacy.game.property.gameserver.geo.npc.aggro=false"'`.
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-chat-smoke-log.i0l9rI`; temp home: `/tmp/aion-chat-smoke.cPPLOM`.
+  - Observed Netty listeners on `*:9014`, `*:2106`, `127.0.0.1:10241`, `127.0.0.1:9021`, and `*:7777`; game connected to ChatServer over Netty.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the provider-compatibility batch.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the housing cron fix and maintenance/world-bootstrap provider batch.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the player-entry and utility compatibility provider batch.
+- Final default Netty + chat-disabled Spring Boot smoke after the player-entry and utility compatibility provider batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-entry-log.z7zQUn`; temp home: `/tmp/aion-boot-smoke-entry.8hGHdZ`.
+- Final chat-enabled Netty Spring Boot smoke after the player-entry and utility compatibility provider batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-entry-chat-log.cWN1lC`; temp home: `/tmp/aion-boot-smoke-entry-chat.cBDPX3`.
+- Final default Netty + chat-disabled Spring Boot smoke after the housing cron fix and provider batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-final-log.f2OXoD`; temp home: `/tmp/aion-boot-smoke-final.WQhYIN`.
+- Final chat-enabled Netty Spring Boot smoke after the housing cron fix and provider batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-final-chat-log.c7kDUf`; temp home: `/tmp/aion-boot-smoke-final-chat.KLVgla`.
+- Default Netty + chat-disabled Spring Boot smoke after the provider-compatibility batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-log.aVp2Kn`; temp home: `/tmp/aion-boot-smoke.znCZ2F`.
+  - Observed `Aion service startup: login=true, chat=false, game=true`, chat disabled by boot configuration, Netty listeners on `*:9014`, `*:2106`, and `*:7777`.
+- Chat-enabled Netty Spring Boot smoke after the provider-compatibility batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-chat-smoke-log.ZuQYCL`; temp home: `/tmp/aion-chat-smoke.M3DZ8G`.
+  - Observed `Aion service startup: login=true, chat=true, game=true`, `AL Chat Server started`, Netty chat listeners on `127.0.0.1:10241` and `127.0.0.1:9021`, and game-side `Connected to ChatServer!`.
 - Database schema verification:
   - `al_server_gs` has 98 tables.
   - `al_server_ls` has 10 tables.
 
-## Remaining Technical Debt
+## Remaining Tasks
 
-- Legacy singleton/provider bridges still exist around service startup and runtime access.
-- Login service startup still has large static initialization blocks; shutdown is guarded for partially initialized DAO/transport/service state, but finer-grained startup components would make failure cleanup easier to test.
-- Full protocol parity still needs client-side runtime validation after the structural migration.
+- [ ] Confirm `GameLegacyServiceBridgeConfiguration` stays free of `return Xxx.getInstance();` bridge beans during subsequent migration slices.
+- [ ] Keep no-side-effect runtime bridge wiring eager, and classify constructor side effects, startup ordering, and lifecycle phase before adding future legacy service beans.
+- [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage.
+- [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components.
+- [ ] Add partial-startup cleanup coverage for the login service decomposition.
+- [ ] Validate client protocol parity for login, character entry, and game networking after structural migration.
+- [ ] Validate runtime/client parity for chat-enabled mode, shutdown/restart requests, and representative gameplay flows, then append the evidence to this plan.

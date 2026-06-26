@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.LegionConfig;
@@ -97,6 +98,7 @@ import javolution.util.FastList;
 public class LegionService {
 
 	private static final Logger log = LoggerFactory.getLogger(LegionService.class);
+	private static volatile ObjectProvider<LegionService> instanceProvider;
 	private final LegionContainer allCachedLegions = new LegionContainer();
 	private final LegionMemberContainer allCachedLegionMembers = new LegionMemberContainer();
 	private World world;
@@ -115,7 +117,15 @@ public class LegionService {
 	private LegionRestrictions legionRestrictions = new LegionRestrictions();
 
 	public static LegionService getInstance() {
+		ObjectProvider<LegionService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<LegionService> provider) {
+		instanceProvider = provider;
 	}
 
 	public LegionService() {

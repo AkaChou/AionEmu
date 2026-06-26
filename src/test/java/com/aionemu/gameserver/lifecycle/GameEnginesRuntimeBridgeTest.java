@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.ai2.AI2Engine;
@@ -7,6 +8,9 @@ import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -36,6 +40,17 @@ class GameEnginesRuntimeBridgeTest {
         assertSame(ai2Engine, runtimeBridge.ai2Engine());
         assertSame(chatProcessor, runtimeBridge.chatProcessor());
         assertSame(threadPoolManager, runtimeBridge.threadPoolManager());
+    }
+
+    @Test
+    void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameEnginesRuntimeBridge.java"));
+
+        assertFalse(source.contains("QuestEngine.getInstance()"));
+        assertFalse(source.contains("InstanceEngine.getInstance()"));
+        assertFalse(source.contains("AI2Engine.getInstance()"));
+        assertFalse(source.contains("ChatProcessor.getInstance()"));
+        assertFalse(source.contains("ThreadPoolManager.getInstance()"));
     }
 
     private <T> T instance(Class<T> type) {

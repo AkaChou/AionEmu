@@ -22,6 +22,7 @@ import java.util.concurrent.CountDownLatch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
@@ -38,6 +39,7 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 public class InstanceEngine implements GameEngine {
+	private static volatile ObjectProvider<InstanceEngine> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(InstanceEngine.class);
 	public static final InstanceHandler DUMMY_INSTANCE_HANDLER = new GeneralInstanceHandler();
 
@@ -106,7 +108,15 @@ public class InstanceEngine implements GameEngine {
 	}
 
 	public static final InstanceEngine getInstance() {
+		ObjectProvider<InstanceEngine> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<InstanceEngine> provider) {
+		instanceProvider = provider;
 	}
 
 	@SuppressWarnings("synthetic-access")

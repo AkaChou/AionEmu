@@ -31,6 +31,7 @@ import java.util.Set;
 import org.quartz.CronExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
@@ -69,32 +70,47 @@ import javolution.util.FastMap;
 
 public class HousingBidService extends AbstractCronTask {
 
+	private static volatile ObjectProvider<HousingBidService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger("HOUSE_AUCTION_LOG");
-	private static final String registerEndExpression = HousingConfig.HOUSE_REGISTER_END;
 	private static CronExpression registerDateExpr;
 	private static final FastMap<Integer, HouseBidEntry> houseBids;
 	private static final FastMap<Integer, HouseBidEntry> playerBids;
 	private static final FastMap<Integer, HouseBidEntry> bidsByIndex;
 	private static int timeProlonged = 0;
 	private static boolean isDataLoaded = false;
-	private static HousingBidService instance;
 
 	static {
 		houseBids = FastMap.newInstance();
 		playerBids = FastMap.newInstance();
 		bidsByIndex = FastMap.newInstance();
-		try {
-			instance = new HousingBidService(HousingConfig.HOUSE_AUCTION_TIME);
-		} catch (ParseException pe) {
-		}
 	}
 
-	private HousingBidService(String auctionTime) throws ParseException {
+	public HousingBidService(String auctionTime) throws ParseException {
 		super(auctionTime);
 	}
 
 	public static final HousingBidService getInstance() {
-		return instance;
+		ObjectProvider<HousingBidService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
+		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<HousingBidService> provider) {
+		instanceProvider = provider;
+	}
+
+	private static HousingBidService createLegacyInstance() {
+		try {
+			return new HousingBidService(HousingConfig.HOUSE_AUCTION_TIME);
+		} catch (ParseException pe) {
+			return null;
+		}
+	}
+
+	private static class SingletonHolder {
+		private static final HousingBidService instance = createLegacyInstance();
 	}
 
 	@Override
@@ -115,14 +131,14 @@ public class HousingBidService extends AbstractCronTask {
 	@Override
 	protected void postInit() {
 		try {
-			registerDateExpr = new CronExpression(registerEndExpression);
+			registerDateExpr = new CronExpression(HousingConfig.HOUSE_REGISTER_END);
 		} catch (ParseException e) {
 		}
 		ServerVariablesDAO dao = DAOManager.getDAO(ServerVariablesDAO.class);
 		timeProlonged = dao.load("auctionProlonged");
 	}
 
-	private HousingBidService() throws ParseException {
+	public HousingBidService() throws ParseException {
 		super(HousingConfig.HOUSE_AUCTION_TIME);
 	}
 

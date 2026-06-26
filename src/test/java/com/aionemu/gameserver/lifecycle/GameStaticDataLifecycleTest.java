@@ -1,15 +1,21 @@
 package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.WorldMapsData;
+import com.aionemu.gameserver.services.GameLegacyServiceBridgeConfiguration;
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 class GameStaticDataLifecycleTest {
 
@@ -29,9 +35,40 @@ class GameStaticDataLifecycleTest {
     }
 
     @Test
+    void staticDataLifecycleInitializesMovementLoopsAfterStaticData() {
+        AtomicInteger loads = new AtomicInteger();
+        AtomicInteger movementLoops = new AtomicInteger();
+        GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, null));
+        lifecycle.setMovementLoopGatewayProvider(provider(GameMovementLoopGateway.class, new RecordingGameMovementLoopGateway(movementLoops)));
+
+        lifecycle.start();
+        lifecycle.start();
+
+        assertEquals(1, loads.get());
+        assertEquals(1, movementLoops.get());
+    }
+
+    @Test
+    void movementLoopProviderRegistrationDoesNotReadWorldMapsBeforeStaticDataLoads() {
+        WorldMapsData oldWorldMapsData = DataManager.WORLD_MAPS_DATA;
+        DataManager.WORLD_MAPS_DATA = null;
+        try {
+            assertDoesNotThrow(() -> {
+                try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+                    context.register(GameLegacyServiceBridgeConfiguration.class, GameMovementLoopServices.class);
+                    context.refresh();
+                }
+            });
+        } finally {
+            DataManager.WORLD_MAPS_DATA = oldWorldMapsData;
+        }
+    }
+
+    @Test
     void startLoadsStaticDataOnceAndRecordsLoadTime() {
         AtomicInteger loads = new AtomicInteger();
         GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, null));
+        lifecycle.setMovementLoopGatewayProvider(provider(GameMovementLoopGateway.class, new RecordingGameMovementLoopGateway(new AtomicInteger())));
 
         lifecycle.start();
         lifecycle.start();
@@ -47,6 +84,7 @@ class GameStaticDataLifecycleTest {
         AtomicInteger loads = new AtomicInteger();
         IllegalStateException failure = new IllegalStateException("static data failed");
         GameStaticDataLifecycle lifecycle = new GameStaticDataLifecycle(new RecordingGameStaticDataGateway(loads, failure));
+        lifecycle.setMovementLoopGatewayProvider(provider(GameMovementLoopGateway.class, new RecordingGameMovementLoopGateway(new AtomicInteger())));
 
         IllegalStateException thrown = assertThrows(IllegalStateException.class, lifecycle::start);
 
@@ -77,6 +115,26 @@ class GameStaticDataLifecycleTest {
                 throw firstFailure;
             }
         }
+    }
+
+    private static final class RecordingGameMovementLoopGateway extends GameMovementLoopGateway {
+
+        private final AtomicInteger starts;
+
+        private RecordingGameMovementLoopGateway(AtomicInteger starts) {
+            this.starts = starts;
+        }
+
+        @Override
+        public void initialize() {
+            starts.incrementAndGet();
+        }
+    }
+
+    private static <T> ObjectProvider<T> provider(Class<T> type, T instance) {
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        beanFactory.registerSingleton(type.getName(), instance);
+        return beanFactory.getBeanProvider(type);
     }
 
     private static Class<?> fieldType(String name) {

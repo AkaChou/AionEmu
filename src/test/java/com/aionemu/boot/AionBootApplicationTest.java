@@ -195,7 +195,7 @@ class AionBootApplicationTest {
     }
 
     @Test
-    void bootApplicationScansGameLegacyBridgeBeansLazily() {
+    void bootApplicationScansGameLegacyBeansWithEagerRuntimeBridgeWiring() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(AionBootApplication.class)) {
             assertEquals(AdminService.class, context.getType("adminService"));
             assertEquals(GameRuntimeServiceBridge.class, context.getType("gameRuntimeServiceBridge"));
@@ -214,21 +214,21 @@ class AionBootApplicationTest {
             assertEquals(GameUtilityServicesRuntimeBridge.class, context.getType("gameUtilityServicesRuntimeBridge"));
             assertEquals(GameNetworkStartupRuntimeBridge.class, context.getType("gameNetworkStartupRuntimeBridge"));
             assertLazy(context.getBeanFactory(), "adminService");
-            assertLazy(context.getBeanFactory(), "gameRuntimeServiceBridge");
-            assertLazy(context.getBeanFactory(), "gameCoreServicesRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameMaintenanceServicesRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameWorldServicesRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameWorldBootstrapRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameEventBootstrapRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameFeatureServicesRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameHousingRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameServerNetworkRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameEventRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameEnginesRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameBattlefieldRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameLocationBootstrapRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameUtilityServicesRuntimeBridge");
-            assertLazy(context.getBeanFactory(), "gameNetworkStartupRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameRuntimeServiceBridge");
+            assertEager(context.getBeanFactory(), "gameCoreServicesRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameMaintenanceServicesRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameWorldServicesRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameWorldBootstrapRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameEventBootstrapRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameFeatureServicesRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameHousingRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameServerNetworkRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameEventRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameEnginesRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameBattlefieldRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameLocationBootstrapRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameUtilityServicesRuntimeBridge");
+            assertEager(context.getBeanFactory(), "gameNetworkStartupRuntimeBridge");
         }
     }
 
@@ -488,6 +488,10 @@ class AionBootApplicationTest {
 
     private static void assertLazy(ConfigurableListableBeanFactory beanFactory, String beanName) {
         Assertions.assertTrue(beanFactory.getBeanDefinition(beanName).isLazyInit(), beanName + " should be lazy");
+    }
+
+    private static void assertEager(ConfigurableListableBeanFactory beanFactory, String beanName) {
+        Assertions.assertFalse(beanFactory.getBeanDefinition(beanName).isLazyInit(), beanName + " should be eager");
     }
 
     private static AnnotationConfigApplicationContext chatEnabledBootContext() {

@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.RiftSchedule;
@@ -43,6 +45,7 @@ import javolution.util.FastMap;
  ****/
 
 public class RiftService {
+	private static volatile ObjectProvider<RiftService> instanceProvider;
 	private RiftSchedule riftSchedule;
 	private Map<Integer, RiftLocation> locations;
 	private final Lock closing = new ReentrantLock();
@@ -177,7 +180,15 @@ public class RiftService {
 	}
 
 	public static RiftService getInstance() {
-		return RiftServiceHolder.INSTANCE;
+		ObjectProvider<RiftService> provider = instanceProvider;
+		if (provider == null) {
+			return RiftServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> RiftServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<RiftService> instanceProvider) {
+		RiftService.instanceProvider = instanceProvider;
 	}
 
 	private static class RiftServiceHolder {

@@ -19,11 +19,14 @@ package com.aionemu.gameserver.taskmanager.tasks;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
+import org.springframework.beans.factory.ObjectProvider;
 
 /**
  * @author lord_rex and MrPoke
  */
 public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Creature> {
+
+	private static volatile ObjectProvider<PacketBroadcaster> instanceProvider;
 
 	private static final class SingletonHolder {
 
@@ -31,10 +34,18 @@ public final class PacketBroadcaster extends AbstractFIFOPeriodicTaskManager<Cre
 	}
 
 	public static PacketBroadcaster getInstance() {
+		ObjectProvider<PacketBroadcaster> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
 	}
 
-	private PacketBroadcaster() {
+	public static void setInstanceProvider(ObjectProvider<PacketBroadcaster> provider) {
+		instanceProvider = provider;
+	}
+
+	public PacketBroadcaster() {
 		super(200);
 	}
 

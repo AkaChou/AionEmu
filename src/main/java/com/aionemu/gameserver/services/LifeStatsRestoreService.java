@@ -18,6 +18,8 @@ package com.aionemu.gameserver.services;
 
 import java.util.concurrent.Future;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.CreatureLifeStats;
@@ -30,6 +32,8 @@ import com.aionemu.gameserver.world.World;
  * @author ATracer
  */
 public class LifeStatsRestoreService {
+
+	private static volatile ObjectProvider<LifeStatsRestoreService> instanceProvider;
 
 	private static final int DEFAULT_DELAY = 6000;
 	private static final int DEFAULT_FPREDUCE_DELAY = 2000;
@@ -76,7 +80,15 @@ public class LifeStatsRestoreService {
 	}
 
 	public static LifeStatsRestoreService getInstance() {
+		ObjectProvider<LifeStatsRestoreService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> instance);
+		}
 		return instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<LifeStatsRestoreService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class HpRestoreTask implements Runnable {

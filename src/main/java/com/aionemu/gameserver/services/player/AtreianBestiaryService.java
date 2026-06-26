@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services.player;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerABDAO;
@@ -36,6 +37,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  */
 
 public class AtreianBestiaryService {
+	private static volatile ObjectProvider<AtreianBestiaryService> instanceProvider;
 	private Logger log = LoggerFactory.getLogger(AtreianBestiaryService.class);
 
 	public void onLogin(Player player) {
@@ -92,7 +94,15 @@ public class AtreianBestiaryService {
 	}
 
 	public static AtreianBestiaryService getInstance() {
+		ObjectProvider<AtreianBestiaryService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AtreianBestiaryService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

@@ -8,11 +8,9 @@ import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 @Component
-@Lazy
 public class GameWorldServicesRuntimeBridge {
 
     private ObjectProvider<GeoService> geoServiceProvider;
@@ -36,23 +34,23 @@ public class GameWorldServicesRuntimeBridge {
 
     public GeoService geoService() {
         if (geoServiceProvider == null) {
-            return GeoService.getInstance();
+            return GameWorldServiceFallbacks.geoService();
         }
-        return geoServiceProvider.getIfAvailable(GeoService::getInstance);
+        return geoServiceProvider.getIfAvailable(GameWorldServiceFallbacks::geoService);
     }
 
     public NavService navService() {
         if (navServiceProvider == null) {
-            return NavService.getInstance();
+            return GameWorldServiceFallbacks.navService();
         }
-        return navServiceProvider.getIfAvailable(NavService::getInstance);
+        return navServiceProvider.getIfAvailable(GameWorldServiceFallbacks::navService);
     }
 
     public DropRegistrationService dropRegistrationService() {
         if (dropRegistrationServiceProvider == null) {
-            return DropRegistrationService.getInstance();
+            return GameWorldServiceFallbacks.dropRegistrationService();
         }
-        return dropRegistrationServiceProvider.getIfAvailable(DropRegistrationService::getInstance);
+        return dropRegistrationServiceProvider.getIfAvailable(GameWorldServiceFallbacks::dropRegistrationService);
     }
 
     public GameServer createGameServer() {

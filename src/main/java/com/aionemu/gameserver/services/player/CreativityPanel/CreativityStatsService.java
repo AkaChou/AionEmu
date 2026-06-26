@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CREATIVITY_POINTS_APPLY;
 import com.aionemu.gameserver.services.player.CreativityPanel.stats.Agility;
@@ -27,6 +29,7 @@ import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class CreativityStatsService {
+	private static volatile ObjectProvider<CreativityStatsService> instanceProvider;
 
 	public void onEssenceApply(Player player, int type, int size, int id, int point) {
 		if (player.isArchDaeva()) {
@@ -62,7 +65,15 @@ public class CreativityStatsService {
 	}
 
 	public static CreativityStatsService getInstance() {
+		ObjectProvider<CreativityStatsService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<CreativityStatsService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

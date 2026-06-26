@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.Race;
@@ -41,6 +42,7 @@ import javolution.util.FastMap;
 
 public class ProtectorConquerorService {
 	private static final Logger log = LoggerFactory.getLogger(ProtectorConquerorService.class);
+	private static volatile ObjectProvider<ProtectorConquerorService> instanceProvider;
 
 	private FastMap<Integer, Protector> protectors = new FastMap<Integer, Protector>();
 	private FastMap<Integer, Conqueror> conquerors = new FastMap<Integer, Conqueror>();
@@ -412,7 +414,15 @@ public class ProtectorConquerorService {
 	}
 
 	public static ProtectorConquerorService getInstance() {
-		return ProtectorConquerorService.SingletonHolder.instance;
+		ObjectProvider<ProtectorConquerorService> provider = instanceProvider;
+		if (provider == null) {
+			return ProtectorConquerorService.SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> ProtectorConquerorService.SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ProtectorConquerorService> instanceProvider) {
+		ProtectorConquerorService.instanceProvider = instanceProvider;
 	}
 
 	private static class SingletonHolder {

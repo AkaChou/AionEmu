@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.services.events.AtreianPassportService;
@@ -7,6 +8,9 @@ import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.toypet.MinionService;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -36,6 +40,17 @@ class GameEventBootstrapRuntimeBridgeTest {
         assertSame(shugoSweepService, runtimeBridge.shugoSweepService());
         assertSame(atreianPassportService, runtimeBridge.atreianPassportService());
         assertSame(eventWindowService, runtimeBridge.eventWindowService());
+    }
+
+    @Test
+    void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameEventBootstrapRuntimeBridge.java"));
+
+        assertFalse(source.contains("LunaShopService.getInstance()"));
+        assertFalse(source.contains("MinionService.getInstance()"));
+        assertFalse(source.contains("ShugoSweepService.getInstance()"));
+        assertFalse(source.contains("AtreianPassportService.getInstance()"));
+        assertFalse(source.contains("EventWindowService.getInstance()"));
     }
 
     private <T> T instance(Class<T> type) {

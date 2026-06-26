@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceService;
 import com.aionemu.gameserver.model.team2.common.legacy.GroupEvent;
@@ -24,12 +26,22 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.taskmanager.AbstractIterativePeriodicTaskManager;
 
 public final class TeamEffectUpdater extends AbstractIterativePeriodicTaskManager<Player> {
+	private static volatile ObjectProvider<TeamEffectUpdater> instanceProvider;
+
 	private static final class SingletonHolder {
 		private static final TeamEffectUpdater INSTANCE = new TeamEffectUpdater();
 	}
 
 	public static TeamEffectUpdater getInstance() {
+		ObjectProvider<TeamEffectUpdater> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<TeamEffectUpdater> provider) {
+		instanceProvider = provider;
 	}
 
 	public TeamEffectUpdater() {

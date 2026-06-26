@@ -1,19 +1,24 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.model.siege.Influence;
+import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.gameserver.services.AnnouncementService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.CuringZoneService;
 import com.aionemu.gameserver.services.DebugService;
 import com.aionemu.gameserver.services.ExchangeService;
+import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.services.FlyRingService;
 import com.aionemu.gameserver.services.GameTimeService;
+import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.LimitedItemTradeService;
 import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.SpringZoneService;
+import com.aionemu.gameserver.services.SurveyService;
 import com.aionemu.gameserver.services.WeatherService;
+import com.aionemu.gameserver.services.WebshopService;
 import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
@@ -34,6 +39,7 @@ public class GameRuntimeServicesGateway {
     private ObjectProvider<DebugService> debugServiceProvider;
     private ObjectProvider<WeatherService> weatherServiceProvider;
     private ObjectProvider<BrokerService> brokerServiceProvider;
+    private ObjectProvider<LegionService> legionServiceProvider;
     private ObjectProvider<Influence> influenceProvider;
     private ObjectProvider<ExchangeService> exchangeServiceProvider;
     private ObjectProvider<PetitionService> petitionServiceProvider;
@@ -43,6 +49,10 @@ public class GameRuntimeServicesGateway {
     private ObjectProvider<BoostEventService> boostEventServiceProvider;
     private ObjectProvider<TaskManagerFromDB> taskManagerFromDBProvider;
     private ObjectProvider<LimitedItemTradeService> limitedItemTradeServiceProvider;
+    private ObjectProvider<WebshopService> webshopServiceProvider;
+    private ObjectProvider<SurveyService> surveyServiceProvider;
+    private ObjectProvider<FindGroupService> findGroupServiceProvider;
+    private ObjectProvider<InGameShopEn> inGameShopEnProvider;
     private ObjectProvider<GameRuntimeServiceBridge> runtimeServiceBridgeProvider;
 
     @Autowired(required = false)
@@ -91,6 +101,11 @@ public class GameRuntimeServicesGateway {
     }
 
     @Autowired(required = false)
+    void setLegionServiceProvider(ObjectProvider<LegionService> legionServiceProvider) {
+        this.legionServiceProvider = legionServiceProvider;
+    }
+
+    @Autowired(required = false)
     void setInfluenceProvider(ObjectProvider<Influence> influenceProvider) {
         this.influenceProvider = influenceProvider;
     }
@@ -136,6 +151,26 @@ public class GameRuntimeServicesGateway {
     }
 
     @Autowired(required = false)
+    void setWebshopServiceProvider(ObjectProvider<WebshopService> webshopServiceProvider) {
+        this.webshopServiceProvider = webshopServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setSurveyServiceProvider(ObjectProvider<SurveyService> surveyServiceProvider) {
+        this.surveyServiceProvider = surveyServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setFindGroupServiceProvider(ObjectProvider<FindGroupService> findGroupServiceProvider) {
+        this.findGroupServiceProvider = findGroupServiceProvider;
+    }
+
+    @Autowired(required = false)
+    void setInGameShopEnProvider(ObjectProvider<InGameShopEn> inGameShopEnProvider) {
+        this.inGameShopEnProvider = inGameShopEnProvider;
+    }
+
+    @Autowired(required = false)
     void setRuntimeServiceBridgeProvider(ObjectProvider<GameRuntimeServiceBridge> runtimeServiceBridgeProvider) {
         this.runtimeServiceBridgeProvider = runtimeServiceBridgeProvider;
     }
@@ -151,6 +186,7 @@ public class GameRuntimeServicesGateway {
         debugService();
         weatherService();
         brokerService();
+        legionService();
         influence();
         exchangeService();
         petitionService();
@@ -161,6 +197,10 @@ public class GameRuntimeServicesGateway {
         boostEventService().onStart();
         taskManagerFromDB();
         limitedItemTradeService().start();
+        webshopService();
+        surveyService();
+        findGroupService();
+        inGameShopEn();
         runtimeServiceBridge().startGameTimeClock();
     }
 
@@ -227,6 +267,13 @@ public class GameRuntimeServicesGateway {
         return brokerServiceProvider.getIfAvailable(() -> runtimeServiceBridge().brokerService());
     }
 
+    private LegionService legionService() {
+        if (legionServiceProvider == null) {
+            return runtimeServiceBridge().legionService();
+        }
+        return legionServiceProvider.getIfAvailable(() -> runtimeServiceBridge().legionService());
+    }
+
     private Influence influence() {
         if (influenceProvider == null) {
             return runtimeServiceBridge().influence();
@@ -288,6 +335,34 @@ public class GameRuntimeServicesGateway {
             return runtimeServiceBridge().limitedItemTradeService();
         }
         return limitedItemTradeServiceProvider.getIfAvailable(() -> runtimeServiceBridge().limitedItemTradeService());
+    }
+
+    private WebshopService webshopService() {
+        if (webshopServiceProvider == null) {
+            return runtimeServiceBridge().webshopService();
+        }
+        return webshopServiceProvider.getIfAvailable(() -> runtimeServiceBridge().webshopService());
+    }
+
+    private SurveyService surveyService() {
+        if (surveyServiceProvider == null) {
+            return runtimeServiceBridge().surveyService();
+        }
+        return surveyServiceProvider.getIfAvailable(() -> runtimeServiceBridge().surveyService());
+    }
+
+    private FindGroupService findGroupService() {
+        if (findGroupServiceProvider == null) {
+            return runtimeServiceBridge().findGroupService();
+        }
+        return findGroupServiceProvider.getIfAvailable(() -> runtimeServiceBridge().findGroupService());
+    }
+
+    private InGameShopEn inGameShopEn() {
+        if (inGameShopEnProvider == null) {
+            return runtimeServiceBridge().inGameShopEn();
+        }
+        return inGameShopEnProvider.getIfAvailable(() -> runtimeServiceBridge().inGameShopEn());
     }
 
     private GameRuntimeServiceBridge runtimeServiceBridge() {

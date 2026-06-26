@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.alliance.PlayerAllianceService;
 import com.aionemu.gameserver.model.team2.common.legacy.GroupEvent;
@@ -27,6 +29,7 @@ import com.aionemu.gameserver.taskmanager.AbstractIterativePeriodicTaskManager;
  * @author Sarynth Supports PlayerGroup and PlayerAlliance movement updating.
  */
 public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<Player> {
+	private static volatile ObjectProvider<TeamMoveUpdater> instanceProvider;
 
 	private static final class SingletonHolder {
 
@@ -34,7 +37,15 @@ public final class TeamMoveUpdater extends AbstractIterativePeriodicTaskManager<
 	}
 
 	public static TeamMoveUpdater getInstance() {
+		ObjectProvider<TeamMoveUpdater> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.INSTANCE);
+		}
 		return SingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<TeamMoveUpdater> provider) {
+		instanceProvider = provider;
 	}
 
 	public TeamMoveUpdater() {

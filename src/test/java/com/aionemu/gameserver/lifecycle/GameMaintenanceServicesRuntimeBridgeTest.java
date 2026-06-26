@@ -1,9 +1,13 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
 import java.lang.reflect.Proxy;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -26,6 +30,16 @@ class GameMaintenanceServicesRuntimeBridgeTest {
         assertSame(abyssRankCleaningProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::abyssRankCleaningService));
         assertSame(shugoImperialTombProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::shugoImperialTombSpawnManager));
         assertSame(seasonRankingProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::seasonRankingUpdateService));
+    }
+
+    @Test
+    void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameMaintenanceServicesRuntimeBridge.java"));
+
+        assertFalse(source.contains("DatabaseCleaningService.getInstance()"));
+        assertFalse(source.contains("AbyssRankCleaningService.getInstance()"));
+        assertFalse(source.contains("ShugoImperialTombSpawnManager.getInstance()"));
+        assertFalse(source.contains("SeasonRankingUpdateService.getInstance()"));
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {

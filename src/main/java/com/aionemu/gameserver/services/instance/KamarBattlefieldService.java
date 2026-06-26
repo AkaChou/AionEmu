@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.services.CronService;
@@ -39,6 +40,7 @@ import javolution.util.FastList;
  ****/
 
 public class KamarBattlefieldService {
+	private static volatile ObjectProvider<KamarBattlefieldService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(KamarBattlefieldService.class);
 	private boolean registerAvailable;
 	private final FastList<Integer> playersWithCooldown = FastList.newInstance();
@@ -131,6 +133,14 @@ public class KamarBattlefieldService {
 	}
 
 	public static KamarBattlefieldService getInstance() {
+		ObjectProvider<KamarBattlefieldService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<KamarBattlefieldService> provider) {
+		instanceProvider = provider;
 	}
 }

@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.services.CronService;
@@ -39,6 +40,7 @@ import javolution.util.FastList;
  ****/
 
 public class HallOfTenacityService {
+	private static volatile ObjectProvider<HallOfTenacityService> instanceProvider;
 	private Logger log = LoggerFactory.getLogger(HallOfTenacityService.class);
 	private boolean registerAvailable;
 	private final FastList<Integer> playersWithCooldown = FastList.newInstance();
@@ -139,6 +141,14 @@ public class HallOfTenacityService {
 	}
 
 	public static HallOfTenacityService getInstance() {
+		ObjectProvider<HallOfTenacityService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<HallOfTenacityService> provider) {
+		instanceProvider = provider;
 	}
 }

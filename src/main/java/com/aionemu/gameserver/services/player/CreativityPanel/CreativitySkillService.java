@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.panel_cp.PanelCp;
@@ -24,6 +26,7 @@ import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class CreativitySkillService {
+	private static volatile ObjectProvider<CreativitySkillService> instanceProvider;
 
 	public void enchantSkill(Player player, int id, int point) {
 		PanelCp pcp = DataManager.PANEL_CP_DATA.getPanelCpId(id);
@@ -67,7 +70,15 @@ public class CreativitySkillService {
 	}
 
 	public static CreativitySkillService getInstance() {
+		ObjectProvider<CreativitySkillService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<CreativitySkillService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

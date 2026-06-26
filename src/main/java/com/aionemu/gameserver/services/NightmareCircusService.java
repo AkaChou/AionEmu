@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -53,6 +54,7 @@ import javolution.util.FastMap;
  */
 
 public class NightmareCircusService {
+	private static volatile ObjectProvider<NightmareCircusService> instanceProvider;
 	private CircusSchedule circusSchedule;
 	private Map<Integer, NightmareCircusLocation> nightmareCircus;
 	private static final int duration = CustomConfig.NIGHTMARE_CIRCUS_DURATION;
@@ -183,7 +185,15 @@ public class NightmareCircusService {
 	}
 
 	public static NightmareCircusService getInstance() {
-		return NightmareCircusServiceHolder.INSTANCE;
+		ObjectProvider<NightmareCircusService> provider = instanceProvider;
+		if (provider == null) {
+			return NightmareCircusServiceHolder.INSTANCE;
+		}
+		return provider.getIfAvailable(() -> NightmareCircusServiceHolder.INSTANCE);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<NightmareCircusService> instanceProvider) {
+		NightmareCircusService.instanceProvider = instanceProvider;
 	}
 
 	private static class NightmareCircusServiceHolder {

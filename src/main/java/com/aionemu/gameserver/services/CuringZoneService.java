@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -32,10 +33,11 @@ import javolution.util.FastList;
 
 public class CuringZoneService {
 
+	private static volatile ObjectProvider<CuringZoneService> instanceProvider;
 	Logger log = LoggerFactory.getLogger(CuringZoneService.class);
 	private FastList<CuringObject> curingObjects = new FastList<CuringObject>();
 
-	private CuringZoneService() {
+	public CuringZoneService() {
 		for (CuringTemplate t : DataManager.CURING_OBJECTS_DATA.getCuringObject()) {
 			CuringObject obj = new CuringObject(t, 0);
 			obj.spawn();
@@ -63,7 +65,15 @@ public class CuringZoneService {
 	}
 
 	public static final CuringZoneService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<CuringZoneService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<CuringZoneService> instanceProvider) {
+		CuringZoneService.instanceProvider = instanceProvider;
 	}
 
 	private static class SingletonHolder {

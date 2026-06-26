@@ -19,6 +19,7 @@ package com.aionemu.gameserver.services.abysslandingservice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.AbyssLandingConfig;
@@ -26,6 +27,7 @@ import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.services.AbyssLandingService;
 
 public class LandingUpdateService {
+	private static volatile ObjectProvider<LandingUpdateService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(LandingUpdateService.class);
 
 	final LandingLocation redemptionLanding = AbyssLandingService.getInstance().redemptionLanding();
@@ -47,7 +49,7 @@ public class LandingUpdateService {
 	final int redemptionPts3 = redemptionLanding.getCommanderPoints() - redemptionLanding.getCommanderPoints();
 	final int harbingerPts3 = harbingerLanding.getCommanderPoints() - harbingerLanding.getCommanderPoints();
 
-	private LandingUpdateService() {
+	public LandingUpdateService() {
 	}
 
 	public void initResetQuestPoints() {
@@ -135,7 +137,15 @@ public class LandingUpdateService {
 	}
 
 	public static LandingUpdateService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<LandingUpdateService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<LandingUpdateService> instanceProvider) {
+		LandingUpdateService.instanceProvider = instanceProvider;
 	}
 
 	private static class SingletonHolder {

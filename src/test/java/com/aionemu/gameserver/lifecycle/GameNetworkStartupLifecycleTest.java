@@ -6,7 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.lang.reflect.Proxy;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -110,6 +113,13 @@ class GameNetworkStartupLifecycleTest {
         runtimeBridge.setShutdownHookProvider(throwingProvider(providerUsed));
 
         assertSame(providerUsed, assertThrows(ProviderUsedException.class, runtimeBridge::shutdownHook));
+    }
+
+    @Test
+    void networkStartupRuntimeBridgeDoesNotCallLegacyShutdownHookDirectly() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameNetworkStartupRuntimeBridge.java"));
+
+        assertFalse(source.contains("ShutdownHook.getInstance()"));
     }
 
     private static Class<?> fieldType(String name) {

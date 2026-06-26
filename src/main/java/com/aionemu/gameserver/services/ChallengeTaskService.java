@@ -24,6 +24,7 @@ import java.util.TreeMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -50,6 +51,7 @@ import com.aionemu.gameserver.world.World;
 import javolution.util.FastMap;
 
 public class ChallengeTaskService {
+	private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(ChallengeTaskService.class);
 	private Map<Integer, Map<Integer, ChallengeTask>> cityTasks;
 	private Map<Integer, Map<Integer, ChallengeTask>> legionTasks;
@@ -59,10 +61,18 @@ public class ChallengeTaskService {
 	}
 
 	public static final ChallengeTaskService getInstance() {
+		ObjectProvider<ChallengeTaskService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
 	}
 
-	private ChallengeTaskService() {
+	public static void setInstanceProvider(ObjectProvider<ChallengeTaskService> provider) {
+		instanceProvider = provider;
+	}
+
+	public ChallengeTaskService() {
 		cityTasks = new FastMap<Integer, Map<Integer, ChallengeTask>>().shared();
 		legionTasks = new FastMap<Integer, Map<Integer, ChallengeTask>>().shared();
 		log.info("ChallengeTaskService initialized.");
