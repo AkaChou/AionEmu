@@ -36,23 +36,23 @@ public class GameWorldServicesRuntimeBridge {
 
     public GeoService geoService() {
         if (geoServiceProvider == null) {
-            return GeoService.getInstance();
+            return GameWorldServiceFallbacks.geoService();
         }
-        return geoServiceProvider.getIfAvailable(GeoService::getInstance);
+        return geoServiceProvider.getIfAvailable(GameWorldServiceFallbacks::geoService);
     }
 
     public NavService navService() {
         if (navServiceProvider == null) {
-            return NavService.getInstance();
+            return GameWorldServiceFallbacks.navService();
         }
-        return navServiceProvider.getIfAvailable(NavService::getInstance);
+        return navServiceProvider.getIfAvailable(GameWorldServiceFallbacks::navService);
     }
 
     public DropRegistrationService dropRegistrationService() {
         if (dropRegistrationServiceProvider == null) {
-            return DropRegistrationService.getInstance();
+            return GameWorldServiceFallbacks.dropRegistrationService();
         }
-        return dropRegistrationServiceProvider.getIfAvailable(DropRegistrationService::getInstance);
+        return dropRegistrationServiceProvider.getIfAvailable(GameWorldServiceFallbacks::dropRegistrationService);
     }
 
     public GameServer createGameServer() {
