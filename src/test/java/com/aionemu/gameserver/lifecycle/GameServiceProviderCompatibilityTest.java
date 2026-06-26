@@ -14,6 +14,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.gameserver.services.AnnouncementService;
 import com.aionemu.gameserver.services.AStationService;
+import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ChallengeTaskService;
 import com.aionemu.gameserver.services.CuringZoneService;
@@ -32,6 +33,7 @@ import com.aionemu.gameserver.services.LimitedItemTradeService;
 import com.aionemu.gameserver.services.MotionLoggingService;
 import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.PetitionService;
+import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.RepurchaseService;
 import com.aionemu.gameserver.services.SpringZoneService;
 import com.aionemu.gameserver.services.StaticDoorService;
@@ -45,11 +47,13 @@ import com.aionemu.gameserver.services.ShieldService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.services.WindyGorgeService;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
+import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
@@ -74,6 +78,7 @@ import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.item.CoalescenceService;
+import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
@@ -799,6 +804,47 @@ class GameServiceProviderCompatibilityTest {
             LifeStatsRestoreService.setInstanceProvider(null);
             SeasonRankingService.setInstanceProvider(null);
             RiftManager.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void gameCoreGameplayServicesRegistersAndClearsCoreOnlineProviders() throws Exception {
+        DropService dropService = instance(DropService.class);
+        MailService mailService = instance(MailService.class);
+        PvpService pvpService = instance(PvpService.class);
+        AutoGroupService autoGroupService = instance(AutoGroupService.class);
+        AbyssRankingCache abyssRankingCache = instance(AbyssRankingCache.class);
+        GameCoreGameplayServices coreGameplayServices = new GameCoreGameplayServices(
+                provider(DropService.class, dropService),
+                provider(MailService.class, mailService),
+                provider(PvpService.class, pvpService),
+                provider(AutoGroupService.class, autoGroupService),
+                provider(AbyssRankingCache.class, abyssRankingCache));
+
+        try {
+            assertSame(dropService, DropService.getInstance());
+            assertSame(mailService, MailService.getInstance());
+            assertSame(pvpService, PvpService.getInstance());
+            assertSame(autoGroupService, AutoGroupService.getInstance());
+            assertSame(abyssRankingCache, AbyssRankingCache.getInstance());
+
+            coreGameplayServices.destroy();
+            coreGameplayServices = null;
+
+            assertProviderCleared(DropService.class);
+            assertProviderCleared(MailService.class);
+            assertProviderCleared(PvpService.class);
+            assertProviderCleared(AutoGroupService.class);
+            assertProviderCleared(AbyssRankingCache.class);
+        } finally {
+            if (coreGameplayServices != null) {
+                coreGameplayServices.destroy();
+            }
+            DropService.setInstanceProvider(null);
+            MailService.setInstanceProvider(null);
+            PvpService.setInstanceProvider(null);
+            AutoGroupService.setInstanceProvider(null);
+            AbyssRankingCache.setInstanceProvider(null);
         }
     }
 

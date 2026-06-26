@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -59,14 +60,23 @@ import com.aionemu.gameserver.world.World;
 public class MailService {
 
 	private static final Logger log = LoggerFactory.getLogger("MAIL_LOG");
+	private static volatile ObjectProvider<MailService> instanceProvider;
 	protected Queue<Player> newPlayers;
 
 	public static final MailService getInstance() {
+		ObjectProvider<MailService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
 	}
 
-	private MailService() {
+	public MailService() {
 		newPlayers = new ConcurrentLinkedQueue<Player>();
+	}
+
+	public static void setInstanceProvider(ObjectProvider<MailService> provider) {
+		instanceProvider = provider;
 	}
 
 	/**

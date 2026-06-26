@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.GroupConfig;
@@ -55,15 +56,24 @@ import javolution.util.FastMap;
 public class PvpService {
 
 	private static Logger log = LoggerFactory.getLogger("KILL_LOG");
+	private static volatile ObjectProvider<PvpService> instanceProvider;
 
 	public static final PvpService getInstance() {
+		ObjectProvider<PvpService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
 	}
 
 	private FastMap<Integer, KillList> pvpKillLists;
 
-	private PvpService() {
+	public PvpService() {
 		pvpKillLists = new FastMap<Integer, KillList>();
+	}
+
+	public static void setInstanceProvider(ObjectProvider<PvpService> provider) {
+		instanceProvider = provider;
 	}
 
 	/**

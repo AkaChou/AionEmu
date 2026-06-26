@@ -24,6 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -66,13 +67,14 @@ import javolution.util.FastMap;
 
 public class AutoGroupService {
 
+	private static volatile ObjectProvider<AutoGroupService> instanceProvider;
 	private Logger log = LoggerFactory.getLogger(AutoGroupService.class);
 	private FastMap<Integer, LookingForParty> searchers = new FastMap<Integer, LookingForParty>().shared();
 	private FastMap<Integer, AutoInstance> autoInstances = new FastMap<Integer, AutoInstance>().shared();
 	private Collection<Integer> penaltys = new FastList<Integer>().shared();
 	private Lock lock = new ReentrantLock();
 
-	private AutoGroupService() {
+	public AutoGroupService() {
 	}
 
 	public void startLooking(Player player, int instanceMaskId, EntryRequestType ert) {
@@ -920,7 +922,15 @@ public class AutoGroupService {
 	}
 
 	public static AutoGroupService getInstance() {
+		ObjectProvider<AutoGroupService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> NewSingletonHolder.INSTANCE);
+		}
 		return NewSingletonHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AutoGroupService> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class NewSingletonHolder {

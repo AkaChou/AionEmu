@@ -60,9 +60,14 @@ import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.LunaShopService;
+import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.services.AutoGroupService;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
+import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingService;
@@ -733,6 +738,27 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEager(context.getBeanFactory(), "lifeStatsRestoreService");
             assertLazy(context.getBeanFactory(), "seasonRankingService");
             assertLazy(context.getBeanFactory(), "riftManager");
+        }
+    }
+
+    @Test
+    void exposesCoreOnlineGameplayServicesAsEagerSpringBeans() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("dropService"));
+            assertTrue(context.containsBeanDefinition("mailService"));
+            assertTrue(context.containsBeanDefinition("pvpService"));
+            assertTrue(context.containsBeanDefinition("autoGroupService"));
+            assertTrue(context.containsBeanDefinition("abyssRankingCache"));
+            assertEquals(DropService.class, context.getType("dropService"));
+            assertEquals(MailService.class, context.getType("mailService"));
+            assertEquals(PvpService.class, context.getType("pvpService"));
+            assertEquals(AutoGroupService.class, context.getType("autoGroupService"));
+            assertEquals(AbyssRankingCache.class, context.getType("abyssRankingCache"));
+            assertEager(context.getBeanFactory(), "dropService");
+            assertEager(context.getBeanFactory(), "mailService");
+            assertEager(context.getBeanFactory(), "pvpService");
+            assertEager(context.getBeanFactory(), "autoGroupService");
+            assertEager(context.getBeanFactory(), "abyssRankingCache");
         }
     }
 

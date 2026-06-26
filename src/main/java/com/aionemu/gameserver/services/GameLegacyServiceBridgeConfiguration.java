@@ -14,6 +14,7 @@ import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
+import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.abyss.AbyssRankCleaningService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
@@ -40,7 +41,9 @@ import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.services.item.CoalescenceService;
+import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
+import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
@@ -912,5 +915,30 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public RiftManager riftManager() {
         return new RiftManager();
+    }
+
+    @Bean
+    public DropService dropService() {
+        return new DropService();
+    }
+
+    @Bean
+    public MailService mailService() {
+        return new MailService();
+    }
+
+    @Bean
+    public PvpService pvpService() {
+        return new PvpService();
+    }
+
+    @Bean
+    public AutoGroupService autoGroupService() {
+        return new AutoGroupService();
+    }
+
+    @Bean
+    public AbyssRankingCache abyssRankingCache() {
+        return new AbyssRankingCache();
     }
 }
