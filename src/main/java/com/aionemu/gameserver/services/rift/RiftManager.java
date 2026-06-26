@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.controllers.RVController;
 import com.aionemu.gameserver.controllers.effect.EffectController;
@@ -46,6 +47,7 @@ import java.util.List;
 public class RiftManager {
 
 	private static Logger log = LoggerFactory.getLogger(RiftManager.class);
+	private static volatile ObjectProvider<RiftManager> instanceProvider;
 	private static List<Npc> rifts = new CopyOnWriteArrayList<Npc>(); 
 	private static Map<String, SpawnTemplate> riftGroups = new HashMap<String, SpawnTemplate>();
 
@@ -129,7 +131,15 @@ public class RiftManager {
     }
 
 	public static RiftManager getInstance() {
+		ObjectProvider<RiftManager> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> RiftManagerHolder.INSTANCE);
+		}
 		return RiftManagerHolder.INSTANCE;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<RiftManager> provider) {
+		instanceProvider = provider;
 	}
 
 	private static class RiftManagerHolder {

@@ -60,9 +60,11 @@ import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
+import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.services.reward.RewardService;
+import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.services.veteranreward.VeteranRewardsService;
@@ -887,5 +889,28 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public RelinquishCraftStatus relinquishCraftStatus() {
         return new RelinquishCraftStatus();
+    }
+
+    @Bean
+    @Lazy
+    public DuelService duelService() {
+        return new DuelService();
+    }
+
+    @Bean
+    public LifeStatsRestoreService lifeStatsRestoreService() {
+        return new LifeStatsRestoreService();
+    }
+
+    @Bean
+    @Lazy
+    public SeasonRankingService seasonRankingService() {
+        return new SeasonRankingService();
+    }
+
+    @Bean
+    @Lazy
+    public RiftManager riftManager() {
+        return new RiftManager();
     }
 }

@@ -26,6 +26,8 @@ import com.aionemu.gameserver.services.FlyRingService;
 import com.aionemu.gameserver.services.GameTimeService;
 import com.aionemu.gameserver.services.HousingBidService;
 import com.aionemu.gameserver.services.KiskService;
+import com.aionemu.gameserver.services.DuelService;
+import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.services.LimitedItemTradeService;
 import com.aionemu.gameserver.services.MotionLoggingService;
 import com.aionemu.gameserver.services.PeriodicSaveService;
@@ -90,8 +92,10 @@ import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.services.player.PlayerLimitService;
 import com.aionemu.gameserver.services.player.PlayerEventService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
+import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.services.reward.RewardService;
+import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
@@ -224,6 +228,10 @@ class GameServiceProviderCompatibilityTest {
         Will will = instance(Will.class);
         CraftSkillUpdateService craftSkillUpdateService = instance(CraftSkillUpdateService.class);
         RelinquishCraftStatus relinquishCraftStatus = instance(RelinquishCraftStatus.class);
+        DuelService duelService = instance(DuelService.class);
+        LifeStatsRestoreService lifeStatsRestoreService = instance(LifeStatsRestoreService.class);
+        SeasonRankingService seasonRankingService = instance(SeasonRankingService.class);
+        RiftManager riftManager = instance(RiftManager.class);
 
         try {
             GeoService.setInstanceProvider(provider(GeoService.class, geoService));
@@ -330,6 +338,10 @@ class GameServiceProviderCompatibilityTest {
             Will.setInstanceProvider(provider(Will.class, will));
             CraftSkillUpdateService.setInstanceProvider(provider(CraftSkillUpdateService.class, craftSkillUpdateService));
             RelinquishCraftStatus.setInstanceProvider(provider(RelinquishCraftStatus.class, relinquishCraftStatus));
+            DuelService.setInstanceProvider(provider(DuelService.class, duelService));
+            LifeStatsRestoreService.setInstanceProvider(provider(LifeStatsRestoreService.class, lifeStatsRestoreService));
+            SeasonRankingService.setInstanceProvider(provider(SeasonRankingService.class, seasonRankingService));
+            RiftManager.setInstanceProvider(provider(RiftManager.class, riftManager));
 
             assertSame(geoService, GeoService.getInstance());
             assertSame(navService, NavService.getInstance());
@@ -435,6 +447,10 @@ class GameServiceProviderCompatibilityTest {
             assertSame(will, Will.getInstance());
             assertSame(craftSkillUpdateService, CraftSkillUpdateService.getInstance());
             assertSame(relinquishCraftStatus, RelinquishCraftStatus.getInstance());
+            assertSame(duelService, DuelService.getInstance());
+            assertSame(lifeStatsRestoreService, LifeStatsRestoreService.getInstance());
+            assertSame(seasonRankingService, SeasonRankingService.getInstance());
+            assertSame(riftManager, RiftManager.getInstance());
         } finally {
             GeoService.setInstanceProvider(null);
             NavService.setInstanceProvider(null);
@@ -540,6 +556,10 @@ class GameServiceProviderCompatibilityTest {
             Will.setInstanceProvider(null);
             CraftSkillUpdateService.setInstanceProvider(null);
             RelinquishCraftStatus.setInstanceProvider(null);
+            DuelService.setInstanceProvider(null);
+            LifeStatsRestoreService.setInstanceProvider(null);
+            SeasonRankingService.setInstanceProvider(null);
+            RiftManager.setInstanceProvider(null);
         }
     }
 
@@ -743,6 +763,42 @@ class GameServiceProviderCompatibilityTest {
             }
             CraftSkillUpdateService.setInstanceProvider(null);
             RelinquishCraftStatus.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void gameGameplayServicesRegistersAndClearsLightweightRuntimeProviders() throws Exception {
+        DuelService duelService = instance(DuelService.class);
+        LifeStatsRestoreService lifeStatsRestoreService = instance(LifeStatsRestoreService.class);
+        SeasonRankingService seasonRankingService = instance(SeasonRankingService.class);
+        RiftManager riftManager = instance(RiftManager.class);
+        GameGameplayServices gameplayServices = new GameGameplayServices(
+                provider(DuelService.class, duelService),
+                provider(LifeStatsRestoreService.class, lifeStatsRestoreService),
+                provider(SeasonRankingService.class, seasonRankingService),
+                provider(RiftManager.class, riftManager));
+
+        try {
+            assertSame(duelService, DuelService.getInstance());
+            assertSame(lifeStatsRestoreService, LifeStatsRestoreService.getInstance());
+            assertSame(seasonRankingService, SeasonRankingService.getInstance());
+            assertSame(riftManager, RiftManager.getInstance());
+
+            gameplayServices.destroy();
+            gameplayServices = null;
+
+            assertProviderCleared(DuelService.class);
+            assertProviderCleared(LifeStatsRestoreService.class);
+            assertProviderCleared(SeasonRankingService.class);
+            assertProviderCleared(RiftManager.class);
+        } finally {
+            if (gameplayServices != null) {
+                gameplayServices.destroy();
+            }
+            DuelService.setInstanceProvider(null);
+            LifeStatsRestoreService.setInstanceProvider(null);
+            SeasonRankingService.setInstanceProvider(null);
+            RiftManager.setInstanceProvider(null);
         }
     }
 

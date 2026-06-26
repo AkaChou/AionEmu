@@ -65,9 +65,11 @@ import com.aionemu.gameserver.services.drop.DropDistributionService;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.SiegeService;
+import com.aionemu.gameserver.services.ranking.SeasonRankingService;
 import com.aionemu.gameserver.services.ranking.SeasonRankingUpdateService;
 import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.services.reward.RewardService;
+import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
@@ -713,6 +715,24 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(RelinquishCraftStatus.class, context.getType("relinquishCraftStatus"));
             assertLazy(context.getBeanFactory(), "craftSkillUpdateService");
             assertLazy(context.getBeanFactory(), "relinquishCraftStatus");
+        }
+    }
+
+    @Test
+    void exposesRuntimeCompatibilityServicesWithCoreRestorationEager() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertTrue(context.containsBeanDefinition("duelService"));
+            assertTrue(context.containsBeanDefinition("lifeStatsRestoreService"));
+            assertTrue(context.containsBeanDefinition("seasonRankingService"));
+            assertTrue(context.containsBeanDefinition("riftManager"));
+            assertEquals(DuelService.class, context.getType("duelService"));
+            assertEquals(LifeStatsRestoreService.class, context.getType("lifeStatsRestoreService"));
+            assertEquals(SeasonRankingService.class, context.getType("seasonRankingService"));
+            assertEquals(RiftManager.class, context.getType("riftManager"));
+            assertLazy(context.getBeanFactory(), "duelService");
+            assertEager(context.getBeanFactory(), "lifeStatsRestoreService");
+            assertLazy(context.getBeanFactory(), "seasonRankingService");
+            assertLazy(context.getBeanFactory(), "riftManager");
         }
     }
 

@@ -20,6 +20,7 @@ import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.DuelResult;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -45,15 +46,24 @@ import javolution.util.FastMap;
 
 public class DuelService {
 	private static Logger log = LoggerFactory.getLogger(DuelService.class);
+	private static volatile ObjectProvider<DuelService> instanceProvider;
 
 	private FastMap<Integer, Integer> duels;
 	private FastMap<Integer, Future<?>> timeOutTask;
 
 	public static final DuelService getInstance() {
+		ObjectProvider<DuelService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
 	}
 
-	private DuelService() {
+	public static void setInstanceProvider(ObjectProvider<DuelService> provider) {
+		instanceProvider = provider;
+	}
+
+	public DuelService() {
 		this.duels = new FastMap<Integer, Integer>().shared();
 		timeOutTask = new FastMap<Integer, Future<?>>().shared();
 	}
