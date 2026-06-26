@@ -39,7 +39,7 @@ public class DebugService {
 		return SingletonHolder.instance;
 	}
 
-	private DebugService() {
+	public DebugService() {
 		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
 
 			@Override

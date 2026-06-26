@@ -53,7 +53,7 @@ public class AnnouncementService {
 	private Collection<Announcement> announcements;
 	private List<Future<?>> delays = new ArrayList<Future<?>>();
 
-	private AnnouncementService() {
+	public AnnouncementService() {
 		this.load();
 	}
 

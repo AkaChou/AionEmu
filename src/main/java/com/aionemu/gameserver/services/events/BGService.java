@@ -35,7 +35,7 @@ public class BGService {
 	private static final int DELAY = 60 * 100;
 	private List<ScheduledFuture<?>> futures = new ArrayList<ScheduledFuture<?>>();
 
-	private BGService() {
+	public BGService() {
 		register(DELAY);
 		log.info("[BGService] is initialized...");
 	}

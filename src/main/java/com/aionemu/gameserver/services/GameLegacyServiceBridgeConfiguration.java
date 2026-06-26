@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.cache.HTMLCache;
+import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ai2.AI2Engine;
@@ -58,6 +59,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import com.aionemu.gameserver.world.zone.ZoneService;
+import java.text.ParseException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -86,7 +88,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public PlayerEventService playerEventService() {
-        return PlayerEventService.getInstance();
+        return new PlayerEventService();
     }
 
     @Bean
@@ -116,13 +118,13 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public LadderService ladderService() {
-        return LadderService.getInstance();
+        return new LadderService();
     }
 
     @Bean
     @Lazy
     public BGService bgService() {
-        return BGService.getInstance();
+        return new BGService();
     }
 
     @Bean
@@ -140,7 +142,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public NpcShoutsService npcShoutsService() {
-        return NpcShoutsService.getInstance();
+        return new NpcShoutsService();
     }
 
     @Bean
@@ -157,8 +159,8 @@ public class GameLegacyServiceBridgeConfiguration {
 
     @Bean
     @Lazy
-    public MaintenanceTask maintenanceTask() {
-        return MaintenanceTask.getInstance();
+    public MaintenanceTask maintenanceTask() throws ParseException {
+        return new MaintenanceTask(HousingConfig.HOUSE_MAINTENANCE_TIME);
     }
 
     @Bean
@@ -290,7 +292,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public PeriodicSaveService periodicSaveService() {
-        return PeriodicSaveService.getInstance();
+        return new PeriodicSaveService();
     }
 
     @Bean
@@ -302,19 +304,19 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public GameTimeService gameTimeService() {
-        return GameTimeService.getInstance();
+        return new GameTimeService();
     }
 
     @Bean
     @Lazy
     public AnnouncementService announcementService() {
-        return AnnouncementService.getInstance();
+        return new AnnouncementService();
     }
 
     @Bean
     @Lazy
     public DebugService debugService() {
-        return DebugService.getInstance();
+        return new DebugService();
     }
 
     @Bean
@@ -404,7 +406,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public VeteranRewardsService veteranRewardsService() {
-        return VeteranRewardsService.getInstance();
+        return new VeteranRewardsService();
     }
 
     @Bean

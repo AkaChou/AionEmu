@@ -70,7 +70,7 @@ public class LadderService {
 	boolean eventTeamBased = false;
 	private int rankUpdateInterval = 2;
 
-	private LadderService() {
+	public LadderService() {
 		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {

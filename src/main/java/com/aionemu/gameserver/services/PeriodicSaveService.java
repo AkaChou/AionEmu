@@ -45,7 +45,7 @@ public class PeriodicSaveService {
 		return SingletonHolder.instance;
 	}
 
-	private PeriodicSaveService() {
+	public PeriodicSaveService() {
 
 		int DELAY_LEGION_ITEM = PeriodicSaveConfig.LEGION_ITEMS * 1000;
 

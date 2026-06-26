@@ -59,7 +59,7 @@ public class MaintenanceTask extends AbstractCronTask {
 		return instance;
 	}
 
-	private MaintenanceTask(String maintainTime) throws ParseException {
+	public MaintenanceTask(String maintainTime) throws ParseException {
 		super(maintainTime);
 	}
 

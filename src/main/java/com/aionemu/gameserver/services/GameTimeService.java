@@ -37,7 +37,7 @@ public class GameTimeService {
 
 	private final static int GAMETIME_UPDATE = 3 * 60000;
 
-	private GameTimeService() {
+	public GameTimeService() {
 		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {

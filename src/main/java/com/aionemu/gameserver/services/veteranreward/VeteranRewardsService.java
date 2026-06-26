@@ -78,7 +78,7 @@ public class VeteranRewardsService {
 
 	private static final String VETERAN_REWARDS_LOOP_STATUS_BROADCAST_SCHEDULE = "0 * * ? * *";
 
-	private VeteranRewardsService() {
+	public VeteranRewardsService() {
 		Init_VeteranRewardStatusLoop();
 	}
 

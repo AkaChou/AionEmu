@@ -31,7 +31,7 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 public class PlayerEventService {
 	private static final Logger log = LoggerFactory.getLogger(PlayerEventService.class);
 
-	private PlayerEventService() {
+	public PlayerEventService() {
 		/**
 		 * Event Awake [Event JAP] http://event2.ncsoft.jp/1.0/aion/1503awake/
 		 */

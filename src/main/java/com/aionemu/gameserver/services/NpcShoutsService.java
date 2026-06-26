@@ -52,7 +52,7 @@ public class NpcShoutsService {
 
 	NpcShoutData shoutsCache = DataManager.NPC_SHOUT_DATA;
 
-	private NpcShoutsService() {
+	public NpcShoutsService() {
 		for (Npc npc : World.getInstance().getNpcs()) {
 			final int npcId = npc.getNpcId();
 			final int worldId = npc.getSpawn().getWorldId();
