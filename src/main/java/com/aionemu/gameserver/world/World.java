@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -50,6 +51,7 @@ import javolution.util.FastMap;
 public class World {
 
 	private static final Logger log = LoggerFactory.getLogger(World.class);
+	private static volatile ObjectProvider<World> instanceProvider;
 	private final PlayerContainer allPlayers;
 	private final FastMap<Integer, VisibleObject> allObjects;
 	private final TIntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new TIntObjectHashMap<Collection<SiegeNpc>>();
@@ -61,7 +63,7 @@ public class World {
 	/**
 	 * Constructor.
 	 */
-	private World() {
+	public World() {
 		Util.printSection(" *** World *** ");
 		allPlayers = new PlayerContainer();
 		allObjects = new FastMap<Integer, VisibleObject>().shared();
@@ -74,7 +76,15 @@ public class World {
 	}
 
 	public static World getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<World> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<World> instanceProvider) {
+		World.instanceProvider = instanceProvider;
 	}
 
 	/**

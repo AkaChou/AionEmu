@@ -520,7 +520,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public World world() {
-        return World.getInstance();
+        return new World();
     }
 
     @Bean

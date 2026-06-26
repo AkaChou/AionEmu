@@ -56,6 +56,19 @@ class GameWorldBootstrapRuntimeBridgeTest {
     }
 
     @Test
+    void worldSingletonAccessorUsesSpringProviderBeforeLegacyFallback() {
+        World world = instance(World.class);
+
+        try {
+            World.setInstanceProvider(provider(World.class, world));
+
+            assertSame(world, World.getInstance());
+        } finally {
+            World.setInstanceProvider(null);
+        }
+    }
+
+    @Test
     void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameWorldBootstrapRuntimeBridge.java"));
 
