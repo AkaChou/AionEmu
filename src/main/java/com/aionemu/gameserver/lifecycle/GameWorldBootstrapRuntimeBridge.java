@@ -47,36 +47,36 @@ public class GameWorldBootstrapRuntimeBridge {
 
     public IDFactory idFactory() {
         if (idFactoryProvider == null) {
-            return IDFactory.getInstance();
+            return GameWorldBootstrapFallbacks.idFactory();
         }
-        return idFactoryProvider.getIfAvailable(IDFactory::getInstance);
+        return idFactoryProvider.getIfAvailable(GameWorldBootstrapFallbacks::idFactory);
     }
 
     public ZoneService zoneService() {
         if (zoneServiceProvider == null) {
-            return ZoneService.getInstance();
+            return GameWorldBootstrapFallbacks.zoneService();
         }
-        return zoneServiceProvider.getIfAvailable(ZoneService::getInstance);
+        return zoneServiceProvider.getIfAvailable(GameWorldBootstrapFallbacks::zoneService);
     }
 
     public HotspotTeleportService hotspotTeleportService() {
         if (hotspotTeleportServiceProvider == null) {
-            return HotspotTeleportService.getInstance();
+            return GameWorldBootstrapFallbacks.hotspotTeleportService();
         }
-        return hotspotTeleportServiceProvider.getIfAvailable(HotspotTeleportService::getInstance);
+        return hotspotTeleportServiceProvider.getIfAvailable(GameWorldBootstrapFallbacks::hotspotTeleportService);
     }
 
     public RoadService roadService() {
         if (roadServiceProvider == null) {
-            return RoadService.getInstance();
+            return GameWorldBootstrapFallbacks.roadService();
         }
-        return roadServiceProvider.getIfAvailable(RoadService::getInstance);
+        return roadServiceProvider.getIfAvailable(GameWorldBootstrapFallbacks::roadService);
     }
 
     public World world() {
         if (worldProvider == null) {
-            return World.getInstance();
+            return GameWorldBootstrapFallbacks.world();
         }
-        return worldProvider.getIfAvailable(World::getInstance);
+        return worldProvider.getIfAvailable(GameWorldBootstrapFallbacks::world);
     }
 }
