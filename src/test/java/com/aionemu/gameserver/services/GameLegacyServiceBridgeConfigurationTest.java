@@ -151,6 +151,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedPlayerLimitServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(PlayerLimitService.getInstance(), context.getBean(PlayerLimitService.class));
+        }
+    }
+
+    @Test
     void exposesHousingServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("housingBidService"));
@@ -250,6 +257,15 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedLightweightEventBootstrapServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(MinionService.getInstance(), context.getBean(MinionService.class));
+            assertNotSame(ShugoSweepService.getInstance(), context.getBean(ShugoSweepService.class));
+            assertNotSame(AtreianPassportService.getInstance(), context.getBean(AtreianPassportService.class));
+        }
+    }
+
+    @Test
     void exposesRuntimeServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("periodicSaveService"));
@@ -322,6 +338,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedWeddingServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(WeddingService.getInstance(), context.getBean(WeddingService.class));
+        }
+    }
+
+    @Test
     void createsSpringManagedRewardServiceInsteadOfLegacySingleton() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertNotSame(RewardService.getInstance(), context.getBean(RewardService.class));
@@ -377,6 +400,13 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedOutpostServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(OutpostService.getInstance(), context.getBean(OutpostService.class));
+        }
+    }
+
+    @Test
     void exposesDredgionServicesAsLazySpringBeans() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("dredgionService"));
@@ -415,11 +445,25 @@ class GameLegacyServiceBridgeConfigurationTest {
     }
 
     @Test
+    void createsSpringManagedSeasonRankingUpdateServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(SeasonRankingUpdateService.getInstance(), context.getBean(SeasonRankingUpdateService.class));
+        }
+    }
+
+    @Test
     void exposesProtectorConquerorServiceAsLazySpringBean() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("protectorConquerorService"));
             assertEquals(ProtectorConquerorService.class, context.getType("protectorConquerorService"));
             assertLazy(context.getBeanFactory(), "protectorConquerorService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedProtectorConquerorServiceInsteadOfLegacySingleton() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(ProtectorConquerorService.getInstance(), context.getBean(ProtectorConquerorService.class));
         }
     }
 
@@ -500,6 +544,14 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertEquals(BaseService.class, context.getType("baseService"));
             assertLazy(context.getBeanFactory(), "siegeService");
             assertLazy(context.getBeanFactory(), "baseService");
+        }
+    }
+
+    @Test
+    void createsSpringManagedSiegeScheduleServicesInsteadOfLegacySingletons() {
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
+            assertNotSame(SiegeService.getInstance(), context.getBean(SiegeService.class));
+            assertNotSame(BaseService.getInstance(), context.getBean(BaseService.class));
         }
     }
 

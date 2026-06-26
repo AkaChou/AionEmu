@@ -134,7 +134,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public PlayerLimitService playerLimitService() {
-        return PlayerLimitService.getInstance();
+        return new PlayerLimitService();
     }
 
     @Bean
@@ -266,19 +266,19 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public MinionService minionService() {
-        return MinionService.getInstance();
+        return new MinionService();
     }
 
     @Bean
     @Lazy
     public ShugoSweepService shugoSweepService() {
-        return ShugoSweepService.getInstance();
+        return new ShugoSweepService();
     }
 
     @Bean
     @Lazy
     public AtreianPassportService atreianPassportService() {
-        return AtreianPassportService.getInstance();
+        return new AtreianPassportService();
     }
 
     @Bean
@@ -398,7 +398,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public WeddingService weddingService() {
-        return WeddingService.getInstance();
+        return new WeddingService();
     }
 
     @Bean
@@ -452,7 +452,7 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public OutpostService outpostService() {
-        return OutpostService.getInstance();
+        return new OutpostService();
     }
 
     @Bean
@@ -476,13 +476,13 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public SeasonRankingUpdateService seasonRankingUpdateService() {
-        return SeasonRankingUpdateService.getInstance();
+        return new SeasonRankingUpdateService();
     }
 
     @Bean
     @Lazy
     public ProtectorConquerorService protectorConquerorService() {
-        return ProtectorConquerorService.getInstance();
+        return new ProtectorConquerorService();
     }
 
     @Bean
@@ -548,13 +548,13 @@ public class GameLegacyServiceBridgeConfiguration {
     @Bean
     @Lazy
     public SiegeService siegeService() {
-        return SiegeService.getInstance();
+        return new SiegeService();
     }
 
     @Bean
     @Lazy
     public BaseService baseService() {
-        return BaseService.getInstance();
+        return new BaseService();
     }
 
     @Bean
