@@ -212,8 +212,14 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - `al_server_gs` has 98 tables.
   - `al_server_ls` has 10 tables.
 
-## Remaining Technical Debt
+## Remaining Tasks
 
-- Legacy singleton/provider bridges still exist around service startup and runtime access.
-- Login service startup still has large static initialization blocks; shutdown is guarded for partially initialized DAO/transport/service state, but finer-grained startup components would make failure cleanup easier to test.
-- Full protocol parity still needs client-side runtime validation after the structural migration.
+- [ ] Verify and commit the current game shutdown-hook Spring-instantiable slice, or revert it if focused tests expose a regression.
+- [ ] Continue reducing `GameLegacyServiceBridgeConfiguration` legacy singleton beans; refresh the exact `return Xxx.getInstance();` count before each slice.
+- [ ] Replace each reduced legacy bean with Spring-instantiable construction only when the constructor and initialization behavior are safe under lazy Spring ownership.
+- [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage and focused tests.
+- [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components with partial-startup cleanup coverage.
+- [ ] Run focused boot/runtime smoke checks after each larger startup slice, including login + game with temporary `aion.home`, Netty transport, and chat disabled by default.
+- [ ] Run chat-enabled smoke after chat-affecting slices to preserve optional chat startup and game-side chat connector behavior.
+- [ ] Validate full client protocol parity after the structural migration, covering login, character entry, game networking, chat-enabled mode, shutdown/restart requests, and representative gameplay flows.
+- [ ] Keep the migration status evidence current by appending focused test commands, smoke commands, and observed results for each committed slice.
