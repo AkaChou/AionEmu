@@ -31,9 +31,11 @@ public class GameThreadPoolGateway {
 
     private ThreadPoolManager threadPoolManager() {
         if (threadPoolManagerProvider == null) {
-            return runtimeBridge().threadPoolManager();
+            return GameThreadPoolServices.rememberThreadPoolManager(runtimeBridge().threadPoolManager());
         }
-        return threadPoolManagerProvider.getIfAvailable(() -> runtimeBridge().threadPoolManager());
+        return GameThreadPoolServices.rememberThreadPoolManager(
+            threadPoolManagerProvider.getIfAvailable(() -> runtimeBridge().threadPoolManager())
+        );
     }
 
     private GameCoreServicesRuntimeBridge runtimeBridge() {

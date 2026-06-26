@@ -6,7 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.utils.ThreadPoolManager;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
@@ -43,6 +46,15 @@ class GameThreadPoolLifecycleTest {
         } finally {
             ThreadPoolManager.setInstanceProvider(null);
         }
+    }
+
+    @Test
+    void gameCronRunnerUsesThreadPoolBridgeInsteadOfDirectSingleton() throws IOException {
+        String cronRunnerSource = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/utils/cron/ThreadPoolManagerRunnableRunner.java"));
+
+        assertFalse(cronRunnerSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(cronRunnerSource.contains("GameThreadPoolServices.threadPoolManager().execute(r)"));
+        assertTrue(cronRunnerSource.contains("GameThreadPoolServices.threadPoolManager().executeLongRunning(r)"));
     }
 
     @Test

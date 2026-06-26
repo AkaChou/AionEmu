@@ -8,12 +8,18 @@ import com.aionemu.loginserver.utils.ThreadPoolManager;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class LoginThreadPoolServicesTest {
+
+    @AfterEach
+    void resetThreadPoolBridge() {
+        LoginThreadPoolServices.resetForTests();
+    }
 
     @Test
     void usesSpringProviderBeforeLegacySingletonFallback() {
@@ -26,6 +32,27 @@ class LoginThreadPoolServicesTest {
             assertSame(threadPoolManager, LoginThreadPoolServices.threadPoolManager());
         } finally {
             services.destroy();
+        }
+    }
+
+    @Test
+    void keepsResolvedSpringThreadPoolAfterBridgeIsDestroyed() {
+        ThreadPoolManager threadPoolManager = instance(ThreadPoolManager.class);
+        LoginThreadPoolServices services = new LoginThreadPoolServices(
+            provider(ThreadPoolManager.class, threadPoolManager)
+        );
+
+        assertSame(threadPoolManager, LoginThreadPoolServices.threadPoolManager());
+
+        services.destroy();
+
+        ThreadPoolManager resolvedAfterDestroy = LoginThreadPoolServices.threadPoolManager();
+        try {
+            assertSame(threadPoolManager, resolvedAfterDestroy);
+        } finally {
+            if (resolvedAfterDestroy != threadPoolManager) {
+                resolvedAfterDestroy.shutdown();
+            }
         }
     }
 
