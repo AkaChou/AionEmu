@@ -27,6 +27,7 @@ import java.util.concurrent.CountDownLatch;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
 import com.aionemu.commons.scripting.classlistener.OnClassLoadUnloadListener;
@@ -67,6 +68,7 @@ import javolution.util.FastMap;
  */
 public final class ZoneService implements GameEngine {
 
+	private static volatile ObjectProvider<ZoneService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(ZoneService.class);
 	private TIntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
 	private final Map<ZoneName, Class<? extends ZoneHandler>> handlers = new HashMap<ZoneName, Class<? extends ZoneHandler>>();
@@ -78,7 +80,15 @@ public final class ZoneService implements GameEngine {
 	}
 
 	public static ZoneService getInstance() {
+		ObjectProvider<ZoneService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<ZoneService> provider) {
+		instanceProvider = provider;
 	}
 
 	@SuppressWarnings("synthetic-access")

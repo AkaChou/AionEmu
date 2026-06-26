@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services.teleport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
@@ -38,10 +39,19 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
  */
 public class HotspotTeleportService {
 
+	private static volatile ObjectProvider<HotspotTeleportService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(HotspotTeleportService.class);
 
 	public static HotspotTeleportService getInstance() {
+		ObjectProvider<HotspotTeleportService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<HotspotTeleportService> provider) {
+		instanceProvider = provider;
 	}
 
 	public HotspotTeleportService() {

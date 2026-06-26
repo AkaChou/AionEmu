@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.road.Road;
@@ -28,6 +29,7 @@ import com.aionemu.gameserver.model.templates.road.RoadTemplate;
  */
 public class RoadService {
 
+	private static volatile ObjectProvider<RoadService> instanceProvider;
 	Logger log = LoggerFactory.getLogger(RoadService.class);
 
 	private static class SingletonHolder {
@@ -36,7 +38,15 @@ public class RoadService {
 	}
 
 	public static final RoadService getInstance() {
+		ObjectProvider<RoadService> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.instance);
+		}
 		return SingletonHolder.instance;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<RoadService> provider) {
+		instanceProvider = provider;
 	}
 
 	public RoadService() {

@@ -157,7 +157,8 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 - [x] Made event-bootstrap services including Luna shop, minion, Shugo Sweep, Atreian Passport, and Event Window static compatibility accessors route through Spring providers before legacy fallbacks.
 - [x] Made game engines and handlers including `QuestEngine`, `InstanceEngine`, `AI2Engine`, and `ChatProcessor` static compatibility accessors route through Spring providers before legacy fallbacks.
 - [x] Made event-runtime and core services including `HTMLCache`, `EventService`, `PlayerEventService`, `CrazyDaevaService`, `AbyssRankUpdateService`, and `PacketBroadcaster` static compatibility accessors route through Spring providers before legacy fallbacks.
-- [x] Made safe housing support services `TownService` and `ChallengeTaskService` static compatibility accessors route through Spring providers before legacy fallbacks while keeping `HousingBidService` and `MaintenanceTask` static fallbacks untouched because their legacy static initialization reads cron configuration.
+- [x] Made housing services `HousingBidService`, `MaintenanceTask`, `TownService`, and `ChallengeTaskService` static compatibility accessors route through Spring providers before legacy fallbacks; `HousingBidService` and `MaintenanceTask` now create their cron-backed legacy instances lazily so provider registration does not trigger cron configuration parsing.
+- [x] Made maintenance and world-bootstrap services including `DatabaseCleaningService`, `AbyssRankCleaningService`, `ZoneService`, `HotspotTeleportService`, and `RoadService` static compatibility accessors route through Spring providers before legacy fallbacks; the cleaning services now create their legacy fallback instances lazily.
 - [x] Made 9 battlefield instance-entry services route static compatibility accessors through Spring providers before legacy fallbacks.
 - [x] Preserved embedded shutdown mode so login/chat/game restart requests reach the boot launcher as restart requests instead of plain shutdown.
 - [x] Tightened the embedded game shutdown fallback so it also closes the active game transport when the boot shutdown handler is unavailable.
@@ -256,6 +257,14 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: exit code 0 after the runtime, feature, event-bootstrap, engine, event-runtime, housing support, core, and battlefield provider batches.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameFeatureServicesRuntimeBridgeTest,GameRuntimeServiceBridgeTest,GameEventBootstrapRuntimeBridgeTest,GameEnginesRuntimeBridgeTest,GameEventRuntimeBridgeTest,GameHousingRuntimeBridgeTest,GameCoreServicesRuntimeBridgeTest,GameBattlefieldRuntimeBridgeTest test`
   - Result: exit code 0.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameHousingRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after making `HousingBidService` and `MaintenanceTask` legacy instances lazy and provider-aware.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -Dtest=GameServiceProviderCompatibilityTest,GameMaintenanceServicesRuntimeBridgeTest,GameWorldBootstrapRuntimeBridgeTest,GameHousingRuntimeBridgeTest,GameLegacyServiceBridgeConfigurationTest test`
+  - Result: exit code 0 after adding provider compatibility for maintenance and world-bootstrap services.
+- Spring migration residual scans after the provider batches:
+  - `GameLegacyServiceBridgeConfiguration` / login / chat bridge configurations contain no `return Xxx.getInstance();` bean factories.
+  - Production and test sources contain no Guice dependency usage except tests that assert `pom.xml` and production sources stay free of `com.google.inject`.
+  - `legacy-nio` remains only in documentation and tests that verify `LEGACY_NIO` is rejected as an unsupported transport mode.
 - Default Netty + chat-disabled Spring Boot smoke:
   - Command shape: `rtk proxy sh -c 'JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q -DskipTests spring-boot:run -Dspring-boot.run.jvmArguments="-Daion.home=$home" -Dspring-boot.run.arguments="--aion.services.chat.enabled=false --aion.services.transport.mode=netty --aion.game.startup.progress.enabled=false --aion.legacy.game.property.gameserver.geodata.enable=false --aion.legacy.game.property.gameserver.geo.npc.move=false --aion.legacy.game.property.gameserver.geo.npc.aggro=false"'`.
   - Result: reached `=== Server initialization COMPLETE ===`.
@@ -270,6 +279,14 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
   - Result: exit code 0.
 - `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
   - Result: exit code 0 after the provider-compatibility batch.
+- `rtk env JAVA_HOME=$(/usr/libexec/java_home -v 25) mvn -q test`
+  - Result: exit code 0 after the housing cron fix and maintenance/world-bootstrap provider batch.
+- Final default Netty + chat-disabled Spring Boot smoke after the housing cron fix and provider batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-final-log.f2OXoD`; temp home: `/tmp/aion-boot-smoke-final.WQhYIN`.
+- Final chat-enabled Netty Spring Boot smoke after the housing cron fix and provider batch:
+  - Result: reached `=== Server initialization COMPLETE ===`.
+  - Evidence log: `/tmp/aion-boot-smoke-final-chat-log.c7kDUf`; temp home: `/tmp/aion-boot-smoke-final-chat.KLVgla`.
 - Default Netty + chat-disabled Spring Boot smoke after the provider-compatibility batch:
   - Result: reached `=== Server initialization COMPLETE ===`.
   - Evidence log: `/tmp/aion-boot-smoke-log.aVp2Kn`; temp home: `/tmp/aion-boot-smoke.znCZ2F`.
@@ -285,7 +302,6 @@ Initialization SQL now lives under `src/main/resources/db/mysql/`.
 ## Remaining Tasks
 
 - [ ] Confirm `GameLegacyServiceBridgeConfiguration` stays free of `return Xxx.getInstance();` bridge beans during subsequent migration slices.
-- [ ] Keep `HousingBidService` and `MaintenanceTask` static fallbacks untouched until their legacy static cron-configuration initialization can be removed or made lazy.
 - [ ] Replace each remaining legacy bean with Spring-instantiable construction only when the constructor and initialization behavior are safe under lazy Spring ownership.
 - [ ] Keep legacy singleton accessors as fallback compatibility paths until the corresponding startup/runtime path has Spring-provider coverage.
 - [ ] Break up the large login service startup static initialization path into finer-grained Spring-managed components.

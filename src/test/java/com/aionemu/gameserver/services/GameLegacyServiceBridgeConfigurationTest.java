@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -188,6 +189,14 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertLazy(context.getBeanFactory(), "townService");
             assertLazy(context.getBeanFactory(), "challengeTaskService");
         }
+    }
+
+    @Test
+    void housingBidServiceReadsRegisterEndCronFromCurrentHousingConfig() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/HousingBidService.java"));
+
+        assertFalse(source.contains("static final String registerEndExpression = HousingConfig.HOUSE_REGISTER_END"));
+        assertTrue(source.contains("new CronExpression(HousingConfig.HOUSE_REGISTER_END)"));
     }
 
     @Test
