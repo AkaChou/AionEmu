@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -37,7 +40,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 public class ProtectorConquerorService {
@@ -239,7 +241,7 @@ public class ProtectorConquerorService {
 		}
 		if (!isEnemyWorld(player)) { // Protector.
 			Protector info = player.getProtectorInfo();
-			FastList<Player> kill = new FastList<Player>();
+			List<Player> kill = new ArrayList<Player>();
 			FastMap<Integer, Player> guards = getWorldProtector(worldId);
 			kill.addAll(guards.values());
 			guards.remove(player.getObjectId());
@@ -255,7 +257,7 @@ public class ProtectorConquerorService {
 			}
 		} else if (isEnemyWorld(player)) { // Conqueror.
 			Conqueror info = player.getConquerorInfo();
-			FastList<Player> kill = new FastList<Player>();
+			List<Player> kill = new ArrayList<Player>();
 			FastMap<Integer, Player> killers = getWorldConqueror(worldId);
 			kill.addAll(killers.values());
 			killers.remove(player.getObjectId());

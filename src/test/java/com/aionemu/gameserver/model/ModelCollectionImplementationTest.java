@@ -111,6 +111,34 @@ class ModelCollectionImplementationTest {
 				"new FastList<DisassembleItem>()");
 	}
 
+	@Test
+	void commandTemporaryListsUseJdkLists() throws Exception {
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/commands/player/GiveStigma.java",
+				"FastList<");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/commands/player/GiveStigma.java",
+				"FastList.Node");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/commands/admin/SpawnAssembledNpc.java",
+				"FastList<AssembledNpcPart>");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/commands/admin/LegionCommand.java",
+				"FastList<String>");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/commands/admin/LegionCommand.java",
+				"FastList.recycle");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/services/siegeservice/BalaurAssaultService.java",
+				"FastList<AssembledNpcPart>");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/services/ProtectorConquerorService.java",
+				"FastList<Player> kill");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/network/loginserver/serverpackets/SM_PTRANSFER_CONTROL.java",
+				"FastList<QuestState>");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/network/loginserver/serverpackets/SM_PTRANSFER_CONTROL.java",
+				"FastList.recycle(quests)");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/services/transfers/CMT_CHARACTER_INFORMATION.java",
+				"FastList<String> itemOut");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/services/transfers/CMT_CHARACTER_INFORMATION.java",
+				"FastList<int[]> manastones");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/services/transfers/CMT_CHARACTER_INFORMATION.java",
+				"FastList.recycle(itemOut)");
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();
