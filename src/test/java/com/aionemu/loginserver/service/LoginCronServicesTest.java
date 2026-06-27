@@ -22,7 +22,9 @@ class LoginCronServicesTest {
         assertTrue(startupBridgeSource.contains("LoginCronServices.initialize()"));
         assertTrue(shutdownSource.contains("LoginCronServices.shutdownIfInitialized()"));
         assertTrue(servicesSource.contains("CronService.initSingleton(ThreadPoolManagerRunnableRunner.class)"));
+        assertTrue(servicesSource.contains("resolvedCronService = CronService.getInstance()"));
+        assertTrue(servicesSource.contains("CronService cronService = resolvedCronService"));
         assertTrue(servicesSource.contains("CronService.isInitialized()"));
-        assertTrue(servicesSource.contains("CronService.getInstance().shutdown()"));
+        assertFalse(servicesSource.contains("CronService.getInstance().shutdown()"));
     }
 }
