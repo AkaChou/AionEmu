@@ -1070,18 +1070,27 @@ class GameServiceProviderCompatibilityTest {
 
     @Test
     void gameHousingServicesRegistersAndClearsHousingProvider() throws Exception {
+        HousingBidService housingBidService = instance(HousingBidService.class);
+        MaintenanceTask maintenanceTask = instance(MaintenanceTask.class);
+        TownService townService = instance(TownService.class);
         HousingService housingService = instance(HousingService.class);
         GameHousingServices housingServices = new GameHousingServices(
-                provider(HousingBidService.class, instance(HousingBidService.class)),
-                provider(MaintenanceTask.class, instance(MaintenanceTask.class)),
-                provider(TownService.class, instance(TownService.class)),
+                provider(HousingBidService.class, housingBidService),
+                provider(MaintenanceTask.class, maintenanceTask),
+                provider(TownService.class, townService),
                 provider(HousingService.class, housingService),
                 provider(ChallengeTaskService.class, instance(ChallengeTaskService.class)));
 
         try {
+            assertSame(housingBidService, GameHousingServices.housingBidService());
+            assertSame(maintenanceTask, GameHousingServices.maintenanceTask());
+            assertSame(townService, GameHousingServices.townService());
             assertSame(housingService, GameHousingServices.housingService());
         } finally {
             housingServices.destroy();
+            assertProviderCleared(HousingBidService.class);
+            assertProviderCleared(MaintenanceTask.class);
+            assertProviderCleared(TownService.class);
             assertProviderCleared(HousingService.class);
         }
     }
