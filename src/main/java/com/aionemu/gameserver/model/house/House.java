@@ -69,7 +69,6 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
-import com.aionemu.gameserver.world.zone.ZoneService;
 
 public class House extends VisibleObject {
 	private static final Logger log = LoggerFactory.getLogger(House.class);
@@ -174,7 +173,7 @@ public class House extends VisibleObject {
 		}
 		List<HouseSpawn> templates = DataManager.HOUSE_NPCS_DATA.getSpawnsByAddress(getAddress().getId());
 		if (templates == null) {
-			Collection<ZoneInstance> zones = ZoneService.getInstance()
+			Collection<ZoneInstance> zones = GameWorldBootstrapServices.zoneService()
 					.getZoneInstancesByWorldId(getAddress().getMapId()).values();
 			String msg = null;
 			for (ZoneInstance zone : zones) {

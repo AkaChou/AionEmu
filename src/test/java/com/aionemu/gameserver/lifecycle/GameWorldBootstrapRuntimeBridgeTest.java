@@ -59,9 +59,10 @@ class GameWorldBootstrapRuntimeBridgeTest {
     @Test
     void worldBootstrapServicesIdFactoryAccessorUsesSpringProviderBeforeLegacyFallback() {
         IDFactory idFactory = instance(IDFactory.class);
+        ZoneService zoneService = instance(ZoneService.class);
         GameWorldBootstrapServices worldBootstrapServices = new GameWorldBootstrapServices(
             provider(IDFactory.class, idFactory),
-            provider(ZoneService.class, instance(ZoneService.class)),
+            provider(ZoneService.class, zoneService),
             provider(HotspotTeleportService.class, instance(HotspotTeleportService.class)),
             provider(RoadService.class, instance(RoadService.class)),
             provider(World.class, instance(World.class))
@@ -69,6 +70,7 @@ class GameWorldBootstrapRuntimeBridgeTest {
 
         try {
             assertSame(idFactory, GameWorldBootstrapServices.idFactory());
+            assertSame(zoneService, GameWorldBootstrapServices.zoneService());
         } finally {
             worldBootstrapServices.destroy();
         }
@@ -80,7 +82,9 @@ class GameWorldBootstrapRuntimeBridgeTest {
         try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
             sources = stream
                 .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("world/zone/ZoneService.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldBootstrapFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldBootstrapServices.java")))
                 .toList();
         }
 
@@ -88,6 +92,7 @@ class GameWorldBootstrapRuntimeBridgeTest {
             String content = Files.readString(source);
 
             assertFalse(content.contains("IDFactory.getInstance()"), source.toString());
+            assertFalse(content.contains("ZoneService.getInstance()"), source.toString());
         }
     }
 

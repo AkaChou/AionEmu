@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.world;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +53,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.RegionZone;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import com.aionemu.gameserver.world.zone.ZoneService;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ public abstract class WorldMapInstance {
 	public WorldMapInstance(WorldMap parent, int instanceId) {
 		this.parent = parent;
 		this.instanceId = instanceId;
-		this.zones = ZoneService.getInstance().getZoneInstancesByWorldId(parent.getMapId());
+		this.zones = GameWorldBootstrapServices.zoneService().getZoneInstancesByWorldId(parent.getMapId());
 		initMapRegions();
 	}
 

@@ -33,6 +33,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.bounding.BoundingVolume;
@@ -49,7 +50,6 @@ import com.aionemu.gameserver.geoEngine.scene.mesh.DoorGeometry;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import com.aionemu.gameserver.world.zone.ZoneService;
 
 /**
  * @author Mr. Poke
@@ -278,10 +278,10 @@ public class GeoWorldLoader {
 				// for override
 				zoneName += "_" + regionId;
 				node.setName(zoneName);
-				ZoneService.getInstance().createMaterialZoneTemplate(node, worldId, node.getMaterialId(), true);
+				GameWorldBootstrapServices.zoneService().createMaterialZoneTemplate(node, worldId, node.getMaterialId(), true);
 			} else {
 				node.setName(zoneName);
-				ZoneService.getInstance().createMaterialZoneTemplate(node, regionId, worldId, node.getMaterialId());
+				GameWorldBootstrapServices.zoneService().createMaterialZoneTemplate(node, regionId, worldId, node.getMaterialId());
 			}
 		}
 	}

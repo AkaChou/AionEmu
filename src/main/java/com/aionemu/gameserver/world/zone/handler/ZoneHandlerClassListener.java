@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.scripting.classlistener.ClassListener;
 import com.aionemu.commons.utils.ClassUtils;
 import com.aionemu.gameserver.instance.InstanceHandlerClassListener;
-import com.aionemu.gameserver.world.zone.ZoneService;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 /**
  * @author MrPoke
@@ -47,7 +47,7 @@ public class ZoneHandlerClassListener implements ClassListener {
 			if (ClassUtils.isSubclass(c, ZoneHandler.class)) {
 				Class<? extends ZoneHandler> tmp = (Class<? extends ZoneHandler>) c;
 				if (tmp != null) {
-					ZoneService.getInstance().addZoneHandlerClass(tmp);
+					GameWorldBootstrapServices.zoneService().addZoneHandlerClass(tmp);
 				}
 			}
 		}
