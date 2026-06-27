@@ -58,6 +58,15 @@ class GameThreadPoolLifecycleTest {
     }
 
     @Test
+    void gameThreadPoolBridgeUsesLocalFallbackInsteadOfDirectLegacySingleton() throws IOException {
+        String servicesSource = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameThreadPoolServices.java"));
+
+        assertFalse(servicesSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(servicesSource.contains("fallbackThreadPoolManager()"));
+        assertTrue(servicesSource.contains("new ThreadPoolManager()"));
+    }
+
+    @Test
     void startAndStopAreIdempotent() {
         AtomicInteger starts = new AtomicInteger();
         AtomicInteger stops = new AtomicInteger();

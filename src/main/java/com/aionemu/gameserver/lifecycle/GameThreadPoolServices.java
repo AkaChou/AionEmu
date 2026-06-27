@@ -23,9 +23,9 @@ public final class GameThreadPoolServices implements DisposableBean {
             if (resolved != null) {
                 return resolved;
             }
-            return rememberThreadPoolManager(ThreadPoolManager.getInstance());
+            return rememberThreadPoolManager(fallbackThreadPoolManager());
         }
-        return rememberThreadPoolManager(provider.getIfAvailable(ThreadPoolManager::getInstance));
+        return rememberThreadPoolManager(provider.getIfAvailable(GameThreadPoolServices::fallbackThreadPoolManager));
     }
 
     static ThreadPoolManager rememberThreadPoolManager(ThreadPoolManager threadPoolManager) {
@@ -37,5 +37,14 @@ public final class GameThreadPoolServices implements DisposableBean {
     public void destroy() {
         threadPoolManagerProvider = null;
         ThreadPoolManager.setInstanceProvider(null);
+    }
+
+    private static ThreadPoolManager fallbackThreadPoolManager() {
+        return Fallbacks.THREAD_POOL_MANAGER;
+    }
+
+    private static final class Fallbacks {
+
+        private static final ThreadPoolManager THREAD_POOL_MANAGER = new ThreadPoolManager();
     }
 }
