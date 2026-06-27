@@ -30,6 +30,7 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Letter;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -242,7 +243,7 @@ public class SystemMailService {
 
 	public static void sendTemplateRewardMail(final int templateId, final PlayerCommonData playerData) {
 		final MailRewardTemplate reward = DataManager.MAIL_REWARD.getMailReward(templateId);
-		SystemMailService.getInstance().sendMail(reward.getSender(), playerData.getName(), reward.getTitle(),
+		GameFeatureServices.systemMailService().sendMail(reward.getSender(), playerData.getName(), reward.getTitle(),
 				reward.getBody() + "\\n\\n" + reward.getTail(), reward.getItemId(), reward.getItemCount(),
 				reward.getKinahCount(), reward.getApCount(), LetterType.NORMAL);
 	}
