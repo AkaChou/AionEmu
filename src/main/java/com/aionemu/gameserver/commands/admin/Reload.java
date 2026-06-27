@@ -140,7 +140,7 @@ public class Reload extends AdminCommand {
 			}
 		}
 		else if (params[0].equals("commands")) {
-			ChatProcessor.getInstance().reload();
+			GameEngineServices.chatProcessor().reload();
 			PacketSendUtility.sendMessage(admin, "Admin commands successfully reloaded!");
 		}
 		else if (params[0].equals("config")) {

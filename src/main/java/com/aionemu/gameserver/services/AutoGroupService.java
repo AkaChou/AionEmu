@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -812,7 +814,7 @@ public class AutoGroupService {
 		WorldMapInstance worldMapInstance = WorldMapInstanceFactory.createWorldMapInstance(map, nextInstanceId);
 		map.addInstance(nextInstanceId, worldMapInstance);
 		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), difficultId);
-		InstanceEngine.getInstance().onInstanceCreate(worldMapInstance);
+		GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
 		return worldMapInstance;
 	}
 

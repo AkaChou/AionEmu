@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.lang.reflect.Modifier;
 
 import org.slf4j.Logger;
@@ -44,7 +46,7 @@ public class AI2HandlerClassListener implements ClassListener {
 			if (ClassUtils.isSubclass(c, AbstractAI.class)) {
 				Class<? extends AbstractAI> tmp = (Class<? extends AbstractAI>) c;
 				if (tmp != null) {
-					AI2Engine.getInstance().registerAI(tmp);
+					GameEngineServices.ai2Engine().registerAI(tmp);
 				}
 			}
 		}

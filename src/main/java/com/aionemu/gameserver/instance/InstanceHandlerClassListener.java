@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.lang.reflect.Modifier;
 
 import org.slf4j.Logger;
@@ -45,7 +47,7 @@ public class InstanceHandlerClassListener implements ClassListener {
 			if (ClassUtils.isSubclass(c, InstanceHandler.class)) {
 				Class<? extends InstanceHandler> tmp = (Class<? extends InstanceHandler>) c;
 				if (tmp != null) {
-					InstanceEngine.getInstance().addInstanceHandlerClass(tmp);
+					GameEngineServices.instanceEngine().addInstanceHandlerClass(tmp);
 				}
 			}
 		}

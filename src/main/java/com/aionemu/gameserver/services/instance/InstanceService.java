@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -86,7 +88,7 @@ public class InstanceService {
 				ownerId);
 		map.addInstance(nextInstanceId, worldMapInstance);
 		SpawnEngine.spawnInstance(worldId, worldMapInstance.getInstanceId(), (byte) 0, ownerId);
-		InstanceEngine.getInstance().onInstanceCreate(worldMapInstance);
+		GameEngineServices.instanceEngine().onInstanceCreate(worldMapInstance);
 		if (map.isInstanceType()) {
 			startInstanceChecker(worldMapInstance);
 		}

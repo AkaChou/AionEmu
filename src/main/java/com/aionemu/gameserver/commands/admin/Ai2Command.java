@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.*;
 import com.aionemu.gameserver.ai2.event.AIEventLog;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -109,7 +111,7 @@ public class Ai2Command extends AdminCommand {
 		String param1 = params[1];
 		if (param0.equals("set")) {
 			String aiName = param1;
-			AI2Engine.getInstance().setupAI(aiName, npc);
+			GameEngineServices.ai2Engine().setupAI(aiName, npc);
 		}
 		else if (param0.equals("event")) {
 			AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());

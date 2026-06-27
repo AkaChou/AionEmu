@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Iterator;
@@ -97,12 +99,12 @@ public class Npc extends Creature {
 		if (spawnTemplate.getModel() != null) {
 			if (spawnTemplate.getModel().getAi() != null) {
 				aiOverride = true;
-				AI2Engine.getInstance().setupAI(spawnTemplate.getModel().getAi(), this);
+				GameEngineServices.ai2Engine().setupAI(spawnTemplate.getModel().getAi(), this);
 			}
 		}
 
 		if (!aiOverride) {
-			AI2Engine.getInstance().setupAI(objectTemplate.getAi(), this);
+			GameEngineServices.ai2Engine().setupAI(objectTemplate.getAi(), this);
 		}
 		lastShoutedSeconds = System.currentTimeMillis() / 1000;
 	}

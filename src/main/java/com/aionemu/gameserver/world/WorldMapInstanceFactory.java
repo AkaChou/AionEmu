@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.world;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.instance.handlers.InstanceHandler;
 
@@ -37,7 +39,7 @@ public class WorldMapInstanceFactory {
 		} else {
 			worldMapInstance = new WorldMap2DInstance(parent, instanceId, ownerId);
 		}
-		InstanceHandler instanceHandler = InstanceEngine.getInstance().getNewInstanceHandler(parent.getMapId());
+		InstanceHandler instanceHandler = GameEngineServices.instanceEngine().getNewInstanceHandler(parent.getMapId());
 		worldMapInstance.setInstanceHandler(instanceHandler);
 		return worldMapInstance;
 	}

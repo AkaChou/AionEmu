@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -159,7 +161,7 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	public AI2 getAi2() {
-		return ai2 != null ? ai2 : AI2Engine.getInstance().setupAI("dummy", this);
+		return ai2 != null ? ai2 : GameEngineServices.ai2Engine().setupAI("dummy", this);
 	}
 
 	public void setAi2(AI2 ai2) {

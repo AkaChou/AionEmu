@@ -152,6 +152,29 @@ class GameEnginesRuntimeBridgeTest {
         }
     }
 
+    @Test
+    void gameServerCodeUsesEngineRuntimeBridgeInsteadOfDirectSingletons() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("instance/InstanceEngine.java")))
+                .filter(path -> !path.endsWith(Path.of("ai2/AI2Engine.java")))
+                .filter(path -> !path.endsWith(Path.of("utils/chathandlers/ChatProcessor.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEngineServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEngineServiceFallbacks.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("InstanceEngine.getInstance()"), source.toString());
+            assertFalse(content.contains("AI2Engine.getInstance()"), source.toString());
+            assertFalse(content.contains("ChatProcessor.getInstance()"), source.toString());
+        }
+    }
+
     private <T> T instance(Class<T> type) {
         return objenesis.newInstance(type);
     }

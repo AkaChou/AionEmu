@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
@@ -49,7 +51,7 @@ public class CM_CHAT_MESSAGE_PUBLIC extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		final Player player = getConnection().getActivePlayer();
-		if (ChatProcessor.getInstance().handleChatCommand(player, message)) {
+		if (GameEngineServices.chatProcessor().handleChatCommand(player, message)) {
 			return;
 		}
 		message = NameRestrictionService.filterMessage(message);

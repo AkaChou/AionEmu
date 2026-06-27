@@ -5,6 +5,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.controllers.observer.MathObjectObserver;
@@ -65,7 +67,7 @@ public class MathController extends VisibleObjectController<MathObject> {
 	 * (Npc)SpawnEngine.spawnObject(template, instanceId); if (randomWalk > 0) { if
 	 * (master.getObjectTemplate().getStatsTemplate().getWalkSpeed() == 0.0f) { //
 	 * empty if block } WalkManager.startWalking((NpcAI2)master.getAi2()); } if (ai
-	 * != null) { AI2Engine.getInstance().setupAI(ai, (Creature)master);
+	 * != null) { GameEngineServices.ai2Engine().setupAI(ai, (Creature)master);
 	 * ((NpcAI2)master.getAi2()).setStateIfNot(AIState.IDLE); }
 	 * ((MathObject)this.getOwner()).setMaster(master); return
 	 * ((MathObject)this.getOwner()).getMaster(); }
