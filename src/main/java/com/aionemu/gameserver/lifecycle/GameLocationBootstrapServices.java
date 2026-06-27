@@ -29,6 +29,8 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameLocationBootstrapServices implements DisposableBean {
 
+    private static volatile ObjectProvider<AbyssLandingService> abyssLandingServiceProvider;
+
     public GameLocationBootstrapServices(ObjectProvider<VortexService> vortexServiceProvider,
             ObjectProvider<BeritraService> beritraServiceProvider, ObjectProvider<AgentService> agentServiceProvider,
             ObjectProvider<AnohaService> anohaServiceProvider, ObjectProvider<SvsService> svsServiceProvider,
@@ -65,9 +67,18 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         ConquestService.setInstanceProvider(conquestServiceProvider);
         IdianDepthsService.setInstanceProvider(idianDepthsServiceProvider);
         TowerOfEternityService.setInstanceProvider(towerOfEternityServiceProvider);
+        GameLocationBootstrapServices.abyssLandingServiceProvider = abyssLandingServiceProvider;
         AbyssLandingService.setInstanceProvider(abyssLandingServiceProvider);
         LandingUpdateService.setInstanceProvider(landingUpdateServiceProvider);
         AbyssLandingSpecialService.setInstanceProvider(abyssLandingSpecialServiceProvider);
+    }
+
+    public static AbyssLandingService abyssLandingService() {
+        ObjectProvider<AbyssLandingService> provider = abyssLandingServiceProvider;
+        if (provider == null) {
+            return AbyssLandingService.getInstance();
+        }
+        return provider.getIfAvailable(AbyssLandingService::getInstance);
     }
 
     @Override
@@ -91,6 +102,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         ConquestService.setInstanceProvider(null);
         IdianDepthsService.setInstanceProvider(null);
         TowerOfEternityService.setInstanceProvider(null);
+        abyssLandingServiceProvider = null;
         AbyssLandingService.setInstanceProvider(null);
         LandingUpdateService.setInstanceProvider(null);
         AbyssLandingSpecialService.setInstanceProvider(null);

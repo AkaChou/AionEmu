@@ -17,14 +17,20 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.gameserver.services.AnnouncementService;
+import com.aionemu.gameserver.services.AbyssLandingService;
+import com.aionemu.gameserver.services.AgentService;
+import com.aionemu.gameserver.services.AnohaService;
 import com.aionemu.gameserver.services.AStationService;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.BaseService;
+import com.aionemu.gameserver.services.BeritraService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ChallengeTaskService;
+import com.aionemu.gameserver.services.ConquestService;
 import com.aionemu.gameserver.services.CuringZoneService;
 import com.aionemu.gameserver.services.DatabaseCleaningService;
 import com.aionemu.gameserver.services.DebugService;
+import com.aionemu.gameserver.services.DynamicRiftService;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.services.F2pService;
@@ -33,21 +39,33 @@ import com.aionemu.gameserver.services.GameTimeService;
 import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.HousingBidService;
+import com.aionemu.gameserver.services.IdianDepthsService;
+import com.aionemu.gameserver.services.InstanceRiftService;
+import com.aionemu.gameserver.services.IuService;
 import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.services.LimitedItemTradeService;
+import com.aionemu.gameserver.services.MoltenusService;
 import com.aionemu.gameserver.services.MotionLoggingService;
+import com.aionemu.gameserver.services.NightmareCircusService;
+import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.RepurchaseService;
+import com.aionemu.gameserver.services.RiftService;
+import com.aionemu.gameserver.services.RvrService;
 import com.aionemu.gameserver.services.SpringZoneService;
 import com.aionemu.gameserver.services.StaticDoorService;
+import com.aionemu.gameserver.services.SvsService;
 import com.aionemu.gameserver.services.SurveyService;
+import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.TownService;
+import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.services.WebshopService;
+import com.aionemu.gameserver.services.ZorshivDredgionService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.DisputeLandService;
 import com.aionemu.gameserver.services.NpcShoutsService;
@@ -894,6 +912,41 @@ class GameServiceProviderCompatibilityTest {
             ThievesGuildService.setInstanceProvider(null);
             BalaurAssaultService.setInstanceProvider(null);
             BattlefieldUnionService.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void gameLocationBootstrapServicesRegistersAndClearsAbyssLandingProvider() {
+        AbyssLandingService abyssLandingService = instance(AbyssLandingService.class);
+        GameLocationBootstrapServices locationServices = new GameLocationBootstrapServices(
+                provider(VortexService.class, instance(VortexService.class)),
+                provider(BeritraService.class, instance(BeritraService.class)),
+                provider(AgentService.class, instance(AgentService.class)),
+                provider(AnohaService.class, instance(AnohaService.class)),
+                provider(SvsService.class, instance(SvsService.class)),
+                provider(RvrService.class, instance(RvrService.class)),
+                provider(IuService.class, instance(IuService.class)),
+                provider(NightmareCircusService.class, instance(NightmareCircusService.class)),
+                provider(DynamicRiftService.class, instance(DynamicRiftService.class)),
+                provider(InstanceRiftService.class, instance(InstanceRiftService.class)),
+                provider(SiegeService.class, instance(SiegeService.class)),
+                provider(BaseService.class, instance(BaseService.class)),
+                provider(OutpostService.class, instance(OutpostService.class)),
+                provider(ZorshivDredgionService.class, instance(ZorshivDredgionService.class)),
+                provider(MoltenusService.class, instance(MoltenusService.class)),
+                provider(RiftService.class, instance(RiftService.class)),
+                provider(ConquestService.class, instance(ConquestService.class)),
+                provider(IdianDepthsService.class, instance(IdianDepthsService.class)),
+                provider(TowerOfEternityService.class, instance(TowerOfEternityService.class)),
+                provider(AbyssLandingService.class, abyssLandingService),
+                provider(LandingUpdateService.class, instance(LandingUpdateService.class)),
+                provider(AbyssLandingSpecialService.class, instance(AbyssLandingSpecialService.class)));
+
+        try {
+            assertSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
+        } finally {
+            locationServices.destroy();
+            assertNotSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
         }
     }
 
