@@ -21,6 +21,7 @@ import java.util.Collections;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABNORMAL_STATE;
@@ -29,7 +30,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
-import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -68,7 +68,7 @@ public class PlayerEffectController extends EffectController {
 		if (!effect.isPassive()) {
 			updatePlayerEffectIcons();
 			if (getOwner().isInTeam()) {
-				TeamEffectUpdater.getInstance().startTask(getOwner());
+				GameTaskManagerServices.teamEffectUpdater().startTask(getOwner());
 			}
 		}
 	}

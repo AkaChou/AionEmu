@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.model.stats.container;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
@@ -30,7 +31,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_STATUPDATE_HP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATUPDATE_MP;
 import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster.BroadcastMode;
-import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -87,7 +87,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 
 	private void sendGroupPacketUpdate() {
 		if (owner.isInTeam()) {
-			TeamEffectUpdater.getInstance().startTask(owner);
+			GameTaskManagerServices.teamEffectUpdater().startTask(owner);
 		}
 	}
 

@@ -762,8 +762,11 @@ class GameServiceProviderCompatibilityTest {
             assertSame(expireTimerTask, ExpireTimerTask.getInstance());
             assertSame(expireTimerTask, GameTaskManagerServices.expireTimerTask());
             assertSame(teamEffectUpdater, TeamEffectUpdater.getInstance());
+            assertSame(teamEffectUpdater, GameTaskManagerServices.teamEffectUpdater());
             assertSame(teamMoveUpdater, TeamMoveUpdater.getInstance());
+            assertSame(teamMoveUpdater, GameTaskManagerServices.teamMoveUpdater());
             assertSame(temporaryTradeTimeTask, TemporaryTradeTimeTask.getInstance());
+            assertSame(temporaryTradeTimeTask, GameTaskManagerServices.temporaryTradeTimeTask());
 
             taskManagerServices.destroy();
             taskManagerServices = null;

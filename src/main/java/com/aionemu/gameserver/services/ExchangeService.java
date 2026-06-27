@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,6 @@ import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
-import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
@@ -176,7 +176,7 @@ public class ExchangeService {
 		if (partner == null) {
 			return;
 		}
-		if (!TemporaryTradeTimeTask.getInstance().canTrade(item, partner.getObjectId())) {
+		if (!GameTaskManagerServices.temporaryTradeTimeTask().canTrade(item, partner.getObjectId())) {
 			if (!item.isTradeable(activePlayer)) {
 				return;
 			}

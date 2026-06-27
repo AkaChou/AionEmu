@@ -20,6 +20,8 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -1009,7 +1011,7 @@ public class PlayerController extends CreatureController<Player> {
 		SkillLearnService.addNewSkills(player);
 		PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getBasicSkills()));
 		if (player.isInTeam()) {
-			TeamEffectUpdater.getInstance().startTask(player);
+			GameTaskManagerServices.teamEffectUpdater().startTask(player);
 		}
 		if (player.isLegionMember()) {
 			GameCoreGameplayServices.legionService().updateMemberInfo(player);

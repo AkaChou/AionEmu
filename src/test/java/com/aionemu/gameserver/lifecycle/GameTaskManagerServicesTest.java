@@ -27,4 +27,26 @@ class GameTaskManagerServicesTest {
             assertFalse(content.contains("ExpireTimerTask.getInstance()"), source.toString());
         }
     }
+
+    @Test
+    void gameServerCodeUsesTaskManagerBridgeInsteadOfDirectSingletons() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("taskmanager/tasks/TeamEffectUpdater.java")))
+                .filter(path -> !path.endsWith(Path.of("taskmanager/tasks/TeamMoveUpdater.java")))
+                .filter(path -> !path.endsWith(Path.of("taskmanager/tasks/TemporaryTradeTimeTask.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameTaskManagerServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("TeamEffectUpdater.getInstance()"), source.toString());
+            assertFalse(content.contains("TeamMoveUpdater.getInstance()"), source.toString());
+            assertFalse(content.contains("TemporaryTradeTimeTask.getInstance()"), source.toString());
+        }
+    }
 }

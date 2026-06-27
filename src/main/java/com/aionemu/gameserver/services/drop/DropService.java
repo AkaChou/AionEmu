@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
@@ -60,7 +61,6 @@ import com.aionemu.gameserver.services.RespawnService;
 import com.aionemu.gameserver.services.item.ItemInfoService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.item.ItemService.ItemUpdatePredicate;
-import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -637,7 +637,7 @@ public class DropService {
 				if (template.getTempExchangeTime() != 0) {
 					input.setTemporaryExchangeTime(
 							(int) (System.currentTimeMillis() / 1000) + (template.getTempExchangeTime() * 60));
-					TemporaryTradeTimeTask.getInstance().addTask(input, dropNpc.getPlayersObjectId());
+					GameTaskManagerServices.temporaryTradeTimeTask().addTask(input, dropNpc.getPlayersObjectId());
 				}
 				return true;
 			}
