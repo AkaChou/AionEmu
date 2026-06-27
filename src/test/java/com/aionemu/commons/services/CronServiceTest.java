@@ -3,8 +3,10 @@ package com.aionemu.commons.services;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.commons.services.cron.CronServiceException;
 import com.aionemu.commons.services.cron.RunnableRunner;
 import org.junit.jupiter.api.Test;
 
@@ -53,6 +55,20 @@ class CronServiceTest {
             assertTrue(CronService.shutdownCurrentIfInitialized());
             assertFalse(CronService.isInitialized());
             assertFalse(CronService.shutdownCurrentIfInitialized());
+        }
+    }
+
+    @Test
+    void requireCurrentReturnsInitializedServiceOrThrows() {
+        String context = "cron-current-test-" + System.nanoTime();
+
+        try (ServiceContext.Scope ignored = ServiceContext.use(context)) {
+            assertThrows(CronServiceException.class, CronService::requireCurrent);
+
+            CronService cronService = CronService.initSingleton(TestRunnableRunner.class);
+
+            assertSame(cronService, CronService.requireCurrent());
+            cronService.shutdown();
         }
     }
 

@@ -68,6 +68,14 @@ public final class CronService {
         return instances.get(ServiceContext.current());
     }
 
+    public static CronService requireCurrent() {
+      CronService cronService = instances.get(ServiceContext.current());
+      if (cronService == null) {
+         throw new CronServiceException("CronService is not initialized");
+      }
+      return cronService;
+   }
+
     public static boolean isInitialized() {
         return instances.containsKey(ServiceContext.current());
     }

@@ -17,6 +17,8 @@ class ScheduledTaskClassListenerTest {
         ));
 
         assertTrue(source.contains("CronService cronService = getCronService();"));
+        assertTrue(source.contains("return CronService.requireCurrent();"));
+        assertFalse(source.contains("CronService.getInstance()"));
         assertFalse(source.contains("getCronService().schedule"));
         assertFalse(source.contains("getCronService().getRunnables()"));
         assertFalse(source.contains("getCronService().cancel"));

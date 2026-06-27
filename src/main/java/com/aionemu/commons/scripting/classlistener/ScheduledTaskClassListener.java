@@ -162,11 +162,6 @@ public class ScheduledTaskClassListener implements ClassListener {
      * @return CronService实例 / CronService instance
      */
     protected CronService getCronService() {
-		CronService cronService = CronService.getInstance();
-		if (cronService == null) {
-			throw new RuntimeException("CronService is not initialized");
-		}
-		
-		return cronService;
+		return CronService.requireCurrent();
 	}
 }
