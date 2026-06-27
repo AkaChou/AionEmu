@@ -399,6 +399,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(asyunatarService, AsyunatarService.getInstance());
             assertSame(shugoImperialTombSpawnManager, ShugoImperialTombSpawnManager.getInstance());
             assertSame(seasonRankingUpdateService, SeasonRankingUpdateService.getInstance());
+            assertSame(seasonRankingUpdateService, GameMaintenanceServices.seasonRankingUpdateService());
             assertSame(periodicSaveService, PeriodicSaveService.getInstance());
             assertSame(adminService, AdminService.getInstance());
             assertSame(playerTransferService, PlayerTransferService.getInstance());

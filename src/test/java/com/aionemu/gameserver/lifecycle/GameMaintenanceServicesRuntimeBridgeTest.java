@@ -42,6 +42,22 @@ class GameMaintenanceServicesRuntimeBridgeTest {
         assertFalse(source.contains("SeasonRankingUpdateService.getInstance()"));
     }
 
+    @Test
+    void gameServerCodeUsesMaintenanceBridgeInsteadOfDirectSingleton() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            for (Path source : stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/ranking/SeasonRankingUpdateService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameMaintenanceServiceFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameMaintenanceServices.java")))
+                .toList()) {
+                String content = Files.readString(source);
+
+                assertFalse(content.contains("SeasonRankingUpdateService.getInstance()"), source.toString());
+            }
+        }
+    }
+
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
         return ObjectProvider.class.cast(Proxy.newProxyInstance(
             ObjectProvider.class.getClassLoader(),
