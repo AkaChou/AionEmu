@@ -34,7 +34,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_STAGE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
@@ -2038,7 +2038,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	
 	@Override
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -2049,143 +2049,143 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217756: //Worthiness Ticket Box (Fin Stage 1)
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 186000124, 1)); //Worthiness Ticket.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 186000124, 1)); //Worthiness Ticket.
 					}
 				}
 			break;
 			case 217737: //King Saam.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125001563, 1)); //Saam's Laurel.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123000768, 1)); //Golden Saam's Belt.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 115000674, 1)); //Golden Saam's Shield.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125001563, 1)); //Saam's Laurel.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123000768, 1)); //Golden Saam's Belt.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 115000674, 1)); //Golden Saam's Shield.
 				switch (Rnd.get(1, 4)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020070, 1)); //Centennial Golden Saam Egg.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020070, 1)); //Centennial Golden Saam Egg.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020071, 1)); //Ten-Thousand-Year-Old Golden Saam Egg.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020071, 1)); //Ten-Thousand-Year-Old Golden Saam Egg.
 				    break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020180, 1)); //Golden Pack Saam.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020180, 1)); //Golden Pack Saam.
 				    break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170170031, 1)); //[Souvenir] Centennial Golden Saam Statue.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170170031, 1)); //[Souvenir] Centennial Golden Saam Statue.
 				    break;
 				}
 			break;
 			case 217738: //Cut Saam.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162000107, 10)); //Saam King's Herbs.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162000107, 10)); //Saam King's Herbs.
 					}
 				}
 			break;
 			case 217740: //Seismik.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125002593, 1)); //Kagas's Hat.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000108, 5)); //Spirit Rune.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125002593, 1)); //Kagas's Hat.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000108, 5)); //Spirit Rune.
 			break;
 			case 217741: //Splashdown.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125002595, 1)); //Splashdown's Hat.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000108, 5)); //Spirit Rune.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125002595, 1)); //Splashdown's Hat.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000108, 5)); //Spirit Rune.
 			break;
 			case 217742: //Crematorux.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125002592, 1)); //Crematorux's Mask.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000108, 5)); //Spirit Rune.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125002592, 1)); //Crematorux's Mask.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000108, 5)); //Spirit Rune.
 			break;
 			case 217743: //Windlash.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125002594, 1)); //Windlash's Hat.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000108, 5)); //Spirit Rune.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125002594, 1)); //Windlash's Hat.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000108, 5)); //Spirit Rune.
 			break;
 			case 217750: //Administrator Arminos.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000109, 5)); //Soul Crystal.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000109, 5)); //Soul Crystal.
 				switch (Rnd.get(1, 13)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 102100723, 1)); //Arminos' Mirage Cipher-Blade.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 102100723, 1)); //Arminos' Mirage Cipher-Blade.
 					break;
 					case 2:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 101900830, 1)); //Arminos' Mirage Aethercannon.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 101900830, 1)); //Arminos' Mirage Aethercannon.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 101700911, 1)); //Arminos' Mirage Bow.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 101700911, 1)); //Arminos' Mirage Bow.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100201003, 1)); //Arminos' Mirage Dagger.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100201003, 1)); //Arminos' Mirage Dagger.
 					break;
 					case 5:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100900869, 1)); //Arminos' Mirage Greatsword.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100900869, 1)); //Arminos' Mirage Greatsword.
 					break;
 					case 6:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 102000864, 1)); //Arminos' Mirage Harp.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 102000864, 1)); //Arminos' Mirage Harp.
 					break;
 					case 7:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100100874, 1)); //Arminos' Mirage Mace.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100100874, 1)); //Arminos' Mirage Mace.
 					break;
 					case 8:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100500886, 1)); //Arminos' Mirage Orb.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100500886, 1)); //Arminos' Mirage Orb.
 					break;
 					case 9:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 101800826, 1)); //Arminos' Mirage Pistol.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 101800826, 1)); //Arminos' Mirage Pistol.
 					break;
 					case 10:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 101300836, 1)); //Arminos' Mirage Polearm.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 101300836, 1)); //Arminos' Mirage Polearm.
 					break;
 					case 11:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100600944, 1)); //Arminos' Mirage Spellbook.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100600944, 1)); //Arminos' Mirage Spellbook.
 					break;
 					case 12:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 101500895, 1)); //Arminos' Mirage Staff.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 101500895, 1)); //Arminos' Mirage Staff.
 					break;
 					case 13:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100001135, 1)); //Arminos' Mirage Sword.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100001135, 1)); //Arminos' Mirage Sword.
 					break;
 				}
 			break;
 			case 217759: //Empyrean Box.
 				switch (Rnd.get(1, 4)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020080, 1)); //Worg Of The Dead Egg.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020080, 1)); //Worg Of The Dead Egg.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190000020, 1)); //Button-Eye Mookie Egg.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190000020, 1)); //Button-Eye Mookie Egg.
 				    break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 168000130, 1)); //Godstone: Tiamat's Fury.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 168000130, 1)); //Godstone: Tiamat's Fury.
 				    break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 168000132, 1)); //Godstone: Vaizel's Vow.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 168000132, 1)); //Godstone: Vaizel's Vow.
 				    break;
 				}
 			break;
 			case 218783: //Ride Treasure Box.
 				switch (Rnd.get(1, 10)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100128, 1)); //Snowkissed Aetherboard.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100128, 1)); //Snowkissed Aetherboard.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100127, 1)); //Flamekissed Aetherboard.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100127, 1)); //Flamekissed Aetherboard.
 				    break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100115, 1)); //Palomeno Heorn.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100115, 1)); //Palomeno Heorn.
 				    break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100109, 1)); //Ruddytail Heorn.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100109, 1)); //Ruddytail Heorn.
 				    break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100101, 1)); //[Stick On] Sharptooth Cruiser.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100101, 1)); //[Stick On] Sharptooth Cruiser.
 				    break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100100, 1)); //[Stick On] Flying Pagati.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100100, 1)); //[Stick On] Flying Pagati.
 				    break;
 					case 7:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100099, 1)); //[Stick On] Quick Crestlich.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100099, 1)); //[Stick On] Quick Crestlich.
 				    break;
 					case 8:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100096, 1)); //[Event] Touring Pagati.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100096, 1)); //[Event] Touring Pagati.
 				    break;
 					case 9:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100015, 1)); //[Event] Stratowisp.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100015, 1)); //[Event] Stratowisp.
 				    break;
 					case 10:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190100018, 1)); //[Event] Cirruspeed.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190100018, 1)); //[Event] Cirruspeed.
 				    break;
 				}
 			break;

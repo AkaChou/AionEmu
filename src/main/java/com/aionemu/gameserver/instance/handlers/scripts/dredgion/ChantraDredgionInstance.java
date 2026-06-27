@@ -45,7 +45,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
@@ -101,16 +101,16 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 216886: //Captain Zanata.
 				for (Player player: instance.getPlayersInside()) {
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
@@ -129,28 +129,28 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 216888: //Quartermaster Bhati.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
 			case 216889: //Rajaya The Inquisitor.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 						switch (Rnd.get(1, 4)) {
 							case 1:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001097, 1)); //Rajaya's Belt.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001097, 1)); //Rajaya's Belt.
 							break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001117, 1)); //Rajaya's Earrings.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001117, 1)); //Rajaya's Earrings.
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123000941, 1)); //Rajaya's Corundum Necklace.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123000941, 1)); //Rajaya's Corundum Necklace.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001032, 1)); //Rajaya's Turquoise Necklace.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001032, 1)); //Rajaya's Turquoise Necklace.
 							break;
 						}
 					}
@@ -159,20 +159,20 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 216890: //Windfinder Kumar.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 						switch (Rnd.get(1, 4)) {
 							case 1:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001096, 1)); //Kumar's Belt.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001096, 1)); //Kumar's Belt.
 							break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001118, 1)); //Kumar's Earrings.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001118, 1)); //Kumar's Earrings.
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001266, 1)); //Kumar's Corundum Ring.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001266, 1)); //Kumar's Corundum Ring.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001267, 1)); //Kumar's Turquoise Ring.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001267, 1)); //Kumar's Turquoise Ring.
 							break;
 						}
 					}
@@ -184,11 +184,11 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			*/
 			case 217037: //Gatekeeper Sarta.
 				for (Player player: instance.getPlayersInside()) {
-				    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000105, 1)); //Captain's Cabin Passage Key.
-				    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
+				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000105, 1)); //Captain's Cabin Passage Key.
+				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;

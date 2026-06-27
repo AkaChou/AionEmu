@@ -22,7 +22,7 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.ArrayList;
@@ -48,30 +48,30 @@ public class ShadowCourtInstance extends GeneralInstanceHandler
     }
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 214347: //Unfest Guard Captain.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000014, 1)); //Arena Basement Level 3 Key 1.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000014, 1)); //Arena Basement Level 3 Key 1.
 		    break;
 			case 214349: //Dysceptic Karnif.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000011, 1)); //Arena Basement Level 2 Key 1.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000011, 1)); //Arena Basement Level 2 Key 1.
 		    break;
 			case 214351: //Dysceptic Taiga.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000012, 1)); //Arena Basement Level 2 Key 2.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000012, 1)); //Arena Basement Level 2 Key 2.
 		    break;
 			case 214353: //Bejeweled Mosbear.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000013, 1)); //Arena Basement Level 2 Key 3.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000013, 1)); //Arena Basement Level 2 Key 3.
 		    break;
 			case 214357: //Cleric Wraith.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000009, 1)); //Arena Basement Level 1 Key 2.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000009, 1)); //Arena Basement Level 1 Key 2.
 		    break;
 			case 214360: //Ranger Spirit.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000010, 1)); //Arena Basement Level 1 Key 3.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000010, 1)); //Arena Basement Level 1 Key 3.
 		    break;
 			case 214531: //Prison Guard.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000008, 1)); //Arena Basement Level 1 Key 1.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000008, 1)); //Arena Basement Level 1 Key 1.
 		    break;
 		}
 	}

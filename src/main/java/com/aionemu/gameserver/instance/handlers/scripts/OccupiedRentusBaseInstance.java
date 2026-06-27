@@ -31,7 +31,7 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.NpcShoutsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
@@ -57,36 +57,36 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 	private List<Integer> movies = new ArrayList<Integer>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 702658: //Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
 		    break;
 			case 702659: //Noble Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
 		    break;
 			case 236300: //Brigade General Vasharti.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170170033, 1)); //[Souvenir] Vasharti Legion Weapon Statue.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170030052, 1)); //[Souvenir] Vasharti's Gloves Wall Decoration.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000229, 1)); //Rentus Quality Supplies Storage Box Key.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170170033, 1)); //[Souvenir] Vasharti Legion Weapon Statue.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170030052, 1)); //[Souvenir] Vasharti's Gloves Wall Decoration.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000229, 1)); //Rentus Quality Supplies Storage Box Key.
 						switch (Rnd.get(1, 4)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053702, 1)); //Vasharti's Equipment Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053702, 1)); //Vasharti's Equipment Box.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053703, 1)); //Vasharti Legionnaire's Weapon Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053703, 1)); //Vasharti Legionnaire's Weapon Box.
 				            break;
 					        case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053704, 1)); //Vasharti Brigade General's Weapon Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053704, 1)); //Vasharti Brigade General's Weapon Box.
 						    break;
 					        case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053705, 1)); //Vasharti Brigade General's Armor Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053705, 1)); //Vasharti Brigade General's Armor Box.
 				            break;
 						}
 					}
@@ -97,40 +97,40 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 				    if (player.isOnline()) {
 					    switch (Rnd.get(1, 12)) {
 							case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 170195109, 1)); //Resistance Army's Guestbloom.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 170195109, 1)); //Resistance Army's Guestbloom.
 				            break;
 							case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125002896, 1)); //Rebel Sorcerer's Headband.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125002896, 1)); //Rebel Sorcerer's Headband.
 				            break;
 					        case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125002897, 1)); //Rebel Spiritmaster's Headband.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125002897, 1)); //Rebel Spiritmaster's Headband.
 				            break;
 					        case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125002898, 1)); //Rebel Assassin's Hat.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125002898, 1)); //Rebel Assassin's Hat.
 						    break;
 					        case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125002899, 1)); //Rebel Ranger's Hat.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125002899, 1)); //Rebel Ranger's Hat.
 				            break;
 							case 6:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125002900, 1)); //Rebel Cleric's Chain Hood.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125002900, 1)); //Rebel Cleric's Chain Hood.
 				            break;
 							case 7:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125002901, 1)); //Rebel Chanter's Chain Hood.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125002901, 1)); //Rebel Chanter's Chain Hood.
 				            break;
 							case 8:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125002902, 1)); //Rebel Gladiator's Helm.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125002902, 1)); //Rebel Gladiator's Helm.
 				            break;
 							case 9:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125002903, 1)); //Rebel Templar's Helm.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125002903, 1)); //Rebel Templar's Helm.
 				            break;
 							case 10:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125003320, 1)); //Rebel Gunslinger's Hat.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125003320, 1)); //Rebel Gunslinger's Hat.
 				            break;
 							case 11:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125003321, 1)); //Rebel Songweaver's Headband.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125003321, 1)); //Rebel Songweaver's Headband.
 				            break;
 							case 12:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125003902, 1)); //Rebel Aethertech's Magic Helm.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125003902, 1)); //Rebel Aethertech's Magic Helm.
 				            break;
 						}
 					}
@@ -139,7 +139,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 			case 833048: //Rentus Quality Supplies Storage Box.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					   dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053706, 1)); //Rentus Base Supplies.
+					   dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053706, 1)); //Rentus Base Supplies.
 				    }
 				}
 			break;

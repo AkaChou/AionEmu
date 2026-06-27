@@ -36,7 +36,7 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.SecretMunitionsFactoryReward;
 import com.aionemu.gameserver.model.instance.playerreward.SecretMunitionsFactoryPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -96,31 +96,31 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 245185: //Mechaturerk’s Core.
 			    switch (Rnd.get(1, 7)) {
 				    case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150000, 2)); //Uncut Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150000, 2)); //Uncut Crystal.
 				    break;
 					case 2:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150001, 2)); //Chipped Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150001, 2)); //Chipped Crystal.
 				    break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150002, 2)); //Cloudy Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150002, 2)); //Cloudy Crystal.
 				    break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150003, 2)); //Clear Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150003, 2)); //Clear Crystal.
 				    break;
 					case 5:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150004, 2)); //Flawless Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150004, 2)); //Flawless Crystal.
 				    break;
 					case 6:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150005, 2)); //Luna’s Light.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150005, 2)); //Luna’s Light.
 				    break;
 					case 7:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150006, 2)); //Luna’s Blessing.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150006, 2)); //Luna’s Blessing.
 				    break;
 			    }
 			break;

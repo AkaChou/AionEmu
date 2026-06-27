@@ -41,7 +41,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -88,21 +88,21 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
             case 702581: //Intelligence Supply Box.
 			case 702582: //Intelligence Supply Box.
 			case 702583: //Intelligence Supply Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000314, 1)); //Devastation Bomb.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000315, 1)); //Freeze Bomb.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000316, 1)); //PvP Defense Scroll.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000314, 1)); //Devastation Bomb.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000315, 1)); //Freeze Bomb.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000316, 1)); //PvP Defense Scroll.
 			break;
 			case 234190: //Destroyer Kunax.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053033, 1)); //Kunax's Equipment Box.
+                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053033, 1)); //Kunax's Equipment Box.
                     }
                 }
             break;

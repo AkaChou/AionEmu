@@ -39,7 +39,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
@@ -94,7 +94,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -103,71 +103,71 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			case 835486: //Ornate Bastion Of Souls Treasure Chest.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058413, 1)); //? ?  ??.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 152012766, 4)); //material_idere_evolution_01.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058413, 1)); //? ?  ??.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 152012766, 4)); //material_idere_evolution_01.
 				        switch (Rnd.get(1, 4)) {
 					        case 1:
-						        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058361, 1)); //Harvester's Armor Box.
+						        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058361, 1)); //Harvester's Armor Box.
 					        break;
 					        case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058362, 1)); //Harvester's Weapon Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058362, 1)); //Harvester's Weapon Box.
 					        break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058363, 1)); //Harvester's Accessory Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058363, 1)); //Harvester's Accessory Box.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058364, 1)); //Harvester's Hat Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058364, 1)); //Harvester's Hat Box.
 							break;
 						} switch (Rnd.get(1, 7)) {
 							case 1:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055498, 1)); //Tike Manastone Bundle: +8.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055498, 1)); //Tike Manastone Bundle: +8.
 							break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057819, 1)); //Legendary Illusion Godstone Bundle.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057819, 1)); //Legendary Illusion Godstone Bundle.
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190080005, 5)); //Lesser Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080005, 5)); //Lesser Minion Contract.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190080006, 5)); //Greater Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080006, 5)); //Greater Minion Contract.
 							break;
 							case 5:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190080007, 5)); //Major Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080007, 5)); //Major Minion Contract.
 							break;
 							case 6:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190080008, 5)); //Cute Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080008, 5)); //Cute Minion Contract.
 							break;
 							case 7:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190200000, 150)); //Minium.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190200000, 150)); //Minium.
 							break;
 						}
 					}
 				}
 			break;
 			case 246727: //Sahidtan.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000308, 1)); //Meditation Chamber Key.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000308, 1)); //Meditation Chamber Key.
 			break;
 			case 246730: //Manusha.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000309, 1)); //Lift To Enlightenment Key.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000309, 1)); //Lift To Enlightenment Key.
 			break;
 			case 246731: //Kramush.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000310, 1)); //Enlightenment Key.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000310, 1)); //Enlightenment Key.
 			break;
 			case 246798: //Kargata.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000311, 5)); //Black Oil.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000311, 5)); //Black Oil.
 			break;
 			case 246881: //Harvesters Drakan Butcher Captain.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002394, 5)); //Jail Key.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002394, 5)); //Jail Key.
 			break;
 			case 246885: //Harvesters Drakan Slaughterer.
 			case 247181: //Harvesters Drakan Slaughterer.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000302, 1)); //Purification Chamber Key - 4.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000302, 1)); //Purification Chamber Key - 4.
 			break;
 			case 246895: //Harvesters Drakan Slaughterer.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000303, 1)); //Purification Chamber Key - 3.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000303, 1)); //Purification Chamber Key - 3.
 			break;
 			case 246905: //Harvesters Drakan Slaughterer.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000304, 1)); //Purification Chamber Key - 2.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000304, 1)); //Purification Chamber Key - 2.
 			break;
         }
     }

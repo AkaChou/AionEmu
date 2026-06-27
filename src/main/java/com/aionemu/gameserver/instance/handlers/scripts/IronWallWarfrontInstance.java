@@ -42,7 +42,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -235,21 +235,21 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     
     @Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
         int npcId = npc.getNpcId();
         switch (npcId) {
             case 233510: case 233511: case 233512: case 233530: case 233531: case 233532:
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000287, 5));
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000288, 5));
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000286, 5));
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000285, 5));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000287, 5));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000288, 5));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000286, 5));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000285, 5));
                 break;
             case 831328: case 831329:
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006996, 10));
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006997, 10));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006996, 10));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006997, 10));
                 break;
             case 831330:
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000137, 1));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000137, 1));
                 break;
         }
     }

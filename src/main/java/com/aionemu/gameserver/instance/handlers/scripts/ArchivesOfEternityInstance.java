@@ -27,7 +27,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -49,7 +49,7 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -61,27 +61,27 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
 			case 857464: //Mountainous Shardgolem.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 166040001, 1)); //Essence Core Solution.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100344, 1)); //Ruby Starlight Particle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100345, 1)); //Sapphire Starlight Particle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100346, 1)); //Emerald Starlight Crystal Dust.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100347, 1)); //Amethyst Starlight Crystal Dust.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 166040001, 1)); //Essence Core Solution.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100344, 1)); //Ruby Starlight Particle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100345, 1)); //Sapphire Starlight Particle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100346, 1)); //Emerald Starlight Crystal Dust.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100347, 1)); //Amethyst Starlight Crystal Dust.
 				    } switch (Rnd.get(1, 5)) {
 						case 1:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 3)); //Lesser Minion Contract.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 3)); //Lesser Minion Contract.
 						break;
 						case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 3)); //Greater Minion Contract.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 3)); //Greater Minion Contract.
 						break;
 						case 3:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 3)); //Major Minion Contract.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 3)); //Major Minion Contract.
 						break;
 						case 4:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 3)); //Cute Minion Contract.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 3)); //Cute Minion Contract.
 						break;
 						case 5:
-					        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+					        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					    break;
 					}
 				}
@@ -98,19 +98,19 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                     if (player.isOnline()) {
                         switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 110000047, 1)); //Library Guardian's Tunic.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110000047, 1)); //Library Guardian's Tunic.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 111000092, 1)); //Library Guardian's Gloves.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 111000092, 1)); //Library Guardian's Gloves.
 				            break;
 							case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 112000051, 1)); //Library Guardian's Pauldrons.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 112000051, 1)); //Library Guardian's Pauldrons.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 113000059, 1)); //Library Guardian's Leggings.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 113000059, 1)); //Library Guardian's Leggings.
 				            break;
 							case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 114000097, 1)); //Library Guardian's Shoes.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 114000097, 1)); //Library Guardian's Shoes.
 				            break;
 						}
 					}
@@ -124,19 +124,19 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                     if (player.isOnline()) {
                         switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100300, 1)); //History Of Southern Atreia Chapter 1.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100300, 1)); //History Of Southern Atreia Chapter 1.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100301, 1)); //History Of Southern Atreia Chapter 2.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100301, 1)); //History Of Southern Atreia Chapter 2.
 				            break;
 							case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100302, 1)); //History Of Southern Atreia Chapter 3.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100302, 1)); //History Of Southern Atreia Chapter 3.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100303, 1)); //History Of Southern Atreia Chapter 4.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100303, 1)); //History Of Southern Atreia Chapter 4.
 				            break;
 							case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100304, 1)); //History Of Southern Atreia Chapter 5.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100304, 1)); //History Of Southern Atreia Chapter 5.
 				            break;
 						}
 					}
@@ -147,19 +147,19 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                     if (player.isOnline()) {
                         switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100310, 1)); //Records Of The Human Races Chapter 1.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100310, 1)); //Records Of The Human Races Chapter 1.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100311, 1)); //Records Of The Human Races Chapter 2.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100311, 1)); //Records Of The Human Races Chapter 2.
 				            break;
 							case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100312, 1)); //Records Of The Human Races Chapter 3.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100312, 1)); //Records Of The Human Races Chapter 3.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100313, 1)); //Records Of The Human Races Chapter 4.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100313, 1)); //Records Of The Human Races Chapter 4.
 				            break;
 							case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100314, 1)); //Records Of The Human Races Chapter 5.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100314, 1)); //Records Of The Human Races Chapter 5.
 				            break;
 						}
 					}
@@ -170,19 +170,19 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                     if (player.isOnline()) {
                         switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100320, 1)); //History Of The Empyrean Lords Chapter 1.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100320, 1)); //History Of The Empyrean Lords Chapter 1.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100321, 1)); //History Of The Empyrean Lords Chapter 2.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100321, 1)); //History Of The Empyrean Lords Chapter 2.
 				            break;
 							case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100322, 1)); //History Of The Empyrean Lords Chapter 3.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100322, 1)); //History Of The Empyrean Lords Chapter 3.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100323, 1)); //History Of The Empyrean Lords Chapter 4.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100323, 1)); //History Of The Empyrean Lords Chapter 4.
 				            break;
 							case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100324, 1)); //History Of The Empyrean Lords Chapter 5.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100324, 1)); //History Of The Empyrean Lords Chapter 5.
 				            break;
 						}
 					}
@@ -196,19 +196,19 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                     if (player.isOnline()) {
                         switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100305, 1)); //History Of Northern Atreia Chapter 1.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100305, 1)); //History Of Northern Atreia Chapter 1.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100306, 1)); //History Of Northern Atreia Chapter 2.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100306, 1)); //History Of Northern Atreia Chapter 2.
 				            break;
 							case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100307, 1)); //History Of Northern Atreia Chapter 3.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100307, 1)); //History Of Northern Atreia Chapter 3.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100308, 1)); //History Of Northern Atreia Chapter 4.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100308, 1)); //History Of Northern Atreia Chapter 4.
 				            break;
 							case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100309, 1)); //History Of Northern Atreia Chapter 5.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100309, 1)); //History Of Northern Atreia Chapter 5.
 				            break;
 						}
 					}
@@ -219,19 +219,19 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                     if (player.isOnline()) {
                         switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100315, 1)); //Records Of The Human Races Chapter 1.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100315, 1)); //Records Of The Human Races Chapter 1.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100316, 1)); //Records Of The Human Races Chapter 2.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100316, 1)); //Records Of The Human Races Chapter 2.
 				            break;
 							case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100317, 1)); //Records Of The Human Races Chapter 3.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100317, 1)); //Records Of The Human Races Chapter 3.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100318, 1)); //Records Of The Human Races Chapter 4.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100318, 1)); //Records Of The Human Races Chapter 4.
 				            break;
 							case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100319, 1)); //Records Of The Human Races Chapter 5.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100319, 1)); //Records Of The Human Races Chapter 5.
 				            break;
 						}
 					}
@@ -242,19 +242,19 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                     if (player.isOnline()) {
                         switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100325, 1)); //History Of The Empyrean Lords Chapter 1.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100325, 1)); //History Of The Empyrean Lords Chapter 1.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100326, 1)); //History Of The Empyrean Lords Chapter 2.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100326, 1)); //History Of The Empyrean Lords Chapter 2.
 				            break;
 							case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100327, 1)); //History Of The Empyrean Lords Chapter 3.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100327, 1)); //History Of The Empyrean Lords Chapter 3.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100328, 1)); //History Of The Empyrean Lords Chapter 4.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100328, 1)); //History Of The Empyrean Lords Chapter 4.
 				            break;
 							case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100329, 1)); //History Of The Empyrean Lords Chapter 5.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100329, 1)); //History Of The Empyrean Lords Chapter 5.
 				            break;
 						}
 					}
@@ -265,19 +265,19 @@ public class ArchivesOfEternityInstance extends GeneralInstanceHandler
                     if (player.isOnline()) {
                         switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100330, 1)); //Records Of Life Chapter 1.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100330, 1)); //Records Of Life Chapter 1.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100331, 1)); //Records Of Life Chapter 2.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100331, 1)); //Records Of Life Chapter 2.
 				            break;
 							case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100332, 1)); //Records Of Life Chapter 3.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100332, 1)); //Records Of Life Chapter 3.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100333, 1)); //Records Of Life Chapter 4.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100333, 1)); //Records Of Life Chapter 4.
 				            break;
 							case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100334, 1)); //Records Of Life Chapter 5.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100334, 1)); //Records Of Life Chapter 5.
 				            break;
 						}
 					}

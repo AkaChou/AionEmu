@@ -43,7 +43,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -93,19 +93,19 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
         //http://aion.power.plaync.com/wiki/%EC%9A%94%EB%A5%B4%EB%AC%B8%EA%B0%84%EB%93%9C+%EC%A7%84%EA%B2%A9%EB%A1%9C+-+%EC%A7%84%ED%96%89+%EC%A0%95%EB%B3%B4
 		switch (npcId) {
 			case 701974: //Supply Box.
 			case 701975: //Emergency Supply Box.
 			case 701976: //Hidden Supply Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000279, 1)); //Advance Route Teleport Scroll.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000148, 1)); //Special Baily Juice.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000278, 1)); //Bombing Device Activation Key.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000150, 1)); //Emergency Stasis Potion.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000149, 1)); //Ambush Scroll.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000147, 1)); //Emergency Support Recovery Potion.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000279, 1)); //Advance Route Teleport Scroll.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000148, 1)); //Special Baily Juice.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000278, 1)); //Bombing Device Activation Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000150, 1)); //Emergency Stasis Potion.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000149, 1)); //Ambush Scroll.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000147, 1)); //Emergency Support Recovery Potion.
 			break;
         }
     }

@@ -91,6 +91,17 @@ class GameWorldServicesRuntimeBridgeTest {
         }
     }
 
+    @Test
+    void instanceDropScriptsUseWorldServicesBridge() throws IOException {
+        try (var sources = Files.walk(Path.of("src/main/java/com/aionemu/gameserver/instance/handlers/scripts"))) {
+            for (Path source : sources.filter(path -> path.toString().endsWith(".java")).toList()) {
+                String content = Files.readString(source);
+
+                assertFalse(content.contains("DropRegistrationService.getInstance()"), source.toString());
+            }
+        }
+    }
+
     private <T> T instance(Class<T> type) {
         return objenesis.newInstance(type);
     }

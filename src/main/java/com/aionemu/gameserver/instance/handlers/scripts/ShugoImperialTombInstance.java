@@ -30,7 +30,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -63,7 +63,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	private final List<Future<?>> imperialTombTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -73,22 +73,22 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			case 219528: //Krall Lookout Commander.
 			    for (Player player: instance.getPlayersInside()) {
 					if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002160, 1)); //Repair.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002158, 1)); //Cursed Chill.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002157, 1)); //Powerful Trickster's Essence.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002156, 1)); //Trickster's Essence.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002160, 1)); //Repair.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002158, 1)); //Cursed Chill.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002157, 1)); //Powerful Trickster's Essence.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002156, 1)); //Trickster's Essence.
 						switch (Rnd.get(1, 4)) {
 					        case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100087, 1)); //Treasure Room Map Piece 1.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100087, 1)); //Treasure Room Map Piece 1.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100088, 1)); //Treasure Room Map Piece 2.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100088, 1)); //Treasure Room Map Piece 2.
 				            break;
 					        case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100089, 1)); //Treasure Room Map Piece 3.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100089, 1)); //Treasure Room Map Piece 3.
 				            break;
 					        case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100090, 1)); //Treasure Room Map Piece 4.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100090, 1)); //Treasure Room Map Piece 4.
 				            break;
 						}
 					}
@@ -99,29 +99,29 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 			case 219544: //Awakened Guardian.
 			    for (Player player: instance.getPlayersInside()) {
 					if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002160, 1)); //Repair.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002158, 1)); //Cursed Chill.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002157, 1)); //Powerful Trickster's Essence.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002156, 1)); //Trickster's Essence.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002160, 1)); //Repair.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002158, 1)); //Cursed Chill.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002157, 1)); //Powerful Trickster's Essence.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002156, 1)); //Trickster's Essence.
 						switch (Rnd.get(1, 4)) {
 					        case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100087, 1)); //Treasure Room Map Piece 1.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100087, 1)); //Treasure Room Map Piece 1.
 				            break;
 					        case 2:
-						        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100088, 1)); //Treasure Room Map Piece 2.
+						        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100088, 1)); //Treasure Room Map Piece 2.
 				            break;
 					        case 3:
-						        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100089, 1)); //Treasure Room Map Piece 3.
+						        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100089, 1)); //Treasure Room Map Piece 3.
 						    break;
 						    case 4:
-						        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100090, 1)); //Treasure Room Map Piece 4.
+						        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100090, 1)); //Treasure Room Map Piece 4.
 						    break;
 						} switch (Rnd.get(1, 2)) {
 						    case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000129, 1)); //Common Treasure Chest Key.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000129, 1)); //Common Treasure Chest Key.
 						    break;
 						    case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000129, 2)); //Common Treasure Chest Key.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000129, 2)); //Common Treasure Chest Key.
 						    break;
 						}
 					}

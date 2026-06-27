@@ -29,7 +29,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -55,39 +55,39 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 237148: //Captain Mundirve.
 			case 237149: //Butler Luitart.
 			case 237150: //Chief Maid Miladi.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000032, 1)); //Observation Post Passage Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000032, 1)); //Observation Post Passage Key.
 		    break;
 			case 237155: //Bard Guionbark.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000027, 1)); //Library Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000027, 1)); //Library Key.
 		    break;
 			case 237240: //Enthralled Gutorum.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000026, 1)); //Inner Chamber Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000026, 1)); //Inner Chamber Key.
 		    break;
 			case 702658: //Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
 		    break;
 			case 702659: //Noble Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
 		    break;
 			case 237241: //Enthralled Karemiwen.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170175031, 1)); //[Souvenir] Karemiwen's Teddy Bear.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000028, 1)); //Main Hall Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170175031, 1)); //[Souvenir] Karemiwen's Teddy Bear.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000028, 1)); //Main Hall Key.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 123000927, 1)); //Karemiwen's Band.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 123000927, 1)); //Karemiwen's Band.
 						break;
 						case 2:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 123000928, 1)); //Karemiwen's Leather Belt.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 123000928, 1)); //Karemiwen's Leather Belt.
 						break;
 					}
 				}
@@ -95,27 +95,27 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			case 237242: //Enthralled Taliesin.
 			    switch (Rnd.get(1, 3)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000029, 1)); //Great Dining Hall Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000029, 1)); //Great Dining Hall Key.
 				    break;
 				    case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000030, 1)); //Lannok Treasury Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000030, 1)); //Lannok Treasury Key.
 				    break;
 				    case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000031, 1)); //Servants Quarters Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000031, 1)); //Servants Quarters Key.
 				    break;
 			    }
 		    break;
 			case 237239: //Death Reaper.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188054548, 1)); //Master Lanmark's Weapon Box.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054548, 1)); //Master Lanmark's Weapon Box.
 					    break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053273, 1)); //Master Accessory Treasure Box.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053273, 1)); //Master Accessory Treasure Box.
 					    break;
 					}
 				}

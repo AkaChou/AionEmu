@@ -28,7 +28,7 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -86,25 +86,25 @@ public class UdasTempleInstance extends GeneralInstanceHandler {
     }
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 215782: //Vallakhan.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000084, 1)); //Great Chapel Key.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000084, 1)); //Great Chapel Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
 		    break;
 			case 215787: //Cota The Gatekeeper.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000083, 1)); //Silent Chapel Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000083, 1)); //Silent Chapel Key.
 		    break;
 			case 215791: //Agra The Guide.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000085, 1)); //Chamber Of Guidance Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000085, 1)); //Chamber Of Guidance Key.
 		    break;
 			case 702658: //Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
 		    break;
 			case 702659: //Noble Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
 		    break;
 		}
 	}

@@ -26,7 +26,7 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -80,63 +80,63 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
 			case 218756: //Padmarashka.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057935, 1)); //Padmarashka's Raging Weapon Box.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057935, 1)); //Padmarashka's Raging Weapon Box.
 					    break;
 						case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057935, 1)); //Padmarashka's Weapon Chest.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057935, 1)); //Padmarashka's Weapon Chest.
 					    break;
 					} switch (Rnd.get(1, 14)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 100001640, 1)); //Padmarashka's Raging Sword Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 100001640, 1)); //Padmarashka's Raging Sword Skin.
 					    break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 100101258, 1)); //Padmarashka's Raging Warhammer Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 100101258, 1)); //Padmarashka's Raging Warhammer Skin.
 					    break;
 						case 3:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 100201433, 1)); //Padmarashka's Raging Dagger Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 100201433, 1)); //Padmarashka's Raging Dagger Skin.
 					    break;
 						case 4:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 100501248, 1)); //Padmarashka's Raging Jewel Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 100501248, 1)); //Padmarashka's Raging Jewel Skin.
 					    break;
 						case 5:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 100601352, 1)); //Padmarashka's Raging Spellbook Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 100601352, 1)); //Padmarashka's Raging Spellbook Skin.
 					    break;
 						case 6:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 100901276, 1)); //Padmarashka's Raging Greatsword Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 100901276, 1)); //Padmarashka's Raging Greatsword Skin.
 					    break;
 						case 7:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 101301191, 1)); //Padmarashka's Raging Polearm Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 101301191, 1)); //Padmarashka's Raging Polearm Skin.
 					    break;
 						case 8:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 101501280, 1)); //Padmarashka's Raging Staff Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 101501280, 1)); //Padmarashka's Raging Staff Skin.
 					    break;
 						case 9:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 101701299, 1)); //Padmarashka's Raging Longbow Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 101701299, 1)); //Padmarashka's Raging Longbow Skin.
 					    break;
 						case 10:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 101801148, 1)); //Padmarashka's Raging Pistol Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 101801148, 1)); //Padmarashka's Raging Pistol Skin.
 					    break;
 						case 11:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 101901059, 1)); //Padmarashka's Raging Aethercannon Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 101901059, 1)); //Padmarashka's Raging Aethercannon Skin.
 					    break;
 						case 12:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 102001175, 1)); //Padmarashka's Raging Harp Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 102001175, 1)); //Padmarashka's Raging Harp Skin.
 					    break;
 						case 13:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 115001680, 1)); //Padmarashka's Raging Shield Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 115001680, 1)); //Padmarashka's Raging Shield Skin.
 					    break;
 						case 14:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 115001794, 1)); //Padmarashka's Raging Shield Skin.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 115001794, 1)); //Padmarashka's Raging Shield Skin.
 					    break;
 					}
 				}
