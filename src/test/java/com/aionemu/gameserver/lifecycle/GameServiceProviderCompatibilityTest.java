@@ -53,6 +53,7 @@ import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.ShieldService;
+import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.services.WindyGorgeService;
@@ -596,6 +597,7 @@ class GameServiceProviderCompatibilityTest {
         AtreianBestiaryService atreianBestiaryService = instance(AtreianBestiaryService.class);
         CoalescenceService coalescenceService = instance(CoalescenceService.class);
         GrowthEnergy growthEnergy = instance(GrowthEnergy.class);
+        SiegeService siegeService = instance(SiegeService.class);
 
         GameFeatureServices featureServices = new GameFeatureServices(
                 provider(DisputeLandService.class, instance(DisputeLandService.class)),
@@ -612,6 +614,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(LadderService.class, instance(LadderService.class)),
                 provider(BGService.class, instance(BGService.class)),
                 provider(BanditService.class, instance(BanditService.class)),
+                provider(SiegeService.class, siegeService),
                 provider(AStationService.class, instance(AStationService.class)),
                 provider(F2pService.class, instance(F2pService.class)),
                 provider(WindyGorgeService.class, instance(WindyGorgeService.class)),
@@ -630,6 +633,7 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(npcShoutsService, GameFeatureServices.npcShoutsService());
+            assertSame(siegeService, GameFeatureServices.siegeService());
             assertSame(bonusService, BonusService.getInstance());
             assertSame(petService, PetService.getInstance());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
