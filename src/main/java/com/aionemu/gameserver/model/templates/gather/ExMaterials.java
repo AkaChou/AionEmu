@@ -16,13 +16,12 @@
  */
 package com.aionemu.gameserver.model.templates.gather;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
-
-import javolution.util.FastList;
 
 /**
  * @author KID
@@ -35,7 +34,7 @@ public class ExMaterials {
 
 	public List<Material> getMaterial() {
 		if (material == null) {
-			material = FastList.newInstance();
+			material = new ArrayList<>();
 		}
 		return this.material;
 	}

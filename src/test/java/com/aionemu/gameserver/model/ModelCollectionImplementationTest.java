@@ -243,6 +243,19 @@ class ModelCollectionImplementationTest {
 				"private FastList<Future<?>> getTaskListForRound");
 	}
 
+	@Test
+	void templateLocalListsUseJdkLists() throws Exception {
+		List<String> templateSources = List.of(
+				"src/main/java/com/aionemu/gameserver/model/templates/gather/ExMaterials.java",
+				"src/main/java/com/aionemu/gameserver/model/templates/windstreams/StreamLocations.java",
+				"src/main/java/com/aionemu/gameserver/model/templates/goods/GoodsList.java",
+				"src/main/java/com/aionemu/gameserver/model/templates/spawns/SpawnTemplate.java");
+		for (String sourcePath : templateSources) {
+			assertSourceOmits(sourcePath, "FastList");
+			assertSourceOmits(sourcePath, "javolution.util");
+		}
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();

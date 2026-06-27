@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -29,7 +31,6 @@ import com.aionemu.gameserver.model.limiteditems.LimitedTradeNpc;
 import com.aionemu.gameserver.model.templates.goods.GoodsList;
 import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate.TradeTab;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 public class LimitedItemTradeService {
@@ -46,7 +47,7 @@ public class LimitedItemTradeService {
 				if (goodsList == null) {
 					continue;
 				}
-				FastList<LimitedItem> limitedItems = goodsList.getLimitedItems();
+				List<LimitedItem> limitedItems = goodsList.getLimitedItems();
 				if (limitedItems.isEmpty()) {
 					continue;
 				}
