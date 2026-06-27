@@ -10,6 +10,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.cache.HTMLCache;
+import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
@@ -822,6 +823,7 @@ class GameServiceProviderCompatibilityTest {
         CrazyDaevaService crazyDaevaService = instance(CrazyDaevaService.class);
         AbyssRankUpdateService abyssRankUpdateService = instance(AbyssRankUpdateService.class);
         PacketBroadcaster packetBroadcaster = instance(PacketBroadcaster.class);
+        EventScheduler eventScheduler = instance(EventScheduler.class);
         LunaShopService lunaShopService = instance(LunaShopService.class);
         MinionService minionService = instance(MinionService.class);
         ShugoSweepService shugoSweepService = instance(ShugoSweepService.class);
@@ -832,7 +834,8 @@ class GameServiceProviderCompatibilityTest {
                 provider(PlayerEventService.class, playerEventService),
                 provider(CrazyDaevaService.class, crazyDaevaService),
                 provider(AbyssRankUpdateService.class, abyssRankUpdateService),
-                provider(PacketBroadcaster.class, packetBroadcaster));
+                provider(PacketBroadcaster.class, packetBroadcaster),
+                provider(EventScheduler.class, eventScheduler));
         GameEventBootstrapServices eventBootstrapServices = new GameEventBootstrapServices(
                 provider(LunaShopService.class, lunaShopService),
                 provider(MinionService.class, minionService),
@@ -846,6 +849,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(crazyDaevaService, GameEventServices.crazyDaevaService());
             assertSame(abyssRankUpdateService, GameEventServices.abyssRankUpdateService());
             assertSame(packetBroadcaster, GameEventServices.packetBroadcaster());
+            assertSame(eventScheduler, GameEventServices.eventScheduler());
             assertSame(lunaShopService, GameEventBootstrapServices.lunaShopService());
             assertSame(minionService, GameEventBootstrapServices.minionService());
             assertSame(shugoSweepService, GameEventBootstrapServices.shugoSweepService());
@@ -862,6 +866,7 @@ class GameServiceProviderCompatibilityTest {
             assertProviderCleared(CrazyDaevaService.class);
             assertProviderCleared(AbyssRankUpdateService.class);
             assertProviderCleared(PacketBroadcaster.class);
+            assertProviderCleared(EventScheduler.class);
             assertProviderCleared(MinionService.class);
             assertProviderCleared(ShugoSweepService.class);
             assertProviderCleared(AtreianPassportService.class);
@@ -878,6 +883,7 @@ class GameServiceProviderCompatibilityTest {
             CrazyDaevaService.setInstanceProvider(null);
             AbyssRankUpdateService.setInstanceProvider(null);
             PacketBroadcaster.setInstanceProvider(null);
+            EventScheduler.setInstanceProvider(null);
             LunaShopService.setInstanceProvider(null);
             MinionService.setInstanceProvider(null);
             ShugoSweepService.setInstanceProvider(null);

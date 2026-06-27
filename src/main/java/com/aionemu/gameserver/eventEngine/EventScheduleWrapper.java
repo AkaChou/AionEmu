@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.eventEngine;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
@@ -56,7 +57,7 @@ class EventScheduleWrapper implements Runnable {
 	private boolean check() {
 		if (event.isFinished() || first) {
 			first = false;
-			EventScheduler.getInstance().schedule(event, 10);
+			GameEventServices.eventScheduler().schedule(event, 10);
 			return true;
 		} else {
 			event.cancel(true);

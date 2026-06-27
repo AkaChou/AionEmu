@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
+import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -31,6 +32,10 @@ final class GameEventRuntimeFallbacks {
         return PacketBroadcasterFallback.INSTANCE;
     }
 
+    static EventScheduler eventScheduler() {
+        return EventSchedulerFallback.INSTANCE;
+    }
+
     private static final class EventServiceFallback {
         private static final EventService INSTANCE = EventService.getInstance();
     }
@@ -49,5 +54,9 @@ final class GameEventRuntimeFallbacks {
 
     private static final class PacketBroadcasterFallback {
         private static final PacketBroadcaster INSTANCE = PacketBroadcaster.getInstance();
+    }
+
+    private static final class EventSchedulerFallback {
+        private static final EventScheduler INSTANCE = EventScheduler.getInstance();
     }
 }

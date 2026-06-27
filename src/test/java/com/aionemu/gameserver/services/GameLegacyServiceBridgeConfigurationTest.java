@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ai2.AI2Engine;
+import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
@@ -147,16 +148,19 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("crazyDaevaService"));
             assertTrue(context.containsBeanDefinition("abyssRankUpdateService"));
             assertTrue(context.containsBeanDefinition("packetBroadcaster"));
+            assertTrue(context.containsBeanDefinition("eventScheduler"));
             assertEquals(EventService.class, context.getType("eventService"));
             assertEquals(PlayerEventService.class, context.getType("playerEventService"));
             assertEquals(CrazyDaevaService.class, context.getType("crazyDaevaService"));
             assertEquals(AbyssRankUpdateService.class, context.getType("abyssRankUpdateService"));
             assertEquals(PacketBroadcaster.class, context.getType("packetBroadcaster"));
+            assertEquals(EventScheduler.class, context.getType("eventScheduler"));
             assertLazy(context.getBeanFactory(), "eventService");
             assertLazy(context.getBeanFactory(), "playerEventService");
             assertLazy(context.getBeanFactory(), "crazyDaevaService");
             assertLazy(context.getBeanFactory(), "abyssRankUpdateService");
             assertLazy(context.getBeanFactory(), "packetBroadcaster");
+            assertLazy(context.getBeanFactory(), "eventScheduler");
         }
     }
 

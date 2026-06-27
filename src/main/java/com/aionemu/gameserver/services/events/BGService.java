@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.gameserver.eventEngine.EventScheduler;
+import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
 import com.aionemu.gameserver.services.EventService;
 
@@ -46,7 +46,7 @@ public class BGService {
 		if (futures.isEmpty()) {
 			BattlegroundEvent bgEvent = new BattlegroundEvent();
 			bgEvent.setPriority(1);
-			futures.add(EventScheduler.getInstance().scheduleAtFixedRate(bgEvent, delay, 6 * 60 * 1000));
+			futures.add(GameEventServices.eventScheduler().scheduleAtFixedRate(bgEvent, delay, 6 * 60 * 1000));
 		}
 	}
 

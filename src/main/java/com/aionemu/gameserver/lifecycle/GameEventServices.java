@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.lifecycle;
 
+import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -17,22 +18,26 @@ public final class GameEventServices implements DisposableBean {
     private static volatile ObjectProvider<CrazyDaevaService> crazyDaevaServiceProvider;
     private static volatile ObjectProvider<AbyssRankUpdateService> abyssRankUpdateServiceProvider;
     private static volatile ObjectProvider<PacketBroadcaster> packetBroadcasterProvider;
+    private static volatile ObjectProvider<EventScheduler> eventSchedulerProvider;
 
     public GameEventServices(ObjectProvider<EventService> eventServiceProvider,
             ObjectProvider<PlayerEventService> playerEventServiceProvider,
             ObjectProvider<CrazyDaevaService> crazyDaevaServiceProvider,
             ObjectProvider<AbyssRankUpdateService> abyssRankUpdateServiceProvider,
-            ObjectProvider<PacketBroadcaster> packetBroadcasterProvider) {
+            ObjectProvider<PacketBroadcaster> packetBroadcasterProvider,
+            ObjectProvider<EventScheduler> eventSchedulerProvider) {
         GameEventServices.eventServiceProvider = eventServiceProvider;
         GameEventServices.playerEventServiceProvider = playerEventServiceProvider;
         GameEventServices.crazyDaevaServiceProvider = crazyDaevaServiceProvider;
         GameEventServices.abyssRankUpdateServiceProvider = abyssRankUpdateServiceProvider;
         GameEventServices.packetBroadcasterProvider = packetBroadcasterProvider;
+        GameEventServices.eventSchedulerProvider = eventSchedulerProvider;
         EventService.setInstanceProvider(eventServiceProvider);
         PlayerEventService.setInstanceProvider(playerEventServiceProvider);
         CrazyDaevaService.setInstanceProvider(crazyDaevaServiceProvider);
         AbyssRankUpdateService.setInstanceProvider(abyssRankUpdateServiceProvider);
         PacketBroadcaster.setInstanceProvider(packetBroadcasterProvider);
+        EventScheduler.setInstanceProvider(eventSchedulerProvider);
     }
 
     public static EventService eventService() {
@@ -75,6 +80,14 @@ public final class GameEventServices implements DisposableBean {
         return provider.getIfAvailable(GameEventRuntimeFallbacks::packetBroadcaster);
     }
 
+    public static EventScheduler eventScheduler() {
+        ObjectProvider<EventScheduler> provider = eventSchedulerProvider;
+        if (provider == null) {
+            return GameEventRuntimeFallbacks.eventScheduler();
+        }
+        return provider.getIfAvailable(GameEventRuntimeFallbacks::eventScheduler);
+    }
+
     @Override
     public void destroy() {
         eventServiceProvider = null;
@@ -82,10 +95,12 @@ public final class GameEventServices implements DisposableBean {
         crazyDaevaServiceProvider = null;
         abyssRankUpdateServiceProvider = null;
         packetBroadcasterProvider = null;
+        eventSchedulerProvider = null;
         EventService.setInstanceProvider(null);
         PlayerEventService.setInstanceProvider(null);
         CrazyDaevaService.setInstanceProvider(null);
         AbyssRankUpdateService.setInstanceProvider(null);
         PacketBroadcaster.setInstanceProvider(null);
+        EventScheduler.setInstanceProvider(null);
     }
 }

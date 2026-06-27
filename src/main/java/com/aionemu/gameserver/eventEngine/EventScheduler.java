@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 
 /**
@@ -32,13 +33,14 @@ import org.slf4j.LoggerFactory;
 public class EventScheduler implements Runnable {
 
 	private static final Logger log = LoggerFactory.getLogger(EventScheduler.class);
+	private static volatile ObjectProvider<EventScheduler> instanceProvider;
 	private static final int TIMEOUT = 15; // in minutes
 	private static final int WORKING_DELAY = 1000; // in msec
 	private final EventQueue<DelayedEvent> queue = new EventQueue<DelayedEvent>();
 	private long startTime = 0;
 	private AtomicBoolean paused = new AtomicBoolean(false);
 
-	private EventScheduler() {
+	public EventScheduler() {
 		GameThreadPoolServices.threadPoolManager().schedule(this, 1);
 		log.info("[EventScheduler] is initialized...");
 	}
@@ -119,6 +121,14 @@ public class EventScheduler implements Runnable {
 	}
 
 	static public EventScheduler getInstance() {
+		ObjectProvider<EventScheduler> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> SingletonHolder.singleton);
+		}
 		return SingletonHolder.singleton;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<EventScheduler> provider) {
+		instanceProvider = provider;
 	}
 }

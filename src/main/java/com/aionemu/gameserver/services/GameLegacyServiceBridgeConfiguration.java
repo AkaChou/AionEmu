@@ -5,6 +5,7 @@ import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ai2.AI2Engine;
+import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServiceBridge;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
@@ -149,6 +150,12 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public PacketBroadcaster packetBroadcaster() {
         return new PacketBroadcaster();
+    }
+
+    @Bean
+    @Lazy
+    public EventScheduler eventScheduler() {
+        return new EventScheduler();
     }
 
     @Bean

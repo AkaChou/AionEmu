@@ -3,6 +3,7 @@ package com.aionemu.gameserver.lifecycle;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -28,6 +29,7 @@ class GameEventRuntimeBridgeTest {
         CrazyDaevaService crazyDaevaService = instance(CrazyDaevaService.class);
         AbyssRankUpdateService abyssRankUpdateService = instance(AbyssRankUpdateService.class);
         PacketBroadcaster packetBroadcaster = instance(PacketBroadcaster.class);
+        EventScheduler eventScheduler = instance(EventScheduler.class);
         GameEventRuntimeBridge runtimeBridge = new GameEventRuntimeBridge();
 
         runtimeBridge.setEventServiceProvider(provider(EventService.class, eventService));
@@ -35,12 +37,28 @@ class GameEventRuntimeBridgeTest {
         runtimeBridge.setCrazyDaevaServiceProvider(provider(CrazyDaevaService.class, crazyDaevaService));
         runtimeBridge.setAbyssRankUpdateServiceProvider(provider(AbyssRankUpdateService.class, abyssRankUpdateService));
         runtimeBridge.setPacketBroadcasterProvider(provider(PacketBroadcaster.class, packetBroadcaster));
+        runtimeBridge.setEventSchedulerProvider(provider(EventScheduler.class, eventScheduler));
 
         assertSame(eventService, runtimeBridge.eventService());
         assertSame(playerEventService, runtimeBridge.playerEventService());
         assertSame(crazyDaevaService, runtimeBridge.crazyDaevaService());
         assertSame(abyssRankUpdateService, runtimeBridge.abyssRankUpdateService());
         assertSame(packetBroadcaster, runtimeBridge.packetBroadcaster());
+        assertSame(eventScheduler, runtimeBridge.eventScheduler());
+    }
+
+    @Test
+    void staticEventServicesExposeProviderBackedEventScheduler() {
+        EventScheduler eventScheduler = instance(EventScheduler.class);
+
+        new GameEventServices(null, null, null, null, null, provider(EventScheduler.class, eventScheduler));
+
+        try {
+            assertSame(eventScheduler, GameEventServices.eventScheduler());
+            assertSame(eventScheduler, EventScheduler.getInstance());
+        } finally {
+            new GameEventServices(null, null, null, null, null, null).destroy();
+        }
     }
 
     @Test
@@ -52,6 +70,7 @@ class GameEventRuntimeBridgeTest {
         assertFalse(source.contains("CrazyDaevaService.getInstance()"));
         assertFalse(source.contains("AbyssRankUpdateService.getInstance()"));
         assertFalse(source.contains("PacketBroadcaster.getInstance()"));
+        assertFalse(source.contains("EventScheduler.getInstance()"));
     }
 
     @Test
@@ -81,6 +100,7 @@ class GameEventRuntimeBridgeTest {
                 .filter(path -> !path.endsWith(Path.of("services/events/CrazyDaevaService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/abyss/AbyssRankUpdateService.java")))
                 .filter(path -> !path.endsWith(Path.of("taskmanager/tasks/PacketBroadcaster.java")))
+                .filter(path -> !path.endsWith(Path.of("eventEngine/EventScheduler.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventServices.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventRuntimeFallbacks.java")))
                 .toList();
@@ -92,6 +112,7 @@ class GameEventRuntimeBridgeTest {
                 assertFalse(source.contains("CrazyDaevaService.getInstance()"), sourcePath.toString());
                 assertFalse(source.contains("AbyssRankUpdateService.getInstance()"), sourcePath.toString());
                 assertFalse(source.contains("PacketBroadcaster.getInstance()"), sourcePath.toString());
+                assertFalse(source.contains("EventScheduler.getInstance()"), sourcePath.toString());
             }
         }
     }
