@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -43,6 +45,6 @@ public class CM_OPEN_STATICDOOR extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = this.getConnection().getActivePlayer();
-		StaticDoorService.getInstance().openStaticDoor(player, doorId);
+		GameFeatureServices.staticDoorService().openStaticDoor(player, doorId);
 	}
 }

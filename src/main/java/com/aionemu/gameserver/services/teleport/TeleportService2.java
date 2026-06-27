@@ -270,7 +270,7 @@ public class TeleportService2 {
 			player.getKnownList().clear();
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
-			DisputeLandService.getInstance().onLogin(player);
+			GameFeatureServices.disputeLandService().onLogin(player);
 			player.getEffectController().updatePlayerEffectIcons();
 			ProtectorConquerorService sgs = GameFeatureServices.protectorConquerorService();
 			playerTransformation(player);
@@ -412,7 +412,7 @@ public class TeleportService2 {
 				player.getEffectController().updatePlayerEffectIcons();
 				player.getController().updateZone();
 				player.getController().updateNearbyQuests();
-				DisputeLandService.getInstance().onLogin(player);
+				GameFeatureServices.disputeLandService().onLogin(player);
 				
 				playerTransformation(player);
 				instanceTransformation(player);

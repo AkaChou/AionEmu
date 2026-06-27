@@ -457,7 +457,7 @@ public final class PlayerEnterWorldService {
 			client.sendPacket(new SM_PRICES());
 
 			// DisputeLand
-			DisputeLandService.getInstance().onLogin(player);
+			GameFeatureServices.disputeLandService().onLogin(player);
 
 			// Event Window
 			GameEventBootstrapServices.eventWindowService().onLogin(player);

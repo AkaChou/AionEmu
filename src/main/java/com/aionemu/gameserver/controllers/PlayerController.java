@@ -590,7 +590,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		if (player.isBandit()) {
 			player.getAggroList().clear();
-			BanditService.getInstance().onDie(player, master);
+			GameFeatureServices.banditService().onDie(player, master);
 			return;
 		}
 		if (player.getBattleground() != null && player.getBattleground() instanceof DeathmatchBg || player.getBattleground() != null && player.getBattleground() instanceof SoloSurvivorBg) {

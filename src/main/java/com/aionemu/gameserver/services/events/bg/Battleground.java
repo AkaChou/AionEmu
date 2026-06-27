@@ -1055,7 +1055,7 @@ public abstract class Battleground {
 		}
 		for (Player pl : getPlayers()) {
 			for (Integer doorId : getMap().getStaticDoors()) {
-				StaticDoorService.getInstance().openStaticDoor(pl, doorId);
+				GameFeatureServices.staticDoorService().openStaticDoor(pl, doorId);
 			}
 		}
 	}

@@ -635,6 +635,9 @@ class GameServiceProviderCompatibilityTest {
         GrowthEnergy growthEnergy = instance(GrowthEnergy.class);
         SiegeService siegeService = instance(SiegeService.class);
         BaseService baseService = instance(BaseService.class);
+        DisputeLandService disputeLandService = instance(DisputeLandService.class);
+        BanditService banditService = instance(BanditService.class);
+        StaticDoorService staticDoorService = instance(StaticDoorService.class);
         FFAService ffaService = instance(FFAService.class);
         LadderService ladderService = instance(LadderService.class);
         AStationService aStationService = instance(AStationService.class);
@@ -645,7 +648,7 @@ class GameServiceProviderCompatibilityTest {
         SystemMailService systemMailService = instance(SystemMailService.class);
 
         GameFeatureServices featureServices = new GameFeatureServices(
-                provider(DisputeLandService.class, instance(DisputeLandService.class)),
+                provider(DisputeLandService.class, disputeLandService),
                 provider(DredgionService2.class, dredgionService),
                 provider(AsyunatarService.class, asyunatarService),
                 provider(PlayerLimitService.class, instance(PlayerLimitService.class)),
@@ -658,14 +661,14 @@ class GameServiceProviderCompatibilityTest {
                 provider(FFAService.class, ffaService),
                 provider(LadderService.class, ladderService),
                 provider(BGService.class, instance(BGService.class)),
-                provider(BanditService.class, instance(BanditService.class)),
+                provider(BanditService.class, banditService),
                 provider(SiegeService.class, siegeService),
                 provider(BaseService.class, baseService),
                 provider(AStationService.class, aStationService),
                 provider(F2pService.class, instance(F2pService.class)),
                 provider(WindyGorgeService.class, instance(WindyGorgeService.class)),
                 provider(MotionLoggingService.class, motionLoggingService),
-                provider(StaticDoorService.class, instance(StaticDoorService.class)),
+                provider(StaticDoorService.class, staticDoorService),
                 provider(KiskService.class, kiskService),
                 provider(RepurchaseService.class, repurchaseService),
                 provider(DropDistributionService.class, dropDistributionService),
@@ -684,6 +687,9 @@ class GameServiceProviderCompatibilityTest {
             assertSame(shieldService, GameFeatureServices.shieldService());
             assertSame(weddingService, GameFeatureServices.weddingService());
             assertSame(protectorConquerorService, GameFeatureServices.protectorConquerorService());
+            assertSame(disputeLandService, GameFeatureServices.disputeLandService());
+            assertSame(banditService, GameFeatureServices.banditService());
+            assertSame(staticDoorService, GameFeatureServices.staticDoorService());
             assertSame(siegeService, GameFeatureServices.siegeService());
             assertSame(baseService, GameFeatureServices.baseService());
             assertSame(ffaService, GameFeatureServices.ffaService());
@@ -717,6 +723,9 @@ class GameServiceProviderCompatibilityTest {
             assertProviderCleared(FFAService.class);
             assertProviderCleared(LadderService.class);
             assertProviderCleared(KiskService.class);
+            assertProviderCleared(DisputeLandService.class);
+            assertProviderCleared(BanditService.class);
+            assertProviderCleared(StaticDoorService.class);
         } finally {
             if (featureServices != null) {
                 featureServices.destroy();
@@ -731,6 +740,9 @@ class GameServiceProviderCompatibilityTest {
             FFAService.setInstanceProvider(null);
             LadderService.setInstanceProvider(null);
             KiskService.setInstanceProvider(null);
+            DisputeLandService.setInstanceProvider(null);
+            BanditService.setInstanceProvider(null);
+            StaticDoorService.setInstanceProvider(null);
         }
     }
 

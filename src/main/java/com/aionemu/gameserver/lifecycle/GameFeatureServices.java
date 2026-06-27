@@ -41,6 +41,7 @@ import org.springframework.stereotype.Component;
 public final class GameFeatureServices implements DisposableBean {
 
     private static volatile ObjectProvider<NpcShoutsService> npcShoutsServiceProvider;
+    private static volatile ObjectProvider<DisputeLandService> disputeLandServiceProvider;
     private static volatile ObjectProvider<DredgionService2> dredgionServiceProvider;
     private static volatile ObjectProvider<AsyunatarService> asyunatarServiceProvider;
     private static volatile ObjectProvider<ShieldService> shieldServiceProvider;
@@ -56,6 +57,8 @@ public final class GameFeatureServices implements DisposableBean {
     private static volatile ObjectProvider<RepurchaseService> repurchaseServiceProvider;
     private static volatile ObjectProvider<DropDistributionService> dropDistributionServiceProvider;
     private static volatile ObjectProvider<SystemMailService> systemMailServiceProvider;
+    private static volatile ObjectProvider<BanditService> banditServiceProvider;
+    private static volatile ObjectProvider<StaticDoorService> staticDoorServiceProvider;
     private static volatile ObjectProvider<PetService> petServiceProvider;
     private static volatile ObjectProvider<ArcadeUpgradeService> arcadeUpgradeServiceProvider;
     private static volatile ObjectProvider<AtreianBestiaryService> atreianBestiaryServiceProvider;
@@ -92,6 +95,7 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<CoalescenceService> coalescenceServiceProvider,
             ObjectProvider<GrowthEnergy> growthEnergyProvider) {
         GameFeatureServices.npcShoutsServiceProvider = npcShoutsServiceProvider;
+        GameFeatureServices.disputeLandServiceProvider = disputeLandServiceProvider;
         GameFeatureServices.dredgionServiceProvider = dredgionServiceProvider;
         GameFeatureServices.asyunatarServiceProvider = asyunatarServiceProvider;
         GameFeatureServices.shieldServiceProvider = shieldServiceProvider;
@@ -107,6 +111,8 @@ public final class GameFeatureServices implements DisposableBean {
         GameFeatureServices.repurchaseServiceProvider = repurchaseServiceProvider;
         GameFeatureServices.dropDistributionServiceProvider = dropDistributionServiceProvider;
         GameFeatureServices.systemMailServiceProvider = systemMailServiceProvider;
+        GameFeatureServices.banditServiceProvider = banditServiceProvider;
+        GameFeatureServices.staticDoorServiceProvider = staticDoorServiceProvider;
         GameFeatureServices.petServiceProvider = petServiceProvider;
         GameFeatureServices.arcadeUpgradeServiceProvider = arcadeUpgradeServiceProvider;
         GameFeatureServices.atreianBestiaryServiceProvider = atreianBestiaryServiceProvider;
@@ -153,6 +159,10 @@ public final class GameFeatureServices implements DisposableBean {
 
     public static DredgionService2 dredgionService() {
         return getIfAvailable(dredgionServiceProvider, DredgionService2::getInstance);
+    }
+
+    public static DisputeLandService disputeLandService() {
+        return getIfAvailable(disputeLandServiceProvider, DisputeLandService::getInstance);
     }
 
     public static AsyunatarService asyunatarService() {
@@ -227,6 +237,14 @@ public final class GameFeatureServices implements DisposableBean {
         return getIfAvailable(dropDistributionServiceProvider, DropDistributionService::getInstance);
     }
 
+    public static BanditService banditService() {
+        return getIfAvailable(banditServiceProvider, BanditService::getInstance);
+    }
+
+    public static StaticDoorService staticDoorService() {
+        return getIfAvailable(staticDoorServiceProvider, StaticDoorService::getInstance);
+    }
+
     public static SystemMailService systemMailService() {
         ObjectProvider<SystemMailService> provider = systemMailServiceProvider;
         if (provider == null) {
@@ -261,6 +279,7 @@ public final class GameFeatureServices implements DisposableBean {
     @Override
     public void destroy() {
         npcShoutsServiceProvider = null;
+        disputeLandServiceProvider = null;
         dredgionServiceProvider = null;
         asyunatarServiceProvider = null;
         shieldServiceProvider = null;
@@ -276,6 +295,8 @@ public final class GameFeatureServices implements DisposableBean {
         repurchaseServiceProvider = null;
         dropDistributionServiceProvider = null;
         systemMailServiceProvider = null;
+        banditServiceProvider = null;
+        staticDoorServiceProvider = null;
         petServiceProvider = null;
         arcadeUpgradeServiceProvider = null;
         atreianBestiaryServiceProvider = null;
