@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -34,12 +36,12 @@ public class SM_ABYSS_ARTIFACT_INFO3 extends AionServerPacket {
 
 	public SM_ABYSS_ARTIFACT_INFO3(int loc) {
 		locations = new ArrayList<ArtifactLocation>();
-		locations.add(SiegeService.getInstance().getArtifact(loc));
+		locations.add(GameFeatureServices.siegeService().getArtifact(loc));
 	}
 
 	public SM_ABYSS_ARTIFACT_INFO3(int locationId, boolean teleportStatus) {
 		locations = new ArrayList<ArtifactLocation>();
-		locations.add(SiegeService.getInstance().getArtifact(locationId));
+		locations.add(GameFeatureServices.siegeService().getArtifact(locationId));
 		this.teleportStatus = teleportStatus;
 	}
 

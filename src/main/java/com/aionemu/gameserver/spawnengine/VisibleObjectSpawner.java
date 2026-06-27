@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import org.slf4j.Logger;
@@ -400,7 +402,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc = null;
         int spawnSiegeId = spawn.getSiegeId();
-        SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(spawnSiegeId);
+        SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(spawnSiegeId);
         if ((spawn.isPeace() || loc.isVulnerable()) && spawnSiegeId == loc.getLocationId() && spawn.getSiegeRace() == loc.getRace()) {
             npc = new SiegeNpc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));

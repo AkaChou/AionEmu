@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -205,7 +207,7 @@ public class NpcController extends CreatureController<Npc> {
 			if (owner.getAi2().poll(AIQuestion.SHOULD_DECAY)) {
 				addTask(TaskId.DECAY, RespawnService.scheduleDecayTask(owner));
 			}
-			if (owner.getAi2().poll(AIQuestion.SHOULD_RESPAWN) && !owner.isDeleteDelayed() && !SiegeService.getInstance().isSiegeNpcInActiveSiege(owner)) {
+			if (owner.getAi2().poll(AIQuestion.SHOULD_RESPAWN) && !owner.isDeleteDelayed() && !GameFeatureServices.siegeService().isSiegeNpcInActiveSiege(owner)) {
 				Future<?> respawnTask = scheduleRespawn();
 				if (respawnTask != null) {
 					addTask(TaskId.RESPAWN, respawnTask);

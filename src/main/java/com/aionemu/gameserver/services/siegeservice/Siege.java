@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -75,7 +77,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 	}
 
 	public final void startSiege(int locationId) {
-		SiegeService.getInstance().startSiege(locationId);
+		GameFeatureServices.siegeService().startSiege(locationId);
 	}
 
 	public final void stopSiege() {
@@ -191,22 +193,22 @@ public abstract class Siege<SL extends SiegeLocation> {
 	}
 
 	protected void spawnNpcs(int locationId, SiegeRace race, SiegeModType type) {
-		SiegeService.getInstance().spawnNpcs(locationId, race, type);
+		GameFeatureServices.siegeService().spawnNpcs(locationId, race, type);
 	}
 
 	protected void deSpawnNpcs(int locationId) {
-		SiegeService.getInstance().deSpawnNpcs(locationId);
+		GameFeatureServices.siegeService().deSpawnNpcs(locationId);
 	}
 
 	protected void broadcastState(SiegeLocation location) {
-		SiegeService.getInstance().broadcast(new SM_SIEGE_LOCATION_STATE(location), null);
+		GameFeatureServices.siegeService().broadcast(new SM_SIEGE_LOCATION_STATE(location), null);
 	}
 
 	protected void broadcastUpdate(SiegeLocation location) {
-		SiegeService.getInstance().broadcastUpdate(location);
+		GameFeatureServices.siegeService().broadcastUpdate(location);
 	}
 
 	protected void broadcastUpdate(SiegeLocation location, int nameId) {
-		SiegeService.getInstance().broadcastUpdate(location, new DescriptionId(nameId));
+		GameFeatureServices.siegeService().broadcastUpdate(location, new DescriptionId(nameId));
 	}
 }

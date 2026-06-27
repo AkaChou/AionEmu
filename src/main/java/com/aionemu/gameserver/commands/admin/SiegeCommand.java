@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dao.SiegeDAO;
@@ -77,24 +79,24 @@ public class SiegeCommand extends AdminCommand {
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (SiegeService.getInstance().isSiegeInProgress(siegeLocId)) {
+			if (GameFeatureServices.siegeService().isSiegeInProgress(siegeLocId)) {
 				PacketSendUtility.sendMessage(player, "Siege Location " + siegeLocId + " is already under siege");
 			} else {
 				PacketSendUtility.sendMessage(player, "Siege Location " + siegeLocId + " - starting siege!");
-				SiegeService.getInstance().startSiege(siegeLocId);
+				GameFeatureServices.siegeService().startSiege(siegeLocId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!SiegeService.getInstance().isSiegeInProgress(siegeLocId)) {
+			if (!GameFeatureServices.siegeService().isSiegeInProgress(siegeLocId)) {
 				PacketSendUtility.sendMessage(player, "Siege Location " + siegeLocId + " is not under siege");
 			} else {
 				PacketSendUtility.sendMessage(player, "Siege Location " + siegeLocId + " - stopping siege!");
-				SiegeService.getInstance().stopSiege(siegeLocId);
+				GameFeatureServices.siegeService().stopSiege(siegeLocId);
 			}
 		}
 	}
 	
 	protected boolean isValidSiegeLocationId(Player player, int fortressId) {
-		if (!SiegeService.getInstance().getSiegeLocations().keySet().contains(fortressId)) {
+		if (!GameFeatureServices.siegeService().getSiegeLocations().keySet().contains(fortressId)) {
 			PacketSendUtility.sendMessage(player, "Id " + fortressId + " is invalid");
 			return false;
 		}
@@ -115,18 +117,18 @@ public class SiegeCommand extends AdminCommand {
 	}
 	
 	protected void listLocations(Player player) {
-		for (FortressLocation f : SiegeService.getInstance().getFortresses().values()) {
+		for (FortressLocation f : GameFeatureServices.siegeService().getFortresses().values()) {
 			PacketSendUtility.sendMessage(player, "Fortress: " + f.getLocationId() + " belongs to " + f.getRace());
-		} for (ArtifactLocation a : SiegeService.getInstance().getStandaloneArtifacts().values()) {
+		} for (ArtifactLocation a : GameFeatureServices.siegeService().getStandaloneArtifacts().values()) {
 			PacketSendUtility.sendMessage(player, "Artifact: " + a.getLocationId() + " belongs to " + a.getRace());
 		}
 	}
 	
 	protected void listSieges(Player player) {
-		for (Integer i : SiegeService.getInstance().getSiegeLocations().keySet()) {
-			Siege s = SiegeService.getInstance().getSiege(i);
+		for (Integer i : GameFeatureServices.siegeService().getSiegeLocations().keySet()) {
+			Siege s = GameFeatureServices.siegeService().getSiege(i);
 			if (s != null) {
-				int secondsLeft = SiegeService.getInstance().getRemainingSiegeTimeInSeconds(i);
+				int secondsLeft = GameFeatureServices.siegeService().getRemainingSiegeTimeInSeconds(i);
 				String minSec = secondsLeft / 60 + "m ";
 				minSec += secondsLeft % 60 + "s";
 				PacketSendUtility.sendMessage(player, "Location: " + i + ": " + minSec + " left.");
@@ -140,7 +142,7 @@ public class SiegeCommand extends AdminCommand {
 			return;
 		}
 		int siegeLocationId = NumberUtils.toInt(params[1]);
-		if (!SiegeService.getInstance().getSiegeLocations().keySet().contains(siegeLocationId)) {
+		if (!GameFeatureServices.siegeService().getSiegeLocations().keySet().contains(siegeLocationId)) {
 			PacketSendUtility.sendMessage(player, "Invalid Siege Location Id: " + siegeLocationId);
 			return;
 		}
@@ -171,20 +173,20 @@ public class SiegeCommand extends AdminCommand {
 			PacketSendUtility.sendMessage(player, params[2] + " is not valid siege race or legion name");
 			return;
 		}
-		SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(siegeLocationId);
-		Siege s = SiegeService.getInstance().getSiege(siegeLocationId);
+		SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(siegeLocationId);
+		Siege s = GameFeatureServices.siegeService().getSiege(siegeLocationId);
 		if (s != null) {
 			s.getSiegeCounter().addRaceDamage(sr, s.getBoss().getLifeStats().getMaxHp() + 1);
 			s.setBossKilled(true);
-			SiegeService.getInstance().stopSiege(siegeLocationId);
+			GameFeatureServices.siegeService().stopSiege(siegeLocationId);
 			loc.setLegionId(legion != null ? legion.getLegionId() : 0);
 		} else {
-			SiegeService.getInstance().deSpawnNpcs(siegeLocationId);
+			GameFeatureServices.siegeService().deSpawnNpcs(siegeLocationId);
 			loc.setVulnerable(false);
 			loc.setUnderShield(false);
 			loc.setRace(sr);
 			loc.setLegionId(legion != null ? legion.getLegionId() : 0);
-			SiegeService.getInstance().spawnNpcs(siegeLocationId, sr, SiegeModType.PEACE);
+			GameFeatureServices.siegeService().spawnNpcs(siegeLocationId, sr, SiegeModType.PEACE);
 			DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
 			switch (siegeLocationId) {
 				//Siel's Western Fortress.
@@ -246,7 +248,7 @@ public class SiegeCommand extends AdminCommand {
 				break;
 			}
 		}
-		SiegeService.getInstance().broadcastUpdate(loc);
+		GameFeatureServices.siegeService().broadcastUpdate(loc);
 	}
 	
 	protected void assault(Player player, String[] params) {
@@ -256,7 +258,7 @@ public class SiegeCommand extends AdminCommand {
 		}
 		int siegeLocationId = NumberUtils.toInt(params[1]);
 		int delay = NumberUtils.toInt(params[2]);
-		if (!SiegeService.getInstance().getSiegeLocations().keySet().contains(siegeLocationId)) {
+		if (!GameFeatureServices.siegeService().getSiegeLocations().keySet().contains(siegeLocationId)) {
 			PacketSendUtility.sendMessage(player, "Invalid Siege Location Id: " + siegeLocationId);
 			return;
 		}
@@ -265,8 +267,8 @@ public class SiegeCommand extends AdminCommand {
 	
 	protected void showHelp(Player player) {
 		PacketSendUtility.sendMessage(player, "AdminCommand //siegecommand Help\n" + "//siegecommand start|stop <LocationId>\n" + "//siegecommand list locations|sieges\n" + "//siegecommand capture <LocationId> <siegeRaceName|legionName|legionId>\n" + "//siegecommand assault <LocationId> <delaySec>");
-		java.util.Set<Integer> fortressIds = SiegeService.getInstance().getFortresses().keySet();
-		java.util.Set<Integer> artifactIds = SiegeService.getInstance().getStandaloneArtifacts().keySet();
+		java.util.Set<Integer> fortressIds = GameFeatureServices.siegeService().getFortresses().keySet();
+		java.util.Set<Integer> artifactIds = GameFeatureServices.siegeService().getStandaloneArtifacts().keySet();
 		PacketSendUtility.sendMessage(player, "Fortress: " + StringUtils.join(fortressIds, ", "));
 		PacketSendUtility.sendMessage(player, "Artifacts: " + StringUtils.join(artifactIds, ", "));
 	}

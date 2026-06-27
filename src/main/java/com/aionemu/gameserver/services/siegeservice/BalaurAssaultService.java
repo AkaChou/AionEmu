@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
@@ -374,7 +376,7 @@ public class BalaurAssaultService {
 			PacketSendUtility.sendMessage(player, "Assault on " + location + " was already started");
 			return;
 		}
-		newAssault(SiegeService.getInstance().getSiege(location), delay);
+		newAssault(GameFeatureServices.siegeService().getSiege(location), delay);
 	}
 
 	private void newAssault(Siege<?> siege, int delay) {
@@ -396,7 +398,7 @@ public class BalaurAssaultService {
 		int ownedForts = 0;
 		float influence;
 		if (isBalaurea) {
-			for (FortressLocation fl : SiegeService.getInstance().getFortresses().values()) {
+			for (FortressLocation fl : GameFeatureServices.siegeService().getFortresses().values()) {
 				if (fl.getWorldId() != 400010000 && !fortressAssaults.containsKey(fl.getLocationId())
 						&& fl.getRace().equals(locationRace)) {
 					ownedForts++;

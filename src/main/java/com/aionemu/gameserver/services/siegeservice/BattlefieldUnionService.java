@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_BATTLEFIELD_UNION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_BATTLEFIELD_UNION_REGISTER;
@@ -44,21 +46,21 @@ public class BattlefieldUnionService {
 	}
 
 	public int getSiegeActive() {
-		if (SiegeService.getInstance().isSiegeInProgress(1011)) {
+		if (GameFeatureServices.siegeService().isSiegeInProgress(1011)) {
 			activeSiegeId = 1011;
-		} else if (SiegeService.getInstance().isSiegeInProgress(1131)) {
+		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1131)) {
 			activeSiegeId = 1131;
-		} else if (SiegeService.getInstance().isSiegeInProgress(1132)) {
+		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1132)) {
 			activeSiegeId = 1132;
-		} else if (SiegeService.getInstance().isSiegeInProgress(1141)) {
+		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1141)) {
 			activeSiegeId = 1141;
-		} else if (SiegeService.getInstance().isSiegeInProgress(1221)) {
+		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1221)) {
 			activeSiegeId = 1231;
-		} else if (SiegeService.getInstance().isSiegeInProgress(1231)) {
+		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1231)) {
 			activeSiegeId = 1231;
-		} else if (SiegeService.getInstance().isSiegeInProgress(1241)) {
+		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1241)) {
 			activeSiegeId = 1241;
-		} else if (SiegeService.getInstance().isSiegeInProgress(7011)) {
+		} else if (GameFeatureServices.siegeService().isSiegeInProgress(7011)) {
 			activeSiegeId = 7011;
 		}
 		return activeSiegeId;

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.siege;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -67,7 +69,7 @@ public class ArtifactAI2 extends NpcAI2
 	
 	@Override
 	protected void handleDialogStart(final Player player) {
-		final ArtifactLocation loc = SiegeService.getInstance().getArtifact(getSpawnTemplate().getSiegeId());
+		final ArtifactLocation loc = GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId());
 		AI2Actions.addRequest(this, player, 160028, new AI2Request() {
 			@Override
 			public void acceptRequest(Creature requester, Player responder) {
@@ -81,7 +83,7 @@ public class ArtifactAI2 extends NpcAI2
 							return;
 						}
 					}
-				}, new DescriptionId(2 * 716570 + 1), SiegeService.getInstance().getArtifact(getSpawnTemplate().getSiegeId()).getTemplate().getActivation().getCount());
+				}, new DescriptionId(2 * 716570 + 1), GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId()).getTemplate().getActivation().getCount());
 			}
 		}, loc);
 	}
@@ -91,7 +93,7 @@ public class ArtifactAI2 extends NpcAI2
 	}
 	
 	public void onActivate(final Player player) {
-		final ArtifactLocation loc = SiegeService.getInstance().getArtifact(getSpawnTemplate().getSiegeId());
+		final ArtifactLocation loc = GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId());
 		ArtifactActivation activation = loc.getTemplate().getActivation();
 		int skillId = activation.getSkillId();
 		final int itemId = activation.getItemId();

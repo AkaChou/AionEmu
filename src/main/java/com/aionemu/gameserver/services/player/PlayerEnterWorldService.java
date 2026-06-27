@@ -1,6 +1,8 @@
 
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -430,7 +432,7 @@ public final class PlayerEnterWorldService {
 			}
 			client.sendPacket(new SM_TITLE_INFO(player));
 			client.sendPacket(new SM_EMOTION_LIST((byte) 0, player.getEmotions().getEmotions()));
-			SiegeService.getInstance().onPlayerLogin(player);
+			GameFeatureServices.siegeService().onPlayerLogin(player);
 
 			// SM_ATREIAN_PASSPORT
 			AtreianPassportService.getInstance().onLogin(player);

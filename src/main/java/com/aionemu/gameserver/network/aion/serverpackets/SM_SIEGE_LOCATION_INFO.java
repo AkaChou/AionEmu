@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +41,7 @@ public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 
 	public SM_SIEGE_LOCATION_INFO() {
 		this.infoType = 0;
-		locations = SiegeService.getInstance().getSiegeLocations();
+		locations = GameFeatureServices.siegeService().getSiegeLocations();
 	}
 
 	public SM_SIEGE_LOCATION_INFO(SiegeLocation loc) {

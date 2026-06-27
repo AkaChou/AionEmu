@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import java.util.Map;
@@ -164,13 +166,13 @@ public class OutpostService {
 		} else {
 			sr = SiegeRace.BALAUR;
 		}
-		SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(getOutpostLocation(id).getArtifactId());
-		SiegeService.getInstance().deSpawnNpcs(getOutpostLocation(id).getArtifactId());
+		SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(getOutpostLocation(id).getArtifactId());
+		GameFeatureServices.siegeService().deSpawnNpcs(getOutpostLocation(id).getArtifactId());
 		loc.setVulnerable(false);
 		loc.setUnderShield(false);
 		loc.setRace(sr);
 		loc.setLegionId(0);
-		SiegeService.getInstance().spawnNpcs(getOutpostLocation(id).getArtifactId(), sr, SiegeModType.SIEGE);
+		GameFeatureServices.siegeService().spawnNpcs(getOutpostLocation(id).getArtifactId(), sr, SiegeModType.SIEGE);
 		DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
 	}
 

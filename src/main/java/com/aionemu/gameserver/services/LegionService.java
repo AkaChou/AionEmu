@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.nio.ByteBuffer;
@@ -476,7 +478,7 @@ public class LegionService {
 		for (Integer memberObjId : legion.getLegionMembers()) {
 			this.allCachedLegionMembers.remove(getLegionMemberEx(memberObjId));
 		}
-		SiegeService.getInstance().cleanLegionId(legion.getLegionId());
+		GameFeatureServices.siegeService().cleanLegionId(legion.getLegionId());
 		updateAfterDisbandLegion(legion);
 		deleteLegionFromDB(legion);
 	}

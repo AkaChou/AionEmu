@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
 import com.aionemu.gameserver.services.SiegeService;
@@ -36,6 +38,6 @@ public class SiegeBossDeathListener extends OnDieEventCallback {
 	@Override
 	public void onAfterDie(AbstractAI obj) {
 		siege.setBossKilled(true);
-		SiegeService.getInstance().stopSiege(siege.getSiegeLocationId());
+		GameFeatureServices.siegeService().stopSiege(siege.getSiegeLocationId());
 	}
 }

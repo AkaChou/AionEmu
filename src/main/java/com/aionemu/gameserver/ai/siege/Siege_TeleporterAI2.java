@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.siege;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -49,7 +51,7 @@ public class Siege_TeleporterAI2 extends GeneralNpcAI2
 	
 	private void siegeTeleport(final boolean status) {
 		final int id = ((SiegeNpc) getOwner()).getSiegeId();
-		SiegeService.getInstance().getFortress(id).setCanTeleport(status);
+		GameFeatureServices.siegeService().getFortress(id).setCanTeleport(status);
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
@@ -60,7 +62,7 @@ public class Siege_TeleporterAI2 extends GeneralNpcAI2
 	
 	private void artifactTeleport(final boolean status) {
         final int id = ((SiegeNpc) getOwner()).getSiegeId();
-        SiegeService.getInstance().getArtifact(id).setCanTeleport(status);
+        GameFeatureServices.siegeService().getArtifact(id).setCanTeleport(status);
         getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
             @Override
             public void visit(Player player) {

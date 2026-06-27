@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -34,7 +36,7 @@ public class ShieldController extends VisibleObjectController<Shield> {
 
 	@Override
 	public void see(VisibleObject object) {
-		FortressLocation loc = SiegeService.getInstance().getFortress(getOwner().getId());
+		FortressLocation loc = GameFeatureServices.siegeService().getFortress(getOwner().getId());
 		Player player = (Player) object;
 		if (loc.isUnderShield()) {
 			if (loc.getRace() != SiegeRace.getByRace(player.getRace())) {
@@ -49,7 +51,7 @@ public class ShieldController extends VisibleObjectController<Shield> {
 
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
-		FortressLocation loc = SiegeService.getInstance().getFortress(getOwner().getId());
+		FortressLocation loc = GameFeatureServices.siegeService().getFortress(getOwner().getId());
 		Player player = (Player) object;
 		if (loc.isUnderShield()) {
 			if (loc.getRace() != SiegeRace.getByRace(player.getRace())) {

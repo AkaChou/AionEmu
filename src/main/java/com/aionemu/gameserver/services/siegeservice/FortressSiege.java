@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.List;
@@ -182,7 +184,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 	public void onSiegeFinish() {
 		GlobalCallbackHelper.removeCallback(addAPListener);
 		unregisterSiegeBossListeners();
-		SiegeService.getInstance().deSpawnNpcs(getSiegeLocationId());
+		GameFeatureServices.siegeService().deSpawnNpcs(getSiegeLocationId());
 		getSiegeLocation().setVulnerable(false);
 		getSiegeLocation().setUnderShield(false);
 		if (isBossKilled()) {
@@ -192,7 +194,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else {
 			broadcastState(getSiegeLocation());
 		}
-		SiegeService.getInstance().spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.PEACE);
+		GameFeatureServices.siegeService().spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.PEACE);
 		if (SiegeRace.BALAUR != getSiegeLocation().getRace()) {
 			if (getSiegeLocation().getLegionId() > 0) {
 				giveRewardsToLegion();
@@ -654,7 +656,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 	}
 
 	protected ArtifactLocation getArtifact() {
-		return SiegeService.getInstance().getFortressArtifacts().get(getSiegeLocationId());
+		return GameFeatureServices.siegeService().getFortressArtifacts().get(getSiegeLocationId());
 	}
 
 	protected boolean hasArtifact() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -271,7 +273,7 @@ public class WeatherService {
 			PacketSendUtility.sendPacket(player, new SM_WEATHER(weatherEntries));
 		}
 		for (WeatherEntry entry : weatherEntries) {
-			SiegeService.getInstance().onWeatherChanged(entry);
+			GameFeatureServices.siegeService().onWeatherChanged(entry);
 		}
 	}
 

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -94,7 +96,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		World.getInstance().spawn(activePlayer);
 		activePlayer.getController().refreshZoneImpl();
 		if (activePlayer.isInSiegeWorld()) {
-			SiegeService.getInstance().onEnterSiegeWorld(activePlayer);
+			GameFeatureServices.siegeService().onEnterSiegeWorld(activePlayer);
 		}
 		activePlayer.getController().updateZone();
 		activePlayer.getController().updateNearbyQuests();

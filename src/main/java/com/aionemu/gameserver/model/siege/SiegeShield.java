@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.siege;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.IActor;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
@@ -56,7 +58,7 @@ public class SiegeShield implements ZoneHandler {
 		}
 		Player player = (Player) creature;
 		if (isEnabled || siegeLocationId == 0) {
-			FortressLocation loc = SiegeService.getInstance().getFortress(siegeLocationId);
+			FortressLocation loc = GameFeatureServices.siegeService().getFortress(siegeLocationId);
 			if (loc == null || loc.getRace() != SiegeRace.getByRace(player.getRace())) {
 				ActionObserver actor = ShieldService.getInstance().createShieldObserver(this, creature);
 				if (actor instanceof IActor) {
