@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.skillengine.model;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -1395,7 +1397,7 @@ public class Skill {
 
 		if (effector instanceof Player) {
 			QuestEnv env = new QuestEnv(effector.getTarget(), (Player) effector, 0, 0);
-			QuestEngine.getInstance().onUseSkill(env, skillTemplate.getSkillId());
+			GameEngineServices.questEngine().onUseSkill(env, skillTemplate.getSkillId());
 		}
 
 		// 【修复】只在客户端未发送有效hitTime时才由服务端计算

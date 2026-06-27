@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.inggison;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -192,7 +194,7 @@ public class _10031A_Risk_For_The_Obelisk extends QuestHandler {
                 } else {
                     int[] inggisonMission = {10031, 10032, 10033, 10034, 10035};
                     for (int quest: inggisonMission) {
-                        QuestEngine.getInstance().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), quest, env.getDialogId()));
+                        GameEngineServices.questEngine().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), quest, env.getDialogId()));
                     }
                     return sendQuestEndDialog(env);
                 }

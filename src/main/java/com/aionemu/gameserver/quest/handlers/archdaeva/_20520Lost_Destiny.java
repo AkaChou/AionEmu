@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.archdaeva;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -157,7 +159,7 @@ public class _20520Lost_Destiny extends QuestHandler {
                 } else {
                     int[] norsvoldMission = {20521, 20522, 20523, 20524, 20525, 20526, 20527, 20528, 20529, 20530};
                     for (int quest: norsvoldMission) {
-                        QuestEngine.getInstance().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), quest, env.getDialogId()));
+                        GameEngineServices.questEngine().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), quest, env.getDialogId()));
                     }
                     return sendQuestEndDialog(env);
                 }

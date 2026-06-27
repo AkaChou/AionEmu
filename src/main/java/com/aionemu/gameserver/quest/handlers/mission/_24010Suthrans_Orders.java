@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.mission;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
@@ -60,7 +62,7 @@ public class _24010Suthrans_Orders extends QuestHandler {
             if (env.getDialogId() == 23) {
                 int[] ids = {24011, 24012, 24013, 24014, 24015, 24016};
                 for (int id : ids) {
-                    QuestEngine.getInstance().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
+                    GameEngineServices.questEngine().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
                 }
             }
             return sendQuestEndDialog(env);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -46,7 +48,7 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 	
 	@Override
 	protected void handleDialogStart(Player player) {
-		if (!(QuestEngine.getInstance().onCanAct(new QuestEnv(getOwner(), player, 0, 0),
+		if (!(GameEngineServices.questEngine().onCanAct(new QuestEnv(getOwner(), player, 0, 0),
 			getObjectTemplate().getTemplateId(), QuestActionType.ACTION_ITEM_USE))) {
 			return;
 		}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.portals;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -96,7 +98,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (questId > 0 && QuestEngine.getInstance().onDialog(env)) {
+		if (questId > 0 && GameEngineServices.questEngine().onDialog(env)) {
 			return true;
 		} if (dialogId == DialogAction.INSTANCE_PARTY_MATCH.id()) {
 			AutoGroupType agt = AutoGroupType.getAutoGroup(player.getLevel(), getNpcId());
@@ -130,7 +132,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 	private void checkDialog(Player player) {
 		int npcId = getNpcId();
 		int teleportationDialogId = DataManager.PORTAL2_DATA.getTeleportDialogId(npcId);
-		List<Integer> relatedQuests = QuestEngine.getInstance().getQuestNpc(npcId).getOnTalkEvent();
+		List<Integer> relatedQuests = GameEngineServices.questEngine().getQuestNpc(npcId).getOnTalkEvent();
 		boolean playerHasQuest = false;
 		boolean playerCanStartQuest = false;
 		if (!relatedQuests.isEmpty()) {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -152,7 +154,7 @@ public class PlayerLeaveWorldService {
 		if (player.isLegionMember()) {
 			LegionService.getInstance().onLogout(player);
 		}
-		QuestEngine.getInstance().onLogOut(new QuestEnv(null, player, 0, 0));
+		GameEngineServices.questEngine().onLogOut(new QuestEnv(null, player, 0, 0));
 		player.getController().delete();
 		// Reset Floor "Crucible Spire 5.6"
 		player.getCommonData().setFloor(0);

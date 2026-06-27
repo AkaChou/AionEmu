@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.raksangRuins;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -52,7 +54,7 @@ public class AbisoAI2 extends GeneralNpcAI2
 		int instanceId = getPosition().getInstanceId();
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1011) {
+		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == 10000) {
 		    switch (getNpcId()) {

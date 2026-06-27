@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.ArrayList;
 
 import com.aionemu.gameserver.model.Race;
@@ -110,7 +112,7 @@ public class CM_USE_ITEM extends AionClientPacket {
 					.STR_CANNOT_USE_ITEM_TOO_LOW_LEVEL_MUST_BE_THIS_LEVEL(item.getNameId(), requiredLevel));
 			return;
 		}
-		HandlerResult result = QuestEngine.getInstance().onItemUseEvent(new QuestEnv(null, player, 0, 0), item);
+		HandlerResult result = GameEngineServices.questEngine().onItemUseEvent(new QuestEnv(null, player, 0, 0), item);
 		if (result == HandlerResult.FAILED) {
 			return;
 		}

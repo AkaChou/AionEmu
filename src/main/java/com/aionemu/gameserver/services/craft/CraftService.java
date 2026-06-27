@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.craft;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.HashMap;
@@ -62,7 +64,7 @@ public class CraftService {
 		if (recipetemplate.getMaxProductionCount() != null) {
 			player.getRecipeList().deleteRecipe(player, recipetemplate.getId());
 			if (critCount == 0) {
-				QuestEngine.getInstance().onFailCraft(new QuestEnv(null, player, 0, 0), recipetemplate.getComboProduct(1) == null ? 0 : recipetemplate.getComboProduct(1));
+				GameEngineServices.questEngine().onFailCraft(new QuestEnv(null, player, 0, 0), recipetemplate.getComboProduct(1) == null ? 0 : recipetemplate.getComboProduct(1));
 			}
 		}
 		int xpReward = (int) ((0.008 * (recipetemplate.getSkillpoint() + 100) * (recipetemplate.getSkillpoint() + 100) + 60));

@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -297,7 +299,7 @@ public final class QuestService {
 		if (!template.getBonus().isEmpty()) {
 			QuestBonuses bonus = template.getBonus().get(0);
 			// Handler can add additional bonuses on repeat (for event quests no data)
-			HandlerResult result = QuestEngine.getInstance().onBonusApplyEvent(env, bonus.getType(), questItems);
+			HandlerResult result = GameEngineServices.questEngine().onBonusApplyEvent(env, bonus.getType(), questItems);
 			if (result != HandlerResult.FAILED) {
 				QuestItems additional = BonusService.getInstance().getQuestBonus(player, template);
 				if (additional != null) {
@@ -389,7 +391,7 @@ public final class QuestService {
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
-		QuestEngine.getInstance().onLvlUp(env);
+		GameEngineServices.questEngine().onLvlUp(env);
 		if (template.getNpcFactionId() != 0) {
 			player.getNpcFactions().completeQuest(template);
 		}
@@ -1042,7 +1044,7 @@ public final class QuestService {
 		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				QuestEngine.getInstance().onQuestTimerEnd(new QuestEnv(null, player, 0, 0));
+				GameEngineServices.questEngine().onQuestTimerEnd(new QuestEnv(null, player, 0, 0));
 			}
 		}, timeInSeconds * 1000);
 		player.getController().addTask(TaskId.QUEST_TIMER, task);
@@ -1055,7 +1057,7 @@ public final class QuestService {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				QuestEngine.getInstance().onInvisibleTimerEnd(new QuestEnv(null, player, 0, 0));
+				GameEngineServices.questEngine().onInvisibleTimerEnd(new QuestEnv(null, player, 0, 0));
 			}
 		}, timeInSeconds * 1000);
 		return true;

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.*;
@@ -69,7 +71,7 @@ public class Reload extends AdminCommand {
 			File xml = new File("./data/static_data/quest_data/quest_data.xml");
 			File dir = new File("./data/static_data/quest_script_data");
 			try {
-				QuestEngine.getInstance().shutdown();
+				GameEngineServices.questEngine().shutdown();
 				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
 				Unmarshaller un = jc.createUnmarshaller();
 				un.setSchema(getSchema("./data/static_data/static_data.xsd"));
@@ -84,7 +86,7 @@ public class Reload extends AdminCommand {
 						if (data.getQuest() != null)
 							questScriptsData.getQuest().addAll(data.getQuest());
 				}
-				QuestEngine.getInstance().load(null);
+				GameEngineServices.questEngine().load(null);
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(admin, "Quest reload failed!");

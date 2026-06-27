@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -192,7 +194,7 @@ public class Quest extends AdminCommand {
         
         QuestEnv env = new QuestEnv(null, target, questId, 0);
         if (questStatus == QuestStatus.COMPLETE) {
-            QuestEngine.getInstance().onLvlUp(env);
+            GameEngineServices.questEngine().onLvlUp(env);
             target.getController().updateNearbyQuests();
             qs.setCompleteCount(qs.getCompleteCount() + 1);
             PacketSendUtility.sendPacket(target, new SM_QUEST_COMPLETED_LIST(target.getQuestStateList().getAllFinishedQuests()));

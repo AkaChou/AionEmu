@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -77,7 +79,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				PvPArenaPlayerReward reward = getPlayerReward(winner.getObjectId());
 				reward.addPvPKillToPlayer();
 				int worldId = winner.getWorldId();
-				QuestEngine.getInstance().onKillInWorld(new QuestEnv(player, winner, 0, 0), worldId);
+				GameEngineServices.questEngine().onKillInWorld(new QuestEnv(player, winner, 0, 0), worldId);
 			}
 		}
 		updatePoints(player);

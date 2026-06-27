@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.handlers;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collections;
@@ -63,7 +65,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	/** Create a new QuestHandler object */
 	protected QuestHandler(int questId) {
 		this.questId = questId;
-		this.qe = QuestEngine.getInstance();
+		this.qe = GameEngineServices.questEngine();
 	}
 
 	/** Update the status of the quest in player's journal */
@@ -955,7 +957,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 		if (qs.getStatus() == QuestStatus.COMPLETE || qs.getStatus() == QuestStatus.REWARD) {
-			QuestEngine.getInstance().onLvlUp(env);
+			GameEngineServices.questEngine().onLvlUp(env);
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
 		}

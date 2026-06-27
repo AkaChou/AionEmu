@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.quest;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +64,7 @@ public class QuestNpc {
 		}
 		String aiName = DataManager.NPC_DATA.getNpcTemplate(npcId).getAi();
 		if ("quest_use_item".equals(aiName)) {
-			QuestEngine.getInstance().registerCanAct(questId, npcId);
+			GameEngineServices.questEngine().registerCanAct(questId, npcId);
 		}
 	}
 

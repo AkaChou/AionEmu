@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.bastionOfSouls;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
@@ -72,7 +74,7 @@ public class Investigative_BatiskanAI2 extends GeneralNpcAI2
 		int instanceId = getPosition().getInstanceId();
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1011) {
+		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));

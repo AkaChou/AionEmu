@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +79,7 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 				QuestService.startQuest(env);
 				return;
 			}
-			if (QuestEngine.getInstance().onDialog(new QuestEnv(null, player, questId, dialogId))) {
+			if (GameEngineServices.questEngine().onDialog(new QuestEnv(null, player, questId, dialogId))) {
 				return;
 			}
 			ClassChangeService.changeClassToSelection(player, dialogId);

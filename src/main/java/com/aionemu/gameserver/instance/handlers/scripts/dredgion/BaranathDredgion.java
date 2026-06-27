@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgion;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -509,7 +511,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 			}
 			AbyssPointsService.addAp(player, (int) abyssPoint);
 			QuestEnv env = new QuestEnv(null, player, 0, 0);
-			QuestEngine.getInstance().onDredgionReward(env);
+			GameEngineServices.questEngine().onDredgionReward(env);
 		}
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();

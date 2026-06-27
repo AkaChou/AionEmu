@@ -11,6 +11,7 @@ import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -51,6 +52,40 @@ class GameEnginesRuntimeBridgeTest {
         assertFalse(source.contains("AI2Engine.getInstance()"));
         assertFalse(source.contains("ChatProcessor.getInstance()"));
         assertFalse(source.contains("ThreadPoolManager.getInstance()"));
+    }
+
+    @Test
+    void gameEngineServicesQuestEngineAccessorUsesSpringProviderBeforeLegacyFallback() {
+        QuestEngine questEngine = instance(QuestEngine.class);
+        GameEngineServices gameEngineServices = new GameEngineServices(
+            provider(QuestEngine.class, questEngine),
+            provider(InstanceEngine.class, instance(InstanceEngine.class)),
+            provider(AI2Engine.class, instance(AI2Engine.class)),
+            provider(ChatProcessor.class, instance(ChatProcessor.class))
+        );
+
+        try {
+            assertSame(questEngine, GameEngineServices.questEngine());
+        } finally {
+            gameEngineServices.destroy();
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesEngineQuestBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEngineServiceFallbacks.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("QuestEngine.getInstance()"), source.toString());
+        }
     }
 
     private <T> T instance(Class<T> type) {

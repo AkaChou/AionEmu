@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.mission;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
@@ -60,7 +62,7 @@ public class _14010Terrain_Of_The_Verteron_Fortress extends QuestHandler {
             if (env.getDialogId() == 23) {
                 int[] ids = {14011, 14012, 14013, 14014, 14015, 14016};
                 for (int id : ids) {
-                    QuestEngine.getInstance().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
+                    GameEngineServices.questEngine().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
                 }
             }
             return sendQuestEndDialog(env);

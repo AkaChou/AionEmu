@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -545,8 +547,8 @@ public class PvpService {
 				continue;
 			}
 			// notify Kill-Quests
-			QuestEngine.getInstance().onKillInWorld(new QuestEnv(victim, p, 0, 0), worldId);
-			QuestEngine.getInstance().onKillRanked(new QuestEnv(victim, p, 0, 0), victim.getAbyssRank().getRank());
+			GameEngineServices.questEngine().onKillInWorld(new QuestEnv(victim, p, 0, 0), worldId);
+			GameEngineServices.questEngine().onKillRanked(new QuestEnv(victim, p, 0, 0), victim.getAbyssRank().getRank());
 		}
 		rewarded.clear();
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -67,6 +69,6 @@ public class CM_HOUSE_DECORATE extends AionClientPacket {
 		sendPacket(new SM_HOUSE_EDIT(4, 2, objectId));
 		house.getRegistry().setPersistentState(PersistentState.UPDATE_REQUIRED);
 		((HouseController) house.getController()).updateAppearance();
-		QuestEngine.getInstance().onHouseItemUseEvent(new QuestEnv(null, player, 0, 0), templateId);
+		GameEngineServices.questEngine().onHouseItemUseEvent(new QuestEnv(null, player, 0, 0), templateId);
 	}
 }

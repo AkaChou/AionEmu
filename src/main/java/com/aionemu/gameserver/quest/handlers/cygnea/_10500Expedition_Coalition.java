@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.cygnea;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
@@ -94,7 +96,7 @@ public class _10500Expedition_Coalition extends QuestHandler {
                 } else {
                     int[] cygneaMission = {10501, 10502, 10503, 10504, 10505, 10506, 10507};
                     for (int quest: cygneaMission) {
-                        QuestEngine.getInstance().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), quest, env.getDialogId()));
+                        GameEngineServices.questEngine().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), quest, env.getDialogId()));
                     }
                     return sendQuestEndDialog(env);
                 }

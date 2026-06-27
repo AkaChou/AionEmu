@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -242,7 +244,7 @@ public class Equipment {
 			notifyItemEquipped(item);
 			owner.getLifeStats().updateCurrentStats();
 			setPersistentState(PersistentState.UPDATE_REQUIRED);
-			QuestEngine.getInstance().onEquipItem(new QuestEnv(null, owner, 0, 0), item.getItemId());
+			GameEngineServices.questEngine().onEquipItem(new QuestEnv(null, owner, 0, 0), item.getItemId());
             if (item.getItemTemplate().isEstima()) {
                 CreativityEssenceService.getInstance().addEstimaCp(owner, item.getObjectId());
             }

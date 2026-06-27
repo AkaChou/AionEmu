@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +109,7 @@ public class DialogService {
     public static void onDialogSelect(int dialogId, final Player player, Npc npc, int questId, int extendedRewardIndex) {
         QuestEnv env = new QuestEnv(npc, player, questId, dialogId);
         env.setExtendedRewardIndex(extendedRewardIndex);
-        if (QuestEngine.getInstance().onDialog(env)) {
+        if (GameEngineServices.questEngine().onDialog(env)) {
             return;
         }
         if (player.getAccessLevel() >= 0 && CustomConfig.ENABLE_SHOW_DIALOG_ID) {

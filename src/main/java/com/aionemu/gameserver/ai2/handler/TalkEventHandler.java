@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -33,7 +35,7 @@ public class TalkEventHandler {
 		onSimpleTalk(npcAI, creature);
 		if (creature instanceof Player) {
 			Player player = (Player) creature;
-			if (QuestEngine.getInstance().onDialog(new QuestEnv(npcAI.getOwner(), player, 0, -1))) {
+			if (GameEngineServices.questEngine().onDialog(new QuestEnv(npcAI.getOwner(), player, 0, -1))) {
 				return;
 			}
 			switch (npcAI.getOwner().getObjectTemplate().getTitleId()) {

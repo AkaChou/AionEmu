@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collections;
@@ -268,7 +270,7 @@ public class PlayerController extends CreatureController<Player> {
 		if (zone.getAreaTemplate().getZoneName() == null) {
 			log.error("No name found for a Zone in the map " + zone.getAreaTemplate().getWorldId());
 		} else {
-			QuestEngine.getInstance().onEnterZone(new QuestEnv(null, player, 0, 0), zone.getAreaTemplate().getZoneName());
+			GameEngineServices.questEngine().onEnterZone(new QuestEnv(null, player, 0, 0), zone.getAreaTemplate().getZoneName());
 		}
 		/**
 		 * These instances portal are "spawn & reversed" to the opposite race. If a player enter in fews area, a portal will appear automatically. These portals
@@ -457,7 +459,7 @@ public class PlayerController extends CreatureController<Player> {
 			log.warn("No name for zone template in " + zone.getAreaTemplate().getWorldId());
 			return;
 		}
-		QuestEngine.getInstance().onLeaveZone(new QuestEnv(null, player, 0, 0), zoneName);
+		GameEngineServices.questEngine().onLeaveZone(new QuestEnv(null, player, 0, 0), zoneName);
 	}
 
 	/**
@@ -639,7 +641,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		super.onDie(lastAttacker);
 		sendDieFromCreature(lastAttacker, showPacket);
-		QuestEngine.getInstance().onDie(new QuestEnv(null, player, 0, 0));
+		GameEngineServices.questEngine().onDie(new QuestEnv(null, player, 0, 0));
 		if (player.isInGroup2()) {
 			player.getPlayerGroup2().sendPacket(SM_SYSTEM_MESSAGE.STR_MSG_COMBAT_FRIENDLY_DEATH(player.getName()), new ExcludePlayerFilter(player));
 		}
@@ -716,7 +718,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 
 		if (target instanceof Npc) {
-			QuestEngine.getInstance().onAttack(new QuestEnv(target, getOwner(), 0, 0));
+			GameEngineServices.questEngine().onAttack(new QuestEnv(target, getOwner(), 0, 0));
 		}
 
 		int attackSpeed = gameStats.getAttackSpeed().getCurrent();
@@ -801,7 +803,7 @@ public class PlayerController extends CreatureController<Player> {
 			skill.setHitTime(clientHitTime);
 			skill.useSkill();
 			QuestEnv env = new QuestEnv(player.getTarget(), player, 0, 0);
-			QuestEngine.getInstance().onUseSkill(env, template.getSkillId());
+			GameEngineServices.questEngine().onUseSkill(env, template.getSkillId());
 		}
 	}
 
@@ -938,7 +940,7 @@ public class PlayerController extends CreatureController<Player> {
 			HTMLService.sendGuideHtml(player);
 		}
 		ClassChangeService.showClassChangeDialog(player);
-		QuestEngine.getInstance().onLvlUp(new QuestEnv(null, player, 0, 0));
+		GameEngineServices.questEngine().onLvlUp(new QuestEnv(null, player, 0, 0));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		player.getController().updatePassiveStats();

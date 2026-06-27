@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Minion;
 import com.aionemu.gameserver.model.gameobjects.Pet;
@@ -104,7 +106,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 				AStationService.getInstance().handleMoveBack(activePlayer);
 			}
 		}
-		QuestEngine.getInstance().onEnterWorld(new QuestEnv(null, activePlayer, 0, 0));
+		GameEngineServices.questEngine().onEnterWorld(new QuestEnv(null, activePlayer, 0, 0));
 		activePlayer.getController().onEnterWorld();
 		if (!WorldMapType.getWorld(activePlayer.getWorldId()).isPersonal()) {
 			sendPacket(new SM_SYSTEM_MESSAGE(1390122, activePlayer.getPosition().getInstanceId()));

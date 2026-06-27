@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.events;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
@@ -43,7 +45,7 @@ public class LegendaryToyBearAI2 extends ActionItemNpcAI2 {
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (QuestEngine.getInstance().onDialog(env)) {
+		if (GameEngineServices.questEngine().onDialog(env)) {
 			return true;
 		}
 		if (dialogId == 10000) {

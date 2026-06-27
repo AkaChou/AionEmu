@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.model.team2.common.service;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -309,7 +311,7 @@ public class PlayerTeamDistributionService {
 		public boolean apply(Player member) {
 			if (member.isOnline()) {
 				if (MathUtil.isIn3dRange(member, owner, GroupConfig.GROUP_MAX_DISTANCE)) {
-					QuestEngine.getInstance().onKill(new QuestEnv(owner, member, 0, 0));
+					GameEngineServices.questEngine().onKill(new QuestEnv(owner, member, 0, 0));
 					if (member.isMentor()) {
 						mentorCount++;
 						return true;

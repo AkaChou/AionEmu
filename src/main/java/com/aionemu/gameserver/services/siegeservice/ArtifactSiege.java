@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +75,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				player.getController().updateZone();
 				player.getController().updateNearbyQuests();
 				if (isBossKilled() && (SiegeRace.getByRace(player.getRace()) == getSiegeLocation().getRace())) {
-					QuestEngine.getInstance().onKill(new QuestEnv(getBoss(), player, 0, 0));
+					GameEngineServices.questEngine().onKill(new QuestEnv(getBoss(), player, 0, 0));
 				}
 			}
 		});

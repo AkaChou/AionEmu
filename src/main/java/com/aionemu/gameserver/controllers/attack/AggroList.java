@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers.attack;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -99,7 +101,7 @@ public class AggroList {
 		if (creature instanceof Player && owner instanceof Npc) {
 			for (Player player : owner.getKnownList().getKnownPlayers().values()) {
 				if (MathUtil.isIn3dRange(owner, player, 50)) {
-					QuestEngine.getInstance().onAddAggroList(new QuestEnv(owner, player, 0, 0));
+					GameEngineServices.questEngine().onAddAggroList(new QuestEnv(owner, player, 0, 0));
 				}
 			}
 		}

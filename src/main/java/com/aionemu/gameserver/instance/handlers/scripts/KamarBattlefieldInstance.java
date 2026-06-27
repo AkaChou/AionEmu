@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -450,7 +452,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
             AbyssPointsService.addGp(player, (int) gloryPoint);
             player.getCommonData().addExp(expPoint, RewardType.HUNTING);
             QuestEnv env = new QuestEnv(null, player, 0, 0);
-            QuestEngine.getInstance().onKamarReward(env);
+            GameEngineServices.questEngine().onKamarReward(env);
         }
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();

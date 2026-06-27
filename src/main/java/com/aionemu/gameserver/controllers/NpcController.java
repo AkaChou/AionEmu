@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -280,7 +282,7 @@ public class NpcController extends CreatureController<Npc> {
 					rewardXp *= percentage;
 					rewardDp *= percentage;
 					rewardAp *= percentage;
-					QuestEngine.getInstance().onKill(new QuestEnv(getOwner(), player, 0, 0));
+					GameEngineServices.questEngine().onKill(new QuestEnv(getOwner(), player, 0, 0));
 					// When a player defeat a "Boss" all ppls on server see!!!
 					defeatNamedMsg(player);
 					// Reward XP Solo (New system, Exp Retail NA)
@@ -456,7 +458,7 @@ public class NpcController extends CreatureController<Npc> {
 	@Override
 	public void onDialogSelect(int dialogId, final Player player, int questId, int extendedRewardIndex, int unk) {// TODO unk need to be figure out
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
-		if (!MathUtil.isInRange(getOwner(), player, getOwner().getObjectTemplate().getTalkDistance() + 2) && !QuestEngine.getInstance().onDialog(env)) {
+		if (!MathUtil.isInRange(getOwner(), player, getOwner().getObjectTemplate().getTalkDistance() + 2) && !GameEngineServices.questEngine().onDialog(env)) {
 			return;
 		}
 		if (!getOwner().getAi2().onDialogSelect(player, dialogId, questId, extendedRewardIndex)) {
@@ -484,7 +486,7 @@ public class NpcController extends CreatureController<Npc> {
 		Npc npc = getOwner();
 
 		if (actingCreature instanceof Player) {
-			QuestEngine.getInstance().onAttack(new QuestEnv(npc, (Player) actingCreature, 0, 0));
+			GameEngineServices.questEngine().onAttack(new QuestEnv(npc, (Player) actingCreature, 0, 0));
 		}
 
 		PacketSendUtility.broadcastPacket(npc, new SM_ATTACK_STATUS(npc, actingCreature, type, skillId, damage, log));

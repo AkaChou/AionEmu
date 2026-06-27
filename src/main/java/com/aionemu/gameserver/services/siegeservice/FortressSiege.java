@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.List;
 import java.util.Map;
 
@@ -205,7 +207,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 				player.getController().updateZone();
 				player.getController().updateNearbyQuests();
 				if (isBossKilled() && (SiegeRace.getByRace(player.getRace()) == getSiegeLocation().getRace())) {
-					QuestEngine.getInstance().onKill(new QuestEnv(getBoss(), player, 0, 0));
+					GameEngineServices.questEngine().onKill(new QuestEnv(getBoss(), player, 0, 0));
 				}
 				// Enraged Guardian 5.3
 				switch (getSiegeLocationId()) {

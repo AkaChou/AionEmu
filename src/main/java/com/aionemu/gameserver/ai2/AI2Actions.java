@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.Collection;
 
 import com.aionemu.gameserver.controllers.observer.DialogObserver;
@@ -116,7 +118,7 @@ public class AI2Actions {
 
 	public static SelectDialogResult selectDialog(AbstractAI ai2, Player player, int questId, int dialogId) {
 		QuestEnv env = new QuestEnv(ai2.getOwner(), player, questId, dialogId);
-		boolean result = QuestEngine.getInstance().onDialog(env);
+		boolean result = GameEngineServices.questEngine().onDialog(env);
 		return new SelectDialogResult(result, env);
 	}
 

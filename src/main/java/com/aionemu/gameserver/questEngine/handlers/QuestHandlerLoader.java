@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.handlers;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.lang.reflect.Modifier;
 
 import org.slf4j.Logger;
@@ -49,7 +51,7 @@ public class QuestHandlerLoader implements ClassListener {
 				try {
 					Class<? extends QuestHandler> tmp = (Class<? extends QuestHandler>) c;
 					if (tmp != null) {
-						QuestEngine.getInstance().addQuestHandler(tmp.getDeclaredConstructor().newInstance());
+						GameEngineServices.questEngine().addQuestHandler(tmp.getDeclaredConstructor().newInstance());
 					}
 				} catch (Exception e) {
 					throw new RuntimeException("Failed to load quest handler class: " + c.getName(), e);
@@ -66,7 +68,7 @@ public class QuestHandlerLoader implements ClassListener {
 				logger.debug("Unload class " + c.getName());
 			}
 		}
-		QuestEngine.getInstance().clear();
+		GameEngineServices.questEngine().clear();
 	}
 
 	public boolean isValidClass(Class<?> clazz) {

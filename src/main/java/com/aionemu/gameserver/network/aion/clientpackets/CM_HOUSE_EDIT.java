@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import org.slf4j.Logger;
@@ -126,7 +128,7 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 			obj.spawn();
 			player.getHouseRegistry().setPersistentState(PersistentState.UPDATE_REQUIRED);
 			sendPacket(new SM_HOUSE_EDIT(4, 1, itemObjectId));
-			QuestEngine.getInstance().onHouseItemUseEvent(new QuestEnv(null, player, 0, 0),
+			GameEngineServices.questEngine().onHouseItemUseEvent(new QuestEnv(null, player, 0, 0),
 					obj.getObjectTemplate().getTemplateId());
 		} else if (action == HousingAction.MOVE_OBJECT) {
 			HouseObject<?> obj = player.getHouseRegistry().getObjectByObjId(itemObjectId);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -61,6 +63,6 @@ public class QuestStartAction extends AbstractItemAction {
 	@Override
 	public void act(Player player, Item parentItem, Item targetItem) {
 
-		QuestEngine.getInstance().onDialog(new QuestEnv(null, player, questid, QuestDialog.ASK_ACCEPTION.id()));
+		GameEngineServices.questEngine().onDialog(new QuestEnv(null, player, questid, QuestDialog.ASK_ACCEPTION.id()));
 	}
 }

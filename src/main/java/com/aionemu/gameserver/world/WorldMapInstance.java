@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.world;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -203,7 +205,7 @@ public abstract class WorldMapInstance {
 					+ String.valueOf(this.getMapId()) + " " + String.valueOf(this.getInstanceId()));
 		}
 		if (object instanceof Npc) {
-			QuestNpc data = QuestEngine.getInstance().getQuestNpc(((Npc) object).getNpcId());
+			QuestNpc data = GameEngineServices.questEngine().getQuestNpc(((Npc) object).getNpcId());
 			if (data != null) {
 				for (int id : data.getOnQuestStart()) {
 					if (!questIds.contains(id)) {

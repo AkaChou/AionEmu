@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public class QuestsData {
 		List<QuestTemplate> quests = new ArrayList<QuestTemplate>();
 		QuestEnv questEnv = new QuestEnv(null, player, 0, 0);
 		for (QuestTemplate questTemplate : factionQuests) {
-			if (!QuestEngine.getInstance().isHaveHandler(questTemplate.getId())) {
+			if (!GameEngineServices.questEngine().isHaveHandler(questTemplate.getId())) {
 				continue;
 			}
 			if (questTemplate.getMinlevelPermitted() != 0 && player.getLevel() < questTemplate.getMinlevelPermitted()) {

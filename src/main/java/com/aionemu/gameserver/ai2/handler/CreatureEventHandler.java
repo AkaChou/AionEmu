@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -41,7 +43,7 @@ public class CreatureEventHandler {
 		checkAggro(npcAI, creature);
 		if (creature instanceof Player) {
 			Player player = (Player) creature;
-			QuestEngine.getInstance().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
+			GameEngineServices.questEngine().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
 		}
 	}
 
@@ -53,7 +55,7 @@ public class CreatureEventHandler {
 		checkAggro(npcAI, creature);
 		if (creature instanceof Player) {
 			Player player = (Player) creature;
-			QuestEngine.getInstance().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
+			GameEngineServices.questEngine().onAtDistance(new QuestEnv(npcAI.getOwner(), player, 0, 0));
 		}
 	}
 
