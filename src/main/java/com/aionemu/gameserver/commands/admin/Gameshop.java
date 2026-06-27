@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -121,7 +123,7 @@ public class Gameshop extends AdminCommand {
 			if (titleDescription.equals("empty")) {
 				titleDescription = StringUtils.EMPTY;
 			}
-			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(IDFactory.getInstance().nextId(), itemId, count, price,
+			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(GameWorldBootstrapServices.idFactory().nextId(), itemId, count, price,
 				category, subCategory, list - 1, 1, itemType, gift, titleDescription, description);
 			PacketSendUtility.sendMessage(admin, "You add [item:" + itemId + "]");
 		}
@@ -163,7 +165,7 @@ public class Gameshop extends AdminCommand {
 			if (titleDescription.equals("empty")) {
 				titleDescription = StringUtils.EMPTY;
 			}
-			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(IDFactory.getInstance().nextId(), itemId, count, price,
+			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(GameWorldBootstrapServices.idFactory().nextId(), itemId, count, price,
 				(byte) -1, (byte) -1, -1, 0, itemType, gift, titleDescription, description);
 			PacketSendUtility.sendMessage(admin, "You remove from Ranking Sales [item:" + itemId + "]");
 		}

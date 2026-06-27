@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.veteranreward;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import java.sql.Timestamp;
@@ -314,7 +316,7 @@ public class VeteranRewardsService {
 		String finalSender = sender;
 
 		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
 				type);
 

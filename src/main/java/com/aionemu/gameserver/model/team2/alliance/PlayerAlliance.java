@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.team2.alliance;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +41,7 @@ public class PlayerAlliance extends TemporaryPlayerTeam<PlayerAllianceMember> {
 	private int bgIndex = -1;
 
 	public PlayerAlliance(PlayerAllianceMember leader, TeamType type) {
-		super(IDFactory.getInstance().nextId());
+		super(GameWorldBootstrapServices.idFactory().nextId());
 		this.type = type;
 		initializeTeam(leader);
 		for (int groupId = 1000; groupId <= 1003; groupId++) {

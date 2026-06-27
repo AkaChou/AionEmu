@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.sql.Timestamp;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -48,13 +50,13 @@ public class MinionCommonData extends VisibleObjectTemplate implements IExpirabl
 	public MinionCommonData(int minionId, int masterObjectId, String name, String minionGrade, int minionLevel, int miniongrowthpoint) {
 		switch (this.minionObjId) {
 		case 0: {
-			this.minionObjId = IDFactory.getInstance().nextId();
+			this.minionObjId = GameWorldBootstrapServices.idFactory().nextId();
 			break;
 		}
 		default:
 			do {
 				if (DAOManager.getDAO(PlayerMinionsDAO.class).PlayerMinions(masterObjectId, minionObjId)) {
-					this.minionObjId = IDFactory.getInstance().nextId();
+					this.minionObjId = GameWorldBootstrapServices.idFactory().nextId();
 				}
 			} while (DAOManager.getDAO(PlayerMinionsDAO.class).PlayerMinions(masterObjectId, minionObjId));
 			break;

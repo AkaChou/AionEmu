@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -282,7 +284,7 @@ public class VisibleObjectSpawner {
             log.error("<No Template For NPC> " + String.valueOf(objectId));
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
 
         Npc npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
         npc.setCreatorId(spawn.getCreatorId());
@@ -305,7 +307,7 @@ public class VisibleObjectSpawner {
     public static SummonedHouseNpc spawnHouseNpc(SpawnTemplate spawn, int instanceIndex, House creator, String masterName) {
         int npcId = spawn.getNpcId();
         NpcTemplate template = RatedTemplate(npcId);
-        SummonedHouseNpc npc = new SummonedHouseNpc(IDFactory.getInstance().nextId(), new NpcController(), spawn, template, creator, masterName);
+        SummonedHouseNpc npc = new SummonedHouseNpc(GameWorldBootstrapServices.idFactory().nextId(), new NpcController(), spawn, template, creator, masterName);
         npc.setKnownlist(new PlayerAwareKnownList(npc));
         npc.setEffectController(new EffectController(npc));
         SpawnEngine.bringIntoWorld(npc, spawn, instanceIndex);
@@ -321,7 +323,7 @@ public class VisibleObjectSpawner {
         int spawnId = spawn.getId();
         boolean isActive = BaseService.getInstance().isActive(spawnId);
         BaseLocation base = BaseService.getInstance().getBaseLocation(spawnId);
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         if (!isActive && spawn.getBaseRace() != base.getRace()) {
             return null;
@@ -346,7 +348,7 @@ public class VisibleObjectSpawner {
         int spawnId = spawn.getId();
         boolean isActive = OutpostService.getInstance().isActive(spawnId);
         OutpostLocation outpost = OutpostService.getInstance().getOutpostLocation(spawnId);
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         if (!isActive && spawn.getOutpostRace() != outpost.getRace()) {
             return null;
@@ -371,7 +373,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         RiftLocation loc = RiftService.getInstance().getRiftLocation(spawnId);
@@ -395,7 +397,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc = null;
         int spawnSiegeId = spawn.getSiegeId();
         SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(spawnSiegeId);
@@ -422,7 +424,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         VortexLocation loc = VortexService.getInstance().getVortexLocation(spawnId);
@@ -449,7 +451,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         BeritraLocation loc = BeritraService.getInstance().getBeritraLocation(spawnId);
@@ -476,7 +478,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         AgentLocation loc = AgentService.getInstance().getAgentLocation(spawnId);
@@ -503,7 +505,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         AnohaLocation loc = AnohaService.getInstance().getAnohaLocation(spawnId);
@@ -530,7 +532,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         ConquestLocation loc = ConquestService.getInstance().getConquestLocation(spawnId);
@@ -557,7 +559,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         SvsLocation loc = SvsService.getInstance().getSvsLocation(spawnId);
@@ -584,7 +586,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         RvrLocation loc = RvrService.getInstance().getRvrLocation(spawnId);
@@ -611,7 +613,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         IuLocation loc = IuService.getInstance().getIuLocation(spawnId);
@@ -638,7 +640,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         MoltenusLocation loc = MoltenusService.getInstance().getMoltenusLocation(spawnId);
@@ -665,7 +667,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         DynamicRiftLocation loc = DynamicRiftService.getInstance().getDynamicRiftLocation(spawnId);
@@ -692,7 +694,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         InstanceRiftLocation loc = InstanceRiftService.getInstance().getInstanceRiftLocation(spawnId);
@@ -719,7 +721,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         NightmareCircusLocation loc = NightmareCircusService.getInstance().getNightmareCircusLocation(spawnId);
@@ -746,7 +748,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         IdianDepthsLocation loc = IdianDepthsService.getInstance().getIdianDepthsLocation(spawnId);
@@ -773,7 +775,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         ZorshivDredgionLocation loc = ZorshivDredgionService.getInstance().getZorshivDredgionLocation(spawnId);
@@ -794,7 +796,7 @@ public class VisibleObjectSpawner {
     protected static VisibleObject spawnGatherable(SpawnTemplate spawn, int instanceIndex) {
         int objectId = spawn.getNpcId();
         VisibleObjectTemplate template = DataManager.GATHERABLE_DATA.getGatherableTemplate(objectId);
-        Gatherable gatherable = new Gatherable(spawn, template, IDFactory.getInstance().nextId(), new GatherableController());
+        Gatherable gatherable = new Gatherable(spawn, template, GameWorldBootstrapServices.idFactory().nextId(), new GatherableController());
         gatherable.setKnownlist(new PlayerAwareKnownList(gatherable));
         SpawnEngine.bringIntoWorld(gatherable, spawn, instanceIndex);
         return gatherable;
@@ -803,7 +805,7 @@ public class VisibleObjectSpawner {
     public static Trap spawnTrap(SpawnTemplate spawn, int instanceIndex, Creature creator) {
         int objectId = spawn.getNpcId();
         NpcTemplate npcTemplate = RatedTemplate(objectId);
-        Trap trap = new Trap(IDFactory.getInstance().nextId(), new NpcController(), spawn, npcTemplate);
+        Trap trap = new Trap(GameWorldBootstrapServices.idFactory().nextId(), new NpcController(), spawn, npcTemplate);
         trap.setKnownlist(new NpcKnownList(trap));
         trap.setEffectController(new EffectController(trap));
         trap.setCreator(creator);
@@ -816,7 +818,7 @@ public class VisibleObjectSpawner {
     public static GroupGate spawnGroupGate(SpawnTemplate spawn, int instanceIndex, Creature creator) {
         int objectId = spawn.getNpcId();
         NpcTemplate npcTemplate = RatedTemplate(objectId);
-        GroupGate groupgate = new GroupGate(IDFactory.getInstance().nextId(), new NpcController(), spawn, npcTemplate);
+        GroupGate groupgate = new GroupGate(GameWorldBootstrapServices.idFactory().nextId(), new NpcController(), spawn, npcTemplate);
         groupgate.setKnownlist(new PlayerAwareKnownList(groupgate));
         groupgate.setEffectController(new EffectController(groupgate));
         groupgate.setCreator(creator);
@@ -827,7 +829,7 @@ public class VisibleObjectSpawner {
     public static Kisk spawnKisk(SpawnTemplate spawn, int instanceIndex, Player creator) {
         int npcId = spawn.getNpcId();
         NpcTemplate template = RatedTemplate(npcId);
-        Kisk kisk = new Kisk(IDFactory.getInstance().nextId(), new NpcController(), spawn, template, creator);
+        Kisk kisk = new Kisk(GameWorldBootstrapServices.idFactory().nextId(), new NpcController(), spawn, template, creator);
         kisk.setKnownlist(new PlayerAwareKnownList(kisk));
         kisk.setCreator(creator);
         kisk.setEffectController(new EffectController(kisk));
@@ -839,7 +841,7 @@ public class VisibleObjectSpawner {
         int npcId = owner.getRace() == Race.ELYOS ? 798100 : 798101;
         NpcData npcData = DataManager.NPC_DATA;
         NpcTemplate template = npcData.getNpcTemplate(npcId);
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         int worldId = owner.getWorldId();
         int instanceId = owner.getInstanceId();
         double radian = Math.toRadians(MathUtil.convertHeadingToDegree(owner.getHeading()));
@@ -857,7 +859,7 @@ public class VisibleObjectSpawner {
     public static Npc spawnFunctionalNpc(final Player owner, int npcId, SummonOwner summonOwner) {
         NpcData npcData = DataManager.NPC_DATA;
         NpcTemplate template = npcData.getNpcTemplate(npcId);
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         int worldId = owner.getWorldId();
         int instanceId = owner.getInstanceId();
         double radian = Math.toRadians(MathUtil.convertHeadingToDegree(owner.getHeading()));
@@ -877,7 +879,7 @@ public class VisibleObjectSpawner {
         int creatureLevel = creator.getLevel();
         level = SkillLearnService.getSkillLearnLevel(skillId, creatureLevel, level);
         byte servantLevel = (byte) SkillLearnService.getSkillMinLevel(skillId, creatureLevel, level);
-        Servant servant = new Servant(IDFactory.getInstance().nextId(), new NpcController(), spawn, npcTemplate, servantLevel);
+        Servant servant = new Servant(GameWorldBootstrapServices.idFactory().nextId(), new NpcController(), spawn, npcTemplate, servantLevel);
         servant.setKnownlist(new NpcKnownList(servant));
         servant.setEffectController(new EffectController(servant));
         servant.setCreator(creator);
@@ -895,7 +897,7 @@ public class VisibleObjectSpawner {
     public static Servant spawnEnemyServant(SpawnTemplate spawn, int instanceIndex, Creature creator, byte servantLvl) {
         int objectId = spawn.getNpcId();
         NpcTemplate npcTemplate = RatedTemplate(objectId);
-        Servant servant = new Servant(IDFactory.getInstance().nextId(), new NpcController(), spawn, npcTemplate, servantLvl);
+        Servant servant = new Servant(GameWorldBootstrapServices.idFactory().nextId(), new NpcController(), spawn, npcTemplate, servantLvl);
         servant.setKnownlist(new NpcKnownList(servant));
         servant.setEffectController(new EffectController(servant));
         servant.setCreator(creator);
@@ -910,7 +912,7 @@ public class VisibleObjectSpawner {
         int creatureLevel = creator.getLevel();
         level = SkillLearnService.getSkillLearnLevel(skillId, creatureLevel, level);
         byte homingLevel = (byte) SkillLearnService.getSkillMinLevel(skillId, creatureLevel, level);
-        Homing homing = new Homing(IDFactory.getInstance().nextId(), new NpcController(), spawn, npcTemplate, homingLevel, skillId);
+        Homing homing = new Homing(GameWorldBootstrapServices.idFactory().nextId(), new NpcController(), spawn, npcTemplate, homingLevel, skillId);
         homing.setState(CreatureState.WEAPON_EQUIPPED);
         homing.setKnownlist(new NpcKnownList(homing));
         homing.setEffectController(new EffectController(homing));
@@ -943,7 +945,7 @@ public class VisibleObjectSpawner {
         skillLevel = SkillLearnService.getSkillLearnLevel(skillId, creator.getCommonData().getLevel(), skillLevel);
         byte level = (byte) SkillLearnService.getSkillMinLevel(skillId, creator.getCommonData().getLevel(), skillLevel);
         boolean isSiegeWeapon = npcTemplate.getAi().equals("siege_weapon");
-        Summon summon = new Summon(IDFactory.getInstance().nextId(), isSiegeWeapon ? new SiegeWeaponController(npcId) : new SummonController(), spawn, npcTemplate, isSiegeWeapon ? npcTemplate.getLevel() : level, time);
+        Summon summon = new Summon(GameWorldBootstrapServices.idFactory().nextId(), isSiegeWeapon ? new SiegeWeaponController(npcId) : new SummonController(), spawn, npcTemplate, isSiegeWeapon ? npcTemplate.getLevel() : level, time);
         summon.setKnownlist(new CreatureAwareKnownList(summon));
         summon.setEffectController(new EffectController(summon));
         summon.setMaster(creator);
@@ -1009,7 +1011,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         LandingLocation loc = AbyssLandingService.getInstance().getLandingLocation(spawnId);
@@ -1033,7 +1035,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         LandingSpecialLocation loc = AbyssLandingSpecialService.getInstance().getLandingSpecialLocation(spawnId);
@@ -1060,7 +1062,7 @@ public class VisibleObjectSpawner {
         if (npcTemplate == null) {
             return null;
         }
-        IDFactory iDFactory = IDFactory.getInstance();
+        IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
         TowerOfEternityLocation loc = TowerOfEternityService.getInstance().getTowerOfEternityLocation(spawnId);

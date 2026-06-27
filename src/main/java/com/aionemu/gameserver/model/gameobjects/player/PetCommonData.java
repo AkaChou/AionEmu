@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -59,7 +61,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 	private boolean isSelling = false;
 
 	public PetCommonData(int petId, int masterObjectId, int expireTime) {
-		this.petObjectId = IDFactory.getInstance().nextId();
+		this.petObjectId = GameWorldBootstrapServices.idFactory().nextId();
 		this.petId = petId;
 		this.masterObjectId = masterObjectId;
 		this.expireTime = expireTime;

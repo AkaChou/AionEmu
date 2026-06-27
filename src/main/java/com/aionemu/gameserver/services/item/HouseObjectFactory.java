@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.time.ZonedDateTime;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -82,7 +84,7 @@ public final class HouseObjectFactory {
 			throw new IllegalArgumentException("template actions miss SummonHouseObjectAction");
 		}
 		int objectTemplateId = action.getTemplateId();
-		HouseObject<?> obj = createNew(house, IDFactory.getInstance().nextId(), objectTemplateId);
+		HouseObject<?> obj = createNew(house, GameWorldBootstrapServices.idFactory().nextId(), objectTemplateId);
 		if (obj.getObjectTemplate().getUseDays() > 0) {
 			ZonedDateTime now = ZonedDateTime.now();
 			ZonedDateTime expireDate = now.plusDays(obj.getObjectTemplate().getUseDays());

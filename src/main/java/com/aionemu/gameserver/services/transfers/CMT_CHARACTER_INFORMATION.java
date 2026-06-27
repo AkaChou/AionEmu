@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.transfers;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +85,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 	public Player readInfo(String name, int targetAccount, String accountName, List<Integer> rsList, Logger textLog) {
 
 		long st = System.currentTimeMillis();
-		PlayerCommonData playerCommonData = new PlayerCommonData(IDFactory.getInstance().nextId());
+		PlayerCommonData playerCommonData = new PlayerCommonData(GameWorldBootstrapServices.idFactory().nextId());
 		playerCommonData.setName(name);
 		playerCommonData.setExp(readQ(), false);
 		playerCommonData.setPlayerClass(PlayerClass.getPlayerClassById((byte) readD()));
@@ -157,7 +159,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 
 		if (!PlayerService.storeNewPlayer(player, accountName, targetAccount)) {
 			textLog.info("failed to store new player to " + accountName);
-			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 			return null;
 		}
 
@@ -217,7 +219,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 					continue;
 				}
 
-				int newId = IDFactory.getInstance().nextId();
+				int newId = GameWorldBootstrapServices.idFactory().nextId();
 				Item item = new Item(newId, itemId, itemCnt, itemColor, colorExpires, itemCreator, itemExpireTime,
 						itemActivationCnt, itemEquipped, itemSoulBound, equipSlot, location, enchant, skinId, fusionId,
 						optSocket, optFusion, charge, bonusNum, randomNum, wrappingNum, newId, itemPacked, 0,
@@ -304,7 +306,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 					continue;
 				}
 
-				int newId = IDFactory.getInstance().nextId();
+				int newId = GameWorldBootstrapServices.idFactory().nextId();
 				Item item = new Item(newId, itemId, itemCnt, itemColor, 0, itemCreator, itemExpireTime,
 						itemActivationCnt, itemEquipped, itemSoulBound, equipSlot, location, enchant, skinId, fusionId,
 						optSocket, optFusion, charge, bonusNum, randomNum, wrappingNum, newId, itemPacked, 0,

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -93,7 +95,7 @@ public class House extends VisibleObject {
 	public static final int NOTICE_LENGTH = 130;
 
 	public House(Building building, HouseAddress address, int instanceId) {
-		this(IDFactory.getInstance().nextId(), building, address, instanceId);
+		this(GameWorldBootstrapServices.idFactory().nextId(), building, address, instanceId);
 	}
 
 	public House(int objectId, Building building, HouseAddress address, int instanceId) {

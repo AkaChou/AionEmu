@@ -12,10 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameWorldBootstrapServices implements DisposableBean {
 
+    private static volatile ObjectProvider<IDFactory> idFactoryProvider;
+
     public GameWorldBootstrapServices(ObjectProvider<IDFactory> idFactoryProvider,
             ObjectProvider<ZoneService> zoneServiceProvider,
             ObjectProvider<HotspotTeleportService> hotspotTeleportServiceProvider,
             ObjectProvider<RoadService> roadServiceProvider, ObjectProvider<World> worldProvider) {
+        GameWorldBootstrapServices.idFactoryProvider = idFactoryProvider;
         IDFactory.setInstanceProvider(idFactoryProvider);
         ZoneService.setInstanceProvider(zoneServiceProvider);
         HotspotTeleportService.setInstanceProvider(hotspotTeleportServiceProvider);
@@ -23,8 +26,17 @@ public final class GameWorldBootstrapServices implements DisposableBean {
         World.setInstanceProvider(worldProvider);
     }
 
+    public static IDFactory idFactory() {
+        ObjectProvider<IDFactory> provider = idFactoryProvider;
+        if (provider == null) {
+            return GameWorldBootstrapFallbacks.idFactory();
+        }
+        return provider.getIfAvailable(GameWorldBootstrapFallbacks::idFactory);
+    }
+
     @Override
     public void destroy() {
+        idFactoryProvider = null;
         IDFactory.setInstanceProvider(null);
         ZoneService.setInstanceProvider(null);
         HotspotTeleportService.setInstanceProvider(null);

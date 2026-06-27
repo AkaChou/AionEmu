@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.rift;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -110,7 +112,7 @@ public class RiftManager {
 
 	private Npc spawnInstance(int instance, SpawnTemplate template, RVController controller) {
 		NpcTemplate masterObjectTemplate = DataManager.NPC_DATA.getNpcTemplate(template.getNpcId());
-		Npc npc = new Npc(IDFactory.getInstance().nextId(), controller, template, masterObjectTemplate);
+		Npc npc = new Npc(GameWorldBootstrapServices.idFactory().nextId(), controller, template, masterObjectTemplate);
 
 		npc.setKnownlist(new NpcKnownList(npc));
 		npc.setEffectController(new EffectController(npc));

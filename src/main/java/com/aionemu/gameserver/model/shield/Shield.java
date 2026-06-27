@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.shield;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.gameserver.controllers.ShieldController;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.shield.ShieldTemplate;
@@ -34,7 +36,7 @@ public class Shield extends VisibleObject {
 	private int id = 0;
 
 	public Shield(ShieldTemplate template) {
-		super(IDFactory.getInstance().nextId(), new ShieldController(), null, null, null);
+		super(GameWorldBootstrapServices.idFactory().nextId(), new ShieldController(), null, null, null);
 
 		((ShieldController) getController()).setOwner(this);
 		this.template = template;

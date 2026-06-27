@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
@@ -273,7 +275,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
         if (!objectsToDelete.isEmpty()) {
             for (HouseObject<?> obj : objectsToDelete) {
                 if (obj != null && obj.getObjectId() != 0) {
-                    IDFactory.getInstance().releaseId(obj.getObjectId());
+                    GameWorldBootstrapServices.idFactory().releaseId(obj.getObjectId());
                 }
             }
         }
@@ -281,7 +283,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
         if (!partsToDelete.isEmpty()) {
             for (HouseDecoration part : partsToDelete) {
                 if (part != null && part.getObjectId() != 0) {
-                    IDFactory.getInstance().releaseId(part.getObjectId());
+                    GameWorldBootstrapServices.idFactory().releaseId(part.getObjectId());
                 }
             }
         }

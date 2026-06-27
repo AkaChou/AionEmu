@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +59,7 @@ public class StaticDoorSpawnManager {
 			SpawnTemplate spawn = new SpawnTemplate(new SpawnGroup2(worldId, 300001), data.getX(), data.getY(),
 					data.getZ(), (byte) 0, 0, null, 0, 0);
 			spawn.setEntityId(data.getDoorId());
-			int objectId = IDFactory.getInstance().nextId();
+			int objectId = GameWorldBootstrapServices.idFactory().nextId();
 			StaticDoor staticDoor = new StaticDoor(objectId, new StaticObjectController(), spawn, data, instanceIndex);
 			staticDoor.setKnownlist(new PlayerAwareKnownList(staticDoor));
 			bringIntoWorld(staticDoor, spawn, instanceIndex);

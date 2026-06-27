@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.mail;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 
@@ -141,7 +143,7 @@ public class SystemMailService {
 		}
 		String finalSender = sender;
 		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
 				letterType);
 		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
@@ -210,7 +212,7 @@ public class SystemMailService {
 		attachedItem.setEquipmentSlot(0);
 		attachedItem.setItemLocation(StorageType.MAILBOX.getId());
 		Timestamp time = new Timestamp(System.currentTimeMillis());
-		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, attachedKinahCount, attachedApCount, title, message, sender, time, true, type);
 		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
 			return false;

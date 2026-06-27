@@ -11,6 +11,7 @@ import com.aionemu.gameserver.world.zone.ZoneService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -52,6 +53,41 @@ class GameWorldBootstrapRuntimeBridgeTest {
             assertSame(idFactory, IDFactory.getInstance());
         } finally {
             IDFactory.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void worldBootstrapServicesIdFactoryAccessorUsesSpringProviderBeforeLegacyFallback() {
+        IDFactory idFactory = instance(IDFactory.class);
+        GameWorldBootstrapServices worldBootstrapServices = new GameWorldBootstrapServices(
+            provider(IDFactory.class, idFactory),
+            provider(ZoneService.class, instance(ZoneService.class)),
+            provider(HotspotTeleportService.class, instance(HotspotTeleportService.class)),
+            provider(RoadService.class, instance(RoadService.class)),
+            provider(World.class, instance(World.class))
+        );
+
+        try {
+            assertSame(idFactory, GameWorldBootstrapServices.idFactory());
+        } finally {
+            worldBootstrapServices.destroy();
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesWorldBootstrapIdFactoryBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldBootstrapFallbacks.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("IDFactory.getInstance()"), source.toString());
         }
     }
 

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.gameserver.controllers.StaticObjectController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.StaticObject;
@@ -45,7 +47,7 @@ public class StaticObjectSpawnManager {
 			spawn.resetTemplates(instanceIndex);
 			for (int i = 0; i < spawn.getPool(); i++) {
 				SpawnTemplate template = spawn.getRndTemplate(instanceIndex);
-				int objectId = IDFactory.getInstance().nextId();
+				int objectId = GameWorldBootstrapServices.idFactory().nextId();
 				StaticObject staticObject = new StaticObject(objectId, new StaticObjectController(), template,
 						objectTemplate);
 				staticObject.setKnownlist(new PlayerAwareKnownList(staticObject));
@@ -53,7 +55,7 @@ public class StaticObjectSpawnManager {
 			}
 		} else {
 			for (SpawnTemplate template : spawn.getSpawnTemplates()) {
-				int objectId = IDFactory.getInstance().nextId();
+				int objectId = GameWorldBootstrapServices.idFactory().nextId();
 				StaticObject staticObject = new StaticObject(objectId, new StaticObjectController(), template,
 						objectTemplate);
 				staticObject.setKnownlist(new PlayerAwareKnownList(staticObject));

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.assemblednpc.AssembledNpc;
 import com.aionemu.gameserver.model.assemblednpc.AssembledNpcPart;
@@ -63,7 +65,7 @@ public class SpawnAssembledNpc  extends AdminCommand {
 		}
 		List<AssembledNpcPart> assembledPatrs = new ArrayList<AssembledNpcPart>();
 		for (AssembledNpcTemplate.AssembledNpcPartTemplate npcPart : template.getAssembledNpcPartTemplates()) {
-			assembledPatrs.add(new AssembledNpcPart(IDFactory.getInstance().nextId(), npcPart));
+			assembledPatrs.add(new AssembledNpcPart(GameWorldBootstrapServices.idFactory().nextId(), npcPart));
 		}
 		AssembledNpc npc = new AssembledNpc(template.getRouteId(), template.getMapId(), template.getLiveTime(), assembledPatrs);
 		Iterator<Player> iter = World.getInstance().getPlayersIterator();

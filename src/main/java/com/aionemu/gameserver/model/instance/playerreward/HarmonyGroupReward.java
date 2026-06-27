@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.instance.playerreward;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.model.autogroup.AGPlayer;
@@ -28,7 +30,7 @@ public class HarmonyGroupReward extends PvPArenaPlayerReward {
 	public HarmonyGroupReward(Integer object, int timeBonus, byte buffId, List<AGPlayer> players) {
 		super(object, timeBonus, buffId);
 		this.players = players;
-		id = IDFactory.getInstance().nextId();
+		id = GameWorldBootstrapServices.idFactory().nextId();
 	}
 
 	public List<AGPlayer> getAGPlayers() {

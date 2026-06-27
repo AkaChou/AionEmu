@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -554,7 +556,7 @@ public class LegionService {
 			/**
 			 * Create new legion and put originator as first member
 			 */
-			Legion legion = new Legion(IDFactory.getInstance().nextId(), legionName);
+			Legion legion = new Legion(GameWorldBootstrapServices.idFactory().nextId(), legionName);
 			legion.addLegionMember(activePlayer.getObjectId());
 
 			activePlayer.getInventory().decreaseKinah(LegionConfig.LEGION_CREATE_REQUIRED_KINAH);

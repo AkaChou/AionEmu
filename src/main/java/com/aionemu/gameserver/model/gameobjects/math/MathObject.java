@@ -3,6 +3,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.math;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.gameserver.controllers.MathController;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -25,7 +27,7 @@ public class MathObject extends VisibleObject {
 
 	public MathObject(SpawnTemplate spawnTemplate, MathObjectType type, MathObjectReaction reaction, double minRange,
 			double maxRange) {
-		super(IDFactory.getInstance().nextId(), new MathController(), spawnTemplate, null,
+		super(GameWorldBootstrapServices.idFactory().nextId(), new MathController(), spawnTemplate, null,
 				new WorldPosition(spawnTemplate.getWorldId()));
 		this.type = type;
 		this.reaction = reaction;

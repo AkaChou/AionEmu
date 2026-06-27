@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.mail;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -240,7 +242,7 @@ public class MailService {
 
 		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
-		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, finalAttachedKinahCount, finaAttachedApCount, title, message, sender.getName(), time,
 				true, letterType);
 

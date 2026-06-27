@@ -17,6 +17,8 @@
  */
 package com.aionemu.gameserver.model.team2.league;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,7 +44,7 @@ public class League extends GeneralTeam<PlayerAlliance, LeagueMember> {
 	private static final LeagueMemberComparator MEMBER_COMPARATOR = new LeagueMemberComparator();
 
 	public League(LeagueMember leader) {
-		super(IDFactory.getInstance().nextId());
+		super(GameWorldBootstrapServices.idFactory().nextId());
 		initializeTeam(leader);
 	}
 

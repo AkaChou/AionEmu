@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -309,12 +311,12 @@ public class ItemService {
 	}
 
 	public static void releaseItemId(Item item) {
-		IDFactory.getInstance().releaseId(item.getObjectId());
+		GameWorldBootstrapServices.idFactory().releaseId(item.getObjectId());
 	}
 
 	public static void releaseItemIds(Collection<Item> items) {
 		Collection<Integer> idIterator = Collections2.transform(items, AionObject.OBJECT_TO_ID_TRANSFORMER);
-		IDFactory.getInstance().releaseIds(idIterator);
+		GameWorldBootstrapServices.idFactory().releaseIds(idIterator);
 	}
 
 	public static boolean dropItemToInventory(int playerObjectId, int itemId) {
@@ -369,7 +371,7 @@ public class ItemService {
 
 		// TODO if Item object will contain ownerId - item can be saved to DB before
 		// return
-		Item temp = new Item(IDFactory.getInstance().nextId(), itemTemplate, count, false, 0);
+		Item temp = new Item(GameWorldBootstrapServices.idFactory().nextId(), itemTemplate, count, false, 0);
 
 		if (itemTemplate.isWeapon() || itemTemplate.isArmor()) {
 			temp.setOptionalSocket(Rnd.get(0, itemTemplate.getOptionSlotBonus()));

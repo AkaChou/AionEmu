@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -152,7 +154,7 @@ public class CM_CREATE_CHARACTER extends AionClientPacket {
 			client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.FAILED_TO_CREATE_THE_CHARACTER));
 			return;
 		}
-		playerCommonData = new PlayerCommonData(IDFactory.getInstance().nextId());
+		playerCommonData = new PlayerCommonData(GameWorldBootstrapServices.idFactory().nextId());
 		playerCommonData.setName(name);
 		playerCommonData.setLevel(1);
 		playerCommonData.setGender(gender);
@@ -164,12 +166,12 @@ public class CM_CREATE_CHARACTER extends AionClientPacket {
 		if (account.getMembership() >= MembershipConfig.CHARACTER_ADDITIONAL_ENABLE) {
 			if (MembershipConfig.CHARACTER_ADDITIONAL_COUNT <= account.size()) {
 				client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.RESPONSE_SERVER_LIMIT_EXCEEDED));
-				IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+				GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 				return;
 			}
 		} else if (GSConfig.CHARACTER_LIMIT_COUNT <= account.size()) {
 			client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.RESPONSE_SERVER_LIMIT_EXCEEDED));
-			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 			return;
 		}
 		if (!PlayerService.isFreeName(playerCommonData.getName())) {
@@ -178,27 +180,27 @@ public class CM_CREATE_CHARACTER extends AionClientPacket {
 			} else {
 				client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.RESPONSE_NAME_ALREADY_USED));
 			}
-			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 			return;
 		}
 		if (PlayerService.isOldName(playerCommonData.getName())) {
 			client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.RESPONSE_NAME_ALREADY_USED));
-			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 			return;
 		}
 		if (!NameRestrictionService.isValidName(playerCommonData.getName())) {
 			client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.RESPONSE_INVALID_NAME));
-			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 			return;
 		}
 		if (NameRestrictionService.isForbiddenWord(playerCommonData.getName())) {
 			client.sendPacket(new SM_CREATE_CHARACTER(null, 9));
-			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 			return;
 		}
 		if (!playerCommonData.getPlayerClass().isStartingClass()) {
 			client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.FAILED_TO_CREATE_THE_CHARACTER));
-			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 			return;
 		}
 		if (GSConfig.CHARACTER_CREATION_MODE == 0) {
@@ -206,7 +208,7 @@ public class CM_CREATE_CHARACTER extends AionClientPacket {
 				if (data.getPlayerCommonData().getRace() != playerCommonData.getRace()) {
 					client.sendPacket(
 							new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.FAILED_TO_CREATE_THE_CHARACTER));
-					IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+					GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 					return;
 				}
 			}
@@ -214,7 +216,7 @@ public class CM_CREATE_CHARACTER extends AionClientPacket {
 		Player player = PlayerService.newPlayer(playerCommonData, playerAppearance, account);
 		if (!PlayerService.storeNewPlayer(player, account.getName(), account.getId())) {
 			client.sendPacket(new SM_CREATE_CHARACTER(null, SM_CREATE_CHARACTER.RESPONSE_DB_ERROR));
-			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 		} else {
 			List<Item> equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(player.getObjectId());
 			PlayerAccountData accPlData = new PlayerAccountData(playerCommonData, null, playerAppearance, equipment,

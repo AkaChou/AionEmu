@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -412,7 +414,7 @@ public class BalaurAssaultService {
 		AssembledNpcTemplate template = DataManager.ASSEMBLED_NPC_DATA.getAssembledNpcTemplate(spawnId);
 		List<AssembledNpcPart> assembledParts = new ArrayList<AssembledNpcPart>();
 		for (AssembledNpcTemplate.AssembledNpcPartTemplate npcPart : template.getAssembledNpcPartTemplates()) {
-			assembledParts.add(new AssembledNpcPart(IDFactory.getInstance().nextId(), npcPart));
+			assembledParts.add(new AssembledNpcPart(GameWorldBootstrapServices.idFactory().nextId(), npcPart));
 		}
 		AssembledNpc npc = new AssembledNpc(template.getRouteId(), template.getMapId(), template.getLiveTime(),
 				assembledParts);

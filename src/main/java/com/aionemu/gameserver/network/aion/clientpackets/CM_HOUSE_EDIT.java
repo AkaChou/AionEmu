@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,7 +99,7 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 			player.getInventory().delete(item, ItemDeleteType.REGISTER);
 			DecorateAction decorateAction = template.getActions().getDecorateAction();
 			if (decorateAction != null) {
-				HouseDecoration decor = new HouseDecoration(IDFactory.getInstance().nextId(),
+				HouseDecoration decor = new HouseDecoration(GameWorldBootstrapServices.idFactory().nextId(),
 						decorateAction.getTemplateId());
 				player.getHouseRegistry().putCustomPart(decor);
 				sendPacket(new SM_HOUSE_EDIT(actionId, 2, decor.getObjectId()));

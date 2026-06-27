@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.team2.group;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -35,7 +37,7 @@ public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
 	private Map<Integer, Player> groupMembers = new LinkedHashMap<Integer, Player>();
 
 	public PlayerGroup(PlayerGroupMember leader, TeamType type) {
-		super(IDFactory.getInstance().nextId());
+		super(GameWorldBootstrapServices.idFactory().nextId());
 		this.playerGroupStats = new PlayerGroupStats(this);
 		this.type = type;
 		initializeTeam(leader);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +68,7 @@ public class HTMLService {
 	}
 
 	public static void pushSurvey(final String html) {
-		final int messageId = IDFactory.getInstance().nextId();
+		final int messageId = GameWorldBootstrapServices.idFactory().nextId();
 		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
@@ -77,7 +79,7 @@ public class HTMLService {
 	}
 
 	public static void showHTML(Player player, String html) {
-		sendData(player, IDFactory.getInstance().nextId(), html);
+		sendData(player, GameWorldBootstrapServices.idFactory().nextId(), html);
 	}
 
 	public static void sendData(Player player, int messageId, String html) {
@@ -110,7 +112,7 @@ public class HTMLService {
 				if (!template.isActivated()) {
 					continue;
 				}
-				int id = IDFactory.getInstance().nextId();
+				int id = GameWorldBootstrapServices.idFactory().nextId();
 				sendData(player, id, getHTMLTemplate(template));
 				DAOManager.getDAO(GuideDAO.class).saveGuide(id, player, template.getTitle());
 			}
@@ -194,7 +196,7 @@ public class HTMLService {
 	public static void sendGuideHtml(Player player, String title) {
 		GuideTemplate template = DataManager.GUIDE_HTML_DATA.getTemplateByTitle(title);
 		if (template != null) {
-			int id = IDFactory.getInstance().nextId();
+			int id = GameWorldBootstrapServices.idFactory().nextId();
 			DAOManager.getDAO(GuideDAO.class).saveGuide(id, player, title);
 			sendData(player, id, getHTMLTemplate(template));
 		}

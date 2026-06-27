@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.flyring;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.gameserver.controllers.FlyRingController;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
@@ -34,7 +36,7 @@ public class FlyRing extends VisibleObject {
 	private Point3D right = null;
 
 	public FlyRing(FlyRingTemplate template, int instanceId) {
-		super(IDFactory.getInstance().nextId(), new FlyRingController(), null, null,
+		super(GameWorldBootstrapServices.idFactory().nextId(), new FlyRingController(), null, null,
 				World.getInstance().createPosition(template.getMap(), template.getCenter().getX(),
 						template.getCenter().getY(), template.getCenter().getZ(), (byte) 0, instanceId));
 		((FlyRingController) getController()).setOwner(this);
