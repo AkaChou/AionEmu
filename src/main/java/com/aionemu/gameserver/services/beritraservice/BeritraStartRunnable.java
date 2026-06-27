@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.beritraservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
@@ -37,53 +39,53 @@ public class BeritraStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// Beritra Invasion Portal.
-		BeritraService.getInstance().adventPortalSP(id);
+		GameLocationBootstrapServices.beritraService().adventPortalSP(id);
 		// Ereshkigal Invasion Portal.
-		BeritraService.getInstance().adventPortalEreshSP(id);
+		GameLocationBootstrapServices.beritraService().adventPortalEreshSP(id);
 		// The Beritra Legion's Invasion Corridor has appeared.
-		BeritraService.getInstance().invasionCorridorMsg(id);
+		GameLocationBootstrapServices.beritraService().invasionCorridorMsg(id);
 		// The Ereshkigal Legion's Invasion Corridor has been created.
-		BeritraService.getInstance().ereshkigalCorridorMsg(id);
+		GameLocationBootstrapServices.beritraService().ereshkigalCorridorMsg(id);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Beritra Invasion Lazer.
-				BeritraService.getInstance().adventDirectingSP(id);
+				GameLocationBootstrapServices.beritraService().adventDirectingSP(id);
 				// Ereshkigal Invasion Lazer.
-				BeritraService.getInstance().adventDirectingEreshSP(id);
+				GameLocationBootstrapServices.beritraService().adventDirectingEreshSP(id);
 				// The Devil Unit has infiltrated through the Invasion Corridor.
-				BeritraService.getInstance().devilUnitThroughMsg(id);
+				GameLocationBootstrapServices.beritraService().devilUnitThroughMsg(id);
 				// The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
 				// Corridor.
-				BeritraService.getInstance().ereshkigalLegionThroughMsg(id);
+				GameLocationBootstrapServices.beritraService().ereshkigalLegionThroughMsg(id);
 			}
 		}, 180000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Beritra Invasion Black Sky.
-				BeritraService.getInstance().adventControlSP(id);
+				GameLocationBootstrapServices.beritraService().adventControlSP(id);
 				// Ereshkigal Invasion Black Sky.
-				BeritraService.getInstance().adventControlEreshSP(id);
+				GameLocationBootstrapServices.beritraService().adventControlEreshSP(id);
 			}
 		}, 300000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				Map<Integer, BeritraLocation> locations = BeritraService.getInstance().getBeritraLocations();
+				Map<Integer, BeritraLocation> locations = GameLocationBootstrapServices.beritraService().getBeritraLocations();
 				for (final BeritraLocation loc : locations.values()) {
 					if (loc.getId() == id) {
 						// Beritra Invasion Light Blue.
-						BeritraService.getInstance().adventEffectSP(id);
+						GameLocationBootstrapServices.beritraService().adventEffectSP(id);
 						// Ereshkigal Invasion Light Blue.
-						BeritraService.getInstance().adventEffectEreshSP(id);
+						GameLocationBootstrapServices.beritraService().adventEffectEreshSP(id);
 						// Beritra Invasion Start 4.7
-						BeritraService.getInstance().beritraInvasionMsg(id);
+						GameLocationBootstrapServices.beritraService().beritraInvasionMsg(id);
 						// Ereshkigal Invasion Start 4.9.1
-						BeritraService.getInstance().ereshkigalInvasionMsg(id);
+						GameLocationBootstrapServices.beritraService().ereshkigalInvasionMsg(id);
 						// Dredgion Defense.
-						BeritraService.getInstance().dredgionDefenseMsg(id);
-						BeritraService.getInstance().startBeritraInvasion(loc.getId());
+						GameLocationBootstrapServices.beritraService().dredgionDefenseMsg(id);
+						GameLocationBootstrapServices.beritraService().startBeritraInvasion(loc.getId());
 					}
 				}
 			}

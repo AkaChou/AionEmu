@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -116,7 +118,7 @@ public class KillInWorld extends QuestHandler {
 	public boolean onEnterWorldEvent(QuestEnv env) {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		VortexLocation vortexLoc = VortexService.getInstance().getLocationByWorld(invasionWorldId);
+		VortexLocation vortexLoc = GameLocationBootstrapServices.vortexService().getLocationByWorld(invasionWorldId);
 		if (player.getWorldId() == invasionWorldId) {
 			if ((qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat())) {
 				if ((vortexLoc != null && vortexLoc.isActive()) || (searchOpenRift())) {

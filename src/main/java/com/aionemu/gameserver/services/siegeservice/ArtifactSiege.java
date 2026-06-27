@@ -165,7 +165,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				switch (getSiegeLocation().getLocationId()) {
 				case 8021:
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						RvrService.getInstance().startRvr(7);
+						GameLocationBootstrapServices.rvrService().startRvr(7);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
@@ -175,7 +175,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 							}
 						});
 					} else if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						RvrService.getInstance().stopRvr(7);
+						GameLocationBootstrapServices.rvrService().stopRvr(7);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
@@ -188,7 +188,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 					break;
 				case 9021:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						RvrService.getInstance().startRvr(8);
+						GameLocationBootstrapServices.rvrService().startRvr(8);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
@@ -198,7 +198,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 							}
 						});
 					} else if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						RvrService.getInstance().stopRvr(8);
+						GameLocationBootstrapServices.rvrService().stopRvr(8);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {

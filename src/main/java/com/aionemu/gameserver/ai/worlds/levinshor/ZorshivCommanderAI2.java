@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -62,8 +64,8 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 		}
         announceZorshivDie();
 		announceKilledZorshiv();
-		ZorshivDredgionService.getInstance().stopZorshivDredgion(1);
-		ZorshivDredgionService.getInstance().stopZorshivDredgion(2);
+		GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(1);
+		GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(2);
 		super.handleDied();
 	}
 	

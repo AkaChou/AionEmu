@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.anohaservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Map;
@@ -42,43 +44,43 @@ public class AnohaStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// Berserk Anoha Sword Effect.
-		AnohaService.getInstance().adventSwordEffectSP(id);
+		GameLocationBootstrapServices.anohaService().adventSwordEffectSP(id);
 		// Berserk Anoha will return to Kaldor in 30 minutes.
-		AnohaService.getInstance().berserkAnohaMsg1(id);
+		GameLocationBootstrapServices.anohaService().berserkAnohaMsg1(id);
 		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				AnohaService.getInstance().sendRequest(player);
+				GameLocationBootstrapServices.anohaService().sendRequest(player);
 			}
 		});
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Enraged Wealhtheow Guardian will appear in 5 minutes.
-				AnohaService.getInstance().wealhtheowGuardianMsg1(id);
+				GameLocationBootstrapServices.anohaService().wealhtheowGuardianMsg1(id);
 			}
 		}, 1500000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Enraged Wealhtheow Guardian will appear in 3 minutes.
-				AnohaService.getInstance().wealhtheowGuardianMsg2(id);
+				GameLocationBootstrapServices.anohaService().wealhtheowGuardianMsg2(id);
 			}
 		}, 1620000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Enraged Wealhtheow Guardian will appear in 1 minute.
-				AnohaService.getInstance().wealhtheowGuardianMsg3(id);
+				GameLocationBootstrapServices.anohaService().wealhtheowGuardianMsg3(id);
 			}
 		}, 1740000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				Map<Integer, AnohaLocation> locations = AnohaService.getInstance().getAnohaLocations();
+				Map<Integer, AnohaLocation> locations = GameLocationBootstrapServices.anohaService().getAnohaLocations();
 				for (final AnohaLocation loc : locations.values()) {
 					if (loc.getId() == id) {
-						AnohaService.getInstance().startAnoha(loc.getId());
+						GameLocationBootstrapServices.anohaService().startAnoha(loc.getId());
 					}
 				}
 				World.getInstance().doOnAllPlayers(new Visitor<Player>() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.beritraservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.beritra.BeritraLocation;
@@ -62,11 +64,11 @@ public abstract class BeritraInvasion<BL extends BeritraLocation> {
 	}
 
 	protected void spawn(BeritraStateType type) {
-		BeritraService.getInstance().spawn(getBeritraLocation(), type);
+		GameLocationBootstrapServices.beritraService().spawn(getBeritraLocation(), type);
 	}
 
 	protected void despawn() {
-		BeritraService.getInstance().despawn(getBeritraLocation());
+		GameLocationBootstrapServices.beritraService().despawn(getBeritraLocation());
 	}
 
 	public boolean isFinished() {

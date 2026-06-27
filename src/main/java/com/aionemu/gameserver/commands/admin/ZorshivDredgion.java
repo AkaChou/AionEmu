@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.ZorshivDredgionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -53,7 +55,7 @@ public class ZorshivDredgion extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (ZorshivDredgionService.getInstance().isZorshivDredgionInProgress(zorshivDredgionId)) {
+			if (GameLocationBootstrapServices.zorshivDredgionService().isZorshivDredgionInProgress(zorshivDredgionId)) {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " started!");
@@ -63,20 +65,20 @@ public class ZorshivDredgion extends AdminCommand
 						PacketSendUtility.sendSys3Message(player, "\uE050", "The <Zorshiv Dredgion> to lands at levinshor !!!");
 					}
 				});
-				ZorshivDredgionService.getInstance().startZorshivDredgion(zorshivDredgionId);
+				GameLocationBootstrapServices.zorshivDredgionService().startZorshivDredgion(zorshivDredgionId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!ZorshivDredgionService.getInstance().isZorshivDredgionInProgress(zorshivDredgionId)) {
+			if (!GameLocationBootstrapServices.zorshivDredgionService().isZorshivDredgionInProgress(zorshivDredgionId)) {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " stopped!");
-				ZorshivDredgionService.getInstance().stopZorshivDredgion(zorshivDredgionId);
+				GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(zorshivDredgionId);
 			}
 		}
 	}
 	
 	protected boolean isValidZorshivDredgionLocationId(Player player, int zorshivDredgionId) {
-		if (!ZorshivDredgionService.getInstance().getZorshivDredgionLocations().keySet().contains(zorshivDredgionId)) {
+		if (!GameLocationBootstrapServices.zorshivDredgionService().getZorshivDredgionLocations().keySet().contains(zorshivDredgionId)) {
 			PacketSendUtility.sendMessage(player, "Id " + zorshivDredgionId + " is invalid");
 			return false;
 		}

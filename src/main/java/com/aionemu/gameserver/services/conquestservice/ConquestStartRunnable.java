@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.conquestservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
@@ -35,23 +37,23 @@ public class ConquestStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// Shugo Emperor's Vault 4.7.5 is now open !!!
-		ConquestService.getInstance().emperorVaultMsg(id);
+		GameLocationBootstrapServices.conquestService().emperorVaultMsg(id);
 		// Emperor Trillirunerk's Safe 4.9.1 is now open !!!
-		ConquestService.getInstance().trillirunerkSafeMsg(id);
+		GameLocationBootstrapServices.conquestService().trillirunerkSafeMsg(id);
 		// Smoldering Fire Temple 5.1 is now open !!!
-		ConquestService.getInstance().smolderingFireTempleMsg(id);
+		GameLocationBootstrapServices.conquestService().smolderingFireTempleMsg(id);
 		// Kumuki Cave 5.3 is now open !!!
-		ConquestService.getInstance().kumukiCaveMsg(id);
+		GameLocationBootstrapServices.conquestService().kumukiCaveMsg(id);
 		// IDEventDefMsg 5.6 is now open !!!
-		ConquestService.getInstance().IDEventDefMsg(id);
+		GameLocationBootstrapServices.conquestService().IDEventDefMsg(id);
 		// Tiamaranta's Eye is now open !!!
-		ConquestService.getInstance().tiamarantaMsg(id);
+		GameLocationBootstrapServices.conquestService().tiamarantaMsg(id);
 		// Conquest/Offering a rare monster appeared !!!
-		ConquestService.getInstance().conquestOfferingMsg(id);
-		Map<Integer, ConquestLocation> locations = ConquestService.getInstance().getConquestLocations();
+		GameLocationBootstrapServices.conquestService().conquestOfferingMsg(id);
+		Map<Integer, ConquestLocation> locations = GameLocationBootstrapServices.conquestService().getConquestLocations();
 		for (final ConquestLocation loc : locations.values()) {
 			if (loc.getId() == id) {
-				ConquestService.getInstance().startConquest(loc.getId());
+				GameLocationBootstrapServices.conquestService().startConquest(loc.getId());
 			}
 		}
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.agentservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.agent.AgentLocation;
@@ -62,11 +64,11 @@ public abstract class AgentFight<AL extends AgentLocation> {
 	}
 
 	protected void spawn(AgentStateType type) {
-		AgentService.getInstance().spawn(getAgentLocation(), type);
+		GameLocationBootstrapServices.agentService().spawn(getAgentLocation(), type);
 	}
 
 	protected void despawn() {
-		AgentService.getInstance().despawn(getAgentLocation());
+		GameLocationBootstrapServices.agentService().despawn(getAgentLocation());
 	}
 
 	public boolean isFinished() {

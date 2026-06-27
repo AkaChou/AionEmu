@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.rvrservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.rvr.RvrLocation;
@@ -62,11 +64,11 @@ public abstract class Rvrlf3df3<RL extends RvrLocation> {
 	}
 
 	protected void spawn(RvrStateType type) {
-		RvrService.getInstance().spawn(getRvrLocation(), type);
+		GameLocationBootstrapServices.rvrService().spawn(getRvrLocation(), type);
 	}
 
 	protected void despawn() {
-		RvrService.getInstance().despawn(getRvrLocation());
+		GameLocationBootstrapServices.rvrService().despawn(getRvrLocation());
 	}
 
 	public boolean isFinished() {

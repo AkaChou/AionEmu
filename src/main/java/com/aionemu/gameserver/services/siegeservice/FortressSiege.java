@@ -216,26 +216,26 @@ public class FortressSiege extends Siege<FortressLocation> {
 				switch (getSiegeLocationId()) {
 				case 1131: // Siel's Western Fortress.
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						MoltenusService.getInstance().startMoltenus(5);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(5);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						MoltenusService.getInstance().startMoltenus(8);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(8);
 					}
 					break;
 				case 1132: // Siel's Eastern Fortress.
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						MoltenusService.getInstance().startMoltenus(6);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(6);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						MoltenusService.getInstance().startMoltenus(9);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(9);
 					}
 					break;
 				case 1141: // Sulfur Fortress.
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						MoltenusService.getInstance().startMoltenus(4);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(4);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						MoltenusService.getInstance().startMoltenus(7);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(7);
 					}
 					break;
 				}

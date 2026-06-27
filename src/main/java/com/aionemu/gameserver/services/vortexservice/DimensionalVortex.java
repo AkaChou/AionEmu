@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.vortexservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.commons.callbacks.EnhancedObject;
@@ -95,11 +97,11 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	}
 
 	protected void spawn(VortexStateType type) {
-		VortexService.getInstance().spawn(getVortexLocation(), type);
+		GameLocationBootstrapServices.vortexService().spawn(getVortexLocation(), type);
 	}
 
 	protected void despawn() {
-		VortexService.getInstance().despawn(getVortexLocation());
+		GameLocationBootstrapServices.vortexService().despawn(getVortexLocation());
 	}
 
 	protected void registerSiegeBossListeners() {

@@ -430,7 +430,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        VortexLocation loc = VortexService.getInstance().getVortexLocation(spawnId);
+        VortexLocation loc = GameLocationBootstrapServices.vortexService().getVortexLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isInvasion()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -457,7 +457,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        BeritraLocation loc = BeritraService.getInstance().getBeritraLocation(spawnId);
+        BeritraLocation loc = GameLocationBootstrapServices.beritraService().getBeritraLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isBeritraInvasion()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -484,7 +484,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        AgentLocation loc = AgentService.getInstance().getAgentLocation(spawnId);
+        AgentLocation loc = GameLocationBootstrapServices.agentService().getAgentLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isAgentFight()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -511,7 +511,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        AnohaLocation loc = AnohaService.getInstance().getAnohaLocation(spawnId);
+        AnohaLocation loc = GameLocationBootstrapServices.anohaService().getAnohaLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isAnohaFight()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -538,7 +538,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        ConquestLocation loc = ConquestService.getInstance().getConquestLocation(spawnId);
+        ConquestLocation loc = GameLocationBootstrapServices.conquestService().getConquestLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isConquest()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -592,7 +592,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        RvrLocation loc = RvrService.getInstance().getRvrLocation(spawnId);
+        RvrLocation loc = GameLocationBootstrapServices.rvrService().getRvrLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isRvr()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -646,7 +646,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        MoltenusLocation loc = MoltenusService.getInstance().getMoltenusLocation(spawnId);
+        MoltenusLocation loc = GameLocationBootstrapServices.moltenusService().getMoltenusLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isFight()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -781,7 +781,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        ZorshivDredgionLocation loc = ZorshivDredgionService.getInstance().getZorshivDredgionLocation(spawnId);
+        ZorshivDredgionLocation loc = GameLocationBootstrapServices.zorshivDredgionService().getZorshivDredgionLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isLanding()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
