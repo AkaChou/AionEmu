@@ -52,7 +52,6 @@ import com.aionemu.gameserver.services.AStationService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.rift.RiftInformer;
@@ -134,7 +133,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// Abyss Landing 4.9.1
 		GameLocationBootstrapServices.abyssLandingService().onEnterWorld(activePlayer);
 		// Tower Of Eternity 5.0
-		TowerOfEternityService.getInstance().onEnterTowerWorld(activePlayer);
+		GameLocationBootstrapServices.towerOfEternityService().onEnterTowerWorld(activePlayer);
 		// Outpost 5.8
 		GameLocationBootstrapServices.outpostService().onEnterOutpostWorld(activePlayer);
 		activePlayer.getEffectController().updatePlayerEffectIcons();

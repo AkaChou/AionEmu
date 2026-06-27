@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
-import com.aionemu.gameserver.services.TowerOfEternityService;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 /**
  * Created by Wnkrz on 22/08/2017.
@@ -62,11 +62,11 @@ public abstract class TowerOfEternity<TE extends TowerOfEternityLocation> {
 	}
 
 	protected void spawn(TowerOfEternityStateType type) {
-		TowerOfEternityService.getInstance().spawn(getTowerOfEternityLocation(), type);
+		GameLocationBootstrapServices.towerOfEternityService().spawn(getTowerOfEternityLocation(), type);
 	}
 
 	protected void despawn() {
-		TowerOfEternityService.getInstance().despawn(getTowerOfEternityLocation());
+		GameLocationBootstrapServices.towerOfEternityService().despawn(getTowerOfEternityLocation());
 	}
 
 	public boolean isClosed() {

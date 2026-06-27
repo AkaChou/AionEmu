@@ -35,6 +35,7 @@ class GameLocationBootstrapServicesTest {
             Map.entry("RiftService", Path.of("services/RiftService.java")),
             Map.entry("ConquestService", Path.of("services/ConquestService.java")),
             Map.entry("IdianDepthsService", Path.of("services/IdianDepthsService.java")),
+            Map.entry("TowerOfEternityService", Path.of("services/TowerOfEternityService.java")),
             Map.entry("AbyssLandingSpecialService", Path.of("services/AbyssLandingSpecialService.java")));
 
         for (Map.Entry<String, Path> serviceSource : serviceSources.entrySet()) {

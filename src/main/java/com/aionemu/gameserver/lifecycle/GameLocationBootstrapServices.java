@@ -47,6 +47,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     private static volatile ObjectProvider<RiftService> riftServiceProvider;
     private static volatile ObjectProvider<ConquestService> conquestServiceProvider;
     private static volatile ObjectProvider<IdianDepthsService> idianDepthsServiceProvider;
+    private static volatile ObjectProvider<TowerOfEternityService> towerOfEternityServiceProvider;
     private static volatile ObjectProvider<AbyssLandingService> abyssLandingServiceProvider;
     private static volatile ObjectProvider<AbyssLandingSpecialService> abyssLandingSpecialServiceProvider;
 
@@ -83,6 +84,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         GameLocationBootstrapServices.riftServiceProvider = riftServiceProvider;
         GameLocationBootstrapServices.conquestServiceProvider = conquestServiceProvider;
         GameLocationBootstrapServices.idianDepthsServiceProvider = idianDepthsServiceProvider;
+        GameLocationBootstrapServices.towerOfEternityServiceProvider = towerOfEternityServiceProvider;
         GameLocationBootstrapServices.abyssLandingSpecialServiceProvider = abyssLandingSpecialServiceProvider;
         VortexService.setInstanceProvider(vortexServiceProvider);
         BeritraService.setInstanceProvider(beritraServiceProvider);
@@ -173,6 +175,10 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         return getIfAvailable(idianDepthsServiceProvider, IdianDepthsService::getInstance);
     }
 
+    public static TowerOfEternityService towerOfEternityService() {
+        return getIfAvailable(towerOfEternityServiceProvider, TowerOfEternityService::getInstance);
+    }
+
     public static AbyssLandingService abyssLandingService() {
         return getIfAvailable(abyssLandingServiceProvider, AbyssLandingService::getInstance);
     }
@@ -225,6 +231,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         riftServiceProvider = null;
         conquestServiceProvider = null;
         idianDepthsServiceProvider = null;
+        towerOfEternityServiceProvider = null;
         abyssLandingServiceProvider = null;
         abyssLandingSpecialServiceProvider = null;
         AbyssLandingService.setInstanceProvider(null);

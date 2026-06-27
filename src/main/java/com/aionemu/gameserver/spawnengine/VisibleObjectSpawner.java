@@ -133,7 +133,6 @@ import com.aionemu.gameserver.services.RvrService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.services.SvsService;
-import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.services.ZorshivDredgionService;
 import com.aionemu.gameserver.skillengine.effect.SummonOwner;
@@ -1068,7 +1067,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        TowerOfEternityLocation loc = TowerOfEternityService.getInstance().getTowerOfEternityLocation(spawnId);
+        TowerOfEternityLocation loc = GameLocationBootstrapServices.towerOfEternityService().getTowerOfEternityLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isTowerOfEternityOpen()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));

@@ -227,6 +227,7 @@ class GameServiceProviderCompatibilityTest {
         ZoneService zoneService = instance(ZoneService.class);
         HotspotTeleportService hotspotTeleportService = instance(HotspotTeleportService.class);
         RoadService roadService = instance(RoadService.class);
+        TowerOfEternityService towerOfEternityService = instance(TowerOfEternityService.class);
         AStationService aStationService = instance(AStationService.class);
         F2pService f2pService = instance(F2pService.class);
         WindyGorgeService windyGorgeService = instance(WindyGorgeService.class);
@@ -337,6 +338,7 @@ class GameServiceProviderCompatibilityTest {
             ZoneService.setInstanceProvider(provider(ZoneService.class, zoneService));
             HotspotTeleportService.setInstanceProvider(provider(HotspotTeleportService.class, hotspotTeleportService));
             RoadService.setInstanceProvider(provider(RoadService.class, roadService));
+            TowerOfEternityService.setInstanceProvider(provider(TowerOfEternityService.class, towerOfEternityService));
             AStationService.setInstanceProvider(provider(AStationService.class, aStationService));
             F2pService.setInstanceProvider(provider(F2pService.class, f2pService));
             WindyGorgeService.setInstanceProvider(provider(WindyGorgeService.class, windyGorgeService));
@@ -450,6 +452,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(zoneService, ZoneService.getInstance());
             assertSame(hotspotTeleportService, HotspotTeleportService.getInstance());
             assertSame(roadService, RoadService.getInstance());
+            assertSame(towerOfEternityService, GameLocationBootstrapServices.towerOfEternityService());
             assertSame(aStationService, AStationService.getInstance());
             assertSame(f2pService, F2pService.getInstance());
             assertSame(f2pService, GameFeatureServices.f2pService());
