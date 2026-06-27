@@ -457,6 +457,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(f2pService, F2pService.getInstance());
             assertSame(f2pService, GameFeatureServices.f2pService());
             assertSame(windyGorgeService, WindyGorgeService.getInstance());
+            assertSame(windyGorgeService, GameFeatureServices.windyGorgeService());
             assertSame(motionLoggingService, MotionLoggingService.getInstance());
             assertSame(staticDoorService, StaticDoorService.getInstance());
             assertSame(kiskService, KiskService.getInstance());

@@ -135,7 +135,6 @@ import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.services.StigmaService;
 import com.aionemu.gameserver.services.SurveyService;
 import com.aionemu.gameserver.services.VortexService;
-import com.aionemu.gameserver.services.WindyGorgeService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.abyss.AbyssSkillService;
 import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
@@ -620,7 +619,7 @@ public final class PlayerEnterWorldService {
 			GameFeatureServices.petService().onPlayerLogin(player);
 			// SM_Minions
 			GameEventBootstrapServices.minionService().onPlayerLogin(player);
-			WindyGorgeService.getInstance().onLogin(player);
+			GameFeatureServices.windyGorgeService().onLogin(player);
 			GameCoreGameplayServices.mailService().onPlayerLogin(player);
 			GameHousingServices.housingService().onPlayerLogin(player);
 			GameRuntimeServices.brokerService().onPlayerLogin(player);
