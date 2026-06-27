@@ -41,8 +41,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -66,11 +67,11 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 1800000; //...30Min
 	private StonespearReachReward instanceReward;
-	private final FastList<Future<?>> stonespearTask1 = FastList.newInstance();
-	private final FastList<Future<?>> stonespearTask2 = FastList.newInstance();
-	private final FastList<Future<?>> stonespearTask3 = FastList.newInstance();
-	private final FastList<Future<?>> stonespearTask4 = FastList.newInstance();
-	private final FastList<Future<?>> stonespearTask5 = FastList.newInstance();
+	private final List<Future<?>> stonespearTask1 = new ArrayList<>();
+	private final List<Future<?>> stonespearTask2 = new ArrayList<>();
+	private final List<Future<?>> stonespearTask3 = new ArrayList<>();
+	private final List<Future<?>> stonespearTask4 = new ArrayList<>();
+	private final List<Future<?>> stonespearTask5 = new ArrayList<>();
 	
 	private static final float[][] SPAWN_POSITIONS = {
 		{211.05080f, 264.03802f, 96.53291f, 0},
@@ -165,7 +166,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		}
 	}
 	
-	private void spawnRaidWave(final int npcId, int delay, final FastList<Future<?>> taskList) {
+	private void spawnRaidWave(final int npcId, int delay, final List<Future<?>> taskList) {
 		taskList.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
 			@Override
 			public void run() {
@@ -176,7 +177,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		}, delay));
 	}
 	
-	private void spawnRepeatingRaid(int npcId, FastList<Future<?>> taskList) {
+	private void spawnRepeatingRaid(int npcId, List<Future<?>> taskList) {
 		int[] delays = {1000, 10000, 20000, 30000, 40000, 50000, 60000};
 		for (int delay : delays) {
 			spawnRaidWave(npcId, delay, taskList);
@@ -566,7 +567,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 		spawnRepeatingRaid(npcId, getTaskListForRound(round, waveIndex));
 	}
 	
-	private FastList<Future<?>> getTaskListForRound(RaidType round, int waveIndex) {
+	private List<Future<?>> getTaskListForRound(RaidType round, int waveIndex) {
 		if (round == RaidType.ROUND_1) {
 			return stonespearTask1;
 		} else if (round == RaidType.ROUND_2) {
@@ -734,44 +735,44 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 	
 	private void stopInstanceTask1() {
-        for (FastList.Node<Future<?>> n = stonespearTask1.head(), end = stonespearTask1.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : stonespearTask1) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	
 	private void stopInstanceTask2() {
-        for (FastList.Node<Future<?>> n = stonespearTask2.head(), end = stonespearTask2.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : stonespearTask2) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	
 	private void stopInstanceTask3() {
-        for (FastList.Node<Future<?>> n = stonespearTask3.head(), end = stonespearTask3.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : stonespearTask3) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	
 	private void stopInstanceTask4() {
-        for (FastList.Node<Future<?>> n = stonespearTask4.head(), end = stonespearTask4.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : stonespearTask4) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	
 	private void stopInstanceTask5() {
-        for (FastList.Node<Future<?>> n = stonespearTask5.head(), end = stonespearTask5.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : stonespearTask5) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {

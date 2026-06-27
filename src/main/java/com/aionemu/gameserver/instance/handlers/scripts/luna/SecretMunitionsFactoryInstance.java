@@ -43,11 +43,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 import java.util.concurrent.Future;
 
 /****/
@@ -73,8 +73,8 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 3600000; //...1Hr
 	private SecretMunitionsFactoryReward instanceReward;
-	private final FastList<Future<?>> factoryTask1 = FastList.newInstance();
-	private final FastList<Future<?>> factoryTask2 = FastList.newInstance();
+	private final List<Future<?>> factoryTask1 = new ArrayList<>();
+	private final List<Future<?>> factoryTask2 = new ArrayList<>();
 	
 	protected SecretMunitionsFactoryPlayerReward getPlayerReward(Integer object) {
 		return (SecretMunitionsFactoryPlayerReward) instanceReward.getPlayerReward(object);
@@ -585,19 +585,19 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask1() {
-        for (FastList.Node<Future<?>> n = factoryTask1.head(), end = factoryTask1.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : factoryTask1) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	private void stopInstanceTask2() {
-        for (FastList.Node<Future<?>> n = factoryTask2.head(), end = factoryTask2.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : factoryTask2) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
         factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {

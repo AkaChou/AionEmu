@@ -44,7 +44,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -61,7 +60,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     private Race spawnRace;
     private Map<Integer, StaticDoor> doors;
     protected boolean isInstanceDestroyed = false;
-    private final FastList<Future<?>> crucibleTask = FastList.newInstance();
+    private final List<Future<?>> crucibleTask = new ArrayList<>();
     private final Map<Integer, Long> lastTeleportTime = new HashMap<>();
     private boolean isSpawning = false;
 

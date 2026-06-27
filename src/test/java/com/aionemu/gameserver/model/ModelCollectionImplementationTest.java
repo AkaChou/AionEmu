@@ -225,6 +225,24 @@ class ModelCollectionImplementationTest {
 		}
 	}
 
+	@Test
+	void multiListInstanceFutureTaskListsUseJdkLists() throws Exception {
+		List<String> instanceScripts = List.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/luna/SecretMunitionsFactoryInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/illuminaryObelisk/IlluminaryObeliskInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/illuminaryObelisk/Infernal_IlluminaryObeliskInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/StonespearReachInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/crucible/CrucibleSpireInstance.java");
+		for (String sourcePath : instanceScripts) {
+			assertSourceOmits(sourcePath, "FastList<Future<?>>");
+			assertSourceOmits(sourcePath, "FastList.Node<Future<?>>");
+		}
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/instance/handlers/scripts/StonespearReachInstance.java",
+				"FastList<Future<?>> taskList");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/instance/handlers/scripts/StonespearReachInstance.java",
+				"private FastList<Future<?>> getTaskListForRound");
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();
