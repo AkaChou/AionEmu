@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -44,6 +46,6 @@ public class CM_BUY_BROKER_ITEM extends AionClientPacket {
 		if (itemCount < 1) {
 			return;
 		}
-		BrokerService.getInstance().buyBrokerItem(player, itemUniqueId, itemCount);
+		GameRuntimeServices.brokerService().buyBrokerItem(player, itemUniqueId, itemCount);
 	}
 }

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +87,7 @@ public class CM_EXCHANGE_REQUEST extends AionClientPacket {
 				RequestResponseHandler responseHandler = new RequestResponseHandler(activePlayer) {
 					@Override
 					public void acceptRequest(Creature requester, Player responder) {
-						ExchangeService.getInstance().registerExchange(activePlayer, targetPlayer);
+						GameRuntimeServices.exchangeService().registerExchange(activePlayer, targetPlayer);
 					}
 
 					@Override

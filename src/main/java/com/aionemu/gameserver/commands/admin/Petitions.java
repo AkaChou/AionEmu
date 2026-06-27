@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PetitionDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -44,7 +46,7 @@ public class Petitions extends AdminCommand {
 	public void execute(Player admin, String... params) {
 		// Send ticket general info
 		if (params == null || params.length == 0) {
-			Collection<Petition> petitions = PetitionService.getInstance().getRegisteredPetitions();
+			Collection<Petition> petitions = GameRuntimeServices.petitionService().getRegisteredPetitions();
 			Petition[] petitionsArray = petitions.toArray(new Petition[0]);
 			PacketSendUtility.sendMessage(admin, petitionsArray.length + " unprocessed petitions.");
 			if (petitionsArray.length < 5) {
@@ -112,7 +114,7 @@ public class Petitions extends AdminCommand {
 		}
 		// Delete
 		else if (params.length == 2 && params[1].equals("delete")) {
-			PetitionService.getInstance().deletePetition(petition.getPlayerObjId());
+			GameRuntimeServices.petitionService().deletePetition(petition.getPlayerObjId());
 			PacketSendUtility.sendMessage(admin, "Petition #" + petitionId + " deleted.");
 		}
 		// Reply
@@ -128,7 +130,7 @@ public class Petitions extends AdminCommand {
 
 			MailService.getInstance().sendMail(admin, petitionPlayer, "GM-Re:" + petition.getTitle(), replyMessage, 0, 0, 0, 0,
 				LetterType.NORMAL);
-			PetitionService.getInstance().setPetitionReplied(petitionId);
+			GameRuntimeServices.petitionService().setPetitionReplied(petitionId);
 
 			PacketSendUtility.sendMessage(admin, "Your reply has been sent to " + petitionPlayer
 				+ ". Petition is now closed.");

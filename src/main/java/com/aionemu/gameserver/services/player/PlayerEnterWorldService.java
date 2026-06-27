@@ -1,6 +1,10 @@
 
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
@@ -619,11 +623,11 @@ public final class PlayerEnterWorldService {
 			WindyGorgeService.getInstance().onLogin(player);
 			MailService.getInstance().onPlayerLogin(player);
 			GameHousingServices.housingService().onPlayerLogin(player);
-			BrokerService.getInstance().onPlayerLogin(player);
+			GameRuntimeServices.brokerService().onPlayerLogin(player);
 			sendMacroList(client, player);
 			client.sendPacket(new SM_FRIEND_STATUS((byte) 1));
 			client.sendPacket(new SM_RECIPE_LIST(player.getRecipeList().getRecipeList()));
-			PetitionService.getInstance().onPlayerLogin(player);
+			GameRuntimeServices.petitionService().onPlayerLogin(player);
 			if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
 				GameCoreGameplayServices.autoGroupService().onPlayerLogin(player);
 			}
@@ -632,7 +636,7 @@ public final class PlayerEnterWorldService {
 			player.getLifeStats().updateCurrentStats();
 			player.getEquipment().checkRankLimitItems();
 			if (HTMLConfig.ENABLE_HTML_WELCOME) {
-				HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("welcome.xhtml"));
+				HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("welcome.xhtml"));
 			}
 			player.getNpcFactions().sendDailyQuest();
 			if (HTMLConfig.ENABLE_GUIDES) {

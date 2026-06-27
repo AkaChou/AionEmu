@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.transfers;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -150,7 +152,7 @@ public class PlayerTransferService {
 			return;
 		}
 
-		if (BrokerService.getInstance().hasRegisteredItems(player)) {
+		if (GameRuntimeServices.brokerService().hasRegisteredItems(player)) {
 			log.warn("cannot transfer #" + taskId + " player while he own some items in broker.");
 			LoginServer.getInstance().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.TASK_STOP, taskId,
 					"cannot transfer player while he own some items in broker."));

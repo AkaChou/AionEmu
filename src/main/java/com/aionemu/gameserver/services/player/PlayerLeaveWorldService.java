@@ -100,8 +100,8 @@ public class PlayerLeaveWorldService {
 		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		player.onLoggedOut();
 		GameFeatureServices.petService().onPlayerLogout(player);
-		BrokerService.getInstance().removePlayerCache(player);
-		ExchangeService.getInstance().cancelExchange(player);
+		GameRuntimeServices.brokerService().removePlayerCache(player);
+		GameRuntimeServices.exchangeService().cancelExchange(player);
 		RepurchaseService.getInstance().removeRepurchaseItems(player);
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
 			GameCoreGameplayServices.autoGroupService().onPlayerLogOut(player);

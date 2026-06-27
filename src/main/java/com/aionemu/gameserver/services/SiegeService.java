@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -422,7 +424,7 @@ public class SiegeService {
 	}
 
 	public void broadcastUpdate(SiegeLocation loc) {
-		Influence.getInstance().recalculateInfluence();
+		GameRuntimeServices.influence().recalculateInfluence();
 		broadcast(new SM_SIEGE_LOCATION_INFO(loc), new SM_INFLUENCE_RATIO());
 	}
 

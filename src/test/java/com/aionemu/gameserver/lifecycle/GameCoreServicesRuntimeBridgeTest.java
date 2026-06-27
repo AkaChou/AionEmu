@@ -9,6 +9,7 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -78,6 +79,25 @@ class GameCoreServicesRuntimeBridgeTest {
         assertFalse(source.contains("ThreadPoolManager.getInstance()"));
         assertFalse(source.contains("ThreadPoolManagerFallback"));
         assertFalse(source.contains("private static final ThreadPoolManager INSTANCE"));
+    }
+
+    @Test
+    void gameServerCodeUsesStaticDataBridgeInsteadOfDirectHtmlCacheSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("cache/HTMLCache.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameStaticDataServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameCoreServiceFallbacks.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("HTMLCache.getInstance()"), source.toString());
+        }
     }
 
     private <T> T instance(Class<T> type) {

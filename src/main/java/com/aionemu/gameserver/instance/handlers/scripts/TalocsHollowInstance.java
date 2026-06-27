@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.*;
@@ -100,7 +102,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		sendMsgByRace(1400752, Race.PC_ALL, 10000);
 		//An object of great power waits in your cube. Launch a powerful aerial attack with Taloc's Tears.
 		sendMsgByRace(1400753, Race.PC_ALL, 15000);
-		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/talocHollow.xhtml"));
+		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/talocHollow.xhtml"));
     }
 	
 	public void onDropRegistered(Npc npc) {

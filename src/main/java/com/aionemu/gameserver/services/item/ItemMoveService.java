@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import static com.aionemu.gameserver.services.item.ItemPacketService.sendItemDeletePacket;
@@ -40,7 +42,7 @@ public class ItemMoveService {
 
 	public static void moveItem(Player player, int itemObjId, byte sourceStorageType, byte destinationStorageType,
 			short slot) {
-		if (ExchangeService.getInstance().isPlayerInExchange(player)) {
+		if (GameRuntimeServices.exchangeService().isPlayerInExchange(player)) {
 			return;
 		}
 		IStorage sourceStorage = player.getStorage(sourceStorageType);

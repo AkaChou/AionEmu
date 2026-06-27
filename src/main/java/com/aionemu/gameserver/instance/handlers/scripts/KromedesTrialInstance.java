@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -67,7 +69,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 		final int transformation = skillRace == Race.ASMODIANS ? 19270 : 19220;
 		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000 * 1);
 		sendMovie(player, 453);
-		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/kromedeTrial.xhtml"));
+		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/kromedeTrial.xhtml"));
 	}
 	
 	@Override

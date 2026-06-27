@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -49,7 +51,7 @@ public class HaramelInstance extends GeneralInstanceHandler
 	@Override
     public void onEnterInstance(Player player) {
 		super.onInstanceCreate(instance);
-		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/haramel.xhtml"));
+		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/haramel.xhtml"));
     }
 	
 	public void onDropRegistered(Npc npc) {

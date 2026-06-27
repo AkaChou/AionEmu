@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.cache.HTMLCache;
@@ -46,7 +48,7 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 /**
 	@Override
     public void onEnterInstance(Player player) {
-		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/nochsanaTrainingCamp.xhtml"));
+		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/nochsanaTrainingCamp.xhtml"));
     }
 **/
 	

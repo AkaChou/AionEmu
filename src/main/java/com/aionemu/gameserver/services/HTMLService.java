@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class HTMLService {
 	private static final Logger log = LoggerFactory.getLogger("ITEM_HTML_LOG");
 
 	public static String getHTMLTemplate(GuideTemplate template) {
-		String context = HTMLCache.getInstance().getHTML("guideTemplate.xhtml");
+		String context = GameStaticDataServices.htmlCache().getHTML("guideTemplate.xhtml");
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<reward_items multi_count='").append(template.getRewardCount()).append("'>\n");

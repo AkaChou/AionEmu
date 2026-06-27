@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +78,7 @@ public class CM_BROKER_SEARCH extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		BrokerService.getInstance().showRequestedItems(player, mask, sortType, page, itemList);
+		GameRuntimeServices.brokerService().showRequestedItems(player, mask, sortType, page, itemList);
 		// log.info("CM_BROKER_SEARCH brokerId:"+brokerId+" sortType:"+sortType+"
 		// page:"+page+" unk1:"+unk1+" unk2:"+unk2+" mask:"+mask+" unk3:"+unk3+"
 		// minLvl:"+minLvl+" maxLvl:"+maxLvl+" minUnk:"+minUnk+" maxUnk:"+maxUnk+"

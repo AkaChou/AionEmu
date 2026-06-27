@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.utils.stats;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -809,7 +811,7 @@ public class StatFunctions {
 			damages = Math.round(damages + (damages * pvpAttackBonus) - (damages * pvpDefenceBonus));
 			// Apply Race modifier
 			if (attacker.getRace() != target.getRace() && !attacker.isInInstance()) {
-				damages *= Influence.getInstance().getPvpRaceBonus(attacker.getRace());
+				damages *= GameRuntimeServices.influence().getPvpRaceBonus(attacker.getRace());
 			}
 		} else if (target instanceof Npc) {
 			int levelDiff = target.getLevel() - attacker.getLevel();

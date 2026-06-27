@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -406,8 +408,8 @@ public class BalaurAssaultService {
 			}
 			influence = ownedForts >= 2 ? 0.25f : 0.1f;
 		} else {
-			influence = locationRace.equals(SiegeRace.ASMODIANS) ? Influence.getInstance().getGlobalAsmodiansInfluence()
-					: Influence.getInstance().getGlobalElyosInfluence();
+			influence = locationRace.equals(SiegeRace.ASMODIANS) ? GameRuntimeServices.influence().getGlobalAsmodiansInfluence()
+					: GameRuntimeServices.influence().getGlobalElyosInfluence();
 		}
 		return Rnd.get() < influence * SiegeConfig.BALAUR_ASSAULT_RATE;
 	}

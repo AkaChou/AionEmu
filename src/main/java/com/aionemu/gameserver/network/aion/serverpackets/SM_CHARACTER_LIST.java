@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +78,7 @@ public class SM_CHARACTER_LIST extends PlayerInfo {
 				writeD(DAOManager.getDAO(MailDAO.class).haveUnread(pcd.getPlayerObjId()) ? 1 : 0); // mail
 				writeD(0); // unk
 				writeD(0); // unk
-				writeQ(BrokerService.getInstance().getCollectedMoney(pcd)); // collected money from broker
+				writeQ(GameRuntimeServices.brokerService().getCollectedMoney(pcd)); // collected money from broker
 				writeD(0);
 				writeB(new byte[122 + 24]); // 5.1 protocol
 			}

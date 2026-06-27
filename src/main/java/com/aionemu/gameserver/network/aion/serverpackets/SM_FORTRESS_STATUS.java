@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.Map;
@@ -30,7 +32,7 @@ public class SM_FORTRESS_STATUS extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		Map<Integer, FortressLocation> fortresses = GameFeatureServices.siegeService().getFortresses();
-		Influence inf = Influence.getInstance();
+		Influence inf = GameRuntimeServices.influence();
 		writeC(1);
 		writeD(GameFeatureServices.siegeService().getSecondsBeforeHourEnd());
 		writeF(inf.getGlobalElyosInfluence());
