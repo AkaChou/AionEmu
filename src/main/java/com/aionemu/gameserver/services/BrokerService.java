@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -559,7 +561,7 @@ public class BrokerService {
 			return;
 		}
 
-		if (!AdminService.getInstance().canOperate(player, null, itemToRegister, "broker")) {
+		if (!GameRuntimeServices.adminService().canOperate(player, null, itemToRegister, "broker")) {
 			return;
 		}
 

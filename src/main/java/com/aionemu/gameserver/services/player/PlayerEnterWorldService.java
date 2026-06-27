@@ -411,7 +411,7 @@ public final class PlayerEnterWorldService {
 			GameFeatureServices.kiskService().onLogin(player);
 
 			// SM_TERRITORY_LIST
-			TerritoryService.getInstance().onEnterWorld(player);
+			GameRuntimeServices.territoryService().onEnterWorld(player);
 
 			// SM_YOUTUBE_VIDEO
 			client.sendPacket(new SM_YOUTUBE_VIDEO());
@@ -691,12 +691,12 @@ public final class PlayerEnterWorldService {
 			}
 			player.getController().addTask(TaskId.PLAYER_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000, PeriodicSaveConfig.PLAYER_GENERAL * 1000));
 			player.getController().addTask(TaskId.INVENTORY_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000, PeriodicSaveConfig.PLAYER_ITEMS * 1000));
-			SurveyService.getInstance().showAvailable(player);
+			GameRuntimeServices.surveyService().showAvailable(player);
 			if (EventsConfig.ENABLE_EVENT_SERVICE) {
 				GameEventServices.eventService().onPlayerLogin(player);
 			}
 			RelinquishCraftStatus.removeExcessCraftStatus(player, false);
-			PlayerTransferService.getInstance().onEnterWorld(player);
+			GameRuntimeServices.playerTransferService().onEnterWorld(player);
 			player.setPartnerId(DAOManager.getDAO(WeddingDAO.class).loadPartnerId(player));
 			EnchantService.GloryShieldSkill(player);
 			ShugoSweepService.getInstance().onLogin(player);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.utils.gametime;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import java.security.InvalidParameterException;
 
 import com.aionemu.gameserver.services.WeatherService;
@@ -129,7 +131,7 @@ public class GameTime implements Cloneable {
 	 * Perform actions upon day time change
 	 */
 	private void onDayTimeChange() {
-		WeatherService.getInstance().checkWeathersTime();
+		GameRuntimeServices.weatherService().checkWeathersTime();
 	}
 
 	/**

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.mail;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -150,7 +152,7 @@ public class MailService {
 				return;
 			}
 
-			if (!AdminService.getInstance().canOperate(sender, null, senderItem, "mail")) {
+			if (!GameRuntimeServices.adminService().canOperate(sender, null, senderItem, "mail")) {
 				return;
 			}
 			float qualityPriceRate;

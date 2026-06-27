@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.ArrayList;
@@ -77,7 +79,7 @@ public class TradeService {
 		long tradeListPrice = tradeList.getRequiredKinah();
 		LimitedItem item = null;
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			item = LimitedItemTradeService.getInstance().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
+			item = GameRuntimeServices.limitedItemTradeService().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
 			if (item != null) {
 				if (item.getBuyLimit() == 0 && item.getDefaultSellLimit() != 0) {
 					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
@@ -164,7 +166,7 @@ public class TradeService {
 		AbyssPointsService.addAp(player, -tradeList.getRequiredAp());
 		LimitedItem item = null;
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			item = LimitedItemTradeService.getInstance().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
+			item = GameRuntimeServices.limitedItemTradeService().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
 			if (item != null) {
 				if (item.getBuyLimit() == 0 && item.getDefaultSellLimit() != 0) {
 					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
@@ -246,7 +248,7 @@ public class TradeService {
 		}
 		LimitedItem item = null;
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			item = LimitedItemTradeService.getInstance().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
+			item = GameRuntimeServices.limitedItemTradeService().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
 			if (item != null) {
 				if (item.getBuyLimit() == 0 && item.getDefaultSellLimit() != 0) {
 					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);

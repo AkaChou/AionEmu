@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -144,7 +146,7 @@ public class HTMLService {
 			return;
 		}
 
-		if (SurveyService.getInstance().isActive(player, messageId)) {
+		if (GameRuntimeServices.surveyService().isActive(player, messageId)) {
 			return;
 		}
 

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -104,7 +106,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		}
 		activePlayer.getController().updateZone();
 		activePlayer.getController().updateNearbyQuests();
-		WeatherService.getInstance().loadWeather(activePlayer);
+		GameRuntimeServices.weatherService().loadWeather(activePlayer);
 		if (activePlayer.isOnAStation()) {
 			if (activePlayer.A_STATION_TYPE == 1) {
 				activePlayer.A_STATION_TYPE = 2;
@@ -120,7 +122,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// Rift
 		RiftInformer.sendRiftsInfo(activePlayer);
 		// Territory
-		TerritoryService.getInstance().onEnterWorld(activePlayer);
+		GameRuntimeServices.territoryService().onEnterWorld(activePlayer);
 		// Town 3.9
 		GameHousingServices.townService().onEnterWorld(activePlayer);
 		// Protector Conqueror

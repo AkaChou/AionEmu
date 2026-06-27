@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -291,19 +293,19 @@ public class LegionCommand extends AdminCommand {
 				PacketSendUtility.sendMessage(player, "You are not in a Legion !");
 				return;
 			} if (params[1].equalsIgnoreCase("list")) {
-				for (LegionTerritory territory : TerritoryService.getInstance().getTerritories()) {
+				for (LegionTerritory territory : GameRuntimeServices.territoryService().getTerritories()) {
 					PacketSendUtility.sendMessage(player, "Id: "+territory.getId()+" owned by Legion: "+territory.getLegionName());
 				}
 			} else if (params[1].equalsIgnoreCase("cancel")) {
 				if (player.getLegion().getTerritory().getId() > 0)
-					TerritoryService.getInstance().onLooseTerritory(player.getLegion());
+					GameRuntimeServices.territoryService().onLooseTerritory(player.getLegion());
 				else PacketSendUtility.sendMessage(player, "Your Legion didn't owns an territory..");
 			} else if (params[1].equalsIgnoreCase("capture")) {
 				if (params[2] == null || params[2].isEmpty()) {
 					onFail(player,"Missing territoryId parameter !");
 					return;
 				}
-				TerritoryService.getInstance().onConquerTerritory(player.getLegion(), Integer.parseInt(params[2]));
+				GameRuntimeServices.territoryService().onConquerTerritory(player.getLegion(), Integer.parseInt(params[2]));
 			}
 		}
 	}

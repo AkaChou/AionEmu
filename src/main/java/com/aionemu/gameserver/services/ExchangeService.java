@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -201,7 +203,7 @@ public class ExchangeService {
 		if (currentExchange.isExchangeListFull()) {
 			return;
 		}
-		if (!AdminService.getInstance().canOperate(activePlayer, partner, item, "trade")) {
+		if (!GameRuntimeServices.adminService().canOperate(activePlayer, partner, item, "trade")) {
 			return;
 		}
 		ExchangeItem exchangeItem = currentExchange.getItems().get(item.getObjectId());

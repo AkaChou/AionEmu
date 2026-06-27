@@ -20,6 +20,12 @@ class GameRuntimeServicesTest {
                 .filter(path -> !path.endsWith(Path.of("model/siege/Influence.java")))
                 .filter(path -> !path.endsWith(Path.of("services/ExchangeService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/PetitionService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/AdminService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/transfers/PlayerTransferService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/territory/TerritoryService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/WeatherService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/LimitedItemTradeService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/SurveyService.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameRuntimeServices.java")))
                 .toList();
         }
@@ -31,6 +37,12 @@ class GameRuntimeServicesTest {
             assertFalse(content.contains("Influence.getInstance()"), source.toString());
             assertFalse(content.contains("ExchangeService.getInstance()"), source.toString());
             assertFalse(content.contains("PetitionService.getInstance()"), source.toString());
+            assertFalse(content.contains("AdminService.getInstance()"), source.toString());
+            assertFalse(content.contains("PlayerTransferService.getInstance()"), source.toString());
+            assertFalse(content.contains("TerritoryService.getInstance()"), source.toString());
+            assertFalse(content.contains("WeatherService.getInstance()"), source.toString());
+            assertFalse(content.contains("LimitedItemTradeService.getInstance()"), source.toString());
+            assertFalse(content.contains("SurveyService.getInstance()"), source.toString());
         }
     }
 }

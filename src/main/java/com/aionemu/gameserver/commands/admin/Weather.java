@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.world.WeatherTable;
@@ -43,7 +45,7 @@ public class Weather extends AdminCommand
 			for (ZoneInstance regionZone : zones) {
 				if (regionZone.getZoneTemplate().getZoneType() == ZoneClassName.WEATHER) {
 					int weatherZoneId = DataManager.ZONE_DATA.getWeatherZoneId(regionZone.getZoneTemplate());
-					weatherCode = WeatherService.getInstance().getWeatherCode(admin.getWorldId(), weatherZoneId);
+					weatherCode = GameRuntimeServices.weatherService().getWeatherCode(admin.getWorldId(), weatherZoneId);
 					regionName = regionZone.getZoneTemplate().getXmlName();
 					break;
 				}
@@ -67,7 +69,7 @@ public class Weather extends AdminCommand
 				return;
 			}
 		} if (regionName.equals("reset")) {
-			WeatherService.getInstance().resetWeather();
+			GameRuntimeServices.weatherService().resetWeather();
 			return;
 		}
 		WorldMapType region = null;
@@ -83,7 +85,7 @@ public class Weather extends AdminCommand
 					PacketSendUtility.sendMessage(admin, "Region has no weather defined");
 					return;
 				}
-				WeatherService.getInstance().changeRegionWeather(region.getId(), weatherType);
+				GameRuntimeServices.weatherService().changeRegionWeather(region.getId(), weatherType);
 			} else {
 				PacketSendUtility.sendMessage(admin, "Weather type must be between 0 and 12");
 				return;

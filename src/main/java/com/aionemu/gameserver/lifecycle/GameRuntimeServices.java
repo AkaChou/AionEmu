@@ -31,10 +31,16 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameRuntimeServices implements DisposableBean {
 
+    private static volatile ObjectProvider<AdminService> adminServiceProvider;
+    private static volatile ObjectProvider<PlayerTransferService> playerTransferServiceProvider;
+    private static volatile ObjectProvider<TerritoryService> territoryServiceProvider;
+    private static volatile ObjectProvider<WeatherService> weatherServiceProvider;
     private static volatile ObjectProvider<BrokerService> brokerServiceProvider;
     private static volatile ObjectProvider<Influence> influenceProvider;
     private static volatile ObjectProvider<ExchangeService> exchangeServiceProvider;
     private static volatile ObjectProvider<PetitionService> petitionServiceProvider;
+    private static volatile ObjectProvider<LimitedItemTradeService> limitedItemTradeServiceProvider;
+    private static volatile ObjectProvider<SurveyService> surveyServiceProvider;
     private static volatile ObjectProvider<FindGroupService> findGroupServiceProvider;
     private static volatile ObjectProvider<InGameShopEn> inGameShopEnProvider;
 
@@ -60,10 +66,16 @@ public final class GameRuntimeServices implements DisposableBean {
             ObjectProvider<SurveyService> surveyServiceProvider,
             ObjectProvider<FindGroupService> findGroupServiceProvider,
             ObjectProvider<InGameShopEn> inGameShopEnProvider) {
+        GameRuntimeServices.adminServiceProvider = adminServiceProvider;
+        GameRuntimeServices.playerTransferServiceProvider = playerTransferServiceProvider;
+        GameRuntimeServices.territoryServiceProvider = territoryServiceProvider;
+        GameRuntimeServices.weatherServiceProvider = weatherServiceProvider;
         GameRuntimeServices.brokerServiceProvider = brokerServiceProvider;
         GameRuntimeServices.influenceProvider = influenceProvider;
         GameRuntimeServices.exchangeServiceProvider = exchangeServiceProvider;
         GameRuntimeServices.petitionServiceProvider = petitionServiceProvider;
+        GameRuntimeServices.limitedItemTradeServiceProvider = limitedItemTradeServiceProvider;
+        GameRuntimeServices.surveyServiceProvider = surveyServiceProvider;
         GameRuntimeServices.findGroupServiceProvider = findGroupServiceProvider;
         GameRuntimeServices.inGameShopEnProvider = inGameShopEnProvider;
         PeriodicSaveService.setInstanceProvider(periodicSaveServiceProvider);
@@ -90,6 +102,22 @@ public final class GameRuntimeServices implements DisposableBean {
         InGameShopEn.setInstanceProvider(inGameShopEnProvider);
     }
 
+    public static AdminService adminService() {
+        return getIfAvailable(adminServiceProvider, AdminService::getInstance);
+    }
+
+    public static PlayerTransferService playerTransferService() {
+        return getIfAvailable(playerTransferServiceProvider, PlayerTransferService::getInstance);
+    }
+
+    public static TerritoryService territoryService() {
+        return getIfAvailable(territoryServiceProvider, TerritoryService::getInstance);
+    }
+
+    public static WeatherService weatherService() {
+        return getIfAvailable(weatherServiceProvider, WeatherService::getInstance);
+    }
+
     public static BrokerService brokerService() {
         return getIfAvailable(brokerServiceProvider, BrokerService::getInstance);
     }
@@ -104,6 +132,14 @@ public final class GameRuntimeServices implements DisposableBean {
 
     public static PetitionService petitionService() {
         return getIfAvailable(petitionServiceProvider, PetitionService::getInstance);
+    }
+
+    public static LimitedItemTradeService limitedItemTradeService() {
+        return getIfAvailable(limitedItemTradeServiceProvider, LimitedItemTradeService::getInstance);
+    }
+
+    public static SurveyService surveyService() {
+        return getIfAvailable(surveyServiceProvider, SurveyService::getInstance);
     }
 
     public static FindGroupService findGroupService() {
@@ -123,13 +159,17 @@ public final class GameRuntimeServices implements DisposableBean {
 
     @Override
     public void destroy() {
+        adminServiceProvider = null;
         PeriodicSaveService.setInstanceProvider(null);
         AdminService.setInstanceProvider(null);
+        playerTransferServiceProvider = null;
         PlayerTransferService.setInstanceProvider(null);
+        territoryServiceProvider = null;
         TerritoryService.setInstanceProvider(null);
         GameTimeService.setInstanceProvider(null);
         AnnouncementService.setInstanceProvider(null);
         DebugService.setInstanceProvider(null);
+        weatherServiceProvider = null;
         WeatherService.setInstanceProvider(null);
         brokerServiceProvider = null;
         BrokerService.setInstanceProvider(null);
@@ -144,8 +184,10 @@ public final class GameRuntimeServices implements DisposableBean {
         SpringZoneService.setInstanceProvider(null);
         BoostEventService.setInstanceProvider(null);
         TaskManagerFromDB.setInstanceProvider(null);
+        limitedItemTradeServiceProvider = null;
         LimitedItemTradeService.setInstanceProvider(null);
         WebshopService.setInstanceProvider(null);
+        surveyServiceProvider = null;
         SurveyService.setInstanceProvider(null);
         findGroupServiceProvider = null;
         inGameShopEnProvider = null;

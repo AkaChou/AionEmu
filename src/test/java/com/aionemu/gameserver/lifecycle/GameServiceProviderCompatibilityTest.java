@@ -1162,19 +1162,25 @@ class GameServiceProviderCompatibilityTest {
 
     @Test
     void gameRuntimeServicesRegistersAndClearsHighTrafficAccessors() throws Exception {
+        AdminService adminService = instance(AdminService.class);
+        PlayerTransferService playerTransferService = instance(PlayerTransferService.class);
+        TerritoryService territoryService = instance(TerritoryService.class);
+        WeatherService weatherService = instance(WeatherService.class);
         BrokerService brokerService = instance(BrokerService.class);
         Influence influence = instance(Influence.class);
         ExchangeService exchangeService = instance(ExchangeService.class);
         PetitionService petitionService = instance(PetitionService.class);
+        LimitedItemTradeService limitedItemTradeService = instance(LimitedItemTradeService.class);
+        SurveyService surveyService = instance(SurveyService.class);
         GameRuntimeServices runtimeServices = new GameRuntimeServices(
                 provider(PeriodicSaveService.class, instance(PeriodicSaveService.class)),
-                provider(AdminService.class, instance(AdminService.class)),
-                provider(PlayerTransferService.class, instance(PlayerTransferService.class)),
-                provider(TerritoryService.class, instance(TerritoryService.class)),
+                provider(AdminService.class, adminService),
+                provider(PlayerTransferService.class, playerTransferService),
+                provider(TerritoryService.class, territoryService),
                 provider(GameTimeService.class, instance(GameTimeService.class)),
                 provider(AnnouncementService.class, instance(AnnouncementService.class)),
                 provider(DebugService.class, instance(DebugService.class)),
-                provider(WeatherService.class, instance(WeatherService.class)),
+                provider(WeatherService.class, weatherService),
                 provider(BrokerService.class, brokerService),
                 provider(Influence.class, influence),
                 provider(ExchangeService.class, exchangeService),
@@ -1184,23 +1190,35 @@ class GameServiceProviderCompatibilityTest {
                 provider(SpringZoneService.class, instance(SpringZoneService.class)),
                 provider(BoostEventService.class, instance(BoostEventService.class)),
                 provider(TaskManagerFromDB.class, instance(TaskManagerFromDB.class)),
-                provider(LimitedItemTradeService.class, instance(LimitedItemTradeService.class)),
+                provider(LimitedItemTradeService.class, limitedItemTradeService),
                 provider(WebshopService.class, instance(WebshopService.class)),
-                provider(SurveyService.class, instance(SurveyService.class)),
+                provider(SurveyService.class, surveyService),
                 provider(FindGroupService.class, instance(FindGroupService.class)),
                 provider(InGameShopEn.class, instance(InGameShopEn.class)));
 
         try {
+            assertSame(adminService, GameRuntimeServices.adminService());
+            assertSame(playerTransferService, GameRuntimeServices.playerTransferService());
+            assertSame(territoryService, GameRuntimeServices.territoryService());
+            assertSame(weatherService, GameRuntimeServices.weatherService());
             assertSame(brokerService, GameRuntimeServices.brokerService());
             assertSame(influence, GameRuntimeServices.influence());
             assertSame(exchangeService, GameRuntimeServices.exchangeService());
             assertSame(petitionService, GameRuntimeServices.petitionService());
+            assertSame(limitedItemTradeService, GameRuntimeServices.limitedItemTradeService());
+            assertSame(surveyService, GameRuntimeServices.surveyService());
         } finally {
             runtimeServices.destroy();
+            assertProviderCleared(AdminService.class);
+            assertProviderCleared(PlayerTransferService.class);
+            assertProviderCleared(TerritoryService.class);
+            assertProviderCleared(WeatherService.class);
             assertProviderCleared(BrokerService.class);
             assertProviderCleared(Influence.class);
             assertProviderCleared(ExchangeService.class);
             assertProviderCleared(PetitionService.class);
+            assertProviderCleared(LimitedItemTradeService.class);
+            assertProviderCleared(SurveyService.class);
         }
     }
 
