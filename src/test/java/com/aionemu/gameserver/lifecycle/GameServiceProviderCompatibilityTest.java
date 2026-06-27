@@ -992,6 +992,24 @@ class GameServiceProviderCompatibilityTest {
     }
 
     @Test
+    void gameHousingServicesRegistersAndClearsHousingProvider() throws Exception {
+        HousingService housingService = instance(HousingService.class);
+        GameHousingServices housingServices = new GameHousingServices(
+                provider(HousingBidService.class, instance(HousingBidService.class)),
+                provider(MaintenanceTask.class, instance(MaintenanceTask.class)),
+                provider(TownService.class, instance(TownService.class)),
+                provider(HousingService.class, housingService),
+                provider(ChallengeTaskService.class, instance(ChallengeTaskService.class)));
+
+        try {
+            assertSame(housingService, GameHousingServices.housingService());
+        } finally {
+            housingServices.destroy();
+            assertProviderCleared(HousingService.class);
+        }
+    }
+
+    @Test
     void remainingSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() throws Exception {
         LegionService legionService = instance(LegionService.class);
         NavData navData = instance(NavData.class);

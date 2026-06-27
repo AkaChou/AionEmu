@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameHousingServices implements DisposableBean {
 
+    private static volatile ObjectProvider<HousingService> housingServiceProvider;
+
     public GameHousingServices(ObjectProvider<HousingBidService> housingBidServiceProvider,
             ObjectProvider<MaintenanceTask> maintenanceTaskProvider, ObjectProvider<TownService> townServiceProvider,
             ObjectProvider<HousingService> housingServiceProvider,
@@ -19,8 +21,17 @@ public final class GameHousingServices implements DisposableBean {
         HousingBidService.setInstanceProvider(housingBidServiceProvider);
         MaintenanceTask.setInstanceProvider(maintenanceTaskProvider);
         TownService.setInstanceProvider(townServiceProvider);
+        GameHousingServices.housingServiceProvider = housingServiceProvider;
         HousingService.setInstanceProvider(housingServiceProvider);
         ChallengeTaskService.setInstanceProvider(challengeTaskServiceProvider);
+    }
+
+    public static HousingService housingService() {
+        ObjectProvider<HousingService> provider = housingServiceProvider;
+        if (provider == null) {
+            return HousingService.getInstance();
+        }
+        return provider.getIfAvailable(HousingService::getInstance);
     }
 
     @Override
@@ -28,6 +39,7 @@ public final class GameHousingServices implements DisposableBean {
         HousingBidService.setInstanceProvider(null);
         MaintenanceTask.setInstanceProvider(null);
         TownService.setInstanceProvider(null);
+        housingServiceProvider = null;
         HousingService.setInstanceProvider(null);
         ChallengeTaskService.setInstanceProvider(null);
     }
