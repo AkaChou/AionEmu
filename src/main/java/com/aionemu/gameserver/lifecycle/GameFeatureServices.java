@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.services.AStationService;
+import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.DisputeLandService;
 import com.aionemu.gameserver.services.F2pService;
 import com.aionemu.gameserver.services.KiskService;
@@ -39,6 +40,7 @@ public final class GameFeatureServices implements DisposableBean {
 
     private static volatile ObjectProvider<NpcShoutsService> npcShoutsServiceProvider;
     private static volatile ObjectProvider<SiegeService> siegeServiceProvider;
+    private static volatile ObjectProvider<BaseService> baseServiceProvider;
 
     public GameFeatureServices(ObjectProvider<DisputeLandService> disputeLandServiceProvider,
             ObjectProvider<DredgionService2> dredgionServiceProvider,
@@ -55,6 +57,7 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<BGService> bgServiceProvider,
             ObjectProvider<BanditService> banditServiceProvider,
             ObjectProvider<SiegeService> siegeServiceProvider,
+            ObjectProvider<BaseService> baseServiceProvider,
             ObjectProvider<AStationService> aStationServiceProvider,
             ObjectProvider<F2pService> f2pServiceProvider,
             ObjectProvider<WindyGorgeService> windyGorgeServiceProvider,
@@ -72,6 +75,7 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<GrowthEnergy> growthEnergyProvider) {
         GameFeatureServices.npcShoutsServiceProvider = npcShoutsServiceProvider;
         GameFeatureServices.siegeServiceProvider = siegeServiceProvider;
+        GameFeatureServices.baseServiceProvider = baseServiceProvider;
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
         DredgionService2.setInstanceProvider(dredgionServiceProvider);
         AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
@@ -87,6 +91,7 @@ public final class GameFeatureServices implements DisposableBean {
         BGService.setInstanceProvider(bgServiceProvider);
         BanditService.setInstanceProvider(banditServiceProvider);
         SiegeService.setInstanceProvider(siegeServiceProvider);
+        BaseService.setInstanceProvider(baseServiceProvider);
         AStationService.setInstanceProvider(aStationServiceProvider);
         F2pService.setInstanceProvider(f2pServiceProvider);
         WindyGorgeService.setInstanceProvider(windyGorgeServiceProvider);
@@ -120,10 +125,19 @@ public final class GameFeatureServices implements DisposableBean {
         return provider.getIfAvailable(SiegeService::getInstance);
     }
 
+    public static BaseService baseService() {
+        ObjectProvider<BaseService> provider = baseServiceProvider;
+        if (provider == null) {
+            return BaseService.getInstance();
+        }
+        return provider.getIfAvailable(BaseService::getInstance);
+    }
+
     @Override
     public void destroy() {
         npcShoutsServiceProvider = null;
         siegeServiceProvider = null;
+        baseServiceProvider = null;
         DisputeLandService.setInstanceProvider(null);
         DredgionService2.setInstanceProvider(null);
         AsyunatarService.setInstanceProvider(null);
@@ -139,6 +153,7 @@ public final class GameFeatureServices implements DisposableBean {
         BGService.setInstanceProvider(null);
         BanditService.setInstanceProvider(null);
         SiegeService.setInstanceProvider(null);
+        BaseService.setInstanceProvider(null);
         AStationService.setInstanceProvider(null);
         F2pService.setInstanceProvider(null);
         WindyGorgeService.setInstanceProvider(null);

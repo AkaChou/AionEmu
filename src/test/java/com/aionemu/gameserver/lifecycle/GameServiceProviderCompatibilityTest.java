@@ -19,6 +19,7 @@ import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.gameserver.services.AnnouncementService;
 import com.aionemu.gameserver.services.AStationService;
 import com.aionemu.gameserver.services.AutoGroupService;
+import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ChallengeTaskService;
 import com.aionemu.gameserver.services.CuringZoneService;
@@ -598,6 +599,7 @@ class GameServiceProviderCompatibilityTest {
         CoalescenceService coalescenceService = instance(CoalescenceService.class);
         GrowthEnergy growthEnergy = instance(GrowthEnergy.class);
         SiegeService siegeService = instance(SiegeService.class);
+        BaseService baseService = instance(BaseService.class);
 
         GameFeatureServices featureServices = new GameFeatureServices(
                 provider(DisputeLandService.class, instance(DisputeLandService.class)),
@@ -615,6 +617,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(BGService.class, instance(BGService.class)),
                 provider(BanditService.class, instance(BanditService.class)),
                 provider(SiegeService.class, siegeService),
+                provider(BaseService.class, baseService),
                 provider(AStationService.class, instance(AStationService.class)),
                 provider(F2pService.class, instance(F2pService.class)),
                 provider(WindyGorgeService.class, instance(WindyGorgeService.class)),
@@ -634,6 +637,7 @@ class GameServiceProviderCompatibilityTest {
         try {
             assertSame(npcShoutsService, GameFeatureServices.npcShoutsService());
             assertSame(siegeService, GameFeatureServices.siegeService());
+            assertSame(baseService, GameFeatureServices.baseService());
             assertSame(bonusService, BonusService.getInstance());
             assertSame(petService, PetService.getInstance());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
