@@ -36,7 +36,10 @@ class LegacyConfigOverridesTest {
 
         LegacyGameProperties legacyGameProperties = bindLegacyGameProperties(environment);
 
-        Properties properties = new LegacyConfigOverrides(environment, legacyGameProperties).gameProperties();
+        Properties properties = new LegacyConfigOverrides(
+            legacyGameProperties,
+            new AionGameProperties()
+        ).gameProperties();
 
         assertEquals("command-line", properties.getProperty("gameserver.name"));
         assertEquals("7777", properties.getProperty("gameserver.network.port"));
@@ -56,7 +59,12 @@ class LegacyConfigOverridesTest {
             )
         ));
 
-        Properties properties = new LegacyConfigOverrides(environment, new LegacyGameProperties()).gameProperties();
+        AionGameProperties gameProperties = bindAionGameProperties(environment);
+
+        Properties properties = new LegacyConfigOverrides(
+            new LegacyGameProperties(),
+            gameProperties
+        ).gameProperties();
 
         assertEquals("false", properties.getProperty("gameserver.startup.progress.enable"));
         assertFalse(properties.containsKey("gameserver.staticdata.progress.enable"));
@@ -82,6 +90,19 @@ class LegacyConfigOverridesTest {
     }
 
     @Test
+    void aionGamePropertiesBindStartupProgressAlias() {
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource(
+            "applicationConfig",
+            Map.of("aion.game.startup.progress.enabled", "false")
+        ));
+
+        AionGameProperties properties = bindAionGameProperties(environment);
+
+        assertEquals(Boolean.FALSE, properties.getStartup().getProgress().getEnabled());
+    }
+
+    @Test
     void springConfigurationMetadataDescribesStartupProgressProperty() throws Exception {
         try (InputStream stream = getClass().getClassLoader().getResourceAsStream("META-INF/spring-configuration-metadata.json")) {
             assertNotNull(stream);
@@ -97,6 +118,12 @@ class LegacyConfigOverridesTest {
     private LegacyGameProperties bindLegacyGameProperties(StandardEnvironment environment) {
         LegacyGameProperties properties = new LegacyGameProperties();
         Binder.get(environment).bind("aion.legacy.game", Bindable.ofInstance(properties));
+        return properties;
+    }
+
+    private AionGameProperties bindAionGameProperties(StandardEnvironment environment) {
+        AionGameProperties properties = new AionGameProperties();
+        Binder.get(environment).bind("aion.game", Bindable.ofInstance(properties));
         return properties;
     }
 }
