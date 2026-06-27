@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.portals;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -59,7 +61,7 @@ public class PortalAI2 extends ActionItemNpcAI2
 			case 802221: //Advance Corridor [Umbral Fortress].
 			case 802223: //Advance Corridor [Eternum Fortress].
 			case 802225: //Advance Corridor [Skyclash Fortress].
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						startLifeTask();
@@ -70,7 +72,7 @@ public class PortalAI2 extends ActionItemNpcAI2
 	}
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				World.getInstance().doOnAllPlayers(new Visitor<Player>() {

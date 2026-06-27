@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -71,7 +73,7 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startSkillTask() {
-		skillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -92,7 +94,7 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 	private void gravityDistortionEvent() {
 		SkillEngine.getInstance().getSkill(getOwner(), 20739, 55, getOwner()).useNoAnimationSkill();
 			spawn(283096, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0);
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 	  		@Override
 	  		public void run() {
 	  			SkillEngine.getInstance().getSkill(getOwner(), 20741, 55, getOwner()).useNoAnimationSkill();
@@ -110,7 +112,7 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 				spawn(283158, 1056.8f, 297.6f, 409.9f, (byte) 0);
 				spawn(283158, 1002.07f, 297.4f, 409.85f, (byte) 0);
 				SkillEngine.getInstance().getSkill(getOwner(), 20737, 55, getOwner()).useNoAnimationSkill();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				  	@Override
 				  	public void run() {
 				  		EmoteManager.emoteStopAttacking(getOwner());
@@ -121,14 +123,14 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 						PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
 				  	}
 			    }, 4000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				  		spawn(283109, 1029.93f, 297.31f, 409.08f, (byte) 0);
 						spawn(283110, 1029.9f, 297.26f, 409.08f, (byte) 0);
 				  	}
 				}, 10000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				  	@Override
 				  	public void run() {
 				  		WorldMapInstance instance = getPosition().getWorldMapInstance();

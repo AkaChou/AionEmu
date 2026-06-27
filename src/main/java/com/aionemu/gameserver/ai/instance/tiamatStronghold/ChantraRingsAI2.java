@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -46,31 +48,31 @@ public class ChantraRingsAI2 extends NpcAI2
     }
 	
     private void checkDistance(NpcAI2 ai, Creature creature) {
-  	    int debuff = getOwner().getNpcId() == 283172 ? 20735 : 20734;
+	    int debuff = getOwner().getNpcId() == 283172 ? 20735 : 20734;
         if (creature instanceof Player) {
-    	    if (getOwner().getNpcId() == 283172 && MathUtil.isIn3dRangeLimited(getOwner(), creature, 10, 18) ||
+	    if (getOwner().getNpcId() == 283172 && MathUtil.isIn3dRangeLimited(getOwner(), creature, 10, 18) ||
 			    getOwner().getNpcId() == 283171 && MathUtil.isIn3dRangeLimited(getOwner(), creature, 18, 25) ||
 				getOwner().getNpcId() == 283171 && MathUtil.isIn3dRangeLimited(getOwner(), creature, 0, 10)) {
-    		    if (!creature.getEffectController().hasAbnormalEffect(debuff)) {
-    		        AI2Actions.useSkill(this, debuff);
+		    if (!creature.getEffectController().hasAbnormalEffect(debuff)) {
+		        AI2Actions.useSkill(this, debuff);
 				}
-    	    }
+	    }
         }
 	}
 	
     @Override
     protected void handleSpawned() {
-  	    super.handleSpawned();
-  	    despawn();
+	    super.handleSpawned();
+	    despawn();
     }
 	
     private void despawn() {
-  	    ThreadPoolManager.getInstance().schedule(new Runnable() {
-  		    @Override
-  		    public void run() {
-  			    getOwner().getController().onDelete();
-  		    }
-  	    }, 20000);
+	    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+		    @Override
+		    public void run() {
+			    getOwner().getController().onDelete();
+		    }
+	    }, 20000);
     }
 	
     @Override

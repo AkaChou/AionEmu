@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -38,7 +40,7 @@ public class CanyonMarkAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void markTarget() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -46,7 +48,7 @@ public class CanyonMarkAI2 extends AggressiveNpcAI2 {
 				if (target != null) {
 					AI2Actions.useSkill(CanyonMarkAI2.this, 19504);
 
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 						@Override
 						public void run() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -52,7 +54,7 @@ public class VirhanaTheGreatAI2 extends AggressiveNpcAI2
 			return;
 		}
 		AI2Actions.useSkill(this, 19121); //Seal Of Reflection.
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startRage();
@@ -66,7 +68,7 @@ public class VirhanaTheGreatAI2 extends AggressiveNpcAI2
 		} if (count < 12) {
 			AI2Actions.useSkill(this, 18897); //Earthly Retribution.
 			count++;
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startRage();

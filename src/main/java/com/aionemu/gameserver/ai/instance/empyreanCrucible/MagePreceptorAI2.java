@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -55,12 +57,12 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 				SkillEngine.getInstance().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
 			break;
 			case 50:
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (!isAlreadyDead()) {
 							SkillEngine.getInstance().getSkill(getOwner(), 19609, 46, getOwner()).useNoAnimationSkill();	
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									WorldPosition p = getPosition();
@@ -88,7 +90,7 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 	}
 	
 	private void scheduleSkill(int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {

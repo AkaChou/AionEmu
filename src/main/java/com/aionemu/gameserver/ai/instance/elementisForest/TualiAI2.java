@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -50,7 +52,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 			NpcShoutsService.getInstance().sendMsg(getOwner(), 1500454, getObjectId(), true, 0, 0);
 			scheduleSkills();
 
-			task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 				@Override
 				public void run() {
@@ -155,7 +157,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 		if (isAlreadyDead() || !isStart.get()) {
 			return;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -64,7 +66,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402685, 240000);
 					//In a moment, the Detachment's Rush Squad, armed with the resolve to sacrifice themselves, will attack the Fount.
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402686, 270000);
-					heatventProtectorTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					heatventProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							AI2Actions.deleteOwner(Heatvent_ProtectorAI2.this);
@@ -106,7 +108,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startTornadoTask() {
-		tornadoTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		tornadoTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -138,7 +140,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startFlamekiteGeistTask() {
-		flamekiteGeistTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		flamekiteGeistTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -173,7 +175,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
@@ -189,7 +191,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {

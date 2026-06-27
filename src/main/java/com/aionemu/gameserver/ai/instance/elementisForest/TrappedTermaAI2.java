@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
@@ -67,7 +69,7 @@ public class TrappedTermaAI2 extends NpcAI2 {
 	}
 	
 	private void dead() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

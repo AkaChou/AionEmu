@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -106,7 +108,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage1();
@@ -119,7 +121,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage2();
@@ -132,7 +134,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage3();

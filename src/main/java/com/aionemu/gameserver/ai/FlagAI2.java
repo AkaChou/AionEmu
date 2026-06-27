@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FLAG_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_FLAG_UPDATE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -40,7 +41,7 @@ public class FlagAI2 extends NoActionAI2
         World.getInstance().doOnAllPlayers(new Visitor<Player>() {
             @Override
             public void visit(final Player player) {
-                sendPacketTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+                sendPacketTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
                     @Override
                     public void run() {
                         if (player.getWorldId() == getOwner().getWorldId()) {
@@ -60,7 +61,7 @@ public class FlagAI2 extends NoActionAI2
         World.getInstance().doOnAllPlayers(new Visitor<Player>() {
             @Override
             public void visit(final Player player) {
-                sendPacketTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+                sendPacketTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
                     @Override
                     public void run() {
                         if (player.getWorldId() == getOwner().getWorldId()) {

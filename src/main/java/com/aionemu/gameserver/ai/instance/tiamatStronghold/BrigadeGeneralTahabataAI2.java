@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -67,7 +69,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 	}
 	
 	private void phase1() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(283116, 679.88f, 1068.88f, 497.88f, (byte) 0); //Tahabata's Altar 1.
@@ -76,7 +78,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 	}
 	
 	private void phase2() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(283118, 679.88f, 1068.88f, 497.88f, (byte) 0); //Tahabata's Altar 2.
@@ -85,7 +87,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 	}
 	
 	private void phase3() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(283120, 679.88f, 1068.88f, 497.88f, (byte) 0); //Tahabata's Altar 3.
@@ -106,7 +108,7 @@ public class BrigadeGeneralTahabataAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead()) {
 			return;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startParalyze();

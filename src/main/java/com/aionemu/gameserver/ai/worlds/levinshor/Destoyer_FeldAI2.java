@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -43,7 +45,7 @@ public class Destoyer_FeldAI2 extends AggressiveNpcAI2
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isStart.compareAndSet(false, true)) {
-			task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {

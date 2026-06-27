@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.rvr;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -52,7 +54,7 @@ public class Archon_ScoutAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.deleteOwner(Archon_ScoutAI2.this);

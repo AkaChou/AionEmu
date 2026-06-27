@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -57,19 +59,19 @@ public class AssultPod4AI2 extends AggressiveNpcAI2
 					spawn(297352, 394.50833f, 385.5321f, 688.8357f, (byte) 70);
 					spawn(297352, 397.13196f, 401.5456f, 688.86523f, (byte) 75);
 					spawn(297309, 645.18121f, 376.97357f, 688.78943f, (byte) 78, 165); //Disillon Advance Corridor Shield.
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {
 							spawn(297193, 639.1037f, 393.87778f, 688.8357f, (byte) 103);
 				        }
 			        }, 1000);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {
 							spawn(297193, 626.69946f, 382.24298f, 688.8357f, (byte) 107);
 				        }
 			        }, 3000);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {
 							spawn(297192, 624.11786f, 398.21442f, 688.869f, (byte) 105);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.norsvold;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -47,7 +49,7 @@ public class Archon_Shadow_ScoutAI2 extends NpcAI2
 	}
 	
 	private void startRiftEscapeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnRiftEscape(701131);
@@ -55,7 +57,7 @@ public class Archon_Shadow_ScoutAI2 extends NpcAI2
 		}, 2500);
 	}
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.deleteOwner(Archon_Shadow_ScoutAI2.this);
@@ -63,7 +65,7 @@ public class Archon_Shadow_ScoutAI2 extends NpcAI2
 		}, 10000);
 	}
 	private void startRiftEscapeClosed() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				despawnNpc(701131);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.seizedDanuarSanctuary;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -74,7 +76,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 	
 	private void ShebanMysticalTyrhund() {
 	    if (!isAlreadyDead()) {
-		    enrageTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		    enrageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			    public void run() {
 					if (!isAlreadyDead()) {
 					    spawn(284455, 1051.3069f, 694.83075f, 282.0391f, (byte) 14); //Sheban Mystical Tyrhund.
@@ -89,7 +91,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage1();

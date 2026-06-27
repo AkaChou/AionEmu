@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -55,7 +57,7 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		getOwner().setState(1);
 		getMoveController().moveToPoint(651, 1319, 487);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 		    @Override
 		    public void run() {
 		  	    startDialog();
@@ -68,7 +70,7 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 390841, getOwner().getObjectId(), 0, 0);
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 390842, getOwner().getObjectId(), 0, 3000);
 		NpcShoutsService.getInstance().sendMsg(laksyaka, 390843, laksyaka.getObjectId(), 0, 6000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 		    @Override
 		    public void run() {
 		  	    WorldMapInstance instance = getPosition().getWorldMapInstance();

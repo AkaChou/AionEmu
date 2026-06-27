@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -40,11 +42,11 @@ public class JurdinsIllusionAI2 extends GeneralNpcAI2 {
 			WorldPosition p = getPosition();
 			final int instanceId = p.getInstanceId();
 			final int worldId = p.getMapId();
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 						@Override
 						public void run() {

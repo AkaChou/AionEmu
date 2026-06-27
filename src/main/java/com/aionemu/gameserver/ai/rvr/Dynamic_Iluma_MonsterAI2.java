@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.rvr;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -136,7 +138,7 @@ public class Dynamic_Iluma_MonsterAI2 extends AggressiveNpcAI2 {
 				spawn(240889, 1358.5513f, 335.7875f, 348.35382f, (byte) 0); //Archon Scout.
 			break;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				despawnNpc(241053); //Portal.

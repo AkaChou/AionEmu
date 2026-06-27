@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.event.pumpkinKingHaunt;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -65,7 +67,7 @@ public class Halloween_CandleAI2 extends NpcAI2
 			player.getObserveController().attach(observer);
 			PacketSendUtility.sendPacket(player, new SM_USE_OBJECT(player.getObjectId(), getObjectId(), getTalkDelay(), startBarAnimation));
 			PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, getObjectId()), true);
-			player.getController().addTask(TaskId.ACTION_ITEM_NPC, ThreadPoolManager.getInstance().schedule(new Runnable() {
+			player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_QUESTLOOT, 0, getObjectId()), true);
@@ -83,20 +85,20 @@ public class Halloween_CandleAI2 extends NpcAI2
 		switch (getNpcId()) {
 		    case 835619: //World_event_halloween_candle_01.
 				spawn(835624, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Candle Flame.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.INVULNERABLE);
 						PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 					}
 				}, 1000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(835624); //Candle Flame.
 					}
 				}, 300000); //...5Min
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.NON_ATTACKABLE);
@@ -106,20 +108,20 @@ public class Halloween_CandleAI2 extends NpcAI2
 			break;
 			case 835620: //World_event_halloween_candle_02.
 				spawn(835625, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Candle Flame.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.INVULNERABLE);
 						PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 					}
 				}, 1000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(835625); //Candle Flame.
 					}
 				}, 300000); //...5Min
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.NON_ATTACKABLE);
@@ -129,20 +131,20 @@ public class Halloween_CandleAI2 extends NpcAI2
 			break;
 			case 835621: //World_event_halloween_candle_03.
 				spawn(835626, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Candle Flame.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.INVULNERABLE);
 						PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 					}
 				}, 1000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(835626); //Candle Flame.
 					}
 				}, 300000); //...5Min
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.NON_ATTACKABLE);
@@ -152,20 +154,20 @@ public class Halloween_CandleAI2 extends NpcAI2
 			break;
 			case 835622: //World_event_halloween_candle_04.
 				spawn(835627, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Candle Flame.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.INVULNERABLE);
 						PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 					}
 				}, 1000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(835627); //Candle Flame.
 					}
 				}, 300000); //...5Min
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.NON_ATTACKABLE);
@@ -175,20 +177,20 @@ public class Halloween_CandleAI2 extends NpcAI2
 			break;
 			case 835623: //World_event_halloween_candle_05.
 				spawn(835628, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Candle Flame.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.INVULNERABLE);
 						PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.INVULNERABLE.getId(), 0));
 					}
 				}, 1000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(835628); //Candle Flame.
 					}
 				}, 300000); //...5Min
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						getOwner().setNpcType(NpcType.NON_ATTACKABLE);

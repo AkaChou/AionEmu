@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.shugoImperialTomb;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.*;
 import com.aionemu.gameserver.model.EmotionType;
@@ -67,7 +69,7 @@ public class Empress_AdmirerAI2 extends NpcAI2
 	}
 	
 	private void startTombWaveB1() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				attackEvent((Npc)spawn(219514, 313.3913f, 443.98557f, 296.40808f, (byte) 13), 333.79936f, 453.9313f, 296.40808f, false);
@@ -78,7 +80,7 @@ public class Empress_AdmirerAI2 extends NpcAI2
 				attackEvent((Npc)spawn(219519, 316.16348f, 431.76547f, 294.58875f, (byte) 78), 335.83118f, 427.14017f, 294.7588f, false);
 			}
 		}, 10000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				attackEvent((Npc)spawn(219515, 313.3913f, 443.98557f, 296.40808f, (byte) 13), 333.79936f, 453.9313f, 296.40808f, false);
@@ -89,7 +91,7 @@ public class Empress_AdmirerAI2 extends NpcAI2
 				attackEvent((Npc)spawn(219519, 316.16348f, 431.76547f, 294.58875f, (byte) 78), 335.83118f, 427.14017f, 294.7588f, false);
 			}
 		}, 30000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				attackEvent((Npc)spawn(219514, 313.3913f, 443.98557f, 296.40808f, (byte) 13), 333.79936f, 453.9313f, 296.40808f, false);

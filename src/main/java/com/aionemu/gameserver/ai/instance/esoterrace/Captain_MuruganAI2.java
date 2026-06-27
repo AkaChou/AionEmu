@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.esoterrace;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,7 +54,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 		if (target != null && target instanceof Player) {
 			SkillEngine.getInstance().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
 		}
-		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -63,7 +64,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 					sendMsg(1500193, getObjectId(), false, 0);
 					SkillEngine.getInstance().getSkill(getOwner(), 19325, 1, getOwner()).useNoAnimationSkill();
 					if (getLifeStats().getHpPercentage() <= 50) {
-						specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+						specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								if (!isAlreadyDead()) {
@@ -73,7 +74,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 									if (target != null && target instanceof Player) {
 										SkillEngine.getInstance().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
 									}
-									specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+									specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 										@Override
 										public void run() {
 											if (!isAlreadyDead()) {

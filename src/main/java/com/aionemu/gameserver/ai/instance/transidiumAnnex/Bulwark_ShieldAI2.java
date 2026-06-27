@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -47,7 +49,7 @@ public class Bulwark_ShieldAI2 extends NpcAI2
 	*/
 	private void startShieldVulnerable() {
 		final Npc GAb1SubNamedBarricadeDa65Ah = getPosition().getWorldMapInstance().getNpc(277231); //Bulwark Shield.
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				GAb1SubNamedBarricadeDa65Ah.setTarget(getOwner());

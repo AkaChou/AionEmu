@@ -16,12 +16,13 @@
  */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
@@ -50,7 +51,7 @@ public class immortalOrissanAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void scheduleSpawnExhaustedOrissan(final float x, final float y, final float z, final byte h) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

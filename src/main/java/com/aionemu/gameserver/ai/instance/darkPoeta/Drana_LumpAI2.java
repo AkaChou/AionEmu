@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.darkPoeta;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -63,7 +65,7 @@ public class Drana_LumpAI2 extends AggressiveNpcAI2
 	}
 	
 	private void dranaBreak() {
-		dranaBreakTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		dranaBreakTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.targetCreature(Drana_LumpAI2.this, getPosition().getWorldMapInstance().getNpc(214880)); //Spaller Echtra.

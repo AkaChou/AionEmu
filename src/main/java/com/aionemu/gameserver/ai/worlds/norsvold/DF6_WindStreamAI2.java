@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.norsvold;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.model.templates.windstreams.WindstreamTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -48,7 +49,7 @@ public class DF6_WindStreamAI2 extends NpcAI2
     }
 	
 	private void startWindStream(final Npc npc) {
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 Npc npc2 = (Npc) spawn(220110000, 857865, 1661.18f, 1956.75f, 197.8f, (byte) 0, 0, 1);

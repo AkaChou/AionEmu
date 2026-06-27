@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.verteron;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -47,7 +49,7 @@ public class Poisonous_BubblegutAI2 extends AggressiveNpcAI2
 		switch (getNpcId()) {
 		    case 210318: //Poisonous Bubblegut.
 			    spawn(203195, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Kato.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        despawnNpc(203195); //Kato.

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -45,7 +47,7 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 	@Override
 	public void handleSpawned() {
 		super.handleSpawned();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				SkillEngine.getInstance().getSkill(getOwner(), 19612, 46, getOwner()).useNoAnimationSkill();
@@ -73,11 +75,11 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 	
 	private void startEvent() {
 		SkillEngine.getInstance().getSkill(getOwner(), 19610, 46, getOwner()).useNoAnimationSkill();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				SkillEngine.getInstance().getSkill(getOwner(), 19614, 46, getOwner()).useNoAnimationSkill();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						WorldPosition p = getPosition();
@@ -109,7 +111,7 @@ public class PriestAsmodiansPreceptorAI2 extends AggressiveNpcAI2 {
 	}
 	
 	private void applySoulSickness(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				npc.getLifeStats().setCurrentHpPercent(50);

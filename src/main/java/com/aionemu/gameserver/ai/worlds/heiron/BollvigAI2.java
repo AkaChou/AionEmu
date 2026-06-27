@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.heiron;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveFirstSkillAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -99,7 +101,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 	private void firstSkill() {
 		int hpPercent = getLifeStats().getHpPercentage();
 		if (50 >= hpPercent && hpPercent > 25) {
-			firstTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			firstTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run()  {
 					useSkill(18034);
@@ -109,7 +111,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 		} else if(hpPercent <= 25) {
 			useSkill(18037);
 		}
-		secondTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		secondTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				skillThree();
@@ -119,7 +121,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 	
 	private void skillThree() {
 		useSkill(17899);
-		thirdTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		thirdTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				int hpPercent = getLifeStats().getHpPercentage();
@@ -131,7 +133,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 					firstSkill();
 				} else if (25 >= hpPercent) {
 					useSkill(18027);
-					lastTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					lastTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							skillThree();

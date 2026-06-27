@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.luckyDanuarReliquary;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -128,7 +130,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
     }
 	
 	private void startSkillTask() {
-		skillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -163,7 +165,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 	private void VengefullOrbEvent() {
 		AI2Actions.targetSelf(Enraged_Queen_ModorAI2.this);
 		SkillEngine.getInstance().getSkill(getOwner(), 21177, 1, getOwner()).useNoAnimationSkill();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnSorcererQueenModor();
@@ -180,7 +182,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 	private void Teleport() {
 		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500750);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
                 modorNpc();
 				World.getInstance().updatePosition(getOwner(), 284, 262, 249, (byte) 63);
@@ -193,7 +195,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
         AI2Actions.targetSelf(Enraged_Queen_ModorAI2.this);
         SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         sendMsg(1500741);
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run(){
                 float pos1[][] = {
@@ -216,7 +218,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 		AI2Actions.targetSelf(Enraged_Queen_ModorAI2.this);
 		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500741);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc();
 				World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
@@ -228,11 +230,11 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 	private void skillfear() {
 		AI2Actions.targetSelf(Enraged_Queen_ModorAI2.this);
 		SkillEngine.getInstance().getSkill(getOwner(), 21268, 60, getOwner()).useNoAnimationSkill();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				AI2Actions.targetSelf(Enraged_Queen_ModorAI2.this);
 				SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					public void run() {
 				        World.getInstance().updatePosition(getOwner(), 232, 263, 249, (byte) 115);
 				        PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
@@ -245,7 +247,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 	private void Teleport4() {
 		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500741);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc();
 				World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
@@ -258,7 +260,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
         AI2Actions.targetSelf(Enraged_Queen_ModorAI2.this);
         SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         sendMsg(1500750);
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 float pos1[][] = {
@@ -280,7 +282,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 	private void Teleport6() {
 		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500741);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc2();
 				World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
@@ -293,7 +295,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
         AI2Actions.targetSelf(Enraged_Queen_ModorAI2.this);
         SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         sendMsg(1500750);
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 float pos1[][] = {
@@ -315,7 +317,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 	private void Teleport8() {
 		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500741);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc2();
 				World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
@@ -325,7 +327,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void modorNpc() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
                 spawn(284659, 271.12497f, 247.17401f, 242.625f, (byte) 90);
                 spawn(284660, 244.12497f, 245.17401f, 242.625f, (byte) 90);
@@ -336,7 +338,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void modorNpc2() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
                 spawn(284663, 271.12497f, 247.17401f, 242.625f, (byte) 90);
                 spawn(284662, 244.12497f, 245.17401f, 242.625f, (byte) 90);

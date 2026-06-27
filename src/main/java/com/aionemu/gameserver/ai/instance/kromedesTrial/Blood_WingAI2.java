@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.kromedesTrial;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 
 import com.aionemu.gameserver.ai2.*;
@@ -53,7 +55,7 @@ public class Blood_WingAI2 extends NpcAI2
 	
 	private void startBloodWing() {
 		AI2Actions.deleteOwner(Blood_WingAI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				attackBloodWing((Npc)spawn(217109, 641.71704f, 573.7239f, 209.03032f, (byte) 96), 651.39923f, 564.0526f, 206.85417f, false);

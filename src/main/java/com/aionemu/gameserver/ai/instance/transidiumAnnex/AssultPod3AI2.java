@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -57,19 +59,19 @@ public class AssultPod3AI2 extends AggressiveNpcAI2
 					spawn(297352, 394.50833f, 385.5321f, 688.8357f, (byte) 70);
 					spawn(297352, 397.13196f, 401.5456f, 688.86523f, (byte) 75);
 					spawn(297308, 645.25562f, 649.67334f, 688.83008f, (byte) 78, 166); //Atanatos Advance Corridor Shield.
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {
 							spawn(297190, 628.48737f, 643.67847f, 688.8357f, (byte) 13);
 				        }
 			        }, 1000);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {
 							spawn(297190, 639.0038f, 630.83386f, 688.8357f, (byte) 16);
 				        }
 			        }, 3000);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {
 							spawn(297194, 623.9741f, 628.6063f, 688.869f, (byte) 16);

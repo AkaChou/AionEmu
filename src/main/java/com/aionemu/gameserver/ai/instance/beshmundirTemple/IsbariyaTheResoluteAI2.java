@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -100,7 +102,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startBasicSkillTask() {
-		basicSkillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		basicSkillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead())
@@ -169,7 +171,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 	
 	private void scheduleSpecial(int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				launchSpecial();

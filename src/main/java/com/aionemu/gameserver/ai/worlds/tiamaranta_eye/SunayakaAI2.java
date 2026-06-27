@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.tiamaranta_eye;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -71,7 +73,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 							}
 						}
 					});
-					sunayakaRageTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					sunayakaRageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							//Berserker Sunayaka has gone berserk.

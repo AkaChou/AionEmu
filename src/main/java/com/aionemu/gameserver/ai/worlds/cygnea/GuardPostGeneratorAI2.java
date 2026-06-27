@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.cygnea;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				SkillEngine.getInstance().getSkill(getOwner(), 22776, 1, getOwner()).useNoAnimationSkill();
@@ -60,7 +61,7 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 				deviceBroken1.setEntityId(951);
 				objects.put(230417, SpawnEngine.spawnObject(deviceBroken1, 1));
 				AI2Actions.deleteOwner(GuardPostGeneratorAI2.this);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(230417);
@@ -75,7 +76,7 @@ public class GuardPostGeneratorAI2 extends NpcAI2
 				deviceBroken3.setEntityId(1192);
 				objects.put(230417, SpawnEngine.spawnObject(deviceBroken3, 1));
 				AI2Actions.deleteOwner(GuardPostGeneratorAI2.this);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(230417);

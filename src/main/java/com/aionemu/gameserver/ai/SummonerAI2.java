@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -186,7 +188,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 					handleBeforeSpawn(percent);
 					for (SummonGroup summonGroup : percent.getSummons()) {
 						final SummonGroup sg = summonGroup;
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								spawnHelpers(sg);

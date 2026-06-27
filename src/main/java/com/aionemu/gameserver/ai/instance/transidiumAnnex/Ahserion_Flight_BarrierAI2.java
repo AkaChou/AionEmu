@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.transidiumAnnex;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -47,7 +49,7 @@ public class Ahserion_Flight_BarrierAI2 extends NpcAI2
 	*/
 	private void startShieldVulnerable() {
 		final Npc GAb1SubCenterBarricadeDa65Ah = getPosition().getWorldMapInstance().getNpc(277230); //Ahserion Flight Barrier.
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				GAb1SubCenterBarricadeDa65Ah.setTarget(getOwner());

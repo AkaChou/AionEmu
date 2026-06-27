@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.cygnea;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,7 +51,7 @@ public class Stygian_Mist_ProtectorAI2 extends AggressiveNpcAI2
 					spawn(235914, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
 					AI2Actions.deleteOwner(Stygian_Mist_ProtectorAI2.this);
 					AI2Actions.scheduleRespawn(this);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {
 						    despawnNpc(235914);

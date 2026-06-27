@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.fallenPoeta;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -62,7 +64,7 @@ public class Brigade_General_TahabataAI2 extends AggressiveNpcAI2
 	}
 	
 	private void fireTornado() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(243961, 679.88f, 1068.88f, 497.88f, (byte) 0); //IDF6_LF1_Thor_SumStatue_PhyAtk.
@@ -82,7 +84,7 @@ public class Brigade_General_TahabataAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead()) {
 			return;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startParalyze();

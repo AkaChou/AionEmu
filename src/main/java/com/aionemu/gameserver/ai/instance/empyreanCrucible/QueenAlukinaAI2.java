@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -84,7 +86,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 				scheduleSkill(17902, 8000);
 			break;
 			case 25:
-				task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+				task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
 					if (isAlreadyDead()) {
@@ -106,7 +108,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void scheduleSkill(final int skillId , int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {

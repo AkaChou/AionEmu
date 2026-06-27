@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.kysis;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -52,7 +53,7 @@ public class Kysis_Crystal_SwordAI2 extends NpcAI2
 				case 702844: //Kysis's Crystal Sword [Elyos]
 				    announceSpiritOfKysis30Min();
 					announceSpiritOfKysisAppears();
-				    ThreadPoolManager.getInstance().schedule(new Runnable() {
+				    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							spawn(883663, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Spirit Of Kysis.
@@ -62,7 +63,7 @@ public class Kysis_Crystal_SwordAI2 extends NpcAI2
 				case 702845: //Kysis's Crystal Sword [Asmodians]
 					announceSpiritOfKysis30Min();
 					announceSpiritOfKysisAppears();
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							spawn(884029, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Spirit Of Kysis.

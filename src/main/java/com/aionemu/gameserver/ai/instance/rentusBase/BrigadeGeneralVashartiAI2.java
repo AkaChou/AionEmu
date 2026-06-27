@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -82,7 +84,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startAirEvent(final NpcAI2 ai, final int percent) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
@@ -114,13 +116,13 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 					spawn(npcId2, 188.16568f, 414.03534f, 260.75488f, (byte) 0);
 					spawn(npcId1, 188.33f, 414.61f, 260.61f, (byte) 244);
 					final Npc buffNpc = (Npc) spawn(283007, 188.33f, 414.61f, 260.61f, (byte) 0);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!buffNpc.getLifeStats().isAlreadyDead()) {
 								startFlameSmashEvent(percent);
 								SkillEngine.getInstance().getSkill(buffNpc, 20538, 60, buffNpc).useNoAnimationSkill();
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										buffNpc.getController().onDelete();
@@ -129,7 +131,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 							}
 						}
 					}, 1000);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							cancelFlameSmashTask();
@@ -164,7 +166,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startFlameSmashEvent(final int percent) {
-		flameSmashTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		flameSmashTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -284,7 +286,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startFlameBuffEvent() {
-		flameBuffTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		flameBuffTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -309,7 +311,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 	
 	private void useKissBuff(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (npc != null && !npc.getLifeStats().isAlreadyDead()) {

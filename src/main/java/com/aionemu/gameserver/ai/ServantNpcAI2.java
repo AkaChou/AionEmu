@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.poll.AIAnswer;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.NpcObjectType;
 import com.aionemu.gameserver.model.skill.NpcSkillEntry;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.concurrent.Future;
 
@@ -44,7 +45,7 @@ public class ServantNpcAI2 extends GeneralNpcAI2
 	protected void handleSpawned() {
 		super.handleSpawned();
 		if (getCreator() != null) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (getOwner().getNpcObjectType() != NpcObjectType.TOTEM) {
@@ -66,7 +67,7 @@ public class ServantNpcAI2 extends GeneralNpcAI2
 			skillId = npcSkill.getSkillId();
 		}
 		int duration = getOwner().getNpcObjectType() == NpcObjectType.TOTEM ? 3000 : 5000;
-		Future<?> task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				getOwner().getController().useSkill(skillId, 1);

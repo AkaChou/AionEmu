@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.fallenPoeta;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -43,7 +45,7 @@ public class Balaur_Explosives_StockpileAI2 extends AggressiveNpcAI2
 	}
 	
 	private void attackBoost() {
-		attackBoostTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		attackBoostTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.targetCreature(Balaur_Explosives_StockpileAI2.this, getPosition().getWorldMapInstance().getNpc(243682)); //Lieutenant Anuhart.

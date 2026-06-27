@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -102,7 +104,7 @@ public class Guard_Captain_RohukaAI2 extends AggressiveNpcAI2
 	
 	private void skill() {
 		SkillEngine.getInstance().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); //Wrathful Venom Burst.
-		   ThreadPoolManager.getInstance().schedule(new Runnable() {
+		   GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
                 SkillEngine.getInstance().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); //Virulence.
 			}
@@ -113,7 +115,7 @@ public class Guard_Captain_RohukaAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage2();
@@ -135,7 +137,7 @@ public class Guard_Captain_RohukaAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					getRandomTarget();

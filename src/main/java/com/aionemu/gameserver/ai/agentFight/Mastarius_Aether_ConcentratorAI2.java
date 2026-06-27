@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.agentFight;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -37,7 +38,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				SkillEngine.getInstance().getSkill(getOwner(), 20125, 1, getOwner()).useNoAnimationSkill(); //Aether Concentrator Standby.

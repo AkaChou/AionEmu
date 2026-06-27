@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.crucibleSpire;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class ChronomancerAI2 extends NpcAI2 {
 		    switch (getNpcId()) {
 				case 247376:
 			    case 247386:
-				    ThreadPoolManager.getInstance().schedule(new Runnable() {
+				    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							despawnNpc(701772); //Stair.

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.siege;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
 import com.aionemu.gameserver.ai2.AIName;
@@ -42,7 +44,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.properties.TargetSpeciesAttribute;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.slf4j.LoggerFactory;
 
@@ -144,7 +145,7 @@ public class ArtifactAI2 extends NpcAI2
 		};
 		observers.put(player.getObjectId(), observer);
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ACTION_ITEM_NPC, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				ItemUseObserver observer = observers.remove(player.getObjectId());
@@ -166,10 +167,10 @@ public class ArtifactAI2 extends NpcAI2
 				});
 				loc.setLastActivation(System.currentTimeMillis());
 				if (loc.getTemplate().getRepeatCount() == 1)
-					ThreadPoolManager.getInstance().schedule(new ArtifactUseSkill(loc, player, skillTemplate), 13000);
+					GameThreadPoolServices.threadPoolManager().schedule(new ArtifactUseSkill(loc, player, skillTemplate), 13000);
 				else {
-					final ScheduledFuture<?> s = ThreadPoolManager.getInstance().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					final ScheduledFuture<?> s = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000);
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							s.cancel(true);

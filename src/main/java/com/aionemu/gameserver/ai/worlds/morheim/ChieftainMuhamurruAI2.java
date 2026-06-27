@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.morheim;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -53,7 +55,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startHideTask() {
-		hideTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		hideTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -70,7 +72,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startEvent(int time, final int msg, final int skill) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead() && !isHome.get()) {

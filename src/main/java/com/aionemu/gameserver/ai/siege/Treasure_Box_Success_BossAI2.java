@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.ai.siege;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,7 +10,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
     protected void handleDied() {
         if (SPAWN_CHEST_IDS.contains(getNpcId())) {
             treasureChest();
-            ThreadPoolManager.getInstance().schedule(this::spawnTreasureChestTask, 10000);
+            GameThreadPoolServices.threadPoolManager().schedule(this::spawnTreasureChestTask, 10000);
         }
         super.handleDied();
     }

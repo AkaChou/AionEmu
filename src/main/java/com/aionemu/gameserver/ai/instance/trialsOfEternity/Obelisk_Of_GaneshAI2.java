@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.trialsOfEternity;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -43,7 +45,7 @@ public class Obelisk_Of_GaneshAI2 extends NpcAI2
 	protected void handleDied() {
 		switch (getNpcId()) {
 			case 246421: //Obelisk Of Ganesh.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(246421, 408.66196f, 1013.1304f, 711.93115f, (byte) 0, 177); //Obelisk Of Ganesh.
@@ -51,7 +53,7 @@ public class Obelisk_Of_GaneshAI2 extends NpcAI2
 				}, 120000);
 			break;
 			case 246422: //Obelisk Of Ganesh.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(246422, 408.77426f, 1037.3873f, 711.90881f, (byte) 0, 179); //Obelisk Of Ganesh.
@@ -59,7 +61,7 @@ public class Obelisk_Of_GaneshAI2 extends NpcAI2
 				}, 120000);
 			break;
 			case 246423: //Obelisk Of Ganesh.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(246423, 386.68903f, 1037.3842f, 711.95770f, (byte) 0, 181); //Obelisk Of Ganesh.
@@ -67,7 +69,7 @@ public class Obelisk_Of_GaneshAI2 extends NpcAI2
 				}, 120000);
 			break;
 			case 246424: //Obelisk Of Ganesh.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(246424, 386.68146f, 1013.2744f, 711.93091f, (byte) 0, 183); //Obelisk Of Ganesh.

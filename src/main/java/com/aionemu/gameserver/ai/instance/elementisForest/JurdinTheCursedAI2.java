@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.SummonerAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -104,7 +106,7 @@ public class JurdinTheCursedAI2 extends SummonerAI2 {
 
 	private void startTask() {
 
-		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {
@@ -120,7 +122,7 @@ public class JurdinTheCursedAI2 extends SummonerAI2 {
 
 	private void spawnShadows() {
 		spawnFlowers();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -66,7 +68,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
     }
 	
     private void startSkillTask() {
-	    trapTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+	    trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 		    @Override
 		    public void run() {
 			    if (isAlreadyDead())
