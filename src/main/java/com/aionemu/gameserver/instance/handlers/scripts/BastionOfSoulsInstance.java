@@ -44,7 +44,6 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +88,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> bastionTask = FastList.newInstance();
+	private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -1316,10 +1315,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = bastionTask.head(), end = bastionTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : bastionTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

@@ -42,7 +42,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	private int surkanaShockCannon;
 	private boolean isInstanceDestroyed;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> pandaemoniumTask = FastList.newInstance();
+	private final List<Future<?>> pandaemoniumTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
@@ -870,10 +869,10 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = pandaemoniumTask.head(), end = pandaemoniumTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : pandaemoniumTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

@@ -52,7 +52,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     private boolean isInstanceDestroyed = false;
 	protected KamarBattlefieldReward kamarBattlefieldReward;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> kamarTask = FastList.newInstance();
+    private final List<Future<?>> kamarTask = new ArrayList<Future<?>>();
     
     protected KamarBattlefieldPlayerReward getPlayerReward(Player player) {
         kamarBattlefieldReward.regPlayerReward(player);
@@ -868,10 +867,10 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     }
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = kamarTask.head(), end = kamarTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : kamarTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

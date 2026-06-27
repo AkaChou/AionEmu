@@ -32,7 +32,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 import java.util.*;
 import java.util.concurrent.Future;
 
@@ -49,7 +48,7 @@ public class DivineTowerInstanceD extends GeneralInstanceHandler
 	private int IDAb1Heroes3RDWaveDoor;
 	private int IDAb1Heroes4THWaveDoor;
 	private boolean isInstanceDestroyed;
-	private final FastList<Future<?>> divineTowerTask = FastList.newInstance();
+	private final List<Future<?>> divineTowerTask = new ArrayList<Future<?>>();
 	
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
@@ -216,10 +215,10 @@ public class DivineTowerInstanceD extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = divineTowerTask.head(), end = divineTowerTask.tail(); (n = n.getNext()) != end;) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : divineTowerTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

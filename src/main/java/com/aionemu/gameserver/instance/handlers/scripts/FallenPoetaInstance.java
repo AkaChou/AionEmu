@@ -35,8 +35,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.*;
-
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -51,7 +49,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	private Race spawnRace;
 	private Future<?> anuhartTaskA1;
 	protected boolean isInstanceDestroyed = false;
-	private final FastList<Future<?>> fallenTask = FastList.newInstance();
+	private final List<Future<?>> fallenTask = new ArrayList<Future<?>>();
 	
 	@Override
 	public void onEnterInstance(Player player) {
@@ -606,10 +604,10 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = fallenTask.head(), end = fallenTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : fallenTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
