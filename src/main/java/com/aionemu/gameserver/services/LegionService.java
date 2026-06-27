@@ -2122,7 +2122,7 @@ public class LegionService {
 	}
 
 	public void handleLegionSearch(Player player, int type, String legionName) {
-		FastList<Legion> matchingLegions = new FastList<Legion>();
+		List<Legion> matchingLegions = new ArrayList<>();
 		switch (type) {
 		case 0:
 			matchingLegions = allCachedLegions.getAllLegions();

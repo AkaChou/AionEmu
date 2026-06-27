@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.List;
+
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-
-import javolution.util.FastList;
 
 /**
  * @author Rinzler
@@ -27,9 +27,9 @@ import javolution.util.FastList;
 
 public class SM_DISPUTE_LAND extends AionServerPacket {
 	boolean active;
-	FastList<Integer> worlds;
+	List<Integer> worlds;
 
-	public SM_DISPUTE_LAND(FastList<Integer> worlds, boolean active) {
+	public SM_DISPUTE_LAND(List<Integer> worlds, boolean active) {
 		this.worlds = worlds;
 		this.active = active;
 	}

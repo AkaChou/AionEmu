@@ -17,14 +17,14 @@
 package com.aionemu.gameserver.model.instancerift;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.instancerift.InstanceRiftTemplate;
 import com.aionemu.gameserver.services.instanceriftservice.RiftInstance;
-
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -35,7 +35,7 @@ public class InstanceRiftLocation {
 	protected boolean isActive;
 	protected InstanceRiftTemplate template;
 	protected RiftInstance<InstanceRiftLocation> activeInstanceRift;
-	protected FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> players = new HashMap<>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public InstanceRiftLocation() {
@@ -71,7 +71,7 @@ public class InstanceRiftLocation {
 		return spawned;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 }

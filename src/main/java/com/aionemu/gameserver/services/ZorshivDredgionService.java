@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.services;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,10 +64,10 @@ public class ZorshivDredgionService {
 	private static final Logger log = LoggerFactory.getLogger(ZorshivDredgionService.class);
 
 	// Inggison Invasion
-	private FastMap<Integer, VisibleObject> adventPortal = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEffect = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventControl = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventDirecting = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
+	private Map<Integer, VisibleObject> adventControl = new HashMap<>();
+	private Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
 
 	public void initZorshivDredgionLocations() {
 		if (CustomConfig.ZORSHIV_DREDGION_ENABLED) {

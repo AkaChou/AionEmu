@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.services;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public class SvsService {
 	private static Logger log = LoggerFactory.getLogger(SvsService.class);
 	private static final int duration = CustomConfig.SVS_DURATION;
 	// Transidium Annex 4.7
-	private FastMap<Integer, VisibleObject> advanceCorridor = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> advanceCorridor = new HashMap<>();
 	private final Map<Integer, Panesterra<?>> activeSvs = new FastMap<Integer, Panesterra<?>>().shared();
 
 	public void initSvsLocations() {

@@ -109,7 +109,7 @@ public abstract class Battleground {
 	protected boolean isDone = false;
 	protected boolean shouldDisband = true;
 	protected boolean teamBased = false;
-	protected Map<Integer, WorldPosition> previousLocations = new FastMap<Integer, WorldPosition>();
+	protected Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
 	protected List<Player> _players = Collections.synchronizedList(new ArrayList<Player>());
 	protected List<PlayerGroup> _groups = Collections.synchronizedList(new ArrayList<PlayerGroup>());
 	protected List<PlayerAlliance> _alliances = Collections.synchronizedList(new ArrayList<PlayerAlliance>());

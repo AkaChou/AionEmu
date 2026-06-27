@@ -4,7 +4,6 @@ import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PortalCooldownItem;
-import javolution.util.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class MySQL8PortalCooldownsDAO extends PortalCooldownsDAO {
@@ -24,7 +24,7 @@ public class MySQL8PortalCooldownsDAO extends PortalCooldownsDAO {
 
 	@Override
 	public void loadPortalCooldowns(final Player player) {
-		FastMap<Integer, PortalCooldownItem> portalCoolDowns = new FastMap<Integer, PortalCooldownItem>();
+		Map<Integer, PortalCooldownItem> portalCoolDowns = new HashMap<>();
 		
 		try (Connection con = DatabaseFactory.getConnection();
 			 PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {

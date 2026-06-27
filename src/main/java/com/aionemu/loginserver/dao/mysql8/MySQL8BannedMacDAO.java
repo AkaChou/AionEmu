@@ -5,11 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javolution.util.FastMap;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.dao.BannedMacDAO;
@@ -26,7 +25,7 @@ public class MySQL8BannedMacDAO extends BannedMacDAO {
 
     @Override
     public Map<String, BannedMacEntry> load() {
-        Map<String, BannedMacEntry> map = new FastMap<>();
+        Map<String, BannedMacEntry> map = new ConcurrentHashMap<>();
         String query = "SELECT `address`, `time`, `details` FROM `banned_mac`";
         
         try (Connection con = DatabaseFactory.getConnection();

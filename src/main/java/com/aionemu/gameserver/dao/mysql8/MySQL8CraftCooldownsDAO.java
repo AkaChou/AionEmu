@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.Map;
-import javolution.util.FastMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -26,7 +26,7 @@ public class MySQL8CraftCooldownsDAO extends CraftCooldownsDAO {
 
     @Override
     public void loadCraftCooldowns(Player player) {
-        FastMap<Integer, Long> cooldowns = FastMap.newInstance();
+        Map<Integer, Long> cooldowns = new HashMap<>();
         
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {

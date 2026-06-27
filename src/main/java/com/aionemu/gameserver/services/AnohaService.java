@@ -16,6 +16,7 @@
 package com.aionemu.gameserver.services;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,7 +66,7 @@ public class AnohaService {
 	private static final Logger log = LoggerFactory.getLogger(AnohaService.class);
 
 	// Berserk Anoha 4.7
-	private FastMap<Integer, VisibleObject> adventSwordEffect = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> adventSwordEffect = new HashMap<>();
 
 	private final Map<Integer, BerserkAnoha<?>> activeAnoha = new FastMap<Integer, BerserkAnoha<?>>().shared();
 

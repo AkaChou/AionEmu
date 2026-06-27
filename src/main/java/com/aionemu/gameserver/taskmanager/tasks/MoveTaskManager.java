@@ -18,6 +18,10 @@ package com.aionemu.gameserver.taskmanager.tasks;
 
 import static com.aionemu.gameserver.taskmanager.parallel.ForEach.forEach;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.internal.chmv8.ForkJoinTask;
@@ -29,12 +33,9 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import com.google.common.base.Predicate;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 public class MoveTaskManager extends AbstractPeriodicTaskManager {
 	private static volatile ObjectProvider<MoveTaskManager> instanceProvider;
-	private final FastMap<Integer, Creature> movingCreatures = new FastMap<Integer, Creature>().shared();
+	private final Map<Integer, Creature> movingCreatures = new ConcurrentHashMap<Integer, Creature>();
 
 	public static final int UPDATE_PERIOD = 100;
 
@@ -67,11 +68,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 
 	@Override
 	public void run() {
-		final FastList<Creature> copy = new FastList<Creature>();
-		for (FastMap.Entry<Integer, Creature> e = movingCreatures.head(),
-				mapEnd = movingCreatures.tail(); (e = e.getNext()) != mapEnd;) {
-			copy.add(e.getValue());
-		}
+		final ArrayList<Creature> copy = new ArrayList<Creature>(movingCreatures.values());
 		ForkJoinTask<Creature> task = forEach(copy, CREATURE_MOVE_PREDICATE);
 		if (task != null) {
 			ThreadPoolManager.getInstance().getForkingPool().invoke(task);

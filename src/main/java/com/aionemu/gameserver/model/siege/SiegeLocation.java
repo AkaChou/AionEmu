@@ -17,7 +17,9 @@
 package com.aionemu.gameserver.model.siege;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +55,7 @@ public class SiegeLocation implements ZoneHandler {
 	protected int siegeDuration;
 	protected int influenceValue;
 	private FastMap<Integer, Creature> creatures = new FastMap<Integer, Creature>();
-	private FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	private Map<Integer, Player> players = new HashMap<>();
 	protected int buffId;
 	protected int buffIdA;
 	protected int buffIdE;
@@ -208,9 +210,7 @@ public class SiegeLocation implements ZoneHandler {
 
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (FastMap.Entry<Integer, Player> e = players.head(),
-					mapEnd = players.tail(); (e = e.getNext()) != mapEnd;) {
-				Player player = e.getValue();
+			for (Player player : players.values()) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -224,7 +224,7 @@ public class SiegeLocation implements ZoneHandler {
 		return creatures;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 

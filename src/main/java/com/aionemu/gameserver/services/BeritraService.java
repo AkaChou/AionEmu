@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.services;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,15 +62,15 @@ public class BeritraService {
 	private static Logger log = LoggerFactory.getLogger(BeritraService.class);
 	private static final int duration = CustomConfig.BERITRA_DURATION;
 	// Beritra Invasion 4.7
-	private FastMap<Integer, VisibleObject> adventPortal = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEffect = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventControl = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventDirecting = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
+	private Map<Integer, VisibleObject> adventControl = new HashMap<>();
+	private Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
 	// Ereshkigal Invasion 4.9
-	private FastMap<Integer, VisibleObject> adventEreshPortal = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEreshEffect = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEreshControl = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEreshDirecting = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> adventEreshPortal = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEreshEffect = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEreshControl = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEreshDirecting = new HashMap<>();
 
 	private final Map<Integer, BeritraInvasion<?>> activeInvasions = new FastMap<Integer, BeritraInvasion<?>>()
 			.shared();

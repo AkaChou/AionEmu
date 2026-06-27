@@ -17,6 +17,8 @@
 package com.aionemu.gameserver.model.gameobjects.player.title;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
@@ -30,15 +32,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_TITLE_INFO;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
-
 public class TitleList {
 
-	private final FastMap<Integer, Title> titles;
+	private final Map<Integer, Title> titles;
 	private Player owner;
 
 	public TitleList() {
-		this.titles = new FastMap<Integer, Title>();
+		this.titles = new HashMap<>();
 		this.owner = null;
 	}
 

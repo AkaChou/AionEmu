@@ -18,11 +18,10 @@
 
 package com.aionemu.loginserver.service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,8 +50,8 @@ public class PlayerTransferService {
     public static PlayerTransferService getInstance() {
         return SingletonHolder.INSTANCE;
     }
-    private Map<Integer, PlayerTransferRequest> transfers = FastMap.newInstance();
-    private Map<Integer, PlayerTransferTask> tasks = FastMap.newInstance();
+    private Map<Integer, PlayerTransferRequest> transfers = new ConcurrentHashMap<>();
+    private Map<Integer, PlayerTransferTask> tasks = new ConcurrentHashMap<>();
     private Future<?> veryfyTask;
     private PlayerTransferDAO dao;
 
@@ -71,7 +70,7 @@ public class PlayerTransferService {
      * first init. getting values from sql
      */
     protected void verifyNewTasks() {
-        FastList<PlayerTransferTask> tasksNew = this.dao.getNew();
+        List<PlayerTransferTask> tasksNew = this.dao.getNew();
         if (!tasksNew.isEmpty()) {
             log.info("PlayerTransfer perform task init. " + tasksNew.size() + " new tasks.");
         }

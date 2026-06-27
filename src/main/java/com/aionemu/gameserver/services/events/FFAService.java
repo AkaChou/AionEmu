@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services.events;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,15 +59,13 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
-
 /**
  * @author Rinzler (Encom)
  */
 public class FFAService {
 	private static volatile ObjectProvider<FFAService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(FFAService.class);
-	private Map<Integer, WorldPosition> previousLocations = new FastMap<Integer, WorldPosition>();
+	private Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
 	private WorldMapInstance activeInstance;
 	private List<ArenaMap> maps = new ArrayList<ArenaMap>();
 	private ArenaMap activeMap = null;

@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.services;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,10 +65,10 @@ public class RvrService {
 	// Brigade General's Urgent Order 4.9.1
 	private final Map<Integer, Rvrlf3df3<?>> activeRvr = new FastMap<Integer, Rvrlf3df3<?>>().shared();
 	// Heavy Tetran/Kenovikan 5.6
-	private FastMap<Integer, VisibleObject> adventPortal = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEffect = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventControl = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventDirecting = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
+	private Map<Integer, VisibleObject> adventControl = new HashMap<>();
+	private Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
 
 	public void initRvrLocations() {
 		if (CustomConfig.RVR_ENABLED) {

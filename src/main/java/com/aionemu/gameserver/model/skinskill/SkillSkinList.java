@@ -17,6 +17,8 @@
 package com.aionemu.gameserver.model.skinskill;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
@@ -29,19 +31,17 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
-
 /**
  * @author Rinzler (Encom)
  * @rework FrozenKiller
  */
 public class SkillSkinList {
 
-	private final FastMap<Integer, SkillSkin> skillskins;
+	private final Map<Integer, SkillSkin> skillskins;
 	private Player owner;
 
 	public SkillSkinList() {
-		skillskins = new FastMap<Integer, SkillSkin>();
+		skillskins = new HashMap<>();
 		owner = null;
 	}
 

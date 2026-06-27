@@ -19,8 +19,8 @@
 package com.aionemu.loginserver.utils;
 
 import java.sql.Timestamp;
-
-import javolution.util.FastMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +39,8 @@ public class FloodProtector {
      * Logger for this class.
      */
     private static final Logger log = LoggerFactory.getLogger(CM_LOGIN.class);
-    private FastMap<String, Long> flood = new FastMap<String, Long>();
-    private FastMap<String, Long> ban = new FastMap<String, Long>();
+    private final Map<String, Long> flood = new ConcurrentHashMap<>();
+    private final Map<String, Long> ban = new ConcurrentHashMap<>();
 
     @Deprecated(since = "boot-migration")
     public static final FloodProtector getInstance() {

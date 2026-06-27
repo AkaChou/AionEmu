@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.services;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -37,8 +38,6 @@ import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.rift.RiftOpenRunnable;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import javolution.util.FastMap;
-
 /****/
 /**
  * Author Rinzler (Encom) /
@@ -50,7 +49,7 @@ public class RiftService {
 	private Map<Integer, RiftLocation> locations;
 	private final Lock closing = new ReentrantLock();
 	private static final int duration = CustomConfig.RIFT_DURATION;
-	private FastMap<Integer, RiftLocation> activeRifts = new FastMap<Integer, RiftLocation>();
+	private Map<Integer, RiftLocation> activeRifts = new HashMap<>();
 
 	public void initRiftLocations() {
 		if (CustomConfig.RIFT_ENABLED) {
@@ -137,7 +136,7 @@ public class RiftService {
 	public void openRifts(RiftLocation location) {
 		location.setOpened(true);
 		RiftManager.getInstance().spawnRift(location);
-		activeRifts.putEntry(location.getId(), location);
+		activeRifts.put(location.getId(), location);
 		ThreadPoolManager.getInstance().schedule(new Runnable() {
 			@Override
 			public void run() {

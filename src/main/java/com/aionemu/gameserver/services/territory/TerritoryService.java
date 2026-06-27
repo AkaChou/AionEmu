@@ -18,7 +18,9 @@ package com.aionemu.gameserver.services.territory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -36,12 +38,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
-import javolution.util.FastMap;
-
 public class TerritoryService {
 	private static volatile ObjectProvider<TerritoryService> instanceProvider;
 	private TerritoryBuff territoryBuff;
-	private FastMap<Integer, TerritoryBuff> buffs = new FastMap<Integer, TerritoryBuff>();
+	private Map<Integer, TerritoryBuff> buffs = new HashMap<>();
 	private TreeMap<Integer, LegionTerritory> territories = new TreeMap<Integer, LegionTerritory>();
 	private TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<Integer, TreeMap<Integer, WorldPosition>>();
 

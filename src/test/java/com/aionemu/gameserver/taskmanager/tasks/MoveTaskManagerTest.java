@@ -1,0 +1,254 @@
+package com.aionemu.gameserver.taskmanager.tasks;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+import com.aionemu.gameserver.ai2.AI2;
+import com.aionemu.gameserver.ai2.AIState;
+import com.aionemu.gameserver.ai2.AISubState;
+import com.aionemu.gameserver.ai2.event.AIEventType;
+import com.aionemu.gameserver.ai2.poll.AIAnswer;
+import com.aionemu.gameserver.ai2.poll.AIQuestion;
+import com.aionemu.gameserver.controllers.movement.MoveController;
+import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
+import com.aionemu.gameserver.model.templates.item.ItemAttackType;
+
+class MoveTaskManagerTest {
+
+	@Test
+	void runMovesRegisteredCreaturesOnce() {
+		MoveTaskManager manager = new MoveTaskManager();
+		TestCreature first = new TestCreature(1);
+		TestCreature second = new TestCreature(2);
+
+		manager.addCreature(first);
+		manager.addCreature(second);
+		manager.run();
+
+		assertEquals(1, first.moveController.moveCalls);
+		assertEquals(1, second.moveController.moveCalls);
+		assertEquals(1, first.ai.validateEvents);
+		assertEquals(1, second.ai.validateEvents);
+	}
+
+	@Test
+	void removedCreatureIsNotMoved() {
+		MoveTaskManager manager = new MoveTaskManager();
+		TestCreature creature = new TestCreature(1);
+
+		manager.addCreature(creature);
+		manager.removeCreature(creature);
+		manager.run();
+
+		assertEquals(0, creature.moveController.moveCalls);
+	}
+
+	private static final class TestCreature extends Creature {
+
+		private final TestMoveController moveController = new TestMoveController();
+		private final TestAI2 ai = new TestAI2();
+
+		private TestCreature(int objectId) {
+			super(objectId, null, null, new TestVisibleObjectTemplate(), null);
+		}
+
+		@Override
+		public MoveController getMoveController() {
+			return moveController;
+		}
+
+		@Override
+		public AI2 getAi2() {
+			return ai;
+		}
+
+		@Override
+		public String getName() {
+			return "test";
+		}
+
+		@Override
+		public byte getLevel() {
+			return 1;
+		}
+	}
+
+	private static final class TestVisibleObjectTemplate extends VisibleObjectTemplate {
+
+		@Override
+		public int getTemplateId() {
+			return 1;
+		}
+
+		@Override
+		public String getName() {
+			return "test";
+		}
+
+		@Override
+		public int getNameId() {
+			return 1;
+		}
+	}
+
+	private static final class TestMoveController implements MoveController {
+
+		private int moveCalls;
+
+		@Override
+		public void moveToDestination() {
+			moveCalls++;
+		}
+
+		@Override
+		public float getTargetX2() {
+			return 0;
+		}
+
+		@Override
+		public float getTargetY2() {
+			return 0;
+		}
+
+		@Override
+		public float getTargetZ2() {
+			return 0;
+		}
+
+		@Override
+		public void setNewDirection(float x, float y, float z, byte heading) {
+		}
+
+		@Override
+		public void startMovingToDestination() {
+		}
+
+		@Override
+		public void abortMove() {
+		}
+
+		@Override
+		public byte getMovementMask() {
+			return 0;
+		}
+
+		@Override
+		public boolean isInMove() {
+			return false;
+		}
+
+		@Override
+		public void setInMove(boolean value) {
+		}
+
+		@Override
+		public void skillMovement() {
+		}
+	}
+
+	private static final class TestAI2 implements AI2 {
+
+		private int validateEvents;
+
+		@Override
+		public void onCreatureEvent(AIEventType event, Creature creature) {
+		}
+
+		@Override
+		public void onCustomEvent(int eventId, Object... args) {
+		}
+
+		@Override
+		public void onGeneralEvent(AIEventType event) {
+			if (event == AIEventType.MOVE_VALIDATE) {
+				validateEvents++;
+			}
+		}
+
+		@Override
+		public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
+			return false;
+		}
+
+		@Override
+		public void think() {
+		}
+
+		@Override
+		public boolean canThink() {
+			return false;
+		}
+
+		@Override
+		public AIState getState() {
+			return null;
+		}
+
+		@Override
+		public AISubState getSubState() {
+			return null;
+		}
+
+		@Override
+		public String getName() {
+			return "test";
+		}
+
+		@Override
+		public boolean poll(AIQuestion question) {
+			return false;
+		}
+
+		@Override
+		public AIAnswer ask(AIQuestion question) {
+			return null;
+		}
+
+		@Override
+		public boolean isLogging() {
+			return false;
+		}
+
+		@Override
+		public long getRemainigTime() {
+			return 0;
+		}
+
+		@Override
+		public int modifyDamage(int damage) {
+			return damage;
+		}
+
+		@Override
+		public int modifyOwnerDamage(int damage) {
+			return damage;
+		}
+
+		@Override
+		public void onIndividualNpcEvent(Creature npc) {
+		}
+
+		@Override
+		public int modifyHealValue(int value) {
+			return value;
+		}
+
+		@Override
+		public int modifyMaccuracy(int value) {
+			return value;
+		}
+
+		@Override
+		public int modifySensoryRange(int value) {
+			return value;
+		}
+
+		@Override
+		public ItemAttackType modifyAttackType(ItemAttackType type) {
+			return type;
+		}
+	}
+}

@@ -17,6 +17,7 @@ package com.aionemu.gameserver.model.ingameshop;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class InGameShopEn {
 	private InGameShopProperty iGProperty;
 	private int lastRequestId = 0;
 	private FastList<IGRequest> activeRequests;
-	private static Map<Integer, Long> lastUsage = new FastMap<Integer, Long>();
+	private static Map<Integer, Long> lastUsage = new HashMap<>();
 
 	public static InGameShopEn getInstance() {
 		ObjectProvider<InGameShopEn> provider = instanceProvider;

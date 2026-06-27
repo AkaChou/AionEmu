@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -31,8 +32,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.SiegeService;
 
-import javolution.util.FastMap;
-
 public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 	private int infoType;
 	private Map<Integer, SiegeLocation> locations;
@@ -45,7 +44,7 @@ public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 
 	public SM_SIEGE_LOCATION_INFO(SiegeLocation loc) {
 		this.infoType = 1;
-		locations = new FastMap<Integer, SiegeLocation>();
+		locations = new HashMap<>();
 		locations.put(loc.getLocationId(), loc);
 	}
 

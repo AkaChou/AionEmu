@@ -18,14 +18,13 @@ package com.aionemu.gameserver.network;
 
 import java.sql.Timestamp;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MACBAN_CONTROL;
-
-import javolution.util.FastMap;
 
 /**
  * @author KID
@@ -38,7 +37,7 @@ public class BannedMacManager {
 		return manager;
 	}
 
-	private Map<String, BannedMacEntry> bannedList = new FastMap<String, BannedMacEntry>();
+	private Map<String, BannedMacEntry> bannedList = new ConcurrentHashMap<>();
 
 	public final void banAddress(String address, long newTime, String details) {
 		BannedMacEntry entry;

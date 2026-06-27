@@ -17,14 +17,14 @@
 package com.aionemu.gameserver.model.nightmarecircus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.nightmarecircus.NightmareCircusTemplate;
 import com.aionemu.gameserver.services.nightmarecircusservice.CircusInstance;
-
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -35,7 +35,7 @@ public class NightmareCircusLocation {
 	protected boolean isActive;
 	protected NightmareCircusTemplate template;
 	protected CircusInstance<NightmareCircusLocation> activeNightmareCircus;
-	protected FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> players = new HashMap<>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public NightmareCircusLocation() {
@@ -71,7 +71,7 @@ public class NightmareCircusLocation {
 		return spawned;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 }

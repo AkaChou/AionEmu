@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.Map;
-import javolution.util.FastMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -33,7 +33,7 @@ public class MySQL8HouseObjectCooldownsDAO extends HouseObjectCooldownsDAO {
             
             stmt.setInt(1, player.getObjectId());
             
-            FastMap<Integer, Long> cooldowns = FastMap.newInstance();
+            Map<Integer, Long> cooldowns = new HashMap<>();
             
             try (ResultSet rset = stmt.executeQuery()) {
                 while (rset.next()) {

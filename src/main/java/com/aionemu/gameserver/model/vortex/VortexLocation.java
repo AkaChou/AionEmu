@@ -17,7 +17,9 @@
 package com.aionemu.gameserver.model.vortex;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.gameserver.controllers.RVController;
 import com.aionemu.gameserver.model.Race;
@@ -49,7 +51,7 @@ public class VortexLocation implements ZoneHandler {
 	protected Race offenceRace;
 	protected Race defendsRace;
 	protected List<InvasionZoneInstance> zones;
-	protected FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> players = new HashMap<>();
 	protected FastMap<Integer, Kisk> kisks = new FastMap<Integer, Kisk>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 	protected HomePoint home;
@@ -131,7 +133,7 @@ public class VortexLocation implements ZoneHandler {
 		return spawned;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 
@@ -177,7 +179,7 @@ public class VortexLocation implements ZoneHandler {
 		} else if (creature instanceof Player) {
 			Player player = (Player) creature;
 			if (!players.containsKey(player.getObjectId())) {
-				players.putEntry(player.getObjectId(), player);
+				players.put(player.getObjectId(), player);
 				if (isActive()) {
 					if (player.getRace().equals(getInvadersRace())) {
 						if (getVortexController().getPassedPlayers().containsKey(player.getObjectId())

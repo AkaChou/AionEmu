@@ -16,16 +16,17 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
-
 public class PortalCooldownList {
 	private Player owner;
-	private FastMap<Integer, PortalCooldownItem> portalCooldowns;
+	private Map<Integer, PortalCooldownItem> portalCooldowns;
 
 	PortalCooldownList(Player owner) {
 		this.owner = owner;
@@ -71,17 +72,17 @@ public class PortalCooldownList {
 		return portalCooldowns.get(worldId);
 	}
 
-	public FastMap<Integer, PortalCooldownItem> getPortalCoolDowns() {
+	public Map<Integer, PortalCooldownItem> getPortalCoolDowns() {
 		return portalCooldowns;
 	}
 
-	public void setPortalCoolDowns(FastMap<Integer, PortalCooldownItem> portalCoolDowns) {
+	public void setPortalCoolDowns(Map<Integer, PortalCooldownItem> portalCoolDowns) {
 		this.portalCooldowns = portalCoolDowns;
 	}
 
 	public void addPortalCooldown(int worldId, int entryCount, long useDelay) {
 		if (portalCooldowns == null) {
-			portalCooldowns = new FastMap<Integer, PortalCooldownItem>();
+			portalCooldowns = new HashMap<Integer, PortalCooldownItem>();
 		}
 		portalCooldowns.put(worldId, new PortalCooldownItem(worldId, entryCount, useDelay));
 		if (owner.isInTeam()) {
