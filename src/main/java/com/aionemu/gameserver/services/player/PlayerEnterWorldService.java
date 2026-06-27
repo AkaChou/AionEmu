@@ -696,7 +696,7 @@ public final class PlayerEnterWorldService {
 			player.setPartnerId(DAOManager.getDAO(WeddingDAO.class).loadPartnerId(player));
 			EnchantService.GloryShieldSkill(player);
 			ShugoSweepService.getInstance().onLogin(player);
-			LunaShopService.getInstance().onLogin(player);
+			GameEventBootstrapServices.lunaShopService().onLogin(player);
 			if (FFAService.getInstance().isInArena(player)) {
 				TeleportService2.moveToBindLocation(player, true);
 			}

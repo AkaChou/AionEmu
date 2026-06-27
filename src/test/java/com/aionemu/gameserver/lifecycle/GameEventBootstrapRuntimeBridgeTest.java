@@ -72,6 +72,24 @@ class GameEventBootstrapRuntimeBridgeTest {
         }
     }
 
+    @Test
+    void gameServerCodeUsesLunaShopServiceBridgeInsteadOfDirectSingleton() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            List<Path> sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/player/LunaShopService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventBootstrapServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventBootstrapFallbacks.java")))
+                .toList();
+
+            for (Path sourcePath : sources) {
+                String source = Files.readString(sourcePath);
+
+                assertFalse(source.contains("LunaShopService.getInstance()"), sourcePath.toString());
+            }
+        }
+    }
+
     private <T> T instance(Class<T> type) {
         return objenesis.newInstance(type);
     }
