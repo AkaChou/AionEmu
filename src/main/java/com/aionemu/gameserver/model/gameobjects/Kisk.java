@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +33,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 import javolution.util.FastSet;
 
 public class Kisk extends SummonedObject<Player> {
@@ -83,7 +83,7 @@ public class Kisk extends SummonedObject<Player> {
 	}
 
 	public List<Player> getCurrentMemberList() {
-		List<Player> currentMemberList = new FastList<Player>();
+		List<Player> currentMemberList = new ArrayList<Player>();
 		for (int memberId : this.kiskMemberIds) {
 			Player member = World.getInstance().findPlayer(memberId);
 			if (member != null) {

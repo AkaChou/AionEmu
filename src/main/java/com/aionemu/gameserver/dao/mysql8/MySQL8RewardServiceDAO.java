@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Updated for MySQL 8 - Fixed connection leaks
@@ -78,7 +79,7 @@ public class MySQL8RewardServiceDAO extends RewardServiceDAO {
     }
 	
     @Override
-    public void uncheckAvailable(FastList<Integer> ids) {
+    public void uncheckAvailable(List<Integer> ids) {
         if (ids == null || ids.isEmpty()) {
             return;
         }

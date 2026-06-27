@@ -18,6 +18,7 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -29,8 +30,6 @@ import com.aionemu.gameserver.dataholders.QuestsData;
 import com.aionemu.gameserver.model.templates.quest.QuestCategory;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-
-import javolution.util.FastList;
 
 /**
  * @author MrPoke
@@ -74,8 +73,8 @@ public class QuestStateList {
 		return _quests.values();
 	}
 
-	public FastList<QuestState> getAllFinishedQuests() {
-		FastList<QuestState> completeQuestList = FastList.newInstance();
+	public List<QuestState> getAllFinishedQuests() {
+		List<QuestState> completeQuestList = new ArrayList<QuestState>();
 		for (QuestState qs : _quests.values()) {
 			if (qs.getStatus() == QuestStatus.COMPLETE) {
 				completeQuestList.add(qs);

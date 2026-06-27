@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.reward;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -60,7 +63,7 @@ public class RewardService {
 		if (list.size() == 0 || player.getMailbox() == null) {
 			return;
 		}
-		FastList<Integer> rewarded = FastList.newInstance();
+		List<Integer> rewarded = new ArrayList<Integer>();
 		for (RewardEntryItem item : list) {
 			if (DataManager.ITEM_DATA.getItemTemplate(item.id) == null) {
 				log.warn("[RewardController][" + item.unique + "] null template for item " + item.id + " on player "
@@ -84,7 +87,6 @@ public class RewardService {
 		}
 		if (rewarded.size() > 0) {
 			dao.uncheckAvailable(rewarded);
-			FastList.recycle(rewarded);
 			FastList.recycle(list);
 		}
 	}
