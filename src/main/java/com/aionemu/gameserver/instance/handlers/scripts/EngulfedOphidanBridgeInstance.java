@@ -55,7 +55,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import javolution.util.FastList;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -80,7 +79,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     private float loosingGroupMultiplier = 1;
     private boolean isInstanceDestroyed = false;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> ophidanTask = FastList.newInstance();
+    private final List<Future<?>> ophidanTask = new ArrayList<Future<?>>();
 	
     protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
         engulfedOphidanBridgeReward.regPlayerReward(player);
@@ -1038,10 +1037,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 	}
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = ophidanTask.head(), end = ophidanTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : ophidanTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

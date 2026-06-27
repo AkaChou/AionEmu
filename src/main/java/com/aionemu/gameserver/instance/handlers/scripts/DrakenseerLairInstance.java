@@ -35,9 +35,10 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 
 /****/
@@ -51,7 +52,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	private int abyssGateEnhancerKilled;
 	private boolean isStartTimer = false;
 	protected boolean isInstanceDestroyed = false;
-	private final FastList<Future<?>> drakenseerLairTask = FastList.newInstance();
+	private final List<Future<?>> drakenseerLairTask = new ArrayList<Future<?>>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
@@ -196,10 +197,10 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopDrakenseerLairTask() {
-        for (FastList.Node<Future<?>> n = drakenseerLairTask.head(), end = drakenseerLairTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : drakenseerLairTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

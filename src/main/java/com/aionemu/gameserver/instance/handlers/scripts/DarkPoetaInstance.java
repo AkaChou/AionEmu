@@ -35,7 +35,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +64,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 14400000; //...4Hrs
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> darkPoetaTask = FastList.newInstance();
+	private final List<Future<?>> darkPoetaTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
@@ -616,10 +615,10 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
     }
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = darkPoetaTask.head(), end = darkPoetaTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : darkPoetaTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

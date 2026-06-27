@@ -35,7 +35,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +57,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	private Map<Integer, StaticDoor> doors;
 	private List<Npc> Poppy = new ArrayList<Npc>();
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> kumukiCaveTask = FastList.newInstance();
+	private final List<Future<?>> kumukiCaveTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
@@ -314,10 +313,10 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = kumukiCaveTask.head(), end = kumukiCaveTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : kumukiCaveTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

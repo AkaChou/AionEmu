@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	private Future<?> trialsOfEternityTaskA8;
 	private List<Integer> movies = new ArrayList<Integer>();
 	private List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
-	private final FastList<Future<?>> trialsOfEternityTask = FastList.newInstance();
+	private final List<Future<?>> trialsOfEternityTask = new ArrayList<Future<?>>();
 	private FastMap<Integer, VisibleObject> trialsShield = new FastMap<Integer, VisibleObject>();
 	
 	@Override
@@ -811,10 +810,10 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = trialsOfEternityTask.head(), end = trialsOfEternityTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : trialsOfEternityTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
