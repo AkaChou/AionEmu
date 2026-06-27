@@ -16,12 +16,13 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -43,7 +44,7 @@ public class GrowthEnergy {
 	public void init() {
 		log.info("<Aura Of Growth Reset>");
 		String daily = "0 0 9 1/1 * ? *";
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				dailyGenerated = false;
 				updateGrowthEnergy();

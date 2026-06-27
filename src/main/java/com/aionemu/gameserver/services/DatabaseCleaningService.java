@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,6 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CleaningConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.services.player.PlayerService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class DatabaseCleaningService {
 
@@ -108,7 +109,7 @@ public class DatabaseCleaningService {
 		}
 
 		for (Worker w : workers) {
-			ThreadPoolManager.getInstance().executeLongRunning(w);
+			GameThreadPoolServices.threadPoolManager().executeLongRunning(w);
 		}
 	}
 

@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.DayOfWeek;
@@ -62,7 +64,6 @@ import com.aionemu.gameserver.services.mail.AuctionResult;
 import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
@@ -619,7 +620,7 @@ public class HousingBidService extends AbstractCronTask {
 		}
 		if (minutesLeft < 5 && timeProlonged < 30) {
 			timeProlonged += 5;
-			ThreadPoolManager.getInstance().execute(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
 				@Override
 				public void run() {
 					DAOManager.getDAO(ServerVariablesDAO.class).store("auctionProlonged", timeProlonged);

@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services.svsservice;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.svs.SvsLocation;
 import com.aionemu.gameserver.services.SvsService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -37,7 +38,7 @@ public class SvsStartRunnable implements Runnable {
 	public void run() {
 		// Advance Corridor [Transidium Annex].
 		SvsService.getInstance().transidiumAnnexMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Advance Corridor [Transidium Annex].

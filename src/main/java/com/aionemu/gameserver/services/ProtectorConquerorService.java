@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.services.protectors.ProtectorBuffs;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -78,7 +79,7 @@ public class ProtectorConquerorService {
 			WorldType type = worldType > 0 ? worldType > 1 ? WorldType.ASMODIANS : WorldType.ELYOS : WorldType.USEALL;
 			handledWorlds.put(worldId, type);
 		}
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				for (Protector info : protectors.values()) {

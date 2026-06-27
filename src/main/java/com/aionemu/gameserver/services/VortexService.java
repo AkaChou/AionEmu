@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.VortexSchedule;
 import com.aionemu.gameserver.configs.schedule.VortexSchedule.Vortex;
@@ -47,7 +49,6 @@ import com.aionemu.gameserver.services.vortexservice.Invasion;
 import com.aionemu.gameserver.services.vortexservice.VortexStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -81,7 +82,7 @@ public class VortexService {
 			vortexSchedule = VortexSchedule.load();
 			for (Vortex vortex : vortexSchedule.getVortexsList()) {
 				for (String invasionTime : vortex.getInvasionTimes()) {
-					CronService.getInstance().schedule(new VortexStartRunnable(vortex.getId()), invasionTime);
+					GameCronServices.cronService().schedule(new VortexStartRunnable(vortex.getId()), invasionTime);
 				}
 			}
 		}
@@ -100,7 +101,7 @@ public class VortexService {
 		theobomosVortexMsg(id);
 		brusthoninVortexMsg(id);
 		dimensionalVortexCountdownMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!invasion.isGeneratorDestroyed()) {

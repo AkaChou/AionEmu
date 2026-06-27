@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.List;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_UPGRADE_ARCADE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -155,7 +156,7 @@ public class ArcadeUpgradeService {
 	public void getPlaySuccesArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		arcade.setFrenzyLevel(arcade.getFrenzyLevel() + 1);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, true, arcade.getFrenzyPoints()));
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(player, 4, arcade.getFrenzyLevel()));
@@ -165,7 +166,7 @@ public class ArcadeUpgradeService {
 
 	public void getPlayFailedArcade(final Player player, final PlayerUpgradeArcade arcade) {
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(3, false, arcade.getFrenzyPoints()));
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				PacketSendUtility.sendPacket(player,
@@ -194,7 +195,7 @@ public class ArcadeUpgradeService {
 		// Upgrade Frenzy!
 		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GACHA_FEVERTIME_START);
 		PacketSendUtility.sendPacket(player, new SM_UPGRADE_ARCADE(7, frenzyTime, arcade.getFrenzyCount()));
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				PlayerUpgradeArcade arcade = player.getUpgradeArcade();

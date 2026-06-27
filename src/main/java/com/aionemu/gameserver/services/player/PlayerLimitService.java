@@ -16,7 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
-import com.aionemu.commons.services.CronService;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.SellLimit;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -57,7 +58,7 @@ public class PlayerLimitService {
 	}
 
 	public void scheduleUpdate() {
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 
 			@Override
 			public void run() {

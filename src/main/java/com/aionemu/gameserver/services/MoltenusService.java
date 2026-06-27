@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.MoltenusSchedule;
 import com.aionemu.gameserver.configs.schedule.MoltenusSchedule.Moltenus;
@@ -44,7 +46,6 @@ import com.aionemu.gameserver.services.moltenusservice.MoltenusFight;
 import com.aionemu.gameserver.services.moltenusservice.MoltenusStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -84,7 +85,7 @@ public class MoltenusService {
 			moltenusSchedule = MoltenusSchedule.load();
 			for (Moltenus moltenus : moltenusSchedule.getMoltenussList()) {
 				for (String fightTime : moltenus.getFightTimes()) {
-					CronService.getInstance().schedule(new MoltenusStartRunnable(moltenus.getId()), fightTime);
+					GameCronServices.cronService().schedule(new MoltenusStartRunnable(moltenus.getId()), fightTime);
 				}
 			}
 		}
@@ -101,7 +102,7 @@ public class MoltenusService {
 		}
 		boss.start();
 		moltenusMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopMoltenus(id);

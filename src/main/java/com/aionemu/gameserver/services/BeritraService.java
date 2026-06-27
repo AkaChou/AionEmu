@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.BeritraSchedule;
 import com.aionemu.gameserver.configs.schedule.BeritraSchedule.Beritra;
@@ -45,7 +47,6 @@ import com.aionemu.gameserver.services.beritraservice.BeritraStartRunnable;
 import com.aionemu.gameserver.services.beritraservice.Invade;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -94,7 +95,7 @@ public class BeritraService {
 			beritraSchedule = BeritraSchedule.load();
 			for (Beritra beritra : beritraSchedule.getBeritrasList()) {
 				for (String invasionTime : beritra.getInvasionTimes()) {
-					CronService.getInstance().schedule(new BeritraStartRunnable(beritra.getId()), invasionTime);
+					GameCronServices.cronService().schedule(new BeritraStartRunnable(beritra.getId()), invasionTime);
 				}
 			}
 		}
@@ -110,7 +111,7 @@ public class BeritraService {
 			activeInvasions.put(id, invade);
 		}
 		invade.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopBeritraInvasion(id);

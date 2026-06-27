@@ -1,4 +1,7 @@
+
 package com.aionemu.gameserver.services.player;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -137,7 +140,6 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.collections.ListSplitter;
 import com.aionemu.gameserver.utils.rates.Rates;
@@ -219,7 +221,7 @@ public final class PlayerEnterWorldService {
 			delay = 15000;
 			log.warn("Postponed enter world " + objectId);
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -670,8 +672,8 @@ public final class PlayerEnterWorldService {
 					}
 				}
 			}
-			player.getController().addTask(TaskId.PLAYER_UPDATE, ThreadPoolManager.getInstance().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000, PeriodicSaveConfig.PLAYER_GENERAL * 1000));
-			player.getController().addTask(TaskId.INVENTORY_UPDATE, ThreadPoolManager.getInstance().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000, PeriodicSaveConfig.PLAYER_ITEMS * 1000));
+			player.getController().addTask(TaskId.PLAYER_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000, PeriodicSaveConfig.PLAYER_GENERAL * 1000));
+			player.getController().addTask(TaskId.INVENTORY_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000, PeriodicSaveConfig.PLAYER_ITEMS * 1000));
 			SurveyService.getInstance().showAvailable(player);
 			if (EventsConfig.ENABLE_EVENT_SERVICE) {
 				EventService.getInstance().onPlayerLogin(player);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.util.concurrent.Future;
 
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.services.events.thievesguildservice.ThievesStatusL
 import com.aionemu.gameserver.services.events.thievesguildservice.ThievesType;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.captcha.CAPTCHAUtil;
 
 /**
@@ -285,7 +286,7 @@ public class ThievesGuildService {
 	private void scheduleThievesTask(final Player player, long thievesTimer) {
 		player.setThievesTimer((int) thievesTimer);
 
-		player.getController().addTask(TaskId.THIEVES, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.THIEVES, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

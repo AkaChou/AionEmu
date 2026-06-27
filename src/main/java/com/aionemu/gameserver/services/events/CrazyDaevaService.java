@@ -16,11 +16,13 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -48,7 +49,7 @@ public class CrazyDaevaService {
 	public void startTimer() {
 		String[] times = EventsConfig.CRAZY_TIMES.split("\\|");
 		for (String cron : times) {
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					checkStart();
@@ -141,7 +142,7 @@ public class CrazyDaevaService {
 
 	// end event clear all and reward
 	public void clearCrazy() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

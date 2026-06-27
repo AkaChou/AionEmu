@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
@@ -52,14 +54,14 @@ public class EngulfedOphidanBridgeService {
 		if (AutoGroupConfig.OPHIDAN_ENABLED) {
 			log.info("Engulfed Ophidan Bridge 4.5");
 			// Engulfed Ophidan Bridge TUE-THU-SAT "12PM-1PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startOphidanRegistration();
 				}
 			}, AutoGroupConfig.OPHIDAN_SCHEDULE_MIDDAY);
 			// Engulfed Ophidan Bridge TUE-THU-SAT "11PM-0AM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startOphidanRegistration();
@@ -69,7 +71,7 @@ public class EngulfedOphidanBridgeService {
 	}
 
 	private void startUregisterOphidanTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				registerAvailable = false;

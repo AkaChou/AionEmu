@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
@@ -52,7 +54,7 @@ public class GrandArenaTrainingCampService {
 		if (AutoGroupConfig.GRAND_ARENA_TRAINING_CAMP_ENABLED) {
 			log.info("Grand Arena Training Camp 5.6");
 			// IDTM_LobbyP01 SAT-SUN "6PM-0AM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startGrandArenaTrainingCampRegistration();
@@ -62,7 +64,7 @@ public class GrandArenaTrainingCampService {
 	}
 
 	private void startUregisterGrandArenaTrainingCampTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				registerAvailable = false;

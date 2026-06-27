@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Iterator;
 import java.util.concurrent.Future;
 
@@ -29,7 +31,6 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.team.legion.Legion;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class PeriodicSaveService {
 
 		int DELAY_LEGION_ITEM = PeriodicSaveConfig.LEGION_ITEMS * 1000;
 
-		legionWhUpdateTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new LegionWhUpdateTask(),
+		legionWhUpdateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new LegionWhUpdateTask(),
 				DELAY_LEGION_ITEM, DELAY_LEGION_ITEM);
 	}
 

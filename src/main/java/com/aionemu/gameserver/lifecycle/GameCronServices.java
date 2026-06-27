@@ -14,6 +14,14 @@ public final class GameCronServices {
         resolvedCronService = CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
     }
 
+    public static CronService cronService() {
+        CronService cronService = resolvedCronService;
+        if (cronService != null) {
+            return cronService;
+        }
+        return CronService.requireCurrent();
+    }
+
     public static void shutdownIfInitialized() {
         CronService cronService = resolvedCronService;
         if (cronService != null) {

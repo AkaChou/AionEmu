@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
@@ -58,21 +60,21 @@ public class DredgionService2 {
 		if (AutoGroupConfig.DREDGION_ENABLED) {
 			log.info("[Baranath/Chantra/Terath] Dredgion");
 			// Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-1PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startDredgionRegistration();
 				}
 			}, AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
 			// Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "8PM-9PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startDredgionRegistration();
 				}
 			}, AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
 			// Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "23PM-0AM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startDredgionRegistration();
@@ -82,7 +84,7 @@ public class DredgionService2 {
 	}
 
 	private void startUregisterDredgionTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				registerAvailable = false;

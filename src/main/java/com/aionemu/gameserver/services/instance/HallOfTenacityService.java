@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
@@ -52,14 +54,14 @@ public class HallOfTenacityService {
 		if (AutoGroupConfig.HALL_OF_TENACITY_ENABLED) {
 			log.info("Hall Of Tenacity 5.3");
 			// Hall Of Tenacity SAT-SUN "9AM-5PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startHallOfTenacityRegistration();
 				}
 			}, AutoGroupConfig.HALL_OF_TENACITY_SCHEDULE_MORNING);
 			// Hall Of Tenacity MON-TUE-WED-THU-FRI "6PM-0AM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startHallOfTenacityRegistration();
@@ -69,7 +71,7 @@ public class HallOfTenacityService {
 	}
 
 	private void startUregisterHallOfTenacityTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				registerAvailable = false;

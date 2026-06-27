@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.veteranreward;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Collection;
@@ -25,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
@@ -88,7 +89,7 @@ public class VeteranRewardsService {
 	private void Init_VeteranRewardStatusLoop() {
 		log.info("Veteran Reward System activated");
 
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			@Override
 			public void run() {
 				Init_VeteranRewards();

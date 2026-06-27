@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.anohaservice;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.anoha.AnohaLocation;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AnohaService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -50,28 +51,28 @@ public class AnohaStartRunnable implements Runnable {
 				AnohaService.getInstance().sendRequest(player);
 			}
 		});
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Enraged Wealhtheow Guardian will appear in 5 minutes.
 				AnohaService.getInstance().wealhtheowGuardianMsg1(id);
 			}
 		}, 1500000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Enraged Wealhtheow Guardian will appear in 3 minutes.
 				AnohaService.getInstance().wealhtheowGuardianMsg2(id);
 			}
 		}, 1620000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Enraged Wealhtheow Guardian will appear in 1 minute.
 				AnohaService.getInstance().wealhtheowGuardianMsg3(id);
 			}
 		}, 1740000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				Map<Integer, AnohaLocation> locations = AnohaService.getInstance().getAnohaLocations();

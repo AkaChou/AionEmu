@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.services.teleport;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +80,6 @@ import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapType;
@@ -202,7 +203,7 @@ public class TeleportService2 {
 		playerTransformation(player);
 		instanceTransformation(player);
 		archdaevaTransformation(player);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (player.getLifeStats().isAlreadyDead() || !player.isSpawned()) {
@@ -438,7 +439,7 @@ public class TeleportService2 {
 				instanceTransformation(player);
 				archdaevaTransformation(player);
 				if (player.isUseRobot() || player.getRobotId() != 0) {
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							PacketSendUtility.sendPacket(player, new SM_USE_ROBOT(player, getRobotInfo(player).getRobotId()));

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +58,6 @@ import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 import java.util.LinkedHashMap;
@@ -99,7 +100,7 @@ public class BrokerService {
 	public BrokerService() {
 		initBrokerService();
 		saveManager = new BrokerPeriodicTaskManager(DELAY_BROKER_SAVE);
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				checkExpiredItems();

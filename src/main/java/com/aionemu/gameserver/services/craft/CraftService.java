@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.craft;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -52,7 +54,6 @@ import com.aionemu.gameserver.services.item.ItemService.ItemUpdatePredicate;
 import com.aionemu.gameserver.skillengine.task.CraftingTask;
 import com.aionemu.gameserver.skillengine.task.MorphingTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class CraftService {
 	private static final Logger log = LoggerFactory.getLogger("CRAFT_LOG");
@@ -157,7 +158,7 @@ public class CraftService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				int xpReward = (int) ((2 * (recipeTemplate.getSkillpoint() + 100) * (recipeTemplate.getSkillpoint() + 100) + 60));

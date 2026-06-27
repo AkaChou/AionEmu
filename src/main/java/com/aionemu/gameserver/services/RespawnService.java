@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -27,7 +29,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -57,7 +58,7 @@ public class RespawnService {
 	}
 
 	public static Future<?> scheduleDecayTask(Npc npc, long decayInterval) {
-		return ThreadPoolManager.getInstance().schedule(new DecayTask(npc.getObjectId()), decayInterval);
+		return GameThreadPoolServices.threadPoolManager().schedule(new DecayTask(npc.getObjectId()), decayInterval);
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class RespawnService {
 		final int interval = visibleObject.getSpawn().getRespawnTime();
 		SpawnTemplate spawnTemplate = visibleObject.getSpawn();
 		int instanceId = visibleObject.getInstanceId();
-		return ThreadPoolManager.getInstance().schedule(new RespawnTask(spawnTemplate, instanceId), interval * 1000);
+		return GameThreadPoolServices.threadPoolManager().schedule(new RespawnTask(spawnTemplate, instanceId), interval * 1000);
 	}
 
 	/**

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,7 +54,6 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapInstance;
@@ -275,7 +276,7 @@ public class FFAService {
 		pickArenaMap();
 		activeInstance = getWorldMap().getMainWorldMapInstance();
 		doors = activeInstance.getDoors();
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				incrementCounter++;
@@ -386,7 +387,7 @@ public class FFAService {
 		if (lastAttacker instanceof Player) {
 			rewardKiller(player, (Player) lastAttacker);
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (isInArena(player) && player.isFFA()) {
@@ -597,7 +598,7 @@ public class FFAService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.FFA, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.FFA, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -629,7 +630,7 @@ public class FFAService {
 		player.getEffectController().setAbnormal(AbnormalState.SLEEP.getId());
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (player.getLifeStats().isAlreadyDead()) {

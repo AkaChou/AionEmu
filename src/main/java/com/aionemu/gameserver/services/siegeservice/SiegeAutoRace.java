@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -43,7 +44,7 @@ public class SiegeAutoRace {
 	public static void AutoSiegeRace(final int locid) {
 		final SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(locid);
 		if (!loc.getRace().equals(SiegeRace.ASMODIANS) || !loc.getRace().equals(SiegeRace.ELYOS)) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				public void run() {
 					SiegeService.getInstance().startSiege(locid);
 				}

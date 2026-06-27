@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.CreatureLifeStats;
 import com.aionemu.gameserver.model.stats.container.PlayerLifeStats;
 import com.aionemu.gameserver.model.templates.zone.ZoneType;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -48,7 +49,7 @@ public class LifeStatsRestoreService {
 	 * @return Future<?>
 	 */
 	public Future<?> scheduleRestoreTask(CreatureLifeStats<? extends Creature> lifeStats) {
-		return ThreadPoolManager.getInstance().scheduleAtFixedRate(new HpMpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
+		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new HpMpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
 	}
 
 	/**
@@ -58,7 +59,7 @@ public class LifeStatsRestoreService {
 	 * @return
 	 */
 	public Future<?> scheduleHpRestoreTask(CreatureLifeStats<? extends Creature> lifeStats) {
-		return ThreadPoolManager.getInstance().scheduleAtFixedRate(new HpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
+		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new HpRestoreTask(lifeStats), 1700, DEFAULT_DELAY);
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class LifeStatsRestoreService {
 	 * @return
 	 */
 	public Future<?> scheduleFpReduceTask(final PlayerLifeStats lifeStats, Integer costFp) {
-		return ThreadPoolManager.getInstance().scheduleAtFixedRate(new FpReduceTask(lifeStats, costFp), 2000,
+		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new FpReduceTask(lifeStats, costFp), 2000,
 				DEFAULT_FPREDUCE_DELAY);
 	}
 
@@ -75,7 +76,7 @@ public class LifeStatsRestoreService {
 	 * @return
 	 */
 	public Future<?> scheduleFpRestoreTask(PlayerLifeStats lifeStats) {
-		return ThreadPoolManager.getInstance().scheduleAtFixedRate(new FpRestoreTask(lifeStats), 2000,
+		return GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new FpRestoreTask(lifeStats), 2000,
 				DEFAULT_FPRESTORE_DELAY);
 	}
 

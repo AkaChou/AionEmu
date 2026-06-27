@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services.rvrservice;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.rvr.RvrLocation;
 import com.aionemu.gameserver.services.RvrService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -41,14 +42,14 @@ public class RvrStartRunnable implements Runnable {
 		RvrService.getInstance().DF6G1Spawn01Msg(id);
 		// An Asmodian warship will invade in 10 minutes.
 		RvrService.getInstance().LF6G1Spawn01Msg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Invasion Lazer.
 				RvrService.getInstance().adventDirectingSP(id);
 			}
 		}, 180000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Invasion Black Sky.
@@ -61,7 +62,7 @@ public class RvrStartRunnable implements Runnable {
 				RvrService.getInstance().F6RaidStart5Minute(id);
 			}
 		}, 300000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// An Elyos warship will invade in 3 minutes.
@@ -70,7 +71,7 @@ public class RvrStartRunnable implements Runnable {
 				RvrService.getInstance().LF6G1Spawn03Msg(id);
 			}
 		}, 480000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// An Elyos warship will invade in 1 minute.
@@ -79,7 +80,7 @@ public class RvrStartRunnable implements Runnable {
 				RvrService.getInstance().LF6G1Spawn04Msg(id);
 			}
 		}, 540000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				Map<Integer, RvrLocation> locations = RvrService.getInstance().getRvrLocations();

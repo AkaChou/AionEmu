@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +35,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.configs.schedule.SiegeSchedule;
@@ -70,7 +72,6 @@ import com.aionemu.gameserver.services.siegeservice.SiegeException;
 import com.aionemu.gameserver.services.siegeservice.SiegeStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldType;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -143,7 +144,7 @@ public class SiegeService {
 		siegeSchedule = SiegeSchedule.load();
 		for (Fortress f : siegeSchedule.getFortressesList()) {
 			for (String siegeTime : f.getSiegeTimes()) {
-				CronService.getInstance().schedule(new SiegeStartRunnable(f.getId()), siegeTime);
+				GameCronServices.cronService().schedule(new SiegeStartRunnable(f.getId()), siegeTime);
 			}
 		}
 		for (ArtifactLocation artifact : artifacts.values()) {
@@ -155,7 +156,7 @@ public class SiegeService {
 			}
 		}
 		updateFortressNextState();
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			@Override
 			public void run() {
 				updateFortressNextState();
@@ -195,7 +196,7 @@ public class SiegeService {
 		if (siege.isEndless()) {
 			return;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopSiege(siegeLocationId);
@@ -225,7 +226,7 @@ public class SiegeService {
 		currentHourPlus1.set(Calendar.SECOND, 0);
 		currentHourPlus1.set(Calendar.MILLISECOND, 0);
 		currentHourPlus1.add(Calendar.HOUR, 1);
-		Map<Runnable, JobDetail> siegeStartRunables = CronService.getInstance().getRunnables();
+		Map<Runnable, JobDetail> siegeStartRunables = GameCronServices.cronService().getRunnables();
 		siegeStartRunables = Maps.filterKeys(siegeStartRunables, new Predicate<Runnable>() {
 			@Override
 			public boolean apply(Runnable runnable) {
@@ -240,7 +241,7 @@ public class SiegeService {
 				storage = Lists.newArrayList();
 				siegeIdToStartTriggers.put(fssr.getLocationId(), storage);
 			}
-			storage.addAll(CronService.getInstance().getJobTriggers(entry.getValue()));
+			storage.addAll(GameCronServices.cronService().getJobTriggers(entry.getValue()));
 		}
 		for (Map.Entry<Integer, List<Trigger>> entry : siegeIdToStartTriggers.entrySet()) {
 			List<Date> nextFireDates = Lists.newArrayListWithCapacity(entry.getValue().size());

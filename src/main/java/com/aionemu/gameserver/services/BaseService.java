@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -23,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dao.BaseDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
@@ -65,7 +66,7 @@ public class BaseService {
 		Race race = null;
 		log.info("[BaseService] initializing <Base Reset>...");
 		String weekly = "0 0 9 ? * WED *";
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				// Elten.
 				capture(45, Race.NPC);

@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.RvrSchedule;
 import com.aionemu.gameserver.configs.schedule.RvrSchedule.Rvr;
@@ -46,7 +48,6 @@ import com.aionemu.gameserver.services.rvrservice.RvrStartRunnable;
 import com.aionemu.gameserver.services.rvrservice.Rvrlf3df3;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -89,7 +90,7 @@ public class RvrService {
 			rvrSchedule = RvrSchedule.load();
 			for (Rvr rvr : rvrSchedule.getRvrsList()) {
 				for (String rvrTime : rvr.getRvrTimes()) {
-					CronService.getInstance().schedule(new RvrStartRunnable(rvr.getId()), rvrTime);
+					GameCronServices.cronService().schedule(new RvrStartRunnable(rvr.getId()), rvrTime);
 				}
 			}
 		}
@@ -109,7 +110,7 @@ public class RvrService {
 		rvrCountdownMsg(id);
 		LF6RvrCountdownMsg(id);
 		DF6RvrCountdownMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopRvr(id);

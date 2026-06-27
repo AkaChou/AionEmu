@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.mail;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Queue;
@@ -49,7 +51,6 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.player.PlayerMailboxState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
@@ -425,7 +426,7 @@ public class MailService {
 	 * @param player
 	 */
 	public void onPlayerLogin(Player player) {
-		ThreadPoolManager.getInstance().schedule(new MailLoadTask(player), 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(new MailLoadTask(player), 5000);
 	}
 
 	public void refreshMail(Player player) {

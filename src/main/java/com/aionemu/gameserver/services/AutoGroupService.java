@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -817,7 +819,7 @@ public class AutoGroupService {
 			penaltys.remove(obj);
 		}
 		penaltys.add(obj);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (penaltys.contains(obj)) {

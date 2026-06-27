@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @Author Rinzler (Encom)
@@ -809,13 +810,13 @@ public class SoloSurvivorBg extends Battleground {
 				}
 			}
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				openStaticDoors();
 			}
 		}, 25 * 1000);
-		super.setExpireTask(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				endSoloSurvivorMatch(true);
@@ -877,7 +878,7 @@ public class SoloSurvivorBg extends Battleground {
 		super.setStartStamp(System.currentTimeMillis());
 		synchronized (super.getPlayers()) {
 			for (final Player pl : super.getPlayers()) {
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						preparePlayer(pl, 8000, false);
@@ -892,14 +893,14 @@ public class SoloSurvivorBg extends Battleground {
 		for (Player pl : super.getSpectators()) {
 			super.createTimer(pl, getMatchLength());
 		}
-		super.setExpireTask(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				endSoloSurvivorMatch(true);
 			}
 		}, getMatchLength() * 1000));
 		super.startBackgroundTask();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				endCalled = false;

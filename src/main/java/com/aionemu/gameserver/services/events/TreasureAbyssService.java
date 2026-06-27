@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -75,7 +77,7 @@ public class TreasureAbyssService {
 	 * Schedule
 	 */
 	public static void ScheduleCron() {
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 
 			@Override
 			public void run() {
@@ -93,7 +95,7 @@ public class TreasureAbyssService {
 		}
 		announceAll("[Event] Balaur treasure chest start location quickly follow to take the prize!");
 		initPig();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.agentservice;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.agent.AgentLocation;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -42,14 +43,14 @@ public class AgentStartRunnable implements Runnable {
 	public void run() {
 		// The Agent battle will start in 10 minutes.
 		AgentService.getInstance().agentBattleMsg1(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// The Agent battle will start in 5 minutes.
 				AgentService.getInstance().agentBattleMsg2(id);
 			}
 		}, 300000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				Map<Integer, AgentLocation> locations = AgentService.getInstance().getAgentLocations();

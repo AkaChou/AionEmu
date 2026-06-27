@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
@@ -52,21 +54,21 @@ public class AsyunatarService {
 		if (AutoGroupConfig.ASHUNATAL_ENABLED) {
 			log.info("[Ashunatal] Dredgion 5.1");
 			// Ashunatal Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-2PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startAsyunatarRegistration();
 				}
 			}, AutoGroupConfig.ASHUNATAL_SCHEDULE_MIDDAY);
 			// Ashunatal Dredgion MON-TUE-WED-THU-FRI "8PM-10PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startAsyunatarRegistration();
 				}
 			}, AutoGroupConfig.ASHUNATAL_SCHEDULE_EVENING);
 			// Ashunatal Dredgion SAT-SUN "11PM-00PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startAsyunatarRegistration();
@@ -76,7 +78,7 @@ public class AsyunatarService {
 	}
 
 	private void startUregisterAsyunatarTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				registerAvailable = false;

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.base;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -43,7 +45,6 @@ import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -121,7 +122,7 @@ public class Base<BL extends BaseLocation> {
 	}
 
 	private void delayedAssault() {
-		startAssault = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		startAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				chooseAttackersRace();
@@ -403,7 +404,7 @@ public class Base<BL extends BaseLocation> {
 	}
 
 	private void delayedSpawn(final Race race) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (getRace().equals(race) && getBoss() == null) {
@@ -638,7 +639,7 @@ public class Base<BL extends BaseLocation> {
 			}
 			if (getAttackers().isEmpty()) {
 			} else {
-				stopAssault = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnAttackers();

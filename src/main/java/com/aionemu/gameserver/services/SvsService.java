@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.SvsSchedule;
 import com.aionemu.gameserver.configs.schedule.SvsSchedule.Svs;
@@ -45,7 +47,6 @@ import com.aionemu.gameserver.services.svsservice.Panesterra;
 import com.aionemu.gameserver.services.svsservice.SvsStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -85,7 +86,7 @@ public class SvsService {
 			svsSchedule = SvsSchedule.load();
 			for (Svs svs : svsSchedule.getSvssList()) {
 				for (String svsTime : svs.getSvsTimes()) {
-					CronService.getInstance().schedule(new SvsStartRunnable(svs.getId()), svsTime);
+					GameCronServices.cronService().schedule(new SvsStartRunnable(svs.getId()), svsTime);
 				}
 			}
 		}
@@ -102,7 +103,7 @@ public class SvsService {
 		}
 		gate.start();
 		advanceCorridorCountdownMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopSvs(id);

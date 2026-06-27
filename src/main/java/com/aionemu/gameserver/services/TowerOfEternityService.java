@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -44,7 +46,6 @@ import com.aionemu.gameserver.services.towerofeternityservice.Tower;
 import com.aionemu.gameserver.services.towerofeternityservice.TowerOfEternity;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -71,7 +72,7 @@ public class TowerOfEternityService {
 			}
 			log.info("[TowerOfEternityService] Loaded " + towerOfEternity.size() + " locations.");
 
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startTowerOfEternity(Rnd.get(1, 5));
@@ -131,7 +132,7 @@ public class TowerOfEternityService {
 			activeTowerOfEternity.put(id, tower);
 		}
 		tower.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopTowerOfEternity(id);

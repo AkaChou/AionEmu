@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +39,7 @@ public class PlayerChatService {
 			player.setGagged(true);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FLOODING);
 			player.getController().cancelTask(TaskId.GAG);
-			player.getController().addTask(TaskId.GAG, ThreadPoolManager.getInstance().schedule(new Runnable() {
+			player.getController().addTask(TaskId.GAG, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					player.setGagged(false);

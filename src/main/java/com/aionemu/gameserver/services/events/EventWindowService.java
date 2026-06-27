@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -34,7 +36,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EVENT_WINDOW_ITEMS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -109,7 +110,7 @@ public class EventWindowService {
 				playerEventsWindowDAO.store(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()), elapsed); // Temp for updating TiemStamp
 			}
 			log.info("Start counting id " + eventsWindow.getId() + " time " + eventsWindow.getRemainingTime() + " minute(s)");
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {
@@ -143,7 +144,7 @@ public class EventWindowService {
 				continue;
 			}
 			if (eventsWindow.getId() == eventId) {
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (player.isOnline()) {

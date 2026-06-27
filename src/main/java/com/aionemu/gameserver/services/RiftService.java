@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +27,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.RiftSchedule;
 import com.aionemu.gameserver.configs.schedule.RiftSchedule.Rift;
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.model.rift.RiftLocation;
 import com.aionemu.gameserver.services.rift.RiftInformer;
 import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.rift.RiftOpenRunnable;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /****/
 /**
@@ -64,7 +65,7 @@ public class RiftService {
 			riftSchedule = RiftSchedule.load();
 			for (Rift rift : riftSchedule.getRiftsList()) {
 				for (String openTimes : rift.getOpenTime()) {
-					CronService.getInstance().schedule(new RiftOpenRunnable(rift.getWorldId()), openTimes);
+					GameCronServices.cronService().schedule(new RiftOpenRunnable(rift.getWorldId()), openTimes);
 				}
 			}
 		}
@@ -137,7 +138,7 @@ public class RiftService {
 		location.setOpened(true);
 		RiftManager.getInstance().spawnRift(location);
 		activeRifts.put(location.getId(), location);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				closeRifts();

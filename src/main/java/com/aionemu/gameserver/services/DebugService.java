@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Iterator;
 
 import org.slf4j.Logger;
@@ -24,7 +26,6 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -50,7 +51,7 @@ public class DebugService {
 	}
 
 	public DebugService() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {

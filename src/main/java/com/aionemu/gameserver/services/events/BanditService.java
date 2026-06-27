@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +49,6 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.skillengine.model.TransformType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -82,7 +83,7 @@ public class BanditService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.PK, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -131,7 +132,7 @@ public class BanditService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.PK, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -180,7 +181,7 @@ public class BanditService {
 				100, false);
 		player.setTarget(null);
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (player.isBandit()) {

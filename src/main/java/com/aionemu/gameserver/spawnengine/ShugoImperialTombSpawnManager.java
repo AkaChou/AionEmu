@@ -16,19 +16,20 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -45,7 +46,7 @@ public class ShugoImperialTombSpawnManager {
 	public void start() {
 		String[] times = EventsConfig.IMPERIAL_TOMB_TIMES.split("\\|");
 		for (String cron : times) {
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					for (RiftEnum rift : RiftEnum.values()) {
@@ -68,7 +69,7 @@ public class ShugoImperialTombSpawnManager {
 	}
 
 	private static void scheduleDelete(final VisibleObject visObj) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (visObj != null && visObj.isSpawned()) {

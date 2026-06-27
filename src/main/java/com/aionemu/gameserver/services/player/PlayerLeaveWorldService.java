@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 
 import org.slf4j.Logger;
@@ -63,7 +65,6 @@ import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.GMService;
 
 public class PlayerLeaveWorldService {
@@ -71,7 +72,7 @@ public class PlayerLeaveWorldService {
 
 	public static final void startLeaveWorldDelay(final Player player, int delay) {
 		player.getController().stopMoving();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startLeaveWorld(player);

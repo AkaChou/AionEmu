@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +40,6 @@ import com.aionemu.gameserver.model.templates.survey.SurveyItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -62,7 +63,7 @@ public class SurveyService {
 	public SurveyService() {
 		activeItems = new HashMap<Integer, SurveyItem>();
 		this.htmlTemplate = HTMLCache.getInstance().getHTML("surveyTemplate.xhtml");
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new TaskUpdate(), 2000,
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
 				SecurityConfig.SURVEY_DELAY * 60000);
 	}
 

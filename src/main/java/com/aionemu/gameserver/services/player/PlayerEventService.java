@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -38,7 +39,7 @@ public class PlayerEventService {
 		 * Event Awake [Event JAP] http://event2.ncsoft.jp/1.0/aion/1503awake/
 		 */
 		final EventAwake awake = new EventAwake();
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				World.getInstance().doOnAllPlayers(awake);
@@ -48,7 +49,7 @@ public class PlayerEventService {
 		 * VIP Tickets.
 		 */
 		final AnnounceVIPTickets vipTickets = new AnnounceVIPTickets();
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				World.getInstance().doOnAllPlayers(vipTickets);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -23,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dao.OutpostDAO;
 import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -69,7 +70,7 @@ public class OutpostService {
 		Race race = null;
 		log.info("[OutpostService] initializing <Outpost Reset>");
 		String weekly = "0 0 9 ? * WED *";
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				// Inggison.
 				capture(101, Race.NPC);

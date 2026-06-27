@@ -16,13 +16,14 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.TradeListData;
@@ -61,7 +62,7 @@ public class LimitedItemTradeService {
 		}
 		for (LimitedTradeNpc limitedTradeNpc : limitedTradeNpcs.values()) {
 			for (final LimitedItem limitedItem : limitedTradeNpc.getLimitedItems()) {
-				CronService.getInstance().schedule(new Runnable() {
+				GameCronServices.cronService().schedule(new Runnable() {
 					@Override
 					public void run() {
 						limitedItem.setToDefault();

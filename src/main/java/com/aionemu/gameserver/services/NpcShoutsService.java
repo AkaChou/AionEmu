@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,7 +39,6 @@ import com.aionemu.gameserver.model.templates.npcshout.NpcShout;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -74,7 +75,7 @@ public class NpcShoutsService {
 				}
 			}
 
-			ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
 					AionObject npcObj = World.getInstance().findVisibleObject(objectId);
@@ -189,7 +190,7 @@ public class NpcShoutsService {
 
 	public void sendMsg(final Npc npc, final WorldMapInstance instance, final int msg, final int Obj,
 			final boolean isShout, final int color, int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (npc != null && npc.isSpawned()) {

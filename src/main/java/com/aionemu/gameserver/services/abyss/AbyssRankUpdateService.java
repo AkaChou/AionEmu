@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.RankingConfig;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
@@ -37,7 +39,6 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.mail.SystemMailService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -74,7 +75,7 @@ public class AbyssRankUpdateService {
 			performUpdate();
 		}
 		log.info("Start <Abyss Ranking> update");
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			@Override
 			public void run() {
 				performUpdate();
@@ -89,7 +90,7 @@ public class AbyssRankUpdateService {
 			performUpdate();
 		}
 		log.info("Start <Abyss Ranking> update");
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new TimerTask() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				performUpdate();
@@ -119,7 +120,7 @@ public class AbyssRankUpdateService {
 	public void initRewardWeeklyManager() {
 		log.info("<Reward Weekly Manager>");
 		String weekly = "0 0 12 ? * MON *";
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				sendRewardWeekly();
 			}
@@ -173,7 +174,7 @@ public class AbyssRankUpdateService {
 	}
 
 	public void AbyssRankingCacheUpdate() {
-		ThreadPoolManager.getInstance().schedule(new TimerTask() {
+		GameThreadPoolServices.threadPoolManager().schedule(new TimerTask() {
 			@Override
 			public void run() {
 				AbyssRankingCache.getInstance().reloadRankings();

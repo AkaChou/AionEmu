@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +35,6 @@ import com.aionemu.gameserver.model.templates.world.WeatherTable;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WEATHER;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.DayTime;
 import com.aionemu.gameserver.utils.gametime.GameTime;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
@@ -99,7 +100,7 @@ public class WeatherService {
 	}
 
 	public void checkWeathersTime() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				for (WeatherKey key : worldZoneWeathers.keySet()) {

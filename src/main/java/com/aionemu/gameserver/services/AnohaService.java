@@ -15,6 +15,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.AnohaSchedule;
 import com.aionemu.gameserver.configs.schedule.AnohaSchedule.Anoha;
@@ -48,7 +50,6 @@ import com.aionemu.gameserver.services.anohaservice.DanuarHero;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -90,7 +91,7 @@ public class AnohaService {
 			anohaSchedule = AnohaSchedule.load();
 			for (Anoha anoha : anohaSchedule.getAnohasList()) {
 				for (String berserkTime : anoha.getBerserkTimes()) {
-					CronService.getInstance().schedule(new AnohaStartRunnable(anoha.getId()), berserkTime);
+					GameCronServices.cronService().schedule(new AnohaStartRunnable(anoha.getId()), berserkTime);
 				}
 			}
 		}
@@ -106,7 +107,7 @@ public class AnohaService {
 			activeAnoha.put(id, danuarhero);
 		}
 		danuarhero.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopAnoha(id);
@@ -235,7 +236,7 @@ public class AnohaService {
             }
         };
         
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (player.isOnline() && player.isSpawned() && player.getLevel() <= 75) {

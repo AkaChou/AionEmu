@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.outpost;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.model.templates.spawns.outpostspawns.OutpostSpawnT
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -125,7 +126,7 @@ public class Outpost<OL extends OutpostLocation> {
 	}
 
 	private void delayedAssault() {
-		startAssault = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		startAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				chooseAttackersRace();
@@ -172,7 +173,7 @@ public class Outpost<OL extends OutpostLocation> {
 			}
 			if (getAttackers().isEmpty()) {
 			} else {
-				stopAssault = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnAttackers();

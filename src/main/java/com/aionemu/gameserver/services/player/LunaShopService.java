@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
@@ -52,7 +54,6 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -90,7 +91,7 @@ public class LunaShopService {
 			generateSpecialCraft();
 		}
 
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				dailyGenerated = false;
 				generateDailyCraft();
@@ -98,7 +99,7 @@ public class LunaShopService {
 			}
 		}, daily);
 
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				specialGenerated = false;
 				generateSpecialCraft();
@@ -560,7 +561,7 @@ public class LunaShopService {
 			Object key = crunchifyKeys[new Random().nextInt(crunchifyKeys.length)];
 			mt.put((int) key, (long) hm.get(key));
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

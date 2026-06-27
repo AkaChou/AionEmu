@@ -1,4 +1,7 @@
+
 package com.aionemu.gameserver.services;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +42,7 @@ public class WebshopService {
 	}
 
 	private void load() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				World.getInstance().doOnAllPlayers(new Visitor<Player>() {

@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services.zorshivdredgionservice;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
 import com.aionemu.gameserver.services.ZorshivDredgionService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -37,21 +38,21 @@ public class DredgionStartRunnable implements Runnable {
 	public void run() {
 		// Invasion Portal.
 		ZorshivDredgionService.getInstance().adventPortalSP(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Invasion Lazer.
 				ZorshivDredgionService.getInstance().adventDirectingSP(id);
 			}
 		}, 180000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Invasion Black Sky.
 				ZorshivDredgionService.getInstance().adventControlSP(id);
 			}
 		}, 300000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				Map<Integer, ZorshivDredgionLocation> locations = ZorshivDredgionService.getInstance()

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +51,7 @@ public class CuringZoneService {
 	}
 
 	private void startTask() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 			public void run() {
 				for (final CuringObject obj : curingObjects)

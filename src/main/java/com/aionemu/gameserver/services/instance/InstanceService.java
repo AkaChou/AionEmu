@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +45,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.StaticDoorSpawnManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMap2DInstance;
@@ -237,7 +238,7 @@ public class InstanceService {
 	private static void startInstanceChecker(WorldMapInstance worldMapInstance) {
 		int delay = 150000;
 		int period = 60000;
-		worldMapInstance.setEmptyInstanceTask(ThreadPoolManager.getInstance()
+		worldMapInstance.setEmptyInstanceTask(GameThreadPoolServices.threadPoolManager()
 				.scheduleAtFixedRate(new EmptyInstanceCheckerTask(worldMapInstance), delay, period));
 	}
 

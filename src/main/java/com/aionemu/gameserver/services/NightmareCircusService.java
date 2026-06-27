@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.CircusSchedule;
 import com.aionemu.gameserver.configs.schedule.CircusSchedule.Circus;
@@ -43,7 +45,6 @@ import com.aionemu.gameserver.services.nightmarecircusservice.CircusStartRunnabl
 import com.aionemu.gameserver.services.nightmarecircusservice.Nightmare;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -82,7 +83,7 @@ public class NightmareCircusService {
 			circusSchedule = CircusSchedule.load();
 			for (Circus circus : circusSchedule.getCircussList()) {
 				for (String circusTime : circus.getCircusTimes()) {
-					CronService.getInstance().schedule(new CircusStartRunnable(circus.getId()), circusTime);
+					GameCronServices.cronService().schedule(new CircusStartRunnable(circus.getId()), circusTime);
 				}
 			}
 		}
@@ -99,7 +100,7 @@ public class NightmareCircusService {
 		}
 		nightmare.start();
 		dreamFaerieMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopNightmareCircus(id);

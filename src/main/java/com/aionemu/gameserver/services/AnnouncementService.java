@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,7 +36,6 @@ import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 import java.util.HashSet;
@@ -96,7 +97,7 @@ public class AnnouncementService {
 		announcements = new HashSet<Announcement>(getDAO().getAnnouncements());
 
 		for (final Announcement announce : announcements) {
-			delays.add(ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			delays.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 				@Override
 				public void run() {

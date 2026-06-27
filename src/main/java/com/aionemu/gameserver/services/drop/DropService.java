@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -59,7 +61,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.item.ItemService.ItemUpdatePredicate;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -87,7 +88,7 @@ public class DropService {
 	 * @param npcUniqueId
 	 */
 	public void scheduleFreeForAll(final int npcUniqueId) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {
@@ -572,7 +573,7 @@ public class DropService {
 			return;
 		}
 		if (dropNpc.containsKey(player.getObjectId()) || dropNpc.isFreeForAll()) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {

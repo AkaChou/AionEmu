@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services.moltenusservice;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
 import com.aionemu.gameserver.services.MoltenusService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class MoltenusStartRunnable implements Runnable {
 		MoltenusService.getInstance().westernFortressMsg(id);
 		// Enraged Eastern Guardian will appear in 10 minutes.
 		MoltenusService.getInstance().easternFortressMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				Map<Integer, MoltenusLocation> locations = MoltenusService.getInstance().getMoltenusLocations();

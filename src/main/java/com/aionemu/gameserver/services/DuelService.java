@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
 import org.slf4j.Logger;
@@ -37,7 +39,6 @@ import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -225,7 +226,7 @@ public class DuelService {
 	}
 
 	private void createTask(final Player requester, final Player responder) {
-		Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				if (isDueling(requester.getObjectId(), responder.getObjectId())) {
 					drawDuelMsg(requester, responder);

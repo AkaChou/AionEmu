@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.teleport;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Ranastic
@@ -68,13 +69,13 @@ public class HotspotTeleportService {
 		// - Base teleportation cooldown has been reduced from 10min to 1min.
 		final int cooldown = 60; // 1 Minute = 60 Seconds
 		player.getController().addTask(TaskId.HOTSPOT_TELEPORT,
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						PacketSendUtility.broadcastPacketAndReceive(player,
 								new SM_HOTSPOT_TELEPORT(3, player.getObjectId(), teleportId));
 						player.getController().addTask(TaskId.HOTSPOT_TELEPORT,
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										TeleportService2.teleportTo(player, worldId, getX, getY, getZ, player.getHeading(), TeleportAnimation.NO_ANIMATION);

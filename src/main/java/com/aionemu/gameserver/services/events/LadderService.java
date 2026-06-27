@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,7 +49,6 @@ import com.aionemu.gameserver.services.events.bg.SoloSurvivorBg;
 import com.aionemu.gameserver.services.events.bg.TwoTeamBg;
 import com.aionemu.gameserver.services.events.bg.TwoTeamSmallBg;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -74,7 +75,7 @@ public class LadderService {
 	private int rankUpdateInterval = 2;
 
 	public LadderService() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				UpdateRanks();
@@ -265,7 +266,7 @@ public class LadderService {
 				}
 			}
 		});
-		normalTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		normalTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				HandleNormalQueue(event);
@@ -308,7 +309,7 @@ public class LadderService {
 				}
 			}
 		});
-		eventTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		eventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
@@ -1132,7 +1133,7 @@ public class LadderService {
 
 	private void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					PacketSendUtility.sendSys3Message(player, sender, msg);

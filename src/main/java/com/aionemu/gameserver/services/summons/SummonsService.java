@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.summons;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.controllers.SummonController;
 import com.aionemu.gameserver.model.EmotionType;
@@ -33,7 +35,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SUMMON_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class SummonsService {
 	public static final void createSummon(Player master, int npcId, int skillId, int skillLevel, int time) {
@@ -72,7 +73,7 @@ public class SummonsService {
 			break;
 		}
 		summon.getObserveController().notifySummonReleaseObservers();
-		summon.setReleaseTask(ThreadPoolManager.getInstance()
+		summon.setReleaseTask(GameThreadPoolServices.threadPoolManager()
 				.schedule(new ReleaseSummonTask(summon, unsummonType, isAttacked), 5000));
 	}
 
@@ -183,7 +184,7 @@ public class SummonsService {
 					final Creature lastAttacker = (Creature) target;
 					if (!master.getLifeStats().isAlreadyDead() && !lastAttacker.getLifeStats().isAlreadyDead()
 							&& isAttacked) {
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								lastAttacker.getAggroList().addHate(master, 1);

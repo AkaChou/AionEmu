@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -88,7 +90,6 @@ import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.google.common.collect.ArrayListMultimap;
@@ -813,7 +814,7 @@ public final class QuestService {
 	}
 
 	private static void despawnQuestNpc(final Npc npc, int timeInMin) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
@@ -1038,7 +1039,7 @@ public final class QuestService {
 
 	public static boolean questTimerStart(QuestEnv env, int timeInSeconds) {
 		final Player player = env.getPlayer();
-		Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				QuestEngine.getInstance().onQuestTimerEnd(new QuestEnv(null, player, 0, 0));
@@ -1051,7 +1052,7 @@ public final class QuestService {
 
 	public static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds) {
 		final Player player = env.getPlayer();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				QuestEngine.getInstance().onInvisibleTimerEnd(new QuestEnv(null, player, 0, 0));

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.toypet;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -35,7 +37,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_PET;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WAREHOUSE_INFO;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author ATracer
@@ -68,7 +69,7 @@ public class PetSpawnService {
 			}
 		}
 		player.getController().addTask(TaskId.PET_UPDATE,
-				ThreadPoolManager.getInstance().scheduleAtFixedRate(new PetController.PetUpdateTask(player),
+				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new PetController.PetUpdateTask(player),
 						PeriodicSaveConfig.PLAYER_PETS * 1000, PeriodicSaveConfig.PLAYER_PETS * 1000));
 
 		Pet pet = VisibleObjectSpawner.spawnPet(player, petId);

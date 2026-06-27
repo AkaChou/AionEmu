@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +54,7 @@ public class SpringZoneService {
 	}
 
 	private void startSpring() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				for (final SpringObject obj : springObjects)
 					obj.getKnownList().doOnAllPlayers(new Visitor<Player>() {

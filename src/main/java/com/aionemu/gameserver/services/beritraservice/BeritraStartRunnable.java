@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services.beritraservice;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.beritra.BeritraLocation;
 import com.aionemu.gameserver.services.BeritraService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -43,7 +44,7 @@ public class BeritraStartRunnable implements Runnable {
 		BeritraService.getInstance().invasionCorridorMsg(id);
 		// The Ereshkigal Legion's Invasion Corridor has been created.
 		BeritraService.getInstance().ereshkigalCorridorMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Beritra Invasion Lazer.
@@ -57,7 +58,7 @@ public class BeritraStartRunnable implements Runnable {
 				BeritraService.getInstance().ereshkigalLegionThroughMsg(id);
 			}
 		}, 180000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Beritra Invasion Black Sky.
@@ -66,7 +67,7 @@ public class BeritraStartRunnable implements Runnable {
 				BeritraService.getInstance().adventControlEreshSP(id);
 			}
 		}, 300000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				Map<Integer, BeritraLocation> locations = BeritraService.getInstance().getBeritraLocations();
