@@ -349,8 +349,8 @@ public class VisibleObjectSpawner {
             return null;
         }
         int spawnId = spawn.getId();
-        boolean isActive = OutpostService.getInstance().isActive(spawnId);
-        OutpostLocation outpost = OutpostService.getInstance().getOutpostLocation(spawnId);
+        boolean isActive = GameLocationBootstrapServices.outpostService().isActive(spawnId);
+        OutpostLocation outpost = GameLocationBootstrapServices.outpostService().getOutpostLocation(spawnId);
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         if (!isActive && spawn.getOutpostRace() != outpost.getRace()) {
@@ -379,7 +379,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        RiftLocation loc = RiftService.getInstance().getRiftLocation(spawnId);
+        RiftLocation loc = GameLocationBootstrapServices.riftService().getRiftLocation(spawnId);
         if (loc.isOpened() && spawnId == loc.getId()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -565,7 +565,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        SvsLocation loc = SvsService.getInstance().getSvsLocation(spawnId);
+        SvsLocation loc = GameLocationBootstrapServices.svsService().getSvsLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isSvs()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -619,7 +619,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        IuLocation loc = IuService.getInstance().getIuLocation(spawnId);
+        IuLocation loc = GameLocationBootstrapServices.iuService().getIuLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isOpen()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -673,7 +673,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        DynamicRiftLocation loc = DynamicRiftService.getInstance().getDynamicRiftLocation(spawnId);
+        DynamicRiftLocation loc = GameLocationBootstrapServices.dynamicRiftService().getDynamicRiftLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isDynamicRiftOpen()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -700,7 +700,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        InstanceRiftLocation loc = InstanceRiftService.getInstance().getInstanceRiftLocation(spawnId);
+        InstanceRiftLocation loc = GameLocationBootstrapServices.instanceRiftService().getInstanceRiftLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isInstanceRiftOpen()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -727,7 +727,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        NightmareCircusLocation loc = NightmareCircusService.getInstance().getNightmareCircusLocation(spawnId);
+        NightmareCircusLocation loc = GameLocationBootstrapServices.nightmareCircusService().getNightmareCircusLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isCircusOpen()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));
@@ -754,7 +754,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        IdianDepthsLocation loc = IdianDepthsService.getInstance().getIdianDepthsLocation(spawnId);
+        IdianDepthsLocation loc = GameLocationBootstrapServices.idianDepthsService().getIdianDepthsLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isIdianDepthsOpen()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));

@@ -64,7 +64,7 @@ public class RVController extends NpcController {
 		this.maxLevel = riftTemplate.getMaxLevel();
 		this.deSpawnedTime = ((int) (System.currentTimeMillis() / 1000))
 				+ (isVortex ? GameLocationBootstrapServices.vortexService().getDuration() * 3600
-						: RiftService.getInstance().getDuration() * 3600);
+						: GameLocationBootstrapServices.riftService().getDuration() * 3600);
 		if (slave != null) {
 			this.slave = slave;
 			this.slaveSpawnTemplate = slave.getSpawn();

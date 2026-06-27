@@ -18,16 +18,24 @@ class GameLocationBootstrapServicesTest {
 
     @Test
     void gameServerCodeUsesLocationBootstrapBridgeInsteadOfDirectSingletons() throws IOException {
-        Map<String, Path> serviceSources = Map.of(
-            "VortexService", Path.of("services/VortexService.java"),
-            "BeritraService", Path.of("services/BeritraService.java"),
-            "AgentService", Path.of("services/AgentService.java"),
-            "AnohaService", Path.of("services/AnohaService.java"),
-            "RvrService", Path.of("services/RvrService.java"),
-            "ZorshivDredgionService", Path.of("services/ZorshivDredgionService.java"),
-            "MoltenusService", Path.of("services/MoltenusService.java"),
-            "ConquestService", Path.of("services/ConquestService.java"),
-            "AbyssLandingSpecialService", Path.of("services/AbyssLandingSpecialService.java"));
+        Map<String, Path> serviceSources = Map.ofEntries(
+            Map.entry("VortexService", Path.of("services/VortexService.java")),
+            Map.entry("BeritraService", Path.of("services/BeritraService.java")),
+            Map.entry("AgentService", Path.of("services/AgentService.java")),
+            Map.entry("AnohaService", Path.of("services/AnohaService.java")),
+            Map.entry("SvsService", Path.of("services/SvsService.java")),
+            Map.entry("RvrService", Path.of("services/RvrService.java")),
+            Map.entry("IuService", Path.of("services/IuService.java")),
+            Map.entry("NightmareCircusService", Path.of("services/NightmareCircusService.java")),
+            Map.entry("DynamicRiftService", Path.of("services/DynamicRiftService.java")),
+            Map.entry("InstanceRiftService", Path.of("services/InstanceRiftService.java")),
+            Map.entry("OutpostService", Path.of("services/OutpostService.java")),
+            Map.entry("ZorshivDredgionService", Path.of("services/ZorshivDredgionService.java")),
+            Map.entry("MoltenusService", Path.of("services/MoltenusService.java")),
+            Map.entry("RiftService", Path.of("services/RiftService.java")),
+            Map.entry("ConquestService", Path.of("services/ConquestService.java")),
+            Map.entry("IdianDepthsService", Path.of("services/IdianDepthsService.java")),
+            Map.entry("AbyssLandingSpecialService", Path.of("services/AbyssLandingSpecialService.java")));
 
         for (Map.Entry<String, Path> serviceSource : serviceSources.entrySet()) {
             assertNoDirectSingletonAccess(serviceSource.getKey(), serviceSource.getValue());

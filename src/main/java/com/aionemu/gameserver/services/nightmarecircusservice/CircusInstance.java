@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.nightmarecircusservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusLocation;
@@ -62,11 +64,11 @@ public abstract class CircusInstance<CL extends NightmareCircusLocation> {
 	}
 
 	protected void spawn(NightmareCircusStateType type) {
-		NightmareCircusService.getInstance().spawn(getNightmareCircusLocation(), type);
+		GameLocationBootstrapServices.nightmareCircusService().spawn(getNightmareCircusLocation(), type);
 	}
 
 	protected void despawn() {
-		NightmareCircusService.getInstance().despawn(getNightmareCircusLocation());
+		GameLocationBootstrapServices.nightmareCircusService().despawn(getNightmareCircusLocation());
 	}
 
 	public boolean isClosed() {

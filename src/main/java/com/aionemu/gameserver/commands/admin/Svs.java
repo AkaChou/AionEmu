@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.SvsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -51,24 +53,24 @@ public class Svs extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (SvsService.getInstance().isSvsInProgress(svsId)) {
+			if (GameLocationBootstrapServices.svsService().isSvsInProgress(svsId)) {
 				PacketSendUtility.sendMessage(player, "<S.v.s> " + svsId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<S.v.s> " + svsId + " started!");
-				SvsService.getInstance().startSvs(svsId);
+				GameLocationBootstrapServices.svsService().startSvs(svsId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!SvsService.getInstance().isSvsInProgress(svsId)) {
+			if (!GameLocationBootstrapServices.svsService().isSvsInProgress(svsId)) {
 				PacketSendUtility.sendMessage(player, "<S.v.s> " + svsId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<S.v.s> " + svsId + " stopped!");
-				SvsService.getInstance().stopSvs(svsId);
+				GameLocationBootstrapServices.svsService().stopSvs(svsId);
 			}
 		}
 	}
 	
 	protected boolean isValidSvsLocationId(Player player, int svsId) {
-		if (!SvsService.getInstance().getSvsLocations().keySet().contains(svsId)) {
+		if (!GameLocationBootstrapServices.svsService().getSvsLocations().keySet().contains(svsId)) {
 			PacketSendUtility.sendMessage(player, "Id " + svsId + " is invalid");
 			return false;
 		}

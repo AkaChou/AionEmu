@@ -137,25 +137,25 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 		if (getSiegeLocation().getLocationId() >= 8011 && getSiegeLocation().getLocationId() <= 8017
 				|| getSiegeLocation().getLocationId() >= 9011 && getSiegeLocation().getLocationId() <= 9017) {
 			if (getSiegeLocation().getRace() == SiegeRace.BALAUR) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.NPC);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.NPC);
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.ASMODIANS);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.ASMODIANS);
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.ELYOS);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.ELYOS);
 			}
 		}
 
 		if (getSiegeLocation().getLocationId() >= 4012 && getSiegeLocation().getLocationId() <= 4052) {
 			if (getSiegeLocation().getRace() == SiegeRace.BALAUR) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.NPC);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.NPC);
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.ASMODIANS);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.ASMODIANS);
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.ELYOS);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.ELYOS);
 			}
 		}
 

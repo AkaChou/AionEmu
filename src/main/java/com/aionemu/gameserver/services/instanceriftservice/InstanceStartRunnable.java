@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.instanceriftservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.instancerift.InstanceRiftLocation;
@@ -34,10 +36,10 @@ public class InstanceStartRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		Map<Integer, InstanceRiftLocation> locations = InstanceRiftService.getInstance().getInstanceRiftLocations();
+		Map<Integer, InstanceRiftLocation> locations = GameLocationBootstrapServices.instanceRiftService().getInstanceRiftLocations();
 		for (InstanceRiftLocation loc : locations.values()) {
 			if (loc.getId() == id) {
-				InstanceRiftService.getInstance().startInstanceRift(loc.getId());
+				GameLocationBootstrapServices.instanceRiftService().startInstanceRift(loc.getId());
 			}
 		}
 	}

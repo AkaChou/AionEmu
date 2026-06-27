@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.InstanceRiftService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -53,7 +55,7 @@ public class InstanceRift extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (InstanceRiftService.getInstance().isInstanceRiftInProgress(instanceRiftId)) {
+			if (GameLocationBootstrapServices.instanceRiftService().isInstanceRiftInProgress(instanceRiftId)) {
 				PacketSendUtility.sendMessage(player, "<Instance Rift> " + instanceRiftId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Instance Rift> " + instanceRiftId + " started!");
@@ -63,20 +65,20 @@ public class InstanceRift extends AdminCommand
 						PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!");
 					}
 				});
-				InstanceRiftService.getInstance().startInstanceRift(instanceRiftId);
+				GameLocationBootstrapServices.instanceRiftService().startInstanceRift(instanceRiftId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!InstanceRiftService.getInstance().isInstanceRiftInProgress(instanceRiftId)) {
+			if (!GameLocationBootstrapServices.instanceRiftService().isInstanceRiftInProgress(instanceRiftId)) {
 				PacketSendUtility.sendMessage(player, "<Instance Rift> " + instanceRiftId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Instance Rift> " + instanceRiftId + " stopped!");
-				InstanceRiftService.getInstance().stopInstanceRift(instanceRiftId);
+				GameLocationBootstrapServices.instanceRiftService().stopInstanceRift(instanceRiftId);
 			}
 		}
 	}
 	
 	protected boolean isValidInstanceRiftLocationId(Player player, int instanceRiftId) {
-		if (!InstanceRiftService.getInstance().getInstanceRiftLocations().keySet().contains(instanceRiftId)) {
+		if (!GameLocationBootstrapServices.instanceRiftService().getInstanceRiftLocations().keySet().contains(instanceRiftId)) {
 			PacketSendUtility.sendMessage(player, "Id " + instanceRiftId + " is invalid");
 			return false;
 		}

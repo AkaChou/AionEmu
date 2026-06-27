@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.outpost;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -150,8 +152,8 @@ public class Outpost<OL extends OutpostLocation> {
 		if (getFlag() == null) {
 		} else if (!getFlag().getPosition().getMapRegion().isMapRegionActive()) {
 			if (Math.random() < 0.5) {
-				OutpostService.getInstance().capture(getId(), race);
-				OutpostService.getInstance().captureArtifact(getId(), race);
+				GameLocationBootstrapServices.outpostService().capture(getId(), race);
+				GameLocationBootstrapServices.outpostService().captureArtifact(getId(), race);
 			} else {
 				delayedAssault();
 			}

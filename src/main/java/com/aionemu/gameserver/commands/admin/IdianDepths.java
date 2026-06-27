@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.IdianDepthsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -53,7 +55,7 @@ public class IdianDepths extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (IdianDepthsService.getInstance().isIdianDepthsInProgress(idianDepthsId)) {
+			if (GameLocationBootstrapServices.idianDepthsService().isIdianDepthsInProgress(idianDepthsId)) {
 				PacketSendUtility.sendMessage(player, "<Idian Depths> " + idianDepthsId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Idian Depths> " + idianDepthsId + " started!");
@@ -63,20 +65,20 @@ public class IdianDepths extends AdminCommand
 						PacketSendUtility.sendSys3Message(player, "\uE0AA", "<Idian Depths> is now open !!!");
 					}
 				});
-				IdianDepthsService.getInstance().startIdianDepths(idianDepthsId);
+				GameLocationBootstrapServices.idianDepthsService().startIdianDepths(idianDepthsId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!IdianDepthsService.getInstance().isIdianDepthsInProgress(idianDepthsId)) {
+			if (!GameLocationBootstrapServices.idianDepthsService().isIdianDepthsInProgress(idianDepthsId)) {
 				PacketSendUtility.sendMessage(player, "<Idian Depths> " + idianDepthsId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Idian Depths> " + idianDepthsId + " stopped!");
-				IdianDepthsService.getInstance().stopIdianDepths(idianDepthsId);
+				GameLocationBootstrapServices.idianDepthsService().stopIdianDepths(idianDepthsId);
 			}
 		}
 	}
 	
 	protected boolean isValidIdianDepthsLocationId(Player player, int idianDepthsId) {
-		if (!IdianDepthsService.getInstance().getIdianDepthsLocations().keySet().contains(idianDepthsId)) {
+		if (!GameLocationBootstrapServices.idianDepthsService().getIdianDepthsLocations().keySet().contains(idianDepthsId)) {
 			PacketSendUtility.sendMessage(player, "Id " + idianDepthsId + " is invalid");
 			return false;
 		}

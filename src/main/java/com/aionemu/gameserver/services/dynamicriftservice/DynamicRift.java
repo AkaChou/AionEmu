@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.dynamicriftservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.dynamicrift.DynamicRiftLocation;
@@ -62,11 +64,11 @@ public abstract class DynamicRift<DL extends DynamicRiftLocation> {
 	}
 
 	protected void spawn(DynamicRiftStateType type) {
-		DynamicRiftService.getInstance().spawn(getDynamicRiftLocation(), type);
+		GameLocationBootstrapServices.dynamicRiftService().spawn(getDynamicRiftLocation(), type);
 	}
 
 	protected void despawn() {
-		DynamicRiftService.getInstance().despawn(getDynamicRiftLocation());
+		GameLocationBootstrapServices.dynamicRiftService().despawn(getDynamicRiftLocation());
 	}
 
 	public boolean isClosed() {

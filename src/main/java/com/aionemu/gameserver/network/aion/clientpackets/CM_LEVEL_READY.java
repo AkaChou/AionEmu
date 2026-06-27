@@ -132,7 +132,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// Tower Of Eternity 5.0
 		TowerOfEternityService.getInstance().onEnterTowerWorld(activePlayer);
 		// Outpost 5.8
-		OutpostService.getInstance().onEnterOutpostWorld(activePlayer);
+		GameLocationBootstrapServices.outpostService().onEnterOutpostWorld(activePlayer);
 		activePlayer.getEffectController().updatePlayerEffectIcons();
 		sendPacket(SM_CUBE_UPDATE.cubeSize(StorageType.CUBE, activePlayer));
 		TeleportService2.archdaevaTransformation(activePlayer);

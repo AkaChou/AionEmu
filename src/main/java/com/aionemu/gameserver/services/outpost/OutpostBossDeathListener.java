@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.outpost;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
@@ -53,7 +55,7 @@ public class OutpostBossDeathListener extends OnDieEventCallback {
 		} else {
 			outpost.setRace(Race.NPC);
 		}
-		OutpostService.getInstance().capture(outpost.getId(), outpost.getRace());
+		GameLocationBootstrapServices.outpostService().capture(outpost.getId(), outpost.getRace());
 	}
 
 	@Override

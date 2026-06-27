@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.nightmarecircusservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusLocation;
@@ -34,11 +36,11 @@ public class CircusStartRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		Map<Integer, NightmareCircusLocation> locations = NightmareCircusService.getInstance()
+		Map<Integer, NightmareCircusLocation> locations = GameLocationBootstrapServices.nightmareCircusService()
 				.getNightmareCircusLocations();
 		for (final NightmareCircusLocation loc : locations.values()) {
 			if (loc.getId() == id) {
-				NightmareCircusService.getInstance().startNightmareCircus(loc.getId());
+				GameLocationBootstrapServices.nightmareCircusService().startNightmareCircus(loc.getId());
 			}
 		}
 	}

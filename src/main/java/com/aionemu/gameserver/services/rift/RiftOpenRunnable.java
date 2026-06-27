@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.rift;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.rift.RiftLocation;
@@ -35,10 +37,10 @@ public class RiftOpenRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		Map<Integer, RiftLocation> locations = RiftService.getInstance().getRiftLocations();
+		Map<Integer, RiftLocation> locations = GameLocationBootstrapServices.riftService().getRiftLocations();
 		for (final RiftLocation loc : locations.values()) {
 			if (loc.getWorldId() == worldId) {
-				RiftService.getInstance().openRifts(loc);
+				GameLocationBootstrapServices.riftService().openRifts(loc);
 			}
 		}
 		RiftInformer.sendRiftsInfo(worldId);

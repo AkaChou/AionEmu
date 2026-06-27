@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -56,16 +58,16 @@ public class Rift extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_OPEN.equalsIgnoreCase(params[0])) {
-			result = RiftService.getInstance().openRifts(id);
+			result = GameLocationBootstrapServices.riftService().openRifts(id);
 			PacketSendUtility.sendMessage(player, result ? "Rifts is opened!" : "Rifts was already opened");
 		} else if (COMMAND_CLOSE.equalsIgnoreCase(params[0])) {
-			result = RiftService.getInstance().closeRifts(id);
+			result = GameLocationBootstrapServices.riftService().closeRifts(id);
 			PacketSendUtility.sendMessage(player, result ? "Rifts is closed!" : "Rifts was already closed");
 		}
 	}
 	
 	protected boolean isValidId(Player player, int id) {
-		if (!RiftService.getInstance().isValidId(id)) {
+		if (!GameLocationBootstrapServices.riftService().isValidId(id)) {
 			PacketSendUtility.sendMessage(player, "Id " + id + " is invalid");
 			return false;
 		}
