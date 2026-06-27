@@ -14,7 +14,7 @@ final class GameCoreServiceFallbacks {
     }
 
     static ThreadPoolManager threadPoolManager() {
-        return ThreadPoolManagerFallback.INSTANCE;
+        return GameThreadPoolServices.threadPoolManager();
     }
 
     static HTMLCache htmlCache() {
@@ -23,10 +23,6 @@ final class GameCoreServiceFallbacks {
 
     private static final class DataManagerFallback {
         private static final DataManager INSTANCE = DataManager.getInstance();
-    }
-
-    private static final class ThreadPoolManagerFallback {
-        private static final ThreadPoolManager INSTANCE = ThreadPoolManager.getInstance();
     }
 
     private static final class HtmlCacheFallback {

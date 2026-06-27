@@ -56,6 +56,15 @@ class GameCoreServicesRuntimeBridgeTest {
         assertFalse(source.contains("HTMLCache.getInstance()"));
     }
 
+    @Test
+    void coreThreadPoolFallbackUsesLifecycleBridgeInsteadOfLegacySingleton() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameCoreServiceFallbacks.java"));
+
+        assertFalse(source.contains("ThreadPoolManager.getInstance()"));
+        assertFalse(source.contains("ThreadPoolManagerFallback"));
+        assertFalse(source.contains("private static final ThreadPoolManager INSTANCE"));
+    }
+
     private <T> T instance(Class<T> type) {
         return objenesis.newInstance(type);
     }
