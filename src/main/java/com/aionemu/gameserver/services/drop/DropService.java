@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.services.drop;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -92,9 +93,9 @@ public class DropService {
 
 			@Override
 			public void run() {
-				DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcUniqueId);
+				DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcUniqueId);
 				if (dropNpc != null) {
-					DropRegistrationService.getInstance().getDropRegistrationMap().get(npcUniqueId).startFreeForAll();
+					dropRegistrationService().getDropRegistrationMap().get(npcUniqueId).startFreeForAll();
 					VisibleObject npc = World.getInstance().findVisibleObject(npcUniqueId);
 					if (npc != null && npc.isSpawned()) {
 						PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcUniqueId, 0));
@@ -112,8 +113,8 @@ public class DropService {
 	 */
 	public void unregisterDrop(Npc npc) {
 		Integer npcObjId = npc.getObjectId();
-		Map<Integer, DropNpc> dropRegmap = DropRegistrationService.getInstance().getDropRegistrationMap();
-		DropRegistrationService.getInstance().getCurrentDropMap().remove(npcObjId);
+		Map<Integer, DropNpc> dropRegmap = dropRegistrationService().getDropRegistrationMap();
+		dropRegistrationService().getCurrentDropMap().remove(npcObjId);
 
 		if (dropRegmap.containsKey(npcObjId)) {
 			dropRegmap.remove(npcObjId);
@@ -127,7 +128,7 @@ public class DropService {
 	 * @param npcId
 	 */
 	public void requestDropList(Player player, int npcId) {
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
 		if (player == null || dropNpc == null) {
 			return;
 		}
@@ -156,7 +157,7 @@ public class DropService {
 			}
 		}
 
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npcId);
+		Set<DropItem> dropItems = dropRegistrationService().getCurrentDropMap().get(npcId);
 
 		if (dropItems == null) {
 			dropItems = Collections.emptySet();
@@ -177,7 +178,7 @@ public class DropService {
 	 * @param npcId
 	 */
 	public void closeDropList(Player player, int npcId) {
-		final DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		final DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
 		if (dropNpc == null) {
 			return;
 		}
@@ -190,7 +191,7 @@ public class DropService {
 		if (dropNpc.getBeingLooted() != player) {
 			return;
 		}
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npcId);
+		Set<DropItem> dropItems = dropRegistrationService().getCurrentDropMap().get(npcId);
 		dropNpc.setBeingLooted(null);
 
 		Npc npc = (Npc) World.getInstance().findVisibleObject(npcId);
@@ -214,7 +215,7 @@ public class DropService {
 							dropNpc.setPlayerObjectId(object);
 						}
 					}
-					DropRegistrationService.getInstance().setItemsToWinner(dropItems, 0);
+					dropRegistrationService().setItemsToWinner(dropItems, 0);
 				}
 			}
 			if (dropNpc.isFreeForAll()) {
@@ -234,7 +235,7 @@ public class DropService {
 
 	public boolean canDistribute(Player player, DropItem requestedItem) {
 		int npcId = requestedItem.getNpcObj();
-		final DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		final DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
 		if (dropNpc == null) {
 			return false;
 		}
@@ -292,7 +293,7 @@ public class DropService {
 
 	public boolean canAutoLoot(Player player, DropItem requestedItem) {
 		int npcId = requestedItem.getNpcObj();
-		final DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		final DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
 		if (dropNpc == null) {
 			return false;
 		}
@@ -331,8 +332,8 @@ public class DropService {
 	}
 
 	public void requestDropItem(Player player, int npcId, int itemIndex, boolean autoLoot) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npcId);
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		Set<DropItem> dropItems = dropRegistrationService().getCurrentDropMap().get(npcId);
+		DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
 		DropItem requestedItem = null;
 		// drop was unregistered
 		if (dropItems == null || dropNpc == null) {
@@ -513,7 +514,7 @@ public class DropService {
 				SM_SYSTEM_MESSAGE.STR_MSG_LOOT_GET_ITEM_ME(new DescriptionId(ItemInfoService.getNameId(itemId))));
 
 		if (player.isInGroup2() || player.isInAlliance2()) {
-			for (Player member : DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId)
+			for (Player member : dropRegistrationService().getDropRegistrationMap().get(npcId)
 					.getInRangePlayers()) {
 				if (member != null && !player.equals(member) && member.isOnline()) {
 					PacketSendUtility.sendPacket(member, SM_SYSTEM_MESSAGE.STR_MSG_LOOT_GET_ITEM_OTHER(player.getName(),
@@ -527,7 +528,7 @@ public class DropService {
 	 * @param Displays messages/removes and shares kinah when item gained via BID
 	 */
 	private void winningBidActions(Player player, int npcId, long highestValue) {
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
 
 		if (highestValue > 0) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_PAY_ACCOUNT_ME(highestValue));
@@ -549,7 +550,7 @@ public class DropService {
 	}
 
 	private void winningNormalActions(Player player, int npcId, DropItem requestedItem) {
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
 		if (player == null || dropNpc == null) {
 			return;
 		}
@@ -567,7 +568,7 @@ public class DropService {
 
 	public void see(final Player player, Npc owner) {
 		final int id = owner.getObjectId();
-		final DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(id);
+		final DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(id);
 
 		if (dropNpc == null) {
 			return;
@@ -615,6 +616,10 @@ public class DropService {
 				});
 			}
 		}
+	}
+
+	private DropRegistrationService dropRegistrationService() {
+		return GameWorldServices.dropRegistrationService();
 	}
 
 	private static final class TempTradeDropPredicate extends ItemUpdatePredicate {
