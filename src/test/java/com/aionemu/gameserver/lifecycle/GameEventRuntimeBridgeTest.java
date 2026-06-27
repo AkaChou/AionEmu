@@ -72,6 +72,30 @@ class GameEventRuntimeBridgeTest {
         }
     }
 
+    @Test
+    void gameServerCodeUsesEventRuntimeBridgeInsteadOfDirectSingletons() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            List<Path> sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/player/PlayerEventService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/events/CrazyDaevaService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/abyss/AbyssRankUpdateService.java")))
+                .filter(path -> !path.endsWith(Path.of("taskmanager/tasks/PacketBroadcaster.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventRuntimeFallbacks.java")))
+                .toList();
+
+            for (Path sourcePath : sources) {
+                String source = Files.readString(sourcePath);
+
+                assertFalse(source.contains("PlayerEventService.getInstance()"), sourcePath.toString());
+                assertFalse(source.contains("CrazyDaevaService.getInstance()"), sourcePath.toString());
+                assertFalse(source.contains("AbyssRankUpdateService.getInstance()"), sourcePath.toString());
+                assertFalse(source.contains("PacketBroadcaster.getInstance()"), sourcePath.toString());
+            }
+        }
+    }
+
     private <T> T instance(Class<T> type) {
         return objenesis.newInstance(type);
     }

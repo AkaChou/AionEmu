@@ -763,6 +763,10 @@ class GameServiceProviderCompatibilityTest {
     @Test
     void gameEventServicesRegisterAndClearEventAccessors() throws Exception {
         EventService eventService = instance(EventService.class);
+        PlayerEventService playerEventService = instance(PlayerEventService.class);
+        CrazyDaevaService crazyDaevaService = instance(CrazyDaevaService.class);
+        AbyssRankUpdateService abyssRankUpdateService = instance(AbyssRankUpdateService.class);
+        PacketBroadcaster packetBroadcaster = instance(PacketBroadcaster.class);
         LunaShopService lunaShopService = instance(LunaShopService.class);
         MinionService minionService = instance(MinionService.class);
         ShugoSweepService shugoSweepService = instance(ShugoSweepService.class);
@@ -770,10 +774,10 @@ class GameServiceProviderCompatibilityTest {
         EventWindowService eventWindowService = instance(EventWindowService.class);
         GameEventServices eventServices = new GameEventServices(
                 provider(EventService.class, eventService),
-                provider(PlayerEventService.class, instance(PlayerEventService.class)),
-                provider(CrazyDaevaService.class, instance(CrazyDaevaService.class)),
-                provider(AbyssRankUpdateService.class, instance(AbyssRankUpdateService.class)),
-                provider(PacketBroadcaster.class, instance(PacketBroadcaster.class)));
+                provider(PlayerEventService.class, playerEventService),
+                provider(CrazyDaevaService.class, crazyDaevaService),
+                provider(AbyssRankUpdateService.class, abyssRankUpdateService),
+                provider(PacketBroadcaster.class, packetBroadcaster));
         GameEventBootstrapServices eventBootstrapServices = new GameEventBootstrapServices(
                 provider(LunaShopService.class, lunaShopService),
                 provider(MinionService.class, minionService),
@@ -783,6 +787,10 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(eventService, GameEventServices.eventService());
+            assertSame(playerEventService, GameEventServices.playerEventService());
+            assertSame(crazyDaevaService, GameEventServices.crazyDaevaService());
+            assertSame(abyssRankUpdateService, GameEventServices.abyssRankUpdateService());
+            assertSame(packetBroadcaster, GameEventServices.packetBroadcaster());
             assertSame(lunaShopService, GameEventBootstrapServices.lunaShopService());
             assertSame(minionService, GameEventBootstrapServices.minionService());
             assertSame(shugoSweepService, GameEventBootstrapServices.shugoSweepService());
@@ -795,6 +803,10 @@ class GameServiceProviderCompatibilityTest {
             eventBootstrapServices = null;
 
             assertProviderCleared(EventService.class);
+            assertProviderCleared(PlayerEventService.class);
+            assertProviderCleared(CrazyDaevaService.class);
+            assertProviderCleared(AbyssRankUpdateService.class);
+            assertProviderCleared(PacketBroadcaster.class);
             assertProviderCleared(MinionService.class);
             assertProviderCleared(ShugoSweepService.class);
             assertProviderCleared(AtreianPassportService.class);
@@ -807,6 +819,10 @@ class GameServiceProviderCompatibilityTest {
                 eventBootstrapServices.destroy();
             }
             EventService.setInstanceProvider(null);
+            PlayerEventService.setInstanceProvider(null);
+            CrazyDaevaService.setInstanceProvider(null);
+            AbyssRankUpdateService.setInstanceProvider(null);
+            PacketBroadcaster.setInstanceProvider(null);
             LunaShopService.setInstanceProvider(null);
             MinionService.setInstanceProvider(null);
             ShugoSweepService.setInstanceProvider(null);

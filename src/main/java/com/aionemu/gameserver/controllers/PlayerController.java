@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -559,7 +561,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 		if (EventsConfig.ENABLE_CRAZY) {
 			if (((master instanceof Player)) && (master.getRace() != player.getRace())) {
-				CrazyDaevaService.getInstance().crazyOnDie(player, (Player) master, true);
+				GameEventServices.crazyDaevaService().crazyOnDie(player, (Player) master, true);
 			}
 		}
 		AbyssRank ar = player.getAbyssRank();

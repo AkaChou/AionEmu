@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import org.slf4j.Logger;
@@ -414,7 +416,7 @@ public abstract class Creature extends VisibleObject {
 	public final void addPacketBroadcastMask(BroadcastMode mode) {
 		packetBroadcastMask |= mode.mask();
 
-		PacketBroadcaster.getInstance().add(this);
+		GameEventServices.packetBroadcaster().add(this);
 
 		// Debug
 		if (log.isDebugEnabled()) {
