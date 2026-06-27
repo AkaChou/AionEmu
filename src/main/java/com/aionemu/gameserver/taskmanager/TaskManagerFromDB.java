@@ -87,10 +87,8 @@ public class TaskManagerFromDB {
 
 				try {
 					// Create new instance of the task
-					currentTask = tmpClass.newInstance();
-				} catch (InstantiationException e) {
-					log.error(e.getMessage(), e);
-				} catch (IllegalAccessException e) {
+					currentTask = tmpClass.getDeclaredConstructor().newInstance();
+				} catch (ReflectiveOperationException e) {
 					log.error(e.getMessage(), e);
 				}
 

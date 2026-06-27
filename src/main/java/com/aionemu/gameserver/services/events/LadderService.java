@@ -507,8 +507,8 @@ public class LadderService {
 		while (iterations++ < 40) {
 			Battleground bg;
 			try {
-				bg = (Battleground) eventBgClass.newInstance();
-			} catch (Exception e) {
+				bg = (Battleground) eventBgClass.getDeclaredConstructor().newInstance();
+			} catch (ReflectiveOperationException e) {
 				continue;
 			}
 			bg.setTeamBased(eventTeamBased);

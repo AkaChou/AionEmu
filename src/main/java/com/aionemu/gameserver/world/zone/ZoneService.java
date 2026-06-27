@@ -105,10 +105,8 @@ public final class ZoneService implements GameEngine {
 		Class<? extends ZoneHandler> zoneClass = handlers.get(zoneName);
 		if (zoneClass != null) {
 			try {
-				zoneHandler = zoneClass.newInstance();
-			} catch (IllegalAccessException ex) {
-				log.warn("Can't instantiate zone handler " + zoneName, ex);
-			} catch (Exception ex) {
+				zoneHandler = zoneClass.getDeclaredConstructor().newInstance();
+			} catch (ReflectiveOperationException ex) {
 				log.warn("Can't instantiate zone handler " + zoneName, ex);
 			}
 		}

@@ -26,6 +26,7 @@ package com.aionemu.commons.utils.i18n;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Locale;
@@ -106,7 +107,7 @@ public class ResourceBundleControl extends ResourceBundle.Control {
                 // If the class isn't a ResourceBundle subclass, throw a
                 // ClassCastException.
                 if (ResourceBundle.class.isAssignableFrom(bundleClass)) {
-                    bundle = bundleClass.newInstance();
+                    bundle = newResourceBundle(bundleClass);
                 } else {
                     throw new ClassCastException(bundleClass.getName() + " cannot be cast to ResourceBundle");
                 }
@@ -151,6 +152,28 @@ public class ResourceBundleControl extends ResourceBundle.Control {
             throw new IllegalArgumentException("unknown format: " + format);
         }
         return bundle;
+    }
+
+    private ResourceBundle newResourceBundle(Class<? extends ResourceBundle> bundleClass)
+            throws IllegalAccessException, InstantiationException {
+        try {
+            return bundleClass.getDeclaredConstructor().newInstance();
+        } catch (NoSuchMethodException e) {
+            InstantiationException ex = new InstantiationException("No default constructor for " + bundleClass.getName());
+            ex.initCause(e);
+            throw ex;
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException runtimeException) {
+                throw runtimeException;
+            }
+            if (cause instanceof Error error) {
+                throw error;
+            }
+            InstantiationException ex = new InstantiationException("Failed to instantiate " + bundleClass.getName());
+            ex.initCause(cause);
+            throw ex;
+        }
     }
 
     /**

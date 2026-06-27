@@ -76,8 +76,8 @@ public class InstanceEngine implements GameEngine {
 		InstanceHandler instanceHandler = null;
 		if (instanceClass != null) {
 			try {
-				instanceHandler = instanceClass.newInstance();
-			} catch (Exception ex) {
+				instanceHandler = instanceClass.getDeclaredConstructor().newInstance();
+			} catch (ReflectiveOperationException ex) {
 				log.warn("Can't instantiate instance handler " + worldId, ex);
 			}
 		}
