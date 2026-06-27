@@ -704,6 +704,7 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(expireTimerTask, ExpireTimerTask.getInstance());
+            assertSame(expireTimerTask, GameTaskManagerServices.expireTimerTask());
             assertSame(teamEffectUpdater, TeamEffectUpdater.getInstance());
             assertSame(teamMoveUpdater, TeamMoveUpdater.getInstance());
             assertSame(temporaryTradeTimeTask, TemporaryTradeTimeTask.getInstance());
