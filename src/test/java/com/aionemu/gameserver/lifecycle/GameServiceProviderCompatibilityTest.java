@@ -619,6 +619,7 @@ class GameServiceProviderCompatibilityTest {
         GrowthEnergy growthEnergy = instance(GrowthEnergy.class);
         SiegeService siegeService = instance(SiegeService.class);
         BaseService baseService = instance(BaseService.class);
+        SystemMailService systemMailService = instance(SystemMailService.class);
 
         GameFeatureServices featureServices = new GameFeatureServices(
                 provider(DisputeLandService.class, instance(DisputeLandService.class)),
@@ -645,7 +646,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(KiskService.class, instance(KiskService.class)),
                 provider(RepurchaseService.class, instance(RepurchaseService.class)),
                 provider(DropDistributionService.class, instance(DropDistributionService.class)),
-                provider(SystemMailService.class, instance(SystemMailService.class)),
+                provider(SystemMailService.class, systemMailService),
                 provider(BonusService.class, bonusService),
                 provider(PetService.class, petService),
                 provider(ArcadeUpgradeService.class, arcadeUpgradeService),
@@ -657,6 +658,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(npcShoutsService, GameFeatureServices.npcShoutsService());
             assertSame(siegeService, GameFeatureServices.siegeService());
             assertSame(baseService, GameFeatureServices.baseService());
+            assertSame(systemMailService, GameFeatureServices.systemMailService());
             assertSame(bonusService, BonusService.getInstance());
             assertSame(petService, PetService.getInstance());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
@@ -673,6 +675,7 @@ class GameServiceProviderCompatibilityTest {
             assertNotSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
             assertNotSame(coalescenceService, CoalescenceService.getInstance());
             assertNotSame(growthEnergy, GrowthEnergy.getInstance());
+            assertProviderCleared(SystemMailService.class);
         } finally {
             if (featureServices != null) {
                 featureServices.destroy();
@@ -683,6 +686,7 @@ class GameServiceProviderCompatibilityTest {
             AtreianBestiaryService.setInstanceProvider(null);
             CoalescenceService.setInstanceProvider(null);
             GrowthEnergy.setInstanceProvider(null);
+            SystemMailService.setInstanceProvider(null);
         }
     }
 

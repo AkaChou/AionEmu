@@ -41,6 +41,7 @@ public final class GameFeatureServices implements DisposableBean {
     private static volatile ObjectProvider<NpcShoutsService> npcShoutsServiceProvider;
     private static volatile ObjectProvider<SiegeService> siegeServiceProvider;
     private static volatile ObjectProvider<BaseService> baseServiceProvider;
+    private static volatile ObjectProvider<SystemMailService> systemMailServiceProvider;
 
     public GameFeatureServices(ObjectProvider<DisputeLandService> disputeLandServiceProvider,
             ObjectProvider<DredgionService2> dredgionServiceProvider,
@@ -76,6 +77,7 @@ public final class GameFeatureServices implements DisposableBean {
         GameFeatureServices.npcShoutsServiceProvider = npcShoutsServiceProvider;
         GameFeatureServices.siegeServiceProvider = siegeServiceProvider;
         GameFeatureServices.baseServiceProvider = baseServiceProvider;
+        GameFeatureServices.systemMailServiceProvider = systemMailServiceProvider;
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
         DredgionService2.setInstanceProvider(dredgionServiceProvider);
         AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
@@ -133,11 +135,20 @@ public final class GameFeatureServices implements DisposableBean {
         return provider.getIfAvailable(BaseService::getInstance);
     }
 
+    public static SystemMailService systemMailService() {
+        ObjectProvider<SystemMailService> provider = systemMailServiceProvider;
+        if (provider == null) {
+            return SystemMailService.getInstance();
+        }
+        return provider.getIfAvailable(SystemMailService::getInstance);
+    }
+
     @Override
     public void destroy() {
         npcShoutsServiceProvider = null;
         siegeServiceProvider = null;
         baseServiceProvider = null;
+        systemMailServiceProvider = null;
         DisputeLandService.setInstanceProvider(null);
         DredgionService2.setInstanceProvider(null);
         AsyunatarService.setInstanceProvider(null);
