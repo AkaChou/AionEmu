@@ -989,10 +989,18 @@ class GameServiceProviderCompatibilityTest {
         BeritraService beritraService = instance(BeritraService.class);
         AgentService agentService = instance(AgentService.class);
         AnohaService anohaService = instance(AnohaService.class);
+        SvsService svsService = instance(SvsService.class);
         RvrService rvrService = instance(RvrService.class);
+        IuService iuService = instance(IuService.class);
+        NightmareCircusService nightmareCircusService = instance(NightmareCircusService.class);
+        DynamicRiftService dynamicRiftService = instance(DynamicRiftService.class);
+        InstanceRiftService instanceRiftService = instance(InstanceRiftService.class);
+        OutpostService outpostService = instance(OutpostService.class);
         ZorshivDredgionService zorshivDredgionService = instance(ZorshivDredgionService.class);
         MoltenusService moltenusService = instance(MoltenusService.class);
+        RiftService riftService = instance(RiftService.class);
         ConquestService conquestService = instance(ConquestService.class);
+        IdianDepthsService idianDepthsService = instance(IdianDepthsService.class);
         AbyssLandingService abyssLandingService = instance(AbyssLandingService.class);
         AbyssLandingSpecialService abyssLandingSpecialService = instance(AbyssLandingSpecialService.class);
         GameLocationBootstrapServices locationServices = new GameLocationBootstrapServices(
@@ -1000,20 +1008,20 @@ class GameServiceProviderCompatibilityTest {
                 provider(BeritraService.class, beritraService),
                 provider(AgentService.class, agentService),
                 provider(AnohaService.class, anohaService),
-                provider(SvsService.class, instance(SvsService.class)),
+                provider(SvsService.class, svsService),
                 provider(RvrService.class, rvrService),
-                provider(IuService.class, instance(IuService.class)),
-                provider(NightmareCircusService.class, instance(NightmareCircusService.class)),
-                provider(DynamicRiftService.class, instance(DynamicRiftService.class)),
-                provider(InstanceRiftService.class, instance(InstanceRiftService.class)),
+                provider(IuService.class, iuService),
+                provider(NightmareCircusService.class, nightmareCircusService),
+                provider(DynamicRiftService.class, dynamicRiftService),
+                provider(InstanceRiftService.class, instanceRiftService),
                 provider(SiegeService.class, instance(SiegeService.class)),
                 provider(BaseService.class, instance(BaseService.class)),
-                provider(OutpostService.class, instance(OutpostService.class)),
+                provider(OutpostService.class, outpostService),
                 provider(ZorshivDredgionService.class, zorshivDredgionService),
                 provider(MoltenusService.class, moltenusService),
-                provider(RiftService.class, instance(RiftService.class)),
+                provider(RiftService.class, riftService),
                 provider(ConquestService.class, conquestService),
-                provider(IdianDepthsService.class, instance(IdianDepthsService.class)),
+                provider(IdianDepthsService.class, idianDepthsService),
                 provider(TowerOfEternityService.class, instance(TowerOfEternityService.class)),
                 provider(AbyssLandingService.class, abyssLandingService),
                 provider(LandingUpdateService.class, instance(LandingUpdateService.class)),
@@ -1024,10 +1032,18 @@ class GameServiceProviderCompatibilityTest {
             assertSame(beritraService, GameLocationBootstrapServices.beritraService());
             assertSame(agentService, GameLocationBootstrapServices.agentService());
             assertSame(anohaService, GameLocationBootstrapServices.anohaService());
+            assertSame(svsService, GameLocationBootstrapServices.svsService());
             assertSame(rvrService, GameLocationBootstrapServices.rvrService());
+            assertSame(iuService, GameLocationBootstrapServices.iuService());
+            assertSame(nightmareCircusService, GameLocationBootstrapServices.nightmareCircusService());
+            assertSame(dynamicRiftService, GameLocationBootstrapServices.dynamicRiftService());
+            assertSame(instanceRiftService, GameLocationBootstrapServices.instanceRiftService());
+            assertSame(outpostService, GameLocationBootstrapServices.outpostService());
             assertSame(zorshivDredgionService, GameLocationBootstrapServices.zorshivDredgionService());
             assertSame(moltenusService, GameLocationBootstrapServices.moltenusService());
+            assertSame(riftService, GameLocationBootstrapServices.riftService());
             assertSame(conquestService, GameLocationBootstrapServices.conquestService());
+            assertSame(idianDepthsService, GameLocationBootstrapServices.idianDepthsService());
             assertSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
             assertSame(abyssLandingSpecialService, GameLocationBootstrapServices.abyssLandingSpecialService());
         } finally {
@@ -1036,10 +1052,18 @@ class GameServiceProviderCompatibilityTest {
             assertNotSame(beritraService, GameLocationBootstrapServices.beritraService());
             assertNotSame(agentService, GameLocationBootstrapServices.agentService());
             assertNotSame(anohaService, GameLocationBootstrapServices.anohaService());
+            assertNotSame(svsService, GameLocationBootstrapServices.svsService());
             assertNotSame(rvrService, GameLocationBootstrapServices.rvrService());
+            assertNotSame(iuService, GameLocationBootstrapServices.iuService());
+            assertNotSame(nightmareCircusService, GameLocationBootstrapServices.nightmareCircusService());
+            assertNotSame(dynamicRiftService, GameLocationBootstrapServices.dynamicRiftService());
+            assertNotSame(instanceRiftService, GameLocationBootstrapServices.instanceRiftService());
+            assertNotSame(outpostService, GameLocationBootstrapServices.outpostService());
             assertNotSame(zorshivDredgionService, GameLocationBootstrapServices.zorshivDredgionService());
             assertNotSame(moltenusService, GameLocationBootstrapServices.moltenusService());
+            assertNotSame(riftService, GameLocationBootstrapServices.riftService());
             assertNotSame(conquestService, GameLocationBootstrapServices.conquestService());
+            assertNotSame(idianDepthsService, GameLocationBootstrapServices.idianDepthsService());
             assertNotSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
             assertNotSame(abyssLandingSpecialService, GameLocationBootstrapServices.abyssLandingSpecialService());
         }

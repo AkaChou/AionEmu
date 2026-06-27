@@ -35,10 +35,18 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     private static volatile ObjectProvider<BeritraService> beritraServiceProvider;
     private static volatile ObjectProvider<AgentService> agentServiceProvider;
     private static volatile ObjectProvider<AnohaService> anohaServiceProvider;
+    private static volatile ObjectProvider<SvsService> svsServiceProvider;
     private static volatile ObjectProvider<RvrService> rvrServiceProvider;
+    private static volatile ObjectProvider<IuService> iuServiceProvider;
+    private static volatile ObjectProvider<NightmareCircusService> nightmareCircusServiceProvider;
+    private static volatile ObjectProvider<DynamicRiftService> dynamicRiftServiceProvider;
+    private static volatile ObjectProvider<InstanceRiftService> instanceRiftServiceProvider;
+    private static volatile ObjectProvider<OutpostService> outpostServiceProvider;
     private static volatile ObjectProvider<ZorshivDredgionService> zorshivDredgionServiceProvider;
     private static volatile ObjectProvider<MoltenusService> moltenusServiceProvider;
+    private static volatile ObjectProvider<RiftService> riftServiceProvider;
     private static volatile ObjectProvider<ConquestService> conquestServiceProvider;
+    private static volatile ObjectProvider<IdianDepthsService> idianDepthsServiceProvider;
     private static volatile ObjectProvider<AbyssLandingService> abyssLandingServiceProvider;
     private static volatile ObjectProvider<AbyssLandingSpecialService> abyssLandingSpecialServiceProvider;
 
@@ -63,10 +71,18 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         GameLocationBootstrapServices.beritraServiceProvider = beritraServiceProvider;
         GameLocationBootstrapServices.agentServiceProvider = agentServiceProvider;
         GameLocationBootstrapServices.anohaServiceProvider = anohaServiceProvider;
+        GameLocationBootstrapServices.svsServiceProvider = svsServiceProvider;
         GameLocationBootstrapServices.rvrServiceProvider = rvrServiceProvider;
+        GameLocationBootstrapServices.iuServiceProvider = iuServiceProvider;
+        GameLocationBootstrapServices.nightmareCircusServiceProvider = nightmareCircusServiceProvider;
+        GameLocationBootstrapServices.dynamicRiftServiceProvider = dynamicRiftServiceProvider;
+        GameLocationBootstrapServices.instanceRiftServiceProvider = instanceRiftServiceProvider;
+        GameLocationBootstrapServices.outpostServiceProvider = outpostServiceProvider;
         GameLocationBootstrapServices.zorshivDredgionServiceProvider = zorshivDredgionServiceProvider;
         GameLocationBootstrapServices.moltenusServiceProvider = moltenusServiceProvider;
+        GameLocationBootstrapServices.riftServiceProvider = riftServiceProvider;
         GameLocationBootstrapServices.conquestServiceProvider = conquestServiceProvider;
+        GameLocationBootstrapServices.idianDepthsServiceProvider = idianDepthsServiceProvider;
         GameLocationBootstrapServices.abyssLandingSpecialServiceProvider = abyssLandingSpecialServiceProvider;
         VortexService.setInstanceProvider(vortexServiceProvider);
         BeritraService.setInstanceProvider(beritraServiceProvider);
@@ -109,8 +125,32 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         return getIfAvailable(anohaServiceProvider, AnohaService::getInstance);
     }
 
+    public static SvsService svsService() {
+        return getIfAvailable(svsServiceProvider, SvsService::getInstance);
+    }
+
     public static RvrService rvrService() {
         return getIfAvailable(rvrServiceProvider, RvrService::getInstance);
+    }
+
+    public static IuService iuService() {
+        return getIfAvailable(iuServiceProvider, IuService::getInstance);
+    }
+
+    public static NightmareCircusService nightmareCircusService() {
+        return getIfAvailable(nightmareCircusServiceProvider, NightmareCircusService::getInstance);
+    }
+
+    public static DynamicRiftService dynamicRiftService() {
+        return getIfAvailable(dynamicRiftServiceProvider, DynamicRiftService::getInstance);
+    }
+
+    public static InstanceRiftService instanceRiftService() {
+        return getIfAvailable(instanceRiftServiceProvider, InstanceRiftService::getInstance);
+    }
+
+    public static OutpostService outpostService() {
+        return getIfAvailable(outpostServiceProvider, OutpostService::getInstance);
     }
 
     public static ZorshivDredgionService zorshivDredgionService() {
@@ -121,8 +161,16 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         return getIfAvailable(moltenusServiceProvider, MoltenusService::getInstance);
     }
 
+    public static RiftService riftService() {
+        return getIfAvailable(riftServiceProvider, RiftService::getInstance);
+    }
+
     public static ConquestService conquestService() {
         return getIfAvailable(conquestServiceProvider, ConquestService::getInstance);
+    }
+
+    public static IdianDepthsService idianDepthsService() {
+        return getIfAvailable(idianDepthsServiceProvider, IdianDepthsService::getInstance);
     }
 
     public static AbyssLandingService abyssLandingService() {
@@ -165,10 +213,18 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         beritraServiceProvider = null;
         agentServiceProvider = null;
         anohaServiceProvider = null;
+        svsServiceProvider = null;
         rvrServiceProvider = null;
+        iuServiceProvider = null;
+        nightmareCircusServiceProvider = null;
+        dynamicRiftServiceProvider = null;
+        instanceRiftServiceProvider = null;
+        outpostServiceProvider = null;
         zorshivDredgionServiceProvider = null;
         moltenusServiceProvider = null;
+        riftServiceProvider = null;
         conquestServiceProvider = null;
+        idianDepthsServiceProvider = null;
         abyssLandingServiceProvider = null;
         abyssLandingSpecialServiceProvider = null;
         AbyssLandingService.setInstanceProvider(null);
