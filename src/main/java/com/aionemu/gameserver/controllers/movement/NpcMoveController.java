@@ -7,6 +7,8 @@
  */
 package com.aionemu.gameserver.controllers.movement;
 
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -96,7 +98,7 @@ public class NpcMoveController
             }
             destination = Destination.TARGET_OBJECT;
             updateLastMove();
-            MoveTaskManager.getInstance().addCreature(owner);
+            GameMovementLoopServices.moveTaskManager().addCreature(owner);
         }
     }
 
@@ -110,7 +112,7 @@ public class NpcMoveController
             pointY = y;
             pointZ = z;
             updateLastMove();
-            MoveTaskManager.getInstance().addCreature(owner);
+            GameMovementLoopServices.moveTaskManager().addCreature(owner);
         }
     }
 
@@ -127,7 +129,7 @@ public class NpcMoveController
             pointY = y;
             pointZ = z;
             updateLastMove();
-            MoveTaskManager.getInstance().addCreature(owner);
+            GameMovementLoopServices.moveTaskManager().addCreature(owner);
         }
     }
 
@@ -138,7 +140,7 @@ public class NpcMoveController
             }
             destination = Destination.POINT;
             updateLastMove();
-            MoveTaskManager.getInstance().addCreature(owner);
+            GameMovementLoopServices.moveTaskManager().addCreature(owner);
         }
     }
 

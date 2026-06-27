@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers.movement;
 
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
@@ -61,7 +63,7 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 	@Override
 	public void moveToTargetObject() {
 		updateLastMove();
-		MoveTaskManager.getInstance().addCreature(owner);
+		GameMovementLoopServices.moveTaskManager().addCreature(owner);
 	}
 
 	protected void moveToLocation(float targetX, float targetY, float targetZ, float offset) {

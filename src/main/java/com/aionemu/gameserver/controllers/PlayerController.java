@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
@@ -823,7 +825,7 @@ public class PlayerController extends CreatureController<Player> {
 
 	@Override
 	public void onStopMove() {
-		PlayerMoveTaskManager.getInstance().removePlayer(getOwner());
+		GameMovementLoopServices.playerMoveTaskManager().removePlayer(getOwner());
 		getOwner().getObserveController().notifyMoveObservers();
 		getOwner().getMoveController().setInMove(false);
 		cancelCurrentSkill();
@@ -834,7 +836,7 @@ public class PlayerController extends CreatureController<Player> {
 	@Override
 	public void onStartMove() {
 		getOwner().getMoveController().setInMove(true);
-		PlayerMoveTaskManager.getInstance().addPlayer(getOwner());
+		GameMovementLoopServices.playerMoveTaskManager().addPlayer(getOwner());
 		cancelUseItem();
 		cancelCurrentSkill();
 		super.onStartMove();

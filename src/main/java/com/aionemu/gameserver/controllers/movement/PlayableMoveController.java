@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers.movement;
 
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
@@ -56,7 +58,7 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 			if (isControlled() && started.compareAndSet(false, true)) {
 				this.movementMask = MovementMask.NPC_STARTMOVE;
 				sendForcedMovePacket();
-				PlayerMoveTaskManager.getInstance().addPlayer(owner);
+				GameMovementLoopServices.playerMoveTaskManager().addPlayer(owner);
 			}
 		}
 	}
@@ -118,7 +120,7 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 	@Override
 	public void abortMove() {
 		started.set(false);
-		PlayerMoveTaskManager.getInstance().removePlayer(owner);
+		GameMovementLoopServices.playerMoveTaskManager().removePlayer(owner);
 		targetDestX = 0;
 		targetDestY = 0;
 		targetDestZ = 0;

@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -117,7 +119,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * Notify everyone in knownlist about move event
 	 */
 	protected void notifyAIOnMove() {
-		MovementNotifyTask.getInstance().add(getOwner());
+		GameMovementLoopServices.movementNotifyTask().add(getOwner());
 	}
 
 	/**
@@ -133,7 +135,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * @param mode
 	 */
 	public final void updateZone() {
-		ZoneUpdateService.getInstance().add(getOwner());
+		GameMovementLoopServices.zoneUpdateService().add(getOwner());
 	}
 
 	/**

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -48,7 +50,7 @@ public class Map extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "World map is unfrozen!");
 		}
 		else if ("stats".equalsIgnoreCase(params[0])) {
-			for (String line : MovementNotifyTask.getInstance().dumpBroadcastStats()) 
+			for (String line : GameMovementLoopServices.movementNotifyTask().dumpBroadcastStats())
 				PacketSendUtility.sendMessage(admin, line);
 		}
 	}
