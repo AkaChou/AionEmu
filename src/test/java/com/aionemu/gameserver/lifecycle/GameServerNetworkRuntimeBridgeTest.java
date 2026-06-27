@@ -36,16 +36,24 @@ class GameServerNetworkRuntimeBridgeTest {
 
     @Test
     void networkSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() {
+        BannedMacManager bannedMacManager = instance(BannedMacManager.class);
         LoginServer loginServer = instance(LoginServer.class);
         ChatServer chatServer = instance(ChatServer.class);
+        GameServerNetworkServices gameServerNetworkServices = new GameServerNetworkServices(
+            provider(LoginServer.class, loginServer),
+            provider(ChatServer.class, chatServer),
+            provider(BannedMacManager.class, bannedMacManager)
+        );
 
         try {
             LoginServer.setInstanceProvider(provider(LoginServer.class, loginServer));
             ChatServer.setInstanceProvider(provider(ChatServer.class, chatServer));
 
+            assertSame(bannedMacManager, GameServerNetworkServices.bannedMacManager());
             assertSame(loginServer, LoginServer.getInstance());
             assertSame(chatServer, ChatServer.getInstance());
         } finally {
+            gameServerNetworkServices.destroy();
             LoginServer.setInstanceProvider(null);
             ChatServer.setInstanceProvider(null);
         }
@@ -58,6 +66,22 @@ class GameServerNetworkRuntimeBridgeTest {
         assertFalse(source.contains("BannedMacManager.getInstance()"));
         assertFalse(source.contains("LoginServer.getInstance()"));
         assertFalse(source.contains("ChatServer.getInstance()"));
+    }
+
+    @Test
+    void gameServerCodeUsesNetworkBridgeInsteadOfDirectBannedMacSingleton() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            for (Path source : stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("network/BannedMacManager.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameServerNetworkFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameServerNetworkServices.java")))
+                .toList()) {
+                String content = Files.readString(source);
+
+                assertFalse(content.contains("BannedMacManager.getInstance()"), source.toString());
+            }
+        }
     }
 
     private <T> T instance(Class<T> type) {

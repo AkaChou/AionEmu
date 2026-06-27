@@ -18,7 +18,7 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.gameserver.network.BannedMacManager;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MAC_INFO;
@@ -65,7 +65,7 @@ public class CM_MAC_ADDRESS extends AionClientPacket {
 	 */
 	@Override
 	protected void runImpl() {
-		if (BannedMacManager.getInstance().isBanned(macAddress)) {
+		if (GameServerNetworkServices.bannedMacManager().isBanned(macAddress)) {
 			// TODO some information packets
 			this.getConnection().closeNow();
 			LoggerFactory.getLogger(CM_MAC_ADDRESS.class).info(
