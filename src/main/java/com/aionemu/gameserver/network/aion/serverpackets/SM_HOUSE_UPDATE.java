@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.model.gameobjects.HouseDecoration;
 import com.aionemu.gameserver.model.gameobjects.SummonedHouseNpc;
 import com.aionemu.gameserver.model.house.House;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.templates.housing.BuildingType;
 import com.aionemu.gameserver.model.templates.housing.PartType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.LegionService;
 import org.apache.commons.lang3.StringUtils;
 
 public class SM_HOUSE_UPDATE extends AionServerPacket {
@@ -60,7 +61,7 @@ public class SM_HOUSE_UPDATE extends AionServerPacket {
 		for (int i = 0; i < dataSize; i++) {
 			writeC(0);
 		}
-		LegionMember member = LegionService.getInstance().getLegionMember(playerObjectId);
+		LegionMember member = GameCoreGameplayServices.legionService().getLegionMember(playerObjectId);
 		writeD(member == null ? 0 : member.getLegion().getLegionId());
 		// Show/Hide Owner Name
 		writeC(house.getNoticeState().getPacketValue());

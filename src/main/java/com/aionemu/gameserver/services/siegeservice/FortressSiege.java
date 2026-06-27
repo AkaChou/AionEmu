@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -48,7 +50,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.MoltenusService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.mail.AbyssSiegeLevel;
@@ -544,7 +545,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		}
 		List<SiegeLegionReward> legionRewards = getSiegeLocation().getLegionReward();
 		SiegeResult resultLegion = isBossKilled() ? SiegeResult.OCCUPY : SiegeResult.DEFENDER;
-		int legionBGeneral = LegionService.getInstance().getLegionBGeneral(getSiegeLocation().getLegionId());
+		int legionBGeneral = GameCoreGameplayServices.legionService().getLegionBGeneral(getSiegeLocation().getLegionId());
 		if (legionBGeneral != 0) {
 			PlayerCommonData BGeneral = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(legionBGeneral);
 			if (legionRewards != null) {

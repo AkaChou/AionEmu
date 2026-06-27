@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import org.slf4j.Logger;
@@ -445,12 +447,12 @@ public class DialogService {
             }
             case 6: {
                 // Disband Legion.
-                LegionService.getInstance().requestDisbandLegion(npc, player);
+                GameCoreGameplayServices.legionService().requestDisbandLegion(npc, player);
                 break;
             }
             case 7: {
                 // Recreate Legion.
-                LegionService.getInstance().recreateLegion(npc, player);
+                GameCoreGameplayServices.legionService().recreateLegion(npc, player);
                 break;
             }
             case 26: {
@@ -701,7 +703,7 @@ public class DialogService {
                     PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
                     return;
                 }
-                LegionService.getInstance().openLegionWarehouse(player, npc);
+                GameCoreGameplayServices.legionService().openLegionWarehouse(player, npc);
                 break;
             }
             case 56: {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.territory;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,7 +48,7 @@ public class TerritoryService {
 	private TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<Integer, TreeMap<Integer, WorldPosition>>();
 
 	public void initTerritory() {
-		LegionService ls = LegionService.getInstance();
+		LegionService ls = GameCoreGameplayServices.legionService();
 		Collection<Legion> legions = new ArrayList<Legion>();
 		int counter = 0;
 		for (int i = 1; i <= 6; i++) {

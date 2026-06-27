@@ -1,0 +1,30 @@
+package com.aionemu.gameserver.lifecycle;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+
+class GameCoreGameplayServicesTest {
+
+    @Test
+    void gameServerCodeUsesCoreLegionBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/LegionService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameCoreGameplayServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("LegionService.getInstance()"), source.toString());
+        }
+    }
+}

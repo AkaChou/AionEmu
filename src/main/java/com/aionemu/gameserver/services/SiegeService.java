@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -442,7 +444,7 @@ public class SiegeService {
 		SM_SYSTEM_MESSAGE info = loc.getLegionId() == 0
 				? new SM_SYSTEM_MESSAGE(1404542, loc.getRace().getDescriptionId(), nameId)
 				: new SM_SYSTEM_MESSAGE(1301038,
-						LegionService.getInstance().getLegion(loc.getLegionId()).getLegionName(), nameId);
+						GameCoreGameplayServices.legionService().getLegion(loc.getLegionId()).getLegionName(), nameId);
 		broadcast(pkt, info, loc.getRace());
 	}
 

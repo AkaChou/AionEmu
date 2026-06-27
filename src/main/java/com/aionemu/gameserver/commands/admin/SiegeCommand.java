@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.siege.*;
 import com.aionemu.gameserver.model.team.legion.Legion;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
 import com.aionemu.gameserver.services.siegeservice.Siege;
@@ -155,14 +156,14 @@ public class SiegeCommand extends AdminCommand {
 		if (sr == null) {
 			try {
 				int legionId = Integer.valueOf(params[2]);
-				legion = LegionService.getInstance().getLegion(legionId);
+				legion = GameCoreGameplayServices.legionService().getLegion(legionId);
 			} catch (NumberFormatException e) {
 				String legionName = "";
 				for (int i = 2; i < params.length; i++)
 					legionName += " " + params[i];
-				legion = LegionService.getInstance().getLegion(legionName.trim());
+				legion = GameCoreGameplayServices.legionService().getLegion(legionName.trim());
 			} if (legion != null) {
-				int legionBGeneral = LegionService.getInstance().getLegionBGeneral(legion.getLegionId());
+				int legionBGeneral = GameCoreGameplayServices.legionService().getLegionBGeneral(legion.getLegionId());
 				if (legionBGeneral != 0) {
 					PlayerCommonData BGeneral = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(legionBGeneral);
 					sr = SiegeRace.getByRace(BGeneral.getRace());

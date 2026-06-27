@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Iterator;
@@ -71,7 +73,7 @@ public class PeriodicSaveService {
 		public void run() {
 			log.info("Legion WH update task started.");
 			long startTime = System.currentTimeMillis();
-			Iterator<Legion> legionsIterator = LegionService.getInstance().getCachedLegionIterator();
+			Iterator<Legion> legionsIterator = GameCoreGameplayServices.legionService().getCachedLegionIterator();
 			int legionWhUpdated = 0;
 			while (legionsIterator.hasNext()) {
 				Legion legion = legionsIterator.next();

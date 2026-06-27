@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_LEGIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_PLAYERS;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -71,7 +72,7 @@ public class AbyssRankingCache {
 		for (AbyssRankingResult result : asmoRanking) {
 			newLegionRankingCache.put(Integer.valueOf(result.getLegionId()), result.getRankPos());
 		}
-		LegionService.getInstance().performRankingUpdate(newLegionRankingCache);
+		GameCoreGameplayServices.legionService().performRankingUpdate(newLegionRankingCache);
 	}
 
 	private void renewPlayerRanking(Race race) {

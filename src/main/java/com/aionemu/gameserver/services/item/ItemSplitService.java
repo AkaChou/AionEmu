@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import static com.aionemu.gameserver.services.item.ItemPacketService.sendStorageUpdatePacket;
 
 import org.slf4j.Logger;
@@ -28,7 +30,6 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUBE_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.ExchangeService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -92,7 +93,7 @@ public class ItemSplitService {
 				return;
 			}
 			if (sourceStorageType != destinationStorageType) {
-				LegionService.getInstance().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
+				GameCoreGameplayServices.legionService().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
 						destStorage);
 			}
 			Item newItem = ItemFactory.newItem(sourceItem.getItemTemplate().getTemplateId(), splitAmount);
@@ -108,7 +109,7 @@ public class ItemSplitService {
 			}
 		} else if (targetItem.getItemId() == sourceItem.getItemId()) {
 			if (sourceStorageType != destinationStorageType) {
-				LegionService.getInstance().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
+				GameCoreGameplayServices.legionService().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
 						destStorage);
 			}
 			mergeStacks(sourceStorage, destStorage, sourceItem, targetItem, splitAmount);

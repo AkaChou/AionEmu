@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LEGION_INFO;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.NameRestrictionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
@@ -172,7 +173,7 @@ public class CM_LEGION extends AionClientPacket {
 			final Legion legion = activePlayer.getLegion();
 
 			if (charName != null) {
-				LegionService.getInstance().handleCharNameRequest(exOpcode, activePlayer, charName, newNickname, rank);
+				GameCoreGameplayServices.legionService().handleCharNameRequest(exOpcode, activePlayer, charName, newNickname, rank);
 			} else {
 				switch (exOpcode) {
 				/** Refresh legion info **/
@@ -181,44 +182,44 @@ public class CM_LEGION extends AionClientPacket {
 					break;
 				/** Edit announcements **/
 				case 0x09:
-					LegionService.getInstance().handleLegionRequest(exOpcode, activePlayer, announcement);
+					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, announcement);
 					break;
 				/** Stonespear Reach **/
 				case 0x10:
 					break;
 				/** Change self introduction **/
 				case 0x0A:
-					LegionService.getInstance().handleLegionRequest(exOpcode, activePlayer, newSelfIntro);
+					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer, newSelfIntro);
 					break;
 				/** Edit permissions **/
 				case 0x0D:
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						LegionService.getInstance().changePermissions(legion, deputyPermission, centurionPermission,
+						GameCoreGameplayServices.legionService().changePermissions(legion, deputyPermission, centurionPermission,
 								legionarPermission, volunteerPermission);
 					break;
 				case 0x11:
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						LegionService.getInstance().setJoinDescription(activePlayer, joinDescription);
+						GameCoreGameplayServices.legionService().setJoinDescription(activePlayer, joinDescription);
 					break;
 				case 0x12:
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						LegionService.getInstance().setJoinType(activePlayer, joinType);
+						GameCoreGameplayServices.legionService().setJoinType(activePlayer, joinType);
 					break;
 				case 0x13:
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						LegionService.getInstance().setJoinMinLevel(activePlayer, minLevel);
+						GameCoreGameplayServices.legionService().setJoinMinLevel(activePlayer, minLevel);
 					break;
 				case 0x14:
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						LegionService.getInstance().handleJoinRequestGiveAnswer(activePlayer, playerId, true);
+						GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, true);
 					break;
 				case 0x15:
 					if (activePlayer.getLegionMember().isBrigadeGeneral())
-						LegionService.getInstance().handleJoinRequestGiveAnswer(activePlayer, playerId, false);
+						GameCoreGameplayServices.legionService().handleJoinRequestGiveAnswer(activePlayer, playerId, false);
 					break;
 				/** Misc. **/
 				default:
-					LegionService.getInstance().handleLegionRequest(exOpcode, activePlayer);
+					GameCoreGameplayServices.legionService().handleLegionRequest(exOpcode, activePlayer);
 					break;
 				}
 			}
@@ -230,7 +231,7 @@ public class CM_LEGION extends AionClientPacket {
 					PacketSendUtility.sendMessage(activePlayer,
 							"You are trying to use a forbidden name. Choose another one!");
 				} else {
-					LegionService.getInstance().createLegion(activePlayer, legionName);
+					GameCoreGameplayServices.legionService().createLegion(activePlayer, legionName);
 				}
 				break;
 			}

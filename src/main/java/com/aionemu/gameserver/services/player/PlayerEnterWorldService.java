@@ -1,6 +1,8 @@
 
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -111,7 +113,6 @@ import com.aionemu.gameserver.services.F2pService;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.KiskService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.PunishmentService;
@@ -422,13 +423,13 @@ public final class PlayerEnterWorldService {
 			ProtectorConquerorService.getInstance().onProtectorConquerorLogin(player);
 			// Legion Request 4.9.1
 			if (player.isLegionMember()) {
-				LegionService.getInstance().onLogin(player);
+				GameCoreGameplayServices.legionService().onLogin(player);
 				if (player.getLegionMember().isBrigadeGeneral() && !player.getLegion().getJoinRequestMap().isEmpty()) {
 					client.sendPacket(new SM_LEGION_REQUEST_LIST(player.getLegion().getJoinRequestMap().values()));
 				}
 			} else {
 				DAOManager.getDAO(PlayerDAO.class).getJoinRequestState(player);
-				LegionService.getInstance().handleJoinRequestGetAnswer(player);
+				GameCoreGameplayServices.legionService().handleJoinRequestGetAnswer(player);
 			}
 			client.sendPacket(new SM_TITLE_INFO(player));
 			client.sendPacket(new SM_EMOTION_LIST((byte) 0, player.getEmotions().getEmotions()));

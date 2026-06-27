@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionEmblem;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.LegionService;
 
 /**
  * @author cura
@@ -40,13 +41,13 @@ public class CM_LEGION_SEND_EMBLEM_INFO extends AionClientPacket {
 
 	@Override
 	protected void runImpl() {
-		Legion legion = LegionService.getInstance().getLegion(legionId);
+		Legion legion = GameCoreGameplayServices.legionService().getLegion(legionId);
 		if (legion != null) {
 			LegionEmblem legionEmblem = legion.getLegionEmblem();
 			if (legionEmblem.getCustomEmblemData() == null) {
 				return;
 			}
-			LegionService.getInstance().sendEmblemData(getConnection().getActivePlayer(), legionEmblem, legionId,
+			GameCoreGameplayServices.legionService().sendEmblemData(getConnection().getActivePlayer(), legionEmblem, legionId,
 					legion.getLegionName());
 		}
 	}

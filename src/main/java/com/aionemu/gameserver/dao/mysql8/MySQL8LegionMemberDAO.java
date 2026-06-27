@@ -1,12 +1,13 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.LegionMemberDAO;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.model.team.legion.LegionRank;
-import com.aionemu.gameserver.services.LegionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +112,7 @@ public class MySQL8LegionMemberDAO extends LegionMemberDAO {
                     legionMember.setNickname(resultSet.getString("nickname"));
                     legionMember.setSelfIntro(resultSet.getString("selfintro"));
                     legionMember.setChallengeScore(resultSet.getInt("challenge_score"));
-                    legionMember.setLegion(LegionService.getInstance().getLegion(legionId));
+                    legionMember.setLegion(GameCoreGameplayServices.legionService().getLegion(legionId));
                     
                     result = legionMember;
                 }
@@ -159,7 +160,7 @@ public class MySQL8LegionMemberDAO extends LegionMemberDAO {
                     
                     legionMemberEx.setNickname(resultSet.getString("legion_members.nickname"));
                     legionMemberEx.setSelfIntro(resultSet.getString("legion_members.selfintro"));
-                    legionMemberEx.setLegion(LegionService.getInstance().getLegion(legionId));
+                    legionMemberEx.setLegion(GameCoreGameplayServices.legionService().getLegion(legionId));
                     
                     result = legionMemberEx;
                 }
@@ -207,7 +208,7 @@ public class MySQL8LegionMemberDAO extends LegionMemberDAO {
                     
                     legionMember.setNickname(resultSet.getString("nickname"));
                     legionMember.setSelfIntro(resultSet.getString("selfintro"));
-                    legionMember.setLegion(LegionService.getInstance().getLegion(legionId));
+                    legionMember.setLegion(GameCoreGameplayServices.legionService().getLegion(legionId));
                     
                     result = legionMember;
                 }

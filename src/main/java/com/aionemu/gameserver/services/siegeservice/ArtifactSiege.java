@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -37,7 +39,6 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.RvrService;
 import com.aionemu.gameserver.services.player.PlayerService;
@@ -100,7 +101,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 		} else {
 			String wPlayerName = "";
 			final Race wRace = wRaceCounter.getSiegeRace() == SiegeRace.ELYOS ? Race.ELYOS : Race.ASMODIANS;
-			Legion wLegion = wLegionId != null ? LegionService.getInstance().getLegion(wLegionId) : null;
+			Legion wLegion = wLegionId != null ? GameCoreGameplayServices.legionService().getLegion(wLegionId) : null;
 			if (!wRaceCounter.getPlayerDamageCounter().isEmpty()) {
 				Integer wPlayerId = wRaceCounter.getPlayerDamageCounter().keySet().iterator().next();
 				wPlayerName = PlayerService.getPlayerName(wPlayerId);

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -90,7 +92,6 @@ import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.services.HTMLService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.PvPSpreeService;
 import com.aionemu.gameserver.services.PvpService;
@@ -998,7 +999,7 @@ public class PlayerController extends CreatureController<Player> {
 			TeamEffectUpdater.getInstance().startTask(player);
 		}
 		if (player.isLegionMember()) {
-			LegionService.getInstance().updateMemberInfo(player);
+			GameCoreGameplayServices.legionService().updateMemberInfo(player);
 		}
 
 		/**

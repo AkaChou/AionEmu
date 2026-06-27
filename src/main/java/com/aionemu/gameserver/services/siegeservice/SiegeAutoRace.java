@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -33,7 +35,6 @@ import com.aionemu.gameserver.model.siege.SiegeModType;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
@@ -54,7 +55,7 @@ public class SiegeAutoRace {
 			GameFeatureServices.siegeService().deSpawnNpcs(locid);
 			final int oldOwnerRaceId = loc.getRace().getRaceId();
 			final int legionId = loc.getLegionId();
-			final String legionName = legionId != 0 ? LegionService.getInstance().getLegion(legionId).getLegionName()
+			final String legionName = legionId != 0 ? GameCoreGameplayServices.legionService().getLegion(legionId).getLegionName()
 					: "";
 			final DescriptionId NameId = new DescriptionId(loc.getTemplate().getNameId());
 			if (ElyosAutoSiege(locid)) {

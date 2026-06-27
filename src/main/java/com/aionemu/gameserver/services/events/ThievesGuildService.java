@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -138,19 +140,19 @@ public class ThievesGuildService {
 	 * player.getObjectId())); ThievesStatusList thieves = player.getThieves(); if
 	 * (thieves.getRankId() >= 3) {
 	 * 
-	 * for (Legion legion : LegionService.getInstance().getCachedLegions()) { if
+	 * for (Legion legion : GameCoreGameplayServices.legionService().getCachedLegions()) { if
 	 * (legion.getLegionName() == "ThievesGuild" &&
 	 * !player.getLegion().getLegionName().equals(legion.getLegionName())) {
-	 * LegionService.getInstance().directAddPlayer(legion, player);
+	 * GameCoreGameplayServices.legionService().directAddPlayer(legion, player);
 	 * log.info("Aion-Unique Console: ThievesGuildService thievesIn [Player = " +
 	 * player.getName() + "]"); } } } }
 	 */
 
 	/*
 	 * TODO private void thievesLegionCreate(Player player) { for (Legion legion :
-	 * LegionService.getInstance().getCachedLegions()) { if
+	 * GameCoreGameplayServices.legionService().getCachedLegions()) { if
 	 * (!legion.getLegionName().contains("ThievesGuild")) {
-	 * LegionService.getInstance().createLegion(player, "ThievesGuild");
+	 * GameCoreGameplayServices.legionService().createLegion(player, "ThievesGuild");
 	 * log.info("Aion-Unique Console: ThievesGuildService thievesLegionCreate done"
 	 * ); } } }
 	 */

@@ -16,12 +16,13 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.LegionService;
 
 public class SM_LEGION_SEARCH extends AionServerPacket {
 	private List<Legion> legions;
@@ -36,7 +37,7 @@ public class SM_LEGION_SEARCH extends AionServerPacket {
 		for (Legion legion : legions) {
 			writeD(legion.getLegionId());
 			writeS(legion.getLegionName());
-			writeS(LegionService.getInstance().getBrigadeGeneralName(legion));
+			writeS(GameCoreGameplayServices.legionService().getBrigadeGeneralName(legion));
 			writeC(legion.getLegionLevel());
 			writeD(legion.getLegionMembers().size());
 			writeS(legion.getLegionDescription());

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.HashMap;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.model.team.legion.LegionEmblem;
 import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.SiegeService;
 
 public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
@@ -66,10 +67,10 @@ public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 			int legionId = loc.getLegionId();
 			writeD(legionId);
 			if (legionId != 0) {
-				if (LegionService.getInstance().getLegion(legionId) == null) {
+				if (GameCoreGameplayServices.legionService().getLegion(legionId) == null) {
 					log.error("Can't find or load legion with id " + legionId);
 				} else {
-					emblem = LegionService.getInstance().getLegion(legionId).getLegionEmblem();
+					emblem = GameCoreGameplayServices.legionService().getLegion(legionId).getLegionEmblem();
 				}
 			}
 			if (emblem.getEmblemType() == LegionEmblemType.DEFAULT) {

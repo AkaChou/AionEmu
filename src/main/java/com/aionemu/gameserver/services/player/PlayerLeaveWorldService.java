@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -52,7 +54,6 @@ import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.services.KiskService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.services.RepurchaseService;
@@ -120,7 +121,7 @@ public class PlayerLeaveWorldService {
 		ShugoSweepService.getInstance().onLogout(player);
 		PlayerGroupService.onPlayerLogout(player);
 		PlayerAllianceService.onPlayerLogout(player);
-		LegionService.getInstance().LegionWhUpdate(player);
+		GameCoreGameplayServices.legionService().LegionWhUpdate(player);
 		player.getEffectController().removeAllEffects(true);
 		player.getLifeStats().cancelAllTasks();
 		if (player.getLifeStats().isAlreadyDead()) {
@@ -152,7 +153,7 @@ public class PlayerLeaveWorldService {
 		PunishmentService.stopPrisonTask(player, true);
 		PunishmentService.stopGatherableTask(player, true);
 		if (player.isLegionMember()) {
-			LegionService.getInstance().onLogout(player);
+			GameCoreGameplayServices.legionService().onLogout(player);
 		}
 		GameEngineServices.questEngine().onLogOut(new QuestEnv(null, player, 0, 0));
 		player.getController().delete();

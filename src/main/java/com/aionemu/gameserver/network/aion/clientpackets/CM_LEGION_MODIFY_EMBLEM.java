@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.LegionService;
 
 /**
  * @author Simple modified cura
@@ -59,7 +60,7 @@ public class CM_LEGION_MODIFY_EMBLEM extends AionClientPacket {
 		Player activePlayer = getConnection().getActivePlayer();
 
 		if (activePlayer.isLegionMember())
-			LegionService.getInstance().storeLegionEmblem(activePlayer, legionId, emblemId, red, green, blue,
+			GameCoreGameplayServices.legionService().storeLegionEmblem(activePlayer, legionId, emblemId, red, green, blue,
 					emblemType);
 	}
 }
