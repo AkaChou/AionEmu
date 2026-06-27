@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
@@ -244,10 +246,10 @@ public class AutoGroupService {
 					autoInstance.clear();
 				}
 			}
-			if (autoInstance.agt.isDredgion() && DredgionService2.getInstance().isDredgionAvailable()) {
+			if (autoInstance.agt.isDredgion() && GameFeatureServices.dredgionService().isDredgionAvailable()) {
 				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 6));
 			}
-			if (autoInstance.agt.isAsyunatar() && AsyunatarService.getInstance().isAsyunatarAvailable()) {
+			if (autoInstance.agt.isAsyunatar() && GameFeatureServices.asyunatarService().isAsyunatarAvailable()) {
 				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 6));
 			}
 			if (autoInstance.agt.isKamar() && GameBattlefieldServices.kamarBattlefieldService().isKamarAvailable()) {
@@ -285,15 +287,15 @@ public class AutoGroupService {
 	}
 
 	public void onPlayerLogin(Player player) {
-		if (DredgionService2.getInstance().isDredgionAvailable() && player.getLevel() > DredgionService2.minLevel
+		if (GameFeatureServices.dredgionService().isDredgionAvailable() && player.getLevel() > DredgionService2.minLevel
 				&& player.getLevel() < DredgionService2.capLevel
-				&& !DredgionService2.getInstance().hasCoolDown(player)) {
+				&& !GameFeatureServices.dredgionService().hasCoolDown(player)) {
 			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(
-					DredgionService2.getInstance().getInstanceMaskId(player), SM_AUTO_GROUP.wnd_EntryIcon));
+					GameFeatureServices.dredgionService().getInstanceMaskId(player), SM_AUTO_GROUP.wnd_EntryIcon));
 		}
-		if (AsyunatarService.getInstance().isAsyunatarAvailable() && player.getLevel() > AsyunatarService.minLevel
+		if (GameFeatureServices.asyunatarService().isAsyunatarAvailable() && player.getLevel() > AsyunatarService.minLevel
 				&& player.getLevel() < AsyunatarService.capLevel
-				&& !AsyunatarService.getInstance().hasCoolDown(player)) {
+				&& !GameFeatureServices.asyunatarService().hasCoolDown(player)) {
 			PacketSendUtility.sendPacket(player,
 					new SM_AUTO_GROUP(AsyunatarService.maskId, SM_AUTO_GROUP.wnd_EntryIcon));
 		}
@@ -362,11 +364,11 @@ public class AutoGroupService {
 				if (searchInstance.getEntryRequestType().isGroupEntry() && !player.isInGroup2()) {
 					int instanceMaskId = searchInstance.getInstanceMaskId();
 					lfp.unregisterInstance(instanceMaskId);
-					if (searchInstance.isDredgion() && DredgionService2.getInstance().isDredgionAvailable()) {
+					if (searchInstance.isDredgion() && GameFeatureServices.dredgionService().isDredgionAvailable()) {
 						PacketSendUtility.sendPacket(player,
 								new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon));
 					}
-					if (searchInstance.isAsyunatar() && AsyunatarService.getInstance().isAsyunatarAvailable()) {
+					if (searchInstance.isAsyunatar() && GameFeatureServices.asyunatarService().isAsyunatarAvailable()) {
 						PacketSendUtility.sendPacket(player,
 								new SM_AUTO_GROUP(instanceMaskId, SM_AUTO_GROUP.wnd_EntryIcon));
 					}
@@ -632,9 +634,9 @@ public class AutoGroupService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_LEVEL);
 			return false;
 		}
-		if (agt.isDredgion() && !DredgionService2.getInstance().isDredgionAvailable()) {
+		if (agt.isDredgion() && !GameFeatureServices.dredgionService().isDredgionAvailable()) {
 			return false;
-		} else if (agt.isAsyunatar() && !AsyunatarService.getInstance().isAsyunatarAvailable()) {
+		} else if (agt.isAsyunatar() && !GameFeatureServices.asyunatarService().isAsyunatarAvailable()) {
 			return false;
 		} else if (agt.isKamar() && !GameBattlefieldServices.kamarBattlefieldService().isKamarAvailable()) {
 			return false;
@@ -718,12 +720,12 @@ public class AutoGroupService {
 							SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_MEMBER(member.getName()));
 					return false;
 				}
-				if (agt.isDredgion() && DredgionService2.getInstance().hasCoolDown(member)) {
+				if (agt.isDredgion() && GameFeatureServices.dredgionService().hasCoolDown(member)) {
 					PacketSendUtility.sendPacket(player,
 							SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_MEMBER(member.getName()));
 					return false;
 				}
-				if (agt.isAsyunatar() && AsyunatarService.getInstance().hasCoolDown(member)) {
+				if (agt.isAsyunatar() && GameFeatureServices.asyunatarService().hasCoolDown(member)) {
 					PacketSendUtility.sendPacket(player,
 							SM_SYSTEM_MESSAGE.STR_MSG_CANT_INSTANCE_ENTER_MEMBER(member.getName()));
 					return false;
@@ -854,9 +856,9 @@ public class AutoGroupService {
 			for (Integer obj : si.getMembers()) {
 				Player member = World.getInstance().findPlayer(obj);
 				if (member != null) {
-					if (si.isDredgion() && DredgionService2.getInstance().isDredgionAvailable()) {
+					if (si.isDredgion() && GameFeatureServices.dredgionService().isDredgionAvailable()) {
 						PacketSendUtility.sendPacket(member, new SM_AUTO_GROUP(instanceMaskId, 6));
-					} else if (si.isAsyunatar() && AsyunatarService.getInstance().isAsyunatarAvailable()) {
+					} else if (si.isAsyunatar() && GameFeatureServices.asyunatarService().isAsyunatarAvailable()) {
 						PacketSendUtility.sendPacket(member, new SM_AUTO_GROUP(instanceMaskId, 6));
 					} else if (si.isKamar() && GameBattlefieldServices.kamarBattlefieldService().isKamarAvailable()) {
 						PacketSendUtility.sendPacket(member, new SM_AUTO_GROUP(instanceMaskId, 6));
@@ -885,9 +887,9 @@ public class AutoGroupService {
 			}
 		}
 		if (player != null) {
-			if (si.isDredgion() && DredgionService2.getInstance().isDredgionAvailable()) {
+			if (si.isDredgion() && GameFeatureServices.dredgionService().isDredgionAvailable()) {
 				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 6));
-			} else if (si.isAsyunatar() && AsyunatarService.getInstance().isAsyunatarAvailable()) {
+			} else if (si.isAsyunatar() && GameFeatureServices.asyunatarService().isAsyunatarAvailable()) {
 				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 6));
 			} else if (si.isKamar() && GameBattlefieldServices.kamarBattlefieldService().isKamarAvailable()) {
 				PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 6));

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -137,7 +139,7 @@ public class SM_UPGRADE_ARCADE extends AionServerPacket {
 			writeD(0);
 			break;
 		case 10:
-			List<ArcadeTab> tabs = ArcadeUpgradeService.getInstance().getTabs();
+			List<ArcadeTab> tabs = GameFeatureServices.arcadeUpgradeService().getTabs();
 			for (ArcadeTab tab : tabs) {
 				writeC(tab.getArcadeTabItems().size());
 			}

@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.services.teleport;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -270,7 +272,7 @@ public class TeleportService2 {
 			player.getController().updateNearbyQuests();
 			DisputeLandService.getInstance().onLogin(player);
 			player.getEffectController().updatePlayerEffectIcons();
-			ProtectorConquerorService sgs = ProtectorConquerorService.getInstance();
+			ProtectorConquerorService sgs = GameFeatureServices.protectorConquerorService();
 			playerTransformation(player);
 			instanceTransformation(player);
 			archdaevaTransformation(player);
@@ -715,7 +717,7 @@ public class TeleportService2 {
 			PacketSendUtility.sendPacket(player, new SM_A_STATION_MOVE(NetworkConfig.GAMESERVER_ID, serverId, player.getWorldId()));
 			PacketSendUtility.sendPacket(player, new SM_A_STATION(NetworkConfig.GAMESERVER_ID, serverId, false));
 			PacketSendUtility.sendPacket(player, new SM_PLAYER_SPAWN(player));
-			AStationService.getInstance().checkAStationMove(player, player.getPlayerAccount().getId(), true);
+			GameFeatureServices.aStationService().checkAStationMove(player, player.getPlayerAccount().getId(), true);
 		} else {
 			World.getInstance().despawn(player);
 			World.getInstance().setPosition(player, player.getWorldId(), player.getX(), player.getY(), player.getZ(), player.getHeading());
@@ -727,7 +729,7 @@ public class TeleportService2 {
 			playerTransformation(player);
 			instanceTransformation(player);
 			archdaevaTransformation(player);
-			AStationService.getInstance().checkAStationMove(player, player.getPlayerAccount().getId(), false);
+			GameFeatureServices.aStationService().checkAStationMove(player, player.getPlayerAccount().getId(), false);
 		}
 	}
 

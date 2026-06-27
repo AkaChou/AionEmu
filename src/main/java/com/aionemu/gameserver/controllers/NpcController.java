@@ -439,7 +439,7 @@ public class NpcController extends CreatureController<Npc> {
 					}
 					// Atreian Bestiary.
 					if (getOwner().getLevel() >= 66) {
-						AtreianBestiaryService.getInstance().onKill(player, getOwner().getNpcId());
+						GameFeatureServices.atreianBestiaryService().onKill(player, getOwner().getNpcId());
 					}
 				}
 			}

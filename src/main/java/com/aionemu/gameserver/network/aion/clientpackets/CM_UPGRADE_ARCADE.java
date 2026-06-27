@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -48,23 +50,23 @@ public class CM_UPGRADE_ARCADE extends AionClientPacket {
 		}
 		switch (action) {
 		case 0:
-			ArcadeUpgradeService.getInstance().startArcadeUpgrade(player);
+			GameFeatureServices.arcadeUpgradeService().startArcadeUpgrade(player);
 			break;
 		case 1:
-			ArcadeUpgradeService.getInstance().closeWindow(player);
+			GameFeatureServices.arcadeUpgradeService().closeWindow(player);
 			break;
 		case 2:
-			ArcadeUpgradeService.getInstance().tryArcadeUpgrade(player);
+			GameFeatureServices.arcadeUpgradeService().tryArcadeUpgrade(player);
 			break;
 		case 3:
-			ArcadeUpgradeService.getInstance().getReward(player);
+			GameFeatureServices.arcadeUpgradeService().getReward(player);
 			break;
 		case 4:
 			player.getUpgradeArcade().setReTry(true);
-			ArcadeUpgradeService.getInstance().tryArcadeUpgrade(player);
+			GameFeatureServices.arcadeUpgradeService().tryArcadeUpgrade(player);
 			break;
 		case 5:
-			ArcadeUpgradeService.getInstance().showRewardList(player);
+			GameFeatureServices.arcadeUpgradeService().showRewardList(player);
 			break;
 		default:
 			break;

@@ -173,6 +173,45 @@ class GameFeatureServicesRuntimeBridgeTest {
         }
     }
 
+    @Test
+    void gameServerCodeUsesFeaturePlayerActionBridgeInsteadOfDirectSingletons() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/instance/DredgionService2.java")))
+                .filter(path -> !path.endsWith(Path.of("services/instance/AsyunatarService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/ShieldService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/WeddingService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/ProtectorConquerorService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/AStationService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/MotionLoggingService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/RepurchaseService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/drop/DropDistributionService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/events/ArcadeUpgradeService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/player/AtreianBestiaryService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServicesRuntimeBridge.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("DredgionService2.getInstance()"), source.toString());
+            assertFalse(content.contains("AsyunatarService.getInstance()"), source.toString());
+            assertFalse(content.contains("ShieldService.getInstance()"), source.toString());
+            assertFalse(content.contains("WeddingService.getInstance()"), source.toString());
+            assertFalse(content.contains("ProtectorConquerorService.getInstance()"), source.toString());
+            assertFalse(content.contains("AStationService.getInstance()"), source.toString());
+            assertFalse(content.contains("MotionLoggingService.getInstance()"), source.toString());
+            assertFalse(content.contains("RepurchaseService.getInstance()"), source.toString());
+            assertFalse(content.contains("DropDistributionService.getInstance()"), source.toString());
+            assertFalse(content.contains("ArcadeUpgradeService.getInstance()"), source.toString());
+            assertFalse(content.contains("AtreianBestiaryService.getInstance()"), source.toString());
+        }
+    }
+
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
         return ObjectProvider.class.cast(Proxy.newProxyInstance(
             ObjectProvider.class.getClassLoader(),

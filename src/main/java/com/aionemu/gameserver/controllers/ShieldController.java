@@ -40,7 +40,7 @@ public class ShieldController extends VisibleObjectController<Shield> {
 		Player player = (Player) object;
 		if (loc.isUnderShield()) {
 			if (loc.getRace() != SiegeRace.getByRace(player.getRace())) {
-				ActionObserver observer = ShieldService.getInstance().createShieldObserver(loc.getLocationId(), player);
+				ActionObserver observer = GameFeatureServices.shieldService().createShieldObserver(loc.getLocationId(), player);
 				if (observer != null) {
 					player.getObserveController().addObserver(observer);
 					observed.put(player.getObjectId(), observer);

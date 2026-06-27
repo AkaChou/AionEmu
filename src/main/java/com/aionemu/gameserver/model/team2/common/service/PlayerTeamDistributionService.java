@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.model.team2.common.service;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -86,7 +88,7 @@ public class PlayerTeamDistributionService {
 			}
 			// Atreian Bestiary.
 			if (owner.getLevel() >= 66) {
-				AtreianBestiaryService.getInstance().onKill(member, owner.getNpcId());
+				GameFeatureServices.atreianBestiaryService().onKill(member, owner.getNpcId());
 			}
 			// Auto Drop Kinah.
 			if (CustomConfig.AUTO_KINAH_ENABLED) {

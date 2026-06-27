@@ -109,7 +109,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 			if (activePlayer.A_STATION_TYPE == 1) {
 				activePlayer.A_STATION_TYPE = 2;
 			} else if (activePlayer.A_STATION_TYPE == 2) {
-				AStationService.getInstance().handleMoveBack(activePlayer);
+				GameFeatureServices.aStationService().handleMoveBack(activePlayer);
 			}
 		}
 		GameEngineServices.questEngine().onEnterWorld(new QuestEnv(null, activePlayer, 0, 0));
@@ -124,7 +124,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// Town 3.9
 		GameHousingServices.townService().onEnterWorld(activePlayer);
 		// Protector Conqueror
-		ProtectorConquerorService.getInstance().onEnterMap(activePlayer);
+		GameFeatureServices.protectorConquerorService().onEnterMap(activePlayer);
 		// Base 4.3
 		GameFeatureServices.baseService().onEnterBaseWorld(activePlayer);
 		// Shugo Imperial Tomb 4.3

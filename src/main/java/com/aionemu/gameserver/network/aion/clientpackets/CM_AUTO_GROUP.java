@@ -87,13 +87,13 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			GameCoreGameplayServices.autoGroupService().cancelEnter(player, instanceMaskId);
 			break;
 		case 104:
-			DredgionService2.getInstance().showWindow(player, instanceMaskId);
+			GameFeatureServices.dredgionService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.kamarBattlefieldService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.engulfedOphidanBridgeService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.ironWallWarfrontService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.idgelDomeService().showWindow(player, instanceMaskId);
 			// Ver. 5.1
-			AsyunatarService.getInstance().showWindow(player, instanceMaskId);
+			GameFeatureServices.asyunatarService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.idgelDomeLandmarkService().showWindow(player, instanceMaskId);
 			GameBattlefieldServices.suspiciousOphidanBridgeService().showWindow(player, instanceMaskId);
 			// Ver. 5.3

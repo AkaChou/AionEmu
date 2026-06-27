@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.player;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
 import com.aionemu.gameserver.cache.HTMLCache;
@@ -71,7 +73,7 @@ public class cmd_marry extends PlayerCommand {
         PacketSendUtility.sendMessage(partner2, "You want marry on " + partner1.getName() + "?");
         HTMLService.showHTML(partner2, GameStaticDataServices.htmlCache().getHTML("weddings.xhtml"));
 
-        WeddingService.getInstance().registerOffer(partner1, partner2, admin);
+        GameFeatureServices.weddingService().registerOffer(partner1, partner2, admin);
     }
 
     @Override

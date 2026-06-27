@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -37,9 +39,9 @@ public class CM_A_STATION_CHECK extends AionClientPacket {
 	protected void runImpl() {
 		final Player player = this.getConnection().getActivePlayer();
 		if (player.isOnAStation()) {
-			AStationService.getInstance().checkAStationMove(player, accountId, true);
+			GameFeatureServices.aStationService().checkAStationMove(player, accountId, true);
 		} else {
-			AStationService.getInstance().checkAStationMove(player, accountId, false);
+			GameFeatureServices.aStationService().checkAStationMove(player, accountId, false);
 		}
 	}
 }

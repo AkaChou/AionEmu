@@ -498,7 +498,7 @@ public class PlayerController extends CreatureController<Player> {
 
 	// TODO [AT] move
 	public void onLeaveWorld() {
-		ProtectorConquerorService.getInstance().onLeaveMap(getOwner());
+		GameFeatureServices.protectorConquerorService().onLeaveMap(getOwner());
 		InstanceService.onLeaveInstance(getOwner());
 	}
 

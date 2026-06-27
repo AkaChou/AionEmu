@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -258,7 +260,7 @@ public class PvpService {
 				playerDamage += aggro.getDamage();
 			}
 		}
-		ProtectorConquerorService.getInstance().updateRanks(winner, victim);
+		GameFeatureServices.protectorConquerorService().updateRanks(winner, victim);
 
 		// notify Quest engine for winner + his group
 		notifyKillQuests(winner, victim);

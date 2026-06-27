@@ -102,11 +102,11 @@ public class PlayerLeaveWorldService {
 		GameFeatureServices.petService().onPlayerLogout(player);
 		GameRuntimeServices.brokerService().removePlayerCache(player);
 		GameRuntimeServices.exchangeService().cancelExchange(player);
-		RepurchaseService.getInstance().removeRepurchaseItems(player);
+		GameFeatureServices.repurchaseService().removeRepurchaseItems(player);
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
 			GameCoreGameplayServices.autoGroupService().onPlayerLogOut(player);
 		}
-		ProtectorConquerorService.getInstance().onLogout(player);
+		GameFeatureServices.protectorConquerorService().onLogout(player);
 		InstanceService.onLogOut(player);
 		GMService.getInstance().onPlayerLogedOut(player);
 		GameFeatureServices.kiskService().onLogout(player);

@@ -353,7 +353,7 @@ public final class PlayerEnterWorldService {
 			}
 			// Upgrade Arcade 4.7
 			if (EventsConfig.ENABLE_EVENT_ARCADE) {
-				ArcadeUpgradeService.getInstance().onEnterWorld(player);
+				GameFeatureServices.arcadeUpgradeService().onEnterWorld(player);
 			}
 			List<QuestState> questList = new ArrayList<QuestState>();
 			List<QuestState> completeQuestList = new ArrayList<QuestState>();
@@ -400,7 +400,7 @@ public final class PlayerEnterWorldService {
 				client.sendPacket(new SM_EQUIPMENT_SETTING(player.getEquipmentSettingList().getEquipmentSetting()));
 			}
 			if (AStationConfig.A_STATION_ENABLE) {
-				AStationService.getInstance().checkAuthorizationRequest(player);
+				GameFeatureServices.aStationService().checkAuthorizationRequest(player);
 			}
 			playerLoggedIn(player);
 			client.sendPacket(new SM_INSTANCE_INFO(player, false, player.getCurrentTeam()));
@@ -432,7 +432,7 @@ public final class PlayerEnterWorldService {
 			GameLocationBootstrapServices.vortexService().validateLoginZone(player);
 			client.sendPacket(new SM_PLAYER_SPAWN(player));
 			client.sendPacket(new SM_GAME_TIME());
-			ProtectorConquerorService.getInstance().onProtectorConquerorLogin(player);
+			GameFeatureServices.protectorConquerorService().onProtectorConquerorLogin(player);
 			// Legion Request 4.9.1
 			if (player.isLegionMember()) {
 				GameCoreGameplayServices.legionService().onLogin(player);
@@ -707,7 +707,7 @@ public final class PlayerEnterWorldService {
 			player.setBattleground(null);
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
-			AtreianBestiaryService.getInstance().onLogin(player);
+			GameFeatureServices.atreianBestiaryService().onLogin(player);
 		} else {
 			log.info("[DEBUG] enter world" + objectId + ", Player: " + player);
 		}

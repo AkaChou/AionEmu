@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -354,7 +356,7 @@ public class TradeService {
 			repurchaseItem.setRepurchasePrice(realReward);
 			items.add(repurchaseItem);
 		}
-		RepurchaseService.getInstance().addRepurchaseItems(player, items);
+		GameFeatureServices.repurchaseService().addRepurchaseItems(player, items);
 		inventory.increaseKinah(kinahReward);
 		return true;
 	}

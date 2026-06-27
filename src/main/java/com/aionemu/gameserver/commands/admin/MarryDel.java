@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -55,7 +57,7 @@ public class MarryDel extends AdminCommand {
 			return;
 		}
 
-		WeddingService.getInstance().unDoWedding(partner1, partner2);
+		GameFeatureServices.weddingService().unDoWedding(partner1, partner2);
 		PacketSendUtility.sendMessage(admin, "Married canceled.");
 	}
 

@@ -60,7 +60,7 @@ public class SiegeShield implements ZoneHandler {
 		if (isEnabled || siegeLocationId == 0) {
 			FortressLocation loc = GameFeatureServices.siegeService().getFortress(siegeLocationId);
 			if (loc == null || loc.getRace() != SiegeRace.getByRace(player.getRace())) {
-				ActionObserver actor = ShieldService.getInstance().createShieldObserver(this, creature);
+				ActionObserver actor = GameFeatureServices.shieldService().createShieldObserver(this, creature);
 				if (actor instanceof IActor) {
 					creature.getObserveController().addObserver(actor);
 					observed.put(creature.getObjectId(), (IActor) actor);

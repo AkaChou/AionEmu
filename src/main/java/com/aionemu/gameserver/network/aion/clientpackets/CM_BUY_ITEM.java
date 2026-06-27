@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,7 +170,7 @@ public class CM_BUY_ITEM extends AionClientPacket {
 				}
 				break;
 			case 2: // [Repurchase]
-				RepurchaseService.getInstance().repurchaseFromShop(player, repurchaseList);
+				GameFeatureServices.repurchaseService().repurchaseFromShop(player, repurchaseList);
 				break;
 			case 13: // [Buy From Shop]
 				if (tlist != null && tlist.getTradeNpcType() == TradeNpcType.NORMAL) {

@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.skillengine.model;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -276,7 +278,7 @@ public class Skill {
 		// log skill time if effector instance of player
 		// TODO config
 		if (effector instanceof Player) {
-			MotionLoggingService.getInstance().logTime((Player) effector, this.getSkillTemplate(), this.getHitTime(), MathUtil.getDistance(effector, firstTarget));
+			GameFeatureServices.motionLoggingService().logTime((Player) effector, this.getSkillTemplate(), this.getHitTime(), MathUtil.getDistance(effector, firstTarget));
 		}
 		boolean setCooldowns = true;
 		if (effector instanceof Player) {
