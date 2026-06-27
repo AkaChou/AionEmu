@@ -727,6 +727,46 @@ class GameServiceProviderCompatibilityTest {
     }
 
     @Test
+    void gameEventServicesRegisterAndClearEventAccessors() throws Exception {
+        EventService eventService = instance(EventService.class);
+        MinionService minionService = instance(MinionService.class);
+        GameEventServices eventServices = new GameEventServices(
+                provider(EventService.class, eventService),
+                provider(PlayerEventService.class, instance(PlayerEventService.class)),
+                provider(CrazyDaevaService.class, instance(CrazyDaevaService.class)),
+                provider(AbyssRankUpdateService.class, instance(AbyssRankUpdateService.class)),
+                provider(PacketBroadcaster.class, instance(PacketBroadcaster.class)));
+        GameEventBootstrapServices eventBootstrapServices = new GameEventBootstrapServices(
+                provider(LunaShopService.class, instance(LunaShopService.class)),
+                provider(MinionService.class, minionService),
+                provider(ShugoSweepService.class, instance(ShugoSweepService.class)),
+                provider(AtreianPassportService.class, instance(AtreianPassportService.class)),
+                provider(EventWindowService.class, instance(EventWindowService.class)));
+
+        try {
+            assertSame(eventService, GameEventServices.eventService());
+            assertSame(minionService, GameEventBootstrapServices.minionService());
+
+            eventServices.destroy();
+            eventServices = null;
+            eventBootstrapServices.destroy();
+            eventBootstrapServices = null;
+
+            assertProviderCleared(EventService.class);
+            assertProviderCleared(MinionService.class);
+        } finally {
+            if (eventServices != null) {
+                eventServices.destroy();
+            }
+            if (eventBootstrapServices != null) {
+                eventBootstrapServices.destroy();
+            }
+            EventService.setInstanceProvider(null);
+            MinionService.setInstanceProvider(null);
+        }
+    }
+
+    @Test
     void gameCreativityServicesRegistersAndClearsCreativityProviders() throws Exception {
         CreativityEssenceService creativityEssenceService = instance(CreativityEssenceService.class);
         CreativitySkillService creativitySkillService = instance(CreativitySkillService.class);

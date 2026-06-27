@@ -12,11 +12,14 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameEventBootstrapServices implements DisposableBean {
 
+    private static volatile ObjectProvider<MinionService> minionServiceProvider;
+
     public GameEventBootstrapServices(ObjectProvider<LunaShopService> lunaShopServiceProvider,
             ObjectProvider<MinionService> minionServiceProvider,
             ObjectProvider<ShugoSweepService> shugoSweepServiceProvider,
             ObjectProvider<AtreianPassportService> atreianPassportServiceProvider,
             ObjectProvider<EventWindowService> eventWindowServiceProvider) {
+        GameEventBootstrapServices.minionServiceProvider = minionServiceProvider;
         LunaShopService.setInstanceProvider(lunaShopServiceProvider);
         MinionService.setInstanceProvider(minionServiceProvider);
         ShugoSweepService.setInstanceProvider(shugoSweepServiceProvider);
@@ -24,8 +27,17 @@ public final class GameEventBootstrapServices implements DisposableBean {
         EventWindowService.setInstanceProvider(eventWindowServiceProvider);
     }
 
+    public static MinionService minionService() {
+        ObjectProvider<MinionService> provider = minionServiceProvider;
+        if (provider == null) {
+            return MinionService.getInstance();
+        }
+        return provider.getIfAvailable(MinionService::getInstance);
+    }
+
     @Override
     public void destroy() {
+        minionServiceProvider = null;
         LunaShopService.setInstanceProvider(null);
         MinionService.setInstanceProvider(null);
         ShugoSweepService.setInstanceProvider(null);
