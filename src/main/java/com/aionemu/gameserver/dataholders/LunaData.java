@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -27,7 +28,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.recipe.LunaTemplate;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastList;
 
 /**
  * Made by Ghostfur (Aion-Unique)
@@ -41,13 +41,13 @@ public class LunaData {
 
 	private TIntObjectHashMap<LunaTemplate> lunaData;
 
-	private FastList<LunaTemplate> elyos, asmos, any;
+	private List<LunaTemplate> elyos, asmos, any;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		lunaData = new TIntObjectHashMap<LunaTemplate>();
-		elyos = FastList.newInstance();
-		asmos = FastList.newInstance();
-		any = FastList.newInstance();
+		elyos = new ArrayList<>();
+		asmos = new ArrayList<>();
+		any = new ArrayList<>();
 		for (LunaTemplate lt : list) {
 			lunaData.put(lt.getId(), lt);
 			switch (lt.getRace()) {
@@ -67,7 +67,7 @@ public class LunaData {
 		list = null;
 	}
 
-	public FastList<LunaTemplate> getLunaTemplatesAny() {
+	public List<LunaTemplate> getLunaTemplatesAny() {
 		return any;
 	}
 

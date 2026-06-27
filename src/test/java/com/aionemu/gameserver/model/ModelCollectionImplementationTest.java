@@ -256,6 +256,21 @@ class ModelCollectionImplementationTest {
 		}
 	}
 
+	@Test
+	void dataholderAndShopListsUseJdkLists() throws Exception {
+		List<String> sourcePaths = List.of(
+				"src/main/java/com/aionemu/gameserver/dataholders/LunaData.java",
+				"src/main/java/com/aionemu/gameserver/dataholders/RecipeData.java",
+				"src/main/java/com/aionemu/gameserver/services/player/LunaShopService.java",
+				"src/main/java/com/aionemu/gameserver/model/ingameshop/InGameShopEn.java",
+				"src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_IN_GAME_SHOP_LIST.java");
+		for (String sourcePath : sourcePaths) {
+			assertSourceOmits(sourcePath, "FastList");
+		}
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_IN_GAME_SHOP_LIST.java",
+				"FastList.recycle");
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();

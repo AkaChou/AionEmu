@@ -14,6 +14,7 @@
  */
 package com.aionemu.gameserver.model.ingameshop;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,7 +48,6 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 /**
@@ -61,7 +61,7 @@ public class InGameShopEn {
 	private InGameShopDAO dao;
 	private InGameShopProperty iGProperty;
 	private int lastRequestId = 0;
-	private FastList<IGRequest> activeRequests;
+	private List<IGRequest> activeRequests;
 	private static Map<Integer, Long> lastUsage = new HashMap<>();
 
 	public static InGameShopEn getInstance() {
@@ -84,7 +84,7 @@ public class InGameShopEn {
 		iGProperty = InGameShopProperty.load();
 		dao = DAOManager.getDAO(InGameShopDAO.class);
 		items = FastMap.newInstance();
-		activeRequests = FastList.newInstance();
+		activeRequests = new ArrayList<>();
 		items = dao.loadInGameShopItems();
 		log.info("Loaded with " + items.size() + " items.");
 	}
@@ -122,17 +122,17 @@ public class InGameShopEn {
 		return items.get(category);
 	}
 
-	public FastList<Integer> getTopSales(int subCategory, byte category) {
+	public List<Integer> getTopSales(int subCategory, byte category) {
 		byte max = 6;
 		TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>(new DescFilter());
 		if (!items.containsKey(category)) {
-			return FastList.newInstance();
+			return new ArrayList<>();
 		}
 		for (IGItem item : items.get(category))
 			if (item.getSalesRanking() != 0 && (subCategory == 2 || item.getSubCategory() == subCategory)) {
 				map.put(item.getSalesRanking(), item.getObjectId());
 			}
-		FastList<Integer> top = FastList.newInstance();
+		List<Integer> top = new ArrayList<>();
 		byte cnt = 0;
 		for (Iterator<Integer> i = map.values().iterator(); i.hasNext();) {
 			int objId = i.next();
