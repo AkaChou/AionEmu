@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -350,7 +351,7 @@ public class SiegeService {
 	}
 
 	public Map<Integer, SiegeLocation> getSiegeLocations(int worldId) {
-		Map<Integer, SiegeLocation> mapLocations = new FastMap<Integer, SiegeLocation>();
+		Map<Integer, SiegeLocation> mapLocations = new HashMap<Integer, SiegeLocation>();
 		for (SiegeLocation location : getSiegeLocations().values()) {
 			if (location.getWorldId() == worldId) {
 				mapLocations.put(location.getLocationId(), location);
@@ -474,8 +475,8 @@ public class SiegeService {
 	}
 
 	public void onEnterSiegeWorld(Player player) {
-		FastMap<Integer, SiegeLocation> worldLocations = new FastMap<Integer, SiegeLocation>();
-		FastMap<Integer, ArtifactLocation> worldArtifacts = new FastMap<Integer, ArtifactLocation>();
+		Map<Integer, SiegeLocation> worldLocations = new HashMap<Integer, SiegeLocation>();
+		Map<Integer, ArtifactLocation> worldArtifacts = new HashMap<Integer, ArtifactLocation>();
 		for (SiegeLocation location : getSiegeLocations().values()) {
 			if (location.getWorldId() == player.getWorldId()) {
 				worldLocations.put(location.getLocationId(), location);
