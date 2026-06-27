@@ -39,9 +39,13 @@ import org.springframework.stereotype.Component;
 public final class GameFeatureServices implements DisposableBean {
 
     private static volatile ObjectProvider<NpcShoutsService> npcShoutsServiceProvider;
+    private static volatile ObjectProvider<FFAService> ffaServiceProvider;
+    private static volatile ObjectProvider<LadderService> ladderServiceProvider;
     private static volatile ObjectProvider<SiegeService> siegeServiceProvider;
     private static volatile ObjectProvider<BaseService> baseServiceProvider;
+    private static volatile ObjectProvider<KiskService> kiskServiceProvider;
     private static volatile ObjectProvider<SystemMailService> systemMailServiceProvider;
+    private static volatile ObjectProvider<PetService> petServiceProvider;
 
     public GameFeatureServices(ObjectProvider<DisputeLandService> disputeLandServiceProvider,
             ObjectProvider<DredgionService2> dredgionServiceProvider,
@@ -75,9 +79,13 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<CoalescenceService> coalescenceServiceProvider,
             ObjectProvider<GrowthEnergy> growthEnergyProvider) {
         GameFeatureServices.npcShoutsServiceProvider = npcShoutsServiceProvider;
+        GameFeatureServices.ffaServiceProvider = ffaServiceProvider;
+        GameFeatureServices.ladderServiceProvider = ladderServiceProvider;
         GameFeatureServices.siegeServiceProvider = siegeServiceProvider;
         GameFeatureServices.baseServiceProvider = baseServiceProvider;
+        GameFeatureServices.kiskServiceProvider = kiskServiceProvider;
         GameFeatureServices.systemMailServiceProvider = systemMailServiceProvider;
+        GameFeatureServices.petServiceProvider = petServiceProvider;
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
         DredgionService2.setInstanceProvider(dredgionServiceProvider);
         AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
@@ -119,6 +127,22 @@ public final class GameFeatureServices implements DisposableBean {
         return provider.getIfAvailable(NpcShoutsService::getInstance);
     }
 
+    public static FFAService ffaService() {
+        ObjectProvider<FFAService> provider = ffaServiceProvider;
+        if (provider == null) {
+            return FFAService.getInstance();
+        }
+        return provider.getIfAvailable(FFAService::getInstance);
+    }
+
+    public static LadderService ladderService() {
+        ObjectProvider<LadderService> provider = ladderServiceProvider;
+        if (provider == null) {
+            return LadderService.getInstance();
+        }
+        return provider.getIfAvailable(LadderService::getInstance);
+    }
+
     public static SiegeService siegeService() {
         ObjectProvider<SiegeService> provider = siegeServiceProvider;
         if (provider == null) {
@@ -135,6 +159,14 @@ public final class GameFeatureServices implements DisposableBean {
         return provider.getIfAvailable(BaseService::getInstance);
     }
 
+    public static KiskService kiskService() {
+        ObjectProvider<KiskService> provider = kiskServiceProvider;
+        if (provider == null) {
+            return KiskService.getInstance();
+        }
+        return provider.getIfAvailable(KiskService::getInstance);
+    }
+
     public static SystemMailService systemMailService() {
         ObjectProvider<SystemMailService> provider = systemMailServiceProvider;
         if (provider == null) {
@@ -143,12 +175,24 @@ public final class GameFeatureServices implements DisposableBean {
         return provider.getIfAvailable(SystemMailService::getInstance);
     }
 
+    public static PetService petService() {
+        ObjectProvider<PetService> provider = petServiceProvider;
+        if (provider == null) {
+            return PetService.getInstance();
+        }
+        return provider.getIfAvailable(PetService::getInstance);
+    }
+
     @Override
     public void destroy() {
         npcShoutsServiceProvider = null;
+        ffaServiceProvider = null;
+        ladderServiceProvider = null;
         siegeServiceProvider = null;
         baseServiceProvider = null;
+        kiskServiceProvider = null;
         systemMailServiceProvider = null;
+        petServiceProvider = null;
         DisputeLandService.setInstanceProvider(null);
         DredgionService2.setInstanceProvider(null);
         AsyunatarService.setInstanceProvider(null);

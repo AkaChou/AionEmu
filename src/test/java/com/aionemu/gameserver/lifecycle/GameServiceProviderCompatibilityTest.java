@@ -619,6 +619,9 @@ class GameServiceProviderCompatibilityTest {
         GrowthEnergy growthEnergy = instance(GrowthEnergy.class);
         SiegeService siegeService = instance(SiegeService.class);
         BaseService baseService = instance(BaseService.class);
+        FFAService ffaService = instance(FFAService.class);
+        LadderService ladderService = instance(LadderService.class);
+        KiskService kiskService = instance(KiskService.class);
         SystemMailService systemMailService = instance(SystemMailService.class);
 
         GameFeatureServices featureServices = new GameFeatureServices(
@@ -632,8 +635,8 @@ class GameServiceProviderCompatibilityTest {
                 provider(WeddingService.class, instance(WeddingService.class)),
                 provider(VeteranRewardsService.class, instance(VeteranRewardsService.class)),
                 provider(ProtectorConquerorService.class, instance(ProtectorConquerorService.class)),
-                provider(FFAService.class, instance(FFAService.class)),
-                provider(LadderService.class, instance(LadderService.class)),
+                provider(FFAService.class, ffaService),
+                provider(LadderService.class, ladderService),
                 provider(BGService.class, instance(BGService.class)),
                 provider(BanditService.class, instance(BanditService.class)),
                 provider(SiegeService.class, siegeService),
@@ -643,7 +646,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(WindyGorgeService.class, instance(WindyGorgeService.class)),
                 provider(MotionLoggingService.class, instance(MotionLoggingService.class)),
                 provider(StaticDoorService.class, instance(StaticDoorService.class)),
-                provider(KiskService.class, instance(KiskService.class)),
+                provider(KiskService.class, kiskService),
                 provider(RepurchaseService.class, instance(RepurchaseService.class)),
                 provider(DropDistributionService.class, instance(DropDistributionService.class)),
                 provider(SystemMailService.class, systemMailService),
@@ -658,9 +661,13 @@ class GameServiceProviderCompatibilityTest {
             assertSame(npcShoutsService, GameFeatureServices.npcShoutsService());
             assertSame(siegeService, GameFeatureServices.siegeService());
             assertSame(baseService, GameFeatureServices.baseService());
+            assertSame(ffaService, GameFeatureServices.ffaService());
+            assertSame(ladderService, GameFeatureServices.ladderService());
+            assertSame(kiskService, GameFeatureServices.kiskService());
             assertSame(systemMailService, GameFeatureServices.systemMailService());
             assertSame(bonusService, BonusService.getInstance());
             assertSame(petService, PetService.getInstance());
+            assertSame(petService, GameFeatureServices.petService());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
             assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
             assertSame(coalescenceService, CoalescenceService.getInstance());
@@ -676,6 +683,9 @@ class GameServiceProviderCompatibilityTest {
             assertNotSame(coalescenceService, CoalescenceService.getInstance());
             assertNotSame(growthEnergy, GrowthEnergy.getInstance());
             assertProviderCleared(SystemMailService.class);
+            assertProviderCleared(FFAService.class);
+            assertProviderCleared(LadderService.class);
+            assertProviderCleared(KiskService.class);
         } finally {
             if (featureServices != null) {
                 featureServices.destroy();
@@ -687,6 +697,9 @@ class GameServiceProviderCompatibilityTest {
             CoalescenceService.setInstanceProvider(null);
             GrowthEnergy.setInstanceProvider(null);
             SystemMailService.setInstanceProvider(null);
+            FFAService.setInstanceProvider(null);
+            LadderService.setInstanceProvider(null);
+            KiskService.setInstanceProvider(null);
         }
     }
 
