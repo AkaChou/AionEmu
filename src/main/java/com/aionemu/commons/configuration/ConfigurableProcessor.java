@@ -99,7 +99,7 @@ public class ConfigurableProcessor {
      * @param props 配置属性数组
      */
     private static void processField(Field f, Object obj, Properties[] props) {
-        boolean oldAccessible = f.isAccessible();
+        boolean oldAccessible = f.canAccess(obj);
         f.setAccessible(true);
 
         try {

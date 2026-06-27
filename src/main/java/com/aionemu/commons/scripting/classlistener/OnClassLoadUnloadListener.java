@@ -65,7 +65,7 @@ public class OnClassLoadUnloadListener implements ClassListener {
     protected final void doMethodInvoke(Method[] methods, Class<? extends Annotation> annotationClass) {
         for (Method m : methods) {
             if (Modifier.isStatic(m.getModifiers())) {
-                boolean accessible = m.isAccessible();
+                boolean accessible = m.canAccess(null);
                 m.setAccessible(true);
                 
                 if (m.getAnnotation(annotationClass) != null) {
