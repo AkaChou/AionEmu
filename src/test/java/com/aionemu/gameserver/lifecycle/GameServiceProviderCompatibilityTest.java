@@ -416,6 +416,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(curingZoneService, CuringZoneService.getInstance());
             assertSame(springZoneService, SpringZoneService.getInstance());
             assertSame(boostEventService, BoostEventService.getInstance());
+            assertSame(boostEventService, GameRuntimeServices.boostEventService());
             assertSame(taskManagerFromDB, TaskManagerFromDB.getInstance());
             assertSame(limitedItemTradeService, LimitedItemTradeService.getInstance());
             assertSame(playerLimitService, PlayerLimitService.getInstance());

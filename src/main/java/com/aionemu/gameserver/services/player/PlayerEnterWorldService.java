@@ -141,7 +141,6 @@ import com.aionemu.gameserver.services.abyss.AbyssSkillService;
 import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
-import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
@@ -590,7 +589,7 @@ public final class PlayerEnterWorldService {
 			} else if (player.getRace() == Race.ASMODIANS) {
 				abyssDarkLogon(player);
 			}
-			BoostEventService.getInstance().sendPacket(player);
+			GameRuntimeServices.boostEventService().sendPacket(player);
 
 			if (CustomConfig.LOGIN_SERVER_INFO) {
 				LoginServerInfo(player); // Show LoginServerinfo + Chat

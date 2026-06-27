@@ -43,6 +43,7 @@ class GameRuntimeServicesTest {
             assertFalse(content.contains("WeatherService.getInstance()"), source.toString());
             assertFalse(content.contains("LimitedItemTradeService.getInstance()"), source.toString());
             assertFalse(content.contains("SurveyService.getInstance()"), source.toString());
+            assertFalse(content.contains("BoostEventService.getInstance()"), source.toString());
         }
     }
 }

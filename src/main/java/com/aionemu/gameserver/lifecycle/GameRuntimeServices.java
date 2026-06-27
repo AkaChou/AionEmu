@@ -39,6 +39,7 @@ public final class GameRuntimeServices implements DisposableBean {
     private static volatile ObjectProvider<Influence> influenceProvider;
     private static volatile ObjectProvider<ExchangeService> exchangeServiceProvider;
     private static volatile ObjectProvider<PetitionService> petitionServiceProvider;
+    private static volatile ObjectProvider<BoostEventService> boostEventServiceProvider;
     private static volatile ObjectProvider<LimitedItemTradeService> limitedItemTradeServiceProvider;
     private static volatile ObjectProvider<SurveyService> surveyServiceProvider;
     private static volatile ObjectProvider<FindGroupService> findGroupServiceProvider;
@@ -74,6 +75,7 @@ public final class GameRuntimeServices implements DisposableBean {
         GameRuntimeServices.influenceProvider = influenceProvider;
         GameRuntimeServices.exchangeServiceProvider = exchangeServiceProvider;
         GameRuntimeServices.petitionServiceProvider = petitionServiceProvider;
+        GameRuntimeServices.boostEventServiceProvider = boostEventServiceProvider;
         GameRuntimeServices.limitedItemTradeServiceProvider = limitedItemTradeServiceProvider;
         GameRuntimeServices.surveyServiceProvider = surveyServiceProvider;
         GameRuntimeServices.findGroupServiceProvider = findGroupServiceProvider;
@@ -134,6 +136,10 @@ public final class GameRuntimeServices implements DisposableBean {
         return getIfAvailable(petitionServiceProvider, PetitionService::getInstance);
     }
 
+    public static BoostEventService boostEventService() {
+        return getIfAvailable(boostEventServiceProvider, BoostEventService::getInstance);
+    }
+
     public static LimitedItemTradeService limitedItemTradeService() {
         return getIfAvailable(limitedItemTradeServiceProvider, LimitedItemTradeService::getInstance);
     }
@@ -182,6 +188,7 @@ public final class GameRuntimeServices implements DisposableBean {
         FlyRingService.setInstanceProvider(null);
         CuringZoneService.setInstanceProvider(null);
         SpringZoneService.setInstanceProvider(null);
+        boostEventServiceProvider = null;
         BoostEventService.setInstanceProvider(null);
         TaskManagerFromDB.setInstanceProvider(null);
         limitedItemTradeServiceProvider = null;
