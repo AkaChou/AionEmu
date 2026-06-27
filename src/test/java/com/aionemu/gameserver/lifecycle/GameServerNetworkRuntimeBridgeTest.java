@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.network.BannedMacManager;
+import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import java.io.IOException;
@@ -39,23 +40,29 @@ class GameServerNetworkRuntimeBridgeTest {
         BannedMacManager bannedMacManager = instance(BannedMacManager.class);
         LoginServer loginServer = instance(LoginServer.class);
         ChatServer chatServer = instance(ChatServer.class);
+        PacketLoggerService packetLoggerService = instance(PacketLoggerService.class);
         GameServerNetworkServices gameServerNetworkServices = new GameServerNetworkServices(
             provider(LoginServer.class, loginServer),
             provider(ChatServer.class, chatServer),
-            provider(BannedMacManager.class, bannedMacManager)
+            provider(BannedMacManager.class, bannedMacManager),
+            provider(PacketLoggerService.class, packetLoggerService)
         );
 
         try {
             LoginServer.setInstanceProvider(provider(LoginServer.class, loginServer));
             ChatServer.setInstanceProvider(provider(ChatServer.class, chatServer));
+            PacketLoggerService.setInstanceProvider(provider(PacketLoggerService.class, packetLoggerService));
 
             assertSame(bannedMacManager, GameServerNetworkServices.bannedMacManager());
+            assertSame(packetLoggerService, GameServerNetworkServices.packetLoggerService());
             assertSame(loginServer, LoginServer.getInstance());
             assertSame(chatServer, ChatServer.getInstance());
+            assertSame(packetLoggerService, PacketLoggerService.getInstance());
         } finally {
             gameServerNetworkServices.destroy();
             LoginServer.setInstanceProvider(null);
             ChatServer.setInstanceProvider(null);
+            PacketLoggerService.setInstanceProvider(null);
         }
     }
 
@@ -66,6 +73,7 @@ class GameServerNetworkRuntimeBridgeTest {
         assertFalse(source.contains("BannedMacManager.getInstance()"));
         assertFalse(source.contains("LoginServer.getInstance()"));
         assertFalse(source.contains("ChatServer.getInstance()"));
+        assertFalse(source.contains("PacketLoggerService.getInstance()"));
     }
 
     @Test
@@ -80,6 +88,22 @@ class GameServerNetworkRuntimeBridgeTest {
                 String content = Files.readString(source);
 
                 assertFalse(content.contains("BannedMacManager.getInstance()"), source.toString());
+            }
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesNetworkBridgeInsteadOfDirectPacketLoggerSingleton() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            for (Path source : stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("network/PacketLoggerService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameServerNetworkFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameServerNetworkServices.java")))
+                .toList()) {
+                String content = Files.readString(source);
+
+                assertFalse(content.contains("PacketLoggerService.getInstance()"), source.toString());
             }
         }
     }

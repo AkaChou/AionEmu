@@ -1,8 +1,8 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
-import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.TradeService;
@@ -19,7 +19,7 @@ public class CM_SELL_TERMINATED_ITEMS extends AionClientPacket {
 
 	@Override
 	protected void readImpl() {
-		PacketLoggerService.getInstance().logPacketCM(this.getPacketName());
+		GameServerNetworkServices.packetLoggerService().logPacketCM(this.getPacketName());
 		Player player = getConnection().getActivePlayer();
 		Storage inventory = player.getInventory();
 		size = readH();

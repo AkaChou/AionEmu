@@ -11,6 +11,7 @@ import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
+import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.questEngine.QuestEngine;
@@ -571,6 +572,12 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public BannedMacManager bannedMacManager() {
         return new BannedMacManager();
+    }
+
+    @Bean
+    @Lazy
+    public PacketLoggerService packetLoggerService() {
+        return new PacketLoggerService();
     }
 
     @Bean
