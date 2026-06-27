@@ -42,7 +42,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +62,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 	private int surkanaShockCannon;
 	private boolean isInstanceDestroyed;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> sanctumTask = FastList.newInstance();
+	private final List<Future<?>> sanctumTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
 		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
@@ -856,10 +855,10 @@ public class SanctumInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = sanctumTask.head(), end = sanctumTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : sanctumTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

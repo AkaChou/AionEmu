@@ -51,7 +51,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.*;
@@ -72,7 +71,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	protected EvergaleCanyonReward evergaleCanyonReward;
 	private boolean isInstanceDestroyed = false;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> evergaleCanyonTask = FastList.newInstance();
+	private final List<Future<?>> evergaleCanyonTask = new ArrayList<Future<?>>();
 	
 	protected EvergaleCanyonPlayerReward getPlayerReward(Player player) {
         evergaleCanyonReward.regPlayerReward(player);
@@ -1081,10 +1080,10 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	}
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = evergaleCanyonTask.head(), end = evergaleCanyonTask.tail(); (n = n.getNext()) != end;) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : evergaleCanyonTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

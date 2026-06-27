@@ -187,6 +187,25 @@ class ModelCollectionImplementationTest {
 		}
 	}
 
+	@Test
+	void remainingSimpleInstanceFutureTaskListsUseJdkLists() throws Exception {
+		List<String> instanceScripts = List.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/IDEvent_Def_HInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SmolderingFireTempleInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TheEternalBastionInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/FissureOfOblivionInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/HallOfTenacityInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/UnstableAbyssalSplinterInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgionDefense/SanctumInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/luna/ContaminatedUnderpathInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EvergaleCanyonInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/dredgion/BaranathDredgion.java");
+		for (String sourcePath : instanceScripts) {
+			assertSourceOmits(sourcePath, "FastList<Future<?>>");
+			assertSourceOmits(sourcePath, "FastList.Node<Future<?>>");
+		}
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();

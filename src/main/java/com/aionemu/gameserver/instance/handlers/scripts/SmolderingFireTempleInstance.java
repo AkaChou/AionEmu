@@ -39,10 +39,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 
 /****/
@@ -64,7 +65,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	private int prepareTimerSeconds = 60000; //...1Min
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 600000; //...10Min
-	private final FastList<Future<?>> smolderingTask = FastList.newInstance();
+	private final List<Future<?>> smolderingTask = new ArrayList<Future<?>>();
 	
 	protected SmolderingPlayerReward getPlayerReward(Integer object) {
 		return (SmolderingPlayerReward) instanceReward.getPlayerReward(object);
@@ -442,10 +443,10 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = smolderingTask.head(), end = smolderingTask.tail(); (n = n.getNext()) != end;) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : smolderingTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

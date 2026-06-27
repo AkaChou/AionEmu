@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -42,7 +44,6 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 
 /****/
 /** Author (Encom)
@@ -56,7 +57,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
 	private boolean isInstanceDestroyed = false;
 	protected HallOfTenacityReward instanceReward;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> hotTask = FastList.newInstance();
+    private final List<Future<?>> hotTask = new ArrayList<Future<?>>();
 
     protected HallOfTenacityPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
@@ -190,10 +191,10 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
     }
     
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = hotTask.head(), end = hotTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : hotTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
     

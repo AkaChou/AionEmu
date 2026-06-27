@@ -51,7 +51,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	private float loosingGroupMultiplier = 1;
 	private boolean isInstanceDestroyed = false;
 	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-	private final FastList<Future<?>> baranathTask = FastList.newInstance();
+	private final List<Future<?>> baranathTask = new ArrayList<Future<?>>();
 	
 	protected DredgionPlayerReward getPlayerReward(Player player) {
 		Integer object = player.getObjectId();
@@ -717,10 +716,10 @@ public class BaranathDredgion extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = baranathTask.head(), end = baranathTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : baranathTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
