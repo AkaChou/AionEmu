@@ -60,10 +60,11 @@ class GameWorldBootstrapRuntimeBridgeTest {
     void worldBootstrapServicesIdFactoryAccessorUsesSpringProviderBeforeLegacyFallback() {
         IDFactory idFactory = instance(IDFactory.class);
         ZoneService zoneService = instance(ZoneService.class);
+        HotspotTeleportService hotspotTeleportService = instance(HotspotTeleportService.class);
         GameWorldBootstrapServices worldBootstrapServices = new GameWorldBootstrapServices(
             provider(IDFactory.class, idFactory),
             provider(ZoneService.class, zoneService),
-            provider(HotspotTeleportService.class, instance(HotspotTeleportService.class)),
+            provider(HotspotTeleportService.class, hotspotTeleportService),
             provider(RoadService.class, instance(RoadService.class)),
             provider(World.class, instance(World.class))
         );
@@ -71,6 +72,7 @@ class GameWorldBootstrapRuntimeBridgeTest {
         try {
             assertSame(idFactory, GameWorldBootstrapServices.idFactory());
             assertSame(zoneService, GameWorldBootstrapServices.zoneService());
+            assertSame(hotspotTeleportService, GameWorldBootstrapServices.hotspotTeleportService());
         } finally {
             worldBootstrapServices.destroy();
         }
@@ -93,6 +95,7 @@ class GameWorldBootstrapRuntimeBridgeTest {
 
             assertFalse(content.contains("IDFactory.getInstance()"), source.toString());
             assertFalse(content.contains("ZoneService.getInstance()"), source.toString());
+            assertFalse(content.contains("HotspotTeleportService.getInstance()"), source.toString());
         }
     }
 
