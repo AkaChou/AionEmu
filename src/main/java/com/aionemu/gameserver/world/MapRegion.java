@@ -15,6 +15,7 @@
 package com.aionemu.gameserver.world;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,7 +24,6 @@ import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -168,7 +168,8 @@ public class MapRegion {
 	 * @param neighbour
 	 */
 	void addNeighbourRegion(MapRegion neighbour) {
-		neighbours = (MapRegion[]) ArrayUtils.add(neighbours, neighbour);
+		neighbours = Arrays.copyOf(neighbours, neighbours.length + 1);
+		neighbours[neighbours.length - 1] = neighbour;
 	}
 
 	/**

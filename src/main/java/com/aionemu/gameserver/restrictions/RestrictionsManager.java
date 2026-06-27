@@ -44,7 +44,8 @@ public final class RestrictionsManager {
 			}
 			Restrictions[] restrictions = RESTRICTIONS[mode.ordinal()];
 			if (!ArrayUtils.contains(restrictions, restriction)) {
-				restrictions = (Restrictions[]) ArrayUtils.add(restrictions, restriction);
+				restrictions = Arrays.copyOf(restrictions, restrictions.length + 1);
+				restrictions[restrictions.length - 1] = restriction;
 			}
 			Arrays.sort(restrictions, mode);
 			RESTRICTIONS[mode.ordinal()] = restrictions;

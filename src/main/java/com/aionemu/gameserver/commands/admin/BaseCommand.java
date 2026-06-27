@@ -69,7 +69,7 @@ public class BaseCommand extends AdminCommand
 	}
 	
 	protected void capture(Player player, String[] params) {
-		if (params.length < 3 || !NumberUtils.isNumber(params[1])) {
+		if (params.length < 3 || !NumberUtils.isCreatable(params[1])) {
 			showHelp(player);
 			return;
 		}

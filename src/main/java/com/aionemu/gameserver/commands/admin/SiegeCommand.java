@@ -135,7 +135,7 @@ public class SiegeCommand extends AdminCommand {
 	}
 	
 	protected void capture(Player player, String[] params) {
-		if (params.length < 3 || !NumberUtils.isNumber(params[1])) {
+		if (params.length < 3 || !NumberUtils.isCreatable(params[1])) {
 			showHelp(player);
 			return;
 		}
@@ -250,7 +250,7 @@ public class SiegeCommand extends AdminCommand {
 	}
 	
 	protected void assault(Player player, String[] params) {
-		if (params.length < 2 || (!NumberUtils.isNumber(params[1]) && !NumberUtils.isNumber(params[2]))) {
+		if (params.length < 2 || (!NumberUtils.isCreatable(params[1]) && !NumberUtils.isCreatable(params[2]))) {
 			showHelp(player);
 			return;
 		}

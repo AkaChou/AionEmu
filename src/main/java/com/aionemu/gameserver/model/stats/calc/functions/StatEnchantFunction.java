@@ -240,7 +240,7 @@ public class StatEnchantFunction extends StatAddFunction {
 			return 0;
 		}
 		long slot = item.getEquipmentSlot();
-		int equipmentSlot = new Long(slot).intValue();
+		int equipmentSlot = (int) slot;
 		switch (item.getItemTemplate().getArmorType()) {
 		/**
 		 * 4.9 Enchant Stats

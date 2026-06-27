@@ -24,6 +24,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.XMLConstants;
 import jakarta.xml.bind.JAXBContext;
@@ -37,7 +38,6 @@ import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -847,7 +847,7 @@ public class SpawnsData2 {
 		for (SpawnSpotTemplate s : oldGroup.getSpawnSpotTemplates()) {
 			if (s.getX() == spot.getX() && s.getY() == spot.getY() && s.getZ() == spot.getZ()
 					&& s.getHeading() == spot.getHeading()) {
-				if (delete || !StringUtils.equals(s.getWalkerId(), spot.getWalkerId())) {
+				if (delete || !Objects.equals(s.getWalkerId(), spot.getWalkerId())) {
 					oldSpot = s;
 					break;
 				} else {

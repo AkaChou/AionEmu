@@ -26,6 +26,7 @@ package com.aionemu.commons.utils.concurrent;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -36,7 +37,6 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,8 +104,10 @@ public final class RunnableStatsManager {
             
             final MethodStat methodStat = new MethodStat(className, methodName);
             
-            methodNames = (String[]) ArrayUtils.add(methodNames, methodName);
-            methodStats = (MethodStat[]) ArrayUtils.add(methodStats, methodStat);
+            methodNames = Arrays.copyOf(methodNames, methodNames.length + 1);
+            methodNames[methodNames.length - 1] = methodName;
+            methodStats = Arrays.copyOf(methodStats, methodStats.length + 1);
+            methodStats[methodStats.length - 1] = methodStat;
             
             return methodStat;
         }

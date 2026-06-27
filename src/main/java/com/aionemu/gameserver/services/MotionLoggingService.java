@@ -300,7 +300,7 @@ public class MotionLoggingService {
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(templates.getClass());
 			Marshaller marshaller = jaxbContext.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			marshaller.marshal(templates, new FileOutputStream(Config.dataFile(file)));
 		} catch (JAXBException e) {
 			e.printStackTrace();

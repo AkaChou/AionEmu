@@ -118,7 +118,7 @@ public class SpawnSpotTemplate {
 
 	@XmlElement(name = "model")
 	private SpawnModel model;
-	private static final Integer ZERO = new Integer(0);
+	private static final Integer ZERO = Integer.valueOf(0);
 
 	public SpawnSpotTemplate() {
 	}

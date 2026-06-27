@@ -98,7 +98,7 @@ public class PingPongThread implements Runnable {
             if (killProcess && serverPID != -1) {
                 if (System.getProperty("os.name").toLowerCase().indexOf("windows") != -1) {
                     try {
-                        Runtime.getRuntime().exec("taskkill /pid " + serverPID + " /f");
+                        new ProcessBuilder("taskkill", "/pid", String.valueOf(serverPID), "/f").start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

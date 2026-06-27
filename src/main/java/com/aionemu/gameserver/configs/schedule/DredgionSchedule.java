@@ -16,7 +16,8 @@
  */
 package com.aionemu.gameserver.configs.schedule;
 
-import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -24,8 +25,6 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-
-import org.apache.commons.io.FileUtils;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
@@ -51,7 +50,7 @@ public class DredgionSchedule {
 	public static DredgionSchedule load() {
 		DredgionSchedule ds;
 		try {
-				String xml = FileUtils.readFileToString(Config.configFile("schedule/dredgion_schedule.xml"));
+			String xml = Files.readString(Config.configFile("schedule/dredgion_schedule.xml").toPath(), StandardCharsets.UTF_8);
 			ds = (DredgionSchedule) JAXBUtil.deserialize(xml, DredgionSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize dredgion", e);

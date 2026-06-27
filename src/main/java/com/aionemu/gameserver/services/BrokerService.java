@@ -375,7 +375,9 @@ public class BrokerService {
 				} else {
 					int buyingItemIndex = ArrayUtils.indexOf(getFilteredItems(player), buyingItem);
 					newCache = (BrokerItem[]) ArrayUtils.removeElement(getFilteredItems(player), buyingItem);
-					newCache = (BrokerItem[]) ArrayUtils.add(newCache, buyingItemIndex, buyingItem);
+					List<BrokerItem> updatedCache = new ArrayList<BrokerItem>(Arrays.asList(newCache));
+					updatedCache.add(buyingItemIndex, buyingItem);
+					newCache = updatedCache.toArray(new BrokerItem[updatedCache.size()]);
 				}
 				getPlayerCache(player).setBrokerListCache(newCache);
 			}

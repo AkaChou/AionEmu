@@ -98,7 +98,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 		Collections.sort(tempList, new Comparator<Map.Entry<K, AtomicLong>>() {
 			@Override
 			public int compare(Map.Entry<K, AtomicLong> o1, Map.Entry<K, AtomicLong> o2) {
-				return new Long(o2.getValue().get()).compareTo(o1.getValue().get());
+				return Long.compare(o2.getValue().get(), o1.getValue().get());
 			}
 		});
 		Map<K, Long> result = Maps.newLinkedHashMap();
@@ -112,7 +112,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 
 	@Override
 	public int compareTo(SiegeRaceCounter o) {
-		return new Long(o.getTotalDamage()).compareTo(getTotalDamage());
+		return Long.compare(o.getTotalDamage(), getTotalDamage());
 	}
 
 	public SiegeRace getSiegeRace() {
