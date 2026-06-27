@@ -4,6 +4,8 @@ import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
+import com.aionemu.gameserver.lifecycle.GameCraftServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import org.slf4j.Logger;
@@ -41,7 +43,6 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
-import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.item.ItemChargeService;
 import com.aionemu.gameserver.services.teleport.PortalService;
@@ -681,7 +682,7 @@ public class DialogService {
                     PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CRAFT_MSG_CAN_WORK_ONLY_DEVA);
                     return;
                 }
-                CraftSkillUpdateService.getInstance().learnSkill(player, npc);
+                GameCraftServices.craftSkillUpdateService().learnSkill(player, npc);
                 break;
             }
             case 47: {
@@ -826,13 +827,13 @@ public class DialogService {
             }
             case 79: {
                 // Give Up Craft Expert.
-                RelinquishCraftStatus.getInstance();
+                GameCraftServices.relinquishCraftStatus();
                 RelinquishCraftStatus.relinquishExpertStatus(player, npc);
                 break;
             }
             case 80: {
                 // Give Up Craft Master.
-                RelinquishCraftStatus.getInstance();
+                GameCraftServices.relinquishCraftStatus();
                 RelinquishCraftStatus.relinquishMasterStatus(player, npc);
                 break;
             }

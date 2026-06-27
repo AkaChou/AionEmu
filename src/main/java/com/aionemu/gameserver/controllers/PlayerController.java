@@ -2,6 +2,8 @@ package com.aionemu.gameserver.controllers;
 
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
+import com.aionemu.gameserver.lifecycle.GameCraftServices;
+
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
@@ -114,7 +116,6 @@ import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.services.abyss.AbyssService;
-import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
 import com.aionemu.gameserver.services.events.FFAService;
@@ -962,7 +963,7 @@ public class PlayerController extends CreatureController<Player> {
 		player.getController().updatePassiveStats();
 		PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 		if (level == 10) {
-			CraftSkillUpdateService.getInstance().setMorphRecipe(player);
+			GameCraftServices.craftSkillUpdateService().setMorphRecipe(player);
 			// You reached the level where you can join a legion.
 			// Use the legion search to find the legion you want.
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GUILD_CAN_JOIN_LEVEL);

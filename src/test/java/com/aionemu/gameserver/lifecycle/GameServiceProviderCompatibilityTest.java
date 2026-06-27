@@ -940,7 +940,9 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(craftSkillUpdateService, CraftSkillUpdateService.getInstance());
+            assertSame(craftSkillUpdateService, GameCraftServices.craftSkillUpdateService());
             assertSame(relinquishCraftStatus, RelinquishCraftStatus.getInstance());
+            assertSame(relinquishCraftStatus, GameCraftServices.relinquishCraftStatus());
 
             craftServices.destroy();
             craftServices = null;
