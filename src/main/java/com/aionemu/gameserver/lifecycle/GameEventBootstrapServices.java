@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameEventBootstrapServices implements DisposableBean {
 
+    private static volatile ObjectProvider<LunaShopService> lunaShopServiceProvider;
     private static volatile ObjectProvider<MinionService> minionServiceProvider;
 
     public GameEventBootstrapServices(ObjectProvider<LunaShopService> lunaShopServiceProvider,
@@ -19,6 +20,7 @@ public final class GameEventBootstrapServices implements DisposableBean {
             ObjectProvider<ShugoSweepService> shugoSweepServiceProvider,
             ObjectProvider<AtreianPassportService> atreianPassportServiceProvider,
             ObjectProvider<EventWindowService> eventWindowServiceProvider) {
+        GameEventBootstrapServices.lunaShopServiceProvider = lunaShopServiceProvider;
         GameEventBootstrapServices.minionServiceProvider = minionServiceProvider;
         LunaShopService.setInstanceProvider(lunaShopServiceProvider);
         MinionService.setInstanceProvider(minionServiceProvider);
@@ -27,16 +29,25 @@ public final class GameEventBootstrapServices implements DisposableBean {
         EventWindowService.setInstanceProvider(eventWindowServiceProvider);
     }
 
+    public static LunaShopService lunaShopService() {
+        ObjectProvider<LunaShopService> provider = lunaShopServiceProvider;
+        if (provider == null) {
+            return GameEventBootstrapFallbacks.lunaShopService();
+        }
+        return provider.getIfAvailable(GameEventBootstrapFallbacks::lunaShopService);
+    }
+
     public static MinionService minionService() {
         ObjectProvider<MinionService> provider = minionServiceProvider;
         if (provider == null) {
-            return MinionService.getInstance();
+            return GameEventBootstrapFallbacks.minionService();
         }
-        return provider.getIfAvailable(MinionService::getInstance);
+        return provider.getIfAvailable(GameEventBootstrapFallbacks::minionService);
     }
 
     @Override
     public void destroy() {
+        lunaShopServiceProvider = null;
         minionServiceProvider = null;
         LunaShopService.setInstanceProvider(null);
         MinionService.setInstanceProvider(null);

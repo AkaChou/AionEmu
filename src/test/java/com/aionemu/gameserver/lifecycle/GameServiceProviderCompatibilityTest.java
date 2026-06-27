@@ -730,6 +730,7 @@ class GameServiceProviderCompatibilityTest {
     @Test
     void gameEventServicesRegisterAndClearEventAccessors() throws Exception {
         EventService eventService = instance(EventService.class);
+        LunaShopService lunaShopService = instance(LunaShopService.class);
         MinionService minionService = instance(MinionService.class);
         GameEventServices eventServices = new GameEventServices(
                 provider(EventService.class, eventService),
@@ -738,7 +739,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(AbyssRankUpdateService.class, instance(AbyssRankUpdateService.class)),
                 provider(PacketBroadcaster.class, instance(PacketBroadcaster.class)));
         GameEventBootstrapServices eventBootstrapServices = new GameEventBootstrapServices(
-                provider(LunaShopService.class, instance(LunaShopService.class)),
+                provider(LunaShopService.class, lunaShopService),
                 provider(MinionService.class, minionService),
                 provider(ShugoSweepService.class, instance(ShugoSweepService.class)),
                 provider(AtreianPassportService.class, instance(AtreianPassportService.class)),
@@ -746,6 +747,7 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(eventService, GameEventServices.eventService());
+            assertSame(lunaShopService, GameEventBootstrapServices.lunaShopService());
             assertSame(minionService, GameEventBootstrapServices.minionService());
 
             eventServices.destroy();
@@ -763,6 +765,7 @@ class GameServiceProviderCompatibilityTest {
                 eventBootstrapServices.destroy();
             }
             EventService.setInstanceProvider(null);
+            LunaShopService.setInstanceProvider(null);
             MinionService.setInstanceProvider(null);
         }
     }
