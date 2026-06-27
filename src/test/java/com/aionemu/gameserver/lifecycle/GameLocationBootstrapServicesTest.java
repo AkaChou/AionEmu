@@ -26,7 +26,8 @@ class GameLocationBootstrapServicesTest {
             "RvrService", Path.of("services/RvrService.java"),
             "ZorshivDredgionService", Path.of("services/ZorshivDredgionService.java"),
             "MoltenusService", Path.of("services/MoltenusService.java"),
-            "ConquestService", Path.of("services/ConquestService.java"));
+            "ConquestService", Path.of("services/ConquestService.java"),
+            "AbyssLandingSpecialService", Path.of("services/AbyssLandingSpecialService.java"));
 
         for (Map.Entry<String, Path> serviceSource : serviceSources.entrySet()) {
             assertNoDirectSingletonAccess(serviceSource.getKey(), serviceSource.getValue());

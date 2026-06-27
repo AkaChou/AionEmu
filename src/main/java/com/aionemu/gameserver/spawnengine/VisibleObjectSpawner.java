@@ -1041,7 +1041,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        LandingSpecialLocation loc = AbyssLandingSpecialService.getInstance().getLandingSpecialLocation(spawnId);
+        LandingSpecialLocation loc = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isSpecialLandingActive()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));

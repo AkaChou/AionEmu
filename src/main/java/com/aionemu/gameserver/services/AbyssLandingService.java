@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.List;
 import java.util.Map;
 
@@ -451,20 +453,20 @@ public class AbyssLandingService {
 	 * MONUMENT
 	 */
 	public void onRewardMonuments(Race race, int id, int points) {
-		LandingSpecialLocation lsl = AbyssLandingSpecialService.getInstance().getLandingSpecialLocation(id);
+		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
 		if (race == Race.ASMODIANS) {
 			updateHarbingerLanding(points, LandingPointsEnum.MONUMENT, true);
-			AbyssLandingSpecialService.getInstance().startLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
 		} else {
 			updateRedemptionLanding(points, LandingPointsEnum.MONUMENT, true);
-			AbyssLandingSpecialService.getInstance().startLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
 		}
 		lsl.setType(LandingSpecialStateType.ACTIVE);
 		AbyssLandingSpecialService.onSave(lsl);
 	}
 
 	public void onDieMonuments(Race race, int id, int points) {
-		LandingSpecialLocation lsl = AbyssLandingSpecialService.getInstance().getLandingSpecialLocation(id);
+		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
 		if (race == Race.ELYOS) {
 			updateRedemptionLanding(points, LandingPointsEnum.MONUMENT, true);
 			updateHarbingerLanding(points, LandingPointsEnum.MONUMENT, false);
@@ -484,10 +486,10 @@ public class AbyssLandingService {
 	public void onRewardCommander(Race race, int id, int points) {
 		if (race == Race.ASMODIANS) {
 			updateHarbingerLanding(points, LandingPointsEnum.COMMANDER, true);
-			AbyssLandingSpecialService.getInstance().startLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
 		} else {
 			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, true);
-			AbyssLandingSpecialService.getInstance().startLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
 		}
 	}
 
@@ -495,11 +497,11 @@ public class AbyssLandingService {
 		if (race == Race.ELYOS) {
 			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, true);
 			updateHarbingerLanding(points, LandingPointsEnum.COMMANDER, false);
-			AbyssLandingSpecialService.getInstance().stopLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(id);
 		} else {
 			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, false);
 			updateHarbingerLanding(points, LandingPointsEnum.COMMANDER, true);
-			AbyssLandingSpecialService.getInstance().stopLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(id);
 		}
 	}
 
