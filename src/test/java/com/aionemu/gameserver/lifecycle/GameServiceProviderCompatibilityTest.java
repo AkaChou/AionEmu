@@ -1157,6 +1157,52 @@ class GameServiceProviderCompatibilityTest {
     }
 
     @Test
+    void gameBattlefieldServicesRegistersAndClearsBattlefieldAccessors() throws Exception {
+        KamarBattlefieldService kamarBattlefieldService = instance(KamarBattlefieldService.class);
+        EngulfedOphidanBridgeService engulfedOphidanBridgeService = instance(EngulfedOphidanBridgeService.class);
+        SuspiciousOphidanBridgeService suspiciousOphidanBridgeService = instance(SuspiciousOphidanBridgeService.class);
+        IronWallWarfrontService ironWallWarfrontService = instance(IronWallWarfrontService.class);
+        IdgelDomeService idgelDomeService = instance(IdgelDomeService.class);
+        IdgelDomeLandmarkService idgelDomeLandmarkService = instance(IdgelDomeLandmarkService.class);
+        HallOfTenacityService hallOfTenacityService = instance(HallOfTenacityService.class);
+        GrandArenaTrainingCampService grandArenaTrainingCampService = instance(GrandArenaTrainingCampService.class);
+        IDRunService idRunService = instance(IDRunService.class);
+        GameBattlefieldServices battlefieldServices = new GameBattlefieldServices(
+                provider(KamarBattlefieldService.class, kamarBattlefieldService),
+                provider(EngulfedOphidanBridgeService.class, engulfedOphidanBridgeService),
+                provider(SuspiciousOphidanBridgeService.class, suspiciousOphidanBridgeService),
+                provider(IronWallWarfrontService.class, ironWallWarfrontService),
+                provider(IdgelDomeService.class, idgelDomeService),
+                provider(IdgelDomeLandmarkService.class, idgelDomeLandmarkService),
+                provider(HallOfTenacityService.class, hallOfTenacityService),
+                provider(GrandArenaTrainingCampService.class, grandArenaTrainingCampService),
+                provider(IDRunService.class, idRunService));
+
+        try {
+            assertSame(kamarBattlefieldService, GameBattlefieldServices.kamarBattlefieldService());
+            assertSame(engulfedOphidanBridgeService, GameBattlefieldServices.engulfedOphidanBridgeService());
+            assertSame(suspiciousOphidanBridgeService, GameBattlefieldServices.suspiciousOphidanBridgeService());
+            assertSame(ironWallWarfrontService, GameBattlefieldServices.ironWallWarfrontService());
+            assertSame(idgelDomeService, GameBattlefieldServices.idgelDomeService());
+            assertSame(idgelDomeLandmarkService, GameBattlefieldServices.idgelDomeLandmarkService());
+            assertSame(hallOfTenacityService, GameBattlefieldServices.hallOfTenacityService());
+            assertSame(grandArenaTrainingCampService, GameBattlefieldServices.grandArenaTrainingCampService());
+            assertSame(idRunService, GameBattlefieldServices.idRunService());
+        } finally {
+            battlefieldServices.destroy();
+            assertProviderCleared(KamarBattlefieldService.class);
+            assertProviderCleared(EngulfedOphidanBridgeService.class);
+            assertProviderCleared(SuspiciousOphidanBridgeService.class);
+            assertProviderCleared(IronWallWarfrontService.class);
+            assertProviderCleared(IdgelDomeService.class);
+            assertProviderCleared(IdgelDomeLandmarkService.class);
+            assertProviderCleared(HallOfTenacityService.class);
+            assertProviderCleared(GrandArenaTrainingCampService.class);
+            assertProviderCleared(IDRunService.class);
+        }
+    }
+
+    @Test
     void remainingSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() throws Exception {
         LegionService legionService = instance(LegionService.class);
         NavData navData = instance(NavData.class);
