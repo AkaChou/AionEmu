@@ -1,7 +1,8 @@
 package com.aionemu.commons.network;
 
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import java.util.Objects;
 
 public final class NettyEventLoopProvider {
@@ -28,7 +29,15 @@ public final class NettyEventLoopProvider {
         if (sharedBossGroup != null && sharedWorkerGroup != null) {
             return new Allocation(sharedBossGroup, sharedWorkerGroup, false);
         }
-        return new Allocation(new NioEventLoopGroup(1), new NioEventLoopGroup(), true);
+        return new Allocation(newBossGroup(), newWorkerGroup(), true);
+    }
+
+    public static EventLoopGroup newBossGroup() {
+        return new MultiThreadIoEventLoopGroup(1, NioIoHandler.newFactory());
+    }
+
+    public static EventLoopGroup newWorkerGroup() {
+        return new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
     }
 
     public record Allocation(EventLoopGroup bossGroup, EventLoopGroup workerGroup, boolean owned) {

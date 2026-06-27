@@ -46,11 +46,11 @@ public final class ChatNettyServers implements DisposableBean {
     }
 
     private static NettyServer fallbackNettyServer() {
-        return Fallbacks.NETTY_SERVER;
+        return register(Fallbacks.NETTY_SERVER);
     }
 
     private static final class Fallbacks {
 
-        private static final NettyServer NETTY_SERVER = NettyServer.getInstance();
+        private static final NettyServer NETTY_SERVER = new NettyServer();
     }
 }
