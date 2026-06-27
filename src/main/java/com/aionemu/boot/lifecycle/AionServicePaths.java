@@ -13,6 +13,8 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 final class AionServicePaths {
 
+    private static final RuntimeProperties RUNTIME_PROPERTIES = new RuntimeProperties();
+
     private AionServicePaths() {
     }
 
@@ -36,34 +38,30 @@ final class AionServicePaths {
 
     private static void configureLogging() {
         String property = "aion.logging.config";
-        if (System.getProperty(property) != null) {
+        if (RUNTIME_PROPERTIES.has(property)) {
             return;
         }
 
         String resourcePath = "logback-spring.xml";
-        Path sourceFile = Path.of(System.getProperty("aion.home", "."))
-            .resolve("src/main/resources")
+        Path sourceFile = RUNTIME_PROPERTIES.resolveHome("src/main/resources")
             .resolve(resourcePath)
             .normalize();
         if (Files.isRegularFile(sourceFile)) {
-            System.setProperty(property, sourceFile.toString());
+            RUNTIME_PROPERTIES.set(property, sourceFile);
             return;
         }
 
-        Path targetFile = Path.of(System.getProperty("aion.home", "."))
-            .resolve(resourcePath)
-            .normalize();
-        System.setProperty(property, targetFile.toString());
+        Path targetFile = RUNTIME_PROPERTIES.resolveHome(resourcePath);
+        RUNTIME_PROPERTIES.set(property, targetFile);
         materializeDefaultFile(resourcePath, targetFile);
     }
 
     private static void configure(String property, String defaultPath) {
-        if (System.getProperty(property) != null) {
+        if (RUNTIME_PROPERTIES.has(property)) {
             return;
         }
 
-        String home = System.getProperty("aion.home", ".");
-        System.setProperty(property, Path.of(home).resolve(defaultPath).normalize().toString());
+        RUNTIME_PROPERTIES.set(property, RUNTIME_PROPERTIES.resolveHome(defaultPath));
     }
 
     private static void configureConfig(String property, String defaultPath, String resourcePath) {
@@ -74,10 +72,10 @@ final class AionServicePaths {
     }
 
     private static void configureResourceDirectory(String property, String defaultPath, String resourcePath) {
-        boolean explicit = System.getProperty(property) != null;
+        boolean explicit = RUNTIME_PROPERTIES.has(property);
         configure(property, defaultPath);
         if (!explicit) {
-            materializeDefaults(resourcePath, Path.of(System.getProperty(property)));
+            materializeDefaults(resourcePath, Path.of(RUNTIME_PROPERTIES.get(property)));
         }
     }
 
@@ -90,28 +88,27 @@ final class AionServicePaths {
     }
 
     private static boolean configureSourceResourceDirectory(String property, String resourcePath) {
-        if (System.getProperty(property) != null) {
+        if (RUNTIME_PROPERTIES.has(property)) {
             return true;
         }
 
-        Path sourceDirectory = Path.of(System.getProperty("aion.home", "."))
-            .resolve("src/main/resources")
+        Path sourceDirectory = RUNTIME_PROPERTIES.resolveHome("src/main/resources")
             .resolve(resourcePath)
             .normalize();
         if (!Files.isDirectory(sourceDirectory)) {
             return false;
         }
 
-        System.setProperty(property, sourceDirectory.toString());
+        RUNTIME_PROPERTIES.set(property, sourceDirectory);
         return true;
     }
 
     private static void configureDirectory(String property, String defaultPath) {
         configure(property, defaultPath);
         try {
-            Files.createDirectories(Path.of(System.getProperty(property)));
+            Files.createDirectories(Path.of(RUNTIME_PROPERTIES.get(property)));
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to prepare runtime directory " + System.getProperty(property), e);
+            throw new IllegalStateException("Failed to prepare runtime directory " + RUNTIME_PROPERTIES.get(property), e);
         }
     }
 
@@ -176,5 +173,26 @@ final class AionServicePaths {
             return null;
         }
         return URLDecoder.decode(external.substring(index + marker.length()), StandardCharsets.UTF_8);
+    }
+
+    private static final class RuntimeProperties {
+
+        private static final String AION_HOME = "aion.home";
+
+        private boolean has(String property) {
+            return System.getProperty(property) != null;
+        }
+
+        private String get(String property) {
+            return System.getProperty(property);
+        }
+
+        private void set(String property, Path value) {
+            System.setProperty(property, value.normalize().toString());
+        }
+
+        private Path resolveHome(String path) {
+            return Path.of(System.getProperty(AION_HOME, ".")).resolve(path).normalize();
+        }
     }
 }
