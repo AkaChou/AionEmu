@@ -121,16 +121,17 @@ public class ScheduledTaskClassListener implements ClassListener {
      */
     protected void scheduleClass(Class<? extends Runnable> clazz) {
 		Scheduled metadata = clazz.getAnnotation(Scheduled.class);
+		CronService cronService = getCronService();
 		
 		try {
 			if (metadata.instancePerCronExpression()) {
 				for (String s : metadata.value()) {
-					getCronService().schedule(clazz.getDeclaredConstructor().newInstance(), s, metadata.longRunningTask());
+					cronService.schedule(clazz.getDeclaredConstructor().newInstance(), s, metadata.longRunningTask());
 				}
 			} else {
 				Runnable r = clazz.getDeclaredConstructor().newInstance();
 				for (String s : metadata.value()) {
-					getCronService().schedule(r, s, metadata.longRunningTask());
+					cronService.schedule(r, s, metadata.longRunningTask());
 				}
 			}
 		} catch (Exception e) {
@@ -145,10 +146,11 @@ public class ScheduledTaskClassListener implements ClassListener {
      * @param clazz 要取消调度的类 / Class to unschedule
      */
     protected void unScheduleClass(Class<? extends Runnable> clazz) {
-		Map<Runnable, JobDetail> map = getCronService().getRunnables();
+		CronService cronService = getCronService();
+		Map<Runnable, JobDetail> map = cronService.getRunnables();
 		for (Map.Entry<Runnable, JobDetail> entry : map.entrySet()) {
 			if (entry.getKey().getClass() == clazz) {
-				getCronService().cancel(entry.getValue());
+				cronService.cancel(entry.getValue());
 			}
 		}
 	}
@@ -160,10 +162,11 @@ public class ScheduledTaskClassListener implements ClassListener {
      * @return CronService实例 / CronService instance
      */
     protected CronService getCronService() {
-		if (CronService.getInstance() == null) {
+		CronService cronService = CronService.getInstance();
+		if (cronService == null) {
 			throw new RuntimeException("CronService is not initialized");
 		}
 		
-		return CronService.getInstance();
+		return cronService;
 	}
 }
