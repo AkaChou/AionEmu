@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Properties;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 
@@ -32,7 +34,9 @@ class LegacyConfigOverridesTest {
             )
         ));
 
-        Properties properties = new LegacyConfigOverrides(environment).gameProperties();
+        LegacyGameProperties legacyGameProperties = bindLegacyGameProperties(environment);
+
+        Properties properties = new LegacyConfigOverrides(environment, legacyGameProperties).gameProperties();
 
         assertEquals("command-line", properties.getProperty("gameserver.name"));
         assertEquals("7777", properties.getProperty("gameserver.network.port"));
@@ -52,11 +56,29 @@ class LegacyConfigOverridesTest {
             )
         ));
 
-        Properties properties = new LegacyConfigOverrides(environment).gameProperties();
+        Properties properties = new LegacyConfigOverrides(environment, new LegacyGameProperties()).gameProperties();
 
         assertEquals("false", properties.getProperty("gameserver.startup.progress.enable"));
         assertFalse(properties.containsKey("gameserver.staticdata.progress.enable"));
         assertFalse(properties.containsKey("gameserver.staticdata.summary.log"));
+    }
+
+    @Test
+    void legacyGamePropertiesBindExistingDottedPropertyKeys() {
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource(
+            "commandLine",
+            Map.of(
+                "aion.legacy.game.property.gameserver.name", "command-line",
+                "aion.legacy.game.property.gameserver.network.port", "7777"
+            )
+        ));
+
+        LegacyGameProperties properties = bindLegacyGameProperties(environment);
+
+        assertEquals("command-line", properties.getProperty().get("gameserver.name"));
+        assertEquals("7777", properties.getProperty().get("gameserver.network.port"));
+        assertEquals(2, properties.getProperty().size());
     }
 
     @Test
@@ -68,6 +90,13 @@ class LegacyConfigOverridesTest {
             assertFalse(metadata.contains("aion.game.static-data.progress.enabled"));
             assertFalse(metadata.contains("aion.game.static-data.summary-log.enabled"));
             assertEquals(true, metadata.contains("\"name\": \"aion.game.startup.progress.enabled\""));
+            assertEquals(true, metadata.contains("\"name\": \"aion.legacy.game.property\""));
         }
+    }
+
+    private LegacyGameProperties bindLegacyGameProperties(StandardEnvironment environment) {
+        LegacyGameProperties properties = new LegacyGameProperties();
+        Binder.get(environment).bind("aion.legacy.game", Bindable.ofInstance(properties));
+        return properties;
     }
 }

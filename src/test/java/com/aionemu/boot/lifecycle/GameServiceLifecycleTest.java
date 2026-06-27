@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.boot.config.LegacyGameProperties;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelGateway;
@@ -154,7 +155,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingLegacyConfigOverrides(List<String> events) {
-            super(new StandardEnvironment());
+            super(new StandardEnvironment(), new LegacyGameProperties());
             this.events = events;
         }
 
