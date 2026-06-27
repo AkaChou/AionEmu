@@ -29,6 +29,26 @@ class GameCoreGameplayServicesTest {
     }
 
     @Test
+    void gameServerCodeUsesCoreMailAndBattlefieldUnionBridgeInsteadOfDirectSingletons() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/mail/MailService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/siegeservice/BattlefieldUnionService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameCoreGameplayServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.matches("(?s).*\\bMailService\\.getInstance\\(\\).*"), source.toString());
+            assertFalse(content.matches("(?s).*\\bBattlefieldUnionService\\.getInstance\\(\\).*"), source.toString());
+        }
+    }
+
+    @Test
     void gameServerCodeUsesCoreAutoGroupBridgeInsteadOfDirectSingleton() throws IOException {
         List<Path> sources;
         try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {

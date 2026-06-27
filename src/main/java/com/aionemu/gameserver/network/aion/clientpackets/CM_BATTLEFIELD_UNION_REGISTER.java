@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -43,21 +45,21 @@ public class CM_BATTLEFIELD_UNION_REGISTER extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		if (GameFeatureServices.siegeService().isSiegeInProgress(1011)) {
-			BattlefieldUnionService.getInstance().onRegister(getConnection().getActivePlayer(), requestId, 1011);
+			GameCoreGameplayServices.battlefieldUnionService().onRegister(getConnection().getActivePlayer(), requestId, 1011);
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1131)) {
-			BattlefieldUnionService.getInstance().onRegister(getConnection().getActivePlayer(), requestId, 1131);
+			GameCoreGameplayServices.battlefieldUnionService().onRegister(getConnection().getActivePlayer(), requestId, 1131);
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1132)) {
-			BattlefieldUnionService.getInstance().onRegister(getConnection().getActivePlayer(), requestId, 1132);
+			GameCoreGameplayServices.battlefieldUnionService().onRegister(getConnection().getActivePlayer(), requestId, 1132);
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1141)) {
-			BattlefieldUnionService.getInstance().onRegister(getConnection().getActivePlayer(), requestId, 1141);
+			GameCoreGameplayServices.battlefieldUnionService().onRegister(getConnection().getActivePlayer(), requestId, 1141);
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1221)) {
-			BattlefieldUnionService.getInstance().onRegister(getConnection().getActivePlayer(), requestId, 1221);
+			GameCoreGameplayServices.battlefieldUnionService().onRegister(getConnection().getActivePlayer(), requestId, 1221);
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1231)) {
-			BattlefieldUnionService.getInstance().onRegister(getConnection().getActivePlayer(), requestId, 1231);
+			GameCoreGameplayServices.battlefieldUnionService().onRegister(getConnection().getActivePlayer(), requestId, 1231);
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(1241)) {
-			BattlefieldUnionService.getInstance().onRegister(getConnection().getActivePlayer(), requestId, 1241);
+			GameCoreGameplayServices.battlefieldUnionService().onRegister(getConnection().getActivePlayer(), requestId, 1241);
 		} else if (GameFeatureServices.siegeService().isSiegeInProgress(7011)) {
-			BattlefieldUnionService.getInstance().onRegister(getConnection().getActivePlayer(), requestId, 7011);
+			GameCoreGameplayServices.battlefieldUnionService().onRegister(getConnection().getActivePlayer(), requestId, 7011);
 		}
 	}
 }

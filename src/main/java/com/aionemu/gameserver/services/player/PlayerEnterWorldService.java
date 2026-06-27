@@ -621,7 +621,7 @@ public final class PlayerEnterWorldService {
 			// SM_Minions
 			GameEventBootstrapServices.minionService().onPlayerLogin(player);
 			WindyGorgeService.getInstance().onLogin(player);
-			MailService.getInstance().onPlayerLogin(player);
+			GameCoreGameplayServices.mailService().onPlayerLogin(player);
 			GameHousingServices.housingService().onPlayerLogin(player);
 			GameRuntimeServices.brokerService().onPlayerLogin(player);
 			sendMacroList(client, player);

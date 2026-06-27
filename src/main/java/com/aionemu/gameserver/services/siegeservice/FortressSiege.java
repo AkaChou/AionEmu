@@ -81,7 +81,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		GlobalCallbackHelper.addCallback(addAPListener);
 		deSpawnNpcs(getSiegeLocationId());
 		clearPlayers();
-		// BattlefieldUnionService.getInstance().onSiegeStart(getSiegeLocation().getLocationId());
+		// GameCoreGameplayServices.battlefieldUnionService().onSiegeStart(getSiegeLocation().getLocationId());
 		spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.SIEGE);
 		initSiegeBoss();
 		if (getSiegeLocation().getLocationId() == 1131) {

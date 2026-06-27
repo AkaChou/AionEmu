@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -139,7 +141,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		TeleportService2.playerTransformation(activePlayer);
 		TeleportService2.instanceTransformation(activePlayer);
 		// BattleField Union 5.3
-		// BattlefieldUnionService.getInstance().onEnterWorld(activePlayer);
+		// GameCoreGameplayServices.battlefieldUnionService().onEnterWorld(activePlayer);
 		// Pet
 		Pet pet = activePlayer.getPet();
 		if (pet != null && !pet.isSpawned()) {

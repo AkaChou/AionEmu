@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -128,7 +130,7 @@ public class Petitions extends AdminCommand {
 				return;
 			}
 
-			MailService.getInstance().sendMail(admin, petitionPlayer, "GM-Re:" + petition.getTitle(), replyMessage, 0, 0, 0, 0,
+			GameCoreGameplayServices.mailService().sendMail(admin, petitionPlayer, "GM-Re:" + petition.getTitle(), replyMessage, 0, 0, 0, 0,
 				LetterType.NORMAL);
 			GameRuntimeServices.petitionService().setPetitionReplied(petitionId);
 
