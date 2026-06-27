@@ -77,7 +77,6 @@ import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.audit.GMService;
 
 public class PlayerLeaveWorldService {
 	private static final Logger log = LoggerFactory.getLogger(PlayerLeaveWorldService.class);
@@ -108,7 +107,7 @@ public class PlayerLeaveWorldService {
 		}
 		GameFeatureServices.protectorConquerorService().onLogout(player);
 		InstanceService.onLogOut(player);
-		GMService.getInstance().onPlayerLogedOut(player);
+		GameRuntimeServices.gmService().onPlayerLogedOut(player);
 		GameFeatureServices.kiskService().onLogout(player);
 		player.getMoveController().abortMove();
 		if (player.isLooting()) {

@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.configs.main.PunishmentConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.google.common.base.Preconditions;
 
@@ -47,7 +48,7 @@ public class AuditLogger {
 		log.info(message);
 
 		if (SecurityConfig.GM_AUDIT_MESSAGE_BROADCAST) {
-			GMService.getInstance().broadcastMesage(message);
+			GameRuntimeServices.gmService().broadcastMesage(message);
 		}
 	}
 }

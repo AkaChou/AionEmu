@@ -152,6 +152,7 @@ import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
+import com.aionemu.gameserver.utils.audit.GMService;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavData;
@@ -281,6 +282,7 @@ class GameServiceProviderCompatibilityTest {
         RiftManager riftManager = instance(RiftManager.class);
         NetworkController networkController = instance(NetworkController.class);
         PacketLoggerService packetLoggerService = instance(PacketLoggerService.class);
+        GMService gmService = instance(GMService.class);
 
         try {
             GeoService.setInstanceProvider(provider(GeoService.class, geoService));
@@ -394,6 +396,7 @@ class GameServiceProviderCompatibilityTest {
             RiftManager.setInstanceProvider(provider(RiftManager.class, riftManager));
             NetworkController.setInstanceProvider(provider(NetworkController.class, networkController));
             PacketLoggerService.setInstanceProvider(provider(PacketLoggerService.class, packetLoggerService));
+            GMService.setInstanceProvider(provider(GMService.class, gmService));
 
             assertSame(geoService, GeoService.getInstance());
             assertSame(geoService, GameWorldServices.geoService());
@@ -528,6 +531,8 @@ class GameServiceProviderCompatibilityTest {
             assertSame(networkController, GameServerNetworkServices.networkController());
             assertSame(packetLoggerService, PacketLoggerService.getInstance());
             assertSame(packetLoggerService, GameServerNetworkServices.packetLoggerService());
+            assertSame(gmService, GMService.getInstance());
+            assertSame(gmService, GameRuntimeServices.gmService());
         } finally {
             GeoService.setInstanceProvider(null);
             NavService.setInstanceProvider(null);
@@ -639,6 +644,7 @@ class GameServiceProviderCompatibilityTest {
             RiftManager.setInstanceProvider(null);
             NetworkController.setInstanceProvider(null);
             PacketLoggerService.setInstanceProvider(null);
+            GMService.setInstanceProvider(null);
         }
     }
 
@@ -1260,6 +1266,7 @@ class GameServiceProviderCompatibilityTest {
         PetitionService petitionService = instance(PetitionService.class);
         LimitedItemTradeService limitedItemTradeService = instance(LimitedItemTradeService.class);
         SurveyService surveyService = instance(SurveyService.class);
+        GMService gmService = instance(GMService.class);
         GameRuntimeServices runtimeServices = new GameRuntimeServices(
                 provider(PeriodicSaveService.class, instance(PeriodicSaveService.class)),
                 provider(AdminService.class, adminService),
@@ -1282,7 +1289,8 @@ class GameServiceProviderCompatibilityTest {
                 provider(WebshopService.class, instance(WebshopService.class)),
                 provider(SurveyService.class, surveyService),
                 provider(FindGroupService.class, instance(FindGroupService.class)),
-                provider(InGameShopEn.class, instance(InGameShopEn.class)));
+                provider(InGameShopEn.class, instance(InGameShopEn.class)),
+                provider(GMService.class, gmService));
 
         try {
             assertSame(adminService, GameRuntimeServices.adminService());
@@ -1295,6 +1303,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(petitionService, GameRuntimeServices.petitionService());
             assertSame(limitedItemTradeService, GameRuntimeServices.limitedItemTradeService());
             assertSame(surveyService, GameRuntimeServices.surveyService());
+            assertSame(gmService, GameRuntimeServices.gmService());
         } finally {
             runtimeServices.destroy();
             assertProviderCleared(AdminService.class);
@@ -1307,6 +1316,7 @@ class GameServiceProviderCompatibilityTest {
             assertProviderCleared(PetitionService.class);
             assertProviderCleared(LimitedItemTradeService.class);
             assertProviderCleared(SurveyService.class);
+            assertProviderCleared(GMService.class);
         }
     }
 

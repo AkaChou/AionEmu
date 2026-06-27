@@ -26,6 +26,7 @@ class GameRuntimeServicesTest {
                 .filter(path -> !path.endsWith(Path.of("services/WeatherService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/LimitedItemTradeService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/SurveyService.java")))
+                .filter(path -> !path.endsWith(Path.of("utils/audit/GMService.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameRuntimeServices.java")))
                 .toList();
         }
@@ -44,6 +45,7 @@ class GameRuntimeServicesTest {
             assertFalse(content.contains("LimitedItemTradeService.getInstance()"), source.toString());
             assertFalse(content.contains("SurveyService.getInstance()"), source.toString());
             assertFalse(content.contains("BoostEventService.getInstance()"), source.toString());
+            assertFalse(content.contains("GMService.getInstance()"), source.toString());
         }
     }
 }

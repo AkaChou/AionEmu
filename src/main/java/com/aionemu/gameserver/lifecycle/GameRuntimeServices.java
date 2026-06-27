@@ -24,6 +24,7 @@ import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.territory.TerritoryService;
 import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 import com.aionemu.gameserver.taskmanager.TaskManagerFromDB;
+import com.aionemu.gameserver.utils.audit.GMService;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,7 @@ public final class GameRuntimeServices implements DisposableBean {
     private static volatile ObjectProvider<SurveyService> surveyServiceProvider;
     private static volatile ObjectProvider<FindGroupService> findGroupServiceProvider;
     private static volatile ObjectProvider<InGameShopEn> inGameShopEnProvider;
+    private static volatile ObjectProvider<GMService> gmServiceProvider;
 
     public GameRuntimeServices(ObjectProvider<PeriodicSaveService> periodicSaveServiceProvider,
             ObjectProvider<AdminService> adminServiceProvider,
@@ -66,7 +68,8 @@ public final class GameRuntimeServices implements DisposableBean {
             ObjectProvider<WebshopService> webshopServiceProvider,
             ObjectProvider<SurveyService> surveyServiceProvider,
             ObjectProvider<FindGroupService> findGroupServiceProvider,
-            ObjectProvider<InGameShopEn> inGameShopEnProvider) {
+            ObjectProvider<InGameShopEn> inGameShopEnProvider,
+            ObjectProvider<GMService> gmServiceProvider) {
         GameRuntimeServices.adminServiceProvider = adminServiceProvider;
         GameRuntimeServices.playerTransferServiceProvider = playerTransferServiceProvider;
         GameRuntimeServices.territoryServiceProvider = territoryServiceProvider;
@@ -80,6 +83,7 @@ public final class GameRuntimeServices implements DisposableBean {
         GameRuntimeServices.surveyServiceProvider = surveyServiceProvider;
         GameRuntimeServices.findGroupServiceProvider = findGroupServiceProvider;
         GameRuntimeServices.inGameShopEnProvider = inGameShopEnProvider;
+        GameRuntimeServices.gmServiceProvider = gmServiceProvider;
         PeriodicSaveService.setInstanceProvider(periodicSaveServiceProvider);
         AdminService.setInstanceProvider(adminServiceProvider);
         PlayerTransferService.setInstanceProvider(playerTransferServiceProvider);
@@ -102,6 +106,7 @@ public final class GameRuntimeServices implements DisposableBean {
         SurveyService.setInstanceProvider(surveyServiceProvider);
         FindGroupService.setInstanceProvider(findGroupServiceProvider);
         InGameShopEn.setInstanceProvider(inGameShopEnProvider);
+        GMService.setInstanceProvider(gmServiceProvider);
     }
 
     public static AdminService adminService() {
@@ -156,6 +161,10 @@ public final class GameRuntimeServices implements DisposableBean {
         return getIfAvailable(inGameShopEnProvider, InGameShopEn::getInstance);
     }
 
+    public static GMService gmService() {
+        return getIfAvailable(gmServiceProvider, GMService::getInstance);
+    }
+
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
         if (provider == null) {
             return fallback.get();
@@ -200,5 +209,7 @@ public final class GameRuntimeServices implements DisposableBean {
         inGameShopEnProvider = null;
         FindGroupService.setInstanceProvider(null);
         InGameShopEn.setInstanceProvider(null);
+        gmServiceProvider = null;
+        GMService.setInstanceProvider(null);
     }
 }

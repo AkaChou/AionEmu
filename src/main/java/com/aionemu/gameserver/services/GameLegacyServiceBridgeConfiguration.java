@@ -90,6 +90,7 @@ import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.utils.audit.GMService;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.services.RoadService;
@@ -424,6 +425,12 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public LimitedItemTradeService limitedItemTradeService() {
         return new LimitedItemTradeService();
+    }
+
+    @Bean
+    @Lazy
+    public GMService gmService() {
+        return new GMService();
     }
 
     @Bean

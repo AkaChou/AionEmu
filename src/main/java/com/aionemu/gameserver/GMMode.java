@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_INFO;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.audit.GMService;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 /**
@@ -47,7 +47,7 @@ public class GMMode extends AdminCommand {
 
         if (params[0].toLowerCase().equals("on")) {
             if (params[1].equals("y")){
-                GMService.getInstance().onPlayerAvailable(admin); //send available message
+                GameRuntimeServices.gmService().onPlayerAvailable(admin); //send available message
                 admin.setWispable();
             } else if (params[1].toLowerCase().equals("n")) {
                 PacketSendUtility.sendMessage(admin, "You are Back Online");
@@ -60,7 +60,7 @@ public class GMMode extends AdminCommand {
             if (!admin.isGmMode()) {
                 admin.setGmMode(true);
 
-                //GMService.getInstance().onPlayerLogin(admin); //put gm into gmlist
+                //GameRuntimeServices.gmService().onPlayerLogin(admin); //put gm into gmlist
 
                 admin.clearKnownlist();
                 PacketSendUtility.sendPacket(admin, new SM_PLAYER_INFO(admin, false));
@@ -71,8 +71,8 @@ public class GMMode extends AdminCommand {
         }
         if (params[0].equals("off")) {
             if (params[1].toLowerCase().equals("y")){
-                GMService.getInstance().onPlayerUnavailable(admin); //send unavailable message
-                GMService.getInstance().onPlayerLogedOut(admin); //remove gm into gmlist
+                GameRuntimeServices.gmService().onPlayerUnavailable(admin); //send unavailable message
+                GameRuntimeServices.gmService().onPlayerLogedOut(admin); //remove gm into gmlist
             } else if (params[1].toLowerCase().equals("n")) {
                 PacketSendUtility.sendMessage(admin, "You are in Offline Status");
                 PacketSendUtility.sendMessage(admin, "you are now Unavailable but can be Whisperable by players");

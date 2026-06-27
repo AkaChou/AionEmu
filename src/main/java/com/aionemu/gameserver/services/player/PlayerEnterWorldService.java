@@ -631,7 +631,7 @@ public final class PlayerEnterWorldService {
 				GameCoreGameplayServices.autoGroupService().onPlayerLogin(player);
 			}
 			ClassChangeService.showClassChangeDialog(player);
-			// GMService.getInstance().onPlayerLogin(player); TODO Make Config File!!
+			// GameRuntimeServices.gmService().onPlayerLogin(player); TODO Make Config File!!
 			player.getLifeStats().updateCurrentStats();
 			player.getEquipment().checkRankLimitItems();
 			if (HTMLConfig.ENABLE_HTML_WELCOME) {
