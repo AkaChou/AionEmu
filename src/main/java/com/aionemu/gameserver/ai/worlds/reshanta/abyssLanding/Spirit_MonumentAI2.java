@@ -16,12 +16,13 @@
  */
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -67,9 +68,9 @@ public class Spirit_MonumentAI2 extends NpcAI2
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
                     if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-                        AbyssLandingService.getInstance().onDieMonuments(Race.ASMODIANS, id, 20000);
+                        GameLocationBootstrapServices.abyssLandingService().onDieMonuments(Race.ASMODIANS, id, 20000);
                     } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-                        AbyssLandingService.getInstance().onDieMonuments(Race.ELYOS, id, 20000);
+                        GameLocationBootstrapServices.abyssLandingService().onDieMonuments(Race.ELYOS, id, 20000);
                     }
                 }
 			}

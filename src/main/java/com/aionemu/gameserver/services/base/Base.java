@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.base;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -41,7 +43,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.basespawns.BaseSpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -442,168 +443,168 @@ public class Base<BL extends BaseLocation> {
 					// Rattlefrost Outpost.
 					if (getBaseLocation().getId() == 53) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Sliversleet Outpost.
 					if (getBaseLocation().getId() == 54) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Coldforge Outpost.
 					if (getBaseLocation().getId() == 55) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Shimmerfrost Outpost.
 					if (getBaseLocation().getId() == 56) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Icehowl Outpost.
 					if (getBaseLocation().getId() == 57) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Chillhaunt Outpost.
 					if (getBaseLocation().getId() == 58) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Sootguzzle Outpost.
 					if (getBaseLocation().getId() == 59) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Flameruin Outpost.
 					if (getBaseLocation().getId() == 60) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Stokebellow Outpost.
 					if (getBaseLocation().getId() == 61) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Blazerack Outpost.
 					if (getBaseLocation().getId() == 62) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Smoldergeist Outpost.
 					if (getBaseLocation().getId() == 63) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Moltenspike Outpost.
 					if (getBaseLocation().getId() == 64) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}

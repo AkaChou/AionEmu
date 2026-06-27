@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -329,12 +331,12 @@ public final class QuestService {
 		}
 		// Abyss Landing 4.9.1
 		if (rewards.getAbyssOp() != null) {
-			AbyssLandingService.getInstance().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
+			GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
 			if (player.getRace() == Race.ASMODIANS) {
-				AbyssLandingService.getInstance().updateHarbingerLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
+				GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
 			}
 			if (player.getRace() == Race.ELYOS) {
-				AbyssLandingService.getInstance().updateRedemptionLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
+				GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
 			}
 		}
 		// Now player can win "Dp" if finish quest.

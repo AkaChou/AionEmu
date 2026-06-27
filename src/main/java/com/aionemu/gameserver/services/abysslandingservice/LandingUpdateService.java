@@ -17,6 +17,8 @@
  */
 package com.aionemu.gameserver.services.abysslandingservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import org.slf4j.Logger;
@@ -25,14 +27,13 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.AbyssLandingConfig;
 import com.aionemu.gameserver.model.landing.LandingLocation;
-import com.aionemu.gameserver.services.AbyssLandingService;
 
 public class LandingUpdateService {
 	private static volatile ObjectProvider<LandingUpdateService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(LandingUpdateService.class);
 
-	final LandingLocation redemptionLanding = AbyssLandingService.getInstance().redemptionLanding();
-	final LandingLocation harbingerLanding = AbyssLandingService.getInstance().harbingerLanding();
+	final LandingLocation redemptionLanding = GameLocationBootstrapServices.abyssLandingService().redemptionLanding();
+	final LandingLocation harbingerLanding = GameLocationBootstrapServices.abyssLandingService().harbingerLanding();
 
 	// Quest Points.
 	final int redemptionPts = redemptionLanding.getQuestPoints() - redemptionLanding.getQuestPoints();
@@ -83,13 +84,13 @@ public class LandingUpdateService {
 		// Redemption's Landing.
 		redemptionLanding.setPoints(redemptionPts);
 		redemptionLanding.setQuestPoints(0);
-		AbyssLandingService.getInstance().checkRedemptionLanding(redemptionLanding.getPoints(), false);
+		GameLocationBootstrapServices.abyssLandingService().checkRedemptionLanding(redemptionLanding.getPoints(), false);
 		// Harbinger's Landing.
 		harbingerLanding.setPoints(harbingerPts);
 		harbingerLanding.setQuestPoints(0);
-		AbyssLandingService.getInstance().checkHarbingerLanding(harbingerLanding.getPoints(), false);
+		GameLocationBootstrapServices.abyssLandingService().checkHarbingerLanding(harbingerLanding.getPoints(), false);
 		// Update All Landing.
-		AbyssLandingService.getInstance().onUpdate();
+		GameLocationBootstrapServices.abyssLandingService().onUpdate();
 	}
 
 	public void resetMonumentPoints() {
@@ -98,13 +99,13 @@ public class LandingUpdateService {
 		// Redemption's Landing.
 		redemptionLanding.setPoints(redemptionPts1);
 		redemptionLanding.setMonumentsPoints(0);
-		AbyssLandingService.getInstance().checkRedemptionLanding(redemptionLanding.getPoints(), false);
+		GameLocationBootstrapServices.abyssLandingService().checkRedemptionLanding(redemptionLanding.getPoints(), false);
 		// Harbinger's Landing.
 		harbingerLanding.setPoints(harbingerPts1);
 		harbingerLanding.setMonumentsPoints(0);
-		AbyssLandingService.getInstance().checkHarbingerLanding(harbingerLanding.getPoints(), false);
+		GameLocationBootstrapServices.abyssLandingService().checkHarbingerLanding(harbingerLanding.getPoints(), false);
 		// Update All Landing.
-		AbyssLandingService.getInstance().onUpdate();
+		GameLocationBootstrapServices.abyssLandingService().onUpdate();
 	}
 
 	public void resetFacilityPoints() {
@@ -113,13 +114,13 @@ public class LandingUpdateService {
 		// Redemption's Landing.
 		redemptionLanding.setPoints(redemptionPts2);
 		redemptionLanding.setFacilityPoints(0);
-		AbyssLandingService.getInstance().checkRedemptionLanding(redemptionLanding.getPoints(), false);
+		GameLocationBootstrapServices.abyssLandingService().checkRedemptionLanding(redemptionLanding.getPoints(), false);
 		// Harbinger's Landing.
 		harbingerLanding.setPoints(harbingerPts2);
 		harbingerLanding.setFacilityPoints(0);
-		AbyssLandingService.getInstance().checkHarbingerLanding(harbingerLanding.getPoints(), false);
+		GameLocationBootstrapServices.abyssLandingService().checkHarbingerLanding(harbingerLanding.getPoints(), false);
 		// Update All Landing.
-		AbyssLandingService.getInstance().onUpdate();
+		GameLocationBootstrapServices.abyssLandingService().onUpdate();
 	}
 
 	public void resetCommanderPoints() {
@@ -128,13 +129,13 @@ public class LandingUpdateService {
 		// Redemption's Landing.
 		redemptionLanding.setPoints(redemptionPts3);
 		redemptionLanding.setCommanderPoints(0);
-		AbyssLandingService.getInstance().checkRedemptionLanding(redemptionLanding.getPoints(), false);
+		GameLocationBootstrapServices.abyssLandingService().checkRedemptionLanding(redemptionLanding.getPoints(), false);
 		// Harbinger's Landing.
 		harbingerLanding.setPoints(harbingerPts3);
 		harbingerLanding.setCommanderPoints(0);
-		AbyssLandingService.getInstance().checkHarbingerLanding(harbingerLanding.getPoints(), false);
+		GameLocationBootstrapServices.abyssLandingService().checkHarbingerLanding(harbingerLanding.getPoints(), false);
 		// Update All Landing.
-		AbyssLandingService.getInstance().onUpdate();
+		GameLocationBootstrapServices.abyssLandingService().onUpdate();
 	}
 
 	public static LandingUpdateService getInstance() {

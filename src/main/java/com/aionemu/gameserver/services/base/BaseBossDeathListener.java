@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.base;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.landing.LandingPointsEnum;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -83,10 +84,10 @@ public class BaseBossDeathListener extends OnDieEventCallback {
         }
         if (base.getBaseLocation().getWorldId() == 400010000) {
             if (race == Race.ASMODIANS && boss.getRace() == Race.ELYOS) {
-                AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE, false);
+                GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE, false);
             }
             if (race == Race.ELYOS && boss.getRace() == Race.ASMODIANS) {
-                AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE, false);
+                GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE, false);
             }
             landingWinBase(race);
         }
@@ -182,10 +183,10 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 
 	public void landingWinBase(Race race) {
 		if (race == Race.ASMODIANS) {
-			AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE, true);
+			GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE, true);
 		}
 		if (race == Race.ELYOS) {
-			AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE, true);
+			GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE, true);
 		}
 	}
 

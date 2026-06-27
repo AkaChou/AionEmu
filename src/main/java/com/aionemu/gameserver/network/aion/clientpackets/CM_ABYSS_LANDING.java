@@ -16,13 +16,14 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.AbyssLandingService;
 
 /**
  * @author Ranastic & Lightning (Encom)
@@ -42,6 +43,6 @@ public class CM_ABYSS_LANDING extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		AbyssLandingService.getInstance().sendPacketToPlayer(player);
+		GameLocationBootstrapServices.abyssLandingService().sendPacketToPlayer(player);
 	}
 }

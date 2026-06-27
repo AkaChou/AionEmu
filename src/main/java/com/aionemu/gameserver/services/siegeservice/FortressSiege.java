@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -45,7 +47,6 @@ import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.MoltenusService;
@@ -364,37 +365,37 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1221:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						AbyssLandingSpecialService.getInstance().startLanding(16);
-						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						AbyssLandingSpecialService.getInstance().startLanding(4);
-						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					break;
 				// Kysis Fortress.
 				case 1231:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						AbyssLandingSpecialService.getInstance().startLanding(18);
-						AbyssLandingService.getInstance().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, true);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						AbyssLandingSpecialService.getInstance().startLanding(6);
-						AbyssLandingService.getInstance().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE, true);
 					}
 					break;
 				// Miren Fortress.
 				case 1241:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						AbyssLandingSpecialService.getInstance().startLanding(17);
-						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						AbyssLandingSpecialService.getInstance().startLanding(5);
-						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					break;
 				}
-				AbyssLandingService.getInstance().AnnounceToPoints(player,
+				GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player,
 						getSiegeLocation().getRace().getDescriptionId(), getSiegeLocation().getNameAsDescriptionId(), 0,
 						LandingPointsEnum.SIEGE);
 			}
@@ -449,11 +450,11 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1221:
 					if (looser == SiegeRace.ASMODIANS) {
 						AbyssLandingSpecialService.getInstance().stopLanding(16);
-						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						AbyssLandingSpecialService.getInstance().stopLanding(4);
-						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
 								false);
 					}
 					break;
@@ -461,11 +462,11 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1231:
 					if (looser == SiegeRace.ASMODIANS) {
 						AbyssLandingSpecialService.getInstance().stopLanding(18);
-						AbyssLandingService.getInstance().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, false);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, false);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						AbyssLandingSpecialService.getInstance().stopLanding(6);
-						AbyssLandingService.getInstance().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE,
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE,
 								false);
 					}
 					break;
@@ -473,11 +474,11 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1241:
 					if (looser == SiegeRace.ASMODIANS) {
 						AbyssLandingSpecialService.getInstance().stopLanding(17);
-						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						AbyssLandingSpecialService.getInstance().stopLanding(5);
-						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
 								false);
 					}
 					break;

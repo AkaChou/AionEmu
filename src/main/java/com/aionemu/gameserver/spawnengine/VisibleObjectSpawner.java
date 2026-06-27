@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -112,7 +114,6 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAYER_STATE;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.services.AnohaService;
@@ -1015,7 +1016,7 @@ public class VisibleObjectSpawner {
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         int spawnId = spawn.getId();
-        LandingLocation loc = AbyssLandingService.getInstance().getLandingLocation(spawnId);
+        LandingLocation loc = GameLocationBootstrapServices.abyssLandingService().getLandingLocation(spawnId);
         if (loc.isActive() && spawnId == loc.getId() && spawn.isLandingOpen()) {
             npc = new Npc(iDFactory.nextId(), new NpcController(), spawn, npcTemplate);
             npc.setKnownlist(new NpcKnownList(npc));

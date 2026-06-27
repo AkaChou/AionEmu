@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.beritraInvasion;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.landing.LandingPointsEnum;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -78,7 +79,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 				if (winner instanceof Creature) {
 					final Creature kill = (Creature) winner;
 					//%0 has destroyed %0 and the Landing is now enhanced.
-					AbyssLandingService.getInstance().AnnounceToPoints(players, kill.getRace().getRaceDescriptionId(), NameId, 0, LandingPointsEnum.MONUMENT);
+					GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(players, kill.getRace().getRaceDescriptionId(), NameId, 0, LandingPointsEnum.MONUMENT);
 				}
 			}
 		});
@@ -90,9 +91,9 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-						AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 24, 0);
+						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 24, 0);
 					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-						AbyssLandingService.getInstance().onRewardMonuments(Race.ELYOS, 12, 0);
+						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 12, 0);
 					}
 				}
 			}

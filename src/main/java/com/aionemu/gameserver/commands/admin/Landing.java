@@ -16,8 +16,9 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
@@ -39,20 +40,20 @@ public class Landing extends AdminCommand
                 }
                 return;
             } if ("update".startsWith(params[i])) {
-                AbyssLandingService.getInstance().onUpdate();
+                GameLocationBootstrapServices.abyssLandingService().onUpdate();
             } if ("level".startsWith(params[i])) {
                 int level = Integer.parseInt(params[i + 2]);
                 if (params[i + 1].equalsIgnoreCase("elyos")) {
-                    if (level > AbyssLandingService.getInstance().redemptionLanding().getLevel()){
-                        AbyssLandingService.getInstance().levelUpRedemptionLanding(level);
-                    } else if (level < AbyssLandingService.getInstance().redemptionLanding().getLevel()){
-                        AbyssLandingService.getInstance().onRedemptionLandingLevelDown(level);
+                    if (level > GameLocationBootstrapServices.abyssLandingService().redemptionLanding().getLevel()){
+                        GameLocationBootstrapServices.abyssLandingService().levelUpRedemptionLanding(level);
+                    } else if (level < GameLocationBootstrapServices.abyssLandingService().redemptionLanding().getLevel()){
+                        GameLocationBootstrapServices.abyssLandingService().onRedemptionLandingLevelDown(level);
                     }
                 } if (params[i + 1].equalsIgnoreCase("asmodians")) {
-                    if (level > AbyssLandingService.getInstance().harbingerLanding().getLevel()){
-                        AbyssLandingService.getInstance().levelUpHarbingerLanding(level);
-                    } else if (level < AbyssLandingService.getInstance().harbingerLanding().getLevel()) {
-                        AbyssLandingService.getInstance().onHarbingerLandingLevelDown(level);
+                    if (level > GameLocationBootstrapServices.abyssLandingService().harbingerLanding().getLevel()){
+                        GameLocationBootstrapServices.abyssLandingService().levelUpHarbingerLanding(level);
+                    } else if (level < GameLocationBootstrapServices.abyssLandingService().harbingerLanding().getLevel()) {
+                        GameLocationBootstrapServices.abyssLandingService().onHarbingerLandingLevelDown(level);
                     }
                 }
                 return;

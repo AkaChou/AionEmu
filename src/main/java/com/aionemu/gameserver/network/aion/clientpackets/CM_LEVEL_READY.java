@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -41,7 +43,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AStationService;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.SiegeService;
@@ -125,7 +126,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// Shugo Imperial Tomb 4.3
 		ShugoImperialTombSpawnManager.sendImperialStatus(activePlayer);
 		// Abyss Landing 4.9.1
-		AbyssLandingService.getInstance().onEnterWorld(activePlayer);
+		GameLocationBootstrapServices.abyssLandingService().onEnterWorld(activePlayer);
 		// Tower Of Eternity 5.0
 		TowerOfEternityService.getInstance().onEnterTowerWorld(activePlayer);
 		// Outpost 5.8
