@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.ai.agentFight;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -27,7 +28,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AgentService;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
@@ -87,7 +87,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		announceKilledVeille();
 		announceEmpoweredVeilleDie();
 		AgentService.getInstance().stopAgentFight(1);
-		BaseService.getInstance().capture(90, Race.ASMODIANS);
+		GameFeatureServices.baseService().capture(90, Race.ASMODIANS);
 		super.handleDied();
 	}
 	

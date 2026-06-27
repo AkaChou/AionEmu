@@ -26,7 +26,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.siege.*;
 import com.aionemu.gameserver.model.team.legion.Legion;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
@@ -193,57 +192,57 @@ public class SiegeCommand extends AdminCommand {
 				case 1131:
 					if (loc.getRace() == SiegeRace.ASMODIANS) {
 						//Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(108, Race.ASMODIANS);
 						//Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(109, Race.ASMODIANS);
 					} else if (loc.getRace() == SiegeRace.ELYOS) {
 						//Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.ELYOS);
+						GameFeatureServices.baseService().capture(108, Race.ELYOS);
 						//Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.ELYOS);
+						GameFeatureServices.baseService().capture(109, Race.ELYOS);
 					} else if (loc.getRace() == SiegeRace.BALAUR) {
 						//Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.NPC);
+						GameFeatureServices.baseService().capture(108, Race.NPC);
 						//Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.NPC);
+						GameFeatureServices.baseService().capture(109, Race.NPC);
 					}
 				break;
 				//Siel's Eastern Fortress.
 				case 1132:
 					if (loc.getRace() == SiegeRace.ASMODIANS) {
 						//Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(110, Race.ASMODIANS);
 					} else if (loc.getRace() == SiegeRace.ELYOS) {
 						//Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.ELYOS);
+						GameFeatureServices.baseService().capture(110, Race.ELYOS);
 					} else if (loc.getRace() == SiegeRace.BALAUR) {
 						//Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.NPC);
+						GameFeatureServices.baseService().capture(110, Race.NPC);
 					}
 				break;
 				//Sulfur Fortress.
 				case 1141:
 					if (loc.getRace() == SiegeRace.ASMODIANS) {
 						//Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(105, Race.ASMODIANS);
 						//Joarin At Zephyr Island.
-					    BaseService.getInstance().capture(106, Race.ASMODIANS);
+					    GameFeatureServices.baseService().capture(106, Race.ASMODIANS);
 						//Temirun At Leibo Island.
-					    BaseService.getInstance().capture(107, Race.ASMODIANS);
+					    GameFeatureServices.baseService().capture(107, Race.ASMODIANS);
 					} else if (loc.getRace() == SiegeRace.ELYOS) {
 						//Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.ELYOS);
+						GameFeatureServices.baseService().capture(105, Race.ELYOS);
 						//Joarin At Zephyr Island.
-					    BaseService.getInstance().capture(106, Race.ELYOS);
+					    GameFeatureServices.baseService().capture(106, Race.ELYOS);
 						//Temirun At Leibo Island.
-					    BaseService.getInstance().capture(107, Race.ELYOS);
+					    GameFeatureServices.baseService().capture(107, Race.ELYOS);
 					} else if (loc.getRace() == SiegeRace.BALAUR) {
 						//Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.NPC);
+						GameFeatureServices.baseService().capture(105, Race.NPC);
 						//Joarin At Zephyr Island.
-					    BaseService.getInstance().capture(106, Race.NPC);
+					    GameFeatureServices.baseService().capture(106, Race.NPC);
 						//Temirun At Leibo Island.
-					    BaseService.getInstance().capture(107, Race.NPC);
+					    GameFeatureServices.baseService().capture(107, Race.NPC);
 					}
 				break;
 			}

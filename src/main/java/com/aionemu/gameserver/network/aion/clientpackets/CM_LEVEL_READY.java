@@ -42,7 +42,6 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AStationService;
 import com.aionemu.gameserver.services.AbyssLandingService;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.SiegeService;
@@ -122,7 +121,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// Protector Conqueror
 		ProtectorConquerorService.getInstance().onEnterMap(activePlayer);
 		// Base 4.3
-		BaseService.getInstance().onEnterBaseWorld(activePlayer);
+		GameFeatureServices.baseService().onEnterBaseWorld(activePlayer);
 		// Shugo Imperial Tomb 4.3
 		ShugoImperialTombSpawnManager.sendImperialStatus(activePlayer);
 		// Abyss Landing 4.9.1

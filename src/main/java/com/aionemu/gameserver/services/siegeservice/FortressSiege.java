@@ -47,7 +47,6 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.MoltenusService;
 import com.aionemu.gameserver.services.SiegeService;
@@ -86,8 +85,8 @@ public class FortressSiege extends Siege<FortressLocation> {
 		if (getSiegeLocation().getLocationId() == 1131) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1131: // Siel's Western Fortress.
-				BaseService.getInstance().capture(108, Race.NPC);
-				BaseService.getInstance().capture(109, Race.NPC);
+				GameFeatureServices.baseService().capture(108, Race.NPC);
+				GameFeatureServices.baseService().capture(109, Race.NPC);
 				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
@@ -112,7 +111,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else if (getSiegeLocation().getLocationId() == 1132) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1132: // Siel's Eastern Fortress.
-				BaseService.getInstance().capture(110, Race.NPC);
+				GameFeatureServices.baseService().capture(110, Race.NPC);
 				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
@@ -129,9 +128,9 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else if (getSiegeLocation().getLocationId() == 1141) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1141: // Sulfur Fortress.
-				BaseService.getInstance().capture(105, Race.NPC);
-				BaseService.getInstance().capture(106, Race.NPC);
-				BaseService.getInstance().capture(107, Race.NPC);
+				GameFeatureServices.baseService().capture(105, Race.NPC);
+				GameFeatureServices.baseService().capture(106, Race.NPC);
+				GameFeatureServices.baseService().capture(107, Race.NPC);
 				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
@@ -266,9 +265,9 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1131:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(108, Race.ASMODIANS);
 						// Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(109, Race.ASMODIANS);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
@@ -281,9 +280,9 @@ public class FortressSiege extends Siege<FortressLocation> {
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.ELYOS);
+						GameFeatureServices.baseService().capture(108, Race.ELYOS);
 						// Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.ELYOS);
+						GameFeatureServices.baseService().capture(109, Race.ELYOS);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
@@ -299,7 +298,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1132:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(110, Race.ASMODIANS);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
@@ -312,7 +311,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.ELYOS);
+						GameFeatureServices.baseService().capture(110, Race.ELYOS);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
@@ -328,11 +327,11 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1141:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(105, Race.ASMODIANS);
 						// Joarin At Zephyr Island.
-						BaseService.getInstance().capture(106, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(106, Race.ASMODIANS);
 						// Temirun At Leibo Island.
-						BaseService.getInstance().capture(107, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(107, Race.ASMODIANS);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
@@ -345,11 +344,11 @@ public class FortressSiege extends Siege<FortressLocation> {
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.ELYOS);
+						GameFeatureServices.baseService().capture(105, Race.ELYOS);
 						// Joarin At Zephyr Island.
-						BaseService.getInstance().capture(106, Race.ELYOS);
+						GameFeatureServices.baseService().capture(106, Race.ELYOS);
 						// Temirun At Leibo Island.
-						BaseService.getInstance().capture(107, Race.ELYOS);
+						GameFeatureServices.baseService().capture(107, Race.ELYOS);
 						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
@@ -405,45 +404,45 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1131:
 					if (looser == SiegeRace.ASMODIANS) {
 						// Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.NPC);
+						GameFeatureServices.baseService().capture(108, Race.NPC);
 						// Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.NPC);
+						GameFeatureServices.baseService().capture(109, Race.NPC);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						// Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.NPC);
+						GameFeatureServices.baseService().capture(108, Race.NPC);
 						// Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.NPC);
+						GameFeatureServices.baseService().capture(109, Race.NPC);
 					}
 					break;
 				// Siel's Eastern Fortress.
 				case 1132:
 					if (looser == SiegeRace.ASMODIANS) {
 						// Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.NPC);
+						GameFeatureServices.baseService().capture(110, Race.NPC);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						// Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.NPC);
+						GameFeatureServices.baseService().capture(110, Race.NPC);
 					}
 					break;
 				// Sulfur Fortress.
 				case 1141:
 					if (looser == SiegeRace.ASMODIANS) {
 						// Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.NPC);
+						GameFeatureServices.baseService().capture(105, Race.NPC);
 						// Joarin At Zephyr Island.
-						BaseService.getInstance().capture(106, Race.NPC);
+						GameFeatureServices.baseService().capture(106, Race.NPC);
 						// Temirun At Leibo Island.
-						BaseService.getInstance().capture(107, Race.NPC);
+						GameFeatureServices.baseService().capture(107, Race.NPC);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						// Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.NPC);
+						GameFeatureServices.baseService().capture(105, Race.NPC);
 						// Joarin At Zephyr Island.
-						BaseService.getInstance().capture(106, Race.NPC);
+						GameFeatureServices.baseService().capture(106, Race.NPC);
 						// Temirun At Leibo Island.
-						BaseService.getInstance().capture(107, Race.NPC);
+						GameFeatureServices.baseService().capture(107, Race.NPC);
 					}
 					break;
 				// Krotan Refuge.

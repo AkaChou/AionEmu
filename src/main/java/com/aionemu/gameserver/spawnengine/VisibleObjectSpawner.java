@@ -116,7 +116,6 @@ import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.services.AnohaService;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.BeritraService;
 import com.aionemu.gameserver.services.ConquestService;
 import com.aionemu.gameserver.services.DynamicRiftService;
@@ -323,8 +322,8 @@ public class VisibleObjectSpawner {
             return null;
         }
         int spawnId = spawn.getId();
-        boolean isActive = BaseService.getInstance().isActive(spawnId);
-        BaseLocation base = BaseService.getInstance().getBaseLocation(spawnId);
+        boolean isActive = GameFeatureServices.baseService().isActive(spawnId);
+        BaseLocation base = GameFeatureServices.baseService().getBaseLocation(spawnId);
         IDFactory iDFactory = GameWorldBootstrapServices.idFactory();
         Npc npc;
         if (!isActive && spawn.getBaseRace() != base.getRace()) {

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.base;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -32,7 +33,6 @@ import com.aionemu.gameserver.model.landing.LandingPointsEnum;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AbyssLandingService;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -90,7 +90,7 @@ public class BaseBossDeathListener extends OnDieEventCallback {
             }
             landingWinBase(race);
         }
-        BaseService.getInstance().capture(base.getId(), base.getRace());
+        GameFeatureServices.baseService().capture(base.getId(), base.getRace());
     }
 
 	@Override

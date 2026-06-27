@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.base;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -41,7 +42,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.basespawns.BaseSpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AbyssLandingService;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -617,7 +617,7 @@ public class Base<BL extends BaseLocation> {
 		if (getFlag() == null) {
 		} else if (!getFlag().getPosition().getMapRegion().isMapRegionActive()) {
 			if (Math.random() < 0.5) {
-				BaseService.getInstance().capture(getId(), race);
+				GameFeatureServices.baseService().capture(getId(), race);
 			} else {
 				delayedAssault();
 			}
