@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
 import com.aionemu.loginserver.lifecycle.LoginStartupSequenceLifecycle;
-import java.lang.reflect.Proxy;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -248,27 +247,25 @@ class LoginServiceLifecycleTest {
 
     private static <T> ObjectProvider<T> oneShotProvider(T instance) {
         AtomicBoolean used = new AtomicBoolean();
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "oneShotProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                if ("getIfAvailable".equals(method.getName())) {
-                    if (!used.compareAndSet(false, true)) {
-                        throw new ProviderUsedAfterPreparationException();
-                    }
-                    return instance;
-                }
-                throw new UnsupportedOperationException(method.toString());
+        return new ObjectProvider<>() {
+            @Override
+            public T getObject(Object... args) {
+                return getIfAvailable();
             }
-        ));
+
+            @Override
+            public T getIfAvailable() {
+                if (!used.compareAndSet(false, true)) {
+                    throw new ProviderUsedAfterPreparationException();
+                }
+                return instance;
+            }
+
+            @Override
+            public T getObject() {
+                return getIfAvailable();
+            }
+        };
     }
 
     private static final class ProviderUsedAfterPreparationException extends RuntimeException {
