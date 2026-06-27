@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -34,7 +36,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 
 /****/
@@ -121,7 +122,7 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
             npc.getMoveController().moveToPoint(path[0][0], path[0][1], path[0][2]);
         } else {
             byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-            Vector3f closestCollision = GeoService.getInstance().getClosestCollision(npc, targetX, targetY, z, true, intentions);
+            Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(npc, targetX, targetY, z, true, intentions);
             npc.getMoveController().resetMove();
             npc.getMoveController().moveToPoint(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ());
         }

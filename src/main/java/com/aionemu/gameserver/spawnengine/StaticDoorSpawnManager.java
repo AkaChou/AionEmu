@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import org.slf4j.Logger;
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorTemplate;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorWorld;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 
 /**
@@ -64,7 +65,7 @@ public class StaticDoorSpawnManager {
 			staticDoor.setKnownlist(new PlayerAwareKnownList(staticDoor));
 			bringIntoWorld(staticDoor, spawn, instanceIndex);
 			if (staticDoor.getDoorName() != null) {
-				GeoService.getInstance().setDoorState(worldId, instanceIndex, staticDoor.getDoorName(),
+				GameWorldServices.geoService().setDoorState(worldId, instanceIndex, staticDoor.getDoorName(),
 						staticDoor.isOpen());
 			}
 			counter++;

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.ai.instance.contaminedUnderpath;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -10,7 +12,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author MATTY (ADev Team)
@@ -47,7 +48,7 @@ public class RecoveringEnergyAI2 extends NpcAI2 {
             return;
         }
         if (MathUtil.isIn3dRange(owner, creature, 1.0f)) {
-            if (GeoService.getInstance().canSee(owner, creature)) {
+            if (GameWorldServices.geoService().canSee(owner, creature)) {
                 AI2Actions.targetCreature(this, creature);
                 AI2Actions.useSkill(this, 11171);
                 AI2Actions.targetCreature(this, null);

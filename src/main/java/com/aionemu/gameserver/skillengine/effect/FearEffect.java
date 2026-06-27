@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
@@ -42,7 +44,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author Sarynth
@@ -151,7 +152,7 @@ public class FearEffect extends EffectTemplate {
 				float x1 = (float) (Math.cos(radian) * maxDistance);
 				float y1 = (float) (Math.sin(radian) * maxDistance);
 				byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-				Vector3f closestCollision = GeoService.getInstance().getClosestCollision(effected, x + x1, y + y1,
+				Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effected, x + x1, y + y1,
 						effected.getZ(), true, intentions);
 				if (effected.isFlying()) {
 					closestCollision.setZ(effected.getZ());

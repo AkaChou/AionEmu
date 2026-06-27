@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.Iterator;
@@ -39,7 +41,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
@@ -72,7 +73,7 @@ public class EventAi extends AdminCommand {
 
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GeoService.getInstance().canSee(admin, player))){
+                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
                         AbyssPointsService.addGp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" GP from an Event!");
                         PacketSendUtility.sendMessage(admin, "Player : "+player.getName()+" has been rewarded!");
@@ -85,7 +86,7 @@ public class EventAi extends AdminCommand {
             }else if(params[1].equals("ap")){
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GeoService.getInstance().canSee(admin, player))){
+                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
                     	AbyssPointsService.addAp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" AP from an Event!");
                     }
@@ -157,7 +158,7 @@ public class EventAi extends AdminCommand {
 
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(!(player.getName() == admin.getName() && GeoService.getInstance().canSee(admin, player))){
+                    if(!(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
                     	AbyssPointsService.addGp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" GP from an Event!");
                         PacketSendUtility.sendMessage(admin, "Player : "+player.getName()+" has been rewarded!");
@@ -170,7 +171,7 @@ public class EventAi extends AdminCommand {
             }else if(params[1].equals("ap")){
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(!(player.getName() == admin.getName() && GeoService.getInstance().canSee(admin, player))){
+                    if(!(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
                     	AbyssPointsService.addAp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" AP from an Event!");
                     }
@@ -283,7 +284,7 @@ public class EventAi extends AdminCommand {
                 while(ita.hasNext()){
                     Player player = ita.next();
 
-                    if(player.getWorldId() == admin.getWorldId() && player.getAccessLevel() < 1 && GeoService.getInstance().canSee(admin,player)){
+                    if(player.getWorldId() == admin.getWorldId() && player.getAccessLevel() < 1 && GameWorldServices.geoService().canSee(admin,player)){
                         GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, player, (10 * 1000));
                     }
                 }
@@ -309,7 +310,7 @@ public class EventAi extends AdminCommand {
             while(ita.hasNext()){
                 Player player = ita.next();
 
-                if(admin.getWorldId() == player.getWorldId() && player.getAccessLevel() < 1 && GeoService.getInstance().canSee(admin,player)){
+                if(admin.getWorldId() == player.getWorldId() && player.getAccessLevel() < 1 && GameWorldServices.geoService().canSee(admin,player)){
                     TeleportService2.moveToBindLocation(player, true);
                 }
 

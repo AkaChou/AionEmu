@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -315,8 +317,8 @@ public class WalkerGroup {
 
 	private float getHeight(float x, float y, SpawnTemplate template) {
 		/*
-		 * if (GeoService.getInstance().isGeoOn()) { return
-		 * GeoService.getInstance().getZ(template.getWorldId(), x, y, z, ); }
+		 * if (GameWorldServices.geoService().isGeoOn()) { return
+		 * GameWorldServices.geoService().getZ(template.getWorldId(), x, y, z, ); }
 		 */
 		return template.getZ();
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIState;
@@ -28,7 +30,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author ATracer
@@ -92,7 +93,7 @@ public class CreatureEventHandler {
         
         if (!ai.isInState(AIState.FIGHT) && (isInAggroRange 
                 || MathUtil.isIn3dRange(owner, creature, (float) (owner.getObjectTemplate().getAggroRange() * 1.6)))) { // 1.6 is for aggro range correction
-            if (owner.isAggressiveTo(creature) && GeoService.getInstance().canSee(owner, creature)) {
+            if (owner.isAggressiveTo(creature) && GameWorldServices.geoService().canSee(owner, creature)) {
                 if (!ai.isInState(AIState.RETURNING)) {
                     ai.getOwner().getMoveController().storeStep();
                 }

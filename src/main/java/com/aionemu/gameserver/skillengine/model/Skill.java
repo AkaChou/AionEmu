@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.skillengine.model;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -70,7 +72,6 @@ import com.aionemu.gameserver.skillengine.properties.TargetRangeAttribute;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author ATracer Modified by Wakzashi
@@ -1820,11 +1821,11 @@ public class Skill {
 		// If creature is at least 2 meters above the terrain, ground skill cannot be applied
 		if (GeoDataConfig.GEO_ENABLE) {
 			if (isGroundSkill()) {
-				if ((object.getZ() - GeoService.getInstance().getZ(object) > 1.0f) || (object.getZ() - GeoService.getInstance().getZ(object) < -2.0f)) {
+				if ((object.getZ() - GameWorldServices.geoService().getZ(object) > 1.0f) || (object.getZ() - GameWorldServices.geoService().getZ(object) < -2.0f)) {
 					return false;
 				}
 			}
-			return GeoService.getInstance().canSee(getFirstTarget(), object);
+			return GameWorldServices.geoService().canSee(getFirstTarget(), object);
 		}
 		return true;
 	}

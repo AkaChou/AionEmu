@@ -7,6 +7,8 @@
  */
 package com.aionemu.gameserver.controllers.movement;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
@@ -34,7 +36,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.collections.LastUsedCache;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavService;
 import java.util.List;
 import org.slf4j.Logger;
@@ -262,7 +263,7 @@ public class NpcMoveController
         float targetZ = creature.getZ();
         if (GeoDataConfig.GEO_NPC_MOVE && creature.isInFlyingState() && !npc.isInFlyingState()) {
 //            if (npc.getGameStats().checkGeoNeedUpdate()) {
-            this.cachedTargetZ = GeoService.getInstance().getZ(creature);
+            this.cachedTargetZ = GameWorldServices.geoService().getZ(creature);
  //           }
             targetZ = this.cachedTargetZ;
         }
@@ -272,7 +273,7 @@ public class NpcMoveController
         float targetZ = z;
         if (GeoDataConfig.GEO_NPC_MOVE && !npc.isFlying()) {
 //            if (npc.getGameStats().checkGeoNeedUpdate()) {
-            cachedTargetZ = GeoService.getInstance().getZ(npc.getWorldId(), x, y, z, 1.1F, npc.getInstanceId());
+            cachedTargetZ = GameWorldServices.geoService().getZ(npc.getWorldId(), x, y, z, 1.1F, npc.getInstanceId());
             targetZ = cachedTargetZ;
 //            }
         }
@@ -344,7 +345,7 @@ public class NpcMoveController
         if (GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE && owner.getAi2().getSubState() != AISubState.WALK_PATH && owner.getAi2().getState() != AIState.RETURNING
                 && owner.getGameStats().checkGeoNeedUpdate()) {
             if (owner.getSpawn().getX() != targetDestX || owner.getSpawn().getY() != targetDestY || owner.getSpawn().getZ() != targetDestZ) {
-                float geoZ = GeoService.getInstance().getZ(owner.getWorldId(), newX, newY, newZ, 0, owner.getInstanceId());
+                float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 0, owner.getInstanceId());
                 if (Math.abs(newZ - geoZ) > 1) {
                     directionChanged = true;
                 }
@@ -430,13 +431,13 @@ public class NpcMoveController
             localPoint2D = WalkerGroup.getLinePoint(new Point2D(paramRouteStep2.getX(), paramRouteStep2.getY()), new Point2D(paramRouteStep1.getX(), paramRouteStep1.getY()), ((Npc)this.owner).getWalkerGroupShift());
             this.pointZ = paramRouteStep2.getZ();
             if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !(this.owner.isInFlyingState())) {
-                this.pointZ = GeoService.getInstance().getZ(((Creature)this.owner).getWorldId(), paramRouteStep2.getX(), paramRouteStep2.getY(), paramRouteStep2.getZ()-1, 100f, 1);
+                this.pointZ = GameWorldServices.geoService().getZ(((Creature)this.owner).getWorldId(), paramRouteStep2.getX(), paramRouteStep2.getY(), paramRouteStep2.getZ()-1, 100f, 1);
             }
             ((Npc)this.owner).getWalkerGroup().setStep((Npc)this.owner, paramRouteStep1.getRouteStep());
         } else {
             this.pointZ = paramRouteStep1.getZ();
             if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !(this.owner.isInFlyingState())) {
-                this.pointZ = GeoService.getInstance().getZ(((Creature)this.owner).getWorldId(), paramRouteStep1.getX(), paramRouteStep1.getY(), paramRouteStep1.getZ()-1, 100f, 1);
+                this.pointZ = GameWorldServices.geoService().getZ(((Creature)this.owner).getWorldId(), paramRouteStep1.getX(), paramRouteStep1.getY(), paramRouteStep1.getZ()-1, 100f, 1);
             }
         }
         this.currentPoint = paramRouteStep1.getRouteStep() - 1;

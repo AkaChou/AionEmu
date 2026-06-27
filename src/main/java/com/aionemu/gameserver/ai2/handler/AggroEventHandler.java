@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collections;
@@ -33,7 +35,6 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplateType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
@@ -86,7 +87,7 @@ public class AggroEventHandler {
 			Player playerTarget = (Player) target;
 			if (!owner.isEnemy(playerTarget) && owner.isEnemy(attacker)
 					&& MathUtil.isInRange(owner, playerTarget, owner.getAggroRange())
-					&& GeoService.getInstance().canSee(owner, attacker)) {
+					&& GameWorldServices.geoService().canSee(owner, attacker)) {
 				owner.getAggroList().startHate(attacker);
 				return true;
 			}

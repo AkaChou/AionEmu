@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 public class SimpleAbyssGuardHandler {
 	public static void onCreatureMoved(NpcAI2 npcAI, Creature creature) {
@@ -55,7 +56,7 @@ public class SimpleAbyssGuardHandler {
 		}
 		if (!ai.isInState(AIState.FIGHT)
 				&& (MathUtil.isIn3dRange(owner, creature, owner.getObjectTemplate().getAggroRange()))) {
-			if (GeoService.getInstance().canSee(owner, creature)) {
+			if (GameWorldServices.geoService().canSee(owner, creature)) {
 				if (!ai.isInState(AIState.RETURNING))
 					ai.getOwner().getMoveController().storeStep();
 				ai.onCreatureEvent(AIEventType.CREATURE_AGGRO, creature);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BackDashEffect")
@@ -62,7 +63,7 @@ public class BackDashEffect extends DamageEffect {
 		float x1 = (float) (Math.cos(Math.PI * direction + radian) * distance);
 		float y1 = (float) (Math.sin(Math.PI * direction + radian) * distance);
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-		Vector3f closestCollision = GeoService.getInstance().getClosestCollision(effector, effector.getX() + x1,
+		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effector, effector.getX() + x1,
 				effector.getY() + y1, effector.getZ(), false, intentions);
 		effect.getSkill().setTargetPosition(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ(),
 				effector.getHeading());

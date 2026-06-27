@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -140,7 +142,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.CreatureAwareKnownList;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
@@ -847,7 +848,7 @@ public class VisibleObjectSpawner {
         int worldId = owner.getWorldId();
         int instanceId = owner.getInstanceId();
         double radian = Math.toRadians(MathUtil.convertHeadingToDegree(owner.getHeading()));
-        Vector3f pos = GeoService.getInstance().getClosestCollision(owner, owner.getX() + (float) (Math.cos(radian) * 5), owner.getY() + (float) (Math.sin(radian) * 5), owner.getZ(), false, CollisionIntention.PHYSICAL.getId());
+        Vector3f pos = GameWorldServices.geoService().getClosestCollision(owner, owner.getX() + (float) (Math.cos(radian) * 5), owner.getY() + (float) (Math.sin(radian) * 5), owner.getZ(), false, CollisionIntention.PHYSICAL.getId());
         SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, pos.getX(), pos.getY(), pos.getZ(), (byte) 0);
         final Npc postman = new Npc(iDFactory.nextId(), new NpcController(), spawn, template);
         postman.setKnownlist(new PlayerAwareKnownList(postman));
@@ -865,7 +866,7 @@ public class VisibleObjectSpawner {
         int worldId = owner.getWorldId();
         int instanceId = owner.getInstanceId();
         double radian = Math.toRadians(MathUtil.convertHeadingToDegree(owner.getHeading()));
-        Vector3f pos = GeoService.getInstance().getClosestCollision(owner, owner.getX() + (float) (Math.cos(radian) * 5), owner.getY() + (float) (Math.sin(radian) * 5), owner.getZ(), false, CollisionIntention.PHYSICAL.getId());
+        Vector3f pos = GameWorldServices.geoService().getClosestCollision(owner, owner.getX() + (float) (Math.cos(radian) * 5), owner.getY() + (float) (Math.sin(radian) * 5), owner.getZ(), false, CollisionIntention.PHYSICAL.getId());
         SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, pos.getX(), pos.getY(), pos.getZ(), (byte) 0);
         final Npc functionalNpc = new Npc(iDFactory.nextId(), new NpcController(), spawn, template);
         functionalNpc.setKnownlist(new PlayerAwareKnownList(functionalNpc));

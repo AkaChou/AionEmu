@@ -3,13 +3,14 @@
  */
 package com.aionemu.gameserver.movement.processors.movement;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.geoEngine.math.Vector2f;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.movement.utils.GeomUtil;
 
 public class PathfindHelper {
@@ -45,7 +46,7 @@ public class PathfindHelper {
 
 			double newRotatedDistance = MathUtil.getDistance(sourcePoint.x, sourcePoint.y, sourcePoint.z, rotated.x,
 					rotated.y, rotated.z);
-			boolean canPassTemp = GeoService.getInstance().canPass(mapId, sourcePoint.x, sourcePoint.y,
+			boolean canPassTemp = GameWorldServices.geoService().canPass(mapId, sourcePoint.x, sourcePoint.y,
 					sourcePoint.z + zOffset, rotated.x, rotated.y, rotated.z + newZOffset, (float) newRotatedDistance,
 					instanceId);
 			if (!canPassTemp)
@@ -78,7 +79,7 @@ public class PathfindHelper {
 		degrees = (float) ((double) degrees + beginDeg);
 		double x = (double) cx + radius * Math.cos((double) degrees * Math.PI / 180.0);
 		double y = (double) cy + radius * Math.sin((double) degrees * Math.PI / 180.0);
-		double z = GeoService.getInstance().getZ(owner.getWorldId(), (float) x, (float) y, defaultZ, 100.0f,
+		double z = GameWorldServices.geoService().getZ(owner.getWorldId(), (float) x, (float) y, defaultZ, 100.0f,
 				owner.getInstanceId());
 		return new Vector3f((float) x, (float) y, (float) z);
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlType;
@@ -30,7 +32,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author ATracer
@@ -77,7 +78,7 @@ public class DashEffect extends DamageEffect {
 			  vx = (x1 - x2) * (boundRadius/distance),
 			  vy = (y1 - y2) * (boundRadius/distance),
 			  vz = (z1 - z2) * (boundRadius/distance);
-		Vector3f pos = GeoService.getInstance().getClosestCollision(effected, x2 + vx, y2 + vy, z2 + vz, false, CollisionIntention.PHYSICAL.getId());
+		Vector3f pos = GameWorldServices.geoService().getClosestCollision(effected, x2 + vx, y2 + vy, z2 + vz, false, CollisionIntention.PHYSICAL.getId());
 		
 		effect.getSkill().setTargetPosition(pos.x, pos.y, pos.z, newHeading);
 	}

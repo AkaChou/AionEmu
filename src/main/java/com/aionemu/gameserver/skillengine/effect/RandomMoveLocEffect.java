@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -39,7 +41,6 @@ import com.aionemu.gameserver.skillengine.model.SkillMoveType;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RandomMoveLocEffect")
@@ -105,7 +106,7 @@ public class RandomMoveLocEffect extends EffectTemplate {
 		PacketSendUtility.broadcastPacketAndReceive(effector,
 				new SM_TRANSFORM(effector, effector.getTransformedModelId(), true, effector.getTransformedItemId()));
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-		Vector3f closestCollision = GeoService.getInstance().getClosestCollision(effector, effector.getX() + x1,
+		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effector, effector.getX() + x1,
 				effector.getY() + y1, effector.getZ(), false, intentions);
 		effect.getSkill().setTargetPosition(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ(),
 				effector.getHeading());
