@@ -262,7 +262,7 @@ public class SiegeCommand extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Invalid Siege Location Id: " + siegeLocationId);
 			return;
 		}
-		BalaurAssaultService.getInstance().startAssault(player, siegeLocationId, delay);
+		GameCoreGameplayServices.balaurAssaultService().startAssault(player, siegeLocationId, delay);
 	}
 	
 	protected void showHelp(Player player) {

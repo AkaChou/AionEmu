@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +96,7 @@ public class AbyssRankCleaningService {
 
 		if (ToArray.size() > 0) {
 			DAOManager.getDAO(AbyssRankDAO.class).removePlayer(ToArray);
-			AbyssRankingCache.getInstance().reloadRankings();
+			GameCoreGameplayServices.abyssRankingCache().reloadRankings();
 			log.info("Cleaned  " + ToArray.size() + " Abyss Ranking Rows in"
 					+ (System.currentTimeMillis() - startTime) / 1000L + " seconds!");
 		} else {

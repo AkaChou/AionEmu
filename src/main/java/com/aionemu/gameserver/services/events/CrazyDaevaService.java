@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -83,7 +85,7 @@ public class CrazyDaevaService {
 						PacketSendUtility.sendYellowMessageOnCenter(player, "CRAZY DAEVA " + player.getName() + "");
 						log.info("System choose " + player.getName() + ".");
 						player.setInCrazy(true);
-						PvpService.getInstance().doReward(player);
+						GameCoreGameplayServices.pvpService().doReward(player);
 					}
 				}
 				log.info("Player " + player.getName() + " got random " + rnd + "");

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -58,7 +60,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 					@Override
 					public void run() {
 						spawnAttackers();
-						// BalaurAssaultService.getInstance().spawnDredgion(getSpawnIdByFortressId());
+						// GameCoreGameplayServices.balaurAssaultService().spawnDredgion(getSpawnIdByFortressId());
 					}
 				}, Rnd.get(240, 300) * 1000);
 			}

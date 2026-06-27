@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -179,7 +181,7 @@ public class AbyssRankUpdateService {
 		GameThreadPoolServices.threadPoolManager().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				AbyssRankingCache.getInstance().reloadRankings();
+				GameCoreGameplayServices.abyssRankingCache().reloadRankings();
 			}
 		}, 3 * 1000);
 	}

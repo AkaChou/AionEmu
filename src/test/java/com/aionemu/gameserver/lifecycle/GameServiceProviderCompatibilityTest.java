@@ -977,13 +977,16 @@ class GameServiceProviderCompatibilityTest {
             assertSame(mailService, MailService.getInstance());
             assertSame(mailService, GameCoreGameplayServices.mailService());
             assertSame(pvpService, PvpService.getInstance());
+            assertSame(pvpService, GameCoreGameplayServices.pvpService());
             assertSame(autoGroupService, AutoGroupService.getInstance());
             assertSame(autoGroupService, GameCoreGameplayServices.autoGroupService());
             assertSame(abyssRankingCache, AbyssRankingCache.getInstance());
+            assertSame(abyssRankingCache, GameCoreGameplayServices.abyssRankingCache());
             assertSame(legionService, LegionService.getInstance());
             assertSame(legionService, GameCoreGameplayServices.legionService());
             assertSame(thievesGuildService, ThievesGuildService.getInstance());
             assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
+            assertSame(balaurAssaultService, GameCoreGameplayServices.balaurAssaultService());
             assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
             assertSame(battlefieldUnionService, GameCoreGameplayServices.battlefieldUnionService());
 

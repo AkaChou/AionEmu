@@ -690,7 +690,7 @@ public class PlayerController extends CreatureController<Player> {
 
 	@Override
 	public void doReward() {
-		PvpService.getInstance().doReward(getOwner());
+		GameCoreGameplayServices.pvpService().doReward(getOwner());
 	}
 
 	@Override

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,9 +71,9 @@ public class CM_ABYSS_RANKING_LEGIONS extends AionClientPacket {
 		if (queriedRace != null) {
 			Player player = this.getConnection().getActivePlayer();
 			if (player.isAbyssRankListUpdated(updateType)) {
-				sendPacket(new SM_ABYSS_RANKING_LEGIONS(AbyssRankingCache.getInstance().getLastUpdate(), queriedRace));
+				sendPacket(new SM_ABYSS_RANKING_LEGIONS(GameCoreGameplayServices.abyssRankingCache().getLastUpdate(), queriedRace));
 			} else {
-				SM_ABYSS_RANKING_LEGIONS results = AbyssRankingCache.getInstance().getLegions(queriedRace);
+				SM_ABYSS_RANKING_LEGIONS results = GameCoreGameplayServices.abyssRankingCache().getLegions(queriedRace);
 				sendPacket(results);
 				player.setAbyssRankListUpdated(updateType);
 			}

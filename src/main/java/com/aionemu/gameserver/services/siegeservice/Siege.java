@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.Collection;
@@ -72,7 +74,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 		}
 		onSiegeStart();
 		if (SiegeConfig.BALAUR_AUTO_ASSAULT) {
-			BalaurAssaultService.getInstance().onSiegeStart(this);
+			GameCoreGameplayServices.balaurAssaultService().onSiegeStart(this);
 		}
 	}
 
@@ -84,7 +86,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 		if (finished.compareAndSet(false, true)) {
 			onSiegeFinish();
 			if (SiegeConfig.BALAUR_AUTO_ASSAULT) {
-				BalaurAssaultService.getInstance().onSiegeFinish(this);
+				GameCoreGameplayServices.balaurAssaultService().onSiegeFinish(this);
 			}
 		} else {
 			log.error("Attempt to stop siege of SiegeLocation#" + siegeLocation.getLocationId() + " for 2 times");
