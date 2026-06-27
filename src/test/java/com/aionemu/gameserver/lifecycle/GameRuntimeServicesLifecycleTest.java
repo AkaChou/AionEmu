@@ -63,6 +63,19 @@ class GameRuntimeServicesLifecycleTest {
     }
 
     @Test
+    void shutdownAndAdminCommandsUseRuntimeServicesBridgeInsteadOfDirectSingletons() throws IOException {
+        Map<String, Path> singletonCallers = Map.of(
+            "PeriodicSaveService", Path.of("src/main/java/com/aionemu/gameserver/ShutdownHook.java"),
+            "AnnouncementService", Path.of("src/main/java/com/aionemu/gameserver/commands/admin/Announcements.java"));
+
+        for (Map.Entry<String, Path> singletonCaller : singletonCallers.entrySet()) {
+            String source = Files.readString(singletonCaller.getValue());
+
+            assertFalse(source.contains(singletonCaller.getKey() + ".getInstance()"), singletonCaller.getValue().toString());
+        }
+    }
+
+    @Test
     void startRunsInitializersOnceInLegacyOrderAndRecordsLoadTime() {
         List<String> events = new ArrayList<>();
         GameRuntimeServicesLifecycle lifecycle = new GameRuntimeServicesLifecycle(

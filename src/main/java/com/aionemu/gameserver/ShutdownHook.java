@@ -18,12 +18,12 @@ import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager.SortBy;
 import com.aionemu.gameserver.configs.main.ShutdownConfig;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
-import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.world.World;
@@ -217,7 +217,7 @@ public class ShutdownHook extends Thread {
 		log.info("All players processed, continuing shutdown...");
 
 		runShutdownStep("dump runnable stats", () -> RunnableStatsManager.dumpClassStats(SortBy.AVG));
-		runShutdownStep("save periodic data", () -> PeriodicSaveService.getInstance().onShutdown());
+		runShutdownStep("save periodic data", () -> GameRuntimeServices.periodicSaveService().onShutdown());
 		runShutdownStep("save game time", GameTimeManager::saveTime);
 		runShutdownStep("shutdown CronService", GameCronServices::shutdownIfInitialized);
 		if (AionRuntimeMode.isBootEmbedded()) {

@@ -74,6 +74,7 @@ class GameWorldServicesRuntimeBridgeTest {
     @Test
     void coreDropRegistrationCallersUseWorldServicesBridge() throws IOException {
         List<Path> sources = List.of(
+            Path.of("src/main/java/com/aionemu/gameserver/commands/admin/AddDrop.java"),
             Path.of("src/main/java/com/aionemu/gameserver/services/RespawnService.java"),
             Path.of("src/main/java/com/aionemu/gameserver/services/QuestService.java"),
             Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropDistributionService.java"),
@@ -88,6 +89,7 @@ class GameWorldServicesRuntimeBridgeTest {
             String content = Files.readString(source);
 
             assertFalse(content.contains("DropRegistrationService.getInstance()"), source.toString());
+            assertFalse(content.contains("DropRegistration.getInstance()"), source.toString());
         }
     }
 

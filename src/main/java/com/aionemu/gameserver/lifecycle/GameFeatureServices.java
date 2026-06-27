@@ -45,6 +45,7 @@ public final class GameFeatureServices implements DisposableBean {
     private static volatile ObjectProvider<DredgionService2> dredgionServiceProvider;
     private static volatile ObjectProvider<AsyunatarService> asyunatarServiceProvider;
     private static volatile ObjectProvider<ShieldService> shieldServiceProvider;
+    private static volatile ObjectProvider<RewardService> rewardServiceProvider;
     private static volatile ObjectProvider<WeddingService> weddingServiceProvider;
     private static volatile ObjectProvider<ProtectorConquerorService> protectorConquerorServiceProvider;
     private static volatile ObjectProvider<FFAService> ffaServiceProvider;
@@ -104,6 +105,7 @@ public final class GameFeatureServices implements DisposableBean {
         GameFeatureServices.dredgionServiceProvider = dredgionServiceProvider;
         GameFeatureServices.asyunatarServiceProvider = asyunatarServiceProvider;
         GameFeatureServices.shieldServiceProvider = shieldServiceProvider;
+        GameFeatureServices.rewardServiceProvider = rewardServiceProvider;
         GameFeatureServices.weddingServiceProvider = weddingServiceProvider;
         GameFeatureServices.protectorConquerorServiceProvider = protectorConquerorServiceProvider;
         GameFeatureServices.ffaServiceProvider = ffaServiceProvider;
@@ -181,6 +183,10 @@ public final class GameFeatureServices implements DisposableBean {
 
     public static ShieldService shieldService() {
         return getIfAvailable(shieldServiceProvider, ShieldService::getInstance);
+    }
+
+    public static RewardService rewardService() {
+        return getIfAvailable(rewardServiceProvider, RewardService::getInstance);
     }
 
     public static WeddingService weddingService() {
@@ -313,6 +319,7 @@ public final class GameFeatureServices implements DisposableBean {
         dredgionServiceProvider = null;
         asyunatarServiceProvider = null;
         shieldServiceProvider = null;
+        rewardServiceProvider = null;
         weddingServiceProvider = null;
         protectorConquerorServiceProvider = null;
         ffaServiceProvider = null;

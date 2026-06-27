@@ -32,9 +32,11 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameRuntimeServices implements DisposableBean {
 
+    private static volatile ObjectProvider<PeriodicSaveService> periodicSaveServiceProvider;
     private static volatile ObjectProvider<AdminService> adminServiceProvider;
     private static volatile ObjectProvider<PlayerTransferService> playerTransferServiceProvider;
     private static volatile ObjectProvider<TerritoryService> territoryServiceProvider;
+    private static volatile ObjectProvider<AnnouncementService> announcementServiceProvider;
     private static volatile ObjectProvider<WeatherService> weatherServiceProvider;
     private static volatile ObjectProvider<BrokerService> brokerServiceProvider;
     private static volatile ObjectProvider<Influence> influenceProvider;
@@ -70,9 +72,11 @@ public final class GameRuntimeServices implements DisposableBean {
             ObjectProvider<FindGroupService> findGroupServiceProvider,
             ObjectProvider<InGameShopEn> inGameShopEnProvider,
             ObjectProvider<GMService> gmServiceProvider) {
+        GameRuntimeServices.periodicSaveServiceProvider = periodicSaveServiceProvider;
         GameRuntimeServices.adminServiceProvider = adminServiceProvider;
         GameRuntimeServices.playerTransferServiceProvider = playerTransferServiceProvider;
         GameRuntimeServices.territoryServiceProvider = territoryServiceProvider;
+        GameRuntimeServices.announcementServiceProvider = announcementServiceProvider;
         GameRuntimeServices.weatherServiceProvider = weatherServiceProvider;
         GameRuntimeServices.brokerServiceProvider = brokerServiceProvider;
         GameRuntimeServices.influenceProvider = influenceProvider;
@@ -111,6 +115,14 @@ public final class GameRuntimeServices implements DisposableBean {
 
     public static AdminService adminService() {
         return getIfAvailable(adminServiceProvider, AdminService::getInstance);
+    }
+
+    public static PeriodicSaveService periodicSaveService() {
+        return getIfAvailable(periodicSaveServiceProvider, PeriodicSaveService::getInstance);
+    }
+
+    public static AnnouncementService announcementService() {
+        return getIfAvailable(announcementServiceProvider, AnnouncementService::getInstance);
     }
 
     public static PlayerTransferService playerTransferService() {
@@ -174,6 +186,7 @@ public final class GameRuntimeServices implements DisposableBean {
 
     @Override
     public void destroy() {
+        periodicSaveServiceProvider = null;
         adminServiceProvider = null;
         PeriodicSaveService.setInstanceProvider(null);
         AdminService.setInstanceProvider(null);
@@ -182,6 +195,7 @@ public final class GameRuntimeServices implements DisposableBean {
         territoryServiceProvider = null;
         TerritoryService.setInstanceProvider(null);
         GameTimeService.setInstanceProvider(null);
+        announcementServiceProvider = null;
         AnnouncementService.setInstanceProvider(null);
         DebugService.setInstanceProvider(null);
         weatherServiceProvider = null;

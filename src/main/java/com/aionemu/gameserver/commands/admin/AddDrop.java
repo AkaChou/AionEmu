@@ -45,7 +45,7 @@ public class AddDrop extends AdminCommand {
 			final int max = Integer.parseInt(params[3]);
 			final float chance = Float.parseFloat(params[4]);
 
-			DropList dropList = DropRegistration.getInstance().getDropList();
+			DropList dropList = GameWorldServices.dropRegistrationService().getDropList();
 
 			DropTemplate dropTemplate = new DropTemplate(mobId, itemId, min, max, chance, false);
 			dropList.addDropTemplate(mobId, dropTemplate);

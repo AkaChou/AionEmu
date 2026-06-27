@@ -148,6 +148,25 @@ class GameFeatureServicesRuntimeBridgeTest {
     }
 
     @Test
+    void gameServerCodeUsesFeatureRewardBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/reward/RewardService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServicesRuntimeBridge.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("RewardService.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
     void gameServerCodeUsesFeatureBridgeInsteadOfDirectArenaPetAndKiskSingletons() throws IOException {
         List<Path> sources;
         try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {

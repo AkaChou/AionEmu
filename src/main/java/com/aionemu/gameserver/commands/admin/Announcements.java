@@ -18,6 +18,7 @@ package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.Announcement;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.services.AnnouncementService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -33,7 +34,7 @@ public class Announcements extends AdminCommand {
 
 	public Announcements() {
 		super("announcements");
-		announceService = AnnouncementService.getInstance();
+		announceService = GameRuntimeServices.announcementService();
 	}
 
 	@Override
