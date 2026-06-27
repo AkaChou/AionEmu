@@ -140,7 +140,6 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 public class Player extends Creature {
@@ -898,8 +897,8 @@ public class Player extends Creature {
 	 * 
 	 * @return
 	 */
-	public FastList<Item> getAllItems() {
-		FastList<Item> items = FastList.newInstance();
+	public List<Item> getAllItems() {
+		List<Item> items = new ArrayList<Item>();
 		items.addAll(this.inventory.getItemsWithKinah());
 		if (this.regularWarehouse != null)
 			items.addAll(this.regularWarehouse.getItemsWithKinah());

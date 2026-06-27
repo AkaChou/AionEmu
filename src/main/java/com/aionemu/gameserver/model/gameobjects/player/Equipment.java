@@ -65,8 +65,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
-import javolution.util.FastList;
-
 public class Equipment {
 
 	private Player owner;
@@ -600,8 +598,8 @@ public class Equipment {
 	/**
 	 * @return List<Item>
 	 */
-	public FastList<Item> getEquippedItemsWithoutStigma() {
-		FastList<Item> equippedItems = FastList.newInstance();
+	public List<Item> getEquippedItemsWithoutStigma() {
+		List<Item> equippedItems = new ArrayList<Item>();
 		Item twoHanded = null;
 		for (Item item : equipment.values()) {
 			if (!ItemSlot.isStigma(item.getEquipmentSlot())) {
@@ -617,8 +615,8 @@ public class Equipment {
 		return equippedItems;
 	}
 
-	public FastList<Item> getEquippedItemsWithoutStigmaOld() {
-		FastList<Item> equippedItems = FastList.newInstance();
+	public List<Item> getEquippedItemsWithoutStigmaOld() {
+		List<Item> equippedItems = new ArrayList<Item>();
 		Item twoHanded = null;
 		Item offTwoHanded = null;
 		for (Item item : equipment.values()) {
@@ -644,8 +642,8 @@ public class Equipment {
 	/**
 	 * @return ItemSlots
 	 */
-	public FastList<Item> getEquippedForApparence() {
-		FastList<Item> equippedItems = FastList.newInstance();
+	public List<Item> getEquippedForApparence() {
+		List<Item> equippedItems = new ArrayList<Item>();
 		Item twoHanded = null;
 		for (Item item : equipment.values()) {
 			long slot = item.getEquipmentSlot();

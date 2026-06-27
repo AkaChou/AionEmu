@@ -286,6 +286,20 @@ class ModelCollectionImplementationTest {
 		}
 	}
 
+	@Test
+	void playerItemSnapshotListsUseJdkLists() throws Exception {
+		List<String> sourcePaths = List.of(
+				"src/main/java/com/aionemu/gameserver/model/gameobjects/player/Equipment.java",
+				"src/main/java/com/aionemu/gameserver/model/gameobjects/player/Player.java",
+				"src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_PLAYER_INFO.java");
+		for (String sourcePath : sourcePaths) {
+			assertSourceOmits(sourcePath, "FastList<Item>");
+			assertSourceOmits(sourcePath, "FastList.newInstance()");
+		}
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_PLAYER_INFO.java",
+				"import javolution.util.FastList");
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();

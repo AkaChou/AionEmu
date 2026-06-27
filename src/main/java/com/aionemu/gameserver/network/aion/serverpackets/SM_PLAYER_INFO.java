@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.List;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -25,8 +27,6 @@ import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.events.bg.DeathmatchBg;
 import com.aionemu.gameserver.services.events.bg.SoloSurvivorBg;
 import com.aionemu.gameserver.model.account.Account;
-
-import javolution.util.FastList;
 
 public class SM_PLAYER_INFO extends AionServerPacket {
 
@@ -226,7 +226,7 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 		 */
 		int mask = 0;
 
-		FastList<Item> items = player.getEquipment().getEquippedForApparence();
+		List<Item> items = player.getEquipment().getEquippedForApparence();
 
 		for (Item item : items) {
 			if (item.getItemTemplate().isTwoHandWeapon()) {
