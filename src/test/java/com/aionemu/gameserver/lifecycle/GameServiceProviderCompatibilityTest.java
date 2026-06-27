@@ -612,6 +612,11 @@ class GameServiceProviderCompatibilityTest {
     void gameFeatureServicesRegistersAndClearsPlayerActionProviders() throws Exception {
         BonusService bonusService = instance(BonusService.class);
         NpcShoutsService npcShoutsService = instance(NpcShoutsService.class);
+        DredgionService2 dredgionService = instance(DredgionService2.class);
+        AsyunatarService asyunatarService = instance(AsyunatarService.class);
+        ShieldService shieldService = instance(ShieldService.class);
+        WeddingService weddingService = instance(WeddingService.class);
+        ProtectorConquerorService protectorConquerorService = instance(ProtectorConquerorService.class);
         PetService petService = instance(PetService.class);
         ArcadeUpgradeService arcadeUpgradeService = instance(ArcadeUpgradeService.class);
         AtreianBestiaryService atreianBestiaryService = instance(AtreianBestiaryService.class);
@@ -621,34 +626,38 @@ class GameServiceProviderCompatibilityTest {
         BaseService baseService = instance(BaseService.class);
         FFAService ffaService = instance(FFAService.class);
         LadderService ladderService = instance(LadderService.class);
+        AStationService aStationService = instance(AStationService.class);
+        MotionLoggingService motionLoggingService = instance(MotionLoggingService.class);
         KiskService kiskService = instance(KiskService.class);
+        RepurchaseService repurchaseService = instance(RepurchaseService.class);
+        DropDistributionService dropDistributionService = instance(DropDistributionService.class);
         SystemMailService systemMailService = instance(SystemMailService.class);
 
         GameFeatureServices featureServices = new GameFeatureServices(
                 provider(DisputeLandService.class, instance(DisputeLandService.class)),
-                provider(DredgionService2.class, instance(DredgionService2.class)),
-                provider(AsyunatarService.class, instance(AsyunatarService.class)),
+                provider(DredgionService2.class, dredgionService),
+                provider(AsyunatarService.class, asyunatarService),
                 provider(PlayerLimitService.class, instance(PlayerLimitService.class)),
                 provider(NpcShoutsService.class, npcShoutsService),
-                provider(ShieldService.class, instance(ShieldService.class)),
+                provider(ShieldService.class, shieldService),
                 provider(RewardService.class, instance(RewardService.class)),
-                provider(WeddingService.class, instance(WeddingService.class)),
+                provider(WeddingService.class, weddingService),
                 provider(VeteranRewardsService.class, instance(VeteranRewardsService.class)),
-                provider(ProtectorConquerorService.class, instance(ProtectorConquerorService.class)),
+                provider(ProtectorConquerorService.class, protectorConquerorService),
                 provider(FFAService.class, ffaService),
                 provider(LadderService.class, ladderService),
                 provider(BGService.class, instance(BGService.class)),
                 provider(BanditService.class, instance(BanditService.class)),
                 provider(SiegeService.class, siegeService),
                 provider(BaseService.class, baseService),
-                provider(AStationService.class, instance(AStationService.class)),
+                provider(AStationService.class, aStationService),
                 provider(F2pService.class, instance(F2pService.class)),
                 provider(WindyGorgeService.class, instance(WindyGorgeService.class)),
-                provider(MotionLoggingService.class, instance(MotionLoggingService.class)),
+                provider(MotionLoggingService.class, motionLoggingService),
                 provider(StaticDoorService.class, instance(StaticDoorService.class)),
                 provider(KiskService.class, kiskService),
-                provider(RepurchaseService.class, instance(RepurchaseService.class)),
-                provider(DropDistributionService.class, instance(DropDistributionService.class)),
+                provider(RepurchaseService.class, repurchaseService),
+                provider(DropDistributionService.class, dropDistributionService),
                 provider(SystemMailService.class, systemMailService),
                 provider(BonusService.class, bonusService),
                 provider(PetService.class, petService),
@@ -659,17 +668,28 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(npcShoutsService, GameFeatureServices.npcShoutsService());
+            assertSame(dredgionService, GameFeatureServices.dredgionService());
+            assertSame(asyunatarService, GameFeatureServices.asyunatarService());
+            assertSame(shieldService, GameFeatureServices.shieldService());
+            assertSame(weddingService, GameFeatureServices.weddingService());
+            assertSame(protectorConquerorService, GameFeatureServices.protectorConquerorService());
             assertSame(siegeService, GameFeatureServices.siegeService());
             assertSame(baseService, GameFeatureServices.baseService());
             assertSame(ffaService, GameFeatureServices.ffaService());
             assertSame(ladderService, GameFeatureServices.ladderService());
+            assertSame(aStationService, GameFeatureServices.aStationService());
+            assertSame(motionLoggingService, GameFeatureServices.motionLoggingService());
             assertSame(kiskService, GameFeatureServices.kiskService());
+            assertSame(repurchaseService, GameFeatureServices.repurchaseService());
+            assertSame(dropDistributionService, GameFeatureServices.dropDistributionService());
             assertSame(systemMailService, GameFeatureServices.systemMailService());
             assertSame(bonusService, BonusService.getInstance());
             assertSame(petService, PetService.getInstance());
             assertSame(petService, GameFeatureServices.petService());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
+            assertSame(arcadeUpgradeService, GameFeatureServices.arcadeUpgradeService());
             assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
+            assertSame(atreianBestiaryService, GameFeatureServices.atreianBestiaryService());
             assertSame(coalescenceService, CoalescenceService.getInstance());
             assertSame(growthEnergy, GrowthEnergy.getInstance());
 

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
+import java.util.function.Supplier;
+
 import com.aionemu.gameserver.services.AStationService;
 import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.DisputeLandService;
@@ -39,13 +41,24 @@ import org.springframework.stereotype.Component;
 public final class GameFeatureServices implements DisposableBean {
 
     private static volatile ObjectProvider<NpcShoutsService> npcShoutsServiceProvider;
+    private static volatile ObjectProvider<DredgionService2> dredgionServiceProvider;
+    private static volatile ObjectProvider<AsyunatarService> asyunatarServiceProvider;
+    private static volatile ObjectProvider<ShieldService> shieldServiceProvider;
+    private static volatile ObjectProvider<WeddingService> weddingServiceProvider;
+    private static volatile ObjectProvider<ProtectorConquerorService> protectorConquerorServiceProvider;
     private static volatile ObjectProvider<FFAService> ffaServiceProvider;
     private static volatile ObjectProvider<LadderService> ladderServiceProvider;
     private static volatile ObjectProvider<SiegeService> siegeServiceProvider;
     private static volatile ObjectProvider<BaseService> baseServiceProvider;
+    private static volatile ObjectProvider<AStationService> aStationServiceProvider;
+    private static volatile ObjectProvider<MotionLoggingService> motionLoggingServiceProvider;
     private static volatile ObjectProvider<KiskService> kiskServiceProvider;
+    private static volatile ObjectProvider<RepurchaseService> repurchaseServiceProvider;
+    private static volatile ObjectProvider<DropDistributionService> dropDistributionServiceProvider;
     private static volatile ObjectProvider<SystemMailService> systemMailServiceProvider;
     private static volatile ObjectProvider<PetService> petServiceProvider;
+    private static volatile ObjectProvider<ArcadeUpgradeService> arcadeUpgradeServiceProvider;
+    private static volatile ObjectProvider<AtreianBestiaryService> atreianBestiaryServiceProvider;
 
     public GameFeatureServices(ObjectProvider<DisputeLandService> disputeLandServiceProvider,
             ObjectProvider<DredgionService2> dredgionServiceProvider,
@@ -79,13 +92,24 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<CoalescenceService> coalescenceServiceProvider,
             ObjectProvider<GrowthEnergy> growthEnergyProvider) {
         GameFeatureServices.npcShoutsServiceProvider = npcShoutsServiceProvider;
+        GameFeatureServices.dredgionServiceProvider = dredgionServiceProvider;
+        GameFeatureServices.asyunatarServiceProvider = asyunatarServiceProvider;
+        GameFeatureServices.shieldServiceProvider = shieldServiceProvider;
+        GameFeatureServices.weddingServiceProvider = weddingServiceProvider;
+        GameFeatureServices.protectorConquerorServiceProvider = protectorConquerorServiceProvider;
         GameFeatureServices.ffaServiceProvider = ffaServiceProvider;
         GameFeatureServices.ladderServiceProvider = ladderServiceProvider;
         GameFeatureServices.siegeServiceProvider = siegeServiceProvider;
         GameFeatureServices.baseServiceProvider = baseServiceProvider;
+        GameFeatureServices.aStationServiceProvider = aStationServiceProvider;
+        GameFeatureServices.motionLoggingServiceProvider = motionLoggingServiceProvider;
         GameFeatureServices.kiskServiceProvider = kiskServiceProvider;
+        GameFeatureServices.repurchaseServiceProvider = repurchaseServiceProvider;
+        GameFeatureServices.dropDistributionServiceProvider = dropDistributionServiceProvider;
         GameFeatureServices.systemMailServiceProvider = systemMailServiceProvider;
         GameFeatureServices.petServiceProvider = petServiceProvider;
+        GameFeatureServices.arcadeUpgradeServiceProvider = arcadeUpgradeServiceProvider;
+        GameFeatureServices.atreianBestiaryServiceProvider = atreianBestiaryServiceProvider;
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
         DredgionService2.setInstanceProvider(dredgionServiceProvider);
         AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
@@ -127,6 +151,26 @@ public final class GameFeatureServices implements DisposableBean {
         return provider.getIfAvailable(NpcShoutsService::getInstance);
     }
 
+    public static DredgionService2 dredgionService() {
+        return getIfAvailable(dredgionServiceProvider, DredgionService2::getInstance);
+    }
+
+    public static AsyunatarService asyunatarService() {
+        return getIfAvailable(asyunatarServiceProvider, AsyunatarService::getInstance);
+    }
+
+    public static ShieldService shieldService() {
+        return getIfAvailable(shieldServiceProvider, ShieldService::getInstance);
+    }
+
+    public static WeddingService weddingService() {
+        return getIfAvailable(weddingServiceProvider, WeddingService::getInstance);
+    }
+
+    public static ProtectorConquerorService protectorConquerorService() {
+        return getIfAvailable(protectorConquerorServiceProvider, ProtectorConquerorService::getInstance);
+    }
+
     public static FFAService ffaService() {
         ObjectProvider<FFAService> provider = ffaServiceProvider;
         if (provider == null) {
@@ -159,12 +203,28 @@ public final class GameFeatureServices implements DisposableBean {
         return provider.getIfAvailable(BaseService::getInstance);
     }
 
+    public static AStationService aStationService() {
+        return getIfAvailable(aStationServiceProvider, AStationService::getInstance);
+    }
+
+    public static MotionLoggingService motionLoggingService() {
+        return getIfAvailable(motionLoggingServiceProvider, MotionLoggingService::getInstance);
+    }
+
     public static KiskService kiskService() {
         ObjectProvider<KiskService> provider = kiskServiceProvider;
         if (provider == null) {
             return KiskService.getInstance();
         }
         return provider.getIfAvailable(KiskService::getInstance);
+    }
+
+    public static RepurchaseService repurchaseService() {
+        return getIfAvailable(repurchaseServiceProvider, RepurchaseService::getInstance);
+    }
+
+    public static DropDistributionService dropDistributionService() {
+        return getIfAvailable(dropDistributionServiceProvider, DropDistributionService::getInstance);
     }
 
     public static SystemMailService systemMailService() {
@@ -183,16 +243,42 @@ public final class GameFeatureServices implements DisposableBean {
         return provider.getIfAvailable(PetService::getInstance);
     }
 
+    public static ArcadeUpgradeService arcadeUpgradeService() {
+        return getIfAvailable(arcadeUpgradeServiceProvider, ArcadeUpgradeService::getInstance);
+    }
+
+    public static AtreianBestiaryService atreianBestiaryService() {
+        return getIfAvailable(atreianBestiaryServiceProvider, AtreianBestiaryService::getInstance);
+    }
+
+    private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
+        if (provider == null) {
+            return fallback.get();
+        }
+        return provider.getIfAvailable(fallback);
+    }
+
     @Override
     public void destroy() {
         npcShoutsServiceProvider = null;
+        dredgionServiceProvider = null;
+        asyunatarServiceProvider = null;
+        shieldServiceProvider = null;
+        weddingServiceProvider = null;
+        protectorConquerorServiceProvider = null;
         ffaServiceProvider = null;
         ladderServiceProvider = null;
         siegeServiceProvider = null;
         baseServiceProvider = null;
+        aStationServiceProvider = null;
+        motionLoggingServiceProvider = null;
         kiskServiceProvider = null;
+        repurchaseServiceProvider = null;
+        dropDistributionServiceProvider = null;
         systemMailServiceProvider = null;
         petServiceProvider = null;
+        arcadeUpgradeServiceProvider = null;
+        atreianBestiaryServiceProvider = null;
         DisputeLandService.setInstanceProvider(null);
         DredgionService2.setInstanceProvider(null);
         AsyunatarService.setInstanceProvider(null);
