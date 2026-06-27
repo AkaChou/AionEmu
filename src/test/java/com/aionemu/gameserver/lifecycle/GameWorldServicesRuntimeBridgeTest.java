@@ -11,6 +11,7 @@ import com.aionemu.gameserver.world.geo.nav.NavService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -68,6 +69,26 @@ class GameWorldServicesRuntimeBridgeTest {
 
         assertFalse(source.contains("DropRegistrationService.getInstance()"));
         assertTrue(source.contains("GameWorldServices.dropRegistrationService()"));
+    }
+
+    @Test
+    void coreDropRegistrationCallersUseWorldServicesBridge() throws IOException {
+        List<Path> sources = List.of(
+            Path.of("src/main/java/com/aionemu/gameserver/services/RespawnService.java"),
+            Path.of("src/main/java/com/aionemu/gameserver/services/QuestService.java"),
+            Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropDistributionService.java"),
+            Path.of("src/main/java/com/aionemu/gameserver/ai2/AI2Actions.java"),
+            Path.of("src/main/java/com/aionemu/gameserver/controllers/NpcController.java"),
+            Path.of("src/main/java/com/aionemu/gameserver/model/team2/common/service/PlayerTeamDistributionService.java"),
+            Path.of("src/main/java/com/aionemu/gameserver/ai/ChestAI2.java"),
+            Path.of("src/main/java/com/aionemu/gameserver/ai/siege/Treasure_Box_Success_BossAI2.java")
+        );
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("DropRegistrationService.getInstance()"), source.toString());
+        }
     }
 
     private <T> T instance(Class<T> type) {

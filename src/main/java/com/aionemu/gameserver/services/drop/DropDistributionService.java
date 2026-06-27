@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.DropNpc;
@@ -56,7 +57,7 @@ public class DropDistributionService {
 	 * @param Called from CM_GROUP_LOOT to handle rolls
 	 */
 	public void handleRoll(Player player, int roll, int itemId, int npcId, int index) {
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
 		if (player == null || dropNpc == null) {
 			log.info("player == null || dropNpc == null ");
 			return;
@@ -100,7 +101,7 @@ public class DropDistributionService {
 	 * @param Called from CM_GROUP_LOOT to handle bids
 	 */
 	public void handleBid(Player player, long bid, int itemId, int npcId, int index) {
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
 		if (player == null || dropNpc == null) {
 			return;
 		}
@@ -142,8 +143,8 @@ public class DropDistributionService {
 	 *               accordingly
 	 */
 	private void distributeLoot(Player player, long luckyPlayer, int itemId, int npcId) {
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npcId);
+		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npcId);
 		DropItem requestedItem = null;
 
 		if (dropItems == null) {

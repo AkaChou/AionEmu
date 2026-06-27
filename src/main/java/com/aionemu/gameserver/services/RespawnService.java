@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -26,7 +27,6 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.world.World;
@@ -45,7 +45,7 @@ public class RespawnService {
 	 */
 	public static Future<?> scheduleDecayTask(Npc npc) {
 		int decayInterval;
-		Set<DropItem> drop = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> drop = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 
 		if (drop == null) {
 			decayInterval = IMMEDIATE_DECAY;

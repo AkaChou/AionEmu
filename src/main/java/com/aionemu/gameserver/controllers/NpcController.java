@@ -35,6 +35,7 @@ import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
 import com.aionemu.gameserver.controllers.attack.AggroList;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.TaskId;
@@ -65,7 +66,6 @@ import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.services.RespawnService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.GrowthEnergy;
@@ -309,7 +309,7 @@ public class NpcController extends CreatureController<Npc> {
 						}
 					}
 					if (attacker.equals(winner)) {
-						DropRegistrationService.getInstance().registerDrop(getOwner(), player, player.getLevel(), null);
+						GameWorldServices.dropRegistrationService().registerDrop(getOwner(), player, player.getLevel(), null);
 					}
 					// Auto Drop Kinah.
 					if (CustomConfig.AUTO_KINAH_ENABLED) {
