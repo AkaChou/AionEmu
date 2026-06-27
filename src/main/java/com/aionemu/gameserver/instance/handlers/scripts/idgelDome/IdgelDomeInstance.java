@@ -49,7 +49,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     private boolean isInstanceDestroyed = false;
 	private List<Integer> movies = new ArrayList<Integer>();
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> idgelTask = FastList.newInstance();
+    private final List<Future<?>> idgelTask = new ArrayList<Future<?>>();
     
     protected IdgelDomePlayerReward getPlayerReward(Player player) {
         idgelDomeReward.regPlayerReward(player);
@@ -572,10 +571,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	}
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = idgelTask.head(), end = idgelTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : idgelTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

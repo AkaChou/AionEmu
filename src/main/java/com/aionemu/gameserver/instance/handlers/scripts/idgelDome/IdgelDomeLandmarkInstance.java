@@ -49,7 +49,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -73,7 +72,7 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
     private boolean isInstanceDestroyed = false;
 	private List<Integer> movies = new ArrayList<Integer>();
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> landMarkTask = FastList.newInstance();
+    private final List<Future<?>> landMarkTask = new ArrayList<Future<?>>();
     
     protected LandMarkPlayerReward getPlayerReward(Player player) {
         landMarkReward.regPlayerReward(player);
@@ -589,10 +588,10 @@ public class IdgelDomeLandmarkInstance extends GeneralInstanceHandler
 	}
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = landMarkTask.head(), end = landMarkTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : landMarkTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

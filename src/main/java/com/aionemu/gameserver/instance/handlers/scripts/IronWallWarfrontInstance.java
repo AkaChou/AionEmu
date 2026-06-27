@@ -51,7 +51,6 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import javolution.util.FastList;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     private float loosingGroupMultiplier = 1;
     private boolean isInstanceDestroyed = false;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> ironWallTask = FastList.newInstance();
+    private final List<Future<?>> ironWallTask = new ArrayList<Future<?>>();
     private static Race RaceKilledCommanderStatic = null;
     private static int ironWallBaseStatic = 0;
     private static IronWallWarfrontInstance instanceStatic = null;
@@ -767,10 +766,10 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     }
     
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = ironWallTask.head(), end = ironWallTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : ironWallTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
     

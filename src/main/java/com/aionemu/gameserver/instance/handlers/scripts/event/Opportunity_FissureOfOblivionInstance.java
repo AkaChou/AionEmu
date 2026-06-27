@@ -41,7 +41,6 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -66,7 +65,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     
     private int prepareTimerSeconds = 60000;
     private int instanceTimerSeconds = 1800000;
-    private final FastList<Future<?>> oblivionTask = FastList.newInstance();
+    private final List<Future<?>> oblivionTask = new ArrayList<Future<?>>();
 
     private boolean spawned = false;
 
@@ -988,10 +987,10 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = oblivionTask.head(), end = oblivionTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : oblivionTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
     

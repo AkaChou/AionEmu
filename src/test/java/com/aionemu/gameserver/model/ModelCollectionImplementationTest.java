@@ -139,6 +139,35 @@ class ModelCollectionImplementationTest {
 				"FastList.recycle(itemOut)");
 	}
 
+	@Test
+	void localUtilityListsUseJdkLists() throws Exception {
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/dao/mysql8/MySQL8InventoryDAO.java",
+				"FastList.newInstance()");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/geoEngine/collision/bih/BIHNode.java",
+				"FastList<BIHStackData>");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/geoEngine/collision/bih/BIHNode.java",
+				"FastList.recycle(stack)");
+	}
+
+	@Test
+	void instanceFutureTaskListsUseJdkLists() throws Exception {
+		List<String> instanceScripts = List.of(
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/idgelDome/IdgelDomeLandmarkInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/idgelDome/IdgelDomeInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/EmperorTrillirunerkSafeInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/SealedArgentManorInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/TalocsHollowInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/IronWallWarfrontInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/OphidanWarpathInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/Event_AturamSkyFortressInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/Opportunity_FissureOfOblivionInstance.java",
+				"src/main/java/com/aionemu/gameserver/instance/handlers/scripts/event/Event_ContaminatedUnderpathInstance.java");
+		for (String sourcePath : instanceScripts) {
+			assertSourceOmits(sourcePath, "FastList<Future<?>>");
+			assertSourceOmits(sourcePath, "FastList.Node<Future<?>>");
+		}
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();

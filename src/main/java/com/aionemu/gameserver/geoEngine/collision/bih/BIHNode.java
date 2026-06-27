@@ -19,6 +19,9 @@ package com.aionemu.gameserver.geoEngine.collision.bih;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.gameserver.geoEngine.bounding.BoundingBox;
 import com.aionemu.gameserver.geoEngine.collision.Collidable;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResult;
@@ -27,8 +30,6 @@ import com.aionemu.gameserver.geoEngine.math.Matrix4f;
 import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Triangle;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
-
-import javolution.util.FastList;
 
 /**
  * Bounding Interval Hierarchy. Based on: Instant Ray Tracing: The Bounding
@@ -107,7 +108,7 @@ public final class BIHNode {
 	public final int intersectWhere(Collidable col, BoundingBox box, Matrix4f worldMatrix, BIHTree tree,
 			CollisionResults results) {
 
-		FastList<BIHStackData> stack = FastList.newInstance();
+		List<BIHStackData> stack = new ArrayList<BIHStackData>();
 
 		float[] minExts = { box.getCenter().x - box.getXExtent(), box.getCenter().y - box.getYExtent(),
 				box.getCenter().z - box.getZExtent() };
@@ -161,7 +162,6 @@ public final class BIHNode {
 				 */
 			}
 		}
-		FastList.recycle(stack);
 		return cols;
 	}
 
@@ -177,7 +177,7 @@ public final class BIHNode {
 
 		int cols = 0;
 
-		FastList<BIHStackData> stack = FastList.newInstance();
+		List<BIHStackData> stack = new ArrayList<BIHStackData>();
 		stack.clear();
 		stack.add(new BIHStackData(this, 0, 0));
 		while (stack.size() > 0) {
@@ -214,14 +214,13 @@ public final class BIHNode {
 				}
 			}
 		}
-		FastList.recycle(stack);
 		return cols;
 	}
 
 	public final int intersectWhere(Ray r, Matrix4f worldMatrix, BIHTree tree, float sceneMin, float sceneMax,
 			CollisionResults results) {
 
-		FastList<BIHStackData> stack = FastList.newInstance();
+		List<BIHStackData> stack = new ArrayList<BIHStackData>();
 
 		// float tHit = Float.POSITIVE_INFINITY;
 		Vector3f o = r.getOrigin().clone();
@@ -331,7 +330,6 @@ public final class BIHNode {
 
 		r.setOrigin(o);
 		r.setDirection(d);
-		FastList.recycle(stack);
 		return cols;
 	}
 }

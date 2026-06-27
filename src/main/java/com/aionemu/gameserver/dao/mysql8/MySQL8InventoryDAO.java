@@ -11,7 +11,6 @@ import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.services.item.ItemService;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,7 +87,7 @@ public class MySQL8InventoryDAO extends InventoryDAO {
     
     @Override
     public List<Item> loadStorageDirect(int playerId, StorageType storageType) {
-        List<Item> list = FastList.newInstance();
+        List<Item> list = new ArrayList<>();
         final int storage = storageType.getId();
 
         if (storageType == StorageType.ACCOUNT_WAREHOUSE) {
