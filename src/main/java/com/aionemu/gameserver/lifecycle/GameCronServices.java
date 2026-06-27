@@ -22,8 +22,6 @@ public final class GameCronServices {
             cronService.shutdown();
             return;
         }
-        if (CronService.isInitialized()) {
-            CronService.getInstance().shutdown();
-        }
+        CronService.shutdownCurrentIfInitialized();
     }
 }

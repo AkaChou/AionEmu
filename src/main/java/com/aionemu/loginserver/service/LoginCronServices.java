@@ -22,11 +22,6 @@ public final class LoginCronServices {
             cronService.shutdown();
             return;
         }
-        if (CronService.isInitialized()) {
-            cronService = CronService.getInstance();
-            if (cronService != null) {
-                cronService.shutdown();
-            }
-        }
+        CronService.shutdownCurrentIfInitialized();
     }
 }

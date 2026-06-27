@@ -72,6 +72,15 @@ public final class CronService {
         return instances.containsKey(ServiceContext.current());
     }
 
+    public static boolean shutdownCurrentIfInitialized() {
+      CronService cronService = instances.get(ServiceContext.current());
+      if (cronService == null) {
+         return false;
+      }
+      cronService.shutdown();
+      return true;
+   }
+
     /**
      * 初始化CronService单例
      * Initialize CronService singleton

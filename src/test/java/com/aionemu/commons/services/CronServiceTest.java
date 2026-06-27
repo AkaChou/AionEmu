@@ -39,6 +39,22 @@ class CronServiceTest {
         assertNotSame(first, second);
     }
 
+    @Test
+    void canShutdownCurrentServiceContextWithoutFetchingSingleton() {
+        String context = "cron-shutdown-test-" + System.nanoTime();
+
+        try (ServiceContext.Scope ignored = ServiceContext.use(context)) {
+            assertFalse(CronService.shutdownCurrentIfInitialized());
+
+            CronService.initSingleton(TestRunnableRunner.class);
+            assertTrue(CronService.isInitialized());
+
+            assertTrue(CronService.shutdownCurrentIfInitialized());
+            assertFalse(CronService.isInitialized());
+            assertFalse(CronService.shutdownCurrentIfInitialized());
+        }
+    }
+
     public static final class TestRunnableRunner extends RunnableRunner {
         @Override
         public void executeRunnable(Runnable r) {
