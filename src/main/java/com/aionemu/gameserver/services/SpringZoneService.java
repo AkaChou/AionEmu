@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -29,8 +32,6 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
-
 /****/
 /**
  * Author Rinzler (Encom) /
@@ -39,7 +40,7 @@ import javolution.util.FastList;
 public class SpringZoneService {
 	private static volatile ObjectProvider<SpringZoneService> instanceProvider;
 	Logger log = LoggerFactory.getLogger(SpringZoneService.class);
-	private FastList<SpringObject> springObjects = new FastList<SpringObject>();
+	private List<SpringObject> springObjects = new ArrayList<SpringObject>();
 
 	public SpringZoneService() {
 		for (SpringTemplate t : DataManager.SPRING_OBJECTS_DATA.getSpringObject()) {

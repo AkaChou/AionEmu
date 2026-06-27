@@ -16,7 +16,9 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
 
 /****/
 /**
@@ -43,7 +44,7 @@ public class AsyunatarService {
 	private static final Logger log = LoggerFactory.getLogger(AsyunatarService.class);
 	private static volatile ObjectProvider<AsyunatarService> instanceProvider;
 	private boolean registerAvailable;
-	private final FastList<Integer> playersWithCooldown = FastList.newInstance();
+	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
 	public static final byte minLevel = 66, capLevel = 76;
 	public static final int maskId = 121;
 

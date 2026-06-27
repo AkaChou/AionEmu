@@ -16,7 +16,9 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +34,13 @@ import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
 
 public class DredgionService2 {
 	private static final Logger log = LoggerFactory.getLogger(DredgionService2.class);
 	private static volatile ObjectProvider<DredgionService2> instanceProvider;
 
 	private boolean registerAvailable;
-	private FastList<Integer> playersWithCooldown = new FastList<Integer>();
+	private List<Integer> playersWithCooldown = new ArrayList<Integer>();
 	private SM_AUTO_GROUP[] autoGroupUnreg, autoGroupReg;
 	private final byte maskLvlGradeC = 1, maskLvlGradeB = 2, maskLvlGradeA = 3;
 	public static final byte minLevel = 46, capLevel = 61;
