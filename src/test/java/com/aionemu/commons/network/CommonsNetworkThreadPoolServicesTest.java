@@ -27,6 +27,16 @@ class CommonsNetworkThreadPoolServicesTest {
     }
 
     @Test
+    void springBeanCreatesBootManagedThreadPoolInsteadOfLegacySingleton() throws IOException {
+        String configurationSource = Files.readString(Path.of("src/main/java/com/aionemu/commons/network/CommonsNetworkSpringConfiguration.java"));
+        String threadPoolSource = Files.readString(Path.of("src/main/java/com/aionemu/commons/network/util/ThreadPoolManager.java"));
+
+        assertFalse(configurationSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(configurationSource.contains("return new ThreadPoolManager();"));
+        assertTrue(threadPoolSource.contains("public ThreadPoolManager()"));
+    }
+
+    @Test
     void usesSpringProviderBeforeLegacySingletonFallback() {
         ThreadPoolManager threadPoolManager = instance(ThreadPoolManager.class);
         CommonsNetworkThreadPoolServices services = new CommonsNetworkThreadPoolServices(
@@ -38,6 +48,16 @@ class CommonsNetworkThreadPoolServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void cachesResolvedSpringProviderForShutdownAfterDestroy() throws IOException {
+        String servicesSource = Files.readString(Path.of("src/main/java/com/aionemu/commons/network/CommonsNetworkThreadPoolServices.java"));
+
+        assertTrue(servicesSource.contains("resolvedThreadPoolManager"));
+        assertTrue(servicesSource.contains("return resolved;"));
+        assertFalse(servicesSource.contains("return ThreadPoolManager.getInstance();"));
+        assertFalse(servicesSource.contains("provider.getIfAvailable(ThreadPoolManager::getInstance)"));
     }
 
     @Test

@@ -99,7 +99,7 @@ public class ThreadPoolManager implements Executor {
      * 构造函数，初始化线程池和死锁检测器
      * Constructor, initialize thread pools and deadlock detector
      */
-    private ThreadPoolManager() {
+    public ThreadPoolManager() {
         DeadLockDetector deadLockDetector = new DeadLockDetector(
             60,
             AionRuntimeMode.isBootEmbedded() ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART

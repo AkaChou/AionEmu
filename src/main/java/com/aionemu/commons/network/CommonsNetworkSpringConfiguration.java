@@ -11,6 +11,6 @@ public class CommonsNetworkSpringConfiguration {
     @Bean
     @Lazy
     public ThreadPoolManager commonsNetworkThreadPoolManager() {
-        return ThreadPoolManager.getInstance();
+        return new ThreadPoolManager();
     }
 }
