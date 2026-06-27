@@ -40,6 +40,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
     private static volatile ObjectProvider<MoltenusService> moltenusServiceProvider;
     private static volatile ObjectProvider<ConquestService> conquestServiceProvider;
     private static volatile ObjectProvider<AbyssLandingService> abyssLandingServiceProvider;
+    private static volatile ObjectProvider<AbyssLandingSpecialService> abyssLandingSpecialServiceProvider;
 
     public GameLocationBootstrapServices(ObjectProvider<VortexService> vortexServiceProvider,
             ObjectProvider<BeritraService> beritraServiceProvider, ObjectProvider<AgentService> agentServiceProvider,
@@ -66,6 +67,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         GameLocationBootstrapServices.zorshivDredgionServiceProvider = zorshivDredgionServiceProvider;
         GameLocationBootstrapServices.moltenusServiceProvider = moltenusServiceProvider;
         GameLocationBootstrapServices.conquestServiceProvider = conquestServiceProvider;
+        GameLocationBootstrapServices.abyssLandingSpecialServiceProvider = abyssLandingSpecialServiceProvider;
         VortexService.setInstanceProvider(vortexServiceProvider);
         BeritraService.setInstanceProvider(beritraServiceProvider);
         AgentService.setInstanceProvider(agentServiceProvider);
@@ -127,6 +129,10 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         return getIfAvailable(abyssLandingServiceProvider, AbyssLandingService::getInstance);
     }
 
+    public static AbyssLandingSpecialService abyssLandingSpecialService() {
+        return getIfAvailable(abyssLandingSpecialServiceProvider, AbyssLandingSpecialService::getInstance);
+    }
+
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
         if (provider == null) {
             return fallback.get();
@@ -164,6 +170,7 @@ public final class GameLocationBootstrapServices implements DisposableBean {
         moltenusServiceProvider = null;
         conquestServiceProvider = null;
         abyssLandingServiceProvider = null;
+        abyssLandingSpecialServiceProvider = null;
         AbyssLandingService.setInstanceProvider(null);
         LandingUpdateService.setInstanceProvider(null);
         AbyssLandingSpecialService.setInstanceProvider(null);

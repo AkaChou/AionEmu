@@ -973,6 +973,7 @@ class GameServiceProviderCompatibilityTest {
         MoltenusService moltenusService = instance(MoltenusService.class);
         ConquestService conquestService = instance(ConquestService.class);
         AbyssLandingService abyssLandingService = instance(AbyssLandingService.class);
+        AbyssLandingSpecialService abyssLandingSpecialService = instance(AbyssLandingSpecialService.class);
         GameLocationBootstrapServices locationServices = new GameLocationBootstrapServices(
                 provider(VortexService.class, vortexService),
                 provider(BeritraService.class, beritraService),
@@ -995,7 +996,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(TowerOfEternityService.class, instance(TowerOfEternityService.class)),
                 provider(AbyssLandingService.class, abyssLandingService),
                 provider(LandingUpdateService.class, instance(LandingUpdateService.class)),
-                provider(AbyssLandingSpecialService.class, instance(AbyssLandingSpecialService.class)));
+                provider(AbyssLandingSpecialService.class, abyssLandingSpecialService));
 
         try {
             assertSame(vortexService, GameLocationBootstrapServices.vortexService());
@@ -1007,6 +1008,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(moltenusService, GameLocationBootstrapServices.moltenusService());
             assertSame(conquestService, GameLocationBootstrapServices.conquestService());
             assertSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
+            assertSame(abyssLandingSpecialService, GameLocationBootstrapServices.abyssLandingSpecialService());
         } finally {
             locationServices.destroy();
             assertNotSame(vortexService, GameLocationBootstrapServices.vortexService());
@@ -1018,6 +1020,7 @@ class GameServiceProviderCompatibilityTest {
             assertNotSame(moltenusService, GameLocationBootstrapServices.moltenusService());
             assertNotSame(conquestService, GameLocationBootstrapServices.conquestService());
             assertNotSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
+            assertNotSame(abyssLandingSpecialService, GameLocationBootstrapServices.abyssLandingSpecialService());
         }
     }
 
