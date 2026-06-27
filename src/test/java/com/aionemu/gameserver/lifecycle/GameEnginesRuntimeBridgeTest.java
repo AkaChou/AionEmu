@@ -96,6 +96,28 @@ class GameEnginesRuntimeBridgeTest {
     }
 
     @Test
+    void gameEngineServicesRuntimeAccessorsUseSpringProviderBeforeLegacyFallback() {
+        InstanceEngine instanceEngine = instance(InstanceEngine.class);
+        AI2Engine ai2Engine = instance(AI2Engine.class);
+        ChatProcessor chatProcessor = instance(ChatProcessor.class);
+        GameEngineServices gameEngineServices = new GameEngineServices(
+            provider(QuestEngine.class, instance(QuestEngine.class)),
+            provider(SkillEngine.class, instance(SkillEngine.class)),
+            provider(InstanceEngine.class, instanceEngine),
+            provider(AI2Engine.class, ai2Engine),
+            provider(ChatProcessor.class, chatProcessor)
+        );
+
+        try {
+            assertSame(instanceEngine, GameEngineServices.instanceEngine());
+            assertSame(ai2Engine, GameEngineServices.ai2Engine());
+            assertSame(chatProcessor, GameEngineServices.chatProcessor());
+        } finally {
+            gameEngineServices.destroy();
+        }
+    }
+
+    @Test
     void gameServerCodeUsesEngineQuestBridgeInsteadOfDirectSingleton() throws IOException {
         List<Path> sources;
         try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
