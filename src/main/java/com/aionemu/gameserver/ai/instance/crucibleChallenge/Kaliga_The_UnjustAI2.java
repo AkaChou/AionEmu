@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.crucibleChallenge;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -110,7 +112,7 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 					cancelPhaseTask();
 				} else {
 					//Mmmmm.... Rumble....
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500175, getObjectId(), 0, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500175, getObjectId(), 0, 0);
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -198,6 +200,6 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 }

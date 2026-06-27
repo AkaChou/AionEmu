@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public final class ShoutEventHandler {
 		if (DataManager.NPC_SHOUT_DATA.hasAnyShout(npc.getPosition().getMapId(), npc.getNpcId(), ShoutEventType.SEE)) {
 			List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
 					npc.getNpcId(), ShoutEventType.SEE, null, 0);
-			NpcShoutsService.getInstance().shout(npc, target, shouts, 0, false);
+			GameFeatureServices.npcShoutsService().shout(npc, target, shouts, 0, false);
 			shouts.clear();
 		}
 	}
@@ -55,7 +57,7 @@ public final class ShoutEventHandler {
 				ShoutEventType.BEFORE_DESPAWN)) {
 			List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
 					npc.getNpcId(), ShoutEventType.BEFORE_DESPAWN, null, 0);
-			NpcShoutsService.getInstance().shout(npc, null, shouts, 0, false);
+			GameFeatureServices.npcShoutsService().shout(npc, null, shouts, 0, false);
 			shouts.clear();
 		}
 	}
@@ -71,9 +73,9 @@ public final class ShoutEventHandler {
 				List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
 						npc.getNpcId(), shoutType, null, 0);
 				if (npc.getTarget() instanceof Creature) {
-					NpcShoutsService.getInstance().shout(npc, (Creature) npc.getTarget(), shouts, 0, false);
+					GameFeatureServices.npcShoutsService().shout(npc, (Creature) npc.getTarget(), shouts, 0, false);
 				} else {
-					NpcShoutsService.getInstance().shout(npc, null, shouts, 0, false);
+					GameFeatureServices.npcShoutsService().shout(npc, null, shouts, 0, false);
 				}
 				shouts.clear();
 			}
@@ -86,7 +88,7 @@ public final class ShoutEventHandler {
 				ShoutEventType.SWITCH_TARGET)) {
 			List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
 					npc.getNpcId(), ShoutEventType.SWITCH_TARGET, null, 0);
-			NpcShoutsService.getInstance().shout(npc, creature, shouts, 0, false);
+			GameFeatureServices.npcShoutsService().shout(npc, creature, shouts, 0, false);
 			shouts.clear();
 		}
 	}
@@ -98,7 +100,7 @@ public final class ShoutEventHandler {
 			List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(owner.getPosition().getMapId(),
 					owner.getNpcId(), ShoutEventType.DIED, null, 0);
 			if (shouts.size() > 0) {
-				NpcShoutsService.getInstance().shout(owner, (Creature) owner.getTarget(), shouts, 0, false);
+				GameFeatureServices.npcShoutsService().shout(owner, (Creature) owner.getTarget(), shouts, 0, false);
 			}
 			shouts.clear();
 		}
@@ -116,7 +118,7 @@ public final class ShoutEventHandler {
 				ShoutEventType.ATTACK_BEGIN)) {
 			List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
 					npc.getNpcId(), ShoutEventType.ATTACK_BEGIN, null, 0);
-			NpcShoutsService.getInstance().shout(npc, creature, shouts, 0, false);
+			GameFeatureServices.npcShoutsService().shout(npc, creature, shouts, 0, false);
 			shouts.clear();
 			return;
 		}
@@ -133,7 +135,7 @@ public final class ShoutEventHandler {
 					ShoutEventType.ATTACKED)) {
 				List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
 						npc.getNpcId(), ShoutEventType.ATTACKED, null, 0);
-				NpcShoutsService.getInstance().shout(npc, creature, shouts, 0, false);
+				GameFeatureServices.npcShoutsService().shout(npc, creature, shouts, 0, false);
 				shouts.clear();
 				return;
 			}
@@ -141,7 +143,7 @@ public final class ShoutEventHandler {
 					ShoutEventType.HELPCALL)) {
 				List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
 						npc.getNpcId(), ShoutEventType.HELPCALL, null, 0);
-				NpcShoutsService.getInstance().shout(npc, creature, shouts, 0, false);
+				GameFeatureServices.npcShoutsService().shout(npc, creature, shouts, 0, false);
 				shouts.clear();
 			}
 		}
@@ -189,7 +191,7 @@ public final class ShoutEventHandler {
 					if (kObj.getLifeStats().isAlreadyDead()) {
 						return;
 					}
-					NpcShoutsService.getInstance().shout(npc, kObj, shout, shout.getPollDelay() / 1000);
+					GameFeatureServices.npcShoutsService().shout(npc, kObj, shout, shout.getPollDelay() / 1000);
 				}
 			}
 		}, 0);
@@ -231,7 +233,7 @@ public final class ShoutEventHandler {
 		}
 
 		if (validShouts.size() > 0) {
-			NpcShoutsService.getInstance().shout(owner, creature, validShouts, 0, false);
+			GameFeatureServices.npcShoutsService().shout(owner, creature, validShouts, 0, false);
 		}
 
 		validShouts.clear();
@@ -244,7 +246,7 @@ public final class ShoutEventHandler {
 				ShoutEventType.ATTACK_END)) {
 			List<NpcShout> shouts = DataManager.NPC_SHOUT_DATA.getNpcShouts(npc.getPosition().getMapId(),
 					npc.getNpcId(), ShoutEventType.ATTACK_END, null, 0);
-			NpcShoutsService.getInstance().shout(npc, null, shouts, 0, false);
+			GameFeatureServices.npcShoutsService().shout(npc, null, shouts, 0, false);
 			shouts.clear();
 		}
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.tiamaranta_eye;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -66,7 +68,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 				case 249144: //Governor Sunayaka.
 				case 249145: //Berserker Sunayaka.
 					//Berserker Sunayaka goes berserk 15 minutes after the battle starts.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1401459, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401459, 0);
 					getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
@@ -79,7 +81,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 						@Override
 						public void run() {
 							//Berserker Sunayaka has gone berserk.
-							NpcShoutsService.getInstance().sendMsg(getOwner(), 1401460, 0);
+							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401460, 0);
 							getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 								@Override
 								public void visit(Player player) {

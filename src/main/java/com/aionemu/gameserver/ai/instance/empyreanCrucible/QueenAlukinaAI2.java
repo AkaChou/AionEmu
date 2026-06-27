@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -79,7 +81,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 		switch (percent) {
 			case 75:
 				scheduleSkill(17900, 4500);
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 340487, getObjectId(), 0, 10000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 340487, getObjectId(), 0, 10000);
 				scheduleSkill(17899, 14000);
 				scheduleSkill(17900, 18000);
 			break;

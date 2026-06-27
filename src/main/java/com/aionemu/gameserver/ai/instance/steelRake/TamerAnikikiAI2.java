@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.steelRake;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -64,7 +66,7 @@ public class TamerAnikikiAI2 extends AggressiveNpcAI2
 				    spawn(700553, 626f, 540f, 936f, (byte) 1);
 				    spawn(700553, 645f, 534f, 936f, (byte) 75);
 				    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 300));
-				    NpcShoutsService.getInstance().sendMsg(getOwner(), 1400262, 3000);
+				    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400262, 3000);
 				}
 			}
 		}

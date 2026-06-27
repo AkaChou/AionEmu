@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -111,7 +113,7 @@ public class GeneralInstanceHandler implements InstanceHandler {
 	}
 
 	protected void sendMsg(int msg, int Obj, boolean isShout, int color, int time) {
-		NpcShoutsService.getInstance().sendMsg(instance, msg, Obj, isShout, color, time);
+		GameFeatureServices.npcShoutsService().sendMsg(instance, msg, Obj, isShout, color, time);
 	}
 
 	protected void sendMsg(int msg) {

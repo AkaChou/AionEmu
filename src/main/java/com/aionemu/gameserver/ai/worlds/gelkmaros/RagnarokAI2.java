@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.gelkmaros;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -60,19 +62,19 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 		if (hpPercentage <= 90) {
 			if (isStartedEvent.compareAndSet(false, true)) {
 				//Attack of poison and paralysis begins.
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400610, 0);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400610, 0);
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 50) {
 			if (isStartedEvent.compareAndSet(false, true)) {
 				//Attack that restricts physical and magical assaults begins.
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400611, 0);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400611, 0);
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 10) {
 			if (isStartedEvent.compareAndSet(false, true)) {
 				//Powerful continuous attacks and reflections begin.
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400613, 0);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400613, 0);
 				startPhaseTask();
 			}
 		}
@@ -123,7 +125,7 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 							break;
 							case 2:
 							    //Ragnarok's acidic fluid appears.
-								NpcShoutsService.getInstance().sendMsg(getOwner(), 1400612, 2000);
+								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400612, 2000);
 							    spawn(281951, x, y, z, (byte) 0); //Ragnarok Slime.
 							break;
 						}

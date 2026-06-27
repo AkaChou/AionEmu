@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -305,9 +307,9 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 									sendMsgByRace(1401540, Race.ELYOS, 5000);
 									Npc godKaisinel1 = getNpc(219489);
 									//I am weakening. You Daevas must take your turn.
-									NpcShoutsService.getInstance().sendMsg(godKaisinel1, 1500686, godKaisinel1.getObjectId(), 0, 20000);
+									GameFeatureServices.npcShoutsService().sendMsg(godKaisinel1, 1500686, godKaisinel1.getObjectId(), 0, 20000);
 									//We're not too late!
-									NpcShoutsService.getInstance().sendMsg(godKaisinel1, 1500687, godKaisinel1.getObjectId(), 0, 30000);
+									GameFeatureServices.npcShoutsService().sendMsg(godKaisinel1, 1500687, godKaisinel1.getObjectId(), 0, 30000);
 								}
 						    }, 15000);
 						break;
@@ -324,9 +326,9 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 									sendMsgByRace(1401541, Race.ASMODIANS, 5000);
 									Npc godMarchutan1 = getNpc(219492);
 									//I must rest a moment. Hold off the Dragon while I do!
-									NpcShoutsService.getInstance().sendMsg(godMarchutan1, 1500690, godMarchutan1.getObjectId(), 0, 20000);
+									GameFeatureServices.npcShoutsService().sendMsg(godMarchutan1, 1500690, godMarchutan1.getObjectId(), 0, 20000);
 									//You, you must be...
-									NpcShoutsService.getInstance().sendMsg(godMarchutan1, 1500691, godMarchutan1.getObjectId(), 0, 30000);
+									GameFeatureServices.npcShoutsService().sendMsg(godMarchutan1, 1500691, godMarchutan1.getObjectId(), 0, 30000);
 								}
 						    }, 15000);
 				        break;
@@ -343,50 +345,50 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 							spawn(800350, 504.4801f, 515.12964f, 417.40436f, (byte) 60); //Kaisinel.
 							Npc godKaisinel2 = getNpc(800350);
 							//It is finally over.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500695, godKaisinel2.getObjectId(), 0, 5000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500695, godKaisinel2.getObjectId(), 0, 5000);
 							//Even a Dragon Lord can be driven to madness.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500696, godKaisinel2.getObjectId(), 0, 15000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500696, godKaisinel2.getObjectId(), 0, 15000);
 							//No need to thank me. Now, give me the relics, and I will be gone.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500625, godKaisinel2.getObjectId(), 0, 25000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500625, godKaisinel2.getObjectId(), 0, 25000);
 							//Yes ? And such a fine job you've done.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500626, godKaisinel2.getObjectId(), 0, 35000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500626, godKaisinel2.getObjectId(), 0, 35000);
 							//How dare you raise your voice in this place ? Be silent.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500627, godKaisinel2.getObjectId(), 0, 45000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500627, godKaisinel2.getObjectId(), 0, 45000);
 							//Israphel? Here?
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500628, godKaisinel2.getObjectId(), 0, 55000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500628, godKaisinel2.getObjectId(), 0, 55000);
 							//No!
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500629, godKaisinel2.getObjectId(), 0, 65000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500629, godKaisinel2.getObjectId(), 0, 65000);
 							//What do you think you're going to do with those ?
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500630, godKaisinel2.getObjectId(), 0, 75000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500630, godKaisinel2.getObjectId(), 0, 75000);
 							//The traitor was right about one thing. We must put our argument aside and go after him.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500631, godKaisinel2.getObjectId(), 0, 85000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500631, godKaisinel2.getObjectId(), 0, 85000);
 							//Ah, Kahrun. Getting a little ambitious, don't you think ?
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500632, godKaisinel2.getObjectId(), 0, 95000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500632, godKaisinel2.getObjectId(), 0, 95000);
 				        break;
 			            case ASMODIANS:
 				            sendMovie(player, 885);
 				            spawn(800356, 504.4801f, 515.12964f, 417.40436f, (byte) 60); //Marchutan.
 							Npc godMarchutan2 = getNpc(800356);
 							//Finally, Tiamat is dead.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500698, godMarchutan2.getObjectId(), 0, 5000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500698, godMarchutan2.getObjectId(), 0, 5000);
 							//I saw its despair, before the end.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500699, godMarchutan2.getObjectId(), 0, 15000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500699, godMarchutan2.getObjectId(), 0, 15000);
 							//You can thank me by giving me those relics, for safekeeping.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500633, godMarchutan2.getObjectId(), 0, 25000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500633, godMarchutan2.getObjectId(), 0, 25000);
 							//That time is over, Kahrun.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500634, godMarchutan2.getObjectId(), 0, 35000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500634, godMarchutan2.getObjectId(), 0, 35000);
 							//You didn't have the power to fight Tiamat, so what makes you think you can stop me ?
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500635, godMarchutan2.getObjectId(), 0, 45000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500635, godMarchutan2.getObjectId(), 0, 45000);
 							//You ? What do you want ?
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500636, godMarchutan2.getObjectId(), 0, 55000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500636, godMarchutan2.getObjectId(), 0, 55000);
 							//Stop!
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500637, godMarchutan2.getObjectId(), 0, 65000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500637, godMarchutan2.getObjectId(), 0, 65000);
 							//How far do you think you'll get with those ?
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500638, godMarchutan2.getObjectId(), 0, 75000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500638, godMarchutan2.getObjectId(), 0, 75000);
 							//We must unite to stop him--but don't think that this argument is over!
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500639, godMarchutan2.getObjectId(), 0, 85000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500639, godMarchutan2.getObjectId(), 0, 85000);
 							//Well well. What's this ? Bickering ? And so soon after your glorious victory.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500640, godMarchutan2.getObjectId(), 0, 95000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500640, godMarchutan2.getObjectId(), 0, 95000);
 				        break;
 					}
 			    }

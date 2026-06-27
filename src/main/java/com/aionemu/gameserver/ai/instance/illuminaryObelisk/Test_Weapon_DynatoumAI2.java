@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -62,13 +64,13 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 					 * You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
 					 */
 					//The Test Weapon Dynatoum's bomb timer has begun its countdown.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402143, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402143, 0);
 					//Test Weapon Dynatoum will go off in 5 minutes.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402144, 60000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402144, 60000);
 					//Test Weapon Dynatoum will go off in 1 minute.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402145, 300000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402145, 300000);
 					//Test Weapon Dynatoum has detonated.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402146, 360000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402146, 360000);
 					testDynatoumFormTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.ophidanBridge;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
@@ -59,11 +61,11 @@ public class Runaway_HirakikiAI2 extends GeneralNpcAI2
 			switch (getNpcId()) {
 				case 235763: //Runaway Hirakiki Leader.
 					//The fugitive will get away in 8 minutes!
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402860, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402860, 0);
 					//The fugitive will get away in 4 minutes!
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402861, 240000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402861, 240000);
 					//The fugitive will get away in 1 minute!
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402862, 420000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402862, 420000);
 					hirakikiTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {

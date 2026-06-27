@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -63,11 +65,11 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			switch (getNpcId()) {
 				case 236228: //Heatvent Protector.
 					//If the Protectors are not defeated in 5 minutes, the Detachment's Rush Squad will sacrifice themselves to destroy the Fount.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402684, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402684, 0);
 					//In 1 minute, the Detachment's Rush Squad will resolve to sacrifice themselves and attempt to destroy the Fount.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402685, 240000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402685, 240000);
 					//In a moment, the Detachment's Rush Squad, armed with the resolve to sacrifice themselves, will attack the Fount.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402686, 270000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402686, 270000);
 					heatventProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {

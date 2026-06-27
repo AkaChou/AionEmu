@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -62,7 +64,7 @@ public class KahrunAI2 extends NpcAI2
 				Npc kharunReianLeader = (Npc)spawn(800335, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 60);
 			    kharunReianLeader.setTarget(aionFXPostGlow);
 			    //Stand back. I will take care of this barrier.
-				NpcShoutsService.getInstance().sendMsg(kharunReianLeader, 1500596, kharunReianLeader.getObjectId(), 0, 1000);
+				GameFeatureServices.npcShoutsService().sendMsg(kharunReianLeader, 1500596, kharunReianLeader.getObjectId(), 0, 1000);
 				GameEngineServices.skillEngine().getSkill(kharunReianLeader, 20943, 60, aionFXPostGlow).useNoAnimationSkill();
 			    fileLadderCGF.getController().onDelete();
 			    aionFXPostGlow.getController().onDelete();

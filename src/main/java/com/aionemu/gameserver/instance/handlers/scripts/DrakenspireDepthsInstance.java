@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -239,10 +241,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									    spawn(209694, 583.8417f, 177.45332f, 1683.7301f, (byte) 8);
 										spawn(209695, 582.48083f, 183.74684f, 1683.7301f, (byte) 116);
 										Npc PCGuard_Li_Talk_A = getNpc(209695);
-										NpcShoutsService.getInstance().sendMsg(PCGuard_Li_Talk_A, 1402727, PCGuard_Li_Talk_A.getObjectId(), 0, 2000);
-										NpcShoutsService.getInstance().sendMsg(PCGuard_Li_Talk_A, 1402728, PCGuard_Li_Talk_A.getObjectId(), 0, 6000);
-										NpcShoutsService.getInstance().sendMsg(PCGuard_Li_Talk_A, 1402729, PCGuard_Li_Talk_A.getObjectId(), 0, 10000);
-										NpcShoutsService.getInstance().sendMsg(PCGuard_Li_Talk_A, 1402730, PCGuard_Li_Talk_A.getObjectId(), 0, 14000);
+										GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li_Talk_A, 1402727, PCGuard_Li_Talk_A.getObjectId(), 0, 2000);
+										GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li_Talk_A, 1402728, PCGuard_Li_Talk_A.getObjectId(), 0, 6000);
+										GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li_Talk_A, 1402729, PCGuard_Li_Talk_A.getObjectId(), 0, 10000);
+										GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li_Talk_A, 1402730, PCGuard_Li_Talk_A.getObjectId(), 0, 14000);
 									}
 								}, 10000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -263,11 +265,11 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									public void run() {
 										Npc Masionel = getNpc(209698);
 										//Thanks to you, the Detachment got through without any losses. Excellent work!
-										NpcShoutsService.getInstance().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
+										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
 										//This place is protected by a dark power. It cannot be destroyed.
-										NpcShoutsService.getInstance().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
+										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
 										//Just let me blast us a path...
-										NpcShoutsService.getInstance().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
+										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
 									}
 								}, 25000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -278,9 +280,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 										//Detachment Demolisher has opened the path to the next area.
 										sendMsgByRace(1402689, Race.PC_ALL, 0);
 										//We can get through now.
-										NpcShoutsService.getInstance().sendMsg(Masionel, 1501311, Masionel.getObjectId(), 0, 0);
+										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501311, Masionel.getObjectId(), 0, 0);
 										//Please take care.
-										NpcShoutsService.getInstance().sendMsg(Masionel, 1501313, Masionel.getObjectId(), 0, 6000);
+										GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501313, Masionel.getObjectId(), 0, 6000);
 									}
 								}, 30000);
 							break;
@@ -302,10 +304,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									    spawn(209759, 583.8417f, 177.45332f, 1683.7301f, (byte) 8);
 										spawn(209760, 582.48083f, 183.74684f, 1683.7301f, (byte) 116);
 										Npc PCGuard_Da_Talk_A = getNpc(209760);
-										NpcShoutsService.getInstance().sendMsg(PCGuard_Da_Talk_A, 1402727, PCGuard_Da_Talk_A.getObjectId(), 0, 2000);
-										NpcShoutsService.getInstance().sendMsg(PCGuard_Da_Talk_A, 1402728, PCGuard_Da_Talk_A.getObjectId(), 0, 6000);
-										NpcShoutsService.getInstance().sendMsg(PCGuard_Da_Talk_A, 1402729, PCGuard_Da_Talk_A.getObjectId(), 0, 10000);
-										NpcShoutsService.getInstance().sendMsg(PCGuard_Da_Talk_A, 1402730, PCGuard_Da_Talk_A.getObjectId(), 0, 14000);
+										GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da_Talk_A, 1402727, PCGuard_Da_Talk_A.getObjectId(), 0, 2000);
+										GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da_Talk_A, 1402728, PCGuard_Da_Talk_A.getObjectId(), 0, 6000);
+										GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da_Talk_A, 1402729, PCGuard_Da_Talk_A.getObjectId(), 0, 10000);
+										GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da_Talk_A, 1402730, PCGuard_Da_Talk_A.getObjectId(), 0, 14000);
 									}
 								}, 10000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -326,11 +328,11 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									public void run() {
 										Npc Parsia = getNpc(209763);
 										//Thanks to you, the Detachment got through without any losses. Excellent work!
-										NpcShoutsService.getInstance().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
+										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
 										//This place is protected by a dark power. It cannot be destroyed.
-										NpcShoutsService.getInstance().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
+										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
 										//Just let me blast us a path...
-										NpcShoutsService.getInstance().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
+										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
 									}
 								}, 25000);
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -341,9 +343,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 										//Detachment Demolisher has opened the path to the next area.
 										sendMsgByRace(1402689, Race.PC_ALL, 0);
 										//We can get through now.
-										NpcShoutsService.getInstance().sendMsg(Parsia, 1501311, Parsia.getObjectId(), 0, 0);
+										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501311, Parsia.getObjectId(), 0, 0);
 										//Please take care.
-										NpcShoutsService.getInstance().sendMsg(Parsia, 1501313, Parsia.getObjectId(), 0, 6000);
+										GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501313, Parsia.getObjectId(), 0, 6000);
 									}
 								}, 30000);
 							break;
@@ -424,10 +426,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								    spawn(209712, 811.5f, 583.0642f, 1701.0447f, (byte) 32);
 									spawn(209713, 810.85767f, 588.2299f, 1701.0449f, (byte) 32);
 									Npc PCGuard_Li = getNpc(209713);
-									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402727, PCGuard_Li.getObjectId(), 0, 2000);
-									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402728, PCGuard_Li.getObjectId(), 0, 6000);
-									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402729, PCGuard_Li.getObjectId(), 0, 10000);
-									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402730, PCGuard_Li.getObjectId(), 0, 14000);
+									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li, 1402727, PCGuard_Li.getObjectId(), 0, 2000);
+									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li, 1402728, PCGuard_Li.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li, 1402729, PCGuard_Li.getObjectId(), 0, 10000);
+									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Li, 1402730, PCGuard_Li.getObjectId(), 0, 14000);
 								}
 							}, 20000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -435,11 +437,11 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								public void run() {
 									Npc Masionel = getNpc(209712);
 									//Thanks to you, the Detachment got through without any losses. Excellent work!
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
 									//This place is protected by a dark power. It cannot be destroyed.
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
 									//Just let me blast us a path...
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
 								}
 							}, 35000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -452,9 +454,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									//Glide at the Soulfade Labyrinth to use the wind road.
 									sendMsgByRace(1402941, Race.PC_ALL, 5000);
 									//We can get through now.
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501311, Masionel.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501311, Masionel.getObjectId(), 0, 0);
 									//Please take care.
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501313, Masionel.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501313, Masionel.getObjectId(), 0, 6000);
 								}
 							}, 50000);
 						break;
@@ -482,10 +484,10 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								    spawn(209777, 811.5f, 583.0642f, 1701.0447f, (byte) 32);
 									spawn(209778, 810.85767f, 588.2299f, 1701.0449f, (byte) 32);
 									Npc PCGuard_Da = getNpc(209778);
-									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402727, PCGuard_Da.getObjectId(), 0, 2000);
-									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402728, PCGuard_Da.getObjectId(), 0, 6000);
-									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402729, PCGuard_Da.getObjectId(), 0, 10000);
-									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402730, PCGuard_Da.getObjectId(), 0, 14000);
+									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da, 1402727, PCGuard_Da.getObjectId(), 0, 2000);
+									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da, 1402728, PCGuard_Da.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da, 1402729, PCGuard_Da.getObjectId(), 0, 10000);
+									GameFeatureServices.npcShoutsService().sendMsg(PCGuard_Da, 1402730, PCGuard_Da.getObjectId(), 0, 14000);
 								}
 							}, 20000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -493,11 +495,11 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								public void run() {
 									Npc Parsia = getNpc(209777);
 									//Thanks to you, the Detachment got through without any losses. Excellent work!
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
 									//This place is protected by a dark power. It cannot be destroyed.
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
 									//Just let me blast us a path...
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
 								}
 							}, 35000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -510,9 +512,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									//Glide at the Soulfade Labyrinth to use the wind road.
 									sendMsgByRace(1402941, Race.PC_ALL, 5000);
 									//We can get through now.
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501311, Parsia.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501311, Parsia.getObjectId(), 0, 0);
 									//Please take care.
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501313, Parsia.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501313, Parsia.getObjectId(), 0, 6000);
 								}
 							}, 50000);
 						break;
@@ -786,11 +788,11 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								public void run() {
 									Npc Masionel = getNpc(209720);
 									//Thanks to you, the Detachment got through without any losses. Excellent work!
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501314, Masionel.getObjectId(), 0, 0);
 									//This place is protected by a dark power. It cannot be destroyed.
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
 									//Darkness blocks our path It is time to use the Empyrean Lord's siege weapon.
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501318, Masionel.getObjectId(), 0, 12000);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501318, Masionel.getObjectId(), 0, 12000);
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -802,9 +804,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									//The Empyrean Lord's Stormcannon has blown open the Seal of Darkness.
 									sendMsgByRace(1402711, Race.PC_ALL, 0);
 									//Charge complete! Fire!!
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501320, Masionel.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501320, Masionel.getObjectId(), 0, 0);
 									//Thank you. Now, let's bring the fight to Beritra!
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501321, Masionel.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501321, Masionel.getObjectId(), 0, 6000);
 								}
 							}, 30000);
 						break;
@@ -820,11 +822,11 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 								public void run() {
 									Npc Parsia = getNpc(209785);
 									//Thanks to you, the Detachment got through without any losses. Excellent work!
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501314, Parsia.getObjectId(), 0, 0);
 									//This place is protected by a dark power. It cannot be destroyed.
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
 									//Darkness blocks our path It is time to use the Empyrean Lord's siege weapon.
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501318, Parsia.getObjectId(), 0, 12000);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501318, Parsia.getObjectId(), 0, 12000);
 								}
 							}, 15000);
 							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -836,9 +838,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									//The Empyrean Lord's Stormcannon has blown open the Seal of Darkness.
 									sendMsgByRace(1402711, Race.PC_ALL, 0);
 									//Charge complete! Fire!!
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501320, Parsia.getObjectId(), 0, 0);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501320, Parsia.getObjectId(), 0, 0);
 									//Thank you. Now, let's bring the fight to Beritra!
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501321, Parsia.getObjectId(), 0, 6000);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501321, Parsia.getObjectId(), 0, 6000);
 								}
 							}, 30000);
 						break;
@@ -977,9 +979,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									spawn(833015, 161.93251f, 518.47626f, 1749.4482f, (byte) 59); //Sacred Beast Of Balaur Lord Beritra.
 									Npc Masionel = getNpc(209739);
 									//Beritra may have gotten away, but we've taken Drakenspire Depths. You've done an excellent job.
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501326, Masionel.getObjectId(), 0, 12000);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501326, Masionel.getObjectId(), 0, 12000);
 									//Beritra has fled! He may have escaped, but we gave him something to remember us by!
-									NpcShoutsService.getInstance().sendMsg(Masionel, 1501327, Masionel.getObjectId(), 0, 22000);
+									GameFeatureServices.npcShoutsService().sendMsg(Masionel, 1501327, Masionel.getObjectId(), 0, 22000);
 									instance.doOnAllPlayers(new Visitor<Player>() {
 										@Override
 										public void visit(Player player) {
@@ -1010,9 +1012,9 @@ public class DrakenspireDepthsInstance extends GeneralInstanceHandler {
 									spawn(833015, 161.93251f, 518.47626f, 1749.4482f, (byte) 59); //Sacred Beast Of Balaur Lord Beritra.
 									Npc Parsia = getNpc(209804);
 									//Beritra may have gotten away, but we've taken Drakenspire Depths. You've done an excellent job.
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501326, Parsia.getObjectId(), 0, 12000);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501326, Parsia.getObjectId(), 0, 12000);
 									//Beritra has fled! He may have escaped, but we gave him something to remember us by!
-									NpcShoutsService.getInstance().sendMsg(Parsia, 1501327, Parsia.getObjectId(), 0, 22000);
+									GameFeatureServices.npcShoutsService().sendMsg(Parsia, 1501327, Parsia.getObjectId(), 0, 22000);
 									instance.doOnAllPlayers(new Visitor<Player>() {
 										@Override
 										public void visit(Player player) {

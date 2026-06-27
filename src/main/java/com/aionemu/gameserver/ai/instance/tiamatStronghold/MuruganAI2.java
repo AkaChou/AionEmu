@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
@@ -39,44 +41,44 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class MuruganAI2 extends GeneralNpcAI2
 {
 	private boolean isMove;
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
 		if (getOwner().getNpcId() == 800438) {
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 390852, getOwner().getObjectId(), 0, 1000);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390852, getOwner().getObjectId(), 0, 1000);
 		}
 	}
-	
+
     @Override
     protected void handleCreatureSee(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
     @Override
     protected void handleCreatureMoved(Creature creature) {
         checkDistance(this, creature);
     }
-	
+
     private void checkDistance(NpcAI2 ai, Creature creature) {
-  	    if (creature instanceof Player) {
-  		    if (MathUtil.isIn3dRange(getOwner(), creature, 15) && !isMove) {
-  			    isMove = true;
-  			    openSuramaDoor();
-  			    startWalk((Player) creature);
-  		    }
-  	    }
+	    if (creature instanceof Player) {
+		    if (MathUtil.isIn3dRange(getOwner(), creature, 15) && !isMove) {
+			    isMove = true;
+			    openSuramaDoor();
+			    startWalk((Player) creature);
+		    }
+	    }
     }
-	
+
     private void startWalk(final Player player) {
-  	    int owner = getOwner().getNpcId();
-  	    if (owner == 800436 || owner == 800438) {
-  		    return;
+	    int owner = getOwner().getNpcId();
+	    if (owner == 800436 || owner == 800438) {
+		    return;
 		} switch (owner) {
-  		    case 800435:
-  			    NpcShoutsService.getInstance().sendMsg(getOwner(), 390837, getOwner().getObjectId(), 0, 0);
-  			    NpcShoutsService.getInstance().sendMsg(getOwner(), 390838, getOwner().getObjectId(), 0, 4000);
-  			break;
+		    case 800435:
+			    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390837, getOwner().getObjectId(), 0, 0);
+			    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390838, getOwner().getObjectId(), 0, 4000);
+			break;
 		}
 		setStateIfNot(AIState.WALKING);
 		getOwner().setState(1);
@@ -85,26 +87,26 @@ public class MuruganAI2 extends GeneralNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 		    @Override
 		    public void run() {
-		  	    forQuest(player);
-		  	    AI2Actions.deleteOwner(MuruganAI2.this);
+			    forQuest(player);
+			    AI2Actions.deleteOwner(MuruganAI2.this);
 		    }
 	    }, 10000);
 	}
-	
+
     private void openSuramaDoor() {
-  	    if (getOwner().getNpcId() == 800436) {
-  		    NpcShoutsService.getInstance().sendMsg(getOwner(), 390835, getOwner().getObjectId(), 0, 0);
+	    if (getOwner().getNpcId() == 800436) {
+		    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390835, getOwner().getObjectId(), 0, 0);
 			getPosition().getWorldMapInstance().getDoors().get(56).setOpen(true);
 			AI2Actions.deleteOwner(this);
-  	    }
+	    }
     }
-	
+
     private void forQuest(Player player) {
-  	    int quest = player.getRace().equals(Race.ELYOS) ? 30708 : 30758;
-  	    final QuestState qs = player.getQuestStateList().getQuestState(quest);
-  	    if (qs != null && qs.getQuestVarById(0) != 5) {
-  		    qs.setQuestVar(qs.getQuestVarById(0) + 1);
-  		    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(quest, qs.getStatus(), qs.getQuestVars().getQuestVars()));
-  	    }
+	    int quest = player.getRace().equals(Race.ELYOS) ? 30708 : 30758;
+	    final QuestState qs = player.getQuestStateList().getQuestState(quest);
+	    if (qs != null && qs.getQuestVarById(0) != 5) {
+		    qs.setQuestVar(qs.getQuestVarById(0) + 1);
+		    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(quest, qs.getStatus(), qs.getQuestVars().getQuestVars()));
+	    }
     }
 }

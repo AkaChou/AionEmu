@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -101,7 +103,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 	
     private void blazeEngraving() {
 	    if (Rnd.get(0, 100) < 2 && getPosition().getWorldMapInstance().getNpc(283130) == null) {
-		    NpcShoutsService.getInstance().sendMsg(getOwner(), 1500718, getObjectId(), 0, 0);
+		    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500718, getObjectId(), 0, 0);
 			GameEngineServices.skillEngine().getSkill(getOwner(), 20913, 60, getOwner().getTarget()).useNoAnimationSkill();
 		    Player target = getRandomTarget();
 		    if (target == null)
@@ -189,6 +191,6 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
     }
 	
 	private void sendMsg(int msg) {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
 }

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -51,7 +53,7 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 390845, getOwner().getObjectId(), 0, 2000);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390845, getOwner().getObjectId(), 0, 2000);
 	}
 
 	private void moveToRaksha() {
@@ -69,9 +71,9 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 
 	private void startDialog() {
 		final Npc laksyaka = getPosition().getWorldMapInstance().getNpc(219356); //Brigade General Laksyaka.
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 390841, getOwner().getObjectId(), 0, 0);
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 390842, getOwner().getObjectId(), 0, 3000);
-		NpcShoutsService.getInstance().sendMsg(laksyaka, 390843, laksyaka.getObjectId(), 0, 6000);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390841, getOwner().getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390842, getOwner().getObjectId(), 0, 3000);
+		GameFeatureServices.npcShoutsService().sendMsg(laksyaka, 390843, laksyaka.getObjectId(), 0, 6000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 		    @Override
 		    public void run() {

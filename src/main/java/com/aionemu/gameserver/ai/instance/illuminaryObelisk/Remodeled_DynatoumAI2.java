@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -62,13 +64,13 @@ public class Remodeled_DynatoumAI2 extends AggressiveNpcAI2
 					 * You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
 					 */
 					//The Remodeled Dynatoum bomb has begun counting down.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402425, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402425, 0);
 					//The Remodeled Dynatoum will explode in 5 minutes.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402426, 60000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402426, 60000);
 					//The Remodeled Dynatoum will explode in 1 minute.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402427, 300000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402427, 300000);
 					//The Remodeled Dynatoum is going to explode.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402428, 360000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402428, 360000);
 					remodeledDynatoumFormTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {

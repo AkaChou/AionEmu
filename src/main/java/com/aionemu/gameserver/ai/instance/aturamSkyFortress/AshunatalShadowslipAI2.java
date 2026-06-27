@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -104,7 +106,7 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 				public void run() {
 					if (!isAlreadyDead()) {
 						//Ashunatal has retreated to another room. Hunt her down!
-						NpcShoutsService.getInstance().sendMsg(getOwner(), 1401391, 0);
+						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401391, 0);
 						GameEngineServices.skillEngine().getSkill(getOwner(), 19417, 49, getOwner()).useNoAnimationSkill();
 						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -51,7 +53,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isStart.compareAndSet(false, true)) {
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 1500454, getObjectId(), true, 0, 0);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500454, getObjectId(), true, 0, 0);
 			scheduleSkills();
 
 			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
@@ -68,7 +70,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 							size++;
 							rndSpawn(282307);
 						}
-						NpcShoutsService.getInstance().sendMsg(getOwner(), 1401378, 6000);
+						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401378, 6000);
 					}
 				}
 
@@ -97,8 +99,8 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 
 	private void buff() {
 		GameEngineServices.skillEngine().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500456, getObjectId(), true, 0, 0);
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1401041, 3500);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500456, getObjectId(), true, 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401041, 3500);
 	}
 
 	private void rndSpawn(int npcId) {
@@ -114,7 +116,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 	public void handleDied() {
 		cancelTask();
 		super.handleDied();
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500457, getObjectId(), true, 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500457, getObjectId(), true, 0, 0);
 	}
 
 	private void cancelTask() {

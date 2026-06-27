@@ -1,9 +1,14 @@
 package com.aionemu.gameserver.lifecycle;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
 import java.lang.reflect.Proxy;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -65,6 +70,25 @@ class GameFeatureServicesRuntimeBridgeTest {
         assertSame(banditProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::banditService));
         assertSame(siegeProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::siegeService));
         assertSame(baseProviderUsed, assertThrows(ProviderUsedException.class, runtimeBridge::baseService));
+    }
+
+    @Test
+    void gameServerCodeUsesFeatureNpcShoutsBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/NpcShoutsService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServicesRuntimeBridge.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("NpcShoutsService.getInstance()"), source.toString());
+        }
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {

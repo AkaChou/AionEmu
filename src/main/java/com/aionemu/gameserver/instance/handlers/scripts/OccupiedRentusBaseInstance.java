@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -247,9 +249,9 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 	
 	private void reianOccupiedSecureBridge() {
 		Npc ariana5 = (Npc) spawn(799670, 183.736f, 391.392f, 260.571f, (byte) 26); //Ariana.
-		NpcShoutsService.getInstance().sendMsg(ariana5, 1500417, ariana5.getObjectId(), 0, 5000);
-		NpcShoutsService.getInstance().sendMsg(ariana5, 1500418, ariana5.getObjectId(), 0, 8000);
-		NpcShoutsService.getInstance().sendMsg(ariana5, 1500419, ariana5.getObjectId(), 0, 11000);
+		GameFeatureServices.npcShoutsService().sendMsg(ariana5, 1500417, ariana5.getObjectId(), 0, 5000);
+		GameFeatureServices.npcShoutsService().sendMsg(ariana5, 1500418, ariana5.getObjectId(), 0, 8000);
+		GameFeatureServices.npcShoutsService().sendMsg(ariana5, 1500419, ariana5.getObjectId(), 0, 11000);
 		spawn(800227, 192.56216f, 421.5615f, 260.5717f, (byte) 0); //Reian Warrior.
 		spawn(800227, 189.40356f, 423.41653f, 260.57162f, (byte) 0); //Reian Warrior.
 		spawn(800228, 195.74078f, 422.42538f, 260.57162f, (byte) 0); //Reian Priest.

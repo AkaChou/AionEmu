@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -55,8 +57,8 @@ public class AlarmAI2 extends AggressiveNpcAI2
 			if (MathUtil.getDistance(getOwner(), player) <= 15) {
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500379, getObjectId(), 0, 0);
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1401350, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500379, getObjectId(), 0, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401350, 0);
 					getSpawnTemplate().setWalkerId("3002400002");
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
