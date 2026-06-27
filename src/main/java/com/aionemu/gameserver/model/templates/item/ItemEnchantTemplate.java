@@ -16,7 +16,9 @@
  */
 package com.aionemu.gameserver.model.templates.item;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -26,8 +28,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
-
-import gnu.trove.map.hash.TIntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "ItemEnchantTemplate")
@@ -41,14 +41,12 @@ public class ItemEnchantTemplate {
 	@XmlElement(name = "item_enchant", required = false)
 	private List<ItemEnchantBonus> item_enchant;
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@XmlTransient
-	private TIntObjectHashMap<List<StatFunction>> enchants = new TIntObjectHashMap();
+	private Map<Integer, List<StatFunction>> enchants = new HashMap<Integer, List<StatFunction>>();
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<StatFunction> getStats(int level) {
-		if (this.enchants.contains(level)) {
-			return (List) this.enchants.get(level);
+		if (this.enchants.containsKey(level)) {
+			return this.enchants.get(level);
 		}
 		return null;
 	}
