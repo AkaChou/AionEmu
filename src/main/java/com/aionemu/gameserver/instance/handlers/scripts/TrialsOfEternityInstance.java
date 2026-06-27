@@ -16,7 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	private List<Integer> movies = new ArrayList<Integer>();
 	private List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
 	private final List<Future<?>> trialsOfEternityTask = new ArrayList<Future<?>>();
-	private FastMap<Integer, VisibleObject> trialsShield = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {

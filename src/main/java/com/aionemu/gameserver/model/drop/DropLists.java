@@ -58,7 +58,7 @@ public class DropLists {
 			document.setXmlStandalone(true);
 			Element root = document.createElement("npc_drops");
 			document.appendChild(root);
-			Collection<NpcTemplate> tm = DataManager.NPC_DATA.getNpcData().valueCollection();
+			Collection<NpcTemplate> tm = DataManager.NPC_DATA.getNpcData().values();
 			for (NpcTemplate npc : tm) {
 				if (npc == null) {
 					continue;

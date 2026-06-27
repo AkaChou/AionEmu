@@ -26,10 +26,11 @@ import com.aionemu.gameserver.services.ShieldService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.World;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ShieldController extends VisibleObjectController<Shield> {
-	FastMap<Integer, ActionObserver> observed = new FastMap<Integer, ActionObserver>().shared();
+	Map<Integer, ActionObserver> observed = new LinkedHashMap<Integer, ActionObserver>();
 
 	@Override
 	public void see(VisibleObject object) {
@@ -63,10 +64,9 @@ public class ShieldController extends VisibleObjectController<Shield> {
 	}
 
 	public void disable() {
-		for (FastMap.Entry<Integer, ActionObserver> e = observed.head(),
-				mapEnd = observed.tail(); (e = e.getNext()) != mapEnd;) {
-			ActionObserver observer = observed.remove(e.getKey());
-			Player player = World.getInstance().findPlayer(e.getKey());
+		for (Integer playerId : observed.keySet().toArray(Integer[]::new)) {
+			ActionObserver observer = observed.remove(playerId);
+			Player player = World.getInstance().findPlayer(playerId);
 			if (player != null) {
 				player.getObserveController().removeObserver(observer);
 			}

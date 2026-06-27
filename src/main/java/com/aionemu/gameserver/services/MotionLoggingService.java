@@ -52,7 +52,8 @@ import com.aionemu.gameserver.skillengine.model.Times;
 import com.aionemu.gameserver.skillengine.model.WeaponTypeWrapper;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author kecimis
@@ -62,7 +63,7 @@ public class MotionLoggingService {
 	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
 	private static Logger log = LoggerFactory.getLogger(MotionLoggingService.class);
 
-	private FastMap<String, MotionLog> motionsMap = new FastMap<String, MotionLog>().shared();
+	private Map<String, MotionLog> motionsMap = new LinkedHashMap<String, MotionLog>();
 
 	private boolean advancedLog = false;
 
@@ -529,9 +530,9 @@ public class MotionLoggingService {
 	}
 
 	private class MotionLog {
-		private FastMap<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new FastMap<WeaponTypeWrapper, List<SkillTime>>();
+		private Map<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new LinkedHashMap<WeaponTypeWrapper, List<SkillTime>>();
 
-		public FastMap<WeaponTypeWrapper, List<SkillTime>> getMotionLog() {
+		public Map<WeaponTypeWrapper, List<SkillTime>> getMotionLog() {
 			return this.motionsForWeapons;
 		}
 

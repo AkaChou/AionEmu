@@ -40,19 +40,20 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ProtectorConquerorService {
 	private static final Logger log = LoggerFactory.getLogger(ProtectorConquerorService.class);
 	private static volatile ObjectProvider<ProtectorConquerorService> instanceProvider;
 
-	private FastMap<Integer, Protector> protectors = new FastMap<Integer, Protector>();
-	private FastMap<Integer, Conqueror> conquerors = new FastMap<Integer, Conqueror>();
+	private Map<Integer, Protector> protectors = new LinkedHashMap<Integer, Protector>();
+	private Map<Integer, Conqueror> conquerors = new LinkedHashMap<Integer, Conqueror>();
 
-	private FastMap<Integer, FastMap<Integer, Player>> worldConqueror = new FastMap<Integer, FastMap<Integer, Player>>();
-	private FastMap<Integer, FastMap<Integer, Player>> worldProtectors = new FastMap<Integer, FastMap<Integer, Player>>();
+	private Map<Integer, Map<Integer, Player>> worldConqueror = new LinkedHashMap<Integer, Map<Integer, Player>>();
+	private Map<Integer, Map<Integer, Player>> worldProtectors = new LinkedHashMap<Integer, Map<Integer, Player>>();
 
-	private static final FastMap<Integer, WorldType> handledWorlds = new FastMap<Integer, WorldType>();
+	private static final Map<Integer, WorldType> handledWorlds = new LinkedHashMap<Integer, WorldType>();
 	private int refresh = CustomConfig.PROTECTOR_CONQUEROR_REFRESH;
 	private int levelDiff = CustomConfig.PROTECTOR_CONQUEROR_LEVEL_DIFF;
 	private ProtectorBuffs protectorBuff;
@@ -114,22 +115,22 @@ public class ProtectorConquerorService {
 		}, refresh * 60000, refresh * 60000);
 	}
 
-	public FastMap<Integer, Player> getWorldProtector(int worldId) {
+	public Map<Integer, Player> getWorldProtector(int worldId) {
 		if (worldProtectors.containsKey(worldId)) {
 			return worldProtectors.get(worldId);
 		} else {
-			FastMap<Integer, Player> protectors = new FastMap<Integer, Player>();
-			worldProtectors.putEntry(worldId, protectors);
+			Map<Integer, Player> protectors = new LinkedHashMap<Integer, Player>();
+			worldProtectors.put(worldId, protectors);
 			return protectors;
 		}
 	}
 
-	public FastMap<Integer, Player> getWorldConqueror(int worldId) {
+	public Map<Integer, Player> getWorldConqueror(int worldId) {
 		if (worldConqueror.containsKey(worldId)) {
 			return worldConqueror.get(worldId);
 		} else {
-			FastMap<Integer, Player> killers = new FastMap<Integer, Player>();
-			worldConqueror.putEntry(worldId, killers);
+			Map<Integer, Player> killers = new LinkedHashMap<Integer, Player>();
+			worldConqueror.put(worldId, killers);
 			return killers;
 		}
 	}
@@ -181,9 +182,9 @@ public class ProtectorConquerorService {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GUARD_UP_3LEVEL);
 			}
 			PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(false, info.getRank()));
-			final FastMap<Integer, Player> world = getWorldProtector(worldId);
+			final Map<Integer, Player> world = getWorldProtector(worldId);
 			if (!world.containsKey(objId)) {
-				world.putEntry(objId, player);
+				world.put(objId, player);
 			}
 			protectorBuff.applyRankEffect(player, info.getRank());
 			World.getInstance().getWorldMap(worldId).getWorldMapInstanceById(player.getInstanceId())
@@ -211,9 +212,9 @@ public class ProtectorConquerorService {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_SLAYER_UP_3LEVEL);
 			}
 			PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(false, infoConqueror.getRank()));
-			final FastMap<Integer, Player> world = getWorldConqueror(worldId);
+			final Map<Integer, Player> world = getWorldConqueror(worldId);
 			if (!world.containsKey(objId)) {
-				world.putEntry(objId, player);
+				world.put(objId, player);
 			}
 			conquerorBuff.applyEffect(player, infoConqueror.getRank());
 			World.getInstance().getWorldMap(worldId).getWorldMapInstanceById(player.getInstanceId())
@@ -242,7 +243,7 @@ public class ProtectorConquerorService {
 		if (!isEnemyWorld(player)) { // Protector.
 			Protector info = player.getProtectorInfo();
 			List<Player> kill = new ArrayList<Player>();
-			FastMap<Integer, Player> guards = getWorldProtector(worldId);
+			Map<Integer, Player> guards = getWorldProtector(worldId);
 			kill.addAll(guards.values());
 			guards.remove(player.getObjectId());
 			if (info.getRank() > 0) {
@@ -258,7 +259,7 @@ public class ProtectorConquerorService {
 		} else if (isEnemyWorld(player)) { // Conqueror.
 			Conqueror info = player.getConquerorInfo();
 			List<Player> kill = new ArrayList<Player>();
-			FastMap<Integer, Player> killers = getWorldConqueror(worldId);
+			Map<Integer, Player> killers = getWorldConqueror(worldId);
 			kill.addAll(killers.values());
 			killers.remove(player.getObjectId());
 			if (info.getRank() > 0) {
@@ -304,7 +305,7 @@ public class ProtectorConquerorService {
 				if (info.getRank() != rank) {
 					info.setRank(rank);
 					protectorBuff.applyRankEffect(killer, rank);
-					final FastMap<Integer, Player> guards = getWorldProtector(killer.getWorldId());
+					final Map<Integer, Player> guards = getWorldProtector(killer.getWorldId());
 					PacketSendUtility.sendPacket(killer, new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
 					World.getInstance().getWorldMap(killer.getWorldId()).getWorldMapInstanceById(killer.getInstanceId())
 							.doOnAllPlayers(new Visitor<Player>() {
@@ -340,7 +341,7 @@ public class ProtectorConquerorService {
 				if (info.getRank() != rank) {
 					info.setRank(rank);
 					conquerorBuff.applyEffect(killer, rank);
-					final FastMap<Integer, Player> killers = getWorldConqueror(killer.getWorldId());
+					final Map<Integer, Player> killers = getWorldConqueror(killer.getWorldId());
 					PacketSendUtility.sendPacket(killer, new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
 					World.getInstance().getWorldMap(killer.getWorldId()).getWorldMapInstanceById(killer.getInstanceId())
 							.doOnAllPlayers(new Visitor<Player>() {

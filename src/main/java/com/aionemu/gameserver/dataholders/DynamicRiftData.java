@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.dynamicrift.DynamicRiftLocation;
 import com.aionemu.gameserver.model.templates.dynamicrift.DynamicRiftTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class DynamicRiftData {
 	private List<DynamicRiftTemplate> dynamicRiftTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, DynamicRiftLocation> dynamicRift = new FastMap<Integer, DynamicRiftLocation>();
+	private Map<Integer, DynamicRiftLocation> dynamicRift = new LinkedHashMap<Integer, DynamicRiftLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (DynamicRiftTemplate template : dynamicRiftTemplates) {
@@ -53,7 +54,7 @@ public class DynamicRiftData {
 		return dynamicRift.size();
 	}
 
-	public FastMap<Integer, DynamicRiftLocation> getDynamicRiftLocations() {
+	public Map<Integer, DynamicRiftLocation> getDynamicRiftLocations() {
 		return dynamicRift;
 	}
 }

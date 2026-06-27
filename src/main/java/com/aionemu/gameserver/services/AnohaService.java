@@ -52,7 +52,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -68,7 +69,7 @@ public class AnohaService {
 	// Berserk Anoha 4.7
 	private Map<Integer, VisibleObject> adventSwordEffect = new HashMap<>();
 
-	private final Map<Integer, BerserkAnoha<?>> activeAnoha = new FastMap<Integer, BerserkAnoha<?>>().shared();
+	private final Map<Integer, BerserkAnoha<?>> activeAnoha = new LinkedHashMap<Integer, BerserkAnoha<?>>();
 
 	public void initAnohaLocations() {
 		if (CustomConfig.ANOHA_ENABLED) {

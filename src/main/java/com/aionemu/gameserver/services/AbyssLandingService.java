@@ -51,13 +51,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class AbyssLandingService {
 	private static volatile ObjectProvider<AbyssLandingService> instanceProvider;
 	private static Logger log = LoggerFactory.getLogger(AbyssLandingService.class);
 	private static Map<Integer, LandingLocation> abyssLanding;
-	private final Map<Integer, Landing<?>> activeLanding = new FastMap<Integer, Landing<?>>().shared();
+	private final Map<Integer, Landing<?>> activeLanding = new LinkedHashMap<Integer, Landing<?>>();
 	private final int questRate = AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE;
 
 	public void initLandingLocations() {

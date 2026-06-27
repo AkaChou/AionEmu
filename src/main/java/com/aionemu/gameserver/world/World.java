@@ -45,19 +45,21 @@ import com.aionemu.gameserver.world.exceptions.WorldMapNotExistException;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
-import com.aionemu.commons.utils.collections.FastList;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class World {
 
 	private static final Logger log = LoggerFactory.getLogger(World.class);
 	private static volatile ObjectProvider<World> instanceProvider;
 	private final PlayerContainer allPlayers;
-	private final FastMap<Integer, VisibleObject> allObjects;
+	private final Map<Integer, VisibleObject> allObjects;
 	private final IntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new IntObjectHashMap<Collection<SiegeNpc>>();
 	private final IntObjectHashMap<Collection<BaseNpc>> localBaseNpcs = new IntObjectHashMap<Collection<BaseNpc>>();
 	private final IntObjectHashMap<Collection<OutpostNpc>> localOutpostNpcs = new IntObjectHashMap<Collection<OutpostNpc>>();
-	private final FastMap<Integer, Npc> allNpcs;
+	private final Map<Integer, Npc> allNpcs;
 	private final IntObjectHashMap<WorldMap> worldMaps;
 
 	/**
@@ -66,8 +68,8 @@ public class World {
 	public World() {
 		Util.printSection(" *** World *** ");
 		allPlayers = new PlayerContainer();
-		allObjects = new FastMap<Integer, VisibleObject>().shared();
-		allNpcs = new FastMap<Integer, Npc>().shared();
+		allObjects = new LinkedHashMap<Integer, VisibleObject>();
+		allNpcs = new LinkedHashMap<Integer, Npc>();
 		worldMaps = new IntObjectHashMap<WorldMap>();
 		for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
 			worldMaps.put(template.getMapId(), new WorldMap(template, this));
@@ -109,7 +111,7 @@ public class World {
 					if (localSiegeNpcs.containsKey(siegeNpc.getSiegeId())) {
 						npcs = localSiegeNpcs.get(siegeNpc.getSiegeId());
 					} else {
-						npcs = new FastList<SiegeNpc>().shared();
+						npcs = new ArrayList<SiegeNpc>();
 						localSiegeNpcs.put(siegeNpc.getSiegeId(), npcs);
 					}
 				}
@@ -123,7 +125,7 @@ public class World {
 					if (localBaseNpcs.containsKey(baseNpc.getBaseId())) {
 						npcs = localBaseNpcs.get(baseNpc.getBaseId());
 					} else {
-						npcs = new FastList<BaseNpc>().shared();
+						npcs = new ArrayList<BaseNpc>();
 						localBaseNpcs.put(baseNpc.getBaseId(), npcs);
 					}
 				}
@@ -137,7 +139,7 @@ public class World {
 					if (localOutpostNpcs.containsKey(outpostNpc.getOutpostId())) {
 						npcs = localOutpostNpcs.get(outpostNpc.getOutpostId());
 					} else {
-						npcs = new FastList<OutpostNpc>().shared();
+						npcs = new ArrayList<OutpostNpc>();
 						localOutpostNpcs.put(outpostNpc.getOutpostId(), npcs);
 					}
 				}
@@ -455,9 +457,7 @@ public class World {
 	 */
 	public void doOnAllObjects(Visitor<VisibleObject> visitor) {
 		try {
-			for (FastMap.Entry<Integer, VisibleObject> e = allObjects.head(),
-					mapEnd = allObjects.tail(); (e = e.getNext()) != mapEnd;) {
-				VisibleObject object = e.getValue();
+			for (VisibleObject object : allObjects.values()) {
 				if (object != null) {
 					visitor.visit(object);
 				}

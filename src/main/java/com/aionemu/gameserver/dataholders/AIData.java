@@ -27,7 +27,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.ai.Ai;
 import com.aionemu.gameserver.model.templates.ai.AITemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author xTz
@@ -38,7 +39,7 @@ public class AIData {
 
 	@XmlElement(name = "ai", type = Ai.class)
 	private List<Ai> templates;
-	private FastMap<Integer, AITemplate> aiTemplate = new FastMap<Integer, AITemplate>();
+	private Map<Integer, AITemplate> aiTemplate = new LinkedHashMap<Integer, AITemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		aiTemplate.clear();
@@ -51,7 +52,7 @@ public class AIData {
 		return aiTemplate.size();
 	}
 
-	public FastMap<Integer, AITemplate> getAiTemplate() {
+	public Map<Integer, AITemplate> getAiTemplate() {
 		return aiTemplate;
 	}
 }

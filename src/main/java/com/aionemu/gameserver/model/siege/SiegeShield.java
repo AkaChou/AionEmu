@@ -26,7 +26,8 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Shields have material ID 11 in geo.
@@ -35,7 +36,7 @@ import com.aionemu.commons.utils.collections.FastMap;
  */
 public class SiegeShield implements ZoneHandler {
 
-	FastMap<Integer, IActor> observed = new FastMap<Integer, IActor>();
+	Map<Integer, IActor> observed = new LinkedHashMap<Integer, IActor>();
 	private Spatial geometry;
 	private int siegeLocationId;
 	private boolean isEnabled = false;

@@ -49,7 +49,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -63,7 +64,7 @@ public class SvsService {
 	private static final int duration = CustomConfig.SVS_DURATION;
 	// Transidium Annex 4.7
 	private Map<Integer, VisibleObject> advanceCorridor = new HashMap<>();
-	private final Map<Integer, Panesterra<?>> activeSvs = new FastMap<Integer, Panesterra<?>>().shared();
+	private final Map<Integer, Panesterra<?>> activeSvs = new LinkedHashMap<Integer, Panesterra<?>>();
 
 	public void initSvsLocations() {
 		if (CustomConfig.SVS_ENABLED) {

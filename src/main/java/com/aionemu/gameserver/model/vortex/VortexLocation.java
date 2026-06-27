@@ -40,7 +40,8 @@ import com.aionemu.gameserver.world.zone.InvasionZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class VortexLocation implements ZoneHandler {
 	protected boolean isActive;
@@ -52,7 +53,7 @@ public class VortexLocation implements ZoneHandler {
 	protected Race defendsRace;
 	protected List<InvasionZoneInstance> zones;
 	protected Map<Integer, Player> players = new HashMap<>();
-	protected FastMap<Integer, Kisk> kisks = new FastMap<Integer, Kisk>();
+	protected Map<Integer, Kisk> kisks = new LinkedHashMap<Integer, Kisk>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 	protected HomePoint home;
 	protected ResurrectionPoint resurrection;
@@ -137,7 +138,7 @@ public class VortexLocation implements ZoneHandler {
 		return players;
 	}
 
-	public FastMap<Integer, Kisk> getInvadersKisks() {
+	public Map<Integer, Kisk> getInvadersKisks() {
 		return kisks;
 	}
 
@@ -174,7 +175,7 @@ public class VortexLocation implements ZoneHandler {
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		if (creature instanceof Kisk) {
 			if (creature.getRace().equals(getInvadersRace())) {
-				kisks.putEntry(creature.getObjectId(), (Kisk) creature);
+				kisks.put(creature.getObjectId(), (Kisk) creature);
 			}
 		} else if (creature instanceof Player) {
 			Player player = (Player) creature;

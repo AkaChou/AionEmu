@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusLocation;
 import com.aionemu.gameserver.model.templates.nightmarecircus.NightmareCircusTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class NightmareCircusData {
 	private List<NightmareCircusTemplate> nightmareCircusTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, NightmareCircusLocation> nightmareCircus = new FastMap<Integer, NightmareCircusLocation>();
+	private Map<Integer, NightmareCircusLocation> nightmareCircus = new LinkedHashMap<Integer, NightmareCircusLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (NightmareCircusTemplate template : nightmareCircusTemplates) {
@@ -53,7 +54,7 @@ public class NightmareCircusData {
 		return nightmareCircus.size();
 	}
 
-	public FastMap<Integer, NightmareCircusLocation> getNightmareCircusLocations() {
+	public Map<Integer, NightmareCircusLocation> getNightmareCircusLocations() {
 		return nightmareCircus;
 	}
 }

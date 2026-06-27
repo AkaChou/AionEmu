@@ -47,7 +47,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -58,7 +59,7 @@ public class InstanceRiftService {
 	private InstanceSchedule instanceSchedule;
 	private Map<Integer, InstanceRiftLocation> instanceRift;
 	private static final int duration = CustomConfig.INSTANCE_RIFT_DURATION;
-	private final Map<Integer, RiftInstance<?>> activeInstanceRift = new FastMap<Integer, RiftInstance<?>>().shared();
+	private final Map<Integer, RiftInstance<?>> activeInstanceRift = new LinkedHashMap<Integer, RiftInstance<?>>();
 	private static final Logger log = LoggerFactory.getLogger(InstanceRiftService.class);
 
 	public void initInstanceLocations() {

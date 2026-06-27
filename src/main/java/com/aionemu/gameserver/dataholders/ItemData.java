@@ -162,7 +162,7 @@ public class ItemData extends ReloadableData {
 	}
 
 	public String getItemDescr(String descr) {
-		for (ItemTemplate it : items.valueCollection()) {
+		for (ItemTemplate it : items.values()) {
 			if (descr.equalsIgnoreCase(it.getDescr())) {
 				return it.getDescr();
 			}
@@ -171,7 +171,7 @@ public class ItemData extends ReloadableData {
 	}
 
 	public int giveItemIdOf(String descr) {
-		for (ItemTemplate it : items.valueCollection()) {
+		for (ItemTemplate it : items.values()) {
 			if (descr.equalsIgnoreCase(it.getDescr())) {
 				return it.getTemplateId();
 			}

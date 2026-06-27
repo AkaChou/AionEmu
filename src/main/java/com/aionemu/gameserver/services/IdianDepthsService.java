@@ -44,7 +44,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -54,7 +55,7 @@ public class IdianDepthsService {
 	private static volatile ObjectProvider<IdianDepthsService> instanceProvider;
 	private Map<Integer, IdianDepthsLocation> idianDepths;
 	private static final int duration = CustomConfig.IDIAN_DEPTHS_DURATION;
-	private final Map<Integer, IdianDepths<?>> activeIdianDepths = new FastMap<Integer, IdianDepths<?>>().shared();
+	private final Map<Integer, IdianDepths<?>> activeIdianDepths = new LinkedHashMap<Integer, IdianDepths<?>>();
 	private static Logger log = LoggerFactory.getLogger(IdianDepthsService.class);
 
 	public void initIdianDepthsLocations() {

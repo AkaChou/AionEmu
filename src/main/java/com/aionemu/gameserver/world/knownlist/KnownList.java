@@ -31,7 +31,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.MapRegion;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * KnownList.
@@ -51,22 +52,22 @@ public class KnownList {
 	/**
 	 * List of objects that this KnownList owner known
 	 */
-	protected final FastMap<Integer, VisibleObject> knownObjects = new FastMap<Integer, VisibleObject>().shared();
+	protected final Map<Integer, VisibleObject> knownObjects = new LinkedHashMap<Integer, VisibleObject>();
 
 	/**
 	 * List of player that this KnownList owner known
 	 */
-	protected volatile FastMap<Integer, Player> knownPlayers;
+	protected volatile Map<Integer, Player> knownPlayers;
 
 	/**
 	 * List of objects that this KnownList owner known
 	 */
-	protected final FastMap<Integer, VisibleObject> visualObjects = new FastMap<Integer, VisibleObject>().shared();
+	protected final Map<Integer, VisibleObject> visualObjects = new LinkedHashMap<Integer, VisibleObject>();
 
 	/**
 	 * List of player that this KnownList owner known
 	 */
-	protected volatile FastMap<Integer, Player> visualPlayers;
+	protected volatile Map<Integer, Player> visualPlayers;
 
 	private ReentrantLock lock = new ReentrantLock();
 
@@ -205,10 +206,8 @@ public class KnownList {
 		MapRegion[] regions = owner.getActiveRegion().getNeighbours();
 		for (int i = 0; i < regions.length; i++) {
 			MapRegion r = regions[i];
-			FastMap<Integer, VisibleObject> objects = r.getObjects();
-			for (FastMap.Entry<Integer, VisibleObject> e = objects.head(),
-					mapEnd = objects.tail(); (e = e.getNext()) != mapEnd;) {
-				VisibleObject newObject = e.getValue();
+			Map<Integer, VisibleObject> objects = r.getObjects();
+			for (VisibleObject newObject : objects.values()) {
 				if (newObject == owner || newObject == null) {
 					continue;
 				}
@@ -267,8 +266,7 @@ public class KnownList {
 	public int doOnAllNpcs(Visitor<Npc> visitor, int iterationLimit) {
 		int counter = 0;
 		try {
-			for (FastMap.Entry<Integer, VisibleObject> e = knownObjects.head(), mapEnd = knownObjects.tail(); (e = e.getNext()) != mapEnd;) {
-				VisibleObject newObject = e.getValue();
+			for (VisibleObject newObject : knownObjects.values()) {
 				if (newObject != null && newObject instanceof Npc) {
 					if ((++counter) == iterationLimit) {
 						break;
@@ -289,8 +287,7 @@ public class KnownList {
 	public int doOnAllNpcsWithOwner(VisitorWithOwner<Npc, VisibleObject> visitor, int iterationLimit) {
 		int counter = 0;
 		try {
-			for (FastMap.Entry<Integer, VisibleObject> e = knownObjects.head(), mapEnd = knownObjects.tail(); (e = e.getNext()) != mapEnd;) {
-				VisibleObject newObject = e.getValue();
+			for (VisibleObject newObject : knownObjects.values()) {
 				if (newObject != null && newObject instanceof Npc) {
 					if ((++counter) == iterationLimit) {
 						break;
@@ -309,8 +306,7 @@ public class KnownList {
 			return;
 		}
 		try {
-			for (FastMap.Entry<Integer, Player> e = knownPlayers.head(), mapEnd = knownPlayers.tail(); (e = e.getNext()) != mapEnd;) {
-				Player player = e.getValue();
+			for (Player player : knownPlayers.values()) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -322,8 +318,7 @@ public class KnownList {
 
 	public void doOnAllObjects(Visitor<VisibleObject> visitor) {
 		try {
-			for (FastMap.Entry<Integer, VisibleObject> e = knownObjects.head(), mapEnd = knownObjects.tail(); (e = e.getNext()) != mapEnd;) {
-				VisibleObject newObject = e.getValue();
+			for (VisibleObject newObject : knownObjects.values()) {
 				if (newObject != null) {
 					visitor.visit(newObject);
 				}
@@ -353,7 +348,7 @@ public class KnownList {
 		if (knownPlayers == null) {
 			synchronized (this) {
 				if (knownPlayers == null) {
-					knownPlayers = new FastMap<Integer, Player>().shared();
+					knownPlayers = new LinkedHashMap<Integer, Player>();
 				}
 			}
 		}
@@ -363,7 +358,7 @@ public class KnownList {
 		if (visualPlayers == null) {
 			synchronized (this) {
 				if (visualPlayers == null) {
-					visualPlayers = new FastMap<Integer, Player>().shared();
+					visualPlayers = new LinkedHashMap<Integer, Player>();
 				}
 			}
 		}

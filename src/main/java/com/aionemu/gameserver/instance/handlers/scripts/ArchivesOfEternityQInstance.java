@@ -17,7 +17,8 @@
 package com.aionemu.gameserver.instance.handlers.scripts;
 
 import java.util.*;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;

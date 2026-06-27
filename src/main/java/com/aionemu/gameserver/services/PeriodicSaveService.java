@@ -31,7 +31,8 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import com.aionemu.commons.utils.collections.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ATracer
@@ -73,7 +74,7 @@ public class PeriodicSaveService {
 			int legionWhUpdated = 0;
 			while (legionsIterator.hasNext()) {
 				Legion legion = legionsIterator.next();
-				FastList<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
+				List<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
 				allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 				try {
 					/**

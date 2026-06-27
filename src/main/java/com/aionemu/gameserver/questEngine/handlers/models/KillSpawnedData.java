@@ -26,7 +26,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.template.KillSpawned;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "KillSpawnedData")
@@ -36,7 +37,7 @@ public class KillSpawnedData extends MonsterHuntData {
 
 	@Override
 	public void register(QuestEngine questEngine) {
-		FastMap<List<Integer>, SpawnedMonster> spawnedMonsters = new FastMap<List<Integer>, SpawnedMonster>();
+		Map<List<Integer>, SpawnedMonster> spawnedMonsters = new LinkedHashMap<List<Integer>, SpawnedMonster>();
 		for (SpawnedMonster m : spawnedMonster) {
 			spawnedMonsters.put(m.getNpcIds(), m);
 		}

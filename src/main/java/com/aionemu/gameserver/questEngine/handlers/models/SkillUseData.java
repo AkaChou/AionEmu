@@ -27,7 +27,8 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.template.SkillUse;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SkillUseData")
@@ -42,7 +43,7 @@ public class SkillUseData extends XMLQuest {
 
 	@Override
 	public void register(QuestEngine questEngine) {
-		FastMap<List<Integer>, QuestSkillData> questSkills = new FastMap<List<Integer>, QuestSkillData>();
+		Map<List<Integer>, QuestSkillData> questSkills = new LinkedHashMap<List<Integer>, QuestSkillData>();
 		for (QuestSkillData qsd : skills) {
 			questSkills.put(qsd.getSkillIds(), qsd);
 		}

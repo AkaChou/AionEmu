@@ -82,7 +82,8 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @XmlRootElement(name = "spawns")
 @XmlType(namespace = "", name = "SpawnsData2")
@@ -93,7 +94,7 @@ public class SpawnsData2 {
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
 
-	private IntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
+	private IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
 	private IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
 	private IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
 	private IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
@@ -124,7 +125,7 @@ public class SpawnsData2 {
 			for (SpawnMap spawnMap : templates) {
 				int mapId = spawnMap.getMapId();
 				if (!allSpawnMaps.containsKey(mapId)) {
-					allSpawnMaps.put(mapId, new FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
+					allSpawnMaps.put(mapId, new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
 				}
 				for (Spawn spawn : spawnMap.getSpawns()) {
 					if (spawn.isCustom()) {
@@ -139,7 +140,7 @@ public class SpawnsData2 {
 							new SimpleEntry(new SpawnGroup2(mapId, spawn), spawn));
 				}
 				if (!allSpawnMaps.containsKey(mapId)) {
-					allSpawnMaps.put(mapId, new FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
+					allSpawnMaps.put(mapId, new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
 				}
 				for (SiegeSpawn SiegeSpawn : spawnMap.getSiegeSpawns()) {
 					int siegeId = SiegeSpawn.getSiegeId();

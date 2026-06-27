@@ -69,7 +69,8 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.commons.utils.collections.IntArrayList;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.commons.utils.collections.IntProcedure;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author MrPoke, Hilgert
@@ -79,7 +80,7 @@ public class QuestEngine implements GameEngine {
 
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(QuestEngine.class);
-	private static final FastMap<Integer, QuestHandler> questHandlers = new FastMap<Integer, QuestHandler>();
+	private static final Map<Integer, QuestHandler> questHandlers = new LinkedHashMap<Integer, QuestHandler>();
 	private IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<QuestNpc>();
 	private IntObjectHashMap<IntArrayList> questItemRelated = new IntObjectHashMap<IntArrayList>();
 	private IntObjectHashMap<IntArrayList> questHouseItems = new IntObjectHashMap<IntArrayList>();
@@ -89,16 +90,16 @@ public class QuestEngine implements GameEngine {
 	private IntArrayList questOnDie = new IntArrayList();
 	private IntArrayList questOnLogOut = new IntArrayList();
 	private IntArrayList questOnEnterWorld = new IntArrayList();
-	private FastMap<ZoneName, IntArrayList> questOnEnterZone = new FastMap<ZoneName, IntArrayList>();
-	private FastMap<ZoneName, IntArrayList> questOnLeaveZone = new FastMap<ZoneName, IntArrayList>();
-	private FastMap<String, IntArrayList> questOnPassFlyingRings = new FastMap<String, IntArrayList>();
+	private Map<ZoneName, IntArrayList> questOnEnterZone = new LinkedHashMap<ZoneName, IntArrayList>();
+	private Map<ZoneName, IntArrayList> questOnLeaveZone = new LinkedHashMap<ZoneName, IntArrayList>();
+	private Map<String, IntArrayList> questOnPassFlyingRings = new LinkedHashMap<String, IntArrayList>();
 	private IntObjectHashMap<IntArrayList> questOnMovieEnd = new IntObjectHashMap<IntArrayList>();
 	private List<Integer> questOnTimerEnd = new ArrayList<Integer>();
 	private List<Integer> onInvisibleTimerEnd = new ArrayList<Integer>();
-	private FastMap<AbyssRankEnum, IntArrayList> questOnKillRanked = new FastMap<AbyssRankEnum, IntArrayList>();
-	private FastMap<Integer, IntArrayList> questOnKillInWorld = new FastMap<Integer, IntArrayList>();
+	private Map<AbyssRankEnum, IntArrayList> questOnKillRanked = new LinkedHashMap<AbyssRankEnum, IntArrayList>();
+	private Map<Integer, IntArrayList> questOnKillInWorld = new LinkedHashMap<Integer, IntArrayList>();
 	private IntObjectHashMap<IntArrayList> questOnUseSkill = new IntObjectHashMap<IntArrayList>();
-	private FastMap<Integer, QuestDialog> dialogMap = FastMap.newInstance();
+	private Map<Integer, QuestDialog> dialogMap = new LinkedHashMap<>();
 	private Map<Integer, Integer> questOnFailCraft = new HashMap<Integer, Integer>();
 	private Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<Integer, Set<Integer>>();
 	private IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<IntArrayList>();
@@ -106,7 +107,7 @@ public class QuestEngine implements GameEngine {
 	private List<Integer> questOnKamarReward = new ArrayList<Integer>();
 	private List<Integer> questOnOphidanReward = new ArrayList<Integer>();
 	private List<Integer> questOnBastionReward = new ArrayList<Integer>();
-	private FastMap<BonusType, IntArrayList> questOnBonusApply = new FastMap<BonusType, IntArrayList>();
+	private Map<BonusType, IntArrayList> questOnBonusApply = new LinkedHashMap<BonusType, IntArrayList>();
 	private IntArrayList reachTarget = new IntArrayList();
 	private IntArrayList lostTarget = new IntArrayList();
 	private IntArrayList questOnEnterWindStream = new IntArrayList();

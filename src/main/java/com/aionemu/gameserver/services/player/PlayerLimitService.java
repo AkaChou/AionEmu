@@ -24,14 +24,15 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Source
  */
 public class PlayerLimitService {
 
-	private static FastMap<Integer, Long> sellLimit = new FastMap<Integer, Long>().shared();
+	private static Map<Integer, Long> sellLimit = new LinkedHashMap<Integer, Long>();
 	private static volatile ObjectProvider<PlayerLimitService> instanceProvider;
 
 	public static boolean updateSellLimit(Player player, long reward) {
@@ -50,7 +51,7 @@ public class PlayerLimitService {
 			return false;
 		} else {
 			limit -= reward;
-			sellLimit.putEntry(accoutnId, limit);
+			sellLimit.put(accoutnId, limit);
 			return true;
 		}
 	}

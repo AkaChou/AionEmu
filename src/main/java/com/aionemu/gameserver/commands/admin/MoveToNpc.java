@@ -49,7 +49,7 @@ public class MoveToNpc extends AdminCommand {
 				npcName += params[i]+" ";
 			npcName = npcName.substring(0, npcName.length() - 1);
 
-			for(NpcTemplate template : DataManager.NPC_DATA.getNpcData().valueCollection()) {
+			for(NpcTemplate template : DataManager.NPC_DATA.getNpcData().values()) {
 				if(template.getName().equalsIgnoreCase(npcName)) {
 					if(npcId == 0)
 						npcId = template.getTemplateId();

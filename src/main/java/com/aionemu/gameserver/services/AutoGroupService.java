@@ -62,16 +62,18 @@ import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapInstanceFactory;
 
-import com.aionemu.commons.utils.collections.FastList;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class AutoGroupService {
 
 	private static volatile ObjectProvider<AutoGroupService> instanceProvider;
 	private Logger log = LoggerFactory.getLogger(AutoGroupService.class);
-	private FastMap<Integer, LookingForParty> searchers = new FastMap<Integer, LookingForParty>().shared();
-	private FastMap<Integer, AutoInstance> autoInstances = new FastMap<Integer, AutoInstance>().shared();
-	private Collection<Integer> penaltys = new FastList<Integer>().shared();
+	private Map<Integer, LookingForParty> searchers = new LinkedHashMap<Integer, LookingForParty>();
+	private Map<Integer, AutoInstance> autoInstances = new LinkedHashMap<Integer, AutoInstance>();
+	private Collection<Integer> penaltys = new ArrayList<Integer>();
 	private Lock lock = new ReentrantLock();
 
 	public AutoGroupService() {

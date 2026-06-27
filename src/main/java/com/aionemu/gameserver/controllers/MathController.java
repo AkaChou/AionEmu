@@ -1,8 +1,7 @@
 /*
  * Decompiled with CFR 0.150.
  * 
- * Could not load the following classes:
- *  legacy FastMap
+ * Could not load legacy collection classes.
  */
 package com.aionemu.gameserver.controllers;
 
@@ -16,10 +15,11 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MathController extends VisibleObjectController<MathObject> {
-	FastMap<Creature, MathObjectObserver> observers = new FastMap<Creature, MathObjectObserver>().shared();
+	Map<Creature, MathObjectObserver> observers = new LinkedHashMap<Creature, MathObjectObserver>();
 
 	@Override
 	public void see(VisibleObject object) {

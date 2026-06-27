@@ -42,7 +42,7 @@ public class CmdTeleportToNamed extends AbstractGMHandler {
 		} catch (NumberFormatException e) {
 			String npcDesc = params;
 
-			for (NpcTemplate template : DataManager.NPC_DATA.getNpcData().valueCollection()) {
+			for (NpcTemplate template : DataManager.NPC_DATA.getNpcData().values()) {
 				if (template.getNamedesc() != null && template.getNamedesc().equalsIgnoreCase(npcDesc)) {
 					TeleportService2.teleportToNpc(admin, template.getTemplateId());
 					message = "Teleporting to Npc: " + template.getTemplateId();

@@ -8,7 +8,8 @@ import com.aionemu.gameserver.model.challenge.ChallengeTask;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeType;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class MySQL8ChallengeTasksDAO extends ChallengeTasksDAO {
 
     @Override
     public Map<Integer, ChallengeTask> load(int ownerId, ChallengeType type) {
-        FastMap<Integer, ChallengeTask> tasks = FastMap.newInstance();
+        Map<Integer, ChallengeTask> tasks = new LinkedHashMap<>();
         
         try (Connection conn = DatabaseFactory.getConnection();
              PreparedStatement stmt = conn.prepareStatement(SELECT_QUERY)) {

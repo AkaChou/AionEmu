@@ -78,7 +78,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SiegeService {
 	private static final Logger log = LoggerFactory.getLogger("SIEGE_LOG");
@@ -86,7 +87,7 @@ public class SiegeService {
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
 	private static volatile ObjectProvider<SiegeService> instanceProvider;
 	private static final SiegeService instance = new SiegeService();
-	private final Map<Integer, Siege<?>> activeSieges = new FastMap<Integer, Siege<?>>().shared();
+	private final Map<Integer, Siege<?>> activeSieges = new LinkedHashMap<Integer, Siege<?>>();
 	private SiegeSchedule siegeSchedule;
 	private Map<Integer, ArtifactLocation> artifacts;
 	private Map<Integer, FortressLocation> fortresses;

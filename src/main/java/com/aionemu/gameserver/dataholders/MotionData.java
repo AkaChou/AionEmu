@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.skillengine.model.MotionTime;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author kecimis
@@ -42,7 +43,7 @@ public class MotionData {
 	protected List<MotionTime> motionTimes;
 
 	@XmlTransient
-	private FastMap<String, MotionTime> motionTimesMap = new FastMap<String, MotionTime>();
+	private Map<String, MotionTime> motionTimesMap = new LinkedHashMap<String, MotionTime>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MotionTime motion : motionTimes) {

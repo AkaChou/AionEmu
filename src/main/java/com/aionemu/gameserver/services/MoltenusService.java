@@ -48,7 +48,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -60,7 +61,7 @@ public class MoltenusService {
 	private MoltenusSchedule moltenusSchedule;
 	private Map<Integer, MoltenusLocation> moltenus;
 	private static final int duration = CustomConfig.MOLTENUS_DURATION;
-	private final Map<Integer, MoltenusFight<?>> activeMoltenus = new FastMap<Integer, MoltenusFight<?>>().shared();
+	private final Map<Integer, MoltenusFight<?>> activeMoltenus = new LinkedHashMap<Integer, MoltenusFight<?>>();
 	private static final Logger log = LoggerFactory.getLogger(MoltenusService.class);
 
 	public void initMoltenusLocations() {

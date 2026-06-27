@@ -24,7 +24,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Source
@@ -32,7 +33,7 @@ import com.aionemu.commons.utils.collections.FastMap;
 public class InvasionZoneInstance extends ZoneInstance {
 
 	private static final Logger log = LoggerFactory.getLogger(InvasionZoneInstance.class);
-	private FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	private Map<Integer, Player> players = new LinkedHashMap<Integer, Player>();
 
 	/**
 	 * @param mapId
@@ -67,9 +68,7 @@ public class InvasionZoneInstance extends ZoneInstance {
 
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (FastMap.Entry<Integer, Player> e = players.head(),
-					mapEnd = players.tail(); (e = e.getNext()) != mapEnd;) {
-				Player player = e.getValue();
+			for (Player player : players.values()) {
 				if (player != null) {
 					visitor.visit(player);
 				}

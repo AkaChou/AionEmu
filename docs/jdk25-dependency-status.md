@@ -34,7 +34,7 @@ This project targets Java 25 bytecode with `maven.compiler.release=25`. Dependen
 
 | Dependency | Status | Reason | Recommendation |
 | --- | --- | --- | --- |
-| `javolution:javolution` | Removed | Maven Central latest is `5.5.1`, last updated `2011-08-15`. No current JDK 25 support statement was found in release metadata. | Do not reintroduce. Remaining `FastList` / `FastMap` names are repo-local compatibility classes backed by JDK collections, not the Javolution artifact. |
+| `javolution:javolution` | Removed | Maven Central latest is `5.5.1`, last updated `2011-08-15`. No current JDK 25 support statement was found in release metadata. | Do not reintroduce. The repo-local `FastList` / `FastMap` / `FastSet` compatibility classes have also been removed; use JDK collections directly. |
 | `net.sf.trove4j:trove4j` | Removed | Maven Central latest is `3.0.3`, last updated `2014-12-04`. No current JDK 25 support statement was found in release metadata. | Do not reintroduce. Primitive collection needs should use maintained libraries or JDK collections. |
 
 ## Vendored JDK compatibility risk

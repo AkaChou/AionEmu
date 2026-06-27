@@ -31,7 +31,8 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Ranastic (Encom)
@@ -47,7 +48,7 @@ public class ItemUpgradeService {
 			log.warn(resultItemId + " item's itemupgrade template is null");
 			return false;
 		}
-		FastMap<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
+		Map<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
 				.getResultItemMap(baseItem.getItemId());
 		if (!resultItemMap.containsKey(resultItemId)) {
 			AuditLogger.info(player,
@@ -92,7 +93,7 @@ public class ItemUpgradeService {
 	}
 
 	public static boolean decreaseMaterial(Player player, Item baseItem, int resultItemId) {
-		FastMap<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
+		Map<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
 				.getResultItemMap(baseItem.getItemId());
 		UpgradeResultItem resultItem = resultItemMap.get(resultItemId);
 		if (resultItem.getNeed_kinah() == null) {

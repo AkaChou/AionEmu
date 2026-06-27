@@ -33,7 +33,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastSet;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Kisk extends SummonedObject<Player> {
 	private final Legion ownerLegion;
@@ -51,7 +52,7 @@ public class Kisk extends SummonedObject<Player> {
 		if (this.kiskStatsTemplate == null) {
 			this.kiskStatsTemplate = new KiskStatsTemplate();
 		}
-		this.kiskMemberIds = new FastSet<Integer>(kiskStatsTemplate.getMaxMembers());
+		this.kiskMemberIds = new HashSet<Integer>(kiskStatsTemplate.getMaxMembers());
 		this.remainingResurrections = this.kiskStatsTemplate.getMaxResurrects();
 		this.kiskSpawnTime = System.currentTimeMillis() / 1000;
 		this.ownerLegion = owner.getLegion();

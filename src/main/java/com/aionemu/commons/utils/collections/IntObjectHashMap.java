@@ -1,6 +1,8 @@
 package com.aionemu.commons.utils.collections;
 
-public class IntObjectHashMap<V> extends FastMap<Integer, V> {
+import java.util.LinkedHashMap;
+
+public class IntObjectHashMap<V> extends LinkedHashMap<Integer, V> {
 
 	public IntObjectHashMap() {
 	}

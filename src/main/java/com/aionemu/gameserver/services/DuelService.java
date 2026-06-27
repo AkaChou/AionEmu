@@ -42,14 +42,15 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class DuelService {
 	private static Logger log = LoggerFactory.getLogger(DuelService.class);
 	private static volatile ObjectProvider<DuelService> instanceProvider;
 
-	private FastMap<Integer, Integer> duels;
-	private FastMap<Integer, Future<?>> timeOutTask;
+	private Map<Integer, Integer> duels;
+	private Map<Integer, Future<?>> timeOutTask;
 
 	public static final DuelService getInstance() {
 		ObjectProvider<DuelService> provider = instanceProvider;
@@ -64,8 +65,8 @@ public class DuelService {
 	}
 
 	public DuelService() {
-		this.duels = new FastMap<Integer, Integer>().shared();
-		timeOutTask = new FastMap<Integer, Future<?>>().shared();
+		this.duels = new LinkedHashMap<Integer, Integer>();
+		timeOutTask = new LinkedHashMap<Integer, Future<?>>();
 	}
 
 	public void onDuelRequest(Player requester, Player responder) {

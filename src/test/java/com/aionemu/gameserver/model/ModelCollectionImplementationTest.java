@@ -304,6 +304,9 @@ class ModelCollectionImplementationTest {
 	void sourceTreeDoesNotUseLegacyCollectionPackages() throws Exception {
 		assertTreeOmitsLegacyCollectionPackages(Path.of("src/main/java"));
 		assertTreeOmitsLegacyCollectionPackages(Path.of("src/test/java"));
+		assertFalse(Files.exists(Path.of("src/main/java/com/aionemu/commons/utils/collections/FastList.java")));
+		assertFalse(Files.exists(Path.of("src/main/java/com/aionemu/commons/utils/collections/FastMap.java")));
+		assertFalse(Files.exists(Path.of("src/main/java/com/aionemu/commons/utils/collections/FastSet.java")));
 		assertSourceOmits("pom.xml", "javo" + "lution");
 		assertSourceOmits("pom.xml", "trove4j");
 	}

@@ -45,13 +45,14 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class BalaurAssaultService {
 	private static final BalaurAssaultService instance = new BalaurAssaultService();
 	private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
 	private Logger log = LoggerFactory.getLogger("SIEGE_LOG");
-	private final Map<Integer, FortressAssault> fortressAssaults = new FastMap<Integer, FortressAssault>().shared();
+	private final Map<Integer, FortressAssault> fortressAssaults = new LinkedHashMap<Integer, FortressAssault>();
 
 	public static BalaurAssaultService getInstance() {
 		ObjectProvider<BalaurAssaultService> provider = instanceProvider;

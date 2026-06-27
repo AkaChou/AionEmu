@@ -3,7 +3,8 @@ package com.aionemu.gameserver.dao.mysql8;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.model.ingameshop.IGItem;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,8 +26,8 @@ public class MySQL8InGameShopDAO extends InGameShopDAO {
     private static final String UPDATE_SALES_QUERY = "UPDATE `ingameshop` SET `sales_ranking`=? WHERE `object_id`=?";
 
     @Override
-    public FastMap<Byte, List<IGItem>> loadInGameShopItems() {
-        FastMap<Byte, List<IGItem>> items = FastMap.newInstance();
+    public Map<Byte, List<IGItem>> loadInGameShopItems() {
+        Map<Byte, List<IGItem>> items = new LinkedHashMap<>();
 
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(SELECT_QUERY);

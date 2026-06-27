@@ -1,6 +1,8 @@
 package com.aionemu.commons.utils.collections;
 
-public class ShortObjectHashMap<V> extends FastMap<Short, V> {
+import java.util.LinkedHashMap;
+
+public class ShortObjectHashMap<V> extends LinkedHashMap<Short, V> {
 
 	public boolean contains(short key) {
 		return containsKey(key);

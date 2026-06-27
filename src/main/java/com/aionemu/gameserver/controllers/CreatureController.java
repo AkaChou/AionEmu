@@ -57,7 +57,8 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class is for controlling Creatures [npc's, players etc]
@@ -68,7 +69,7 @@ import com.aionemu.commons.utils.collections.FastMap;
 public abstract class CreatureController<T extends Creature> extends VisibleObjectController<Creature> {
 
 	private static final Logger log = LoggerFactory.getLogger(CreatureController.class);
-	private FastMap<Integer, Future<?>> tasks = new FastMap<Integer, Future<?>>().shared();
+	private Map<Integer, Future<?>> tasks = new LinkedHashMap<Integer, Future<?>>();
 	private float healingSkillBoost = 1.0f;
 	private int SimpleAttackType;
 

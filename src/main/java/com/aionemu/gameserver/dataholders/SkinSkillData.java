@@ -29,7 +29,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.skillengine.model.SkinSkillTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Ranastic
@@ -44,7 +45,7 @@ public class SkinSkillData {
 	@XmlTransient
 	private IntObjectHashMap<SkinSkillTemplate> skinSkillData = new IntObjectHashMap<SkinSkillTemplate>();
 
-	private final Map<String, SkinSkillTemplate> string = new FastMap<String, SkinSkillTemplate>().shared();
+	private final Map<String, SkinSkillTemplate> string = new LinkedHashMap<String, SkinSkillTemplate>();
 
 	void afterUnmarshal(Unmarshaller paramUnmarshaller, Object paramObject) {
 		for (SkinSkillTemplate skinSkill : tlist) {

@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.templates.towerofeternity.TowerOfEternityTemplate;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Wnkrz on 22/08/2017.
@@ -41,7 +42,7 @@ public class TowerOfEternityData {
 	private List<TowerOfEternityTemplate> towerOfEternityTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, TowerOfEternityLocation> towerOfEternity = new FastMap<Integer, TowerOfEternityLocation>();
+	private Map<Integer, TowerOfEternityLocation> towerOfEternity = new LinkedHashMap<Integer, TowerOfEternityLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TowerOfEternityTemplate template : towerOfEternityTemplates) {
@@ -53,7 +54,7 @@ public class TowerOfEternityData {
 		return towerOfEternity.size();
 	}
 
-	public FastMap<Integer, TowerOfEternityLocation> getTowerOfEternityLocations() {
+	public Map<Integer, TowerOfEternityLocation> getTowerOfEternityLocations() {
 		return towerOfEternity;
 	}
 }

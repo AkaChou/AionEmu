@@ -32,7 +32,8 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This table contains all nesessary data for new players. <br/>
@@ -52,7 +53,7 @@ public class PlayerInitialData {
 	@XmlElement(name = "asmodian_spawn_location", required = true)
 	private LocationData asmodianSpawnLocation;
 
-	private FastMap<PlayerClass, PlayerCreationData> data = new FastMap<PlayerClass, PlayerCreationData>();
+	private Map<PlayerClass, PlayerCreationData> data = new LinkedHashMap<PlayerClass, PlayerCreationData>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PlayerCreationData pt : dataList) {

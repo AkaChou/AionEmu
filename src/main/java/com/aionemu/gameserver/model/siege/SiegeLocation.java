@@ -32,7 +32,8 @@ import com.aionemu.gameserver.world.zone.SiegeZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SiegeLocation implements ZoneHandler {
 	private static final Logger log = LoggerFactory.getLogger(SiegeLocation.class);
@@ -54,7 +55,7 @@ public class SiegeLocation implements ZoneHandler {
 	private boolean canTeleport;
 	protected int siegeDuration;
 	protected int influenceValue;
-	private FastMap<Integer, Creature> creatures = new FastMap<Integer, Creature>();
+	private Map<Integer, Creature> creatures = new LinkedHashMap<Integer, Creature>();
 	private Map<Integer, Player> players = new HashMap<>();
 	protected int buffId;
 	protected int buffIdA;
@@ -220,7 +221,7 @@ public class SiegeLocation implements ZoneHandler {
 		}
 	}
 
-	public FastMap<Integer, Creature> getCreatures() {
+	public Map<Integer, Creature> getCreatures() {
 		return creatures;
 	}
 

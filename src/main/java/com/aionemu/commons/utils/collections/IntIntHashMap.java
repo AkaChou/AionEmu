@@ -1,6 +1,8 @@
 package com.aionemu.commons.utils.collections;
 
-public class IntIntHashMap extends FastMap<Integer, Integer> {
+import java.util.LinkedHashMap;
+
+public class IntIntHashMap extends LinkedHashMap<Integer, Integer> {
 
 	public int get(int key) {
 		Integer value = super.get(key);

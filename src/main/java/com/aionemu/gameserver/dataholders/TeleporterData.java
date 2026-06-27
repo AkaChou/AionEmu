@@ -60,7 +60,7 @@ public class TeleporterData {
 	}
 
 	public TeleporterTemplate getTeleporterTemplateByNpcId(int npcId) {
-		for (TeleporterTemplate template : npctlistData.valueCollection()) {
+		for (TeleporterTemplate template : npctlistData.values()) {
 			if (template.containNpc(npcId)) {
 				return template;
 			}

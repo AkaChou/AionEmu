@@ -51,7 +51,8 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 
-import com.aionemu.commons.utils.collections.FastSet;
+import java.util.HashSet;
+import java.util.Set;
 
 public class VeteranRewardsService {
 	private static volatile ObjectProvider<VeteranRewardsService> instanceProvider;
@@ -102,7 +103,7 @@ public class VeteranRewardsService {
 			veteran_rewards.clear();
 		}
 
-		veteran_rewards = new FastSet<VeteranRewards>(getDAO().getVeteranReward()).shared();
+		veteran_rewards = new HashSet<VeteranRewards>(getDAO().getVeteranReward());
 
 		if (veteran_rewards.size() > 0) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {

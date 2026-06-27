@@ -34,17 +34,18 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
 import com.aionemu.commons.utils.collections.IntArrayList;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class KillSpawned extends QuestHandler {
 	private final int questId;
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
 	private final Set<Integer> endNpcs = new HashSet<Integer>();
-	private final FastMap<List<Integer>, SpawnedMonster> spawnedMonsters;
+	private final Map<List<Integer>, SpawnedMonster> spawnedMonsters;
 	private IntArrayList spawnerObjects;
 
 	public KillSpawned(int questId, List<Integer> startNpcIds, List<Integer> endNpcIds,
-			FastMap<List<Integer>, SpawnedMonster> spawnedMonsters) {
+			Map<List<Integer>, SpawnedMonster> spawnedMonsters) {
 		super(questId);
 		this.questId = questId;
 		this.startNpcs.addAll(startNpcIds);

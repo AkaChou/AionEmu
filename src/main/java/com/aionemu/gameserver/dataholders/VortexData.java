@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.templates.vortex.VortexTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Source
@@ -40,7 +41,7 @@ public class VortexData {
 	@XmlElement(name = "vortex_location")
 	private List<VortexTemplate> vortexTemplates;
 	@XmlTransient
-	private FastMap<Integer, VortexLocation> vortex = new FastMap<Integer, VortexLocation>();
+	private Map<Integer, VortexLocation> vortex = new LinkedHashMap<Integer, VortexLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (VortexTemplate template : vortexTemplates) {
@@ -61,7 +62,7 @@ public class VortexData {
 		return null;
 	}
 
-	public FastMap<Integer, VortexLocation> getVortexLocations() {
+	public Map<Integer, VortexLocation> getVortexLocations() {
 		return vortex;
 	}
 }

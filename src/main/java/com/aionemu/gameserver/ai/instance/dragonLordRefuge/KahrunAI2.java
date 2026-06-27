@@ -25,7 +25,8 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /****/
 /** Author (Encom)
@@ -35,7 +36,7 @@ import com.aionemu.commons.utils.collections.FastMap;
 @AIName("kahrun2")
 public class KahrunAI2 extends NpcAI2
 {
-	private FastMap<Integer, VisibleObject> portal = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> portal = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
 	protected void handleDialogStart(Player player) {

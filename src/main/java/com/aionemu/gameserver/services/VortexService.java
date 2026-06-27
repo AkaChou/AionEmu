@@ -51,7 +51,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class VortexService {
 	private static volatile ObjectProvider<VortexService> instanceProvider;
@@ -59,8 +60,8 @@ public class VortexService {
 	Logger log = LoggerFactory.getLogger(VortexService.class);
 	private Map<Integer, VortexLocation> vortex;
 	private static final int duration = CustomConfig.VORTEX_DURATION;
-	private final Map<Integer, DimensionalVortex<?>> activeInvasions = new FastMap<Integer, DimensionalVortex<?>>()
-			.shared();
+	private final Map<Integer, DimensionalVortex<?>> activeInvasions = new LinkedHashMap<Integer, DimensionalVortex<?>>()
+			;
 
 	public void initVortexLocations() {
 		if (CustomConfig.VORTEX_ENABLED) {

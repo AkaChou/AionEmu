@@ -15,7 +15,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WebshopService {
 	private static final Logger log = LoggerFactory.getLogger(WebshopService.class);
@@ -44,7 +45,7 @@ public class WebshopService {
 				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player pl) {
-						FastList<RewardEntryItem> liste = DAOManager.getDAO(RewardServiceDAO.class)
+						List<RewardEntryItem> liste = DAOManager.getDAO(RewardServiceDAO.class)
 								.getAvailable(pl.getObjectId());
 						if (liste.isEmpty()) {
 							return;

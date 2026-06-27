@@ -140,7 +140,8 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Player extends Creature {
 
@@ -277,7 +278,7 @@ public class Player extends Creature {
 	public long prevPosUT;
 	public byte prevMoveType;
 	private PlayerVarsDAO daoVars = (PlayerVarsDAO) DAOManager.getDAO(PlayerVarsDAO.class);
-	private Map<String, Object> vars = FastMap.newInstance();
+	private Map<String, Object> vars = new LinkedHashMap<>();
 	private boolean robot = false;
 	private int robotId = 0;
 	public int A_STATION_TYPE = 0;
@@ -1651,7 +1652,7 @@ public class Player extends Creature {
 	 */
 	public void addItemCoolDown(int delayId, long time, int useDelay) {
 		if (itemCoolDowns == null) {
-			itemCoolDowns = new FastMap<Integer, ItemCooldown>().shared();
+			itemCoolDowns = new LinkedHashMap<Integer, ItemCooldown>();
 		}
 		itemCoolDowns.put(delayId, new ItemCooldown(time, useDelay));
 	}
@@ -3001,7 +3002,7 @@ public class Player extends Creature {
 
 	public void addItemMaxCountOfDay(int itemId, int thisCount) {
 		if (maxCountEvent == null) {
-			maxCountEvent = new FastMap<Integer, MaxCountOfDay>().shared();
+			maxCountEvent = new LinkedHashMap<Integer, MaxCountOfDay>();
 		}
 		if (maxCountEvent.get(itemId) != null) {
 			maxCountEvent.get(itemId).setThisCount(thisCount);

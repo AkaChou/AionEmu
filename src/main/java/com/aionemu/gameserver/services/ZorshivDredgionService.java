@@ -49,7 +49,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -59,8 +60,8 @@ public class ZorshivDredgionService {
 	private DredgionSchedule dredgionSchedule;
 	private Map<Integer, ZorshivDredgionLocation> zorshivDredgion;
 	private static final int duration = CustomConfig.ZORSHIV_DREDGION_DURATION;
-	private final Map<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new FastMap<Integer, ZorshivDredgion<?>>()
-			.shared();
+	private final Map<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new LinkedHashMap<Integer, ZorshivDredgion<?>>()
+			;
 	private static final Logger log = LoggerFactory.getLogger(ZorshivDredgionService.class);
 
 	// Inggison Invasion

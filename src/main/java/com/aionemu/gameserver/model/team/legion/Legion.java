@@ -32,7 +32,8 @@ import com.aionemu.gameserver.model.bonus_service.ServiceBuff;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Simple
@@ -57,7 +58,7 @@ public class Legion {
 	private LegionWarehouse legionWarehouse;
 	private SortedSet<LegionHistory> legionHistory;
 	private AtomicBoolean hasBonus = new AtomicBoolean(false);
-	private FastMap<Integer, LegionJoinRequest> joinRequestMap = new FastMap<Integer, LegionJoinRequest>();
+	private Map<Integer, LegionJoinRequest> joinRequestMap = new LinkedHashMap<Integer, LegionJoinRequest>();
 	private String description = "";
 	private int minJoinLevel = 0;
 	private int joinType = 0;
@@ -611,7 +612,7 @@ public class Legion {
 		this.joinType = joinType;
 	}
 
-	public FastMap<Integer, LegionJoinRequest> getJoinRequestMap() {
+	public Map<Integer, LegionJoinRequest> getJoinRequestMap() {
 		return joinRequestMap;
 	}
 

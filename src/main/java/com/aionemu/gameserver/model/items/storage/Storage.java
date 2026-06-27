@@ -31,7 +31,8 @@ import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 
-import com.aionemu.commons.utils.collections.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author KID, ATracer
@@ -229,7 +230,7 @@ public abstract class Storage implements IStorage {
 	}
 
 	boolean decreaseByItemId(int itemId, long count, Player actor) {
-		FastList<Item> items = itemStorage.getItemsById(itemId);
+		List<Item> items = itemStorage.getItemsById(itemId);
 		if (items.size() == 0) {
 			return false;
 		}
@@ -240,7 +241,7 @@ public abstract class Storage implements IStorage {
 			count = decreaseItemCount(item, count, actor);
 		}
 
-		FastList.recycle(items);
+		items.clear();
 		return count == 0;
 	}
 
@@ -262,8 +263,8 @@ public abstract class Storage implements IStorage {
 	}
 
 	@Override
-	public FastList<Item> getItemsWithKinah() {
-		FastList<Item> items = this.itemStorage.getItems();
+	public List<Item> getItemsWithKinah() {
+		List<Item> items = this.itemStorage.getItems();
 		if (this.kinahItem != null) {
 			items.add(this.kinahItem);
 		}
@@ -292,7 +293,7 @@ public abstract class Storage implements IStorage {
 
 	@Override
 	public long getItemCountByItemId(int itemId) {
-		FastList<Item> temp = this.itemStorage.getItemsById(itemId);
+		List<Item> temp = this.itemStorage.getItemsById(itemId);
 		if (temp.size() == 0) {
 			return 0;
 		}

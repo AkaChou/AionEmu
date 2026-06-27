@@ -30,7 +30,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @XmlRootElement(name = "skill_data")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -43,7 +44,7 @@ public class SkillData {
 
 	private IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<SkillTemplate>();
 
-	private final Map<String, SkillTemplate> skillGroup = new FastMap<String, SkillTemplate>().shared();
+	private final Map<String, SkillTemplate> skillGroup = new LinkedHashMap<String, SkillTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		skillData.clear();

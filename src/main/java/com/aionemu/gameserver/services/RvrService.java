@@ -50,7 +50,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -63,7 +64,7 @@ public class RvrService {
 	private static Logger log = LoggerFactory.getLogger(SvsService.class);
 
 	// Brigade General's Urgent Order 4.9.1
-	private final Map<Integer, Rvrlf3df3<?>> activeRvr = new FastMap<Integer, Rvrlf3df3<?>>().shared();
+	private final Map<Integer, Rvrlf3df3<?>> activeRvr = new LinkedHashMap<Integer, Rvrlf3df3<?>>();
 	// Heavy Tetran/Kenovikan 5.6
 	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
 	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();

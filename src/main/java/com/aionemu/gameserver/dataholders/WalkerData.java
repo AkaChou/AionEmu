@@ -41,7 +41,8 @@ import org.xml.sax.SAXException;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author KKnD, Rolandas
@@ -56,7 +57,7 @@ public class WalkerData {
 	private List<WalkerTemplate> walkerlist;
 
 	@XmlTransient
-	private FastMap<String, WalkerTemplate> walkerlistData = new FastMap<String, WalkerTemplate>();
+	private Map<String, WalkerTemplate> walkerlistData = new LinkedHashMap<String, WalkerTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (WalkerTemplate route : walkerlist) {

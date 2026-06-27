@@ -48,7 +48,8 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ChallengeTaskService {
 	private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
@@ -73,8 +74,8 @@ public class ChallengeTaskService {
 	}
 
 	public ChallengeTaskService() {
-		cityTasks = new FastMap<Integer, Map<Integer, ChallengeTask>>().shared();
-		legionTasks = new FastMap<Integer, Map<Integer, ChallengeTask>>().shared();
+		cityTasks = new LinkedHashMap<Integer, Map<Integer, ChallengeTask>>();
+		legionTasks = new LinkedHashMap<Integer, Map<Integer, ChallengeTask>>();
 		log.info("ChallengeTaskService initialized.");
 	}
 

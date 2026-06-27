@@ -24,7 +24,8 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author ATracer
@@ -34,7 +35,7 @@ public class PetList {
 	private final Player player;
 	private int lastUsedPetId;
 
-	private FastMap<Integer, PetCommonData> pets = new FastMap<Integer, PetCommonData>();
+	private Map<Integer, PetCommonData> pets = new LinkedHashMap<Integer, PetCommonData>();
 
 	PetList(Player player) {
 		this.player = player;

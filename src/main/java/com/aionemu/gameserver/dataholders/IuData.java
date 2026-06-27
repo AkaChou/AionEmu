@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.iu.IuLocation;
 import com.aionemu.gameserver.model.templates.iu.IuTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class IuData {
 	private List<IuTemplate> iuTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, IuLocation> iu = new FastMap<Integer, IuLocation>();
+	private Map<Integer, IuLocation> iu = new LinkedHashMap<Integer, IuLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (IuTemplate template : iuTemplates) {
@@ -53,7 +54,7 @@ public class IuData {
 		return iu.size();
 	}
 
-	public FastMap<Integer, IuLocation> getIuLocations() {
+	public Map<Integer, IuLocation> getIuLocations() {
 		return iu;
 	}
 }

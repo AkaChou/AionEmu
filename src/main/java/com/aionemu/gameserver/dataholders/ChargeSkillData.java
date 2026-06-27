@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.skillengine.model.ChargeSkillTemplate;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Dr.Nism [Ranastic]
@@ -41,7 +42,7 @@ public class ChargeSkillData {
 	private List<ChargeSkillTemplate> chargeSkills;
 
 	private IntObjectHashMap<ChargeSkillTemplate> ids = new IntObjectHashMap<ChargeSkillTemplate>();
-	private final Map<String, ChargeSkillTemplate> setName = new FastMap<String, ChargeSkillTemplate>().shared();
+	private final Map<String, ChargeSkillTemplate> setName = new LinkedHashMap<String, ChargeSkillTemplate>();
 	private IntObjectHashMap<ChargeSkillTemplate> firstTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
 	private IntObjectHashMap<ChargeSkillTemplate> totalTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
 

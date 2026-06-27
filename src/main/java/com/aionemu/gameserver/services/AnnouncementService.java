@@ -37,7 +37,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
-import com.aionemu.commons.utils.collections.FastSet;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Automatic Announcement System
@@ -92,7 +93,7 @@ public class AnnouncementService {
 	 * Load the announcements system
 	 */
 	private void load() {
-		announcements = new FastSet<Announcement>(getDAO().getAnnouncements()).shared();
+		announcements = new HashSet<Announcement>(getDAO().getAnnouncements());
 
 		for (final Announcement announce : announcements) {
 			delays.add(ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {

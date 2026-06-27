@@ -3,7 +3,8 @@ package com.aionemu.gameserver.dao.mysql8;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
-import com.aionemu.commons.utils.collections.FastList;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +56,8 @@ public class MySQL8RewardServiceDAO extends RewardServiceDAO {
     }
 	
     @Override
-    public FastList<RewardEntryItem> getAvailable(int playerId) {
-        FastList<RewardEntryItem> list = FastList.newInstance();
+    public List<RewardEntryItem> getAvailable(int playerId) {
+        List<RewardEntryItem> list = new ArrayList<>();
         
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(SELECT_QUERY)) {

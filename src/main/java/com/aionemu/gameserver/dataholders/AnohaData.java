@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.anoha.AnohaLocation;
 import com.aionemu.gameserver.model.templates.anoha.AnohaTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class AnohaData {
 	private List<AnohaTemplate> anohaTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, AnohaLocation> anoha = new FastMap<Integer, AnohaLocation>();
+	private Map<Integer, AnohaLocation> anoha = new LinkedHashMap<Integer, AnohaLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AnohaTemplate template : anohaTemplates) {
@@ -53,7 +54,7 @@ public class AnohaData {
 		return anoha.size();
 	}
 
-	public FastMap<Integer, AnohaLocation> getAnohaLocations() {
+	public Map<Integer, AnohaLocation> getAnohaLocations() {
 		return anoha;
 	}
 }

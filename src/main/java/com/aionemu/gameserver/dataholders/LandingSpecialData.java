@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.templates.landing_special.LandingSpecialTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "landing_special")
@@ -37,7 +38,7 @@ public class LandingSpecialData {
 	private List<LandingSpecialTemplate> landingSpecialTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, LandingSpecialLocation> landingSpecial = new FastMap<Integer, LandingSpecialLocation>();
+	private Map<Integer, LandingSpecialLocation> landingSpecial = new LinkedHashMap<Integer, LandingSpecialLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (LandingSpecialTemplate template : landingSpecialTemplates) {
@@ -49,7 +50,7 @@ public class LandingSpecialData {
 		return landingSpecial.size();
 	}
 
-	public FastMap<Integer, LandingSpecialLocation> getLandingSpecialLocations() {
+	public Map<Integer, LandingSpecialLocation> getLandingSpecialLocations() {
 		return landingSpecial;
 	}
 }

@@ -48,7 +48,8 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author KID
@@ -57,7 +58,7 @@ public class InGameShopEn {
 
 	private static volatile ObjectProvider<InGameShopEn> instanceProvider;
 	private final Logger log = LoggerFactory.getLogger("INGAMESHOP_LOG");
-	private FastMap<Byte, List<IGItem>> items;
+	private Map<Byte, List<IGItem>> items;
 	private InGameShopDAO dao;
 	private InGameShopProperty iGProperty;
 	private int lastRequestId = 0;
@@ -83,7 +84,7 @@ public class InGameShopEn {
 		}
 		iGProperty = InGameShopProperty.load();
 		dao = DAOManager.getDAO(InGameShopDAO.class);
-		items = FastMap.newInstance();
+		items = new LinkedHashMap<>();
 		activeRequests = new ArrayList<>();
 		items = dao.loadInGameShopItems();
 		log.info("Loaded with " + items.size() + " items.");

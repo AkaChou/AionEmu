@@ -59,7 +59,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author kosyachok
@@ -68,10 +69,10 @@ import com.aionemu.commons.utils.collections.FastMap;
  */
 public class BrokerService {
 
-	private Map<Integer, BrokerItem> elyosBrokerItems = new FastMap<Integer, BrokerItem>().shared();
-	private Map<Integer, BrokerItem> elyosSettledItems = new FastMap<Integer, BrokerItem>().shared();
-	private Map<Integer, BrokerItem> asmodianBrokerItems = new FastMap<Integer, BrokerItem>().shared();
-	private Map<Integer, BrokerItem> asmodianSettledItems = new FastMap<Integer, BrokerItem>().shared();
+	private Map<Integer, BrokerItem> elyosBrokerItems = new LinkedHashMap<Integer, BrokerItem>();
+	private Map<Integer, BrokerItem> elyosSettledItems = new LinkedHashMap<Integer, BrokerItem>();
+	private Map<Integer, BrokerItem> asmodianBrokerItems = new LinkedHashMap<Integer, BrokerItem>();
+	private Map<Integer, BrokerItem> asmodianSettledItems = new LinkedHashMap<Integer, BrokerItem>();
 	private static final Logger log = LoggerFactory.getLogger("EXCHANGE_LOG");
 	private final int DELAY_BROKER_SAVE = (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000) >= 6000
 			? (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000)
@@ -80,7 +81,7 @@ public class BrokerService {
 			? (BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL * 1000)
 			: 60000;
 	private BrokerPeriodicTaskManager saveManager;
-	private Map<Integer, BrokerPlayerCache> playerBrokerCache = new FastMap<Integer, BrokerPlayerCache>().shared();
+	private Map<Integer, BrokerPlayerCache> playerBrokerCache = new LinkedHashMap<Integer, BrokerPlayerCache>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
 
 	public static final BrokerService getInstance() {

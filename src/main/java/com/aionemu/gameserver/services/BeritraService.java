@@ -49,7 +49,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -72,8 +73,8 @@ public class BeritraService {
 	private Map<Integer, VisibleObject> adventEreshControl = new HashMap<>();
 	private Map<Integer, VisibleObject> adventEreshDirecting = new HashMap<>();
 
-	private final Map<Integer, BeritraInvasion<?>> activeInvasions = new FastMap<Integer, BeritraInvasion<?>>()
-			.shared();
+	private final Map<Integer, BeritraInvasion<?>> activeInvasions = new LinkedHashMap<Integer, BeritraInvasion<?>>()
+			;
 
 	public void initBeritraLocations() {
 		if (CustomConfig.BERITRA_ENABLED) {

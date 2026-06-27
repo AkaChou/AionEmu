@@ -28,7 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.templates.conquest.ConquestTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class ConquestData {
 	private List<ConquestTemplate> conquestTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, ConquestLocation> conquest = new FastMap<Integer, ConquestLocation>();
+	private Map<Integer, ConquestLocation> conquest = new LinkedHashMap<Integer, ConquestLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ConquestTemplate template : conquestTemplates) {
@@ -53,7 +54,7 @@ public class ConquestData {
 		return conquest.size();
 	}
 
-	public FastMap<Integer, ConquestLocation> getConquestLocations() {
+	public Map<Integer, ConquestLocation> getConquestLocations() {
 		return conquest;
 	}
 }

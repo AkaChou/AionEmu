@@ -27,7 +27,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.chest.ChestTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
@@ -43,7 +44,7 @@ public class ChestData {
 	/** A map containing all npc templates */
 	private IntObjectHashMap<ChestTemplate> chestData = new IntObjectHashMap<ChestTemplate>();
 	private IntObjectHashMap<ArrayList<ChestTemplate>> instancesMap = new IntObjectHashMap<ArrayList<ChestTemplate>>();
-	private FastMap<String, ChestTemplate> namedChests = new FastMap<String, ChestTemplate>();
+	private Map<String, ChestTemplate> namedChests = new LinkedHashMap<String, ChestTemplate>();
 
 	/**
 	 * - Inititialize all maps for subsequent use - Don't nullify initial chest list

@@ -37,7 +37,8 @@ import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @authors Layane, nbali, savormix, hex1r0, lord_rex
@@ -76,7 +77,7 @@ public final class HTMLCache {
 		instanceProvider = provider;
 	}
 
-	private FastMap<String, String> cache = new FastMap<String, String>(16000);
+	private Map<String, String> cache = new LinkedHashMap<String, String>(16000);
 
 	private int loadedFiles;
 	private int size;
@@ -107,7 +108,7 @@ public final class HTMLCache {
 			try {
 				ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(getCacheFile())));
 
-				cache = (FastMap<String, String>) ois.readObject();
+				cache = (Map<String, String>) ois.readObject();
 
 				for (String html : cache.values()) {
 					loadedFiles++;

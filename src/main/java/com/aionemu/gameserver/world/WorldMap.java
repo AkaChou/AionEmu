@@ -24,7 +24,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.world.zone.ZoneAttributes;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This object is representing one in-game map and can have instances.
@@ -39,7 +40,7 @@ public class WorldMap {
 	/**
 	 * List of instances.
 	 */
-	private Map<Integer, WorldMapInstance> instances = new FastMap<Integer, WorldMapInstance>().shared();
+	private Map<Integer, WorldMapInstance> instances = new LinkedHashMap<Integer, WorldMapInstance>();
 
 	/** World to which belongs this WorldMap */
 	private World world;

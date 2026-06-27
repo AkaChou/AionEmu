@@ -47,7 +47,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -58,8 +59,8 @@ public class NightmareCircusService {
 	private CircusSchedule circusSchedule;
 	private Map<Integer, NightmareCircusLocation> nightmareCircus;
 	private static final int duration = CustomConfig.NIGHTMARE_CIRCUS_DURATION;
-	private final Map<Integer, CircusInstance<?>> activeNightmareCircus = new FastMap<Integer, CircusInstance<?>>()
-			.shared();
+	private final Map<Integer, CircusInstance<?>> activeNightmareCircus = new LinkedHashMap<Integer, CircusInstance<?>>()
+			;
 	private static Logger log = LoggerFactory.getLogger(NightmareCircusService.class);
 
 	public void initCircusLocations() {

@@ -33,7 +33,8 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -75,10 +76,10 @@ public class EventData {
 	protected List<EventTemplate> events;
 
 	@XmlTransient
-	private FastMap<String, EventTemplate> activeEvents = new FastMap<String, EventTemplate>();
+	private Map<String, EventTemplate> activeEvents = new LinkedHashMap<String, EventTemplate>();
 
 	@XmlTransient
-	private FastMap<String, EventTemplate> allEvents = new FastMap<String, EventTemplate>();
+	private Map<String, EventTemplate> allEvents = new LinkedHashMap<String, EventTemplate>();
 
 	@XmlTransient
 	private int counter = 0;

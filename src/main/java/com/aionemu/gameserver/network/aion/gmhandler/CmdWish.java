@@ -51,7 +51,7 @@ public final class CmdWish extends AbstractGMHandler {
 			byte heading = admin.getHeading();
 			int worldId = admin.getWorldId();
 
-			for (NpcTemplate nTemp : npcTemp.valueCollection()) {
+			for (NpcTemplate nTemp : npcTemp.values()) {
 				if (nTemp.getNamedesc() != null && nTemp.getNamedesc().equalsIgnoreCase(npcName)) {
 					SpawnTemplate spawn = SpawnEngine.addNewSpawn(worldId, nTemp.getTemplateId(), x, y, z, heading, 0);
 					VisibleObject visibleObject = SpawnEngine.spawnObject(spawn, admin.getInstanceId());
@@ -67,7 +67,7 @@ public final class CmdWish extends AbstractGMHandler {
 		String itemName = itemN[0];
 		Integer enchant = Integer.parseInt(itemN[1]);
 
-		for (ItemTemplate it : itemTemp.valueCollection()) {
+		for (ItemTemplate it : itemTemp.values()) {
 			if (it.getNamedesc() != null && it.getNamedesc().equalsIgnoreCase(itemName)) {
 				int maxauthorize = it.getMaxAuthorize();
 				if ((maxauthorize!=0)&&(enchant>maxauthorize))

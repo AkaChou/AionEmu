@@ -43,7 +43,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -53,7 +54,7 @@ public class IuService {
 	private static volatile ObjectProvider<IuService> instanceProvider;
 	private Map<Integer, IuLocation> iu;
 	private static final int duration = CustomConfig.IU_DURATION;
-	private final Map<Integer, Iu<?>> activeConcert = new FastMap<Integer, Iu<?>>().shared();
+	private final Map<Integer, Iu<?>> activeConcert = new LinkedHashMap<Integer, Iu<?>>();
 	private static Logger log = LoggerFactory.getLogger(IuService.class);
 
 	public void initConcertLocations() {

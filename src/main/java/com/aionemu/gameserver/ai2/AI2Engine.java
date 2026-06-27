@@ -108,7 +108,7 @@ public class AI2Engine implements GameEngine {
 
 	private void validateScripts() {
 		Collection<String> npcAINames = new HashSet<String>();
-		for (NpcTemplate npcTemplate : DataManager.NPC_DATA.getNpcData().valueCollection()) {
+		for (NpcTemplate npcTemplate : DataManager.NPC_DATA.getNpcData().values()) {
 			npcAINames.add(npcTemplate.getAi());
 		}
 		npcAINames.removeAll(aiMap.keySet());

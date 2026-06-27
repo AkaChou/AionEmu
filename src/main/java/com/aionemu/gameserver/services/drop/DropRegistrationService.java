@@ -66,13 +66,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.DropRewardEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class DropRegistrationService {
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
 
-	private Map<Integer, Set<DropItem>> currentDropMap = new FastMap<Integer, Set<DropItem>>().shared();
-	private Map<Integer, DropNpc> dropRegistrationMap = new FastMap<Integer, DropNpc>().shared();
+	private Map<Integer, Set<DropItem>> currentDropMap = new LinkedHashMap<Integer, Set<DropItem>>();
+	private Map<Integer, DropNpc> dropRegistrationMap = new LinkedHashMap<Integer, DropNpc>();
 	private List<Integer> noReductionMaps;
 
 	Logger log = LoggerFactory.getLogger(DropRegistrationService.class);

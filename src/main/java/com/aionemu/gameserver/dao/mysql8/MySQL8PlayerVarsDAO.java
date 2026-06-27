@@ -2,7 +2,8 @@ package com.aionemu.gameserver.dao.mysql8;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,7 +26,7 @@ public class MySQL8PlayerVarsDAO extends PlayerVarsDAO {
 
     @Override
     public Map<String, Object> load(final int playerId) {
-        final Map<String, Object> map = FastMap.newInstance();
+        final Map<String, Object> map = new LinkedHashMap<>();
         
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement st = con.prepareStatement(SELECT_QUERY)) {

@@ -47,7 +47,7 @@ public class TownSpawnsData {
 
 	public int getSpawnsCount() {
 		int counter = 0;
-		for (TownSpawnMap spawnMap : spawnMapsData.valueCollection()) {
+		for (TownSpawnMap spawnMap : spawnMapsData.values()) {
 			for (TownSpawn townSpawn : spawnMap.getTownSpawns()) {
 				for (TownLevel townLevel : townSpawn.getTownLevels()) {
 					counter += townLevel.getSpawns().size();
@@ -58,7 +58,7 @@ public class TownSpawnsData {
 	}
 
 	public List<Spawn> getSpawns(int townId, int townLevel) {
-		for (TownSpawnMap spawnMap : spawnMapsData.valueCollection()) {
+		for (TownSpawnMap spawnMap : spawnMapsData.values()) {
 			if (spawnMap.getTownSpawn(townId) != null) {
 				TownSpawn townSpawn = spawnMap.getTownSpawn(townId);
 				return townSpawn.getSpawnsForLevel(townLevel).getSpawns();
@@ -68,7 +68,7 @@ public class TownSpawnsData {
 	}
 
 	public int getWorldIdForTown(int townId) {
-		for (TownSpawnMap spawnMap : spawnMapsData.valueCollection())
+		for (TownSpawnMap spawnMap : spawnMapsData.values())
 			if (spawnMap.getTownSpawn(townId) != null) {
 				return spawnMap.getMapId();
 			}

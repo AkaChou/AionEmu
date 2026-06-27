@@ -36,7 +36,8 @@ import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.util.Map;
 import java.util.Set;
@@ -57,7 +58,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	private Future<?> instanceTimer;
 	private Map<Integer, StaticDoor> doors;
 	protected boolean isInstanceDestroyed = false;
-	private FastMap<Integer, VisibleObject> objects = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {

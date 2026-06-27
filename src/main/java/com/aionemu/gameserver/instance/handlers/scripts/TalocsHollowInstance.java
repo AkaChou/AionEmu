@@ -19,7 +19,8 @@ package com.aionemu.gameserver.instance.handlers.scripts;
 import java.util.*;
 import java.util.concurrent.Future;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -61,7 +62,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	private Map<Integer, StaticDoor> doors;
 	private List<Integer> movies = new ArrayList<Integer>();
 	private final List<Future<?>> talocTask = new ArrayList<Future<?>>();
-	private FastMap<Integer, VisibleObject> objects = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
     
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {

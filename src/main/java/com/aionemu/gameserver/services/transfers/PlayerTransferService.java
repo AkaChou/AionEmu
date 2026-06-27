@@ -42,7 +42,8 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author KID
@@ -69,7 +70,7 @@ public class PlayerTransferService {
 	}
 
 	private PlayerDAO dao;
-	private Map<Integer, TransferablePlayer> transfers = FastMap.newInstance();
+	private Map<Integer, TransferablePlayer> transfers = new LinkedHashMap<>();
 	private List<Integer> rsList = new ArrayList<Integer>();
 
 	public PlayerTransferService() {

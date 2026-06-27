@@ -21,7 +21,8 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.google.common.collect.Maps;
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +38,8 @@ public class MySQL8PlayerDAO extends PlayerDAO {
     
     private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerDAO.class);
     
-    private FastMap<Integer, PlayerCommonData> playerCommonData = new FastMap<Integer, PlayerCommonData>().shared();
-    private FastMap<String, PlayerCommonData> playerCommonDataByName = new FastMap<String, PlayerCommonData>().shared();
+    private Map<Integer, PlayerCommonData> playerCommonData = new LinkedHashMap<Integer, PlayerCommonData>();
+    private Map<String, PlayerCommonData> playerCommonDataByName = new LinkedHashMap<String, PlayerCommonData>();
 
     // Queries
     private static final String CHECK_NAME_USED_QUERY = "SELECT COUNT(id) as cnt FROM players WHERE name = ?";

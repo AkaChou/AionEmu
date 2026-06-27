@@ -24,14 +24,15 @@ import org.apache.commons.lang3.Range;
 
 import com.aionemu.gameserver.model.templates.rewards.CraftReward;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rolandas
  */
 public abstract class CraftGroup extends BonusItemGroup {
 
-	private FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>> dataHolder;
+	private Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder;
 
 	public ItemRaceEntry[] getRewards(Integer skillId) {
 		if (!dataHolder.containsKey(skillId)) {
@@ -59,14 +60,14 @@ public abstract class CraftGroup extends BonusItemGroup {
 	/**
 	 * @return the dataHolder
 	 */
-	public FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>> getDataHolder() {
+	public Map<Integer, Map<Range<Integer>, List<CraftReward>>> getDataHolder() {
 		return dataHolder;
 	}
 
 	/**
 	 * @param dataHolder the dataHolder to set
 	 */
-	public void setDataHolder(FastMap<Integer, FastMap<Range<Integer>, List<CraftReward>>> dataHolder) {
+	public void setDataHolder(Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder) {
 		this.dataHolder = dataHolder;
 	}
 }

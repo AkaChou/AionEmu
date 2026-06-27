@@ -19,7 +19,8 @@ package com.aionemu.gameserver.world.zone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.utils.collections.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rolandas
@@ -28,7 +29,7 @@ public final class ZoneName {
 
 	private final static Logger log = LoggerFactory.getLogger(ZoneName.class);
 
-	private static final FastMap<String, ZoneName> zoneNames = new FastMap<String, ZoneName>();
+	private static final Map<String, ZoneName> zoneNames = new LinkedHashMap<String, ZoneName>();
 	public static final String NONE = "NONE";
 	public static final String ABYSS_CASTLE = "_ABYSS_CASTLE_AREA_";
 
