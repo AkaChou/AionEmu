@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
+import java.util.function.Supplier;
+
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.services.AdminService;
@@ -29,6 +31,9 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameRuntimeServices implements DisposableBean {
 
+    private static volatile ObjectProvider<FindGroupService> findGroupServiceProvider;
+    private static volatile ObjectProvider<InGameShopEn> inGameShopEnProvider;
+
     public GameRuntimeServices(ObjectProvider<PeriodicSaveService> periodicSaveServiceProvider,
             ObjectProvider<AdminService> adminServiceProvider,
             ObjectProvider<PlayerTransferService> playerTransferServiceProvider,
@@ -51,6 +56,8 @@ public final class GameRuntimeServices implements DisposableBean {
             ObjectProvider<SurveyService> surveyServiceProvider,
             ObjectProvider<FindGroupService> findGroupServiceProvider,
             ObjectProvider<InGameShopEn> inGameShopEnProvider) {
+        GameRuntimeServices.findGroupServiceProvider = findGroupServiceProvider;
+        GameRuntimeServices.inGameShopEnProvider = inGameShopEnProvider;
         PeriodicSaveService.setInstanceProvider(periodicSaveServiceProvider);
         AdminService.setInstanceProvider(adminServiceProvider);
         PlayerTransferService.setInstanceProvider(playerTransferServiceProvider);
@@ -75,6 +82,21 @@ public final class GameRuntimeServices implements DisposableBean {
         InGameShopEn.setInstanceProvider(inGameShopEnProvider);
     }
 
+    public static FindGroupService findGroupService() {
+        return getIfAvailable(findGroupServiceProvider, FindGroupService::getInstance);
+    }
+
+    public static InGameShopEn inGameShopEn() {
+        return getIfAvailable(inGameShopEnProvider, InGameShopEn::getInstance);
+    }
+
+    private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
+        if (provider == null) {
+            return fallback.get();
+        }
+        return provider.getIfAvailable(fallback);
+    }
+
     @Override
     public void destroy() {
         PeriodicSaveService.setInstanceProvider(null);
@@ -97,6 +119,8 @@ public final class GameRuntimeServices implements DisposableBean {
         LimitedItemTradeService.setInstanceProvider(null);
         WebshopService.setInstanceProvider(null);
         SurveyService.setInstanceProvider(null);
+        findGroupServiceProvider = null;
+        inGameShopEnProvider = null;
         FindGroupService.setInstanceProvider(null);
         InGameShopEn.setInstanceProvider(null);
     }

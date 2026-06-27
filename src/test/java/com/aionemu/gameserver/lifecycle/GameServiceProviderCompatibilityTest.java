@@ -1065,10 +1065,12 @@ class GameServiceProviderCompatibilityTest {
             assertSame(webshopService, WebshopService.getInstance());
             assertSame(thievesGuildService, ThievesGuildService.getInstance());
             assertSame(inGameShopEn, InGameShopEn.getInstance());
+            assertSame(inGameShopEn, GameRuntimeServices.inGameShopEn());
             assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
             assertSame(housingService, HousingService.getInstance());
             assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
             assertSame(findGroupService, FindGroupService.getInstance());
+            assertSame(findGroupService, GameRuntimeServices.findGroupService());
             assertSame(surveyService, SurveyService.getInstance());
         } finally {
             LegionService.setInstanceProvider(null);
