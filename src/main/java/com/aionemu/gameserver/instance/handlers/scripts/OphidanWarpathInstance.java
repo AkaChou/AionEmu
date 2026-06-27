@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.configs.main.GroupConfig;
@@ -49,7 +51,6 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -105,7 +106,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         engulfedOphidanBridgeReward.setInstanceStartTime();
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!engulfedOphidanBridgeReward.isRewarded()) {
@@ -128,7 +129,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				}
             }
         }, 90000)); //...1 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -139,7 +140,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalElyos();
             }
         }, 150000)); //...2 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -150,7 +151,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalAsmodians();
             }
         }, 210000)); //...3 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -161,7 +162,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalElyos();
             }
         }, 270000)); //...4 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -172,7 +173,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalAsmodians();
             }
         }, 330000)); //...5 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -183,7 +184,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalElyos();
             }
         }, 390000)); //...6 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -194,7 +195,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalAsmodians();
             }
         }, 450000)); //...7 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -205,7 +206,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalElyos();
             }
         }, 510000)); //...8 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -216,7 +217,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalAsmodians();
             }
         }, 570000)); //...9 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -227,7 +228,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalElyos();
             }
         }, 630000)); //...10 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -238,7 +239,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalAsmodians();
             }
         }, 690000)); //...11 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -249,7 +250,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalElyos();
             }
         }, 750000)); //...12 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -260,7 +261,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalAsmodians();
             }
         }, 810000)); //...13 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -271,7 +272,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalElyos();
             }
         }, 870000)); //...14 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -282,7 +283,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalAsmodians();
             }
         }, 930000)); //...15 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -293,7 +294,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalElyos();
             }
         }, 990000)); //...16 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -304,7 +305,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalAsmodians();
             }
         }, 1050000)); //...17 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -315,7 +316,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalElyos();
             }
         }, 1110000)); //...18 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -326,7 +327,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 				spawnMechanicalAsmodians();
             }
         }, 1170000)); //...19 Minutes 30s
-		warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!engulfedOphidanBridgeReward.isRewarded()) {
@@ -617,7 +618,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -889,7 +890,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -903,7 +904,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -916,7 +917,7 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        warpathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        warpathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

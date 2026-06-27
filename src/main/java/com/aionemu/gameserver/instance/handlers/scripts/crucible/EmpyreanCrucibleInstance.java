@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -126,7 +128,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	
 	private void sendEventPacket(final StageType type, final int time) {
 		this.stageType = type;
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -685,7 +687,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217510:
 			case 217501:
 				despawnNpc(npc);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						sp(217737, 334.49496f, 349.2322f, 96.090935f, (byte) 0, 4000);
@@ -699,11 +701,11 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 						//King Saam will disappear in 30 seconds!
 						sendMsgByRace(1400979, Race.PC_ALL, 10000);
                         sp(799569, 345.25f, 349.24f, 96.09097f, (byte) 0, 60000);
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								if (getNpc(217737) != null) {
-									ThreadPoolManager.getInstance().schedule(new Runnable() {
+									GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 										@Override
 										public void run() {
 											if (getNpc(217737) != null) {
@@ -828,7 +830,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					//You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
 				    sp(217744, 342.45215f, 349.339f, 96.09096f, (byte) 0, 2000); //Administrator Arminos.
-				    ThreadPoolManager.getInstance().schedule(new Runnable() {
+				    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {
 						    startBonusStage3();
@@ -869,7 +871,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 						    sp(217559, 330.53665f, 349.23523f, 96.09093f, (byte) 0, 6000);
 						    sp(217562, 334.89508f, 363.78442f, 96.090904f, (byte) 105, 6000);
 						    sp(217560, 334.61942f, 334.80353f, 96.090904f, (byte) 15, 6000);
-						    ThreadPoolManager.getInstance().schedule(new Runnable() {
+						    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 							    public void run() {
 								    List<Npc> round = new ArrayList<Npc>();
@@ -934,7 +936,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				sp(217652, 353.92606f, 364.92636f, 96.090904f, (byte) 80, 110000);
 				sp(217653, 361.13452f, 358.90424f, 96.091156f, (byte) 65, 130000);
 				sp(217652, 346.34402f, 329.9449f, 96.09091f, (byte) 30, 142000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						sp(217653, 331.53894f, 339.8832f, 96.09091f, (byte) 10);
@@ -956,7 +958,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					sendMsgByRace(1400928, Race.PC_ALL, 4000);
 					//You have eliminated all enemies in Round %0.
 					sendMsgByRace(1400929, Race.PC_ALL, 0);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							startBonusStage4();
@@ -1155,7 +1157,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 					sp(217570, 1629.4642f, 154.8044f, 126f, (byte) 30, 6000);
 					sp(217569, 1643.7776f, 161.63562f, 126f, (byte) 46, 6000);
 					sp(217569, 1639.7843f, 142.09268f, 126f, (byte) 40, 6000);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							sp(217569, 1614.6377f, 164.04999f, 126.00113f, (byte) 3);
@@ -1208,11 +1210,11 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				//Administrator Arminos will disappear in 5 seconds!
 				sendMsgByRace(1401018, Race.PC_ALL, 25000);
 				sp(217750, 1626.7312f, 156.94821f, 126.0f, (byte) 91, 2000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (getNpc(217750) != null) { //Administrator Arminos.
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									if (getNpc(217750) != null) {
@@ -1513,22 +1515,22 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		sp(217741, 346.27f, 363.35f, 96.1f, (byte) 11);
 		sp(217742, 332.12f, 349.22f, 96.1f, (byte) 0);
 		sp(217743, 346.42f, 335.1f, 96.1f, (byte) 87);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Spirits will disappear in 30 seconds!
 				sendMsgByRace(1401010, Race.PC_ALL, 0);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						//Spirits will disappear in 10 seconds!
 						sendMsgByRace(1401011, Race.PC_ALL, 0);
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								//Spirits will disappear in 5 seconds!
 								sendMsgByRace(1401012, Race.PC_ALL, 0);
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										despawnNpc(getNpc(217740));
@@ -1593,7 +1595,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		sp(217747, 345.3226f, 367.7414f, 96.0909f, (byte) 60, 96000);
 		sp(217747, 345.4836f, 367.3886f, 96.090904f, (byte) 60, 99000);
 		sp(217747, 345.80862f, 366.0682f, 96.09092f, (byte) 60, 102000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				despawnNpcs(getNpcs(217745));
@@ -1616,7 +1618,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		List<Npc> round = new ArrayList<Npc>();
 		round.add(sp(217508, 334.06754f, 339.84393f, 96.09091f, (byte) 0));
 		empyreanStage.add(new EmpyreanStage(round));
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				List<Npc> round1 = new ArrayList<Npc>();
@@ -1634,7 +1636,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 		sp(217563, 339.70975f, 333.54272f, 96.090904f, (byte) 20, 6000);
 		sp(217564, 342.92892f, 333.43994f, 96.09092f, (byte) 18, 6000);
 		sp(217565, 341.55396f, 330.70847f, 96.09093f, (byte) 23, 16000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				List<Npc> round = new ArrayList<Npc>();
@@ -1867,7 +1869,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 				sp(217568, 1636.7102f, 166.87984f, 126f, (byte) 60, 2000);
                 sp(217568, 1619.4432f, 153.83188f, 126f, (byte) 60, 2000);
                 sp(217568, 1636.6416f, 164.15344f, 126f, (byte) 60, 2000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						sp(217568, 1638.7107f, 165.40533f, 126f, (byte) 60);
@@ -2015,7 +2017,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 	}
 	
 	private void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {

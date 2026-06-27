@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 
 import com.aionemu.gameserver.ai2.AIState;
@@ -38,7 +40,6 @@ import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -167,7 +168,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 	
 	private void spawnRaidWave(final int npcId, int delay, final List<Future<?>> taskList) {
-		taskList.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		taskList.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				for (float[] pos : SPAWN_POSITIONS) {
@@ -305,7 +306,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			    break;
 			case 855843: //Vision Of Guardian General.
 			    points = 42000;
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						instance.doOnAllPlayers(new Visitor<Player>() {
@@ -330,11 +331,11 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 	
 	private void scheduleNextRound(long delay, Runnable task) {
-		ThreadPoolManager.getInstance().schedule(task, delay);
+		GameThreadPoolServices.threadPoolManager().schedule(task, delay);
 	}
 	
 	protected void startInstanceTask1() {
-    	stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//The player has 1 min to prepare !!! [Timer Red]
@@ -355,7 +356,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 60000)); //...1Min
 		
-		stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				deleteNpc(855763);
@@ -368,14 +369,14 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 120000)); //...2Min
 		
-		stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnKebabit();
 			}
 		}, 180000)); //...3Min
 		
-		stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startRaidRound(RaidType.ROUND_1, 2);
@@ -384,7 +385,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 240000)); //...4Min
 		
-		stonespearTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnBoss(855774, 855775, 855776);
@@ -396,7 +397,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void startInstanceTask2() {
-    	stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnGuardianStone();
@@ -407,7 +408,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 60000)); //...1Min
 		
-		stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				deleteNpc(855763);
@@ -419,14 +420,14 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 120000)); //...2Min
 		
-		stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnKebabit();
 			}
 		}, 180000)); //...3Min
 		
-		stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startRaidRound(RaidType.ROUND_2, 2);
@@ -435,7 +436,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 240000)); //...4Min
 		
-		stonespearTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnBoss(855797, 855798, 855799);
@@ -447,7 +448,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void startInstanceTask3() {
-    	stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnGuardianStone();
@@ -458,7 +459,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 60000)); //...1Min
 		
-		stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				deleteNpc(855763);
@@ -470,14 +471,14 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 120000)); //...2Min
 		
-		stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnKebabit();
 			}
 		}, 180000)); //...3Min
 		
-		stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startRaidRound(RaidType.ROUND_3, 2);
@@ -486,7 +487,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 240000)); //...4Min
 		
-		stonespearTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnBoss(855820, 855821, 855822);
@@ -498,7 +499,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void startInstanceTask4() {
-    	stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnGuardianStone();
@@ -509,7 +510,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 60000)); //...1Min
 		
-		stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				deleteNpc(855763);
@@ -521,14 +522,14 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 120000)); //...2Min
 		
-		stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnKebabit();
 			}
 		}, 180000)); //...3Min
 		
-		stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startRaidRound(RaidType.ROUND_4, 2);
@@ -537,7 +538,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 			}
         }, 240000)); //...4Min
 		
-		stonespearTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				deleteNpc(856305);
@@ -585,7 +586,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void startCountDown() {
-		stonespearTask5.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		stonespearTask5.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -599,7 +600,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
     }
 	
 	private void stoneSpearRaid(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -668,7 +669,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -821,7 +822,7 @@ public class StonespearReachInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

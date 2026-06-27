@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -41,7 +43,6 @@ import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -264,7 +265,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 			break;
 			case 231130: //Grand Commander Pashid.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -327,7 +328,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
             case 209517: //Commander Granir.
 				despawnNpc(npc);
 				instanceReward.addPoints(-90000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -366,7 +367,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startAssaultPod1();
@@ -381,14 +382,14 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				}
             }
         }, 60000)); //1 Minute.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			    startAssaultPod2();
 				startRaidBastion1();
             }
         }, 120000)); //2 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			    //The Pashid Legion's 2nd Siege Troop is attacking the Bastion's gates.
@@ -398,7 +399,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				startRaidBastion2();
             }
         }, 300000)); //5 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			    //The Pashid Legion's 3rd Siege Troop is attacking the Bastion's gates.
@@ -409,7 +410,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				startRaidBastion3();
             }
         }, 480000)); //8 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The Pashid Legion's Sheban Siege Troop is attacking the Bastion's gates.
@@ -418,7 +419,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				startRaidBastion4();
             }
         }, 660000)); //11 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The Eternal Bastion defenders have withdrawn in preparation of Pashid's assault.
@@ -428,13 +429,13 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				startRaidBastion6();
             }
         }, 840000)); //14 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startRaidBastion7();
             }
         }, 1020000)); //17 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//Grand Commander Pashid has arrived with the Guard to assault the fortress.
@@ -777,7 +778,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -836,7 +837,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

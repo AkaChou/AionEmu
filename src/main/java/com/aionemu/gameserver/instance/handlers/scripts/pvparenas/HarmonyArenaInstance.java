@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -192,7 +194,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
 		instanceReward.setInstanceStartTime();
 		spawnRings();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed && !instanceReward.isRewarded() && canStart()) {
@@ -202,7 +204,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 					instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 					instanceReward.sendPacket(10, null);
 					instanceReward.sendPacket(2, null);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -213,7 +215,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 								changeZone();
 								//If you defeat a higher rank group in this round, you can earn additional points.
 								sendMsgByRace(1401491, Race.PC_ALL, 2000);
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -224,7 +226,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 											changeZone();
 											//If you defeat a higher rank group in this round, you can earn additional points.
 											sendMsgByRace(1401491, Race.PC_ALL, 2000);
-											ThreadPoolManager.getInstance().schedule(new Runnable() {
+											GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 												@Override
 												public void run() {
 													if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -262,7 +264,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	}
 	
 	private void changeZone() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				for (Player player : instance.getPlayersInside()) {
@@ -293,7 +295,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -347,7 +349,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {

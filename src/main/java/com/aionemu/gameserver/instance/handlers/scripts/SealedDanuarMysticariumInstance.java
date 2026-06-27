@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 
@@ -163,7 +165,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 		sendMsgByRace(1402805, Race.PC_ALL, 300000);
 		//All monsters and key boxes in the library will disappear in 1 minute.
 		this.sendMessage(1402802, 4 * 60 * 1000);
-		keyBoxTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		keyBoxTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(702715, 172.09422f, 206.95068f, 188.01584f, (byte) 118); //Experimental Prison Teleporter.
@@ -212,7 +214,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 		this.sendMessage(1402812, 3 * 60 * 1000);
 		//All monsters will disappear in 1 minute.
 		this.sendMessage(1402813, 4 * 60 * 1000);
-		prisonTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		prisonTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				TestSubject48012C.get(0).getController().onDelete();
@@ -239,37 +241,37 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402821, Race.PC_ALL, 0); 
 				//Monsters will attack in a moment.
 				sendMsgByRace(1402830, Race.PC_ALL, 3000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        doors.get(4).setOpen(true);
 				    }
 			    }, 5000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid1();
 				    }
 			    }, 10000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid2();
 					}
 			    }, 30000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid3();
 					}
 			    }, 50000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid4();
 					}
 			    }, 70000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						startMysticariumRaid5();
@@ -279,19 +281,19 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 						sendMsgByRace(1402824, Race.PC_ALL, 3000);
 					}
 			    }, 90000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid6();
 					}
 			    }, 110000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid7();
 					}
 			    }, 130000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    startMysticariumRaid8();
@@ -301,19 +303,19 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 						sendMsgByRace(1402824, Race.PC_ALL, 3000);
 					}
 			    }, 150000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid9();
 					}
 			    }, 170000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid10();
 					}
 			    }, 190000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid11();
@@ -323,7 +325,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 						sendMsgByRace(1402824, Race.PC_ALL, 3000);
 					}
 			    }, 210000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid12();
@@ -333,13 +335,13 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 						sendMsgByRace(1402824, Race.PC_ALL, 3000);
 					}
 			    }, 230000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid13();
 					}
 			    }, 250000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid14();
@@ -349,13 +351,13 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 						sendMsgByRace(1402824, Race.PC_ALL, 3000);
 					}
 			    }, 270000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid15();
 					}
 			    }, 290000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid16();
@@ -365,7 +367,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 						sendMsgByRace(1402824, Race.PC_ALL, 3000);
 					}
 			    }, 310000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid17();
@@ -375,13 +377,13 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 						sendMsgByRace(1402824, Race.PC_ALL, 3000);
 					}
 			    }, 330000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid18();
 					}
 			    }, 350000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid19();
@@ -391,7 +393,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 						sendMsgByRace(1402824, Race.PC_ALL, 3000);
 					}
 			    }, 370000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        startMysticariumRaid20();
@@ -400,7 +402,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 						sendMsgByRace(1402827, Race.PC_ALL, 0);
 					}
 			    }, 390000);
-			    raidTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    raidTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    startMysticariumBoss();
@@ -490,7 +492,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
     }
 	
 	private void raidMysticarium(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -601,7 +603,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -620,7 +622,7 @@ public class SealedDanuarMysticariumInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 public void run() {
                     sendMsg(msgId);
                 }

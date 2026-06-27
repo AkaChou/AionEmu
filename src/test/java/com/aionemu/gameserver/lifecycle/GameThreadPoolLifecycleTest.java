@@ -105,6 +105,22 @@ class GameThreadPoolLifecycleTest {
     }
 
     @Test
+    void gameInstancesUseLifecycleSchedulerBridgeInsteadOfDirectThreadPoolSingleton() throws IOException {
+        List<Path> sources;
+        try (Stream<Path> stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver/instance"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("ThreadPoolManager.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
     void startAndStopAreIdempotent() {
         AtomicInteger starts = new AtomicInteger();
         AtomicInteger stops = new AtomicInteger();

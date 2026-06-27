@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.Race;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-				    rightWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				    rightWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							instance.doOnAllPlayers(new Visitor<Player>() {
@@ -226,7 +227,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	        AncienTreasureBox.add((Npc) spawn(700471, 235.61336f, 206.10374f, 104.71777f, (byte) 0));
 	        AncienTreasureBox.add((Npc) spawn(700471, 223.27577f, 258.16458f, 104.71452f, (byte) 0));
 	        AncienTreasureBox.add((Npc) spawn(700471, 212.30345f, 268.06534f, 104.71452f, (byte) 0));
-			chestRWCTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestRWCTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					//One of the Ancient Treasure Boxes is missing.
@@ -382,7 +383,7 @@ public class RightWingChamberInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -61,7 +63,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		spawn(833483, 496.42648f, 516.493f, 240.26653f, (byte) 0); //Kahrun (Reian Leader).
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnIDTiamatDrakanNamed65Al();
@@ -146,14 +148,14 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 							sendMsgByRace(1401538, Race.ELYOS, 15000);
 							//Eliminate the Balaur Spiritualist to grant a beneficial effect to the Empyrean Lord.
 							sendMsgByRace(1401550, Race.ELYOS, 25000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						        @Override
 						        public void run() {
 									startGodKaisinelEvent();
 									spawn(283175, 551.78796f, 514.75494f, 417.40436f, (byte) 60); //Kaisinel Teleport.
 								}
 						    }, 15000);
-						    ThreadPoolManager.getInstance().schedule(new Runnable() {
+						    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					            @Override
 					            public void run() {
 						            startRushWalkEvent1();
@@ -173,14 +175,14 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 							sendMsgByRace(1401539, Race.ASMODIANS, 15000);
 							//Eliminate the Balaur Spiritualist to grant a beneficial effect to the Empyrean Lord.
 							sendMsgByRace(1401550, Race.ASMODIANS, 25000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						        @Override
 						        public void run() {
 									startGodMarchutanEvent();
 									spawn(283176, 551.78796f, 514.75494f, 417.40436f, (byte) 60); //Marchutan Teleport.
 								}
 						    }, 15000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					            @Override
 					            public void run() {
 						            startRushWalkEvent1();
@@ -199,7 +201,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 						SkillEngine.getInstance().applyEffectDirectly(20920, player, player, 30000); //Dragon Lord's Roar.
 				    }
 			    });
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -224,7 +226,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 			    //Fissure Incarnate has collapsed.
 				sendMsgByRace(1401533, Race.PC_ALL, 0);
 			    despawnNpc(getNpc(730673)); //Internal Passage In 1.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    startRushWalkEvent2();
@@ -246,7 +248,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 			    //Gravity Incarnate has collapsed.
 				sendMsgByRace(1401535, Race.PC_ALL, 0);
 			    despawnNpc(getNpc(730674)); //Internal Passage In 2.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    startRushWalkEvent3();
@@ -268,7 +270,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 				//Wrath Incarnate has collapsed.
 				sendMsgByRace(1401534, Race.PC_ALL, 0);
 			    despawnNpc(getNpc(730675)); //Internal Passage In 3.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    startRushWalkEvent4();
@@ -301,7 +303,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					        kaisinelLight();
 							//All of Tiamat's Incarnations have collapsed.
 							sendMsgByRace(1401537, Race.ELYOS, 2000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						        @Override
 						        public void run() {
 									spawnGodKaisinelGroggy();
@@ -319,7 +321,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					        marchutanGrace();
 							//All of Tiamat's Incarnations have collapsed.
 							sendMsgByRace(1401537, Race.ASMODIANS, 2000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						        @Override
 						        public void run() {
 									spawnGodMarchutanGroggy();
@@ -422,7 +424,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
 				    }
 			    });
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -452,7 +454,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
 				    }
 			    });
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -537,7 +539,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	
 	//PHASE GOD KASINEL.
 	private void startGodKaisinelEvent() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				eventGodAttack((Npc)spawn(219488, 551.78796f, 514.75494f, 417.40436f, (byte) 60), 480.363f, 514.3989f, 417.40436f, false); //God Kaisinel.
@@ -550,7 +552,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	
 	//PHASE GOD MARCHUTAN.
 	private void startGodMarchutanEvent() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 		        eventGodAttack((Npc)spawn(219491, 551.78796f, 514.75494f, 417.40436f, (byte) 60), 480.363f, 514.3989f, 417.40436f, false); //God Marchutan.
@@ -591,7 +593,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	
 	//PHASE RUSH.
 	private void rushWalk(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -679,7 +681,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

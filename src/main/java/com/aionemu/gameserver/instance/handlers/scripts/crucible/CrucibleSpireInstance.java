@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -173,7 +175,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         isSpawning = true;
         int pfloor = player.getFloor();
         spawnNextFloor(pfloor + 1);
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 deleteNpc(701773);
@@ -663,7 +665,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     }
     
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

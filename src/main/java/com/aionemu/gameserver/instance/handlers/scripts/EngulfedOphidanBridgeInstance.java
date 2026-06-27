@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -50,7 +52,6 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -122,7 +123,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         engulfedOphidanBridgeReward.setInstanceStartTime();
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!engulfedOphidanBridgeReward.isRewarded()) {
@@ -135,7 +136,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 				}
             }
         }, 90000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -148,7 +149,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 				sp(802023, 337.73990f, 491.16772f, 597.2395f, (byte) 0, 156);
             }
         }, 220000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -163,7 +164,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 				sp(801958, 759.2739f, 569.3167f, 577.37885f, (byte) 87, 0); //Asmodians Reinforcements Flag.
             }
         }, 400000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -179,7 +180,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
                 sp(701976, 582.56866f, 396.15695f, 603.4048f, (byte) 2, 10000); //Hidden Supply Box.
             }
         }, 600000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -228,7 +229,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
                 }
             }
         }, 900000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!engulfedOphidanBridgeReward.isRewarded()) {
@@ -361,7 +362,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -985,7 +986,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -999,7 +1000,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1012,7 +1013,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

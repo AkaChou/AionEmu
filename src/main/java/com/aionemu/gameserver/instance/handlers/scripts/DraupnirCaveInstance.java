@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -57,7 +59,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		//You must kill Afrane, Saraswati, Lakshmi, and Nimbarka to make Commander Bakarma appear.
 		sendMsgByRace(1400757, Race.PC_ALL, 10000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(237276, 495.48535f, 392.0867f, 616.5717f, (byte) 89); //Akhal's Phantasm.
@@ -151,7 +153,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 					    spawn(702659, 787.32513f, 431.49173f, 319.62155f, (byte) 33); //Noble Abbey Box.
 					break;
 				}
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawnAkhal();
@@ -183,13 +185,13 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403063, Race.PC_ALL, 0);
 				//The Balaur have been alerted to the presence of intruders.
 				sendMsgByRace(1403064, Race.PC_ALL, 4000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						startAbyssGateRaid1();
 				    }
 			    }, 5000);
-				abyssGateTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				abyssGateTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						//Balaur are swarming to defend the Abyss Gate Enhancer.
@@ -233,7 +235,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	}
 	
 	private void abyssGateRaid(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -271,7 +273,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

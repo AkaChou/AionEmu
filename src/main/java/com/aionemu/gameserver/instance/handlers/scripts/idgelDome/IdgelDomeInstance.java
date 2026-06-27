@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.idgelDome;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.configs.main.GroupConfig;
@@ -46,7 +48,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -118,7 +119,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         idgelDomeReward.setInstanceStartTime();
-		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!idgelDomeReward.isRewarded()) {
@@ -131,7 +132,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 				}
             }
         }, 90000));
-		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -144,7 +145,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 				sp(702583, 276.4865f, 271.9778f, 92.94253f, (byte) 75, 0); //Intelligence Supply Box.
             }
         }, 300000));
-		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
             	sendPacket(false);
@@ -294,7 +295,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -446,7 +447,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 			case 234190: //Destroyer Kunax.
                 point = 6000;
 				RaceKilledKunax = mostPlayerDamage.getRace();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						if (!idgelDomeReward.isRewarded()) {
@@ -519,7 +520,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -533,7 +534,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -546,7 +547,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

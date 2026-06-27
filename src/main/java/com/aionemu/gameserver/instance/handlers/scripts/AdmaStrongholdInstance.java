@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -30,7 +32,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.LinkedHashMap;
@@ -157,7 +158,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 			isStartTimer = true;
 			System.currentTimeMillis();
 			suspiciousPot.add((Npc) spawn(237245, 451.54147f, 276.3691f, 170.08488f, (byte) 90)); //Suspicious Pot.
-			suspiciousPotTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			suspiciousPotTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					//The Suspicious Pot has disappeared.
@@ -205,7 +206,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
             break;
 			case 237244: //Enthralled Lannok.
 				despawnNpc(npc);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						//The Death Reaper appeared at the Collapsed Observation Post.
@@ -258,7 +259,7 @@ public class AdmaStrongholdInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.event;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -581,7 +583,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 			 killCounters[idx]++;
 
 			 if (killCounters[idx] == 4) {
-					 ThreadPoolManager.getInstance().schedule(new Runnable() {
+					 GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							 @Override
 							 public void run() {
 									 int warpType = Rnd.get(1, 3);
@@ -601,7 +603,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 							 }
 					 }, 5000);
 			 } else if (killCounters[idx] == 8) {
-					 ThreadPoolManager.getInstance().schedule(new Runnable() {
+					 GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							 @Override
 							 public void run() {
 									 killNpc(getNpcs(245403));
@@ -610,7 +612,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 							 }
 					 }, 5000);
 			 } else if (killCounters[idx] == 12) {
-					 ThreadPoolManager.getInstance().schedule(new Runnable() {
+					 GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							 @Override
 							 public void run() {
 									 killNpc(getNpcs(245404));
@@ -718,7 +720,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 			 points = 1500;
 			 despawnNpc(npc);
 			 deleteNpc(245405);
-			 ThreadPoolManager.getInstance().schedule(new Runnable() {
+			 GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					 @Override
 					 public void run() {
 							 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -765,7 +767,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     protected void startInstanceTask() {
-        oblivionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -809,7 +811,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     
     private void startPrepareTimer() {
         if (timerPrepare == null) {
-            timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+            timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 @Override
                 public void run() {
                     startMainInstanceTimer();
@@ -1053,7 +1055,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        oblivionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1067,7 +1069,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        oblivionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1089,7 +1091,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

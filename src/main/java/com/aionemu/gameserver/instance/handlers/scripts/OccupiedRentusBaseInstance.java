@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -206,7 +208,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 			    final float y = npc.getY();
 			    final float z = npc.getZ();
 			    final byte h = npc.getHeading();
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    if (!isInstanceDestroyed) {
@@ -216,7 +218,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 					    }
 				    }
 			    }, 2000);
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    despawnNpc(npc);
@@ -337,7 +339,7 @@ public class OccupiedRentusBaseInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

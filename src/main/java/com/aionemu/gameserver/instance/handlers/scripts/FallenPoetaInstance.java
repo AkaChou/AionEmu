@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -131,7 +132,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		fallenTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		fallenTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startAnuhartPath();
@@ -143,7 +144,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	private void startAnuhartPath() {
-		anuhartTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		anuhartTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(243682, 285.35428f, 998.8121f, 112.34111f, (byte) 85, 0, "3016600001"); //Lieutenant Anuhart.
@@ -165,7 +166,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar1 = spawnRace == Race.ASMODIANS ? 833858 : 833854;
                 spawn(Kantil_Animar1, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						seaOfFlames1();
@@ -182,7 +183,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar2 = spawnRace == Race.ASMODIANS ? 833859 : 833855;
                 spawn(Kantil_Animar2, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						seaOfFlames2();
@@ -199,7 +200,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar3 = spawnRace == Race.ASMODIANS ? 833860 : 833856;
                 spawn(Kantil_Animar3, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						seaOfFlames3();
@@ -217,7 +218,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar4 = spawnRace == Race.ASMODIANS ? 833861 : 833857;
                 spawn(Kantil_Animar4, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						seaOfFlames4();
@@ -588,7 +589,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -612,7 +613,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
     }
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        fallenTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        fallenTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {

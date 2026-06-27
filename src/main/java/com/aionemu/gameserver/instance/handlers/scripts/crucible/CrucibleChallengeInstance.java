@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -222,7 +224,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(217847, 1307.2786f, 1734.3274f, 316f, (byte) 0, 2000);
 				//Stop Gomju from perpetrating a senseless massacre!
 				sendMsgByRace(1401086, Race.PC_ALL, 3000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpcs(getNpcs(217848));
@@ -335,7 +337,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(205678, 346.64798f, 349.25586f, 96.090965f, (byte) 0, 0);
 			break;
 			case 217819:
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						Player player = null;
@@ -433,7 +435,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				final int fnpcId = npc.getNpcId();
 				despawnNpc(npc);
 				if (getNpcs(fnpcId).size() == 2) {
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							//You have eliminated all enemies in Round %0.
@@ -494,7 +496,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 	
 	private void startBonusStage2() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Round %0 begins!
@@ -502,7 +504,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				setEvent(StageType.START_BONUS_STAGE_2, 2000);
 			}
 		}, 2000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Poppy is running from the Dukaki Cooks. Eliminate them and help Poppy to reach the refuge.
@@ -510,7 +512,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				startWalk((Npc) spawn(217802, 1780.5371f, 307.3513f, 469.25f, (byte) 0), "PoppyOnTheRun"); //Poppy.
 			}
 		}, 1000);
-		bonusTimer = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		bonusTimer = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				spawnCount++;
@@ -523,7 +525,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 	
 	private void startWalk(final Npc npc, final String walkId) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -613,7 +615,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			place = 7;
 		}
 		getPlayerReward(player.getObjectId()).setSpawnPosition(place);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 onReviveEvent(player);
@@ -827,7 +829,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 	
 	private void sp(final int npcId, final float x, final float y, final float z, final byte h, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -839,7 +841,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void setEvent(StageType type, int time) {
 		this.stageType = type;
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sendEventPacket();

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgion;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -48,7 +50,6 @@ import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -173,7 +174,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
-		asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				openFirstDoors();
@@ -206,7 +207,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		* These teleportation devices allow players to teleport to different areas of the Dredgion with ease.
 		* Side Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun.
 		*/
-		asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//The teleportation device at the Emergency Exit is now operational.
@@ -221,13 +222,13 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		* Time Elapsed: 15 Minutes
 		* Valor: 1,000 Points
 		*/
-		asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(243822, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Large Bagitara.
 			}
 		}, 900000));
-		asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!dredgionReward.isRewarded()) {
@@ -420,7 +421,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			case 243816: //Frigate Commander Ashunatal.
 				point = 1000;
 				AbyssPointsService.addGp(mostPlayerDamage, 540);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						if (!dredgionReward.isRewarded()) {
@@ -486,7 +487,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -637,7 +638,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -651,7 +652,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -664,7 +665,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

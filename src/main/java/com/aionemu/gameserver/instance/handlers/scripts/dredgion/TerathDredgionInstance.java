@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgion;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -48,7 +50,6 @@ import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.apache.commons.lang3.mutable.MutableInt;
@@ -178,7 +179,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
-		terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				openFirstDoors();
@@ -211,7 +212,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		* These teleportation devices allow players to teleport to different areas of the Dredgion with ease.
 		* Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun.
 		*/
-		terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//A teleport device has been activated in the Emergency Exit.
@@ -226,7 +227,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		* Time Elapsed: 15 Minutes
 		* Valor: 1,000 Points
 		*/
-		terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Enforcer Udara has appeared in the Gravity Control Room.
@@ -234,7 +235,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 				spawn(219270, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Enforcer Udara.
 			}
 		}, 900000));
-		terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!dredgionReward.isRewarded()) {
@@ -418,7 +419,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			break;
 			case 219264: //Captain Anusa.
 				point = 1000;
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						if (!dredgionReward.isRewarded()) {
@@ -484,7 +485,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -635,7 +636,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -649,7 +650,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -662,7 +663,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

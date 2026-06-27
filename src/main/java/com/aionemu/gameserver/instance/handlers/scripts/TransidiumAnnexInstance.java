@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -102,7 +104,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			sendMsgByRace(1401181, Race.PC_ALL, 50000);
 			//The effect of the Transidium Annex has weakened the Hangar Barricade.
 			sendMsgByRace(1402638, Race.PC_ALL, 1200000);
-			instanceTimer = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					openFirstDoors();
@@ -143,7 +145,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402641, Race.PC_ALL, 7000);
 				//You will return to the fortress soon.
 				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						instance.doOnAllPlayers(new Visitor<Player>() {
@@ -166,7 +168,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402641, Race.PC_ALL, 7000);
 				//You will return to the fortress soon.
 				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						instance.doOnAllPlayers(new Visitor<Player>() {
@@ -189,7 +191,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402641, Race.PC_ALL, 7000);
 				//You will return to the fortress soon.
 				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						instance.doOnAllPlayers(new Visitor<Player>() {
@@ -212,7 +214,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402641, Race.PC_ALL, 7000);
 				//You will return to the fortress soon.
 				sendMsgByRace(1402642, Race.PC_ALL, 12000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						instance.doOnAllPlayers(new Visitor<Player>() {
@@ -437,7 +439,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

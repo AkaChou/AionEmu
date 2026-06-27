@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -87,7 +89,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				spawn(219364, 893.3504f, 1446.1143f, 495.64215f, (byte) 91);
 			break;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				protectorateFirstWave();
@@ -201,7 +203,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				NpcShoutsService.getInstance().sendMsg(tiamatEye1, 1500681, tiamatEye1.getObjectId(), 0, 15000);
 				//Dear Dragon Lord, please rest in peace. Let me avenge you!
 				NpcShoutsService.getInstance().sendMsg(tiamatEye1, 1500682, tiamatEye1.getObjectId(), 0, 21000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						deleteNpc(283177);
@@ -228,7 +230,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				NpcShoutsService.getInstance().sendMsg(tiamatEye2, 1500681, tiamatEye2.getObjectId(), 0, 15000);
 				//Dear Dragon Lord, please rest in peace. Let me avenge you!
 				NpcShoutsService.getInstance().sendMsg(tiamatEye2, 1500682, tiamatEye2.getObjectId(), 0, 21000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						deleteNpc(283178);
@@ -266,7 +268,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				NpcShoutsService.getInstance().sendMsg(tiamatEye3, 1500681, tiamatEye3.getObjectId(), 0, 15000);
 				//Dear Dragon Lord, please rest in peace. Let me avenge you!
 				NpcShoutsService.getInstance().sendMsg(tiamatEye3, 1500682, tiamatEye3.getObjectId(), 0, 21000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						deleteNpc(283178);
@@ -301,7 +303,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 				NpcShoutsService.getInstance().sendMsg(tiamatEye4, 1500681, tiamatEye4.getObjectId(), 0, 15000);
 				//Dear Dragon Lord, please rest in peace. Let me avenge you!
 				NpcShoutsService.getInstance().sendMsg(tiamatEye4, 1500682, tiamatEye4.getObjectId(), 0, 21000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						deleteNpc(283180);
@@ -350,7 +352,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 		npc.getMoveController().moveToPoint(x, y, z);
 		PacketSendUtility.broadcastPacket(npc, new SM_EMOTION(npc, EmotionType.START_EMOTE2, 0, npc.getObjectId()));
 		if (despawn) {
-		    ThreadPoolManager.getInstance().schedule(new Runnable() {
+		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			    @Override
 			    public void run() {
 			  	    if (npc.getNpcId() == 800336) {
@@ -433,7 +435,7 @@ public class TiamatStrongholdInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -192,7 +194,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			    final float y1 = npc.getY();
 			    final float z1 = npc.getZ();
 			    final byte h1 = npc.getHeading();
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    if (!isInstanceDestroyed) {
@@ -202,7 +204,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 					    }
 				    }
 			    }, 2000);
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    despawnNpc(npc);
@@ -214,7 +216,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			    final float y2 = npc.getY();
 			    final float z2 = npc.getZ();
 			    final byte h2 = npc.getHeading();
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    if (!isInstanceDestroyed) {
@@ -224,7 +226,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 					    }
 				    }
 			    }, 2000);
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    despawnNpc(npc);
@@ -345,7 +347,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

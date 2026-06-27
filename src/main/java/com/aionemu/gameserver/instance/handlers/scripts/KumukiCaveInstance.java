@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -106,7 +107,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startKumukiCaveTimer();
@@ -131,7 +132,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				});
             }
         }, 10000));
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The first Porgus made for a fine barbecue! There are 3 Porguses left.
@@ -141,7 +142,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				Poppy.get(0).getController().onDelete();
             }
         }, 225000));
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The second Porgus smells delicious! There are 2 Porguses left.
@@ -154,7 +155,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				sp(835130, 142.37743f, 19.93851f, 144.2455f, (byte) 5, 0, 0, null);
             }
         }, 450000));
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The third Porgus is slathered in barbecue sauce! There is 1 Porgus left.
@@ -164,7 +165,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				Poppy.get(2).getController().onDelete();
             }
         }, 675000));
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -329,7 +330,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -343,7 +344,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -368,7 +369,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -377,7 +378,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
     }
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

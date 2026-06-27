@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.event;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -37,7 +39,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -229,7 +230,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 			break;
 			case 248525:
 				points = 500000;
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -253,7 +254,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	private void startContaminedUnderPath1() {
-		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248495, 222.78767f, 276.12140f, 160.4131f, (byte) 89, 1000, "IDEVENT_Def_1");
@@ -264,7 +265,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248500, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 1000);
-		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248501, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -275,7 +276,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248496, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 30000);
-		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248501, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -286,7 +287,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248496, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 60000);
-		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248497, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -297,7 +298,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248502, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 90000);
-		underpathTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248497, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -311,7 +312,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	private void startContaminedUnderPath2() {
-		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248505, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -322,7 +323,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248510, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 1000);
-		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248511, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -333,7 +334,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248506, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 30000);
-		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248511, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -344,7 +345,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248506, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 60000);
-		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248507, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -355,7 +356,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248512, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 90000);
-		underpathTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248507, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -369,7 +370,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	private void startContaminedUnderPath3() {
-		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248515, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -380,7 +381,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248520, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 1000);
-		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248521, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -391,7 +392,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248516, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 30000);
-		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248521, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -402,7 +403,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248516, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 60000);
-		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248517, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -413,7 +414,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 				sp(248522, 234.10661f, 275.83023f, 160.3114f, (byte) 89, 3500, "IDEVENT_Def_1");
 			}
 		}, 90000);
-		underpathTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248517, 222.78767f, 276.12140f, 160.4131f, (byte) 90, 1000, "IDEVENT_Def_1");
@@ -427,7 +428,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	private void startContaminedUnderPath4() {
-		underpathTaskA4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		underpathTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(248525, 229.59123f, 275.84586f, 160.3114f, (byte) 89, 1000, "IDEVENT_Def_1");
@@ -488,7 +489,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		IDEventDefTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -560,7 +561,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -663,7 +664,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
     }
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        IDEventDefTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -677,7 +678,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        IDEventDefTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        IDEventDefTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -750,7 +751,7 @@ public class Event_ContaminatedUnderpathInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

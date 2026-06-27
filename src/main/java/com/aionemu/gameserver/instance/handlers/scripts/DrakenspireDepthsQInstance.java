@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -98,7 +100,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 		super.onInstanceCreate(instance);
 		if (sealSceneRaceQ == null) {
             sealSceneRaceQ = player.getRace();
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 				    spawnIDSealScene01();
@@ -194,7 +196,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (player != null) {
 				    switch (player.getRace()) {
 					    case ELYOS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									//The Empyrean Elite started to advance.
@@ -206,7 +208,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 0);
 						break;
 						case ASMODIANS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									//The Empyrean Elite started to advance.
@@ -224,7 +226,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (player != null) {
 				    switch (player.getRace()) {
 					    case ELYOS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									//The Empyrean Elite started to advance.
@@ -236,7 +238,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 0);
 						break;
 						case ASMODIANS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									//The Empyrean Elite started to advance.
@@ -292,7 +294,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Masionel, 1501312, Masionel.getObjectId(), 0, 6000);
 									//Just let me blast us a path...
 									NpcShoutsService.getInstance().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
-							    ThreadPoolManager.getInstance().schedule(new Runnable() {
+							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 									killNpc(getNpcs(731580));
@@ -335,7 +337,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Parsia, 1501312, Parsia.getObjectId(), 0, 6000);
 									//Just let me blast us a path...
 									NpcShoutsService.getInstance().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 									killNpc(getNpcs(731580));
@@ -361,7 +363,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 					if (player != null) {
 				        switch (player.getRace()) {
 					        case ELYOS:
-							    ThreadPoolManager.getInstance().schedule(new Runnable() {
+							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							        @Override
 								    public void run() {
 								        //The Empyrean Elite started to advance.
@@ -376,7 +378,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							    }, 0);
 						    break;
 						    case ASMODIANS:
-							    ThreadPoolManager.getInstance().schedule(new Runnable() {
+							    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							        @Override
 								    public void run() {
 								        //The Empyrean Elite started to advance.
@@ -399,14 +401,14 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				    switch (player.getRace()) {
 					    case ELYOS:
 						    sendMovie(player, 920);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(209706, 810.4212f, 550.19934f, 1701.044f, (byte) 31);
 									spawn(209707, 818.40704f, 552.7704f, 1701.044f, (byte) 36);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(209710, 807.78894f, 578.7186f, 1701.0446f, (byte) 34);
@@ -415,7 +417,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209711, 806.99536f, 587.9815f, 1701.0448f, (byte) 30);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(805363, 811.5f, 583.0642f, 1701.0447f, (byte) 32); //Killios.
@@ -427,7 +429,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(PCGuard_Li, 1402730, PCGuard_Li.getObjectId(), 0, 14000);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									Npc Masionel = getNpc(209712);
@@ -439,7 +441,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Masionel, 1501310, Masionel.getObjectId(), 0, 12000);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									killNpc(getNpcs(700546));
@@ -457,14 +459,14 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 						break;
 						case ASMODIANS:
 						    sendMovie(player, 917);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(209771, 810.4212f, 550.19934f, 1701.044f, (byte) 31);
 									spawn(209772, 818.40704f, 552.7704f, 1701.044f, (byte) 36);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(209775, 807.78894f, 578.7186f, 1701.0446f, (byte) 34);
@@ -473,7 +475,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209776, 806.99536f, 587.9815f, 1701.0448f, (byte) 30);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(805366, 811.5f, 583.0642f, 1701.0447f, (byte) 32); //Aimah.
@@ -485,7 +487,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(PCGuard_Da, 1402730, PCGuard_Da.getObjectId(), 0, 14000);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									Npc Parsia = getNpc(209777);
@@ -497,7 +499,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Parsia, 1501310, Parsia.getObjectId(), 0, 12000);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									killNpc(getNpcs(700546));
@@ -520,14 +522,14 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (player != null) {
 				    switch (player.getRace()) {
 					    case ELYOS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(209722, 631.6413f, 847.15717f, 1599.8486f, (byte) 90);
 									spawn(209722, 639.45526f, 847.40265f, 1599.9614f, (byte) 90);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									spawn(209720, 635.39325f, 886.9716f, 1600.7146f, (byte) 90);
@@ -536,13 +538,13 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209731, 629.2198f, 891.1963f, 1600.5817f, (byte) 92);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawnIDSeal4ThStageElyos();
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									spawnEmpyreanLordsSiegeWeapon();
@@ -554,7 +556,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402706, Race.ELYOS, 10000);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									spawnWaveDoor();
@@ -564,7 +566,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1403006, Race.ELYOS, 5000);
 								}
 							}, 25000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal1();
@@ -573,7 +575,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402710, Race.ELYOS, 0);
 								}
 							}, 30000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal2();
@@ -581,13 +583,13 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402707, Race.ELYOS, 0);
 								}
 							}, 65000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    startRaidSeal2_1();
 								}
 							}, 67000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal3();
@@ -598,14 +600,14 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 87000);
 						break;
 						case ASMODIANS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(209787, 631.6413f, 847.15717f, 1599.8486f, (byte) 90);
 									spawn(209787, 639.45526f, 847.40265f, 1599.9614f, (byte) 90);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									spawn(209785, 635.39325f, 886.9716f, 1600.7146f, (byte) 90);
@@ -614,13 +616,13 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									spawn(209796, 629.2198f, 891.1963f, 1600.5817f, (byte) 92);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawnIDSeal4ThStageAsmodians();
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									spawnEmpyreanLordsSiegeWeapon();
@@ -632,7 +634,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402706, Race.ASMODIANS, 10000);
 								}
 							}, 0);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawnWaveDoor();
@@ -642,7 +644,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1403006, Race.ASMODIANS, 5000);
 								}
 							}, 25000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal1();
@@ -651,7 +653,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402710, Race.ASMODIANS, 0);
 								}
 							}, 30000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal2();
@@ -659,13 +661,13 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									sendMsgByRace(1402707, Race.ASMODIANS, 0);
 								}
 							}, 65000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    startRaidSeal2_1();
 								}
 							}, 67000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal3();
@@ -683,7 +685,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (player != null) {
 				    switch (player.getRace()) {
 					    case ELYOS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal4();
@@ -696,7 +698,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 15000);
 						break;
 						case ASMODIANS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal4();
@@ -716,7 +718,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (player != null) {
 				    switch (player.getRace()) {
 					    case ELYOS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal6();
@@ -730,7 +732,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 15000);
 						break;
 						case ASMODIANS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal6();
@@ -751,7 +753,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				if (player != null) {
 				    switch (player.getRace()) {
 					    case ELYOS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal3();
@@ -762,7 +764,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							}, 15000);
 						break;
 						case ASMODIANS:
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 									startRaidSeal3();
@@ -786,7 +788,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							sendMsgByRace(1402714, Race.PC_ALL, 5000);
 							//You have successfully protected the Detachment. They will assist you during the battle against Beritra.
 							sendMsgByRace(1402715, Race.PC_ALL, 10000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									Npc Masionel = getNpc(209720);
@@ -798,7 +800,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Masionel, 1501318, Masionel.getObjectId(), 0, 12000);
 								}
 							}, 15000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									spawnAgonyWell();
@@ -826,7 +828,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 							sendMsgByRace(1402714, Race.PC_ALL, 5000);
 							//You have successfully protected the Detachment. They will assist you during the battle against Beritra.
 							sendMsgByRace(1402715, Race.PC_ALL, 10000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									Npc Parsia = getNpc(209785);
@@ -838,7 +840,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 									NpcShoutsService.getInstance().sendMsg(Parsia, 1501318, Parsia.getObjectId(), 0, 12000);
 								}
 							}, 15000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									spawnAgonyWell();
@@ -891,7 +893,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 				    switch (player.getRace()) {
 				        case ELYOS:
 						    sendMovie(player, 919);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									spawnIDSealSceneEnding();
@@ -920,7 +922,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 						break;
 						case ASMODIANS:
 						    sendMovie(player, 922);
-						    ThreadPoolManager.getInstance().schedule(new Runnable() {
+						    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									spawnIDSealSceneEnding();
@@ -970,7 +972,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
-				    drakenspireQTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				    drakenspireQTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							instance.doOnAllPlayers(new Visitor<Player>() {
@@ -1086,7 +1088,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	}
 	
 	private void raidSeal(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -1161,7 +1163,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -1180,7 +1182,7 @@ public class DrakenspireDepthsQInstance extends GeneralInstanceHandler {
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 public void run() {
                     sendMsg(msgId);
                 }

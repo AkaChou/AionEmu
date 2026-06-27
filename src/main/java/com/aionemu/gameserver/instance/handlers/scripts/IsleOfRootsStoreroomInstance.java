@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -29,7 +31,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -139,7 +140,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			case 215104: //Ranx Patrol Legate.
 			    //A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						deleteNpc(731580);
@@ -149,7 +150,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			case 215116: //Ranx Archmage.
 			    //A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						deleteNpc(700545);
@@ -159,7 +160,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			case 215128: //Ranx Sartip.
 			    //A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						deleteNpc(700546);
@@ -169,7 +170,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			case 215134: //Ebonlord Arknamium.
 			    //A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						deleteNpc(700547);
@@ -229,7 +230,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 			isleOfRootsStoreroomChest.add((Npc) spawn(254574, 578.9111f,  874.7958f, 199.76036f, (byte) 9));
 			isleOfRootsStoreroomChest.add((Npc) spawn(254574, 585.83545f, 855.7736f, 199.76036f, (byte) 3));
 			isleOfRootsStoreroomChest.add((Npc) spawn(254574, 586.7527f, 835.4556f, 199.76036f, (byte) 116));
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer2();
@@ -252,7 +253,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer3();
@@ -275,7 +276,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer4();
@@ -298,7 +299,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer5();
@@ -321,7 +322,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer6();
@@ -344,7 +345,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer7();
@@ -367,7 +368,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer8();
@@ -390,7 +391,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer9();
@@ -413,7 +414,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer10();
@@ -436,7 +437,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer11();
@@ -459,7 +460,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer12();
@@ -482,7 +483,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			isleOfRootsStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			isleOfRootsStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					sendMsg(1400244);
@@ -522,7 +523,7 @@ public class IsleOfRootsStoreroomInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
