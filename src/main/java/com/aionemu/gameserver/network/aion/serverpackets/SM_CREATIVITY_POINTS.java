@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,36 +100,36 @@ public class SM_CREATIVITY_POINTS extends AionServerPacket {
 				writeH(ce.getPoint());
 				if (ce.getSlot() == 1) {
 					activePlayer.setCPSlot1(ce.getPoint());
-					Power.getInstance().onChange(activePlayer, ce.getPoint());
+					GameCreativityServices.power().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 2) {
 					activePlayer.setCPSlot2(ce.getPoint());
-					Health.getInstance().onChange(activePlayer, ce.getPoint());
+					GameCreativityServices.health().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 3) {
 					activePlayer.setCPSlot3(ce.getPoint());
-					Agility.getInstance().onChange(activePlayer, ce.getPoint());
+					GameCreativityServices.agility().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 4) {
 					activePlayer.setCPSlot4(ce.getPoint());
-					Precision.getInstance().onChange(activePlayer, ce.getPoint());
+					GameCreativityServices.precision().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 5) {
 					activePlayer.setCPSlot5(ce.getPoint());
-					Knowledge.getInstance().onChange(activePlayer, ce.getPoint());
+					GameCreativityServices.knowledge().onChange(activePlayer, ce.getPoint());
 				}
 				if (ce.getSlot() == 6) {
 					activePlayer.setCPSlot6(ce.getPoint());
-					Will.getInstance().onChange(activePlayer, ce.getPoint());
+					GameCreativityServices.will().onChange(activePlayer, ce.getPoint());
 				}
 				/*
 				 * if (ce.getSlot() >= 15 && ce.getSlot() <= 372 && ce.getPoint() != 0) { //
 				 * Reduce Server Send Packet. its handled on login
-				 * CreativitySkillService.getInstance().enchantSkill(activePlayer, ce.getSlot(),
+				 * GameCreativityServices.creativitySkillService().enchantSkill(activePlayer, ce.getSlot(),
 				 * ce.getPoint()); }
-				 * CreativityTransfoService.getInstance().enchantTransfo(activePlayer,
+				 * GameCreativityServices.creativityTransfoService().enchantTransfo(activePlayer,
 				 * ce.getSlot(), ce.getPoint()); if (ce.getSlot() >= 373 && ce.getSlot() <= 400)
-				 * { CreativitySkillService.getInstance().loginDaevaSkill(activePlayer,
+				 * { GameCreativityServices.creativitySkillService().loginDaevaSkill(activePlayer,
 				 * ce.getSlot(), ce.getPoint()); }
 				 */
 			}

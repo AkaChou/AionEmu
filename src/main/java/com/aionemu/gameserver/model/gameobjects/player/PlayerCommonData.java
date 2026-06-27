@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -359,7 +361,7 @@ public double getExpMultiplier() {
 				break;
 			}
 			if (this.isArchDaeva()) {
-				CreativityEssenceService.getInstance().pointPerExp(this.getPlayer());
+				GameCreativityServices.creativityEssenceService().pointPerExp(this.getPlayer());
 			}
 		}
 	}

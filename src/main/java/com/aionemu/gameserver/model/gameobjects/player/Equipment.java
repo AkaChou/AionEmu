@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -246,7 +248,7 @@ public class Equipment {
 			setPersistentState(PersistentState.UPDATE_REQUIRED);
 			GameEngineServices.questEngine().onEquipItem(new QuestEnv(null, owner, 0, 0), item.getItemId());
             if (item.getItemTemplate().isEstima()) {
-                CreativityEssenceService.getInstance().addEstimaCp(owner, item.getObjectId());
+                GameCreativityServices.creativityEssenceService().addEstimaCp(owner, item.getObjectId());
             }
 			return item;
 		}
@@ -335,7 +337,7 @@ public class Equipment {
 			return;
 		}
         if (item.getItemTemplate().isEstima()) {
-            CreativityEssenceService.getInstance().removeEstimaCp(owner, item);
+            GameCreativityServices.creativityEssenceService().removeEstimaCp(owner, item);
         }
 		if (allSlots.length > 1) {
 			if (!item.getItemTemplate().isTwoHandWeapon()) {

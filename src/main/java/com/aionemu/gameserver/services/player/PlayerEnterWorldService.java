@@ -1,6 +1,8 @@
 
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
+
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
@@ -394,7 +396,7 @@ public final class PlayerEnterWorldService {
 			if (houseBuddies != null) {
 				client.sendPacket(new SM_UI_SETTINGS(houseBuddies, 2));
 			}
-			CreativityEssenceService.getInstance().onLogin(player);
+			GameCreativityServices.creativityEssenceService().onLogin(player);
 			sendItemInfos(client, player);
 			if (!player.getEquipmentSettingList().getEquipmentSetting().isEmpty()) {
 				client.sendPacket(new SM_EQUIPMENT_SETTING(player.getEquipmentSettingList().getEquipmentSetting()));

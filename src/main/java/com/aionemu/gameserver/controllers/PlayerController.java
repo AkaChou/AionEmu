@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
+
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
@@ -1029,7 +1031,7 @@ public class PlayerController extends CreatureController<Player> {
 			reachedPlayerLvl(player);
 		}
 		player.getNpcFactions().onLevelUp();
-		CreativityEssenceService.getInstance().pointPerLevel(player);
+		GameCreativityServices.creativityEssenceService().pointPerLevel(player);
 	}
 
 	public static final void reachedPlayerLvl(final Player player) {
