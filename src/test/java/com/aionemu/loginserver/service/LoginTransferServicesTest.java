@@ -7,12 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class LoginTransferServicesTest {
+
+    @AfterEach
+    void resetTransferBridge() {
+        LoginTransferServices.resetForTests();
+    }
 
     @Test
     void usesSpringProviderBeforeLocalFallback() {
@@ -26,6 +32,20 @@ class LoginTransferServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void keepsResolvedSpringTransferServiceAfterBridgeIsDestroyed() {
+        PlayerTransferService playerTransferService = instance(PlayerTransferService.class);
+        LoginTransferServices services = new LoginTransferServices(
+            provider(PlayerTransferService.class, playerTransferService)
+        );
+
+        assertSame(playerTransferService, LoginTransferServices.playerTransferService());
+
+        services.destroy();
+
+        assertSame(playerTransferService, LoginTransferServices.playerTransferService());
     }
 
     @Test
