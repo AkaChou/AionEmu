@@ -765,6 +765,9 @@ class GameServiceProviderCompatibilityTest {
         EventService eventService = instance(EventService.class);
         LunaShopService lunaShopService = instance(LunaShopService.class);
         MinionService minionService = instance(MinionService.class);
+        ShugoSweepService shugoSweepService = instance(ShugoSweepService.class);
+        AtreianPassportService atreianPassportService = instance(AtreianPassportService.class);
+        EventWindowService eventWindowService = instance(EventWindowService.class);
         GameEventServices eventServices = new GameEventServices(
                 provider(EventService.class, eventService),
                 provider(PlayerEventService.class, instance(PlayerEventService.class)),
@@ -774,14 +777,17 @@ class GameServiceProviderCompatibilityTest {
         GameEventBootstrapServices eventBootstrapServices = new GameEventBootstrapServices(
                 provider(LunaShopService.class, lunaShopService),
                 provider(MinionService.class, minionService),
-                provider(ShugoSweepService.class, instance(ShugoSweepService.class)),
-                provider(AtreianPassportService.class, instance(AtreianPassportService.class)),
-                provider(EventWindowService.class, instance(EventWindowService.class)));
+                provider(ShugoSweepService.class, shugoSweepService),
+                provider(AtreianPassportService.class, atreianPassportService),
+                provider(EventWindowService.class, eventWindowService));
 
         try {
             assertSame(eventService, GameEventServices.eventService());
             assertSame(lunaShopService, GameEventBootstrapServices.lunaShopService());
             assertSame(minionService, GameEventBootstrapServices.minionService());
+            assertSame(shugoSweepService, GameEventBootstrapServices.shugoSweepService());
+            assertSame(atreianPassportService, GameEventBootstrapServices.atreianPassportService());
+            assertSame(eventWindowService, GameEventBootstrapServices.eventWindowService());
 
             eventServices.destroy();
             eventServices = null;
@@ -790,6 +796,9 @@ class GameServiceProviderCompatibilityTest {
 
             assertProviderCleared(EventService.class);
             assertProviderCleared(MinionService.class);
+            assertProviderCleared(ShugoSweepService.class);
+            assertProviderCleared(AtreianPassportService.class);
+            assertProviderCleared(EventWindowService.class);
         } finally {
             if (eventServices != null) {
                 eventServices.destroy();
@@ -800,6 +809,9 @@ class GameServiceProviderCompatibilityTest {
             EventService.setInstanceProvider(null);
             LunaShopService.setInstanceProvider(null);
             MinionService.setInstanceProvider(null);
+            ShugoSweepService.setInstanceProvider(null);
+            AtreianPassportService.setInstanceProvider(null);
+            EventWindowService.setInstanceProvider(null);
         }
     }
 

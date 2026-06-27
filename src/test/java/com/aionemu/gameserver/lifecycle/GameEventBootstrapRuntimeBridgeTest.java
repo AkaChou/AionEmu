@@ -90,6 +90,28 @@ class GameEventBootstrapRuntimeBridgeTest {
         }
     }
 
+    @Test
+    void gameServerCodeUsesEventBootstrapBridgeInsteadOfDirectSingletons() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            List<Path> sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/events/ShugoSweepService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/events/AtreianPassportService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/events/EventWindowService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventBootstrapServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventBootstrapFallbacks.java")))
+                .toList();
+
+            for (Path sourcePath : sources) {
+                String source = Files.readString(sourcePath);
+
+                assertFalse(source.contains("ShugoSweepService.getInstance()"), sourcePath.toString());
+                assertFalse(source.contains("AtreianPassportService.getInstance()"), sourcePath.toString());
+                assertFalse(source.contains("EventWindowService.getInstance()"), sourcePath.toString());
+            }
+        }
+    }
+
     private <T> T instance(Class<T> type) {
         return objenesis.newInstance(type);
     }

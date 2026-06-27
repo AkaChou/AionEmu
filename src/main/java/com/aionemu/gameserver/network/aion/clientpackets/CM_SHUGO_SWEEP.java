@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -45,11 +47,11 @@ public class CM_SHUGO_SWEEP extends AionClientPacket {
 		}
 		switch (action) {
 		case 0: // Reset
-			ShugoSweepService.getInstance().resetBoard(player);
+			GameEventBootstrapServices.shugoSweepService().resetBoard(player);
 			break;
 		case 1: // Launch Dice
 			if (player.getPlayerShugoSweep().getFreeDice() != 0 || player.getCommonData().getGoldenDice() != 0) {
-				ShugoSweepService.getInstance().launchDice(player);
+				GameEventBootstrapServices.shugoSweepService().launchDice(player);
 			} else {
 				return;
 			}

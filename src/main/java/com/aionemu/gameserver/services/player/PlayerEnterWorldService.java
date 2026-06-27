@@ -448,7 +448,7 @@ public final class PlayerEnterWorldService {
 			GameFeatureServices.siegeService().onPlayerLogin(player);
 
 			// SM_ATREIAN_PASSPORT
-			AtreianPassportService.getInstance().onLogin(player);
+			GameEventBootstrapServices.atreianPassportService().onLogin(player);
 
 			AbyssPointsService.AbyssRankCheck(player);
 			// TODO: Send Rift Announce Here
@@ -458,7 +458,7 @@ public final class PlayerEnterWorldService {
 			DisputeLandService.getInstance().onLogin(player);
 
 			// Event Window
-			EventWindowService.getInstance().onLogin(player);
+			GameEventBootstrapServices.eventWindowService().onLogin(player);
 
 			// Abyss Rank
 			client.sendPacket(new SM_ABYSS_RANK(player.getAbyssRank()));
@@ -699,7 +699,7 @@ public final class PlayerEnterWorldService {
 			GameRuntimeServices.playerTransferService().onEnterWorld(player);
 			player.setPartnerId(DAOManager.getDAO(WeddingDAO.class).loadPartnerId(player));
 			EnchantService.GloryShieldSkill(player);
-			ShugoSweepService.getInstance().onLogin(player);
+			GameEventBootstrapServices.shugoSweepService().onLogin(player);
 			GameEventBootstrapServices.lunaShopService().onLogin(player);
 			if (GameFeatureServices.ffaService().isInArena(player)) {
 				TeleportService2.moveToBindLocation(player, true);

@@ -127,7 +127,7 @@ public class PlayerLeaveWorldService {
 		DAOManager.getDAO(PlayerLifeStatsDAO.class).updatePlayerLifeStat(player);
 		DAOManager.getDAO(EventItemsDAO.class).storeItems(player);
 		// SHUGO SWEEP
-		ShugoSweepService.getInstance().onLogout(player);
+		GameEventBootstrapServices.shugoSweepService().onLogout(player);
 		PlayerGroupService.onPlayerLogout(player);
 		PlayerAllianceService.onPlayerLogout(player);
 		GameCoreGameplayServices.legionService().LegionWhUpdate(player);
@@ -189,7 +189,7 @@ public class PlayerLeaveWorldService {
 		PlayerAccountData pad = player.getPlayerAccount().getPlayerAccountData(player.getObjectId());
 		pad.setEquipment(player.getEquipment().getEquippedItems());
 		StigmaLinkedService.onLogOut(player);
-		EventWindowService.getInstance().onLogout(player);
+		GameEventBootstrapServices.eventWindowService().onLogout(player);
 	}
 
 	public static void tryLeaveWorld(Player player) {
