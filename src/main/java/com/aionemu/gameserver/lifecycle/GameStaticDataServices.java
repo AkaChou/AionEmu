@@ -9,14 +9,26 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameStaticDataServices implements DisposableBean {
 
+    private static volatile ObjectProvider<HTMLCache> htmlCacheProvider;
+
     public GameStaticDataServices(ObjectProvider<DataManager> dataManagerProvider,
             ObjectProvider<HTMLCache> htmlCacheProvider) {
+        GameStaticDataServices.htmlCacheProvider = htmlCacheProvider;
         DataManager.setInstanceProvider(dataManagerProvider);
         HTMLCache.setInstanceProvider(htmlCacheProvider);
     }
 
+    public static HTMLCache htmlCache() {
+        ObjectProvider<HTMLCache> provider = htmlCacheProvider;
+        if (provider == null) {
+            return GameCoreServiceFallbacks.htmlCache();
+        }
+        return provider.getIfAvailable(GameCoreServiceFallbacks::htmlCache);
+    }
+
     @Override
     public void destroy() {
+        htmlCacheProvider = null;
         DataManager.setInstanceProvider(null);
         HTMLCache.setInstanceProvider(null);
     }

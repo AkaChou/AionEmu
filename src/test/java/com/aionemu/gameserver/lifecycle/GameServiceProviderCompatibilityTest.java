@@ -1113,6 +1113,50 @@ class GameServiceProviderCompatibilityTest {
     }
 
     @Test
+    void gameRuntimeServicesRegistersAndClearsHighTrafficAccessors() throws Exception {
+        BrokerService brokerService = instance(BrokerService.class);
+        Influence influence = instance(Influence.class);
+        ExchangeService exchangeService = instance(ExchangeService.class);
+        PetitionService petitionService = instance(PetitionService.class);
+        GameRuntimeServices runtimeServices = new GameRuntimeServices(
+                provider(PeriodicSaveService.class, instance(PeriodicSaveService.class)),
+                provider(AdminService.class, instance(AdminService.class)),
+                provider(PlayerTransferService.class, instance(PlayerTransferService.class)),
+                provider(TerritoryService.class, instance(TerritoryService.class)),
+                provider(GameTimeService.class, instance(GameTimeService.class)),
+                provider(AnnouncementService.class, instance(AnnouncementService.class)),
+                provider(DebugService.class, instance(DebugService.class)),
+                provider(WeatherService.class, instance(WeatherService.class)),
+                provider(BrokerService.class, brokerService),
+                provider(Influence.class, influence),
+                provider(ExchangeService.class, exchangeService),
+                provider(PetitionService.class, petitionService),
+                provider(FlyRingService.class, instance(FlyRingService.class)),
+                provider(CuringZoneService.class, instance(CuringZoneService.class)),
+                provider(SpringZoneService.class, instance(SpringZoneService.class)),
+                provider(BoostEventService.class, instance(BoostEventService.class)),
+                provider(TaskManagerFromDB.class, instance(TaskManagerFromDB.class)),
+                provider(LimitedItemTradeService.class, instance(LimitedItemTradeService.class)),
+                provider(WebshopService.class, instance(WebshopService.class)),
+                provider(SurveyService.class, instance(SurveyService.class)),
+                provider(FindGroupService.class, instance(FindGroupService.class)),
+                provider(InGameShopEn.class, instance(InGameShopEn.class)));
+
+        try {
+            assertSame(brokerService, GameRuntimeServices.brokerService());
+            assertSame(influence, GameRuntimeServices.influence());
+            assertSame(exchangeService, GameRuntimeServices.exchangeService());
+            assertSame(petitionService, GameRuntimeServices.petitionService());
+        } finally {
+            runtimeServices.destroy();
+            assertProviderCleared(BrokerService.class);
+            assertProviderCleared(Influence.class);
+            assertProviderCleared(ExchangeService.class);
+            assertProviderCleared(PetitionService.class);
+        }
+    }
+
+    @Test
     void remainingSingletonAccessorsUseSpringProvidersBeforeLegacyFallbacks() throws Exception {
         LegionService legionService = instance(LegionService.class);
         NavData navData = instance(NavData.class);

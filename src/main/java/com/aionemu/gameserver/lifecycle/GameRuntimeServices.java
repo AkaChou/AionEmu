@@ -31,6 +31,10 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameRuntimeServices implements DisposableBean {
 
+    private static volatile ObjectProvider<BrokerService> brokerServiceProvider;
+    private static volatile ObjectProvider<Influence> influenceProvider;
+    private static volatile ObjectProvider<ExchangeService> exchangeServiceProvider;
+    private static volatile ObjectProvider<PetitionService> petitionServiceProvider;
     private static volatile ObjectProvider<FindGroupService> findGroupServiceProvider;
     private static volatile ObjectProvider<InGameShopEn> inGameShopEnProvider;
 
@@ -56,6 +60,10 @@ public final class GameRuntimeServices implements DisposableBean {
             ObjectProvider<SurveyService> surveyServiceProvider,
             ObjectProvider<FindGroupService> findGroupServiceProvider,
             ObjectProvider<InGameShopEn> inGameShopEnProvider) {
+        GameRuntimeServices.brokerServiceProvider = brokerServiceProvider;
+        GameRuntimeServices.influenceProvider = influenceProvider;
+        GameRuntimeServices.exchangeServiceProvider = exchangeServiceProvider;
+        GameRuntimeServices.petitionServiceProvider = petitionServiceProvider;
         GameRuntimeServices.findGroupServiceProvider = findGroupServiceProvider;
         GameRuntimeServices.inGameShopEnProvider = inGameShopEnProvider;
         PeriodicSaveService.setInstanceProvider(periodicSaveServiceProvider);
@@ -80,6 +88,22 @@ public final class GameRuntimeServices implements DisposableBean {
         SurveyService.setInstanceProvider(surveyServiceProvider);
         FindGroupService.setInstanceProvider(findGroupServiceProvider);
         InGameShopEn.setInstanceProvider(inGameShopEnProvider);
+    }
+
+    public static BrokerService brokerService() {
+        return getIfAvailable(brokerServiceProvider, BrokerService::getInstance);
+    }
+
+    public static Influence influence() {
+        return getIfAvailable(influenceProvider, Influence::getInstance);
+    }
+
+    public static ExchangeService exchangeService() {
+        return getIfAvailable(exchangeServiceProvider, ExchangeService::getInstance);
+    }
+
+    public static PetitionService petitionService() {
+        return getIfAvailable(petitionServiceProvider, PetitionService::getInstance);
     }
 
     public static FindGroupService findGroupService() {
@@ -107,9 +131,13 @@ public final class GameRuntimeServices implements DisposableBean {
         AnnouncementService.setInstanceProvider(null);
         DebugService.setInstanceProvider(null);
         WeatherService.setInstanceProvider(null);
+        brokerServiceProvider = null;
         BrokerService.setInstanceProvider(null);
+        influenceProvider = null;
         Influence.setInstanceProvider(null);
+        exchangeServiceProvider = null;
         ExchangeService.setInstanceProvider(null);
+        petitionServiceProvider = null;
         PetitionService.setInstanceProvider(null);
         FlyRingService.setInstanceProvider(null);
         CuringZoneService.setInstanceProvider(null);

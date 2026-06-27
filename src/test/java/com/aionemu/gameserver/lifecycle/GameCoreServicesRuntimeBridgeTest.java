@@ -48,6 +48,21 @@ class GameCoreServicesRuntimeBridgeTest {
     }
 
     @Test
+    void staticDataServicesExposeHtmlCacheAccessor() {
+        DataManager dataManager = instance(DataManager.class);
+        HTMLCache htmlCache = instance(HTMLCache.class);
+        GameStaticDataServices staticDataServices = new GameStaticDataServices(
+                provider(DataManager.class, dataManager),
+                provider(HTMLCache.class, htmlCache));
+
+        try {
+            assertSame(htmlCache, GameStaticDataServices.htmlCache());
+        } finally {
+            staticDataServices.destroy();
+        }
+    }
+
+    @Test
     void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameCoreServicesRuntimeBridge.java"));
 
