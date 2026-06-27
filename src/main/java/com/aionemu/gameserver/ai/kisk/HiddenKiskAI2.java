@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.kisk;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -84,7 +86,7 @@ public class HiddenKiskAI2 extends NpcAI2
 	
 	@Override
 	protected void handleDespawned() {
-		KiskService.getInstance().removeKisk(getOwner());
+		GameFeatureServices.kiskService().removeKisk(getOwner());
 		if (!isAlreadyDead()) {
 			getOwner().broadcastPacket(SM_SYSTEM_MESSAGE.STR_BINDSTONE_IS_REMOVED);
 		}
@@ -106,7 +108,7 @@ public class HiddenKiskAI2 extends NpcAI2
                             PacketSendUtility.sendPacket(responder, SM_SYSTEM_MESSAGE.STR_CANNOT_REGISTER_BINDSTONE_HAVE_NO_AUTHORITY);
                             return;
                         }
-                        KiskService.getInstance().onBind(getOwner(), responder);
+                        GameFeatureServices.kiskService().onBind(getOwner(), responder);
                     }
                 }
                 @Override

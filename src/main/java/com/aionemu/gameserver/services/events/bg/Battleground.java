@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -848,7 +850,7 @@ public abstract class Battleground {
 	}
 
 	protected void onEndDefault() {
-		LadderService.getInstance().onBgEnd(this);
+		GameFeatureServices.ladderService().onBgEnd(this);
 		if (getPlayers().size() > 0) {
 			for (Player pl : getPlayers()) {
 				freezePlayer(pl, 7500);

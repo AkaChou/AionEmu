@@ -404,7 +404,7 @@ public final class PlayerEnterWorldService {
 			// SM_CHANNEL_INFO
 			client.sendPacket(new SM_CHANNEL_INFO(player.getPosition()));
 
-			KiskService.getInstance().onLogin(player);
+			GameFeatureServices.kiskService().onLogin(player);
 
 			// SM_TERRITORY_LIST
 			TerritoryService.getInstance().onEnterWorld(player);
@@ -613,7 +613,7 @@ public final class PlayerEnterWorldService {
 			}
 			PlayerGroupService.onPlayerLogin(player);
 			// SM_PET
-			PetService.getInstance().onPlayerLogin(player);
+			GameFeatureServices.petService().onPlayerLogin(player);
 			// SM_Minions
 			GameEventBootstrapServices.minionService().onPlayerLogin(player);
 			WindyGorgeService.getInstance().onLogin(player);
@@ -697,7 +697,7 @@ public final class PlayerEnterWorldService {
 			EnchantService.GloryShieldSkill(player);
 			ShugoSweepService.getInstance().onLogin(player);
 			GameEventBootstrapServices.lunaShopService().onLogin(player);
-			if (FFAService.getInstance().isInArena(player)) {
+			if (GameFeatureServices.ffaService().isInArena(player)) {
 				TeleportService2.moveToBindLocation(player, true);
 			}
 			player.setBattleground(null);

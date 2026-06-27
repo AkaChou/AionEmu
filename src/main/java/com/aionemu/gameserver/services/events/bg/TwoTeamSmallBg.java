@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collections;
@@ -1001,13 +1003,13 @@ public class TwoTeamSmallBg extends Battleground {
 					for (PlayerGroup group : super.getGroups()) {
 						for (Player pl : group.getMembers()) {
 							super.scheduleAnnouncement(pl,
-									LadderService.getInstance().getNameByIndex(roundWinner.getBgIndex())
+									GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex())
 											+ " Win's the round!",
 									0);
 						}
 					}
 					super.specAnnounce(
-							LadderService.getInstance().getNameByIndex(roundWinner.getBgIndex()) + " Win's the round!");
+							GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex()) + " Win's the round!");
 					startNewRound();
 					return;
 				}
@@ -1134,7 +1136,7 @@ public class TwoTeamSmallBg extends Battleground {
 					}
 				}
 			}
-			super.specAnnounce(LadderService.getInstance().getNameByIndex(winner.getBgIndex()) + " Win's the round!");
+			super.specAnnounce(GameFeatureServices.ladderService().getNameByIndex(winner.getBgIndex()) + " Win's the round!");
 		}
 		super.onEndDefault();
 	}

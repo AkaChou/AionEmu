@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import org.slf4j.Logger;
@@ -103,7 +105,7 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			break;
 		}
 		if (PvPModConfig.BG_ENABLED) {
-			LadderService.getInstance().handleWindow(player, windowId, entryRequestId);
+			GameFeatureServices.ladderService().handleWindow(player, windowId, entryRequestId);
 		}
 	}
 }

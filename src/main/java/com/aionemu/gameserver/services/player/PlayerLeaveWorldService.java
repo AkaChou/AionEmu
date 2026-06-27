@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
@@ -97,7 +99,7 @@ public class PlayerLeaveWorldService {
 		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
 		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		player.onLoggedOut();
-		PetService.getInstance().onPlayerLogout(player);
+		GameFeatureServices.petService().onPlayerLogout(player);
 		BrokerService.getInstance().removePlayerCache(player);
 		ExchangeService.getInstance().cancelExchange(player);
 		RepurchaseService.getInstance().removeRepurchaseItems(player);
@@ -107,7 +109,7 @@ public class PlayerLeaveWorldService {
 		ProtectorConquerorService.getInstance().onLogout(player);
 		InstanceService.onLogOut(player);
 		GMService.getInstance().onPlayerLogedOut(player);
-		KiskService.getInstance().onLogout(player);
+		GameFeatureServices.kiskService().onLogout(player);
 		player.getMoveController().abortMove();
 		if (player.isLooting()) {
 			GameCoreGameplayServices.dropService().closeDropList(player, player.getLootingNpcOid());

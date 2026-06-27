@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
@@ -575,9 +577,9 @@ public class PlayerController extends CreatureController<Player> {
 			}
 			GameGameplayServices.duelService().loseDuel(player);
 		}
-		if (FFAService.getInstance().isInArena(player) && player.isFFA()) {
+		if (GameFeatureServices.ffaService().isInArena(player) && player.isFFA()) {
 			player.getAggroList().clear();
-			FFAService.getInstance().onDie(player, master);
+			GameFeatureServices.ffaService().onDie(player, master);
 			return;
 		}
 		if (player.isBandit()) {
@@ -629,7 +631,7 @@ public class PlayerController extends CreatureController<Player> {
 		player.unsetState(CreatureState.GLIDING);
 		player.setFlyState(0);
 
-		if (player.isInInstance() && !FFAService.getInstance().isInArena(player) || player.getBattleground() == null || !player.getBattleground().is1v1()) {
+		if (player.isInInstance() && !GameFeatureServices.ffaService().isInArena(player) || player.getBattleground() == null || !player.getBattleground().is1v1()) {
 			if (player.getPosition().getWorldMapInstance().getInstanceHandler().onDie(player, lastAttacker)) {
 				super.onDie(lastAttacker);
 				return;

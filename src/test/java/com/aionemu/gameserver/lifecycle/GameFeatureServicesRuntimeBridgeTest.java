@@ -148,6 +148,31 @@ class GameFeatureServicesRuntimeBridgeTest {
         }
     }
 
+    @Test
+    void gameServerCodeUsesFeatureBridgeInsteadOfDirectArenaPetAndKiskSingletons() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/events/FFAService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/events/LadderService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/toypet/PetService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/KiskService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServicesRuntimeBridge.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("FFAService.getInstance()"), source.toString());
+            assertFalse(content.contains("LadderService.getInstance()"), source.toString());
+            assertFalse(content.contains("PetService.getInstance()"), source.toString());
+            assertFalse(content.contains("KiskService.getInstance()"), source.toString());
+        }
+    }
+
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
         return ObjectProvider.class.cast(Proxy.newProxyInstance(
             ObjectProvider.class.getClassLoader(),

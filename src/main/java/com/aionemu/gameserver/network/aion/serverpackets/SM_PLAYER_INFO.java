@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.List;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -54,7 +56,7 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 
 		if (player.getAdminNeutral() > 1 || activePlayer.getAdminNeutral() > 1 || player.isInPvEMode() || activePlayer.isInPvEMode()) {
 			raceId = activePlayer.getRace().getRaceId();
-		} else if (FFAService.getInstance().isInArena(activePlayer) && activePlayer.isFFA() || activePlayer.isInPkMode() || activePlayer.isBandit()) {
+		} else if (GameFeatureServices.ffaService().isInArena(activePlayer) && activePlayer.isFFA() || activePlayer.isInPkMode() || activePlayer.isBandit()) {
 			if (player.getRace() == activePlayer.getRace() && player != activePlayer) {
 				raceId = (player.getRace().getRaceId() == 0 ? 1 : 0);
 			} else if (player != activePlayer) {
@@ -183,7 +185,7 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 			writeS(player.getLegion().getLegionName());
 		} else if (!player.isSpectating() && player.getBattleground() != null && (player.isInGroup2() || player.isInAlliance2())) {
 			bgIndex = (player.isInGroup2()) ? player.getPlayerGroup2().getBgIndex() : player.getPlayerAlliance2().getBgIndex();
-			LegionEmblem emblem = LadderService.getInstance().getCapeEmblemByIndex(bgIndex);
+			LegionEmblem emblem = GameFeatureServices.ladderService().getCapeEmblemByIndex(bgIndex);
 			writeD(bgIndex + 1);
 			writeC(emblem.getEmblemId());
 			writeC(0);
@@ -191,17 +193,17 @@ public class SM_PLAYER_INFO extends AionServerPacket {
 			writeC(player.isLegionMember() ? player.getLegion().getLegionEmblem().getColor_r() : 0);
 			writeC(player.isLegionMember() ? player.getLegion().getLegionEmblem().getColor_g() : 0);
 			writeC(player.isLegionMember() ? player.getLegion().getLegionEmblem().getColor_b() : 0);
-			writeS(LadderService.getInstance().getNameByIndex(bgIndex));
+			writeS(GameFeatureServices.ladderService().getNameByIndex(bgIndex));
 		} else if (!player.isSpectating() && player.getBattleground() != null && player.getBattleground().is1v1() && (player.getBattleground() instanceof DeathmatchBg || player.getBattleground() instanceof SoloSurvivorBg)) {
 			writeD(bgIndex + 1);
-			LegionEmblem emblem = LadderService.getInstance().getCapeEmblemByIndex(player.getBgIndex());
+			LegionEmblem emblem = GameFeatureServices.ladderService().getCapeEmblemByIndex(player.getBgIndex());
 			writeC(emblem.getEmblemId());
 			writeC(0);
 			writeC(0xFF);
 			writeC(player.isLegionMember() ? player.getLegion().getLegionEmblem().getColor_r() : 0);
 			writeC(player.isLegionMember() ? player.getLegion().getLegionEmblem().getColor_g() : 0);
 			writeC(player.isLegionMember() ? player.getLegion().getLegionEmblem().getColor_b() : 0);
-			writeS(LadderService.getInstance().getNameByIndex(bgIndex));
+			writeS(GameFeatureServices.ladderService().getNameByIndex(bgIndex));
 		} else if (player.isBandit() || player.isFFA()) {
 			writeD(player.getObjectId());
 			writeC(16);

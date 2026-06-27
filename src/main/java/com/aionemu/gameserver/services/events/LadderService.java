@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -261,7 +263,7 @@ public class LadderService {
 		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player pl) {
-				if (pl.getBattleground() == null && !isInQueue(pl) && !FFAService.getInstance().isInArena(pl)) {
+				if (pl.getBattleground() == null && !isInQueue(pl) && !GameFeatureServices.ffaService().isInArena(pl)) {
 					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, true));
 				}
 			}
@@ -627,7 +629,7 @@ public class LadderService {
 		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				if (player.getBattleground() == null && !FFAService.getInstance().isInArena(player)) {
+				if (player.getBattleground() == null && !GameFeatureServices.ffaService().isInArena(player)) {
 					PacketSendUtility.sendSys3Message(player, "\uE05C", msg);
 				}
 			}
