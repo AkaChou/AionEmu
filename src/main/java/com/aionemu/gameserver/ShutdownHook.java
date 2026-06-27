@@ -9,7 +9,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionProcessExit;
@@ -18,13 +17,14 @@ import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager.SortBy;
 import com.aionemu.gameserver.configs.main.ShutdownConfig;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.world.World;
 
@@ -219,11 +219,11 @@ public class ShutdownHook extends Thread {
 		runShutdownStep("dump runnable stats", () -> RunnableStatsManager.dumpClassStats(SortBy.AVG));
 		runShutdownStep("save periodic data", () -> PeriodicSaveService.getInstance().onShutdown());
 		runShutdownStep("save game time", GameTimeManager::saveTime);
-		runShutdownStep("shutdown CronService", () -> CronService.getInstance().shutdown());
+		runShutdownStep("shutdown CronService", GameCronServices::shutdownIfInitialized);
 		if (AionRuntimeMode.isBootEmbedded()) {
 			log.info("ThreadPoolManager shutdown is managed by Spring Boot lifecycle.");
 		} else {
-			runShutdownStep("shutdown ThreadPoolManager", () -> ThreadPoolManager.getInstance().shutdown());
+			runShutdownStep("shutdown ThreadPoolManager", () -> GameThreadPoolServices.threadPoolManager().shutdown());
 		}
 		log.info("All service shutdown steps completed");
 

@@ -2,11 +2,9 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 import com.aionemu.gameserver.utils.ThreadUncaughtExceptionHandler;
-import com.aionemu.gameserver.utils.cron.ThreadPoolManagerRunnableRunner;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import com.aionemu.gameserver.utils.javaagent.JavaAgentUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +27,7 @@ public class GameUtilityServicesRuntimeBridge {
     }
 
     public void initializeCronService() {
-        CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
+        GameCronServices.initialize();
     }
 
     public void loadConfig() {
