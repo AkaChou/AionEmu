@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.reward;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +74,7 @@ public class RewardService {
 				continue;
 			}
 			try {
-				if (!SystemMailService.getInstance().sendMail("$$CASH_ITEM_MAIL", player.getName(),
+				if (!GameFeatureServices.systemMailService().sendMail("$$CASH_ITEM_MAIL", player.getName(),
 						item.id + ", " + item.count, "0, " + (System.currentTimeMillis() / 1000) + ",", item.id,
 						(int) item.count, 0, 0, LetterType.BLACKCLOUD)) {
 					continue;

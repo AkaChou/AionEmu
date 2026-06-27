@@ -129,6 +129,25 @@ class GameFeatureServicesRuntimeBridgeTest {
         }
     }
 
+    @Test
+    void gameServerCodeUsesFeatureSystemMailBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/mail/SystemMailService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServicesRuntimeBridge.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("SystemMailService.getInstance()"), source.toString());
+        }
+    }
+
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
         return ObjectProvider.class.cast(Proxy.newProxyInstance(
             ObjectProvider.class.getClassLoader(),

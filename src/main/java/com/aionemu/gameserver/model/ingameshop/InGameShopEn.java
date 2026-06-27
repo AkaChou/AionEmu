@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.model.ingameshop;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -275,7 +277,7 @@ public class InGameShopEn {
 				}
 				
 				if (foundRequest.gift) {
-					SystemMailService.getInstance().sendMail(player.getName(), foundRequest.receiver, "In Game Shop", foundRequest.message, item.getItemId(), item.getItemCount(), 0L, 0L, LetterType.BLACKCLOUD);
+					GameFeatureServices.systemMailService().sendMail(player.getName(), foundRequest.receiver, "In Game Shop", foundRequest.message, item.getItemId(), item.getItemCount(), 0L, 0L, LetterType.BLACKCLOUD);
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_GIFT_SUCCESS);
 					player.getClientConnection().getAccount().setToll(toll);
 					player.getClientConnection().getAccount().setLuna(luna);

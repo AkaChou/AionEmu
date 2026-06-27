@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -158,7 +160,7 @@ public class SysMail extends AdminCommand {
 			if (letterType == LetterType.BLACKCLOUD)
 				MailFormatter.sendBlackCloudMail(recipient, item, count);
 			else
-				SystemMailService.getInstance().sendMail(sender, recipient, title, message, item, count, kinah, 1000, letterType);
+				GameFeatureServices.systemMailService().sendMail(sender, recipient, title, message, item, count, kinah, 1000, letterType);
 		}
 		else {
 			for (Player player : World.getInstance().getAllPlayers()) {
@@ -166,7 +168,7 @@ public class SysMail extends AdminCommand {
 					if (letterType == LetterType.BLACKCLOUD)
 						MailFormatter.sendBlackCloudMail(player.getName(), item, count);
 					else
-						SystemMailService.getInstance().sendMail(sender, player.getName(), title, message, item, count, kinah, 1000, letterType);
+						GameFeatureServices.systemMailService().sendMail(sender, player.getName(), title, message, item, count, kinah, 1000, letterType);
 				}
 			}
 		}

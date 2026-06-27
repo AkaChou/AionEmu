@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -922,7 +924,7 @@ public class BrokerService {
 	}
 
 	private void expireItem(Race race, BrokerItem item) {
-		if (SystemMailService.getInstance().sendSystemMail("$$VENDOR_RETURN_MAIL", "", "", item.getSeller(),
+		if (GameFeatureServices.systemMailService().sendSystemMail("$$VENDOR_RETURN_MAIL", "", "", item.getSeller(),
 				item.getItem(), 0, 0, LetterType.NORMAL)) {
 			item.setPersistentState(PersistentState.DELETED);
 			saveManager.add(new BrokerOpSaveTask(item));

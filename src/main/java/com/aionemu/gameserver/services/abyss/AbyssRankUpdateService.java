@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -134,39 +136,39 @@ public class AbyssRankUpdateService {
 				switch (player.getAbyssRank().getRank()) {
 				case SUPREME_COMMANDER:
 					final int reward1 = rewardRace == Race.ASMODIANS ? 10 : 1;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward1, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward1, player.getCommonData());
 					break;
 				case COMMANDER:
 					final int reward2 = rewardRace == Race.ASMODIANS ? 11 : 2;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward2, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward2, player.getCommonData());
 					break;
 				case GREAT_GENERAL:
 					final int reward3 = rewardRace == Race.ASMODIANS ? 12 : 3;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward3, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward3, player.getCommonData());
 					break;
 				case GENERAL:
 					final int reward4 = rewardRace == Race.ASMODIANS ? 13 : 4;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward4, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward4, player.getCommonData());
 					break;
 				case STAR5_OFFICER:
 					final int reward5 = rewardRace == Race.ASMODIANS ? 14 : 5;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward5, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward5, player.getCommonData());
 					break;
 				case STAR4_OFFICER:
 					final int reward6 = rewardRace == Race.ASMODIANS ? 15 : 6;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward6, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward6, player.getCommonData());
 					break;
 				case STAR3_OFFICER:
 					final int reward7 = rewardRace == Race.ASMODIANS ? 16 : 7;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward7, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward7, player.getCommonData());
 					break;
 				case STAR2_OFFICER:
 					final int reward8 = rewardRace == Race.ASMODIANS ? 17 : 8;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward8, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward8, player.getCommonData());
 					break;
 				case STAR1_OFFICER:
 					final int reward9 = rewardRace == Race.ASMODIANS ? 18 : 9;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward9, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward9, player.getCommonData());
 					break;
 				}
 			}
