@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import java.io.IOException;
@@ -24,6 +25,7 @@ class GameEnginesRuntimeBridgeTest {
     @Test
     void usesSpringProvidersBeforeLegacySingletonFallbacks() {
         QuestEngine questEngine = instance(QuestEngine.class);
+        SkillEngine skillEngine = instance(SkillEngine.class);
         InstanceEngine instanceEngine = instance(InstanceEngine.class);
         AI2Engine ai2Engine = instance(AI2Engine.class);
         ChatProcessor chatProcessor = instance(ChatProcessor.class);
@@ -31,12 +33,14 @@ class GameEnginesRuntimeBridgeTest {
         GameEnginesRuntimeBridge runtimeBridge = new GameEnginesRuntimeBridge();
 
         runtimeBridge.setQuestEngineProvider(provider(QuestEngine.class, questEngine));
+        runtimeBridge.setSkillEngineProvider(provider(SkillEngine.class, skillEngine));
         runtimeBridge.setInstanceEngineProvider(provider(InstanceEngine.class, instanceEngine));
         runtimeBridge.setAi2EngineProvider(provider(AI2Engine.class, ai2Engine));
         runtimeBridge.setChatProcessorProvider(provider(ChatProcessor.class, chatProcessor));
         runtimeBridge.setThreadPoolManagerProvider(provider(ThreadPoolManager.class, threadPoolManager));
 
         assertSame(questEngine, runtimeBridge.questEngine());
+        assertSame(skillEngine, runtimeBridge.skillEngine());
         assertSame(instanceEngine, runtimeBridge.instanceEngine());
         assertSame(ai2Engine, runtimeBridge.ai2Engine());
         assertSame(chatProcessor, runtimeBridge.chatProcessor());
@@ -48,6 +52,7 @@ class GameEnginesRuntimeBridgeTest {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameEnginesRuntimeBridge.java"));
 
         assertFalse(source.contains("QuestEngine.getInstance()"));
+        assertFalse(source.contains("SkillEngine.getInstance()"));
         assertFalse(source.contains("InstanceEngine.getInstance()"));
         assertFalse(source.contains("AI2Engine.getInstance()"));
         assertFalse(source.contains("ChatProcessor.getInstance()"));
@@ -59,6 +64,7 @@ class GameEnginesRuntimeBridgeTest {
         QuestEngine questEngine = instance(QuestEngine.class);
         GameEngineServices gameEngineServices = new GameEngineServices(
             provider(QuestEngine.class, questEngine),
+            provider(SkillEngine.class, instance(SkillEngine.class)),
             provider(InstanceEngine.class, instance(InstanceEngine.class)),
             provider(AI2Engine.class, instance(AI2Engine.class)),
             provider(ChatProcessor.class, instance(ChatProcessor.class))
@@ -66,6 +72,24 @@ class GameEnginesRuntimeBridgeTest {
 
         try {
             assertSame(questEngine, GameEngineServices.questEngine());
+        } finally {
+            gameEngineServices.destroy();
+        }
+    }
+
+    @Test
+    void gameEngineServicesSkillEngineAccessorUsesSpringProviderBeforeLegacyFallback() {
+        SkillEngine skillEngine = instance(SkillEngine.class);
+        GameEngineServices gameEngineServices = new GameEngineServices(
+            provider(QuestEngine.class, instance(QuestEngine.class)),
+            provider(SkillEngine.class, skillEngine),
+            provider(InstanceEngine.class, instance(InstanceEngine.class)),
+            provider(AI2Engine.class, instance(AI2Engine.class)),
+            provider(ChatProcessor.class, instance(ChatProcessor.class))
+        );
+
+        try {
+            assertSame(skillEngine, GameEngineServices.skillEngine());
         } finally {
             gameEngineServices.destroy();
         }

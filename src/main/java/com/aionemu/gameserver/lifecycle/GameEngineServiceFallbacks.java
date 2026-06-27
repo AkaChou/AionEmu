@@ -3,6 +3,7 @@ package com.aionemu.gameserver.lifecycle;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 
@@ -13,6 +14,10 @@ final class GameEngineServiceFallbacks {
 
     static QuestEngine questEngine() {
         return QuestEngineFallback.INSTANCE;
+    }
+
+    static SkillEngine skillEngine() {
+        return SkillEngineFallback.INSTANCE;
     }
 
     static InstanceEngine instanceEngine() {
@@ -33,6 +38,10 @@ final class GameEngineServiceFallbacks {
 
     private static final class QuestEngineFallback {
         private static final QuestEngine INSTANCE = QuestEngine.getInstance();
+    }
+
+    private static final class SkillEngineFallback {
+        private static final SkillEngine INSTANCE = SkillEngine.getInstance();
     }
 
     private static final class InstanceEngineFallback {
