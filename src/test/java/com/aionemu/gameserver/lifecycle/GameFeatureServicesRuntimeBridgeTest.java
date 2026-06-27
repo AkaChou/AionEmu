@@ -185,6 +185,7 @@ class GameFeatureServicesRuntimeBridgeTest {
                 .filter(path -> !path.endsWith(Path.of("services/WeddingService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/ProtectorConquerorService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/AStationService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/F2pService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/MotionLoggingService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/RepurchaseService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/drop/DropDistributionService.java")))
@@ -204,6 +205,7 @@ class GameFeatureServicesRuntimeBridgeTest {
             assertFalse(content.contains("WeddingService.getInstance()"), source.toString());
             assertFalse(content.contains("ProtectorConquerorService.getInstance()"), source.toString());
             assertFalse(content.contains("AStationService.getInstance()"), source.toString());
+            assertFalse(content.contains("F2pService.getInstance()"), source.toString());
             assertFalse(content.contains("MotionLoggingService.getInstance()"), source.toString());
             assertFalse(content.contains("RepurchaseService.getInstance()"), source.toString());
             assertFalse(content.contains("DropDistributionService.getInstance()"), source.toString());

@@ -124,7 +124,6 @@ import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.services.DisputeLandService;
 import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.EventService;
-import com.aionemu.gameserver.services.F2pService;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.services.PetitionService;
@@ -597,7 +596,7 @@ public final class PlayerEnterWorldService {
 				LoginServerInfo(player); // Show LoginServerinfo + Chat
 			}
 			// GloryPointLoseMsg(player);
-			F2pService.getInstance().onEnterWorld(player);
+			GameFeatureServices.f2pService().onEnterWorld(player);
 			// Aura Of Growth.
 			// Players can gain additional XP from hunting, gathering or crafting by obtaining Growth Aura.
 			// Growth Aura can be obtained from hunting monsters, acquiring essence, and through login and quest rewards.

@@ -52,6 +52,7 @@ public final class GameFeatureServices implements DisposableBean {
     private static volatile ObjectProvider<SiegeService> siegeServiceProvider;
     private static volatile ObjectProvider<BaseService> baseServiceProvider;
     private static volatile ObjectProvider<AStationService> aStationServiceProvider;
+    private static volatile ObjectProvider<F2pService> f2pServiceProvider;
     private static volatile ObjectProvider<MotionLoggingService> motionLoggingServiceProvider;
     private static volatile ObjectProvider<KiskService> kiskServiceProvider;
     private static volatile ObjectProvider<RepurchaseService> repurchaseServiceProvider;
@@ -106,6 +107,7 @@ public final class GameFeatureServices implements DisposableBean {
         GameFeatureServices.siegeServiceProvider = siegeServiceProvider;
         GameFeatureServices.baseServiceProvider = baseServiceProvider;
         GameFeatureServices.aStationServiceProvider = aStationServiceProvider;
+        GameFeatureServices.f2pServiceProvider = f2pServiceProvider;
         GameFeatureServices.motionLoggingServiceProvider = motionLoggingServiceProvider;
         GameFeatureServices.kiskServiceProvider = kiskServiceProvider;
         GameFeatureServices.repurchaseServiceProvider = repurchaseServiceProvider;
@@ -217,6 +219,10 @@ public final class GameFeatureServices implements DisposableBean {
         return getIfAvailable(aStationServiceProvider, AStationService::getInstance);
     }
 
+    public static F2pService f2pService() {
+        return getIfAvailable(f2pServiceProvider, F2pService::getInstance);
+    }
+
     public static MotionLoggingService motionLoggingService() {
         return getIfAvailable(motionLoggingServiceProvider, MotionLoggingService::getInstance);
     }
@@ -290,6 +296,7 @@ public final class GameFeatureServices implements DisposableBean {
         siegeServiceProvider = null;
         baseServiceProvider = null;
         aStationServiceProvider = null;
+        f2pServiceProvider = null;
         motionLoggingServiceProvider = null;
         kiskServiceProvider = null;
         repurchaseServiceProvider = null;
