@@ -8,12 +8,18 @@ import com.aionemu.loginserver.controller.PremiumController;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class LoginPremiumServicesTest {
+
+    @AfterEach
+    void resetPremiumBridge() {
+        LoginPremiumServices.resetForTests();
+    }
 
     @Test
     void usesSpringProviderBeforeLocalFallback() {
@@ -27,6 +33,20 @@ class LoginPremiumServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void keepsResolvedSpringPremiumControllerAfterBridgeIsDestroyed() {
+        PremiumController premiumController = instance(PremiumController.class);
+        LoginPremiumServices services = new LoginPremiumServices(
+            provider(PremiumController.class, premiumController)
+        );
+
+        assertSame(premiumController, LoginPremiumServices.premiumController());
+
+        services.destroy();
+
+        assertSame(premiumController, LoginPremiumServices.premiumController());
     }
 
     @Test
