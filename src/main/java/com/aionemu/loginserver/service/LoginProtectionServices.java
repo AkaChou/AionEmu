@@ -14,6 +14,10 @@ public final class LoginProtectionServices implements DisposableBean {
     private static volatile ObjectProvider<LoginBannedIpService> bannedIpServiceProvider;
     private static volatile ObjectProvider<BruteForceProtector> bruteForceProtectorProvider;
     private static volatile ObjectProvider<FloodProtector> floodProtectorProvider;
+    private static volatile BannedMacManager resolvedBannedMacManager;
+    private static volatile LoginBannedIpService resolvedBannedIpService;
+    private static volatile BruteForceProtector resolvedBruteForceProtector;
+    private static volatile FloodProtector resolvedFloodProtector;
 
     public LoginProtectionServices(
         ObjectProvider<BannedMacManager> bannedMacManagerProvider,
@@ -30,33 +34,49 @@ public final class LoginProtectionServices implements DisposableBean {
     public static BannedMacManager bannedMacManager() {
         ObjectProvider<BannedMacManager> provider = bannedMacManagerProvider;
         if (provider == null) {
-            return fallbackBannedMacManager();
+            BannedMacManager resolved = resolvedBannedMacManager;
+            if (resolved != null) {
+                return resolved;
+            }
+            return rememberBannedMacManager(fallbackBannedMacManager());
         }
-        return provider.getIfAvailable(LoginProtectionServices::fallbackBannedMacManager);
+        return rememberBannedMacManager(provider.getIfAvailable(LoginProtectionServices::fallbackBannedMacManager));
     }
 
     public static LoginBannedIpService bannedIpService() {
         ObjectProvider<LoginBannedIpService> provider = bannedIpServiceProvider;
         if (provider == null) {
+            LoginBannedIpService resolved = resolvedBannedIpService;
+            if (resolved != null) {
+                return resolved;
+            }
             return new LoginBannedIpService();
         }
-        return provider.getIfAvailable(LoginBannedIpService::new);
+        return rememberBannedIpService(provider.getIfAvailable(LoginBannedIpService::new));
     }
 
     public static BruteForceProtector bruteForceProtector() {
         ObjectProvider<BruteForceProtector> provider = bruteForceProtectorProvider;
         if (provider == null) {
-            return fallbackBruteForceProtector();
+            BruteForceProtector resolved = resolvedBruteForceProtector;
+            if (resolved != null) {
+                return resolved;
+            }
+            return rememberBruteForceProtector(fallbackBruteForceProtector());
         }
-        return provider.getIfAvailable(LoginProtectionServices::fallbackBruteForceProtector);
+        return rememberBruteForceProtector(provider.getIfAvailable(LoginProtectionServices::fallbackBruteForceProtector));
     }
 
     public static FloodProtector floodProtector() {
         ObjectProvider<FloodProtector> provider = floodProtectorProvider;
         if (provider == null) {
-            return fallbackFloodProtector();
+            FloodProtector resolved = resolvedFloodProtector;
+            if (resolved != null) {
+                return resolved;
+            }
+            return rememberFloodProtector(fallbackFloodProtector());
         }
-        return provider.getIfAvailable(LoginProtectionServices::fallbackFloodProtector);
+        return rememberFloodProtector(provider.getIfAvailable(LoginProtectionServices::fallbackFloodProtector));
     }
 
     @Override
@@ -77,6 +97,37 @@ public final class LoginProtectionServices implements DisposableBean {
 
     private static FloodProtector fallbackFloodProtector() {
         return Fallbacks.FLOOD_PROTECTOR;
+    }
+
+    private static BannedMacManager rememberBannedMacManager(BannedMacManager bannedMacManager) {
+        resolvedBannedMacManager = bannedMacManager;
+        return bannedMacManager;
+    }
+
+    private static LoginBannedIpService rememberBannedIpService(LoginBannedIpService bannedIpService) {
+        resolvedBannedIpService = bannedIpService;
+        return bannedIpService;
+    }
+
+    private static BruteForceProtector rememberBruteForceProtector(BruteForceProtector bruteForceProtector) {
+        resolvedBruteForceProtector = bruteForceProtector;
+        return bruteForceProtector;
+    }
+
+    private static FloodProtector rememberFloodProtector(FloodProtector floodProtector) {
+        resolvedFloodProtector = floodProtector;
+        return floodProtector;
+    }
+
+    static void resetForTests() {
+        bannedMacManagerProvider = null;
+        bannedIpServiceProvider = null;
+        bruteForceProtectorProvider = null;
+        floodProtectorProvider = null;
+        resolvedBannedMacManager = null;
+        resolvedBannedIpService = null;
+        resolvedBruteForceProtector = null;
+        resolvedFloodProtector = null;
     }
 
     private static final class Fallbacks {
