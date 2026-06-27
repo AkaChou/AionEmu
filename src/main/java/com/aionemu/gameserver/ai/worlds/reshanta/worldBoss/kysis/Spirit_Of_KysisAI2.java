@@ -56,7 +56,7 @@ public class Spirit_Of_KysisAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(Spirit_Of_KysisAI2.this);
@@ -69,7 +69,7 @@ public class Spirit_Of_KysisAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceSpiritOfKysis() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Kysis Guardian Appears.
@@ -81,7 +81,7 @@ public class Spirit_Of_KysisAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		updateKysisLanding();
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Kysis Berserker Soul has been slain.
@@ -93,7 +93,7 @@ public class Spirit_Of_KysisAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateKysisLanding() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {

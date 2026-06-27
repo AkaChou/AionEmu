@@ -61,7 +61,7 @@ public class Defeat_MonumentAI2 extends NpcAI2
 	}
 	
 	private void updateDefeatLanding1(final int id) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
@@ -75,7 +75,7 @@ public class Defeat_MonumentAI2 extends NpcAI2
 		});
 	}
 	private void updateDefeatLanding2(final int id) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {

@@ -546,7 +546,7 @@ public class PlayerController extends CreatureController<Player> {
 		}
 
 		if (moveToBind) {
-			World.getInstance().setPosition(getOwner(), mapId, x, y, z, h);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(getOwner(), mapId, x, y, z, h);
 		}
 	}
 
@@ -1038,7 +1038,7 @@ public class PlayerController extends CreatureController<Player> {
 	}
 
 	public static final void reachedPlayerLvl(final Player player) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player players) {
 				// "Player Name" has reached level %1.

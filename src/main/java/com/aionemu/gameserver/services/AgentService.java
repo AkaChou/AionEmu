@@ -142,7 +142,7 @@ public class AgentService {
 	public boolean empyreanLordCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Empyrean Lord's Agent will end the battle in 30 minutes.
@@ -162,7 +162,7 @@ public class AgentService {
 	public boolean agentBattleMsg1(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Agent battle will start in 10 minutes.
@@ -179,7 +179,7 @@ public class AgentService {
 	public boolean agentBattleMsg2(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Agent battle will start in 5 minutes.
@@ -196,7 +196,7 @@ public class AgentService {
 	public boolean governorSunayakaMsg(int id) {
 		switch (id) {
 		case 2:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Tiamat's Incarnation has appeared.
@@ -215,7 +215,7 @@ public class AgentService {
 	public boolean berserkerSunayakaMsg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Tiamat's Incarnation has appeared.

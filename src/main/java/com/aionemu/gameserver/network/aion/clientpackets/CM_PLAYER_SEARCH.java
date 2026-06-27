@@ -61,7 +61,7 @@ public class CM_PLAYER_SEARCH extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player activePlayer = getConnection().getActivePlayer();
-		Iterator<Player> it = World.getInstance().getPlayersIterator();
+		Iterator<Player> it = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		List<Player> matches = new ArrayList<Player>(MAX_RESULTS);
 		if (activePlayer.getLevel() < 10) {
 			// Characters under level 10 cannot use the search function.

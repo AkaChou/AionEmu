@@ -153,7 +153,7 @@ public class RvrService {
 	public boolean rvrCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Brigade General's Urgent Order.
@@ -211,7 +211,7 @@ public class RvrService {
 	public boolean LF6G1Spawn01Msg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Asmodian warship will invade in 10 minutes.
@@ -227,7 +227,7 @@ public class RvrService {
 	public boolean LF6G1Spawn02Msg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Asmodian warship will invade in 5 minutes.
@@ -243,7 +243,7 @@ public class RvrService {
 	public boolean LF6G1Spawn03Msg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Asmodian warship will invade in 3 minutes.
@@ -259,7 +259,7 @@ public class RvrService {
 	public boolean LF6G1Spawn04Msg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Asmodian warship will invade in 1 minute.
@@ -275,7 +275,7 @@ public class RvrService {
 	public boolean LF6G1Spawn05Msg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Asmodian warship Invasion.
@@ -336,7 +336,7 @@ public class RvrService {
 	public boolean LF6EventG2Start02Msg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Asmodian Troopers are retreating after the defeat of their officers.
@@ -356,7 +356,7 @@ public class RvrService {
 	public boolean LF6RvrCountdownMsg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Elyos frigate invasion will end in 10 minutes.
@@ -384,7 +384,7 @@ public class RvrService {
 	public boolean DF6G1Spawn01Msg(int id) {
 		switch (id) {
 		case 4:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Elyos warship will invade in 10 minutes.
@@ -400,7 +400,7 @@ public class RvrService {
 	public boolean DF6G1Spawn02Msg(int id) {
 		switch (id) {
 		case 4:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Elyos warship will invade in 5 minutes.
@@ -416,7 +416,7 @@ public class RvrService {
 	public boolean DF6G1Spawn03Msg(int id) {
 		switch (id) {
 		case 4:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Elyos warship will invade in 3 minutes.
@@ -432,7 +432,7 @@ public class RvrService {
 	public boolean DF6G1Spawn04Msg(int id) {
 		switch (id) {
 		case 4:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Elyos warship will invade in 1 minute.
@@ -448,7 +448,7 @@ public class RvrService {
 	public boolean DF6G1Spawn05Msg(int id) {
 		switch (id) {
 		case 4:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Elyos warship Invasion.
@@ -509,7 +509,7 @@ public class RvrService {
 	public boolean DF6EventG2Start02Msg(int id) {
 		switch (id) {
 		case 4:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Aetos are retreating after the defeat of their officers.
@@ -529,7 +529,7 @@ public class RvrService {
 	public boolean DF6RvrCountdownMsg(int id) {
 		switch (id) {
 		case 4:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Asmodian frigate invasion will end in 10 minutes.
@@ -559,7 +559,7 @@ public class RvrService {
 	public boolean F6RaidStart(int id) {
 		switch (id) {
 		case 5:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Archon's Weapon Invasion.
@@ -591,7 +591,7 @@ public class RvrService {
 	public boolean F6RaidStart5Minute(int id) {
 		switch (id) {
 		case 5:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Space has been distorted... You should look into that.

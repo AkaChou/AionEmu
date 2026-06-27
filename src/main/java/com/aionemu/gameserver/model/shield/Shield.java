@@ -59,7 +59,7 @@ public class Shield extends VisibleObject {
 	}
 
 	public void spawn() {
-		World w = World.getInstance();
+		World w = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		WorldPosition position = w.createPosition(template.getMap(), template.getCenter().getX(),
 				template.getCenter().getY(), template.getCenter().getZ(), (byte) 0, 0);
 		this.setPosition(position);

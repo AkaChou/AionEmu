@@ -76,7 +76,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendRvrGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -90,7 +90,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 	* Defender Elyos.
 	*/
 	private void announceGeneralMiltarDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodian Raiders have successfully eliminated General Miltar.
@@ -99,7 +99,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceGeneralKuparoDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodian Raiders have successfully eliminated General Kupiaro.
@@ -108,7 +108,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceGeneralLanstriDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodian Raiders have successfully eliminated General Lanstri.
@@ -121,7 +121,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 	* Defender Asmodians.
 	*/
 	private void announceGeneralMagkenDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Elyos Raiders have successfully eliminated General Magken.
@@ -130,7 +130,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceGeneralHarkDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Elyos Raiders have successfully eliminated General Hark.
@@ -139,7 +139,7 @@ public class Rvr_GeneralAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceGeneralTombolkDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Elyos Raiders have successfully eliminated General Tombolk.

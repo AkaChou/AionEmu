@@ -322,7 +322,7 @@ public class ItemService {
 	}
 
 	public static boolean dropItemToInventory(int playerObjectId, int itemId) {
-		return dropItemToInventory(World.getInstance().findPlayer(playerObjectId), itemId);
+		return dropItemToInventory(com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjectId), itemId);
 	}
 
 	public static boolean dropItemToInventory(Player player, int itemId) {

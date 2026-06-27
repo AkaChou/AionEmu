@@ -108,7 +108,7 @@ public class TreasureAbyssService {
 	 * Announce All
 	 */
 	private static void announceAll(final String msg) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendSys3Message(player, "\uE056", msg);

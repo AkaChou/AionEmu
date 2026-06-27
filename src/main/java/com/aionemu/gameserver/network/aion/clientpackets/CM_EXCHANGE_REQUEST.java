@@ -51,7 +51,7 @@ public class CM_EXCHANGE_REQUEST extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		final Player activePlayer = getConnection().getActivePlayer();
-		final Player targetPlayer = World.getInstance().findPlayer(targetObjectId);
+		final Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetObjectId);
 		if (targetPlayer == null) {
 			log.warn("CM_EXCHANGE_REQUEST null target from {} to {}", activePlayer.getObjectId(), targetObjectId);
 			return;

@@ -56,7 +56,7 @@ public class NpcShoutsService {
 	NpcShoutData shoutsCache = DataManager.NPC_SHOUT_DATA;
 
 	public NpcShoutsService() {
-		for (Npc npc : World.getInstance().getNpcs()) {
+		for (Npc npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 			final int npcId = npc.getNpcId();
 			final int worldId = npc.getSpawn().getWorldId();
 			final int objectId = npc.getObjectId();
@@ -78,7 +78,7 @@ public class NpcShoutsService {
 			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
-					AionObject npcObj = World.getInstance().findVisibleObject(objectId);
+					AionObject npcObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
 					if (npcObj != null && npcObj instanceof Npc) {
 						Npc npc2 = (Npc) npcObj;
 						// check if AI overrides

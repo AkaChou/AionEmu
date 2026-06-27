@@ -146,7 +146,7 @@ public class LegionCommand extends AdminCommand {
 			
 			PlayerDAO dao = null;
 			for(int memberId : members) {
-				Player pl = World.getInstance().findPlayer(memberId);
+				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
 				if(pl != null)
 					online.add(pl.getName()+" (lv"+pl.getLevel()+") classId "+pl.getPlayerClass().getClassId());
 				else {
@@ -170,7 +170,7 @@ public class LegionCommand extends AdminCommand {
 			if(!verifyLenght(player, 2, params)) //legion kick PLAYER
 				return;
 			
-			Player target = World.getInstance().findPlayer(Util.convertName(params[1]));
+			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[1]+" not exists.");
 				return;
@@ -192,7 +192,7 @@ public class LegionCommand extends AdminCommand {
 			if(legion == null)
 				return;
 			
-			Player target = World.getInstance().findPlayer(Util.convertName(params[2]));
+			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[2]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[2]+" not exists.");
 				return;
@@ -217,7 +217,7 @@ public class LegionCommand extends AdminCommand {
 			if(legion == null)
 				return;
 			
-			Player target = World.getInstance().findPlayer(Util.convertName(params[2]));
+			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[2]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[2]+" not exists.");
 				return;
@@ -231,7 +231,7 @@ public class LegionCommand extends AdminCommand {
 			List<Integer> members = legion.getLegionMembers();
 			Player bgplayer = null;
 			for(int memberId : members) {
-				Player pl = World.getInstance().findPlayer(memberId);
+				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
 				if(pl != null) {
 					if(pl.getLegionMember().getRank() == LegionRank.BRIGADE_GENERAL) {
 						bgplayer = pl;
@@ -258,7 +258,7 @@ public class LegionCommand extends AdminCommand {
 			if(!verifyLenght(player, 3, params)) //legion setrank PLAYER RANK
 				return;
 			
-			Player target = World.getInstance().findPlayer(Util.convertName(params[1]));
+			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[1]+" not exists.");
 				return;

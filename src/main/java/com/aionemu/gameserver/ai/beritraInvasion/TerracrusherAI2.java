@@ -51,7 +51,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 	}
 	
 	private void addGpPlayer() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -61,7 +61,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceEreshkigalDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Legion's magic weapon has been destroyed.
@@ -72,7 +72,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 	private void announceKilledEreshkigal() {
 		Npc npc = (Npc) getOwner();
 		final DescriptionId NameId = new DescriptionId(npc.getObjectTemplate().getNameId());
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player players) {
 				AionObject winner = getAggroList().getMostDamage();
@@ -86,7 +86,7 @@ public class TerracrusherAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateTerracrusherLanding() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {

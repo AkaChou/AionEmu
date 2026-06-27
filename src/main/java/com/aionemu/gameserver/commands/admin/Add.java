@@ -372,7 +372,7 @@ public class Add extends AdminCommand {
             }
             receiver = player;
         } catch (NumberFormatException e) {
-            receiver = World.getInstance().findPlayer(Util.convertName(params[0]));
+            receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 
             if (receiver == null) {
                 PacketSendUtility.sendMessage(player, "Could not find a player by that name.");

@@ -141,7 +141,7 @@ public class MoltenusService {
 	public boolean moltenusMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE005",
@@ -158,7 +158,7 @@ public class MoltenusService {
 		switch (id) {
 		case 4:
 		case 7:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Enraged Sulfur Guardian will appear in 10 minutes.
@@ -176,7 +176,7 @@ public class MoltenusService {
 		switch (id) {
 		case 5:
 		case 8:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Enraged Western Guardian will appear in 10 minutes.
@@ -194,7 +194,7 @@ public class MoltenusService {
 		switch (id) {
 		case 6:
 		case 9:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Enraged Eastern Guardian will appear in 10 minutes.

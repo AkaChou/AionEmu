@@ -86,7 +86,7 @@ public class Kisk extends SummonedObject<Player> {
 	public List<Player> getCurrentMemberList() {
 		List<Player> currentMemberList = new ArrayList<Player>();
 		for (int memberId : this.kiskMemberIds) {
-			Player member = World.getInstance().findPlayer(memberId);
+			Player member = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
 			if (member != null) {
 				currentMemberList.add(member);
 			}

@@ -178,7 +178,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 
 	protected void initSiegeBoss() {
 		SiegeNpc boss = null;
-		Collection<SiegeNpc> npcs = World.getInstance().getLocalSiegeNpcs(getSiegeLocationId());
+		Collection<SiegeNpc> npcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalSiegeNpcs(getSiegeLocationId());
 		for (SiegeNpc npc : npcs) {
 			if (npc.getObjectTemplate().getAbyssNpcType().equals(AbyssNpcType.BOSS)) {
 				if (boss != null) {

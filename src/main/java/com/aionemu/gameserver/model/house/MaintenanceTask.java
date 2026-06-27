@@ -163,7 +163,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			long impoundTime = 0;
 			int warnCount = 0;
 			PlayerCommonData pcd = null;
-			Player player = World.getInstance().findPlayer(house.getOwnerId());
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(house.getOwnerId());
 			if (player == null) {
 				pcd = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(house.getOwnerId());
 			} else {

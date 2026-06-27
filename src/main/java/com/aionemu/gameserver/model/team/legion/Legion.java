@@ -139,7 +139,7 @@ public class Legion {
 	public ArrayList<Player> getOnlineLegionMembers() {
 		ArrayList<Player> onlineLegionMembers = new ArrayList<Player>();
 		for (int legionMemberObjId : legionMembers) {
-			Player onlineLegionMember = World.getInstance().findPlayer(legionMemberObjId);
+			Player onlineLegionMember = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(legionMemberObjId);
 			if (onlineLegionMember != null) {
 				onlineLegionMembers.add(onlineLegionMember);
 			}

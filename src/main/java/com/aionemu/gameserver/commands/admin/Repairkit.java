@@ -107,7 +107,7 @@ public class Repairkit extends AdminCommand {
 
     private void wipeInventoryExceptEquiped(final Player admin, final String playerToWipe){
         Connection con = null;
-        Player checkPOnline = World.getInstance().findPlayer(playerToWipe);
+        Player checkPOnline = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerToWipe);
         if(checkPOnline != null){
             PacketSendUtility.sendMessage(admin, "You cannot proceed if the player is Online!");
             return;
@@ -147,7 +147,7 @@ public class Repairkit extends AdminCommand {
 
     private void removeItemByID(final Player admin, final String playerToRemoveFrom, final int itemID){
         Connection con = null;
-        Player checkPlayerOnline = World.getInstance().findPlayer(playerToRemoveFrom);
+        Player checkPlayerOnline = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerToRemoveFrom);
         if(checkPlayerOnline != null){
             PacketSendUtility.sendMessage(admin, "You can only remove items from Offline Player using this Command, If you want to remove item from Online Players, use '//remove'!!");
             return;
@@ -189,7 +189,7 @@ public class Repairkit extends AdminCommand {
 
     private void returnPlayer(final Player admin, final String playerToReturn, final String race){
         Connection con = null;
-        Player checkPlayerOnline = World.getInstance().findPlayer(Util.convertName(playerToReturn));
+        Player checkPlayerOnline = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(playerToReturn));
         if(checkPlayerOnline != null){
             PacketSendUtility.sendMessage(admin, "You cannot return a player while he's Online!");
             return;

@@ -108,7 +108,7 @@ public class AbyssRankUpdateService {
 	public void performUpdate() {
 		log.info("Abyss Rank: executing rank update");
 		long startTime = System.currentTimeMillis();
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AbyssPointsService.AbyssRankCheck(player);
@@ -132,7 +132,7 @@ public class AbyssRankUpdateService {
 	}
 
 	private void sendRewardWeekly() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				switch (player.getAbyssRank().getRank()) {
@@ -244,7 +244,7 @@ public class AbyssRankUpdateService {
 
 	protected void updateRankTo(AbyssRankEnum newRank, int playerId) {
 		// check if rank is changed for online players
-		Player onlinePlayer = World.getInstance().findPlayer(playerId);
+		Player onlinePlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (onlinePlayer != null) {
 			AbyssRank abyssRank = onlinePlayer.getAbyssRank();
 			AbyssRankEnum currentRank = abyssRank.getRank();
@@ -259,7 +259,7 @@ public class AbyssRankUpdateService {
 
 	protected void updateGpRankTo(AbyssRankEnum newRank, int playerId) {
 		// check if rankGp is changed for online players
-		Player onlinePlayer = World.getInstance().findPlayer(playerId);
+		Player onlinePlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (onlinePlayer != null) {
 			AbyssRank abyssRank = onlinePlayer.getAbyssRank();
 			AbyssRankEnum currentRank = abyssRank.getRank();

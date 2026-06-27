@@ -142,7 +142,7 @@ public class DuelService {
 	}
 
 	private void startDuelMsg(final Player player1, final Player player2) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player object) {
 				if (MathUtil.isInRange(player1, object, 100)) {
@@ -155,7 +155,7 @@ public class DuelService {
 	}
 
 	private void loseDuelMsg(final Player player1, final Player player2) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player object) {
 				if (MathUtil.isInRange(player1, object, 100)) {
@@ -168,7 +168,7 @@ public class DuelService {
 	}
 
 	private void drawDuelMsg(final Player player1, final Player player2) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player object) {
 				if (MathUtil.isInRange(player1, object, 100)) {
@@ -185,7 +185,7 @@ public class DuelService {
 			return;
 		}
 		int opponnentId = duels.get(player.getObjectId());
-		Player opponent = World.getInstance().findPlayer(opponnentId);
+		Player opponent = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(opponnentId);
 		if (opponent != null) {
 			opponent.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 			opponent.getController().cancelCurrentSkill();
@@ -217,7 +217,7 @@ public class DuelService {
 		player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 		player.getController().cancelCurrentSkill();
 		int opponnentId = duels.get(player.getObjectId());
-		Player opponent = World.getInstance().findPlayer(opponnentId);
+		Player opponent = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(opponnentId);
 		if (opponent != null) {
 			opponent.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 			opponent.getController().cancelCurrentSkill();

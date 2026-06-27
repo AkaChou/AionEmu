@@ -154,7 +154,7 @@ public class EventTemplate {
 			int spawnCount = 0;
 			for (SpawnMap map : spawns.getTemplates()) {
 				DataManager.SPAWNS_DATA2.addNewSpawnMap(map);
-				Collection<Integer> instanceIds = World.getInstance().getWorldMap(map.getMapId()).getAvailableInstanceIds();
+				Collection<Integer> instanceIds = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(map.getMapId()).getAvailableInstanceIds();
 				for (Integer instanceId : instanceIds) {
 					for (Spawn spawn : map.getSpawns()) {
 						spawn.setEventTemplate(this);
@@ -175,7 +175,7 @@ public class EventTemplate {
 			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							if (player.getCommonData().getLevel() >= inventoryDrop.getStartLevel()) {
@@ -190,7 +190,7 @@ public class EventTemplate {
 			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							int itemId = getInventoryDrop().getDropItem();

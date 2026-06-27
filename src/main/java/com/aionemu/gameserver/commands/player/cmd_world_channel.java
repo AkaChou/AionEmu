@@ -86,7 +86,7 @@ public class cmd_world_channel extends PlayerCommand {
 		final String sMessage = message.substring(0, CustomConfig.MAX_CHAT_TEXT_LENGHT > messageLenght ? messageLenght : CustomConfig.MAX_CHAT_TEXT_LENGHT);
 		if (player.isGM()) {
 
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 				@Override
 				public void visit(Player player) {
@@ -100,7 +100,7 @@ public class cmd_world_channel extends PlayerCommand {
 			}
 			else {
 				AbyssPointsService.addAp(player, -ap);
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 					@Override
 					public void visit(Player player) {

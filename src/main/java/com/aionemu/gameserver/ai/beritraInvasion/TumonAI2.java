@@ -201,7 +201,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 	
 	private void addGpPlayer() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -212,7 +212,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateTumonLanding1() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
@@ -226,7 +226,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void updateTumonLanding2() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
@@ -265,7 +265,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceTumonDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Devil Unit's Tumon has been destroyed.
@@ -275,7 +275,7 @@ public class TumonAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceRadeonDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Devil Unit's Raedon Beta has been destroyed.

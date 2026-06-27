@@ -55,7 +55,7 @@ public class BenoidAI2 extends AggressiveNpcAI2
 	}
 	
 	private void addGpPlayer() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -65,7 +65,7 @@ public class BenoidAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceBenoidDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Devil Unit's Benoid has been destroyed.
@@ -75,7 +75,7 @@ public class BenoidAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateBenoidLanding() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {

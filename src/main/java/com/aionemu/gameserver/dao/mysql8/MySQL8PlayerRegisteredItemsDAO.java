@@ -146,7 +146,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
     
     private HouseObject<?> constructObject(final HouseRegistry registry, House house, ResultSet rset) throws SQLException {
         int itemUniqueId = rset.getInt("item_unique_id");
-        VisibleObject visObj = World.getInstance().findVisibleObject(itemUniqueId);
+        VisibleObject visObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(itemUniqueId);
         HouseObject<?> obj = null;
         
         if (visObj != null) {

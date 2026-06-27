@@ -64,7 +64,7 @@ public class ShutdownHook extends Thread {
 
 	private void sendShutdownMessage(int seconds) {
 		try {
-			Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
+			Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			if (!onlinePlayers.hasNext()) {
 				return;
 			}
@@ -82,13 +82,13 @@ public class ShutdownHook extends Thread {
 	private void sendShutdownStatus(boolean status) {
 		if (ShutdownConfig.DESPAWN_NPCS) {
 			if (status) {
-				for (Npc npc : World.getInstance().getNpcs()) {
+				for (Npc npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 					npc.getController().onDelete();
 				}
 			}
 		}
 		try {
-			Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
+			Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			if (!onlinePlayers.hasNext()) {
 				return;
 			}
@@ -113,7 +113,7 @@ public class ShutdownHook extends Thread {
 		
 		for (int i = delay; i >= announceInterval; i -= announceInterval) {
 			try {
-				if (World.getInstance().getPlayersIterator().hasNext()) {
+				if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator().hasNext()) {
 					log.info("Runtime is " + mode.getText() + " in " + i + " seconds.");
 					sendShutdownMessage(i);
 					sendShutdownStatus(ShutdownConfig.SAFE_REBOOT);
@@ -168,7 +168,7 @@ public class ShutdownHook extends Thread {
 		}
 
 		List<Player> playersToDisconnect = new ArrayList<>();
-		Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
+		Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (onlinePlayers.hasNext()) {
 			playersToDisconnect.add(onlinePlayers.next());
 		}

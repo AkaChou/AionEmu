@@ -56,7 +56,7 @@ public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(Spirit_Of_MirenAI2.this);
@@ -69,7 +69,7 @@ public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceSpiritOfMiren() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Miren Guardian Appears.
@@ -81,7 +81,7 @@ public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		updateMirenLanding();
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Berserker Soul has been slain.
@@ -93,7 +93,7 @@ public class Spirit_Of_MirenAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateMirenLanding() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {

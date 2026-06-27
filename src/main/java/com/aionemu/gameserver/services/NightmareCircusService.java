@@ -139,7 +139,7 @@ public class NightmareCircusService {
 	public boolean dreamFaerieMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE09B", "<Nightmare Circus> is now open !!!");

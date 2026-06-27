@@ -49,7 +49,7 @@ public class DelSkill extends AdminCommand {
 		recipient = Util.convertName(params[0]);
 		int skillId = 0;
 		if (params.length == 2) {
-			player = World.getInstance().findPlayer(recipient);
+			player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipient);
 			if (player == null) {
 				PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 				return;

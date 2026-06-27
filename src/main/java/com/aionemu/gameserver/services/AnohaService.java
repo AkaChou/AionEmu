@@ -156,7 +156,7 @@ public class AnohaService {
 	public boolean berserkAnohaMsg1(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Named_Spawn_System, 0); // Berserk Anoha will return to Kaldor in 30 minutes.
@@ -171,7 +171,7 @@ public class AnohaService {
 	public boolean wealhtheowGuardianMsg1(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_01, 0); // Enraged Wealhtheow Guardian will appear in 5 minutes.
@@ -186,7 +186,7 @@ public class AnohaService {
 	public boolean wealhtheowGuardianMsg2(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_02, 0); // Enraged Wealhtheow Guardian will appear in 3 minutes.
@@ -201,7 +201,7 @@ public class AnohaService {
 	public boolean wealhtheowGuardianMsg3(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_03, 0); // Enraged Wealhtheow Guardian will appear in 1 minute.

@@ -48,7 +48,7 @@ public class CM_SILENCE_REPORT extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player activePlayer = getConnection().getActivePlayer();
-		final Player targetPlayer = World.getInstance().findPlayer(targetName);
+		final Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
 		if (targetPlayer == null || targetPlayer.isGM()) {
 			PacketSendUtility.sendPacket(activePlayer,
 					new SM_QUESTION_WINDOW(SM_QUESTION_WINDOW.STR_MSG_REPORT_CHAT_CANT_NO_ENTER, 0, 0, 0));

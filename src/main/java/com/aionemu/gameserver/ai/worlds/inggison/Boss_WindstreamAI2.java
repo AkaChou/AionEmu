@@ -131,7 +131,7 @@ public class Boss_WindstreamAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceWindBox() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_JUMP_TRIGGER_ON_INFO);

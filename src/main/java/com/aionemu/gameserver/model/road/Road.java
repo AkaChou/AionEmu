@@ -41,7 +41,7 @@ public class Road extends VisibleObject {
 
 	public Road(RoadTemplate template) {
 		super(GameWorldBootstrapServices.idFactory().nextId(), new RoadController(), null, null,
-				World.getInstance().createPosition(template.getMap(), template.getCenter().getX(),
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(template.getMap(), template.getCenter().getX(),
 						template.getCenter().getY(), template.getCenter().getZ(), (byte) 0, 0));
 
 		((RoadController) getController()).setOwner(this);
@@ -69,7 +69,7 @@ public class Road extends VisibleObject {
 	}
 
 	public void spawn() {
-		World w = World.getInstance();
+		World w = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		w.storeObject(this);
 		w.spawn(this);
 	}

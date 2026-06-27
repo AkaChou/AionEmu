@@ -58,7 +58,7 @@ public class CM_BLOCK_ADD extends AionClientPacket {
 
 		Player activePlayer = getConnection().getActivePlayer();
 
-		Player targetPlayer = World.getInstance().findPlayer(targetName);
+		Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
 
 		// Trying to block self
 		if (activePlayer.getName().equalsIgnoreCase(targetName)) {

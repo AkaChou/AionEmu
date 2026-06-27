@@ -71,7 +71,7 @@ public class Anoha_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceBerserkAnoha30Min() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Berserk Anoha will return to Kaldor in 30 minutes.
@@ -81,7 +81,7 @@ public class Anoha_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceReleaseAnoha() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Release Anoha.

@@ -81,7 +81,7 @@ public class Krotan_Crystal_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceSpiritOfKrotanAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Krotan Protector Spirit will appear after 5 minutes.
@@ -95,7 +95,7 @@ public class Krotan_Crystal_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceSpiritOfKrotan30Min() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Spirit of Krotan will be summoned from Krotan's Crystal Sword in 30 minutes.

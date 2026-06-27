@@ -96,7 +96,7 @@ public class DropService {
 				DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcUniqueId);
 				if (dropNpc != null) {
 					dropRegistrationService().getDropRegistrationMap().get(npcUniqueId).startFreeForAll();
-					VisibleObject npc = World.getInstance().findVisibleObject(npcUniqueId);
+					VisibleObject npc = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcUniqueId);
 					if (npc != null && npc.isSpawned()) {
 						PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcUniqueId, 0));
 					}
@@ -147,7 +147,7 @@ public class DropService {
 			return;
 		}
 		dropNpc.setBeingLooted(player);
-		VisibleObject visObj = World.getInstance().findVisibleObject(npcId);
+		VisibleObject visObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
 		if (visObj instanceof Npc) {
 			Npc npc = ((Npc) visObj);
 			ScheduledFuture<?> decayTask = (ScheduledFuture<?>) npc.getController().cancelTask(TaskId.DECAY);
@@ -194,7 +194,7 @@ public class DropService {
 		Set<DropItem> dropItems = dropRegistrationService().getCurrentDropMap().get(npcId);
 		dropNpc.setBeingLooted(null);
 
-		Npc npc = (Npc) World.getInstance().findVisibleObject(npcId);
+		Npc npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
 		if (npc != null) {
 			if (dropItems == null || dropItems.isEmpty()) {
 				npc.getController().onDelete();
@@ -259,7 +259,7 @@ public class DropService {
 				if (lootGrouRules.getItemsToBeDistributed().isEmpty() || containDropItem) {
 					dropNpc.setCurrentIndex(requestedItem.getIndex());
 					for (Player member : dropNpc.getInRangePlayers()) {
-						Player finalPlayer = World.getInstance().findPlayer(member.getObjectId());
+						Player finalPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(member.getObjectId());
 						if (finalPlayer != null && finalPlayer.isOnline()) {
 							dropNpc.addPlayerStatus(finalPlayer);
 							finalPlayer.setPlayerMode(PlayerMode.IN_ROLL,
@@ -316,7 +316,7 @@ public class DropService {
 		if ((distId > 1) && (lootGroupRules.getQualityRule(quality))) {
 			boolean anyOnline = false;
 			for (Player member : dropNpc.getInRangePlayers()) {
-				Player finalPlayer = World.getInstance().findPlayer(member.getObjectId());
+				Player finalPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(member.getObjectId());
 				if ((finalPlayer != null) && (finalPlayer.isOnline())) {
 					anyOnline = true;
 					break;
@@ -407,7 +407,7 @@ public class DropService {
 				requestedItem.setCount(currentDropItemCount);
 			}
 			if (dropItems.size() == 0) {
-				Npc npc = (Npc) World.getInstance().findVisibleObject(npcId);
+				Npc npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
 				if (npc != null) {
 					npc.getController().onDelete();
 				}
@@ -488,7 +488,7 @@ public class DropService {
 	}
 
 	private void resendDropList(Player player, int npcId, Set<DropItem> dropItems) {
-		Npc npc = (Npc) World.getInstance().findVisibleObject(npcId);
+		Npc npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
 		if (dropItems.size() != 0) {
 			if (player != null) {
 				PacketSendUtility.sendPacket(player, new SM_LOOT_ITEMLIST(npcId, dropItems, player));
@@ -600,7 +600,7 @@ public class DropService {
 				final int pRaceId = player.getRace().getRaceId();
 				final int pMapId = player.getWorldId();
 				final int pInstance = player.isInInstance() ? player.getInstanceId() : 0;
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player other) {
 						int oObjectId = other.getObjectId();

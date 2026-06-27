@@ -102,7 +102,7 @@ public class RespawnService {
 
 		@Override
 		public void run() {
-			VisibleObject visibleObject = World.getInstance().findVisibleObject(npcId);
+			VisibleObject visibleObject = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
 			if (visibleObject != null) {
 				visibleObject.getController().onDelete();
 			}

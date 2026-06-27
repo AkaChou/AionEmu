@@ -75,7 +75,7 @@ public class PortalAI2 extends ActionItemNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(PortalAI2.this);

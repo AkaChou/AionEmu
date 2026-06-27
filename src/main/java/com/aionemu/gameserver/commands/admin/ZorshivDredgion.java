@@ -59,7 +59,7 @@ public class ZorshivDredgion extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " started!");
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys3Message(player, "\uE050", "The <Zorshiv Dredgion> to lands at levinshor !!!");

@@ -69,7 +69,7 @@ public class Stolen_Light_Of_RedemptionAI2 extends NpcAI2
 	}
 	
 	private void updateRedemptionLanding1() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
@@ -83,7 +83,7 @@ public class Stolen_Light_Of_RedemptionAI2 extends NpcAI2
 		});
 	}
 	private void updateRedemptionLanding2() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
@@ -97,7 +97,7 @@ public class Stolen_Light_Of_RedemptionAI2 extends NpcAI2
 		});
 	}
 	private void updateRedemptionLanding3() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
@@ -111,7 +111,7 @@ public class Stolen_Light_Of_RedemptionAI2 extends NpcAI2
 		});
 	}
 	private void updateRedemptionLanding4() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {

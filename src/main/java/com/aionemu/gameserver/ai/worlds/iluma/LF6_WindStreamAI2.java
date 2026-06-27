@@ -68,7 +68,7 @@ public class LF6_WindStreamAI2 extends NpcAI2
     }
 	
 	private void announceWindPathInvasion() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The wind road will disappear in 1 minute. You need to exit the wind road.

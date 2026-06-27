@@ -236,7 +236,7 @@ public class ChallengeTaskService {
 			if (task.isCompleted()) {
 				TreeMap<Integer, List<Integer>> winnersByPoints = new TreeMap<Integer, List<Integer>>();
 				for (Integer memberObjId : player.getLegion().getLegionMembers()) {
-					Player member = World.getInstance().findPlayer(memberObjId);
+					Player member = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberObjId);
 					if (member != null) {
 						int score = member.getLegionMember().getChallengeScore();
 						if (winnersByPoints.get(score) == null) {

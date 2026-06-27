@@ -126,7 +126,7 @@ public class SurveyService {
 		}
 		log.info("[SurveyController] found new " + cnt + " items for " + players.size() + " players.");
 		for (int ownerId : players) {
-			Player player = World.getInstance().findPlayer(ownerId);
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(ownerId);
 			if (player != null) {
 				showAvailable(player);
 			}

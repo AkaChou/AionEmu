@@ -65,7 +65,7 @@ public class DebugService {
 	private void analyzeWorldPlayers() {
 		log.info("Starting analysis of world players at " + System.currentTimeMillis());
 
-		Iterator<Player> playersIterator = World.getInstance().getPlayersIterator();
+		Iterator<Player> playersIterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (playersIterator.hasNext()) {
 			Player player = playersIterator.next();
 

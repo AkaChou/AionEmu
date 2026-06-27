@@ -189,7 +189,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
                 modorNpc();
-				World.getInstance().updatePosition(getOwner(), 284, 262, 249, (byte) 63);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 284, 262, 249, (byte) 63);
 				PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 		    }
 		}, 2000);
@@ -212,7 +212,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
                     }
                 };
                 float pos[] = pos1[Rnd.get(0, 2)];
-                World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+                com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
@@ -225,7 +225,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc();
-				World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
 				PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 			}
 		}, 2000);
@@ -240,7 +240,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 				GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					public void run() {
-				        World.getInstance().updatePosition(getOwner(), 232, 263, 249, (byte) 115);
+				        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 232, 263, 249, (byte) 115);
 				        PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 					}
 				}, 2000);
@@ -254,7 +254,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc();
-				World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
 				PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 			}
 		}, 2000);
@@ -277,7 +277,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
                     }
                 };
                 float pos[] = pos1[Rnd.get(0, 2)];
-                World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+                com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
@@ -289,7 +289,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc2();
-				World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
 				PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 			}
 		}, 2000);
@@ -312,7 +312,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
                     }
                 };
                 float pos[] = pos1[Rnd.get(0, 2)];
-                World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+                com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
@@ -324,7 +324,7 @@ public class Enraged_Queen_ModorAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc2();
-				World.getInstance().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256, 258, 242, (byte) 10);
 				PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 			}
 		}, 2000);

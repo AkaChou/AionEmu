@@ -267,7 +267,7 @@ public class PlayerService {
 			Account account) {
 		PlayerInitialData playerInitialData = DataManager.PLAYER_INITIAL_DATA;
 		LocationData ld = playerInitialData.getSpawnLocation(playerCommonData.getRace());
-		WorldPosition position = World.getInstance().createPosition(ld.getMapId(), ld.getX(), ld.getY(), ld.getZ(),
+		WorldPosition position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(ld.getMapId(), ld.getX(), ld.getY(), ld.getZ(),
 				ld.getHeading(), 0);
 		playerCommonData.setPosition(position);
 		Player newPlayer = new Player(new PlayerController(), playerCommonData, playerAppearance, account);
@@ -391,7 +391,7 @@ public class PlayerService {
 		}
 		final Map<Integer, String> result = Maps.newHashMap();
 		final Set<Integer> playerObjIdsCopy = Sets.newHashSet(playerObjIds);
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player object) {
 				if (playerObjIdsCopy.contains(object.getObjectId())) {

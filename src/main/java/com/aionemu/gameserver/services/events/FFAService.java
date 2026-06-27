@@ -291,7 +291,7 @@ public class FFAService {
 				if ((incrementCounter % 900) == 0) {
 					final int players = activeInstance.getPlayersInside().size();
 					if (players > 0) {
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player pl) {
 								if (!isInArena(pl) && pl.getBattleground() == null) {
@@ -306,7 +306,7 @@ public class FFAService {
 				}
 				if ((incrementCounter % 3600) == 0) {
 					incrementCounter = 0;
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player pl) {
 							if (!isInArena(pl) && pl.getBattleground() == null) {
@@ -349,7 +349,7 @@ public class FFAService {
 	}
 
 	private WorldMap getWorldMap() {
-		return World.getInstance().getWorldMap(activeMap.getMapId());
+		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(activeMap.getMapId());
 	}
 
 	private void announcePlayerCount() {

@@ -69,7 +69,7 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 	}
 	
 	private void announce1StDefense() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//As the shields fell, the 1st Defense Line was breached and overrun.
@@ -80,7 +80,7 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 		});
 	}
 	private void announce2NdDefense() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//As the shields fell, the 2nd Defense Line was breached and overrun.
@@ -91,7 +91,7 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 		});
 	}
 	private void announce3RdDefense() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//As the shields fell, the 3rd Defense Line was breached and overrun.
@@ -102,7 +102,7 @@ public class Elyos_Elite_Combat_MageAI2 extends NpcAI2
 		});
 	}
 	private void announce4ThDefense() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//As the shields fell, the 4th Defense Line was breached and overrun.

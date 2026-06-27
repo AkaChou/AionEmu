@@ -50,7 +50,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendAdventurersBase2() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (player.isInGroup2() && MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -60,7 +60,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void addGpPlayer() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (player.isInGroup2() && MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -166,7 +166,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV01() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v01);
@@ -175,7 +175,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV02() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v02);
@@ -184,7 +184,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV03() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v03);
@@ -193,7 +193,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV04() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v04);
@@ -202,7 +202,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV05() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v05);
@@ -211,7 +211,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV06() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v06);
@@ -220,7 +220,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV07() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v07);
@@ -229,7 +229,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV08() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v08);
@@ -238,7 +238,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV09() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v09);
@@ -247,7 +247,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV10() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v10);
@@ -256,7 +256,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV11() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v11);
@@ -265,7 +265,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV12() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v12);
@@ -274,7 +274,7 @@ public class LDF4_Advance_ChiefAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceBattleV13() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_chief_v13);

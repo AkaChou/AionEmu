@@ -53,7 +53,7 @@ public class DoubleBoostEffect extends EffectTemplate {
 		final Player effector = (Player) effect.getEffector();
 		PacketSendUtility.sendPacket(effector, new SM_TARGET_UPDATE(effector));
 		Skill skill = effect.getSkill();
-		World.getInstance().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
 	}
 
 	@Override

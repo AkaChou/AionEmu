@@ -61,7 +61,7 @@ public class MessagerAddition {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player sender) {
 							PacketSendUtility.sendBrightYellowMessageOnCenter(sender, msg);
@@ -71,7 +71,7 @@ public class MessagerAddition {
 				}
 			}, delay);
 		} else {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player sender) {
 					PacketSendUtility.sendBrightYellowMessageOnCenter(sender, msg);
@@ -86,7 +86,7 @@ public class MessagerAddition {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player sender) {
 							PacketSendUtility.sendMessage(sender, msg);
@@ -96,7 +96,7 @@ public class MessagerAddition {
 				}
 			}, delay);
 		} else {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player sender) {
 					PacketSendUtility.sendMessage(sender, msg);
@@ -111,7 +111,7 @@ public class MessagerAddition {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player sender) {
 							PacketSendUtility.sendWhiteMessage(sender, msg);
@@ -121,7 +121,7 @@ public class MessagerAddition {
 				}
 			}, delay);
 		} else {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player sender) {
 					PacketSendUtility.sendWhiteMessage(sender, msg);
@@ -136,7 +136,7 @@ public class MessagerAddition {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player sender) {
 							PacketSendUtility.sendWhiteMessageOnCenter(sender, msg);
@@ -146,7 +146,7 @@ public class MessagerAddition {
 				}
 			}, delay);
 		} else {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player sender) {
 					PacketSendUtility.sendWhiteMessageOnCenter(sender, msg);
@@ -161,7 +161,7 @@ public class MessagerAddition {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player sender) {
 							PacketSendUtility.sendYellowMessage(sender, msg);
@@ -171,7 +171,7 @@ public class MessagerAddition {
 				}
 			}, delay);
 		} else {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player sender) {
 					PacketSendUtility.sendYellowMessage(sender, msg);
@@ -186,7 +186,7 @@ public class MessagerAddition {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player sender) {
 							PacketSendUtility.sendYellowMessageOnCenter(sender, msg);
@@ -196,7 +196,7 @@ public class MessagerAddition {
 				}
 			}, delay);
 		} else {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player sender) {
 					PacketSendUtility.sendYellowMessageOnCenter(sender, msg);
@@ -207,7 +207,7 @@ public class MessagerAddition {
 	}
 
 	public static void global(final String msg) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player sender) {
 				PacketSendUtility.sendBrightYellowMessageOnCenter(sender, "[Global]:" + msg);
@@ -217,7 +217,7 @@ public class MessagerAddition {
 	}
 
 	public static void attention(final String msg) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player sender) {
 				PacketSendUtility.sendBrightYellowMessageOnCenter(sender, "[Attention]:" + msg);

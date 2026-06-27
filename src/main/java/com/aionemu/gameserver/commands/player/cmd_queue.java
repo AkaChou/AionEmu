@@ -43,7 +43,7 @@ public class cmd_queue extends PlayerCommand {
             PacketSendUtility.sendMessage(player, "You cant register inside Prison!");
             return;
         }
-        Iterator<Player> ita = World.getInstance().getPlayersIterator();
+        Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
         while(ita.hasNext()){
             Player player1 = ita.next();
@@ -82,7 +82,7 @@ public class cmd_queue extends PlayerCommand {
 
     private int checkRegedPlayers(){
         int count = 0;
-        Collection<Player> players = World.getInstance().getAllPlayers();
+        Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
         for(Player p : players){
             if(p.isRegedEvent()){
                 count = count + 1;

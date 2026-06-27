@@ -127,7 +127,7 @@ public class EnragedGuardianGeneralAI2 extends AggressiveNpcAI2
 	}
 	
 	private void killedTheGuardianGeneral() {
-        World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Loading the Advance Corridor Shield... Please wait.

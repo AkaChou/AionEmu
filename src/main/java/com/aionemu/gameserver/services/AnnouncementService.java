@@ -101,7 +101,7 @@ public class AnnouncementService {
 
 				@Override
 				public void run() {
-					final Iterator<Player> iter = World.getInstance().getPlayersIterator();
+					final Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 					while (iter.hasNext()) {
 						Player player = iter.next();
 

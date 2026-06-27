@@ -52,7 +52,7 @@ public class CM_LS_CONTROL_RESPONSE extends LsClientPacket {
 
 	@Override
 	public void runImpl() {
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		Player admin = world.findPlayer(Util.convertName(adminName));
 		Player player = world.findPlayer(Util.convertName(playerName));
 		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().accountUpdate(accountId, param, type);

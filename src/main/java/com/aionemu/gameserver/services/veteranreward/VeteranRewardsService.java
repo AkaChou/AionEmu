@@ -189,7 +189,7 @@ public class VeteranRewardsService {
 		if (recipientType == RecipientType.PLAYER) {
 			SendVeteranRewardMail(Sender, recipient, Title, Message, item, count, kinah, mailtype);
 		} else {
-			for (Player player : World.getInstance().getAllPlayers()) {
+			for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 				if (recipientType.isAllowed(player.getCommonData().getRace())) {
 					SendVeteranRewardMail(Sender, player.getName(), Title, Message, item, count, kinah, mailtype);
 				}
@@ -258,7 +258,7 @@ public class VeteranRewardsService {
 			return;
 		}
 
-		Player onlineRecipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+		Player onlineRecipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 
 		if (recipientCommonData.isOnline()) {
 			if (!onlineRecipient.getMailbox().haveFreeSlots()) {

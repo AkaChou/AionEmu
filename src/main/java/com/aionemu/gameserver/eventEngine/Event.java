@@ -109,7 +109,7 @@ public abstract class Event implements Runnable {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player pl) {
 							if (pl.getBattleground() == null) {
@@ -120,7 +120,7 @@ public abstract class Event implements Runnable {
 				}
 			}, delay);
 		} else {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player pl) {
 					if (pl.getBattleground() == null) {

@@ -123,7 +123,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	public Integer getWinnerLegionId() {
 		Map<Player, AtomicLong> teamDamageMap = new HashMap<Player, AtomicLong>();
 		for (Integer id : playerDamageCounter.keySet()) {
-			Player player = World.getInstance().findPlayer(id);
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(id);
 			if (player != null && player.getCurrentTeam() != null) {
 				Player teamLeader = player.getCurrentTeam().getLeaderObject();
 				long damage = playerDamageCounter.get(id).get();

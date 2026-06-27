@@ -65,7 +65,7 @@ public class RenameService {
 			DAOManager.getDAO(OldNamesDAO.class).insertNames(player.getObjectId(), player.getName(), newName);
 			player.getCommonData().setName(newName);
 		}
-		Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
+		Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (onlinePlayers.hasNext()) {
 			Player p = onlinePlayers.next();
 			if (p != null && p.getClientConnection() != null) {

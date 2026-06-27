@@ -192,7 +192,7 @@ public class ReloadSpawn extends AdminCommand
 		final Player adm = admin;
 		final String dest = destinationMap;
 		if (IdWorld != 0) {
-			World.getInstance().doOnAllObjects(new Visitor<VisibleObject>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(new Visitor<VisibleObject>() {
 				@Override
 				public void visit(VisibleObject object) {
 					if (object.getWorldId() != IdWorld) {

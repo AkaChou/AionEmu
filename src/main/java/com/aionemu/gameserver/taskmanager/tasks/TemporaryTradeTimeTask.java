@@ -103,7 +103,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 				int time = (item.getTemporaryExchangeTime() - (int) (System.currentTimeMillis() / 1000));
 				if (time == 60) {
 					for (int playerId : entry.getValue()) {
-						Player player = World.getInstance().findPlayer(playerId);
+						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 						if (player != null) {
 							PacketSendUtility.sendPacket(player,
 									SM_SYSTEM_MESSAGE.STR_MSG_END_OF_EXCHANGE_TIME(item.getNameId(), time));
@@ -111,7 +111,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 					}
 				} else if (time <= 0) {
 					for (int playerId : entry.getValue()) {
-						Player player = World.getInstance().findPlayer(playerId);
+						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 						if (player != null) {
 							PacketSendUtility.sendPacket(player,
 									SM_SYSTEM_MESSAGE.STR_MSG_EXCHANGE_TIME_OVER(item.getNameId()));

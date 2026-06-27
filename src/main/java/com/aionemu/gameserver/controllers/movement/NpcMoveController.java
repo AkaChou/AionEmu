@@ -356,7 +356,7 @@ public class NpcMoveController
         if (((Npc)this.owner).getAi2().isLogging()) {
             AI2Logger.moveinfo((Creature)this.owner, "newX=" + newX + " newY=" + newY + " newZ=" + newZ + " mask=" + this.movementMask);
         }
-        World.getInstance().updatePosition(this.owner, newX, newY, newZ, this.heading, false);
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(this.owner, newX, newY, newZ, this.heading, false);
         byte newMask = this.getMoveMask(directionChanged);
         if (this.movementMask != newMask) {
             if (((Npc)this.owner).getAi2().isLogging()) {

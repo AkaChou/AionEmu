@@ -89,7 +89,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 			case 1131: // Siel's Western Fortress.
 				GameFeatureServices.baseService().capture(108, Race.NPC);
 				GameFeatureServices.baseService().capture(109, Race.NPC);
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// The Gold Sand Negotiation Team is under attack by the Balaur.
@@ -114,7 +114,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1132: // Siel's Eastern Fortress.
 				GameFeatureServices.baseService().capture(110, Race.NPC);
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// The Balaur have taken control of the Sasming at Siel's Right Wing.
@@ -133,7 +133,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 				GameFeatureServices.baseService().capture(105, Race.NPC);
 				GameFeatureServices.baseService().capture(106, Race.NPC);
 				GameFeatureServices.baseService().capture(107, Race.NPC);
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// The Balaur have taken control of the Oharung at the Sulfur Tree Archipelago.
@@ -161,7 +161,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else if (getSiegeLocation().getLocationId() == 10111) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 10111:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// The Temple Gate will open in 5 minutes.
@@ -270,7 +270,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 						GameFeatureServices.baseService().capture(108, Race.ASMODIANS);
 						// Bomishung At Siel's Left Wing.
 						GameFeatureServices.baseService().capture(109, Race.ASMODIANS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
@@ -285,7 +285,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 						GameFeatureServices.baseService().capture(108, Race.ELYOS);
 						// Bomishung At Siel's Left Wing.
 						GameFeatureServices.baseService().capture(109, Race.ELYOS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
@@ -301,7 +301,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// Sasming At Siel's Right Wing.
 						GameFeatureServices.baseService().capture(110, Race.ASMODIANS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
@@ -314,7 +314,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// Sasming At Siel's Right Wing.
 						GameFeatureServices.baseService().capture(110, Race.ELYOS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
@@ -334,7 +334,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 						GameFeatureServices.baseService().capture(106, Race.ASMODIANS);
 						// Temirun At Leibo Island.
 						GameFeatureServices.baseService().capture(107, Race.ASMODIANS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Asmodians have arrived at the Sulfur
@@ -351,7 +351,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 						GameFeatureServices.baseService().capture(106, Race.ELYOS);
 						// Temirun At Leibo Island.
 						GameFeatureServices.baseService().capture(107, Race.ELYOS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Elyos have arrived at the Sulfur
@@ -500,7 +500,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 			getSiegeLocation().setLegionId(topLegionId != null ? topLegionId : 0);
 			getArtifact().setLegionId(topLegionId != null ? topLegionId : 0);
 		}
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Buff for Both Race.

@@ -55,7 +55,7 @@ public class Announce extends AdminCommand {
 		// Add the last without the end space
 		message += params[params.length - 1];
 
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
 		while (iter.hasNext()) {
 			PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), message);

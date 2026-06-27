@@ -113,7 +113,7 @@ public abstract class PlayableMoveController<T extends Creature> extends Creatur
 		 * targetDestY = newY + vectorY; targetDestZ = newZ + vectorZ; }
 		 */
 
-		World.getInstance().updatePosition(owner, newX, newY, newZ, heading, false);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, newX, newY, newZ, heading, false);
 		updateLastMove();
 	}
 

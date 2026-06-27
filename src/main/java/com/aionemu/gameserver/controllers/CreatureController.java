@@ -366,7 +366,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 */
 	public void stopMoving() {
 		Creature owner = getOwner();
-		World.getInstance().updatePosition(owner, owner.getX(), owner.getY(), owner.getZ(), owner.getHeading());
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, owner.getX(), owner.getY(), owner.getZ(), owner.getHeading());
 		PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner));
 	}
 

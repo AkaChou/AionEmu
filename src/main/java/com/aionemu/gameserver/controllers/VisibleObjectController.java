@@ -38,9 +38,9 @@ public abstract class VisibleObjectController<T extends VisibleObject> {
 
 	public void delete() {
 		if (getOwner().isSpawned()) {
-			World.getInstance().despawn(getOwner());
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(getOwner());
 		}
-		World.getInstance().removeObject(getOwner());
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().removeObject(getOwner());
 	}
 
 	public void onBeforeSpawn() {

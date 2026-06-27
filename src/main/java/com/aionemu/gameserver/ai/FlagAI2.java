@@ -38,7 +38,7 @@ public class FlagAI2 extends NoActionAI2
     @Override
     public void handleSpawned() {
         super.handleSpawned();
-        World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
             @Override
             public void visit(final Player player) {
                 sendPacketTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
@@ -58,7 +58,7 @@ public class FlagAI2 extends NoActionAI2
     @Override
     protected void handleDespawned() {
         super.handleDespawned();
-        World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
             @Override
             public void visit(final Player player) {
                 sendPacketTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {

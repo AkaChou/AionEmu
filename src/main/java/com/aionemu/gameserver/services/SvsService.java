@@ -146,7 +146,7 @@ public class SvsService {
 	public boolean advanceCorridorCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Advance Corridor to a Rift Portal battle has appeared.
@@ -177,7 +177,7 @@ public class SvsService {
 	public boolean distinguishedServiceMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Distinguished Service Siege Portal leading to Panesterra opened.
@@ -207,7 +207,7 @@ public class SvsService {
 	public boolean transidiumAnnexMsg(int id) {
 		switch (id) {
 		case 5:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Loading the Advance Corridor Shield... Please wait.

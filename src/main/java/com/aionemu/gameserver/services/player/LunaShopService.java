@@ -181,7 +181,7 @@ public class LunaShopService {
 	}
 
 	private void updateSpecialCraft() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(2, 0, SpecialCraft));
@@ -190,7 +190,7 @@ public class LunaShopService {
 	}
 
 	private void updateFreeLuna() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
 			public void visit(Player player) {
@@ -227,7 +227,7 @@ public class LunaShopService {
 	}
 
 	private void updateDailyCraft() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(DailyCraft));

@@ -101,7 +101,7 @@ public class CM_MOVE extends AionClientPacket {
 		if (player.getAdminTeleportation() && ((type & MovementMask.STARTMOVE) == MovementMask.STARTMOVE)
 				&& ((type & MovementMask.MOUSE) == MovementMask.MOUSE)) {
 			m.setNewDirection(x2, y2, z2);
-			World.getInstance().updatePosition(player, x2, y2, z2, heading);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(player, x2, y2, z2, heading);
 			PacketSendUtility.broadcastPacketAndReceive(player, new SM_MOVE(player));
 		}
 		float speed = player.getGameStats().getMovementSpeedFloat();
@@ -143,7 +143,7 @@ public class CM_MOVE extends AionClientPacket {
 			return;
 		}
 
-		World.getInstance().updatePosition(player, x, y, z, heading);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(player, x, y, z, heading);
 		m.updateLastMove();
 		if (player.isInGroup2() || player.isInAlliance2()) {
 			GameTaskManagerServices.teamMoveUpdater().startTask(player);

@@ -24,7 +24,7 @@ public class Cooldown extends AdminCommand {
         
         if (params.length > 0) {
             String targetName = params[0];
-            target = World.getInstance().findPlayer(targetName);
+            target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
             
             if (target == null) {
                 PacketSendUtility.sendMessage(admin, "Player " + targetName + " not found online.");

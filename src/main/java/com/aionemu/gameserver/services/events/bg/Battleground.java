@@ -195,7 +195,7 @@ public abstract class Battleground {
 		int playerIndex = 0;
 		while (players.size() > 0) {
 			int objId = players.remove(0);
-			Player pl = World.getInstance().findPlayer(objId);
+			Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 			if (pl == null) {
 				continue;
 			}
@@ -222,7 +222,7 @@ public abstract class Battleground {
 			List<Player> groupPlayers = new ArrayList<Player>();
 			while (groupPlayers.size() < groupSize && players.size() > 0) {
 				int objId = players.remove(0);
-				Player pl = World.getInstance().findPlayer(objId);
+				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 				if (pl != null) {
 					removePlayerFromTeam(pl);
 					groupPlayers.add(pl);
@@ -254,7 +254,7 @@ public abstract class Battleground {
 			List<Player> alliancePlayers = new ArrayList<Player>();
 			while (alliancePlayers.size() < allianceSize && players.size() > 0) {
 				int objId = players.remove(0);
-				Player pl = World.getInstance().findPlayer(objId);
+				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 				if (pl != null) {
 					alliancePlayers.add(pl);
 					pl.setBattleground(this);

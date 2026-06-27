@@ -61,18 +61,20 @@ class GameWorldBootstrapRuntimeBridgeTest {
         IDFactory idFactory = instance(IDFactory.class);
         ZoneService zoneService = instance(ZoneService.class);
         HotspotTeleportService hotspotTeleportService = instance(HotspotTeleportService.class);
+        World world = instance(World.class);
         GameWorldBootstrapServices worldBootstrapServices = new GameWorldBootstrapServices(
             provider(IDFactory.class, idFactory),
             provider(ZoneService.class, zoneService),
             provider(HotspotTeleportService.class, hotspotTeleportService),
             provider(RoadService.class, instance(RoadService.class)),
-            provider(World.class, instance(World.class))
+            provider(World.class, world)
         );
 
         try {
             assertSame(idFactory, GameWorldBootstrapServices.idFactory());
             assertSame(zoneService, GameWorldBootstrapServices.zoneService());
             assertSame(hotspotTeleportService, GameWorldBootstrapServices.hotspotTeleportService());
+            assertSame(world, GameWorldBootstrapServices.world());
         } finally {
             worldBootstrapServices.destroy();
         }
@@ -96,6 +98,22 @@ class GameWorldBootstrapRuntimeBridgeTest {
             assertFalse(content.contains("IDFactory.getInstance()"), source.toString());
             assertFalse(content.contains("ZoneService.getInstance()"), source.toString());
             assertFalse(content.contains("HotspotTeleportService.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesWorldBootstrapBridgeInsteadOfDirectWorldSingleton() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            for (Path source : stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("world/World.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldBootstrapFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldBootstrapServices.java")))
+                .toList()) {
+                String content = Files.readString(source);
+
+                assertFalse(content.contains("World.getInstance()"), source.toString());
+            }
         }
     }
 

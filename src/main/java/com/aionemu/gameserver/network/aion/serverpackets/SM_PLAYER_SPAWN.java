@@ -189,7 +189,7 @@ public class SM_PLAYER_SPAWN extends AionServerPacket {
 				instanceBuff.endPledge(player);
 			}
 		}
-		if (World.getInstance().getWorldMap(player.getWorldId()).getTemplate().getBeginnerTwinCount() > 0) {
+		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(player.getWorldId()).getTemplate().getBeginnerTwinCount() > 0) {
 			writeC(1);
 		} else {
 			writeC(0);

@@ -47,7 +47,7 @@ public class Ban extends AdminCommand {
 		String accountIp = "";
 
 		// First, try to find player in the World
-		Player player = World.getInstance().findPlayer(name);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
 		if (player != null) {
 			accountId = player.getClientConnection().getAccount().getId();
 			accountIp = player.getClientConnection().getIP();

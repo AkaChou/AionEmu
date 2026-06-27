@@ -71,7 +71,7 @@ public class IuService {
 					for (IuLocation loc : getIuLocations().values()) {
 						startConcert(loc.getId());
 					}
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN);
@@ -146,7 +146,7 @@ public class IuService {
 	public boolean lPCHCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The entrance to the Live Party Concert Hall appeared.

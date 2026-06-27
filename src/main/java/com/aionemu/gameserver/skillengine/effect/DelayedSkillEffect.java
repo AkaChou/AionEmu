@@ -50,7 +50,7 @@ public class DelayedSkillEffect extends EffectTemplate {
 					final SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 					if (template.getProperties().getTargetMaxCount() > 1) {
 						final Effect e = new Effect(effect.getEffector(), effect.getEffected(), template, template.getLvl(), 0);
-						World.getInstance().doOnAllObjects(new Visitor<VisibleObject>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(new Visitor<VisibleObject>() {
 							@Override
 							public void visit(VisibleObject object) {
 								if (MathUtil.getDistance(effect.getEffected(), object) <= template.getProperties().getRevisionDistance()) {

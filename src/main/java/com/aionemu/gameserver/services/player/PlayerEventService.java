@@ -42,7 +42,7 @@ public class PlayerEventService {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(awake);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(awake);
 			}
 		}, EventsConfig.SEED_TRANSFORMATION_PERIOD * 60000, EventsConfig.SEED_TRANSFORMATION_PERIOD * 60000);
 		/**
@@ -52,7 +52,7 @@ public class PlayerEventService {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(vipTickets);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(vipTickets);
 			}
 		}, EventsConfig.VIP_TICKETS_PERIOD * 60000, EventsConfig.VIP_TICKETS_PERIOD * 60000);
 	}

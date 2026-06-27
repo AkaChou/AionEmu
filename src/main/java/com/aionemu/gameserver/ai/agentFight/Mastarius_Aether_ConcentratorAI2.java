@@ -92,7 +92,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 	}
 	
 	private void announceMastariusI() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The first Sphere of Destiny has been activated.
@@ -101,7 +101,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 		});
 	}
 	private void announceMastariusII() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The second Sphere of Destiny has been activated. Marchutan's Agent Mastarius prepares to cast the Empyrean Lord's blessing.
@@ -110,7 +110,7 @@ public class Mastarius_Aether_ConcentratorAI2 extends ActionItemNpcAI2
 		});
 	}
 	private void announceMastariusIII() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//You may use the Sphere of Destiny again.

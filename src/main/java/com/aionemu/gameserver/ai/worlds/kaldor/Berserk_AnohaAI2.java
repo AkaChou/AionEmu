@@ -82,7 +82,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(Berserk_AnohaAI2.this);
@@ -345,7 +345,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		if (p != null) {
 			sendBerserkAnohaGuide();
 		}
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Berserk Anoha has been defeated.
@@ -357,7 +357,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendBerserkAnohaGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {

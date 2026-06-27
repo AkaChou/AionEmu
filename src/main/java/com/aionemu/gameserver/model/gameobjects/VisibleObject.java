@@ -113,7 +113,7 @@ public abstract class VisibleObject extends AionObject {
 	 * Return the WorldType of the current location
 	 */
 	public WorldType getWorldType() {
-		return World.getInstance().getWorldMap(getWorldId()).getWorldType();
+		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(getWorldId()).getWorldType();
 	}
 
 	/**
@@ -170,7 +170,7 @@ public abstract class VisibleObject extends AionObject {
 	 * @return
 	 */
 	public boolean isInWorld() {
-		return World.getInstance().findVisibleObject(getObjectId()) != null;
+		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(getObjectId()) != null;
 	}
 
 	/**
@@ -323,6 +323,6 @@ public abstract class VisibleObject extends AionObject {
 	}
 
 	public WorldDropType getWorldDropType() {
-		return World.getInstance().getWorldMap(getWorldId()).getWorldDropType();
+		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(getWorldId()).getWorldDropType();
 	}
 }

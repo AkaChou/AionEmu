@@ -1384,7 +1384,7 @@ public class Player extends Creature {
 	private boolean canPvP(Player enemy) {
 		int worldId = enemy.getWorldId();
 		if (!enemy.getRace().equals(getRace())) {
-			if (World.getInstance().getWorldMap(getWorldId()).isPvpAllowed()) {
+			if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(getWorldId()).isPvpAllowed()) {
 				return (!this.isInDisablePvPZone() && !enemy.isInDisablePvPZone());
 			} else {
 				return (this.isInPvPZone() && enemy.isInPvPZone());
@@ -2323,7 +2323,7 @@ public class Player extends Creature {
 
 	// Partner For Wedding
 	public Player findPartner() {
-		return World.getInstance().findPlayer(partnerId);
+		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(partnerId);
 	}
 
 	public int getPartnerId() {

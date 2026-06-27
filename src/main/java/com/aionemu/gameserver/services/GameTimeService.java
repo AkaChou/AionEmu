@@ -52,7 +52,7 @@ public class GameTimeService {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				Iterator<Player> iterator = World.getInstance().getPlayersIterator();
+				Iterator<Player> iterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 				while (iterator.hasNext()) {
 					Player next = iterator.next();
 					PacketSendUtility.sendPacket(next, new SM_GAME_TIME());

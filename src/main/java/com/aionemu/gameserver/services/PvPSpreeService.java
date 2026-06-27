@@ -88,7 +88,7 @@ public class PvPSpreeService {
 	}
 
 	private static void sendUpdateSpreeMessage(Player winner, int level) {
-		for (Player p : World.getInstance().getAllPlayers()) {
+		for (Player p : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 			if (level == 1)
 				PacketSendUtility.sendBrightYellowMessageOnCenter(p,
 						winner.getName() + " Of " + winner.getCommonData().getRace().toString().toLowerCase()
@@ -143,7 +143,7 @@ public class PvPSpreeService {
 
 	private static void sendEndSpreeMessage(Player victim, Creature killer, boolean isPvPDeath, int killsBeforeDeath) {
 		String spreeEnder = isPvPDeath ? ((Player) killer).getName() : "A monster";
-		for (Player p : World.getInstance().getAllPlayers()) {
+		for (Player p : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 			PacketSendUtility.sendWhiteMessageOnCenter(p, "The killing spree of " + victim.getName()
 					+ " has been stopped by " + spreeEnder + " after " + killsBeforeDeath + " uninterrupted murders !");
 		}

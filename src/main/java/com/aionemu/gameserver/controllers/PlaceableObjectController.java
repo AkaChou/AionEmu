@@ -59,9 +59,9 @@ public class PlaceableObjectController<T extends PlaceableHouseObject> extends V
 
 	public void delete() {
 		if (getOwner().isSpawned()) {
-			World.getInstance().despawn(getOwner(), false);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(getOwner(), false);
 		}
-		World.getInstance().removeObject(getOwner());
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().removeObject(getOwner());
 	}
 
 	public void onDialogRequest(Player player) {

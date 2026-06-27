@@ -175,7 +175,7 @@ public class NpcController extends CreatureController<Npc> {
 		final int npcNameId = owner.getObjectTemplate().getNameId();
 		NpcRank npcRank = owner.getObjectTemplate().getRank();
 		if (npcRank == NpcRank.EXPERT && !player.isInInstance()) {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player players) {
 					// "Player Name" has killed "Named Monster"

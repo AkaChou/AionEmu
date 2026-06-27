@@ -73,7 +73,7 @@ public class HTMLService {
 
 	public static void pushSurvey(final String html) {
 		final int messageId = GameWorldBootstrapServices.idFactory().nextId();
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
 			public void visit(Player player) {

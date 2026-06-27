@@ -59,7 +59,7 @@ public class Moltenus extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Resurrected Moltenus> " + moltenusId + " started!");
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys3Message(player, "\uE005", "<Resurrected Moltenus> appear in the abyss !!!");

@@ -53,7 +53,7 @@ public class GrowthEnergy {
 	}
 
 	private void updateGrowthEnergy() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(final Player player) {
 				player.getCommonData().setAuraOfGrowth(0);

@@ -53,7 +53,7 @@ public class StaggerEffect extends EffectTemplate {
 			effected.getMoveController().abortMove();
 			PacketSendUtility.broadcastPacketAndReceive(effect.getEffected(), new SM_FORCED_MOVE(effect.getEffector(),
 					effect.getEffected().getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));
-			World.getInstance().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
 					effected.getHeading());
 		}
 	}

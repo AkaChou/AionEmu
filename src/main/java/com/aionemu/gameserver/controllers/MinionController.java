@@ -79,7 +79,7 @@ public class MinionController extends VisibleObjectController<Minion> {
         float oldY = minion.getY();
         float oldZ = minion.getZ();
 
-        World.getInstance().updatePosition(minion, player.getX(), player.getY(), player.getZ(), player.getHeading());
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(minion, player.getX(), player.getY(), player.getZ(), player.getHeading());
         
         PacketSendUtility.broadcastPacketAndReceive(minion, new SM_MOVE(minion.getObjectId(), oldX, oldY, oldZ, player.getX(), player.getY(), player.getZ(), player.getHeading(), (byte) 0));
     }

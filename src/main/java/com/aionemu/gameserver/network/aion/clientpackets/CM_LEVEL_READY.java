@@ -96,9 +96,9 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		location = null;
 		template = null;
 		if (activePlayer.isSpawned()) {
-			World.getInstance().despawn(activePlayer);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(activePlayer);
 		}
-		World.getInstance().spawn(activePlayer);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(activePlayer);
 		activePlayer.getController().refreshZoneImpl();
 		if (activePlayer.isInSiegeWorld()) {
 			GameFeatureServices.siegeService().onEnterSiegeWorld(activePlayer);
@@ -146,17 +146,17 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// Pet
 		Pet pet = activePlayer.getPet();
 		if (pet != null && !pet.isSpawned()) {
-			World.getInstance().spawn(pet);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(pet);
 		}
 		// Summon
 		Summon summon = activePlayer.getSummon();
 		if (summon != null && !summon.isSpawned()) {
-			World.getInstance().spawn(summon);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(summon);
 		}
 		// Minion
 		Minion minion = activePlayer.getMinion();
 		if (minion != null && !minion.isSpawned()) {
-			World.getInstance().spawn(minion);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(minion);
 		}
 
 		activePlayer.setPortAnimation(0x02);

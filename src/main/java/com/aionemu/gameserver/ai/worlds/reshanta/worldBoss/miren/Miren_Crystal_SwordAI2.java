@@ -81,7 +81,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceSpiritOfMirenAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Protector Spirit will appear after 5 minutes.
@@ -95,7 +95,7 @@ public class Miren_Crystal_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceSpiritOfMiren30Min() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Spirit of Miren will be summoned from Miren's Crystal Sword in 30 minutes.

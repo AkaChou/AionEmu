@@ -72,7 +72,7 @@ public class CM_MOVE_IN_AIR extends AionClientPacket {
 			} else if (player.isInPlayerMode(PlayerMode.WINDSTREAM)) {
 				player.windstreamPath.distance = distance;
 			}
-			World.getInstance().updatePosition(player, x, y, z, (byte) 0);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(player, x, y, z, (byte) 0);
 			player.getMoveController().updateLastMove();
 		}
 	}

@@ -137,7 +137,7 @@ public class ConquestService {
 	public boolean conquestOfferingMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE00D",
@@ -153,7 +153,7 @@ public class ConquestService {
 	public boolean emperorVaultMsg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE0BD", "Shugo Emperor's Vault is now open !!!");
@@ -168,7 +168,7 @@ public class ConquestService {
 	public boolean trillirunerkSafeMsg(int id) {
 		switch (id) {
 		case 4:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE11C", "Emperor Trillirunerk's Safe is now open !!!");
@@ -183,7 +183,7 @@ public class ConquestService {
 	public boolean smolderingFireTempleMsg(int id) {
 		switch (id) {
 		case 5:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE114", "Smoldering Fire Temple is now open !!!");
@@ -198,7 +198,7 @@ public class ConquestService {
 	public boolean kumukiCaveMsg(int id) {
 		switch (id) {
 		case 6:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE054", "Kumuki Cave is now open !!!");
@@ -213,7 +213,7 @@ public class ConquestService {
 	public boolean IDEventDefMsg(int id) {
 		switch (id) {
 		case 11:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE079", "IDEvent Def UnderPath is now open !!!");
@@ -228,7 +228,7 @@ public class ConquestService {
 	public boolean tiamarantaMsg(int id) {
 		switch (id) {
 		case 13:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE04C", "Tiamaranta's Eye is now open !!!");

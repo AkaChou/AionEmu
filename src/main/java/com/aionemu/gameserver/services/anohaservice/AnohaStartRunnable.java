@@ -47,7 +47,7 @@ public class AnohaStartRunnable implements Runnable {
 		GameLocationBootstrapServices.anohaService().adventSwordEffectSP(id);
 		// Berserk Anoha will return to Kaldor in 30 minutes.
 		GameLocationBootstrapServices.anohaService().berserkAnohaMsg1(id);
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				GameLocationBootstrapServices.anohaService().sendRequest(player);
@@ -83,7 +83,7 @@ public class AnohaStartRunnable implements Runnable {
 						GameLocationBootstrapServices.anohaService().startAnoha(loc.getId());
 					}
 				}
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// Summon Berserk Anoha.

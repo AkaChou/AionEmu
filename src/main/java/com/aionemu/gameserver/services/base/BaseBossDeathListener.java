@@ -100,7 +100,7 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 
 	public void announceCapture(final TemporaryPlayerTeam team, final Creature kill) {
 		final String baseName = base.getBaseLocation().getName();
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (team != null && kill == null) {
@@ -131,7 +131,7 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 	}
 
 	public void applyBaseBuff() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (player.getCommonData().getRace() == Race.ELYOS) {

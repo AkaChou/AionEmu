@@ -912,7 +912,7 @@ public class SpawnsData2 {
 
 	String getRelativePath(VisibleObject visibleObject) {
 		String path;
-		WorldMap map = World.getInstance().getWorldMap(visibleObject.getWorldId());
+		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(visibleObject.getWorldId());
 		if (visibleObject.getSpawn().getHandlerType() == SpawnHandlerType.RIFT) {
 			path = "Rifts";
 		}

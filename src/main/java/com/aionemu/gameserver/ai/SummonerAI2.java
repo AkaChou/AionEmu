@@ -142,7 +142,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	}
 	
 	private void addGpPlayer() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -152,7 +152,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceTarmatDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Devil Unit's Tarmat Beta has been destroyed.
@@ -163,7 +163,7 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	
 	private void removeHelpersSpawn() {
 		for (Integer object : spawnedNpc) {
-			VisibleObject npc = World.getInstance().findVisibleObject(object);
+			VisibleObject npc = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(object);
 			if (npc != null && npc.isSpawned()) {
 				npc.getController().onDelete();
 			}

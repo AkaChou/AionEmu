@@ -166,7 +166,7 @@ public class House extends VisibleObject {
 		}
 		fixBuildingStates();
 		if (getPosition() == null || !getPosition().isSpawned()) {
-			WorldPosition position = World.getInstance().createPosition(address.getMapId(), address.getX(),
+			WorldPosition position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(address.getMapId(), address.getX(),
 					address.getY(), address.getZ(), (byte) 0, instanceId);
 			this.setPosition(position);
 			SpawnEngine.bringIntoWorld(this);

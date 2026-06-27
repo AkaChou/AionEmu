@@ -48,7 +48,7 @@ public class LuluranAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceDF6G1BossSpawn01() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Elyos Frigate Commander has arrived.

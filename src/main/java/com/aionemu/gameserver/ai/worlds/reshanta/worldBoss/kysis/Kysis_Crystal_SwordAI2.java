@@ -81,7 +81,7 @@ public class Kysis_Crystal_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceSpiritOfKysisAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Kysis Protector Spirit will appear after 5 minutes.
@@ -95,7 +95,7 @@ public class Kysis_Crystal_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceSpiritOfKysis30Min() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Spirit of Kysis will be summoned from Kysis's Crystal Sword in 30 minutes.

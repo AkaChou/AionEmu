@@ -120,7 +120,7 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {

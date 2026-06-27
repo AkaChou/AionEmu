@@ -71,7 +71,7 @@ public class SuspiciousOphidanBridgeService {
 				registerAvailable = false;
 				playersWithCooldown.clear();
 				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
-				Iterator<Player> iter = World.getInstance().getPlayersIterator();
+				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 				while (iter.hasNext()) {
 					Player player = iter.next();
 					if (player.getLevel() > minLevel) {
@@ -89,7 +89,7 @@ public class SuspiciousOphidanBridgeService {
 	private void startSuspiciousOphidanRegistration() {
 		this.registerAvailable = true;
 		startUregisterSuspiciousTask();
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {

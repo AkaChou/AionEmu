@@ -323,7 +323,7 @@ public class PortalService {
 		if (instancecooltime != null && player.isMentor()) {
 			if (!instancecooltime.getCanEnterMentor()) {
 				PacketSendUtility.sendPacket(player,
-						SM_SYSTEM_MESSAGE.STR_MSG_MENTOR_CANT_ENTER(World.getInstance().getWorldMap(mapId).getName()));
+						SM_SYSTEM_MESSAGE.STR_MSG_MENTOR_CANT_ENTER(com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).getName()));
 				return false;
 			}
 		}

@@ -106,13 +106,13 @@ public class HousingService {
 				if (addr.getMapId() != worldId) {
 					return;
 				}
-				VisibleObject existing = World.getInstance().findVisibleObject(studio.getObjectId());
+				VisibleObject existing = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(studio.getObjectId());
 				WorldPosition position = null;
 				if (existing != null) {
 					position = existing.getPosition();
 				}
 				if (position == null) {
-					position = World.getInstance().createPosition(addr.getMapId(), addr.getX(), addr.getY(),
+					position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(addr.getMapId(), addr.getX(), addr.getY(),
 							addr.getZ(), (byte) 0, instanceId);
 					studio.setPosition(position);
 				}
@@ -120,7 +120,7 @@ public class HousingService {
 					SpawnEngine.bringIntoWorld(studio);
 				}
 				studio.spawn(instanceId);
-				Player enteredPlayer = World.getInstance().findPlayer(registeredId);
+				Player enteredPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(registeredId);
 				if (enteredPlayer != null) {
 					enteredPlayer.setHouseRegistry(studio.getRegistry());
 				}

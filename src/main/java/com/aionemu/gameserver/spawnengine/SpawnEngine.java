@@ -222,7 +222,7 @@ public class SpawnEngine {
 
 	public static void bringIntoWorld(VisibleObject visibleObject, int worldId, int instanceIndex, float x, float y,
 			float z, byte h) {
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		world.storeObject(visibleObject);
 		world.setPosition(visibleObject, worldId, instanceIndex, x, y, z, h);
 		world.spawn(visibleObject);
@@ -231,7 +231,7 @@ public class SpawnEngine {
 	public static void bringIntoWorld(VisibleObject visibleObject) {
 		if (visibleObject.getPosition() == null)
 			throw new IllegalArgumentException("Position is null");
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		world.storeObject(visibleObject);
 		world.spawn(visibleObject);
 	}
@@ -346,7 +346,7 @@ public class SpawnEngine {
 
 	public static void printWorldSpawnStats() {
 		StatsCollector visitor = new StatsCollector();
-		World.getInstance().doOnAllObjects(visitor);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(visitor);
 		log.info("Loaded " + visitor.getNpcCount() + " Npc Spawns");
 		log.info("Loaded " + visitor.getGatherableCount() + " Gatherable Spawns");
 	}

@@ -59,7 +59,7 @@ public class ShutdownTask extends TaskFromDBHandler {
 		announceInterval = Integer.parseInt(params[1]);
 		warnCountDown = Integer.parseInt(params[2]);
 
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
 			public void visit(Player player) {

@@ -52,7 +52,7 @@ public class Enraged_Eastern_GuardianAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(Enraged_Eastern_GuardianAI2.this);
@@ -65,7 +65,7 @@ public class Enraged_Eastern_GuardianAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceAb1NamedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Siel's Eastern Guardian has appeared.
@@ -76,7 +76,7 @@ public class Enraged_Eastern_GuardianAI2 extends AggressiveNpcAI2
 	
 	@Override
 	protected void handleDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Enraged Eastern Guardian has been defeated.

@@ -37,7 +37,7 @@ public class FlyRing extends VisibleObject {
 
 	public FlyRing(FlyRingTemplate template, int instanceId) {
 		super(GameWorldBootstrapServices.idFactory().nextId(), new FlyRingController(), null, null,
-				World.getInstance().createPosition(template.getMap(), template.getCenter().getX(),
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(template.getMap(), template.getCenter().getX(),
 						template.getCenter().getY(), template.getCenter().getZ(), (byte) 0, instanceId));
 		((FlyRingController) getController()).setOwner(this);
 		this.template = template;
@@ -64,6 +64,6 @@ public class FlyRing extends VisibleObject {
 	}
 
 	public void spawn() {
-		World.getInstance().spawn(this);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(this);
 	}
 }

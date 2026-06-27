@@ -92,7 +92,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 	}
 	
 	private void announceVeilleI() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The first Sphere of Mirage has been activated.
@@ -101,7 +101,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 		});
 	}
 	private void announceVeilleII() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The second Sphere of Mirage has been activated. Kaisinel's Agent Veille prepares to cast the Empyrean Lord's blessing.
@@ -110,7 +110,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 		});
 	}
 	private void announceVeilleIII() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//You may use the Sphere of Mirage again.

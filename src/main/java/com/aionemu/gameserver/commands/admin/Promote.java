@@ -71,7 +71,7 @@ public class Promote extends AdminCommand {
 			return;
 		}
 
-		Player player = World.getInstance().findPlayer(Util.convertName(params[0]));
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 		if (player == null) {
 			PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 			return;

@@ -633,7 +633,7 @@ public double getExpMultiplier() {
 	 */
 	public Player getPlayer() {
 		if (online && getPosition() != null) {
-			return World.getInstance().findPlayer(playerObjId);
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
 		}
 		return null;
 	}

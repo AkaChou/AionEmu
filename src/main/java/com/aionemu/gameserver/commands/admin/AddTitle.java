@@ -42,7 +42,7 @@ public class AddTitle extends AdminCommand
 		}
 		Player target = null;
 		if (params.length == 2) {
-			target = World.getInstance().findPlayer(Util.convertName(params[1]));
+			target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 			if (target == null) {
 				PacketSendUtility.sendMessage(player, "player " + params[1] + " was not found");
 				return;

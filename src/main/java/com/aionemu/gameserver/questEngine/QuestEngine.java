@@ -1086,7 +1086,7 @@ public class QuestEngine implements GameEngine {
 			public void run() {
 				SM_SYSTEM_MESSAGE dailyMessage = new SM_SYSTEM_MESSAGE(1400854);
 				SM_SYSTEM_MESSAGE weeklyMessage = new SM_SYSTEM_MESSAGE(1400856);
-				for (Player player : World.getInstance().getAllPlayers()) {
+				for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 					for (QuestState qs : player.getQuestStateList().getAllQuestState()) {
 						if (qs != null && qs.canRepeat()) {
 							QuestTemplate template = DataManager.QUEST_DATA.getQuestById(qs.getQuestId());

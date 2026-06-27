@@ -46,7 +46,7 @@ public class CM_GM_BOOKMARK extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player admin = getConnection().getActivePlayer();
-		Player player = World.getInstance().findPlayer(Util.convertName(playerName));
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(playerName));
 		if (admin == null) {
 			return;
 		}

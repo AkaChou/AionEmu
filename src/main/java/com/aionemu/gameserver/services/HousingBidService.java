@@ -445,7 +445,7 @@ public class HousingBidService extends AbstractCronTask {
 	}
 
 	private PlayerCommonData getPlayerData(int objectId) {
-		Player player = World.getInstance().findPlayer(objectId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
 		if (player == null) {
 			return DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(objectId);
 		}

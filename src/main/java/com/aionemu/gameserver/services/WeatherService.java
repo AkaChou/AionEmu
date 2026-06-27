@@ -259,7 +259,7 @@ public class WeatherService {
 			return;
 		}
 		if (player == null) {
-			for (Iterator<Player> playerIterator = World.getInstance().getPlayersIterator(); playerIterator
+			for (Iterator<Player> playerIterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator(); playerIterator
 					.hasNext();) {
 				Player currentPlayer = playerIterator.next();
 				if (!currentPlayer.isSpawned()) {

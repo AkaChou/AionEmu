@@ -274,7 +274,7 @@ public class PortalDialogAI2 extends PortalAI2 {
 	}
 	
 	private void announceIlluminaryObeliskOpen() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The entrance to the Infernal Illuminary Obelisk has opened.

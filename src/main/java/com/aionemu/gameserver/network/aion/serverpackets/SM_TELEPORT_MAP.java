@@ -47,7 +47,7 @@ public class SM_TELEPORT_MAP extends AionServerPacket {
 	public SM_TELEPORT_MAP(Player player, int targetObjectId, TeleporterTemplate teleport) {
 		this.player = player;
 		this.targetObjectId = targetObjectId;
-		this.npc = (Npc) World.getInstance().findVisibleObject(targetObjectId);
+		this.npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
 		this.teleport = teleport;
 	}
 

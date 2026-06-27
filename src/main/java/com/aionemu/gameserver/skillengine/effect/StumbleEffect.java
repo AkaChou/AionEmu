@@ -52,7 +52,7 @@ public class StumbleEffect extends EffectTemplate {
 			effected.getController().cancelCurrentSkill();
 			effected.getEffectController().removeParalyzeEffects();
 			effected.getMoveController().abortMove();
-			World.getInstance().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
 					effected.getHeading());
 			PacketSendUtility.broadcastPacketAndReceive(effect.getEffected(), new SM_FORCED_MOVE(effect.getEffector(),
 					effect.getEffected().getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));

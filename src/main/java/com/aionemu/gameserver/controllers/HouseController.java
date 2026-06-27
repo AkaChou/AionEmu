@@ -89,7 +89,7 @@ public class HouseController extends VisibleObjectController<House> {
 			@Override
 			public void run() {
 				for (int playerId : observed.keySet()) {
-					Player player = World.getInstance().findPlayer(playerId);
+					Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 					if (player == null) {
 						continue;
 					}
@@ -104,7 +104,7 @@ public class HouseController extends VisibleObjectController<House> {
 			@Override
 			public void run() {
 				for (int playerId : observed.keySet()) {
-					Player player = World.getInstance().findPlayer(playerId);
+					Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 					if (player == null) {
 						continue;
 					}
@@ -125,7 +125,7 @@ public class HouseController extends VisibleObjectController<House> {
 					if (!kickFriends && kicker != null && kicker.getFriendList().getFriend(objId) != null) {
 						continue;
 					}
-					Player visitor = World.getInstance().findPlayer(objId);
+					Player visitor = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 					if (visitor != null) {
 						if (visitor.isInsideZone(info.getZoneTemplate().getName())) {
 							moveOutside(visitor, onSettingsChange);

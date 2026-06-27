@@ -42,7 +42,7 @@ class GeneralUpdateTask implements Runnable {
 	}
 
 	public void run() {
-		Player player = World.getInstance().findPlayer(playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player != null)
 			try {
 				DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);

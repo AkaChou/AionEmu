@@ -51,7 +51,7 @@ public class Rift_GeneratorAI2 extends NpcAI2
 	}
 	
 	private void announceRiftGeneratorUnderAttack() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Rift Generator is under attack! Once it is destroyed, the Dimensional Vortex will close.
@@ -60,7 +60,7 @@ public class Rift_GeneratorAI2 extends NpcAI2
 		});
 	}
 	private void announceRiftGeneratorDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Rift Generator has been destroyed.

@@ -102,7 +102,7 @@ public class LifeStatsRestoreService {
 
 		@Override
 		public void run() {
-			boolean inWorld = World.getInstance().isInWorld(lifeStats.getOwner());
+			boolean inWorld = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().isInWorld(lifeStats.getOwner());
 			if (!inWorld || lifeStats.isAlreadyDead() || lifeStats.isFullyRestoredHp()
 					|| lifeStats.getOwner().getAi2().getState().equals(AIState.FIGHT)) {
 				lifeStats.cancelRestoreTask();
@@ -123,7 +123,7 @@ public class LifeStatsRestoreService {
 
 		@Override
 		public void run() {
-			boolean inWorld = World.getInstance().isInWorld(lifeStats.getOwner());
+			boolean inWorld = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().isInWorld(lifeStats.getOwner());
 			if (!inWorld || lifeStats.isAlreadyDead() || lifeStats.isFullyRestoredHpMp()) {
 				lifeStats.cancelRestoreTask();
 				lifeStats = null;
@@ -146,7 +146,7 @@ public class LifeStatsRestoreService {
 
 		@Override
 		public void run() {
-			boolean inWorld = World.getInstance().isInWorld(lifeStats.getOwner());
+			boolean inWorld = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().isInWorld(lifeStats.getOwner());
 			if (!inWorld || lifeStats.isAlreadyDead()) {
 				lifeStats.cancelFpReduce();
 				lifeStats = null;

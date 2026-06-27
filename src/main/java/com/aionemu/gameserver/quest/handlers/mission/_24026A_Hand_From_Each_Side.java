@@ -195,7 +195,7 @@ public class _24026A_Hand_From_Each_Side extends QuestHandler {
     }
     
     Npc spawn = (Npc) QuestService.spawnQuestNpc(320040000, player.getInstanceId(), mobToSpawn, x, y, z, (byte) 95);
-    Collection<Npc> allNpcs = World.getInstance().getNpcs();
+    Collection<Npc> allNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs();
     Npc target = null;
     for (Npc npc : allNpcs) {
         if (npc.getNpcId() == 204432) { //Kargate.

@@ -68,7 +68,7 @@ public class Gate_Guardian_StoneAI2 extends NpcAI2
 	
 	@Override
 	protected void handleDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();

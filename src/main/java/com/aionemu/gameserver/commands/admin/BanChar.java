@@ -45,7 +45,7 @@ public class BanChar extends AdminCommand {
 		String playerName = Util.convertName(params[0]);
 
 		// First, try to find player in the World
-		Player player = World.getInstance().findPlayer(playerName);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
 		if (player != null)
 			playerId = player.getObjectId();
 

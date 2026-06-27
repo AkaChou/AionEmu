@@ -130,7 +130,7 @@ public class PacketSendUtility {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -195,7 +195,7 @@ public class PacketSendUtility {
 	}
 
 	public static void broadcastFilteredPacket(final AionServerPacket packet, final ObjectFilter<Player> filter) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
 			public void visit(Player object) {

@@ -108,7 +108,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceSpringAgrint() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HF_SpringAgrintAppear);
@@ -117,7 +117,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceSummerAgrint() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HF_SummerAgrintAppear);
@@ -126,7 +126,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceFallAgrint() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HF_FallAgrintAppear);
@@ -135,7 +135,7 @@ public class AgrintAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceWinterAgrint() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HF_WinterAgrintAppear);

@@ -76,7 +76,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 		if (!captured) {
 			rewardDefendingPlayers();
 		} else {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Balaur have killed the Guardian General.
@@ -135,7 +135,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 				SpawnEngine.spawnObject(spawn, 1);
 			}
 		}
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// The Dredgion has disgorged a horde of Balaur troopers.

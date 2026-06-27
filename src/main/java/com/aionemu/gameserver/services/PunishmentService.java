@@ -63,7 +63,7 @@ public class PunishmentService {
 				calculateDuration(dayCount), reason);
 
 		// if player is online - kick him
-		Player player = World.getInstance().findPlayer(playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player != null) {
 			player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
 		}

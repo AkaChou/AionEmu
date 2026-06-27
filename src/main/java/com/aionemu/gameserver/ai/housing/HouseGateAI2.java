@@ -74,7 +74,7 @@ public class HouseGateAI2 extends NpcAI2
 				if (instanceOwnerId > 0) {
 					house = GameHousingServices.housingService().getPlayerStudio(instanceOwnerId);
 					exitMapId = house.getAddress().getExitMapId();
-					instanceId = World.getInstance().getWorldMap(exitMapId).getMainWorldMapInstance().getInstanceId();
+					instanceId = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(exitMapId).getMainWorldMapInstance().getInstanceId();
 					x = house.getAddress().getExitX();
 					y = house.getAddress().getExitY();
 					z = house.getAddress().getExitZ();

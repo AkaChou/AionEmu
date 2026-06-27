@@ -95,7 +95,7 @@ public class InstanceEngine implements GameEngine {
 	}
 
 	public void onInstanceCreate(final WorldMapInstance instance) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {

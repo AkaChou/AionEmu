@@ -48,7 +48,7 @@ public class VasadAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceLF6G1BossSpawn01() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodian Frigate Commander has arrived.

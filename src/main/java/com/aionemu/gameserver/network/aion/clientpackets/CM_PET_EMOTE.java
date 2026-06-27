@@ -100,11 +100,11 @@ public class CM_PET_EMOTE extends AionClientPacket {
 			PacketSendUtility.broadcastPacket(player, new SM_PET_EMOTE(pet, emote), true);
 			break;
 		case MOVE_STOP:
-			World.getInstance().updatePosition(pet, x1, y1, z1, h);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(pet, x1, y1, z1, h);
 			PacketSendUtility.broadcastPacket(player, new SM_PET_EMOTE(pet, emote, x1, y1, z1, h), true);
 			break;
 		case MOVETO:
-			World.getInstance().updatePosition(pet, x1, y1, z1, h);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(pet, x1, y1, z1, h);
 			pet.getMoveController().setNewDirection(x2, y2, z2, h);
 			PacketSendUtility.broadcastPacket(player, new SM_PET_EMOTE(pet, emote, x1, y1, z2, x2, y2, z2, h), true);
 			break;

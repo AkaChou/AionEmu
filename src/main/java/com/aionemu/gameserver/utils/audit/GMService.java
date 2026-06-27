@@ -111,7 +111,7 @@ public class GMService {
 			}
 
 
-			Iterator<Player> iter = World.getInstance().getPlayersIterator();
+			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			while (iter.hasNext()) {
 				PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), "Information : " + String.format(adminTag, player.getName()) + " is now available for support!");
 			}
@@ -145,7 +145,7 @@ public class GMService {
 			}
 		}
 
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), "Information : " + String.format(adminTag, player.getName()) + " is now unavailable for support!");
 		}

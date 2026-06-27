@@ -46,7 +46,7 @@ public class ChatService {
 	 * @param nick
 	 */
 	public static void playerAuthed(int playerId, byte[] token) {
-		Player player = World.getInstance().findPlayer(playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player != null) {
 			PacketSendUtility.sendPacket(player, new SM_CHAT_INIT(token));
 		}

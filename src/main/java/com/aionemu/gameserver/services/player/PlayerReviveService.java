@@ -187,7 +187,7 @@ public class PlayerReviveService {
 		if (player.getPosition().getWorldMapInstance().getInstanceHandler().onReviveEvent(player)) {
 			return;
 		}
-		WorldMap map = World.getInstance().getWorldMap(player.getWorldId());
+		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(player.getWorldId());
 		if (map == null) {
 			bindRevive(player);
 			return;

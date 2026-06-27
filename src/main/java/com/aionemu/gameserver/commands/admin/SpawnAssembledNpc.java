@@ -68,7 +68,7 @@ public class SpawnAssembledNpc  extends AdminCommand {
 			assembledPatrs.add(new AssembledNpcPart(GameWorldBootstrapServices.idFactory().nextId(), npcPart));
 		}
 		AssembledNpc npc = new AssembledNpc(template.getRouteId(), template.getMapId(), template.getLiveTime(), assembledPatrs);
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		Player findedPlayer = null;
 		while (iter.hasNext()) {
 			findedPlayer = iter.next();

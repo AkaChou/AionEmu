@@ -67,7 +67,7 @@ public class BattlefieldUnionService {
 	}
 
 	public void onSiegeStart(final int fortressId) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
 						new SM_BATTLEFIELD_UNION(fortressId, true, getSize(), getMaxSize()));
@@ -76,7 +76,7 @@ public class BattlefieldUnionService {
 	}
 
 	public void onSiegeFinish(final int fortressId) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player,
 						new SM_BATTLEFIELD_UNION(fortressId, false, getSize(), getMaxSize()));

@@ -64,7 +64,7 @@ public class Siege_CommanderAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateCommanderLanding1(final int id) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
@@ -78,7 +78,7 @@ public class Siege_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void updateCommanderLanding2(final int id) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {

@@ -40,7 +40,7 @@ public class CM_USE_HOUSE_OBJECT extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		VisibleObject visObject = World.getInstance().findVisibleObject(itemObjectId);
+		VisibleObject visObject = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(itemObjectId);
 		if (visObject == null) {
 			return;
 		}

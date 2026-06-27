@@ -61,7 +61,7 @@ public class Invasion extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " started!");
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -70,7 +70,7 @@ public class Invasion extends AdminCommand
 						}
 					}
 				});
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						if (player.getCommonData().getRace() == Race.ASMODIANS) {

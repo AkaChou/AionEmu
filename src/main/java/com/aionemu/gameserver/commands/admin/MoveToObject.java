@@ -48,7 +48,7 @@ public class MoveToObject extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "Only numbers please!!!");
 		}
 
-		VisibleObject object = World.getInstance().findVisibleObject(objectId);
+		VisibleObject object = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
 		if (object == null) {
 			PacketSendUtility.sendMessage(admin, "Cannot find object for spawn #" + objectId);
 			return;

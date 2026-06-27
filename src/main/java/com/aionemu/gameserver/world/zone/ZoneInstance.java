@@ -131,71 +131,71 @@ public class ZoneInstance implements Comparable<ZoneInstance> {
 
 	public boolean canFly() {
 		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
-				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY)) {
-			return World.getInstance().getWorldMap(mapId).isPossibleFly();
+				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY)) {
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isPossibleFly();
 		}
 		return (template.getZoneTemplate().getFlags() & ZoneAttributes.FLY.getId()) != 0;
 	}
 
 	public boolean canGlide() {
 		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
-				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.GLIDE)) {
-			return World.getInstance().getWorldMap(mapId).canGlide();
+				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.GLIDE)) {
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canGlide();
 		}
 		return (template.getZoneTemplate().getFlags() & ZoneAttributes.GLIDE.getId()) != 0;
 	}
 
 	public boolean canPutKisk() {
 		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
-				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.BIND)) {
-			return World.getInstance().getWorldMap(mapId).canPutKisk();
+				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.BIND)) {
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canPutKisk();
 		}
 		return (template.getZoneTemplate().getFlags() & ZoneAttributes.BIND.getId()) != 0;
 	}
 
 	public boolean canRecall() {
 		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
-				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RECALL)) {
-			return World.getInstance().getWorldMap(mapId).canRecall();
+				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RECALL)) {
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canRecall();
 		}
 		return (template.getZoneTemplate().getFlags() & ZoneAttributes.RECALL.getId()) != 0;
 	}
 
 	public boolean canRide() {
 		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
-				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RIDE)) {
-			return World.getInstance().getWorldMap(mapId).canRide();
+				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.RIDE)) {
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canRide();
 		}
 		return (template.getZoneTemplate().getFlags() & ZoneAttributes.RIDE.getId()) != 0;
 	}
 
 	public boolean canFlyRide() {
 		if (template.getZoneTemplate().getFlags() == -1 || template.getZoneTemplate().getFlags() == 0
-				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY_RIDE)) {
-			return World.getInstance().getWorldMap(mapId).canFlyRide();
+				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.FLY_RIDE)) {
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).canFlyRide();
 		}
 		return (template.getZoneTemplate().getFlags() & ZoneAttributes.FLY_RIDE.getId()) != 0;
 	}
 
 	public boolean isPvpAllowed() {
 		if (template.getZoneTemplate().getZoneType() != ZoneClassName.PVP) {
-			return World.getInstance().getWorldMap(mapId).isPvpAllowed();
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isPvpAllowed();
 		}
 		return (template.getZoneTemplate().getFlags() & ZoneAttributes.PVP_ENABLED.getId()) != 0;
 	}
 
 	public boolean isSameRaceDuelsAllowed() {
 		if (template.getZoneTemplate().getZoneType() != ZoneClassName.DUEL || template.getZoneTemplate().getFlags() == 0
-				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_SAME_RACE_ENABLED)) {
-			return World.getInstance().getWorldMap(mapId).isSameRaceDuelsAllowed();
+				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_SAME_RACE_ENABLED)) {
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isSameRaceDuelsAllowed();
 		}
 		return (template.getZoneTemplate().getFlags() & ZoneAttributes.DUEL_SAME_RACE_ENABLED.getId()) != 0;
 	}
 
 	public boolean isOtherRaceDuelsAllowed() {
 		if (template.getZoneTemplate().getZoneType() != ZoneClassName.DUEL || template.getZoneTemplate().getFlags() == 0
-				|| World.getInstance().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_OTHER_RACE_ENABLED)) {
-			return World.getInstance().getWorldMap(mapId).isOtherRaceDuelsAllowed();
+				|| com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).hasOverridenOption(ZoneAttributes.DUEL_OTHER_RACE_ENABLED)) {
+			return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).isOtherRaceDuelsAllowed();
 		}
 		return (template.getZoneTemplate().getFlags() & ZoneAttributes.DUEL_OTHER_RACE_ENABLED.getId()) != 0;
 	}

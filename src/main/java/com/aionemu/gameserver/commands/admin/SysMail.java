@@ -163,7 +163,7 @@ public class SysMail extends AdminCommand {
 				GameFeatureServices.systemMailService().sendMail(sender, recipient, title, message, item, count, kinah, 1000, letterType);
 		}
 		else {
-			for (Player player : World.getInstance().getAllPlayers()) {
+			for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 				if (recipientType.isAllowed(player.getRace())) {
 					if (letterType == LetterType.BLACKCLOUD)
 						MailFormatter.sendBlackCloudMail(player.getName(), item, count);
@@ -239,14 +239,14 @@ public class SysMail extends AdminCommand {
 				shouldExpress = false;
 			}
 			else if (letterType == LetterType.EXPRESS) {
-				if (World.getInstance().findPlayer(recipient) == null) {
+				if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipient) == null) {
 					PacketSendUtility.sendMessage(admin, "This Recipient is offline.");
 					return null;
 				}
 				shouldExpress = true;
 			}
 			else { // Black cloud
-				shouldExpress = World.getInstance().findPlayer(recipient) != null;
+				shouldExpress = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipient) != null;
 			}
 		} else {
 			shouldExpress = letterType != LetterType.NORMAL;

@@ -39,7 +39,7 @@ public class PulledEffect extends EffectTemplate {
 		final Creature effected = effect.getEffected();
 		effected.setPulledMulti(0);
 		effected.getController().cancelCurrentSkill();
-		World.getInstance().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
 				effected.getHeading());
 		PacketSendUtility.broadcastPacketAndReceive(effected, new SM_FORCED_MOVE(effect.getEffector(),
 				effected.getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));

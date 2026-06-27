@@ -147,7 +147,7 @@ public class EnchantItemAction extends AbstractItemAction {
 				PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, isSuccess ? 1 : 2, 384));
 				if (CustomConfig.ENABLE_ENCHANT_ANNOUNCE) {
 					if (itemTemplate.isEnchantmentStone() || itemTemplate.isAmplificationStone()) {
-						Iterator<Player> iter = World.getInstance().getPlayersIterator();
+						Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 						while (iter.hasNext()) {
 							Player player2 = iter.next();
 							if (targetItem.getEnchantLevel() == 15 && isSuccess) {

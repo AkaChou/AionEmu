@@ -41,7 +41,7 @@ public class MoveToMe extends AdminCommand {
 			return;
 		}
 
-		Player playerToMove = World.getInstance().findPlayer(Util.convertName(params[0]));
+		Player playerToMove = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 		if (playerToMove == null) {
 			PacketSendUtility.sendMessage(player, "The specified player is not online.");
 			return;

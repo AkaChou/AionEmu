@@ -57,7 +57,7 @@ public class StudioPortalAI2 extends ActionItemNpcAI2
 		if (ownerId > 0) {
 			studio = GameHousingServices.housingService().getPlayerStudio(ownerId);
 			exitMapId = studio.getAddress().getExitMapId();
-			instanceId = World.getInstance().getWorldMap(exitMapId).getMainWorldMapInstance().getInstanceId();
+			instanceId = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(exitMapId).getMainWorldMapInstance().getInstanceId();
 			x = studio.getAddress().getExitX();
 			y = studio.getAddress().getExitY();
 			z = studio.getAddress().getExitZ();

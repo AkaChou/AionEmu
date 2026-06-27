@@ -309,7 +309,7 @@ public class AbyssLandingService {
 
 	public void AnnounceToPoints(final Player pl, final DescriptionId race, final DescriptionId name, final int points,
 			final LandingPointsEnum type) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				switch (type) {
@@ -393,7 +393,7 @@ public class AbyssLandingService {
 		redemptionLanding().setLevel(level);
 		stopLanding(redemptionLanding().getId());
 		startLanding(redemptionLanding().getId());
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Landing Level Up.
@@ -408,7 +408,7 @@ public class AbyssLandingService {
 		harbingerLanding().setLevel(level);
 		stopLanding(harbingerLanding().getId());
 		startLanding(harbingerLanding().getId());
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Landing Level Up.
@@ -423,7 +423,7 @@ public class AbyssLandingService {
 		harbingerLanding().setLevel(level);
 		stopLanding(harbingerLanding().getId());
 		startLanding(harbingerLanding().getId());
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Landing Weakened.
@@ -438,7 +438,7 @@ public class AbyssLandingService {
 		redemptionLanding().setLevel(level);
 		stopLanding(redemptionLanding().getId());
 		startLanding(redemptionLanding().getId());
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Landing Weakened.

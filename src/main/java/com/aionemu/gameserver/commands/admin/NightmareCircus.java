@@ -59,7 +59,7 @@ public class NightmareCircus extends AdminCommand
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Nightmare Circus> " + nightmareId + " started!");
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys3Message(player, "\uE04C", "<Nightmare Circus 4.3> is now open !!!");

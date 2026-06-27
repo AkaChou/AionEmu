@@ -70,7 +70,7 @@ public class SimpleRootEffect extends EffectTemplate {
 		x1 = closestCollision.x;
 		y1 = closestCollision.y;
 		z = closestCollision.z;
-		World.getInstance().updatePosition(effected, x1, y1, z, heading, false);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, x1, y1, z, heading, false);
 		PacketSendUtility.broadcastPacketAndReceive(effected,
 				new SM_FORCED_MOVE(effect.getEffector(), effected.getObjectId(), x1, y1, z));
 	}

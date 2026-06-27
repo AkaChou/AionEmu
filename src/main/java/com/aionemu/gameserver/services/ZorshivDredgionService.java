@@ -149,7 +149,7 @@ public class ZorshivDredgionService {
 		switch (id) {
 		case 1:
 		case 2:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE050",
@@ -174,7 +174,7 @@ public class ZorshivDredgionService {
 	public boolean inggisonMsg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE050",

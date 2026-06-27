@@ -121,7 +121,7 @@ public class Outpost<OL extends OutpostLocation> {
 
 	protected void despawn(int outpostLocationId) {
 		setFlag(null);
-		Collection<OutpostNpc> outpostNpcs = World.getInstance().getLocalOutpostNpcs(outpostLocationId);
+		Collection<OutpostNpc> outpostNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalOutpostNpcs(outpostLocationId);
 		for (OutpostNpc npc : outpostNpcs) {
 			npc.getController().onDelete();
 		}

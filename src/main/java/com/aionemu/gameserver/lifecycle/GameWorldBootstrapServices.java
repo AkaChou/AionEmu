@@ -15,6 +15,7 @@ public final class GameWorldBootstrapServices implements DisposableBean {
     private static volatile ObjectProvider<IDFactory> idFactoryProvider;
     private static volatile ObjectProvider<ZoneService> zoneServiceProvider;
     private static volatile ObjectProvider<HotspotTeleportService> hotspotTeleportServiceProvider;
+    private static volatile ObjectProvider<World> worldProvider;
 
     public GameWorldBootstrapServices(ObjectProvider<IDFactory> idFactoryProvider,
             ObjectProvider<ZoneService> zoneServiceProvider,
@@ -23,6 +24,7 @@ public final class GameWorldBootstrapServices implements DisposableBean {
         GameWorldBootstrapServices.idFactoryProvider = idFactoryProvider;
         GameWorldBootstrapServices.zoneServiceProvider = zoneServiceProvider;
         GameWorldBootstrapServices.hotspotTeleportServiceProvider = hotspotTeleportServiceProvider;
+        GameWorldBootstrapServices.worldProvider = worldProvider;
         IDFactory.setInstanceProvider(idFactoryProvider);
         ZoneService.setInstanceProvider(zoneServiceProvider);
         HotspotTeleportService.setInstanceProvider(hotspotTeleportServiceProvider);
@@ -54,11 +56,20 @@ public final class GameWorldBootstrapServices implements DisposableBean {
         return provider.getIfAvailable(GameWorldBootstrapFallbacks::hotspotTeleportService);
     }
 
+    public static World world() {
+        ObjectProvider<World> provider = worldProvider;
+        if (provider == null) {
+            return GameWorldBootstrapFallbacks.world();
+        }
+        return provider.getIfAvailable(GameWorldBootstrapFallbacks::world);
+    }
+
     @Override
     public void destroy() {
         idFactoryProvider = null;
         zoneServiceProvider = null;
         hotspotTeleportServiceProvider = null;
+        worldProvider = null;
         IDFactory.setInstanceProvider(null);
         ZoneService.setInstanceProvider(null);
         HotspotTeleportService.setInstanceProvider(null);

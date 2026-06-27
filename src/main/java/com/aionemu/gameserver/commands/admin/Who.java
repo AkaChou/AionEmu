@@ -33,7 +33,7 @@ public class Who extends AdminCommand {
 	@Override
 	public void execute(Player admin, String... params) {
 
-		Collection<Player> players = World.getInstance().getAllPlayers();
+		Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
 
 		PacketSendUtility.sendMessage(admin, "Player :");
 

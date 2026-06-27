@@ -82,7 +82,7 @@ public class SocialService {
 		if (DAOManager.getDAO(FriendListDAO.class).delFriends(deleter.getObjectId(), exFriend2Id)) {
 			Player friend2Player = PlayerService.getCachedPlayer(exFriend2Id);
 			if (friend2Player == null) {
-				friend2Player = World.getInstance().findPlayer(exFriend2Id);
+				friend2Player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(exFriend2Id);
 			}
 			String friend2Name = friend2Player != null ? friend2Player.getName()
 					: DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(exFriend2Id).getName();

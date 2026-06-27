@@ -48,7 +48,7 @@ public class DashEffect extends DamageEffect {
 
 		// Move Effector to Effected
 		Skill skill = effect.getSkill();
-		World.getInstance().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, skill.getX(), skill.getY(), skill.getZ(), skill.getH());
 	}
 
 	@Override

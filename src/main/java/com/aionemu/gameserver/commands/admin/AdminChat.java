@@ -48,7 +48,7 @@ public class AdminChat extends AdminCommand {
 		for(String p : params)
 			sbMessage.append(p + " ");
 		String message = sbMessage.toString().trim();
-		for(Player a : World.getInstance().getAllPlayers()) {
+		for(Player a : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 			if(a.isGM())
 				PacketSendUtility.sendWhiteMessageOnCenter(a, message);
 		}

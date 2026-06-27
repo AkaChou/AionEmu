@@ -68,7 +68,7 @@ public class CM_TEAM_INVITE extends AionClientPacket {
 			return;
 		}
 
-		final Player invited = World.getInstance().findPlayer(playerName);
+		final Player invited = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
 		if (invited != null) {
 			if (invited.getPlayerSettings().isInDeniedStatus(DeniedStatus.GROUP)) {
 				sendPacket(SM_SYSTEM_MESSAGE.STR_MSG_REJECTED_INVITE_PARTY(invited.getName()));

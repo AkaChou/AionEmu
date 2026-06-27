@@ -196,7 +196,7 @@ public class OutpostService {
 	}
 
 	public void broadcastUpdate(final OutpostLocation outpostLocation) {
-		World.getInstance().getWorldMap(outpostLocation.getWorldId()).getMainWorldMapInstance()
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(outpostLocation.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {

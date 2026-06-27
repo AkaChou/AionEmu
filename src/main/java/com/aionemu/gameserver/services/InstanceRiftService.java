@@ -138,7 +138,7 @@ public class InstanceRiftService {
 	public boolean instanceRiftMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!");

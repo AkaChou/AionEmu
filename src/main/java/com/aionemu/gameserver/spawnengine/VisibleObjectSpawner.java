@@ -301,7 +301,7 @@ public class VisibleObjectSpawner {
         } catch (Exception ex) {
             log.error("Error during spawn of npc {}, world {}, x-y {}-{}", new Object[] { npcTemplate.getTemplateId(), spawn.getWorldId(), spawn.getX(), spawn.getY() });
             log.error("Npc {} will be despawned", npcTemplate.getTemplateId(), ex);
-            World.getInstance().despawn(npc);
+            com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(npc);
         }
         return npc;
     }

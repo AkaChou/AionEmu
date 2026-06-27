@@ -84,7 +84,7 @@ public class RiftManager {
 		}
 
 		int spawned = 0;
-		int instanceCount = World.getInstance().getWorldMap(masterTemplate.getWorldId()).getInstanceCount();
+		int instanceCount = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(masterTemplate.getWorldId()).getInstanceCount();
 
 		if (slaveTemplate.hasPool()) {
 			slaveTemplate = slaveTemplate.changeTemplate(1);
@@ -117,7 +117,7 @@ public class RiftManager {
 		npc.setKnownlist(new NpcKnownList(npc));
 		npc.setEffectController(new EffectController(npc));
 
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		world.storeObject(npc);
 		world.setPosition(npc, template.getWorldId(), instance, template.getX(), template.getY(), template.getZ(), template.getHeading());
 		world.spawn(npc);

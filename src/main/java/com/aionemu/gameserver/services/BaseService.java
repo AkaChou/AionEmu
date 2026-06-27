@@ -192,7 +192,7 @@ public class BaseService {
 	}
 
 	public void broadcastUpdate(final BaseLocation baseLocation) {
-		World.getInstance().getWorldMap(baseLocation.getWorldId()).getMainWorldMapInstance()
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(baseLocation.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {

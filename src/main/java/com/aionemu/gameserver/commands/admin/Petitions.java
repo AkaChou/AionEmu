@@ -88,8 +88,8 @@ public class Petitions extends AdminCommand {
 		String petitionPlayer = "";
 		boolean isOnline;
 
-		if (World.getInstance().findPlayer(petition.getPlayerObjId()) != null) {
-			petitionPlayer = World.getInstance().findPlayer(petition.getPlayerObjId()).getName();
+		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(petition.getPlayerObjId()) != null) {
+			petitionPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(petition.getPlayerObjId()).getName();
 			isOnline = true;
 		}
 		else {

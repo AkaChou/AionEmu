@@ -186,7 +186,7 @@ public class WeddingService {
 
 	private void announceWedding(Player player, Player partner) {
 		String message = player.getName() + " and " + partner.getName() + " now married.";
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			PacketSendUtility.sendBrightYellowMessage(iter.next(), message);
 		}

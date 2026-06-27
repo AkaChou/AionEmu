@@ -811,7 +811,7 @@ public class AutoGroupService {
 	}
 
 	private WorldMapInstance createInstance(int worldId, byte difficultId) {
-		WorldMap map = World.getInstance().getWorldMap(worldId);
+		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
 		int nextInstanceId = map.getNextInstanceId();
 		WorldMapInstance worldMapInstance = WorldMapInstanceFactory.createWorldMapInstance(map, nextInstanceId);
 		map.addInstance(nextInstanceId, worldMapInstance);
@@ -854,7 +854,7 @@ public class AutoGroupService {
 		int instanceMaskId = si.getInstanceMaskId();
 		if (si.getEntryRequestType().isGroupEntry() && si.getMembers() != null) {
 			for (Integer obj : si.getMembers()) {
-				Player member = World.getInstance().findPlayer(obj);
+				Player member = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(obj);
 				if (member != null) {
 					if (si.isDredgion() && GameFeatureServices.dredgionService().isDredgionAvailable()) {
 						PacketSendUtility.sendPacket(member, new SM_AUTO_GROUP(instanceMaskId, 6));

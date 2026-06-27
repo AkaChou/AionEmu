@@ -233,7 +233,7 @@ public final class PlayerEnterWorldService {
 			pendingEnterWorld.add(objectId);
 		}
 		int delay = 0;
-		if (World.getInstance().findPlayer(objectId) != null) {
+		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId) != null) {
 			delay = 15000;
 			log.warn("Postponed enter world " + objectId);
 		}
@@ -241,7 +241,7 @@ public final class PlayerEnterWorldService {
 			@Override
 			public void run() {
 				try {
-					Player player = World.getInstance().findPlayer(objectId);
+					Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
 					if (player != null) {
 						AuditLogger.info(player, "Duplicate player in world");
 						client.close(new SM_QUIT_RESPONSE(), false);
@@ -269,7 +269,7 @@ public final class PlayerEnterWorldService {
 		if (player != null && client.setActivePlayer(player)) {
 			player.setClientConnection(client);
 			log.info("[MAC_AUDIT] Player " + player.getName() + " (account " + account.getName() + ") has entered world with " + client.getMacAddress() + " MAC.");
-			World.getInstance().storeObject(player);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().storeObject(player);
 			StigmaService.onPlayerLogin(player);
 			if (playerAccData.getPlayerCommonData().getLastOnline() != null) {
 				long lastOnline = playerAccData.getPlayerCommonData().getLastOnline().getTime();
@@ -427,7 +427,7 @@ public final class PlayerEnterWorldService {
 			 */
 			TeleportService2.onLogOutOppositeMap(player);
 			// TeleportService2.sendSetBindPoint(player);
-			World.getInstance().preSpawn(player);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().preSpawn(player);
 			GameLocationBootstrapServices.vortexService().validateLoginZone(player);
 			client.sendPacket(new SM_PLAYER_SPAWN(player));
 			client.sendPacket(new SM_GAME_TIME());
@@ -717,7 +717,7 @@ public final class PlayerEnterWorldService {
 	 */
 	public static final void abyssLightLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player players) {
 					// Elyos Governor "Player Name" has graced Atreia.
@@ -729,7 +729,7 @@ public final class PlayerEnterWorldService {
 
 	public static final void abyssDarkLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player players) {
 					// Asmodian Governor "Player Name" has graced Atreia.

@@ -51,7 +51,7 @@ public class AbyssRankingCache {
 		renewPlayerRanking(Race.ASMODIANS);
 		renewPlayerRanking(Race.ELYOS);
 		renewLegionRanking();
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				player.resetAbyssRankListUpdated();

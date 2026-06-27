@@ -429,7 +429,7 @@ public class BrokerService {
 			elyosBrokerItems.put(brokerItem.getItemUniqueId(), brokerItem);
 			elyosSettledItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
 		}
-		Player seller = World.getInstance().findPlayer(brokerItem.getSellerId());
+		Player seller = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(brokerItem.getSellerId());
 		if (seller != null) {
 			PacketSendUtility.sendPacket(seller, new SM_BROKER_SERVICE(true, getTotalSettledKinah(seller)));
 			PacketSendUtility.sendPacket(seller, SM_SYSTEM_MESSAGE.STR_VENDOR_REGISTER_SOLD_OUT(itemNameId));
@@ -499,7 +499,7 @@ public class BrokerService {
 			elyosSettledItems.put(brokerItem.getItemUniqueId(), brokerItem);
 		}
 
-		Player seller = World.getInstance().findPlayer(brokerItem.getSellerId());
+		Player seller = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(brokerItem.getSellerId());
 
 		saveManager.add(new BrokerOpSaveTask(brokerItem));
 

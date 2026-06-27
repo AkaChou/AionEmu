@@ -110,7 +110,7 @@ public class TerritoryService {
 
 	public void scanForIntruders(Player player) {
 		Collection<Player> players = new ArrayList<Player>();
-		Iterator<Player> playerIt = World.getInstance().getPlayersIterator();
+		Iterator<Player> playerIt = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (playerIt.hasNext()) {
 			Player enemy = playerIt.next();
 			if (player.getWorldId() == enemy.getWorldId() && player.getRace() != enemy.getRace()) {
@@ -154,7 +154,7 @@ public class TerritoryService {
 	}
 
 	public void broadcastTerritoryList(TreeMap<Integer, LegionTerritory> terr) {
-		Collection<Player> players = World.getInstance().getAllPlayers();
+		Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
 		for (Player player : players) {
 			if (!player.isOnline()) {
 				return;

@@ -63,7 +63,7 @@ public class Time extends AdminCommand
 		time = GameTimeManager.getGameTime().getTime() + (60 * time) - min;
 		GameTimeManager.reloadTime(time);
 		GameTimeManager.getGameTime().calculateDayTime();
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_GAME_TIME());

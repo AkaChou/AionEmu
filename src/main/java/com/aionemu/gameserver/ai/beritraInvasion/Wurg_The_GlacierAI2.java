@@ -45,7 +45,7 @@ public class Wurg_The_GlacierAI2 extends AggressiveNpcAI2
 	}
 	
 	private void addGpPlayer() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -55,7 +55,7 @@ public class Wurg_The_GlacierAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceEreshkigalDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Legion's magic weapon has been destroyed.
@@ -65,7 +65,7 @@ public class Wurg_The_GlacierAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateWurgLanding() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {

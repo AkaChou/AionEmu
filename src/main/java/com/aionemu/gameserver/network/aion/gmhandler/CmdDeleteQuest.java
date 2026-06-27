@@ -49,7 +49,7 @@ public class CmdDeleteQuest extends AbstractGMHandler {
 		}
 
 		if (admin.getTarget() != null && admin.getTarget() instanceof Player)
-			t = World.getInstance().findPlayer(Util.convertName(admin.getTarget().getName()));
+			t = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(admin.getTarget().getName()));
 
 		Integer questID = Integer.parseInt(params);
 		if (questID <= 0) {

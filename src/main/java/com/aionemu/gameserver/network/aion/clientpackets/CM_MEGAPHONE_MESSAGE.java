@@ -65,7 +65,7 @@ public class CM_MEGAPHONE_MESSAGE extends AionClientPacket {
 		if (!deleteItem) {
 			return;
 		}
-		Iterator<Player> players = World.getInstance().getPlayersIterator();
+		Iterator<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (players.hasNext()) {
 			Player player = (Player) players.next();
 			if (this.isAll) {

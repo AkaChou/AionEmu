@@ -121,7 +121,7 @@ public class Ai2Command extends AdminCommand {
 		}
 		else if (param0.equals("event2")) {
 			AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
-			Creature creature = (Creature) World.getInstance().findVisibleObject(Integer.valueOf(params[2]));
+			Creature creature = (Creature) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(Integer.valueOf(params[2]));
 			if (eventType != null) {
 				npc.getAi2().onCreatureEvent(eventType, creature);
 			}

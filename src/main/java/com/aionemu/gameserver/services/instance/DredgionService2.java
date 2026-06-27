@@ -93,7 +93,7 @@ public class DredgionService2 {
 				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeA);
 				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeB);
 				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeC);
-				Iterator<Player> iter = World.getInstance().getPlayersIterator();
+				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 				while (iter.hasNext()) {
 					Player player = iter.next();
 					if (player.getLevel() > minLevel) {
@@ -110,7 +110,7 @@ public class DredgionService2 {
 	private void startDredgionRegistration() {
 		this.registerAvailable = true;
 		startUregisterDredgionTask();
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {

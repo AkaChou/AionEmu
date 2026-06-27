@@ -94,7 +94,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendVeilleGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -104,7 +104,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void addGpPlayer() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -115,7 +115,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceKilledVeille() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
@@ -128,7 +128,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceAgentUnderAttack() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Kaisinel's Agent Veille is under attack!
@@ -137,7 +137,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceJusinOdSpawn() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Empyrean Lord Agent summoned the Aether Concentrator.
@@ -148,7 +148,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceEmpyreanLordAgentHP50() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Empyrean Lord Agent's HP has dropped below 50%
@@ -157,7 +157,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceEmpyreanLordAgentHP10() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Empyrean Lord Agent's HP has dropped below 10%
@@ -166,7 +166,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceEmpoweredVeilleDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Agent battle has ended.
@@ -176,7 +176,7 @@ public class Empowered_VeilleAI2 extends AggressiveNpcAI2
 	}
 	
 	public void applyMastariusEnergy() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (player.getCommonData().getRace() == Race.ASMODIANS) {

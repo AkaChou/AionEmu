@@ -42,7 +42,7 @@ public class RPrison extends AdminCommand {
 		}
 
 		try {
-			Player playerFromPrison = World.getInstance().findPlayer(Util.convertName(params[0]));
+			Player playerFromPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 
 			if (playerFromPrison != null) {
 				PunishmentService.setIsInPrison(playerFromPrison, false, 0, "");

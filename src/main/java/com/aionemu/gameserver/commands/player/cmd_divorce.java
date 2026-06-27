@@ -44,8 +44,8 @@ public class cmd_divorce extends PlayerCommand {
 			return;
 		}
 
-		Player partner1 = World.getInstance().findPlayer(Util.convertName(params[0]));
-		Player partner2 = World.getInstance().findPlayer(Util.convertName(params[1]));
+		Player partner1 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player partner2 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 
 		final int ap1 = partner1.getAbyssRank().getAp();
 		final int ap2 = partner2.getAbyssRank().getAp();

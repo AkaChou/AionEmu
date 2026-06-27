@@ -167,10 +167,10 @@ public class TowerOfEternityService {
 				|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS))
 				|| ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS))
 				|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS))) {
-			World.getInstance().getWorldMap(player.getWorldId()).getMainWorldMapInstance()
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(player.getWorldId()).getMainWorldMapInstance()
 					.doOnAllPlayers(new Visitor<Player>() {
 						public void visit(Player player) {
-							for (VisibleObject npc : World.getInstance().getNpcs()) {
+							for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 								if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
 									if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
 										PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
@@ -198,10 +198,10 @@ public class TowerOfEternityService {
 	}
 
 	private void broadcastUpdate(final TowerOfEternityLocation tower) {
-		World.getInstance().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(new Visitor<Player>() {
 					public void visit(Player player) {
-						for (VisibleObject npc : World.getInstance().getNpcs()) {
+						for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
 								if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
 									PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
@@ -228,10 +228,10 @@ public class TowerOfEternityService {
 	}
 
 	private void broadcastDespawn(final TowerOfEternityLocation tower) {
-		World.getInstance().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(new Visitor<Player>() {
 					public void visit(Player player) {
-						for (VisibleObject npc : World.getInstance().getNpcs()) {
+						for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
 								if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
 									PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));

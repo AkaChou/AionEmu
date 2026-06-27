@@ -46,7 +46,7 @@ public class CM_CHAT_GROUP_INFO extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		Player target = World.getInstance().findPlayer(playerName);
+		Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
 		if (target == null) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ASK_PCINFO_LOGOFF);
 			return;

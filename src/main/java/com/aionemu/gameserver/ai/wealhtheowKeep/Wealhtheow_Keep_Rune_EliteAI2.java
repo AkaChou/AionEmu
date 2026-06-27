@@ -77,7 +77,7 @@ public class Wealhtheow_Keep_Rune_EliteAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceRuneElite() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite);

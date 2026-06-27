@@ -155,7 +155,7 @@ public class BeritraService {
 	public boolean beritraInvasionMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
@@ -170,7 +170,7 @@ public class BeritraService {
 	public boolean invasionCorridorMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Beritra Legion's Invasion Corridor has appeared.
@@ -186,7 +186,7 @@ public class BeritraService {
 	public boolean devilUnitThroughMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Devil Unit has infiltrated through the Invasion Corridor.
@@ -202,7 +202,7 @@ public class BeritraService {
 	public boolean devilUnitReturnMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Devil Unit is preparing for its return.
@@ -221,7 +221,7 @@ public class BeritraService {
 	public boolean ereshkigalInvasionMsg(int id) {
 		switch (id) {
 		case 35:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
@@ -236,7 +236,7 @@ public class BeritraService {
 	public boolean ereshkigalCorridorMsg(int id) {
 		switch (id) {
 		case 35:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Ereshkigal Legion's Invasion Corridor has been created.
@@ -252,7 +252,7 @@ public class BeritraService {
 	public boolean ereshkigalLegionThroughMsg(int id) {
 		switch (id) {
 		case 35:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
@@ -269,7 +269,7 @@ public class BeritraService {
 	public boolean beritraLegionReturnMsg(int id) {
 		switch (id) {
 		case 35:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Beritra Legion Devil Unit is preparing for its return.
@@ -288,7 +288,7 @@ public class BeritraService {
 	public boolean dredgionDefenseMsg(int id) {
 		switch (id) {
 		case 57:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Dreadgion_Start_L);

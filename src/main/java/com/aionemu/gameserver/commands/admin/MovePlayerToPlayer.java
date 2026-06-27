@@ -42,13 +42,13 @@ public class MovePlayerToPlayer extends AdminCommand {
 			return;
 		}
 
-		Player playerToMove = World.getInstance().findPlayer(Util.convertName(params[0]));
+		Player playerToMove = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 		if (playerToMove == null) {
 			PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 			return;
 		}
 
-		Player playerDestination = World.getInstance().findPlayer(Util.convertName(params[1]));
+		Player playerDestination = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 		if (playerDestination == null) {
 			PacketSendUtility.sendMessage(admin, "The destination player is not online.");
 			return;

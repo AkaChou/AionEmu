@@ -125,9 +125,9 @@ public class DisputeLandService {
 				continue;
 			}
 			if (active) {
-				World.getInstance().getWorldMap(world).setWorldOption(ZoneAttributes.PVP_ENABLED);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(world).setWorldOption(ZoneAttributes.PVP_ENABLED);
 			} else {
-				World.getInstance().getWorldMap(world).removeWorldOption(ZoneAttributes.PVP_ENABLED);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(world).removeWorldOption(ZoneAttributes.PVP_ENABLED);
 			}
 		}
 	}
@@ -137,7 +137,7 @@ public class DisputeLandService {
 	}
 
 	private void broadcast() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				broadcast(player);

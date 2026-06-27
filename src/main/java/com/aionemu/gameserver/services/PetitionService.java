@@ -83,8 +83,8 @@ public class PetitionService {
 			}
 		}
 		DAOManager.getDAO(PetitionDAO.class).deletePetition(playerObjId);
-		if (playerObjId > 0 && World.getInstance().findPlayer(playerObjId) != null) {
-			Player p = World.getInstance().findPlayer(playerObjId);
+		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
+			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
 		}
 		rebroadcastPlayerData();
@@ -95,8 +95,8 @@ public class PetitionService {
 		DAOManager.getDAO(PetitionDAO.class).setReplied(petitionId);
 		registeredPetitions.remove(petitionId);
 		rebroadcastPlayerData();
-		if (playerObjId > 0 && World.getInstance().findPlayer(playerObjId) != null) {
-			Player p = World.getInstance().findPlayer(playerObjId);
+		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
+			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
 		}
 	}
@@ -113,7 +113,7 @@ public class PetitionService {
 
 	private void rebroadcastPlayerData() {
 		for (Petition p : registeredPetitions.values()) {
-			Player player = World.getInstance().findPlayer(p.getPlayerObjId());
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(p.getPlayerObjId());
 			if (player != null) {
 				PacketSendUtility.sendPacket(player, new SM_PETITION(p));
 			}
@@ -121,7 +121,7 @@ public class PetitionService {
 	}
 
 	private void broadcastMessageToGM(Player sender, int petitionId) {
-		Iterator<Player> players = World.getInstance().getPlayersIterator();
+		Iterator<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (players.hasNext()) {
 			Player p = players.next();
 			if (p.getAccessLevel() > 0) {

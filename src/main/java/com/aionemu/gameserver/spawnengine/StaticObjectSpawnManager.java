@@ -70,7 +70,7 @@ public class StaticObjectSpawnManager {
 	 * @param instanceIndex
 	 */
 	private static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		world.storeObject(visibleObject);
 		world.setPosition(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), spawn.getZ(),
 				spawn.getHeading());

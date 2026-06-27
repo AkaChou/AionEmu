@@ -66,7 +66,7 @@ public class AgentStartRunnable implements Runnable {
 						GameLocationBootstrapServices.agentService().startAgentFight(loc.getId());
 					}
 				}
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// An Agent has spawned.

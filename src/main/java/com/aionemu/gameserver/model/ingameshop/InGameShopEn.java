@@ -259,7 +259,7 @@ public class InGameShopEn {
 			return;
 		}
 		
-		Player player = World.getInstance().findPlayer(foundRequest.playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(foundRequest.playerId);
 		if (player != null) {
 			if (result == 1) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_ERROR);

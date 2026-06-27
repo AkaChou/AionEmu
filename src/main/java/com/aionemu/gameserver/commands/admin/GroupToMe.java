@@ -39,7 +39,7 @@ public class GroupToMe extends AdminCommand {
 			return;
 		}
 
-		Player groupToMove = World.getInstance().findPlayer(Util.convertName(params[0]));
+		Player groupToMove = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 		if (groupToMove == null) {
 			PacketSendUtility.sendMessage(admin, "The player is not online.");
 			return;

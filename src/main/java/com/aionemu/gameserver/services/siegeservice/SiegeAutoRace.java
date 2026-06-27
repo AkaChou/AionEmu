@@ -65,7 +65,7 @@ public class SiegeAutoRace {
 				loc.setRace(SiegeRace.ASMODIANS);
 			}
 			loc.setLegionId(0);
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				public void visit(Player player) {
 					if (legionId != 0 && player.getRace().getRaceId() == oldOwnerRaceId) {
 						// %0 has conquered %1.

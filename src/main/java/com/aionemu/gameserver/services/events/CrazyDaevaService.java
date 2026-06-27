@@ -71,7 +71,7 @@ public class CrazyDaevaService {
 
 	// start choose rnd
 	public void startChoose() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(final Player player) {
 				int rnd = 0;
@@ -130,7 +130,7 @@ public class CrazyDaevaService {
 			if (killer.getRace().getRaceId() != victim.getRace().getRaceId()) {
 				final String spreeEnder = isPvPDeath ? ((Player) killer).getName() : "Killer";
 				AbyssPointsService.addAp((Player) killer, 5000);
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(final Player player) {
 						PacketSendUtility.sendYellowMessageOnCenter(player,
@@ -148,7 +148,7 @@ public class CrazyDaevaService {
 
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(final Player player) {
 						if (player.isInCrazy()) {

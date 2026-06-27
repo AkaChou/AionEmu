@@ -70,7 +70,7 @@ public class MoveBehindEffect extends DamageEffect {
 		PacketSendUtility.sendPacket(effector, new SM_TARGET_UPDATE(effector));
 		effect.setDashStatus(DashStatus.MOVEBEHIND);
 		effect.setSkillMoveType(SkillMoveType.MOVEBEHIND);
-		World.getInstance().updatePosition(effector, closestCollision.getX(), closestCollision.getY(),
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effector, closestCollision.getX(), closestCollision.getY(),
 				closestCollision.getZ(), effected.getHeading());
 		effect.getSkill().setTargetPosition(closestCollision.getX(), closestCollision.getY(), closestCollision.getZ(),
 				effected.getHeading());

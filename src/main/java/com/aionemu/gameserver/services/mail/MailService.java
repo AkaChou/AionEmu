@@ -122,7 +122,7 @@ public class MailService {
 			return;
 		}
 
-		Player recipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 		if (recipient != null) {
 			if (!recipient.getMailbox().haveFreeSlots()) {
 				PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.RECIPIENT_MAILBOX_FULL));

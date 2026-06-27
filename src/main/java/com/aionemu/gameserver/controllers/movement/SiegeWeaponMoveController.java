@@ -99,7 +99,7 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 		float newX = (targetDestX - ownerX) * distFraction + ownerX;
 		float newY = (targetDestY - ownerY) * distFraction + ownerY;
 		float newZ = (targetDestZ - ownerZ) * distFraction + ownerZ;
-		World.getInstance().updatePosition(owner, newX, newY, newZ, heading, false);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, newX, newY, newZ, heading, false);
 		if (directionChanged) {
 			movementMask = -32;
 			PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner));

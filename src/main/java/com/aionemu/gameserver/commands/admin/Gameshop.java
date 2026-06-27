@@ -183,7 +183,7 @@ public class Gameshop extends AdminCommand {
 
 				String name = Util.convertName(params[1]);
 
-				player = World.getInstance().findPlayer(name);
+				player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
 				if (player == null) {
 					PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 					return;
@@ -247,7 +247,7 @@ public class Gameshop extends AdminCommand {
 
 				String name = Util.convertName(params[1]);
 
-				player = World.getInstance().findPlayer(name);
+				player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
 				if (player == null) {
 					PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 					return;

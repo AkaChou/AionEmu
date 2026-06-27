@@ -70,7 +70,7 @@ public class AbyssRankCleaningService {
 				.getAbyssRankingPlayers(Race.ASMODIANS);
 		List<Player> ToArray = new ArrayList<Player>();
 		for (AbyssRankingResult result : rankingsElyos) {
-			Player p = World.getInstance().findPlayer(result.getPlayerName());
+			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(result.getPlayerName());
 			if (p == null) {
 				return;
 			}
@@ -82,7 +82,7 @@ public class AbyssRankCleaningService {
 		}
 
 		for (AbyssRankingResult result : rankingsAsmos) {
-			Player p = World.getInstance().findPlayer(result.getPlayerName());
+			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(result.getPlayerName());
 			if (p == null) {
 				return;
 			}

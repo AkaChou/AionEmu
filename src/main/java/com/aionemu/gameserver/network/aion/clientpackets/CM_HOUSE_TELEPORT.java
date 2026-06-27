@@ -59,7 +59,7 @@ public class CM_HOUSE_TELEPORT extends AionClientPacket {
 
 	@Override
 	protected void runImpl() {
-		Player player1 = World.getInstance().findPlayer(playerId1);
+		Player player1 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId1);
 		if (player1 == null || !player1.isOnline()) {
 			return;
 		}

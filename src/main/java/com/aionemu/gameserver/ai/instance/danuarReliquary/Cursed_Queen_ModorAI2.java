@@ -179,7 +179,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
                         spawn(284380, 244.12497f, 276.17401f, 242.625f, (byte) 0); //Modor's Bodyguard.
                         spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); //Vengeful Reaper.
 						spawn(284382, 253.12497f, 277.17401f, 242.625f, (byte) 0); //Hoarfrost Acheron Drake.
-						World.getInstance().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
 				        PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 					}
 				}
@@ -203,7 +203,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
                     }
                 };
                 float pos[] = pos1[Rnd.get(0, 2)];
-                World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+                com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
@@ -228,7 +228,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
                     }
                 };
                 float pos[] = pos1[Rnd.get(0, 4)];
-                World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+                com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
@@ -239,7 +239,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().updatePosition(getOwner(), 256.4457f, 257.6867f, 242.30f, (byte) 115);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256.4457f, 257.6867f, 242.30f, (byte) 115);
 				PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 			}
 		}, 2000);

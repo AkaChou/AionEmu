@@ -72,7 +72,7 @@ public class DynamicRiftService {
 				public void run() {
 					startDynamicRift(1);
 					startDynamicRift(3);
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendPacket(player,
@@ -86,7 +86,7 @@ public class DynamicRiftService {
 				public void run() {
 					startDynamicRift(2);
 					startDynamicRift(4);
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendPacket(player,
@@ -101,7 +101,7 @@ public class DynamicRiftService {
 				public void run() {
 					startDynamicRift(5);
 					startDynamicRift(6);
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							// The Shugo Merchant League has arrived.

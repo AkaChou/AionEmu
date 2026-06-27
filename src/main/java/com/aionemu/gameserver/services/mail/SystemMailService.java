@@ -110,7 +110,7 @@ public class SystemMailService {
 			// CHARACTER NAME.");
 			return false;
 		}
-		Player recipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 		if (recipient != null) {
 			if (recipient.getMailbox() != null && !(recipient.getMailbox().size() < 200)) {
 				// log.info("[SYSMAILSERVICE] > [SenderName: " + sender + "] [RecipientName: " +
@@ -194,7 +194,7 @@ public class SystemMailService {
 		if (recipientCommonData == null) {
 			return false;
 		}
-		Player recipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 		if (recipient != null) {
 			if (recipient.getMailbox() != null && !(recipient.getMailbox().size() < 200)) {
 				return false;
@@ -207,7 +207,7 @@ public class SystemMailService {
 			return false;
 		}
 		if (recipientCommonData.isOnline()) {
-			onlineRecipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+			onlineRecipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 		}
 		attachedItem.setEquipped(false);
 		attachedItem.setEquipmentSlot(0);

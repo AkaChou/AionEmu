@@ -136,7 +136,7 @@ public class LegionService {
 	}
 
 	public LegionService() {
-		this.world = World.getInstance();
+		this.world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 	}
 
 	/**
@@ -869,7 +869,7 @@ public class LegionService {
 		Legion legion = activePlayer.getLegion();
 		LegionMember legionMember;
 		Player targetPlayer;
-		if ((targetPlayer = World.getInstance().findPlayer(charName)) != null) {
+		if ((targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(charName)) != null) {
 			legionMember = targetPlayer.getLegionMember();
 			if (targetPlayer.getLegion() != legion) {
 				return;
@@ -1029,7 +1029,7 @@ public class LegionService {
 		Player player = null;
 		for (LegionMemberEx member : loadLegionMemberExList(legion, null)) {
 			if (member.isBrigadeGeneral()) {
-				player = World.getInstance().findPlayer(member.getObjectId());
+				player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(member.getObjectId());
 			}
 		}
 		return player;
@@ -2270,7 +2270,7 @@ public class LegionService {
 		if (legion == null) {
 			return;
 		}
-		Player player = World.getInstance().findPlayer(playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player == null) {
 			playerOnline = false;
 			DAOManager.getDAO(PlayerDAO.class).updateLegionJoinRequestState(playerId, state);

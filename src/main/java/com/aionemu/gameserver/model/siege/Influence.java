@@ -150,7 +150,7 @@ public class Influence {
 	@SuppressWarnings("unused")
 	private void broadcastInfluencePacket() {
 		SM_INFLUENCE_RATIO pkt = new SM_INFLUENCE_RATIO();
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			PacketSendUtility.sendPacket(player, pkt);

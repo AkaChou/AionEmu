@@ -41,8 +41,8 @@ public class MarryDel extends AdminCommand {
 			return;
 		}
 
-		Player partner1 = World.getInstance().findPlayer(Util.convertName(params[0]));
-		Player partner2 = World.getInstance().findPlayer(Util.convertName(params[1]));
+		Player partner1 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player partner2 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 		
 		if (partner1 == null || partner2 == null) {
 			PacketSendUtility.sendMessage(admin, "The specified player is not online.");

@@ -45,7 +45,7 @@ public class PowerUp extends AdminCommand {
 		// + "  Target: Named player, then targeted player, only then self.\n" + "  Default Value: Multiplier is 2.");
 		// return;
 		// }
-		// player = World.getInstance().findPlayer(Util.convertName(params[i]));
+		// player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[i]));
 		// if (player == null) {
 		// VisibleObject target = admin.getTarget();
 		// if (target instanceof Player)

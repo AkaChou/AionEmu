@@ -70,7 +70,7 @@ public class EventAi extends AdminCommand {
         if(params[0].equals("rewardall_inzone")){
             int rewardAmount = Integer.parseInt(params[2]);
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
             if(params[1].equals("gp")){
 
                 while(ita.hasNext()){
@@ -107,7 +107,7 @@ public class EventAi extends AdminCommand {
             RequestResponseHandler requestHim = new RequestResponseHandler(admin) {
                 @Override
                 public void acceptRequest(Creature requester, Player responder) {
-                    World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+                    com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
                         @Override
                         public void visit(Player player) {
                             if (MathUtil.isInRange(admin, player, range)){
@@ -155,7 +155,7 @@ public class EventAi extends AdminCommand {
         }else if(params[0].equalsIgnoreCase("rewardall_all")){
             int rewardAmount = Integer.parseInt(params[2]);
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
             if(params[1].equals("gp")){
 
                 while(ita.hasNext()){
@@ -189,7 +189,7 @@ public class EventAi extends AdminCommand {
                 return;
             }
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
             if(params[1].equals("gp")){
 
                 while(ita.hasNext()){
@@ -205,7 +205,7 @@ public class EventAi extends AdminCommand {
             }
 
         }else if(params[0].equals("movetomeall_inzone")){
-           Iterator<Player> ita = World.getInstance().getPlayersIterator();
+           Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
            while(ita.hasNext()){
                Player player = ita.next();
                if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName())){
@@ -217,7 +217,7 @@ public class EventAi extends AdminCommand {
             PacketSendUtility.sendMessage(admin, "Every player in this Map as been gathered to Your location!");
 
         }else if(params[0].equals("resall_inzone")){
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
             while(ita.hasNext()){
                 Player player = ita.next();
                 if(player.getWorldId() == admin.getWorldId() && player.getLifeStats().isAlreadyDead()){
@@ -243,7 +243,7 @@ public class EventAi extends AdminCommand {
             String actual;
             actual = "[ " +type+" ] : " + Message + " ";
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
             while(ita.hasNext()){
                 Player player = ita.next();
@@ -269,7 +269,7 @@ public class EventAi extends AdminCommand {
             String actual;
             actual = "[ " +type+" ] : " + Message + " ";
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
             while(ita.hasNext()){
                 Player player = ita.next();
@@ -281,7 +281,7 @@ public class EventAi extends AdminCommand {
         }else if(params[0].equalsIgnoreCase("stop")){
             if(params[1].equalsIgnoreCase("all")){
 
-                Iterator<Player> ita = World.getInstance().getPlayersIterator();
+                Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
                 while(ita.hasNext()){
                     Player player = ita.next();
@@ -307,7 +307,7 @@ public class EventAi extends AdminCommand {
             log.info("[eventai-stop{target}] GM : " + admin.getName() + " paralyzed both [" + target.getName() + "][" + targetsTarget.getName() +"] in mapId '" + admin.getWorldId() + "'");
             }
         }else if(params[0].equalsIgnoreCase("returnall_inzone")){
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
             while(ita.hasNext()){
                 Player player = ita.next();
@@ -319,7 +319,7 @@ public class EventAi extends AdminCommand {
             }
             log.info("[eventai-returnall_inzone] GM : " + admin.getName() + " returned everyone in mapId '" + admin.getWorldId() + "'");
         }else if(params[0].equalsIgnoreCase("port2jumping")){
-            Player player = World.getInstance().findPlayer(Util.convertName(params[1]));
+            Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 
             if (player == null) {
                 PacketSendUtility.sendMessage(player, "The specified player is not online.");

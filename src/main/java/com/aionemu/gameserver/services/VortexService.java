@@ -149,7 +149,7 @@ public class VortexService {
 	public boolean theobomosVortexMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ASMODIANS) {
@@ -168,7 +168,7 @@ public class VortexService {
 	public boolean brusthoninVortexMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -190,7 +190,7 @@ public class VortexService {
 	public boolean dimensionalVortexCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Dimensional Vortex will close in 90 minutes. When it closes, the alliance
@@ -341,7 +341,7 @@ public class VortexService {
 			float y = loc.getHomePoint().getY();
 			float z = loc.getHomePoint().getZ();
 			byte h = loc.getHomePoint().getHeading();
-			World.getInstance().setPosition(player, mapId, x, y, z, h);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, mapId, x, y, z, h);
 		}
 	}
 

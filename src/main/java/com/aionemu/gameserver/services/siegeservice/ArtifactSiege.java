@@ -92,7 +92,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 		if (getSiegeLocation().getRace() == SiegeRace.BALAUR) {
 			final AionServerPacket lRacePacket = new SM_SYSTEM_MESSAGE(1320004,
 					getSiegeLocation().getNameAsDescriptionId(), getSiegeLocation().getRace().getDescriptionId());
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player object) {
 					PacketSendUtility.sendPacket(object, lRacePacket);
@@ -111,7 +111,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 					winnerName, getSiegeLocation().getNameAsDescriptionId());
 			final AionServerPacket lRacePacket = new SM_SYSTEM_MESSAGE(1320004,
 					getSiegeLocation().getNameAsDescriptionId(), wRace.getRaceDescriptionId());
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, player.getRace().equals(wRace) ? wRacePacket : lRacePacket);
@@ -166,7 +166,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				case 8021:
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						GameLocationBootstrapServices.rvrService().startRvr(7);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// 마족이 아스테라의 모든 기지를 점령하자 아스테라 수비대 지원 병력이 추가로 파견되었습니다.
@@ -176,7 +176,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 						});
 					} else if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						GameLocationBootstrapServices.rvrService().stopRvr(7);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// 마족이 점령하고 있던 아스테라의 기지를 탈환하자 아스테라 수비대 지원 병력이 복귀했습니다.
@@ -189,7 +189,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				case 9021:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						GameLocationBootstrapServices.rvrService().startRvr(8);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// 천족이 노스폴드의 모든 기지를 점령하자 노스폴드 수비대 지원 병력이 추가로 파견되었습니다.
@@ -199,7 +199,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 						});
 					} else if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						GameLocationBootstrapServices.rvrService().stopRvr(8);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// 천족이 점령하고 있던 노스폴드의 기지를 탈환하자 노스폴드 수비대 지원 병력이 복귀했습니다.

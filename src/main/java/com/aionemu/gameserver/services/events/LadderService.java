@@ -260,7 +260,7 @@ public class LadderService {
 		normalQueueList.clear();
 		announceAll(
 				"[BG Open] Register with the button located on the right of your skill bar. You have <2 Minutes> to register!!!");
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player pl) {
 				if (pl.getBattleground() == null && !isInQueue(pl) && !GameFeatureServices.ffaService().isInArena(pl)) {
@@ -274,7 +274,7 @@ public class LadderService {
 				HandleNormalQueue(event);
 				normalReady = false;
 				normalTask = null;
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player pl) {
 						PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, false));
@@ -303,7 +303,7 @@ public class LadderService {
 			announceAll("WARNING!!! " + bg.getName()
 					+ "The event start in 30 seconds ! Register you by using the right button on your skill bars!!!");
 		}
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player pl) {
 				if (pl.getBattleground() == null && !isInQueue(pl)) {
@@ -314,7 +314,7 @@ public class LadderService {
 		eventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player pl) {
 						PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, false));
@@ -454,7 +454,7 @@ public class LadderService {
 			}
 		} else {
 			for (Integer objectId : validParticipants) {
-				AionObject ao = World.getInstance().findVisibleObject(objectId);
+				AionObject ao = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
 				if (ao != null && ao instanceof Player) {
 					scheduleAnnouncement((Player) ao, "No opponents found!!! Please wait for the next registration.",
 							0);
@@ -588,7 +588,7 @@ public class LadderService {
 			}
 		} else {
 			for (Integer objectId : validParticipants) {
-				AionObject ao = World.getInstance().findVisibleObject(objectId);
+				AionObject ao = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
 				if (ao != null && ao instanceof Player) {
 					scheduleAnnouncement((Player) ao, "\uE05C",
 							"There are no more place!!!, You will more luck next time!", 0);
@@ -615,7 +615,7 @@ public class LadderService {
 			eventQueueList.clear();
 			eventTask = null;
 			eventReady = false;
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player pl) {
 					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, false));
@@ -626,7 +626,7 @@ public class LadderService {
 	}
 
 	private void announceAll(final String msg) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (player.getBattleground() == null && !GameFeatureServices.ffaService().isInArena(player)) {
@@ -1049,7 +1049,7 @@ public class LadderService {
 		List<Integer> technist = new ArrayList<Integer>();
 		List<Integer> muse = new ArrayList<Integer>();
 		for (Integer objectId : participants) {
-			Player pl = World.getInstance().findPlayer(objectId);
+			Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
 			if (pl == null) {
 				continue;
 			}

@@ -224,7 +224,7 @@ public class BanditService {
 	}
 
 	public void sendAnnounce(final Player player) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player pl) {
 				if (pl.getWorldId() == player.getWorldId() && pl != player) {
@@ -235,7 +235,7 @@ public class BanditService {
 	}
 
 	public void sendDieAnnounce(final Player looser, final Player killer) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player pl) {
 				if (pl.getWorldId() == looser.getWorldId()) {

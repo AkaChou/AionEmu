@@ -42,7 +42,7 @@ public class AnnounceFaction extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Syntax: //announcefaction <ely | asmo> <message>");
 		}
 		else {
-			Iterator<Player> iter = World.getInstance().getPlayersIterator();
+			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			String message = null;
 
 			if (params[0].equals("ely"))

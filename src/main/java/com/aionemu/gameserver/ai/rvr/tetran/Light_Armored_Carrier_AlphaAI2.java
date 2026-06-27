@@ -89,7 +89,7 @@ public class Light_Armored_Carrier_AlphaAI2 extends GeneralNpcAI2
 	}
 
 	private void announceF6RaidSumAtta01Light() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {
@@ -101,7 +101,7 @@ public class Light_Armored_Carrier_AlphaAI2 extends GeneralNpcAI2
 		});
 	}
 	private void announceF6RaidSumKill01LightDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (player.isOnline()) {

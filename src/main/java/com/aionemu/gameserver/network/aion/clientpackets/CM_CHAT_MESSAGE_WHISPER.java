@@ -56,7 +56,7 @@ public class CM_CHAT_MESSAGE_WHISPER extends AionClientPacket {
 		name = ChatUtil.getRealAdminName(name);
 		String formatname = Util.convertName(name);
 		Player sender = getConnection().getActivePlayer();
-		Player receiver = World.getInstance().findPlayer(formatname);
+		Player receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(formatname);
 		if (LoggingConfig.LOG_CHAT)
 			log.info(
 					String.format("[MESSAGE] [%s] Whisper To: %s, Message: %s", sender.getName(), formatname, message));

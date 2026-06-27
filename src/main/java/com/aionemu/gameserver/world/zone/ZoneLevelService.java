@@ -33,7 +33,7 @@ public class ZoneLevelService {
 	 * Check water level (start drowning) and map death level (die)
 	 */
 	public static void checkZoneLevels(Player player) {
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		float z = player.getZ();
 
 		if (player.getLifeStats().isAlreadyDead()) {

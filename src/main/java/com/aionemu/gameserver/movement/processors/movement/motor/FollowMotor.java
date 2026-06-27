@@ -131,7 +131,7 @@ public class FollowMotor extends AMovementMotor {
 										- FollowMotor.this._owner.getObjectTemplate().getHeight()
 								: newZ;
 					}
-					World.getInstance().updatePosition(FollowMotor.this._owner, position.x, position.y, position.z,
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(FollowMotor.this._owner, position.x, position.y, position.z,
 							FollowMotor.this.new_targetHeading, false);
 				} else {
 					PacketSendUtility.broadcastPacket(FollowMotor.this._owner,

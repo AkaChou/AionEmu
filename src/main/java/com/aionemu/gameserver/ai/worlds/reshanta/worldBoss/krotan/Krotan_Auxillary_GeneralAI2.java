@@ -86,7 +86,7 @@ public class Krotan_Auxillary_GeneralAI2 extends AggressiveNpcAI2
 	}
 
 	private void announceUnsealedKrotan() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Unsealed Krotan.

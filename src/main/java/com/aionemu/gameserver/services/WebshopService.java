@@ -45,7 +45,7 @@ public class WebshopService {
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player pl) {
 						List<RewardEntryItem> liste = DAOManager.getDAO(RewardServiceDAO.class)

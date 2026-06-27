@@ -50,7 +50,7 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceKilledBattleship() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
@@ -63,7 +63,7 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void sendDredgionGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {

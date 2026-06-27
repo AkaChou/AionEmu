@@ -66,7 +66,7 @@ public final class CmdCombineSkill extends AbstractGMHandler {
 		if (commandArgs.length >= 3) {
 			String playerName = commandArgs[2];
 			player = null;
-			Collection<Player> allPlayers = World.getInstance().getAllPlayers();
+			Collection<Player> allPlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
 			for (Player p : allPlayers) {
 				if (p.getName().equalsIgnoreCase(playerName)) {
 					player = p;
