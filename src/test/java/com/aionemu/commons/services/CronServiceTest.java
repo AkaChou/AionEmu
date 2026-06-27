@@ -2,6 +2,7 @@ package com.aionemu.commons.services;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.commons.services.cron.RunnableRunner;
@@ -23,16 +24,16 @@ class CronServiceTest {
         CronService second;
 
         try (ServiceContext.Scope ignored = ServiceContext.use(context)) {
-            CronService.initSingleton(TestRunnableRunner.class);
+            first = CronService.initSingleton(TestRunnableRunner.class);
             assertTrue(CronService.isInitialized());
-            first = CronService.getInstance();
+            assertSame(first, CronService.getInstance());
 
             first.shutdown();
 
             assertFalse(CronService.isInitialized());
 
-            CronService.initSingleton(TestRunnableRunner.class);
-            second = CronService.getInstance();
+            second = CronService.initSingleton(TestRunnableRunner.class);
+            assertSame(second, CronService.getInstance());
             second.shutdown();
         }
 

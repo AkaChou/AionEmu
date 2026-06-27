@@ -88,7 +88,7 @@ public final class CronService {
      * @param runableRunner 任务执行器类 Task executor class
      * @throws CronServiceException 如果服务已初始化 if service is already initialized
      */
-    public static synchronized void initSingleton(Class<? extends RunnableRunner> runableRunner) {
+    public static synchronized CronService initSingleton(Class<? extends RunnableRunner> runableRunner) {
       String context = ServiceContext.current();
       if (instances.containsKey(context)) {
          throw new CronServiceException("CronService is already initialized");
@@ -97,6 +97,7 @@ public final class CronService {
          cs.context = context;
          cs.init(runableRunner);
          instances.put(context, cs);
+         return cs;
       }
    }
 

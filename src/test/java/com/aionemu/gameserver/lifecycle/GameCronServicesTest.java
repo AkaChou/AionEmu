@@ -14,6 +14,8 @@ class GameCronServicesTest {
     void shutdownFallbackUsesCronServiceHelperInsteadOfFetchingSingleton() throws IOException {
         String servicesSource = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameCronServices.java"));
 
+        assertTrue(servicesSource.contains("resolvedCronService = CronService.initSingleton(ThreadPoolManagerRunnableRunner.class)"));
+        assertFalse(servicesSource.contains("resolvedCronService = CronService.getInstance()"));
         assertTrue(servicesSource.contains("CronService.shutdownCurrentIfInitialized()"));
         assertFalse(servicesSource.contains("CronService.getInstance().shutdown()"));
     }
