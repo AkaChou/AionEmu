@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.toypet;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.PetCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -46,7 +48,7 @@ public class PetAdoptionService {
 		if (petCommonData != null) {
 			PacketSendUtility.sendPacket(player, new SM_PET(1, petCommonData));
 			if (expireTime > 0) {
-				ExpireTimerTask.getInstance().addTask(petCommonData, player);
+				GameTaskManagerServices.expireTimerTask().addTask(petCommonData, player);
 			}
 		}
 	}

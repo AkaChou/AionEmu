@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player.f2p;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -39,7 +41,7 @@ public class F2p {
 		f2pacc.setActive(true);
 		if (isNew) {
 			if (f2pacc.getExpireTime() != 0) {
-				ExpireTimerTask.getInstance().addTask(f2pacc, owner);
+				GameTaskManagerServices.expireTimerTask().addTask(f2pacc, owner);
 			}
 			DAOManager.getDAO(F2pDAO.class).storeF2p(owner.getObjectId().intValue(), f2pacc.getExpireTime());
 		}
@@ -50,7 +52,7 @@ public class F2p {
 		f2pacc.setActive(true);
 		if (isNew) {
 			if (f2pacc.getExpireTime() != 0) {
-				ExpireTimerTask.getInstance().addTask(f2pacc, owner);
+				GameTaskManagerServices.expireTimerTask().addTask(f2pacc, owner);
 			}
 			DAOManager.getDAO(F2pDAO.class).storeF2p(owner.getObjectId().intValue(), f2pacc.getExpireTime());
 		}

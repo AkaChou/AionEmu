@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.Collection;
@@ -157,7 +159,7 @@ public class ItemService {
 		while (!inventory.isFull(itemTemplate.getExtraInventoryId()) && count > 0) {
 			Item newItem = ItemFactory.newItem(itemTemplate.getTemplateId());
 			if (newItem.getExpireTime() != 0) {
-				ExpireTimerTask.getInstance().addTask(newItem, player);
+				GameTaskManagerServices.expireTimerTask().addTask(newItem, player);
 			}
 			if (sourceItem != null) {
 				copyItemInfo(sourceItem, newItem);

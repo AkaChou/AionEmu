@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.util.Collection;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -42,7 +44,7 @@ public class MinionList {
 	public void loadMinions() {
 		for (MinionCommonData minionCommonData : DAOManager.getDAO(PlayerMinionsDAO.class).getPlayerMinions(player)) {
 			if (minionCommonData.getExpireTime() > 0) {
-				ExpireTimerTask.getInstance().addTask(minionCommonData, player);
+				GameTaskManagerServices.expireTimerTask().addTask(minionCommonData, player);
 			}
 			minions.put(minionCommonData.getObjectId(), minionCommonData);
 		}

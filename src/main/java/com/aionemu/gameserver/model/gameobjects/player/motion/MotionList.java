@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player.motion;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class MotionList {
         }
         if (persist) {
             if (motion.getExpireTime() != 0) {
-                ExpireTimerTask.getInstance().addTask(motion, owner);
+                GameTaskManagerServices.expireTimerTask().addTask(motion, owner);
             }
             DAOManager.getDAO(MotionDAO.class).storeMotion(owner.getObjectId(), motion);
         }

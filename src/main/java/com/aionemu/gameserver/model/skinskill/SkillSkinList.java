@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.skinskill;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,7 +79,7 @@ public class SkillSkinList {
 			if (!skillskins.containsKey(skinId)) {
 				skillskins.put(skinId, skillSkin);
 				if (time != 0) {
-					ExpireTimerTask.getInstance().addTask(skillSkin, owner);
+					GameTaskManagerServices.expireTimerTask().addTask(skillSkin, owner);
 				}
 				DAOManager.getDAO(PlayerSkillSkinListDAO.class).storeSkillSkins(owner, skillSkin);
 			} else {

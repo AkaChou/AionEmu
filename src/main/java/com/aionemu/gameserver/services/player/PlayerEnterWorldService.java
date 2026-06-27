@@ -1,6 +1,8 @@
 
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameEventServices;
@@ -644,41 +646,41 @@ public final class PlayerEnterWorldService {
 				if (storage != null) {
 					for (Item item : storage.getItemsWithKinah()) {
 						if (item.getExpireTime() > 0) {
-							ExpireTimerTask.getInstance().addTask(item, player);
+							GameTaskManagerServices.expireTimerTask().addTask(item, player);
 						}
 					}
 				}
 			}
 			for (Item item : player.getEquipment().getEquippedItems()) {
 				if (item.getExpireTime() > 0) {
-					ExpireTimerTask.getInstance().addTask(item, player);
+					GameTaskManagerServices.expireTimerTask().addTask(item, player);
 				}
 			}
 			for (Motion motion : player.getMotions().getMotions().values()) {
 				if (motion.getExpireTime() != 0) {
-					ExpireTimerTask.getInstance().addTask(motion, player);
+					GameTaskManagerServices.expireTimerTask().addTask(motion, player);
 				}
 			}
 			for (Emotion emotion : player.getEmotions().getEmotions()) {
 				if (emotion.getExpireTime() != 0) {
-					ExpireTimerTask.getInstance().addTask(emotion, player);
+					GameTaskManagerServices.expireTimerTask().addTask(emotion, player);
 				}
 			}
 			for (Title title : player.getTitleList().getTitles()) {
 				if (title.getExpireTime() != 0) {
-					ExpireTimerTask.getInstance().addTask(title, player);
+					GameTaskManagerServices.expireTimerTask().addTask(title, player);
 				}
 			}
 			for (SkillSkin skillSkin : player.getSkillSkinList().getSkillSkins()) {
 				if (skillSkin.getExpireTime() != 0) {
-					ExpireTimerTask.getInstance().addTask(skillSkin, player);
+					GameTaskManagerServices.expireTimerTask().addTask(skillSkin, player);
 				}
 			}
 			if (player.getHouseRegistry() != null) {
 				for (HouseObject<?> obj : player.getHouseRegistry().getObjects()) {
 					if (obj.getPersistentState() != PersistentState.DELETED) {
 						if (obj.getObjectTemplate().getUseDays() > 0) {
-							ExpireTimerTask.getInstance().addTask(obj, player);
+							GameTaskManagerServices.expireTimerTask().addTask(obj, player);
 						}
 					}
 				}

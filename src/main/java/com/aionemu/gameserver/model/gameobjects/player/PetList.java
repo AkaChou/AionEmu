@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +49,7 @@ public class PetList {
 		PetCommonData lastUsedPet = null;
 		for (PetCommonData pet : playerPets) {
 			if (pet.getExpireTime() > 0) {
-				ExpireTimerTask.getInstance().addTask(pet, player);
+				GameTaskManagerServices.expireTimerTask().addTask(pet, player);
 			}
 			pets.put(pet.getPetId(), pet);
 			if (lastUsedPet == null || pet.getDespawnTime().after(lastUsedPet.getDespawnTime())) {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player.title;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -76,7 +78,7 @@ public class TitleList {
 			if (!titles.containsKey(titleId)) {
 				titles.put(titleId, entry);
 				if (time != 0)
-					ExpireTimerTask.getInstance().addTask(entry, owner);
+					GameTaskManagerServices.expireTimerTask().addTask(entry, owner);
 				DAOManager.getDAO(PlayerTitleListDAO.class).storeTitles(owner, entry);
 			} else {
 				PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_TOOLTIP_LEARNED_TITLE);

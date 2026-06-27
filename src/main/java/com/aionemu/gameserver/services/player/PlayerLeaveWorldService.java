@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -170,7 +172,7 @@ public class PlayerLeaveWorldService {
 			ChatService.onPlayerLogout(player);
 		}
 		PlayerService.storePlayer(player);
-		ExpireTimerTask.getInstance().removePlayer(player);
+		GameTaskManagerServices.expireTimerTask().removePlayer(player);
 		if (player.getCraftingTask() != null) {
 			player.getCraftingTask().stop(true);
 		}
