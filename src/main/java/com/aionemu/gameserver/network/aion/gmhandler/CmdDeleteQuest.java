@@ -17,7 +17,7 @@
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.configs.administration.PanelConfig;
-import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
@@ -57,7 +57,7 @@ public class CmdDeleteQuest extends AbstractGMHandler {
 		}
 
 		@SuppressWarnings("static-access")
-		QuestTemplate qt = DataManager.getInstance().QUEST_DATA.getQuestById(questID);
+		QuestTemplate qt = GameStaticDataServices.dataManager().QUEST_DATA.getQuestById(questID);
 		if (qt == null) {
 			PacketSendUtility.sendMessage(admin, "Quest with ID: " + questID + " was not found");
 			return;

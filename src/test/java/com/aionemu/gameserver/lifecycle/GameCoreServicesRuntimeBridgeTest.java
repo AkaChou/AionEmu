@@ -57,6 +57,7 @@ class GameCoreServicesRuntimeBridgeTest {
                 provider(HTMLCache.class, htmlCache));
 
         try {
+            assertSame(dataManager, GameStaticDataServices.dataManager());
             assertSame(htmlCache, GameStaticDataServices.htmlCache());
         } finally {
             staticDataServices.destroy();
@@ -97,6 +98,25 @@ class GameCoreServicesRuntimeBridgeTest {
             String content = Files.readString(source);
 
             assertFalse(content.contains("HTMLCache.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesStaticDataBridgeInsteadOfDirectDataManagerSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("dataholders/DataManager.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameCoreServiceFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameStaticDataServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("DataManager.getInstance()"), source.toString());
         }
     }
 
