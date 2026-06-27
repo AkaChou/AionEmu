@@ -3397,7 +3397,7 @@ public class Player extends Creature {
 		return false;
 	}
 
-	private List<DisassembleItem> disassemblyItemLists = new FastList<DisassembleItem>();
+	private List<DisassembleItem> disassemblyItemLists = new ArrayList<DisassembleItem>();
 
 	public List<DisassembleItem> getDisassemblyItemLists() {
 		return disassemblyItemLists;

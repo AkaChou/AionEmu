@@ -95,6 +95,22 @@ class ModelCollectionImplementationTest {
 				"new FastList<Player>()");
 	}
 
+	@Test
+	void modelAndServiceListFieldsAvoidFastListInitializers() throws Exception {
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/services/transfers/PlayerTransferService.java",
+				"rsList = FastList.newInstance()");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/services/drop/DropRegistrationService.java",
+				"private FastList<Integer> noReductionMaps");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/services/drop/DropRegistrationService.java",
+				"noReductionMaps = new FastList<Integer>()");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/model/autogroup/LookingForParty.java",
+				"FastList<SearchInstance> tempList");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/model/skill/PlayerSkillList.java",
+				"FastList<Integer> linked");
+		assertSourceOmits("src/main/java/com/aionemu/gameserver/model/gameobjects/player/Player.java",
+				"new FastList<DisassembleItem>()");
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();

@@ -66,7 +66,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.DropRewardEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 
 public class DropRegistrationService {
@@ -74,7 +73,7 @@ public class DropRegistrationService {
 
 	private Map<Integer, Set<DropItem>> currentDropMap = new FastMap<Integer, Set<DropItem>>().shared();
 	private Map<Integer, DropNpc> dropRegistrationMap = new FastMap<Integer, DropNpc>().shared();
-	private FastList<Integer> noReductionMaps;
+	private List<Integer> noReductionMaps;
 
 	Logger log = LoggerFactory.getLogger(DropRegistrationService.class);
 
@@ -84,7 +83,7 @@ public class DropRegistrationService {
 
 	public DropRegistrationService() {
 		init();
-		noReductionMaps = new FastList<Integer>();
+		noReductionMaps = new ArrayList<Integer>();
 		for (String zone : DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES.split(",")) {
 			noReductionMaps.add(Integer.parseInt(zone));
 		}
