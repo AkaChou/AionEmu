@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -175,13 +177,13 @@ public class Reload extends AdminCommand {
 				return;
 			}
 			if (data != null) {
-				EventService.getInstance().stop();
+				GameEventServices.eventService().stop();
 				String text = data.getActiveText();
 				if (text == null || text.trim().length() == 0)
 					text = "NONE";
 				DataManager.EVENT_DATA.setAllEvents(data.getAllEvents(), data.getActiveText());
 				PacketSendUtility.sendMessage(admin, "Active events: " + text);
-				EventService.getInstance().start();
+				GameEventServices.eventService().start();
 			}
 		}
 		else

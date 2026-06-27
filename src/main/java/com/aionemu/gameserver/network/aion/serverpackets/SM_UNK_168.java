@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -45,7 +47,7 @@ public class SM_UNK_168 extends AionServerPacket {
 		writeC(0);
 		writeC(GSConfig.CHARACTER_REENTRY_TIME);
 		writeC(EventsConfig.ENABLE_DECOR);
-		writeC(EventService.getInstance().getEventType().getId()); // 18 Summer Splash V1 / 20 Summer Splash V2
+		writeC(GameEventServices.eventService().getEventType().getId()); // 18 Summer Splash V1 / 20 Summer Splash V2
 		writeB(new byte[3]);
 		writeC(4);
 		writeC(1);

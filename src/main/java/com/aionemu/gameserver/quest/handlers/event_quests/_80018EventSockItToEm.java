@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
@@ -96,7 +98,7 @@ public class _80018EventSockItToEm extends QuestHandler {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 
-		if (EventService.getInstance().checkQuestIsActive(questId)) {
+		if (GameEventServices.eventService().checkQuestIsActive(questId)) {
 			if (!QuestService.checkLevelRequirement(questId, player.getCommonData().getLevel()))
 				return false;
 

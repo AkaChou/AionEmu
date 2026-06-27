@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.Race;
@@ -87,7 +89,7 @@ public class _80030EventAnUnwelcomeGaze extends QuestHandler {
 	@Override
 	public HandlerResult onItemUseEvent(final QuestEnv env, Item item) {
 		// check if the parent quest is active (you get Charm Cards)
-		if (!EventService.getInstance().checkQuestIsActive(80029))
+		if (!GameEventServices.eventService().checkQuestIsActive(80029))
 			return HandlerResult.UNKNOWN;
 
 		final Player player = env.getPlayer();
@@ -140,7 +142,7 @@ public class _80030EventAnUnwelcomeGaze extends QuestHandler {
 	public boolean onLvlUpEvent(QuestEnv env) {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (!EventService.getInstance().checkQuestIsActive(questId) && qs != null)
+		if (!GameEventServices.eventService().checkQuestIsActive(questId) && qs != null)
 			QuestService.abandonQuest(player, questId);
 		return true;
 	}

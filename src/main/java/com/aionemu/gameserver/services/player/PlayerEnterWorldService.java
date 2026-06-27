@@ -1,6 +1,10 @@
 
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
@@ -609,7 +613,7 @@ public final class PlayerEnterWorldService {
 			// SM_PET
 			PetService.getInstance().onPlayerLogin(player);
 			// SM_Minions
-			MinionService.getInstance().onPlayerLogin(player);
+			GameEventBootstrapServices.minionService().onPlayerLogin(player);
 			WindyGorgeService.getInstance().onLogin(player);
 			MailService.getInstance().onPlayerLogin(player);
 			GameHousingServices.housingService().onPlayerLogin(player);
@@ -683,7 +687,7 @@ public final class PlayerEnterWorldService {
 			player.getController().addTask(TaskId.INVENTORY_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000, PeriodicSaveConfig.PLAYER_ITEMS * 1000));
 			SurveyService.getInstance().showAvailable(player);
 			if (EventsConfig.ENABLE_EVENT_SERVICE) {
-				EventService.getInstance().onPlayerLogin(player);
+				GameEventServices.eventService().onPlayerLogin(player);
 			}
 			RelinquishCraftStatus.removeExcessCraftStatus(player, false);
 			PlayerTransferService.getInstance().onEnterWorld(player);

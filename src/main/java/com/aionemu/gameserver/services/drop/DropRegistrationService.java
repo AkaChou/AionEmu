@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -187,7 +189,7 @@ public class DropRegistrationService {
 		currentDropMap.put(npcObjId, droppedItems);
 		index = QuestService.getQuestDrop(droppedItems, index, npc, groupMembers, genesis);
 		if (EventsConfig.ENABLE_EVENT_SERVICE) {
-			List<EventTemplate> activeEvents = EventService.getInstance().getActiveEvents();
+			List<EventTemplate> activeEvents = GameEventServices.eventService().getActiveEvents();
 			for (EventTemplate eventTemplate : activeEvents) {
 				if (eventTemplate.EventDrop() == null) {
 					continue;

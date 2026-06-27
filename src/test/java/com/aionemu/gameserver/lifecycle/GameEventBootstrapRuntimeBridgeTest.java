@@ -11,6 +11,7 @@ import com.aionemu.gameserver.services.toypet.MinionService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -51,6 +52,24 @@ class GameEventBootstrapRuntimeBridgeTest {
         assertFalse(source.contains("ShugoSweepService.getInstance()"));
         assertFalse(source.contains("AtreianPassportService.getInstance()"));
         assertFalse(source.contains("EventWindowService.getInstance()"));
+    }
+
+    @Test
+    void gameServerCodeUsesMinionServiceBridgeInsteadOfDirectSingleton() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            List<Path> sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/toypet/MinionService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventBootstrapServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventBootstrapFallbacks.java")))
+                .toList();
+
+            for (Path sourcePath : sources) {
+                String source = Files.readString(sourcePath);
+
+                assertFalse(source.contains("MinionService.getInstance()"), sourcePath.toString());
+            }
+        }
     }
 
     private <T> T instance(Class<T> type) {

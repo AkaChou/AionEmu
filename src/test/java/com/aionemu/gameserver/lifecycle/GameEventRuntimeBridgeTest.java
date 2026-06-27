@@ -11,6 +11,7 @@ import com.aionemu.gameserver.taskmanager.tasks.PacketBroadcaster;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -51,6 +52,24 @@ class GameEventRuntimeBridgeTest {
         assertFalse(source.contains("CrazyDaevaService.getInstance()"));
         assertFalse(source.contains("AbyssRankUpdateService.getInstance()"));
         assertFalse(source.contains("PacketBroadcaster.getInstance()"));
+    }
+
+    @Test
+    void gameServerCodeUsesEventServiceBridgeInsteadOfDirectSingleton() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            List<Path> sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/EventService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEventRuntimeFallbacks.java")))
+                .toList();
+
+            for (Path sourcePath : sources) {
+                String source = Files.readString(sourcePath);
+
+                assertFalse(source.matches("(?s).*\\bEventService\\.getInstance\\(\\).*"), sourcePath.toString());
+            }
+        }
     }
 
     private <T> T instance(Class<T> type) {

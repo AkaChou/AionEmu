@@ -16,6 +16,8 @@
 
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 /**
  * @author Rolandas
  */
@@ -76,7 +78,7 @@ public class _80028EventMeetTheFayrefolk extends QuestHandler {
 	public boolean onLvlUpEvent(QuestEnv env) {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (!EventService.getInstance().checkQuestIsActive(questId) && qs != null)
+		if (!GameEventServices.eventService().checkQuestIsActive(questId) && qs != null)
 			QuestService.abandonQuest(player, questId);
 		return true;
 	}

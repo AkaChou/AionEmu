@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -171,7 +173,7 @@ public class CM_PET extends AionClientPacket {
 			break;
 		case SPAWN:
 			if (player.getMinion() != null) {
-				MinionService.getInstance().despawnMinion(player, 0);
+				GameEventBootstrapServices.minionService().despawnMinion(player, 0);
 			}
 			PetService.getInstance().switchOffBuff(player);
 			PetSpawnService.summonPet(player, petId, true);

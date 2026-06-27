@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -144,7 +146,7 @@ public class PlayerLeaveWorldService {
 		}
 
 		if (player.getMinion() != null) {
-			MinionService.getInstance().despawnMinion(player, player.getMinion().getObjectId());
+			GameEventBootstrapServices.minionService().despawnMinion(player, player.getMinion().getObjectId());
 		}
 
 		if (player.getPostman() != null) {

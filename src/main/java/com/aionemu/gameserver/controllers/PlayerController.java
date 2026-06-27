@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -608,7 +610,7 @@ public class PlayerController extends CreatureController<Player> {
 		 */
 		Minion minion = player.getMinion();
 		if (minion != null) {
-			MinionService.getInstance().despawnMinion(player, minion.getObjectId());
+			GameEventBootstrapServices.minionService().despawnMinion(player, minion.getObjectId());
 		}
 
 		if (player.isInState(CreatureState.FLYING)) {

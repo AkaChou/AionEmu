@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.Race;
@@ -86,7 +88,7 @@ public class _80033EventAvertingTheGaze extends QuestHandler {
 	@Override
 	public HandlerResult onItemUseEvent(final QuestEnv env, Item item) {
 		// check if the parent quest is active (you get Charm Cards)
-		if (!EventService.getInstance().checkQuestIsActive(80032))
+		if (!GameEventServices.eventService().checkQuestIsActive(80032))
 			return HandlerResult.FAILED;
 
 		final Player player = env.getPlayer();
