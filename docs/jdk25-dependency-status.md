@@ -34,14 +34,14 @@ This project targets Java 25 bytecode with `maven.compiler.release=25`. Dependen
 
 | Dependency | Status | Reason | Recommendation |
 | --- | --- | --- | --- |
-| `javolution:javolution` | Stale / effectively stopped | Maven Central latest is `5.5.1`, last updated `2011-08-15`. No current JDK 25 support statement was found in release metadata. | Keep only as a compatibility dependency for now. Replace usages gradually with JDK collections or a maintained library before relying on newer JDK collection/runtime features in that code path. |
-| `net.sf.trove4j:trove4j` | Stale / effectively stopped | Maven Central latest is `3.0.3`, last updated `2014-12-04`. No current JDK 25 support statement was found in release metadata. | Keep only as a compatibility dependency for now. Prefer fastutil, HPPC, Eclipse Collections, or standard collections for new code. |
+| `javolution:javolution` | Removed | Maven Central latest is `5.5.1`, last updated `2011-08-15`. No current JDK 25 support statement was found in release metadata. | Do not reintroduce. Remaining `FastList` / `FastMap` names are repo-local compatibility classes backed by JDK collections, not the Javolution artifact. |
+| `net.sf.trove4j:trove4j` | Removed | Maven Central latest is `3.0.3`, last updated `2014-12-04`. No current JDK 25 support statement was found in release metadata. | Do not reintroduce. Primitive collection needs should use maintained libraries or JDK collections. |
 
 ## Vendored JDK compatibility risk
 
 | Code | Status | Evidence | Recommendation |
 | --- | --- | --- | --- |
-| `com.aionemu.commons.utils.internal.chmv8` | JDK-internal API risk | `mvn test` on JDK 26 emits a terminal deprecation warning for `sun.misc.Unsafe::objectFieldOffset` from `ForkJoinTask`. This still passes on the current toolchain, but the API is marked for future removal. | Do not expand usage. Migrate remaining `ConcurrentHashMapV8` / chmv8 users to `java.util.concurrent` in a separate focused batch because the impact radius is large. |
+| `com.aionemu.commons.utils.internal.chmv8` | Removed | The vendored Java 8 backport package was deleted and direct users were moved to `java.util.concurrent`. | Do not reintroduce vendored JDK concurrency backports. Use JDK concurrency primitives directly. |
 
 ## Build plugins
 
@@ -63,4 +63,4 @@ This project targets Java 25 bytecode with `maven.compiler.release=25`. Dependen
 - Maven Central metadata: `https://repo.maven.apache.org/maven2/net/sf/trove4j/trove4j/maven-metadata.xml`
 - Maven Central metadata: `https://repo.maven.apache.org/maven2/org/javassist/javassist/maven-metadata.xml`
 - Maven Central metadata: `https://repo.maven.apache.org/maven2/org/objenesis/objenesis/maven-metadata.xml`
-- Local checks: `mvn versions:display-property-updates`, `mvn versions:display-dependency-updates`, `mvn versions:display-plugin-updates`, `mvn -DskipTests package`, `mvn test`
+- Local checks: `mvn versions:display-property-updates`, `mvn versions:display-dependency-updates`, `mvn versions:display-plugin-updates`, `mvn dependency:tree`, `mvn -DskipTests package`, `mvn test`
