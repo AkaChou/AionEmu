@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -60,10 +62,10 @@ public class CM_START_LOOT extends AionClientPacket {
 
 		if (action == 0) // open
 		{
-			DropService.getInstance().requestDropList(player, targetObjectId);
+			GameCoreGameplayServices.dropService().requestDropList(player, targetObjectId);
 		} else if (action == 1) // close
 		{
-			DropService.getInstance().closeDropList(player, targetObjectId);
+			GameCoreGameplayServices.dropService().closeDropList(player, targetObjectId);
 		}
 	}
 }

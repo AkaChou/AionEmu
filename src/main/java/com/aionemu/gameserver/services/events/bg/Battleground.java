@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -514,7 +516,7 @@ public abstract class Battleground {
 	}
 
 	protected void preparePlayer(final Player pl, int time, boolean announce) {
-		DuelService.getInstance().loseDuel(pl);
+		GameGameplayServices.duelService().loseDuel(pl);
 		pl.setKillStreak(0);
 		pl.setLastAction();
 		pl.getFlyController().endFly(true);

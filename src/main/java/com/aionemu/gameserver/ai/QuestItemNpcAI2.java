@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
@@ -83,9 +85,9 @@ public class QuestItemNpcAI2 extends ActionItemNpcAI2
 				registeredPlayers.add(player);
 			}
 			AI2Actions.registerDrop(this, player, registeredPlayers);
-			DropService.getInstance().requestDropList(player, getObjectId());
+			GameCoreGameplayServices.dropService().requestDropList(player, getObjectId());
 		} else if (registeredPlayers.contains(player)) {
-			DropService.getInstance().requestDropList(player, getObjectId());
+			GameCoreGameplayServices.dropService().requestDropList(player, getObjectId());
 		}
 	}
 	

@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -564,14 +566,14 @@ public class PlayerController extends CreatureController<Player> {
 				}
 			}
 		}
-		if (DuelService.getInstance().isDueling(player.getObjectId())) {
-			if (master != null && DuelService.getInstance().isDueling(player.getObjectId(), master.getObjectId())) {
-				DuelService.getInstance().loseDuel(player);
+		if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
+			if (master != null && GameGameplayServices.duelService().isDueling(player.getObjectId(), master.getObjectId())) {
+				GameGameplayServices.duelService().loseDuel(player);
 				player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 				player.getLifeStats().setCurrentHp(player.getLifeStats().getMaxHp() / 3);
 				return;
 			}
-			DuelService.getInstance().loseDuel(player);
+			GameGameplayServices.duelService().loseDuel(player);
 		}
 		if (FFAService.getInstance().isInArena(player) && player.isFFA()) {
 			player.getAggroList().clear();
@@ -910,7 +912,7 @@ public class PlayerController extends CreatureController<Player> {
 	 */
 	// TODO [AT] move to Player
 	public boolean isDueling(Player player) {
-		return DuelService.getInstance().isDueling(player.getObjectId(), getOwner().getObjectId());
+		return GameGameplayServices.duelService().isDueling(player.getObjectId(), getOwner().getObjectId());
 	}
 
 	// TODO [AT] rename or remove

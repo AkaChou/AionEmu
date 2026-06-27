@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.services.teleport;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import org.slf4j.Logger;
@@ -331,8 +333,8 @@ public class TeleportService2 {
 			return false;
 		}
 
-		if (DuelService.getInstance().isDueling(player.getObjectId())) {
-			DuelService.getInstance().loseDuel(player);
+		if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
+			GameGameplayServices.duelService().loseDuel(player);
 		}
 
 		if (player.getWorldId() != worldId) {

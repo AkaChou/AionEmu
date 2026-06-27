@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -112,7 +114,7 @@ public class NpcController extends CreatureController<Npc> {
 					owner.setState(CreatureState.DEAD);
 				}
 				
-				DropService.getInstance().see(player, owner);
+				GameCoreGameplayServices.dropService().see(player, owner);
 				
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
@@ -164,7 +166,7 @@ public class NpcController extends CreatureController<Npc> {
 	@Override
 	public void onDespawn() {
 		Npc owner = getOwner();
-		DropService.getInstance().unregisterDrop(getOwner());
+		GameCoreGameplayServices.dropService().unregisterDrop(getOwner());
 		owner.getAi2().onGeneralEvent(AIEventType.DESPAWNED);
 		super.onDespawn();
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -97,7 +99,7 @@ public class ThievesGuildService {
 			player.setThievesDuel(true);
 			thievesMessage(player, "Thief " + target.getName() + " in the reach zone. The duel begins.", 0);
 			thievesMessage(target, "Sacrifice " + player.getName() + " in the zone of revenge. The duel begins.", 0);
-			// DuelService.getInstance().startDuel(player, target);
+			// GameGameplayServices.duelService().startDuel(player, target);
 		}
 		log.info("Aion-Unique Console: ThievesGuildService createRevenge [Player = " + player.getName() + "]");
 	}

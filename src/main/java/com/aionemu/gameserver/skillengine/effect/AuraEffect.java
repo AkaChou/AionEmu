@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collection;
@@ -69,11 +71,11 @@ public class AuraEffect extends EffectTemplate {
 					* effector.getGameStats().getStat(StatEnum.BOOST_MANTRA_RANGE, 100).getCurrent() / 100f);
 			for (Player player : onlinePlayers) {
 				if (MathUtil.isIn3dRange(effector, player, actualRange)) {
-					if (!DuelService.getInstance().isDueling(player.getObjectId()) && player != effector) {
+					if (!GameGameplayServices.duelService().isDueling(player.getObjectId()) && player != effector) {
 						applyAuraTo(player, effect);
 					}
-					if (DuelService.getInstance().isDueling(effector.getObjectId())
-							&& DuelService.getInstance().isDueling(player.getObjectId())) {
+					if (GameGameplayServices.duelService().isDueling(effector.getObjectId())
+							&& GameGameplayServices.duelService().isDueling(player.getObjectId())) {
 						applyAuraTo(effector, effect);
 					} else {
 						applyAuraTo(effector, effect);

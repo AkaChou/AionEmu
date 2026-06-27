@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -198,14 +200,14 @@ public class DropDistributionService {
 		if (requestedItem.getWinningPlayer() == null) {
 			requestedItem.isFreeForAll(true);
 			if (lgr != null && !lgr.getItemsToBeDistributed().isEmpty()) {
-				DropService.getInstance().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
+				GameCoreGameplayServices.dropService().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
 			}
 			return;
 		}
 		requestedItem.isDistributeItem(true);
-		DropService.getInstance().requestDropItem(player, npcId, dropNpc.getCurrentIndex());
+		GameCoreGameplayServices.dropService().requestDropItem(player, npcId, dropNpc.getCurrentIndex());
 		if (lgr != null && !lgr.getItemsToBeDistributed().isEmpty()) {
-			DropService.getInstance().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
+			GameCoreGameplayServices.dropService().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
 		}
 	}
 

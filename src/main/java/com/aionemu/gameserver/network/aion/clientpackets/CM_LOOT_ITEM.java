@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -45,6 +47,6 @@ public class CM_LOOT_ITEM extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		DropService.getInstance().requestDropItem(player, targetObjectId, index);
+		GameCoreGameplayServices.dropService().requestDropItem(player, targetObjectId, index);
 	}
 }

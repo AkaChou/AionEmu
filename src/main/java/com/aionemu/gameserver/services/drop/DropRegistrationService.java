@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 
 import java.util.ArrayList;
@@ -400,7 +402,7 @@ public class DropRegistrationService {
 			} else {
 				DropItem[] dropItems = drops.toArray(new DropItem[0]);
 				for (int i = 0; i < dropItems.length; i++) {
-					DropService.getInstance().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
+					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_PET(false, npcObjId));
@@ -416,7 +418,7 @@ public class DropRegistrationService {
 			} else {
 				DropItem[] dropItems = drops.toArray(new DropItem[drops.size()]);
 				for (int i = 0; i < dropItems.length; i++) {
-					DropService.getInstance().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
+					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, npcObjId, true));
@@ -424,7 +426,7 @@ public class DropRegistrationService {
 				return;
 			}
 		}
-		DropService.getInstance().scheduleFreeForAll(npcObjId);
+		GameCoreGameplayServices.dropService().scheduleFreeForAll(npcObjId);
 	}
 
 	public void setItemsToWinner(Set<DropItem> droppedItems, Integer obj) {

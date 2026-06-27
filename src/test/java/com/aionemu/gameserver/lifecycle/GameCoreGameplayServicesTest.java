@@ -45,4 +45,22 @@ class GameCoreGameplayServicesTest {
             assertFalse(content.contains("AutoGroupService.getInstance()"), source.toString());
         }
     }
+
+    @Test
+    void gameServerCodeUsesCoreDropBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/drop/DropService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameCoreGameplayServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("DropService.getInstance()"), source.toString());
+        }
+    }
 }

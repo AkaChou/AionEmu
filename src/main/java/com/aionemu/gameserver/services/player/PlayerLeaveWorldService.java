@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
@@ -108,7 +110,7 @@ public class PlayerLeaveWorldService {
 		KiskService.getInstance().onLogout(player);
 		player.getMoveController().abortMove();
 		if (player.isLooting()) {
-			DropService.getInstance().closeDropList(player, player.getLootingNpcOid());
+			GameCoreGameplayServices.dropService().closeDropList(player, player.getLootingNpcOid());
 		}
 		if (player.isInPrison()) {
 			long prisonTimer = System.currentTimeMillis() - player.getStartPrison();
@@ -135,8 +137,8 @@ public class PlayerLeaveWorldService {
 			} else {
 				PlayerReviveService.bindRevive(player);
 			}
-		} else if (DuelService.getInstance().isDueling(player.getObjectId())) {
-			DuelService.getInstance().loseDuel(player);
+		} else if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
+			GameGameplayServices.duelService().loseDuel(player);
 		}
 
 		if (player.getSummon() != null) {
