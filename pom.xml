@@ -20,7 +20,6 @@
         <javassist.version>3.32.0-GA</javassist.version>
         <jakarta-xml-bind.version>4.0.5</jakarta-xml-bind.version>
         <jaxb-runtime.version>4.0.9</jaxb-runtime.version>
-        <javolution.version>5.5.1</javolution.version>
         <junit-jupiter.version>6.1.0</junit-jupiter.version>
         <lombok.version>1.18.46</lombok.version>
         <logback.version>1.5.37</logback.version>
@@ -70,11 +69,6 @@
                 <version>${jaxb-runtime.version}</version>
             </dependency>
             <dependency>
-                <groupId>javolution</groupId>
-                <artifactId>javolution</artifactId>
-                <version>${javolution.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
@@ -98,11 +92,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.trove4j</groupId>
-                <artifactId>trove4j</artifactId>
-                <version>3.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.objenesis</groupId>
@@ -169,10 +158,6 @@
             <artifactId>jaxb-runtime</artifactId>
         </dependency>
         <dependency>
-            <groupId>javolution</groupId>
-            <artifactId>javolution</artifactId>
-        </dependency>
-        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
@@ -191,10 +176,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.trove4j</groupId>
-            <artifactId>trove4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.objenesis</groupId>

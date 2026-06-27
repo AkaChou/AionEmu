@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.landing_special.LandingSpecialLocation;
 import com.aionemu.gameserver.model.templates.landing_special.LandingSpecialTemplate;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "landing_special")

@@ -51,7 +51,7 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastSet;
+import com.aionemu.commons.utils.collections.FastSet;
 
 public class VeteranRewardsService {
 	private static volatile ObjectProvider<VeteranRewardsService> instanceProvider;

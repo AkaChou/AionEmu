@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.abyss_bonus.AbyssServiceAttr;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @Author Rinzler (Encom)
@@ -42,7 +42,7 @@ public class AbyssBuffData {
 	protected List<AbyssServiceAttr> abyssBonusattr;
 
 	@XmlTransient
-	private TIntObjectHashMap<AbyssServiceAttr> templates = new TIntObjectHashMap<AbyssServiceAttr>();
+	private IntObjectHashMap<AbyssServiceAttr> templates = new IntObjectHashMap<AbyssServiceAttr>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AbyssServiceAttr template : abyssBonusattr) {

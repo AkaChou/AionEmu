@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.panels.SkillPanel;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "polymorph_panels")
@@ -34,7 +34,7 @@ public class PanelSkillsData {
 
 	@XmlElement(name = "panel")
 	protected List<SkillPanel> templates;
-	private TIntObjectHashMap<SkillPanel> skillPanels = new TIntObjectHashMap<SkillPanel>();
+	private IntObjectHashMap<SkillPanel> skillPanels = new IntObjectHashMap<SkillPanel>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (SkillPanel panel : templates) {

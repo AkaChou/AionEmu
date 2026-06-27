@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.pet.PetDopingEntry;
 
-import gnu.trove.map.hash.TShortObjectHashMap;
+import com.aionemu.commons.utils.collections.ShortObjectHashMap;
 
 @XmlRootElement(name = "dopings")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -37,7 +37,7 @@ public class PetDopingData {
 	private List<PetDopingEntry> list;
 
 	@XmlTransient
-	private TShortObjectHashMap<PetDopingEntry> dopingsById = new TShortObjectHashMap<PetDopingEntry>();
+	private ShortObjectHashMap<PetDopingEntry> dopingsById = new ShortObjectHashMap<PetDopingEntry>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PetDopingEntry dope : list) {

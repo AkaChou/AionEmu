@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.utils.internal.chmv8.PlatformDependent;
+import java.util.concurrent.ConcurrentHashMap;
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -84,9 +84,9 @@ public class HousingService {
 
 	public HousingService() {
 		log.info("Loading housing data...");
-		customHouses = PlatformDependent.newConcurrentHashMap(
+		customHouses = new ConcurrentHashMap<>(
 				DAOManager.getDAO(HousesDAO.class).loadHouses(DataManager.HOUSE_DATA.getLands(), false));
-		studios = PlatformDependent.newConcurrentHashMap(
+		studios = new ConcurrentHashMap<>(
 				DAOManager.getDAO(HousesDAO.class).loadHouses(DataManager.HOUSE_DATA.getLands(), true));
 		log.info("Housing Service loaded.");
 	}

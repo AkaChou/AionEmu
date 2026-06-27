@@ -24,7 +24,7 @@ import org.apache.commons.lang3.Range;
 
 import com.aionemu.gameserver.model.templates.rewards.CraftReward;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Rolandas

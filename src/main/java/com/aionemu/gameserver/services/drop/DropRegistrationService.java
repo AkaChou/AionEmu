@@ -66,7 +66,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.DropRewardEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class DropRegistrationService {
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;

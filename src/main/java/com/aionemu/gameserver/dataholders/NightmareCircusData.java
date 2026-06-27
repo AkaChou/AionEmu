@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusLocation;
 import com.aionemu.gameserver.model.templates.nightmarecircus.NightmareCircusTemplate;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Rinzler (Encom)

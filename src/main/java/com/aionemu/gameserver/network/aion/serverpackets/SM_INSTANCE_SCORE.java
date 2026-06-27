@@ -69,7 +69,7 @@ import com.aionemu.gameserver.model.instance.playerreward.StonespearReachPlayerR
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.FastList;
 
 @SuppressWarnings("rawtypes")
 public class SM_INSTANCE_SCORE extends AionServerPacket {

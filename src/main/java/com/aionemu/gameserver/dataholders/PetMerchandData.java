@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.pet.PetMerchandEntry;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Rinzler
@@ -40,7 +40,7 @@ public class PetMerchandData {
 	private List<PetMerchandEntry> list;
 
 	@XmlTransient
-	private TIntObjectHashMap<PetMerchandEntry> merchandsById = new TIntObjectHashMap<PetMerchandEntry>();
+	private IntObjectHashMap<PetMerchandEntry> merchandsById = new IntObjectHashMap<PetMerchandEntry>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PetMerchandEntry merch : list) {

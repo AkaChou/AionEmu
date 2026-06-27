@@ -26,7 +26,7 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Kill3r
@@ -43,7 +43,7 @@ public final class CmdWish extends AbstractGMHandler {
 		if (p.length != 2) {
 
 			String npcName = params;
-			TIntObjectHashMap<NpcTemplate> npcTemp = DataManager.NPC_DATA.getNpcData();
+			IntObjectHashMap<NpcTemplate> npcTemp = DataManager.NPC_DATA.getNpcData();
 
 			float x = admin.getX();
 			float y = admin.getY();
@@ -61,7 +61,7 @@ public final class CmdWish extends AbstractGMHandler {
 			return;
 		}
 		// WORKING PERFECTLY
-		TIntObjectHashMap<ItemTemplate> itemTemp = DataManager.ITEM_DATA.getItemData();
+		IntObjectHashMap<ItemTemplate> itemTemp = DataManager.ITEM_DATA.getItemData();
 		String[] itemN = params.split(" ");
 
 		String itemName = itemN[0];

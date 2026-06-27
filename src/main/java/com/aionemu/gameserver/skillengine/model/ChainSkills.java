@@ -22,7 +22,7 @@ import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class ChainSkills {
 

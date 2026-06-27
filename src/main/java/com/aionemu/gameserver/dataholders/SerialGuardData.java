@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.serial_guard.GuardRankRestriction;
 import com.aionemu.gameserver.model.templates.serial_guard.GuardTypeRestriction;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "guardRankRestriction", "guardTypeRestriction" })
@@ -42,10 +42,10 @@ public class SerialGuardData {
 	protected List<GuardTypeRestriction> guardTypeRestriction;
 
 	@XmlTransient
-	private TIntObjectHashMap<GuardRankRestriction> templates = new TIntObjectHashMap<GuardRankRestriction>();
+	private IntObjectHashMap<GuardRankRestriction> templates = new IntObjectHashMap<GuardRankRestriction>();
 
 	@XmlTransient
-	private TIntObjectHashMap<GuardTypeRestriction> templatesType = new TIntObjectHashMap<GuardTypeRestriction>();
+	private IntObjectHashMap<GuardTypeRestriction> templatesType = new IntObjectHashMap<GuardTypeRestriction>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (GuardRankRestriction template : guardRankRestriction) {

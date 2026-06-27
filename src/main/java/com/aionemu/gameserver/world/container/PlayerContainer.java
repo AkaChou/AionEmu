@@ -26,7 +26,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * Container for storing Players by objectId and name.

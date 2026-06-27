@@ -25,8 +25,8 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.TemporarySpawn;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastList;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class TemporarySpawnEngine {
 

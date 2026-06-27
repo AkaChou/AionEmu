@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.flypath.FlyPathEntry;
 
-import gnu.trove.map.hash.TShortObjectHashMap;
+import com.aionemu.commons.utils.collections.ShortObjectHashMap;
 
 /**
  * @author KID
@@ -37,7 +37,7 @@ public class FlyPathData {
 	@XmlElement(name = "flypath_location")
 	private List<FlyPathEntry> list;
 
-	private TShortObjectHashMap<FlyPathEntry> loctlistData = new TShortObjectHashMap<FlyPathEntry>();
+	private ShortObjectHashMap<FlyPathEntry> loctlistData = new ShortObjectHashMap<FlyPathEntry>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (FlyPathEntry loc : list) {

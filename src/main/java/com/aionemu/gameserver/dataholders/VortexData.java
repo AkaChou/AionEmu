@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.templates.vortex.VortexTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Source

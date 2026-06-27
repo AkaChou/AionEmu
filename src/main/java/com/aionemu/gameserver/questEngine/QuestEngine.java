@@ -66,10 +66,10 @@ import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.procedure.TIntProcedure;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntArrayList;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntProcedure;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author MrPoke, Hilgert
@@ -80,38 +80,38 @@ public class QuestEngine implements GameEngine {
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(QuestEngine.class);
 	private static final FastMap<Integer, QuestHandler> questHandlers = new FastMap<Integer, QuestHandler>();
-	private TIntObjectHashMap<QuestNpc> questNpcs = new TIntObjectHashMap<QuestNpc>();
-	private TIntObjectHashMap<TIntArrayList> questItemRelated = new TIntObjectHashMap<TIntArrayList>();
-	private TIntObjectHashMap<TIntArrayList> questHouseItems = new TIntObjectHashMap<TIntArrayList>();
-	private TIntObjectHashMap<TIntArrayList> questItems = new TIntObjectHashMap<TIntArrayList>();
-	private TIntArrayList questOnEnterZoneMissionEnd = new TIntArrayList();
-	private TIntArrayList questOnLevelUp = new TIntArrayList();
-	private TIntArrayList questOnDie = new TIntArrayList();
-	private TIntArrayList questOnLogOut = new TIntArrayList();
-	private TIntArrayList questOnEnterWorld = new TIntArrayList();
-	private FastMap<ZoneName, TIntArrayList> questOnEnterZone = new FastMap<ZoneName, TIntArrayList>();
-	private FastMap<ZoneName, TIntArrayList> questOnLeaveZone = new FastMap<ZoneName, TIntArrayList>();
-	private FastMap<String, TIntArrayList> questOnPassFlyingRings = new FastMap<String, TIntArrayList>();
-	private TIntObjectHashMap<TIntArrayList> questOnMovieEnd = new TIntObjectHashMap<TIntArrayList>();
+	private IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<QuestNpc>();
+	private IntObjectHashMap<IntArrayList> questItemRelated = new IntObjectHashMap<IntArrayList>();
+	private IntObjectHashMap<IntArrayList> questHouseItems = new IntObjectHashMap<IntArrayList>();
+	private IntObjectHashMap<IntArrayList> questItems = new IntObjectHashMap<IntArrayList>();
+	private IntArrayList questOnEnterZoneMissionEnd = new IntArrayList();
+	private IntArrayList questOnLevelUp = new IntArrayList();
+	private IntArrayList questOnDie = new IntArrayList();
+	private IntArrayList questOnLogOut = new IntArrayList();
+	private IntArrayList questOnEnterWorld = new IntArrayList();
+	private FastMap<ZoneName, IntArrayList> questOnEnterZone = new FastMap<ZoneName, IntArrayList>();
+	private FastMap<ZoneName, IntArrayList> questOnLeaveZone = new FastMap<ZoneName, IntArrayList>();
+	private FastMap<String, IntArrayList> questOnPassFlyingRings = new FastMap<String, IntArrayList>();
+	private IntObjectHashMap<IntArrayList> questOnMovieEnd = new IntObjectHashMap<IntArrayList>();
 	private List<Integer> questOnTimerEnd = new ArrayList<Integer>();
 	private List<Integer> onInvisibleTimerEnd = new ArrayList<Integer>();
-	private FastMap<AbyssRankEnum, TIntArrayList> questOnKillRanked = new FastMap<AbyssRankEnum, TIntArrayList>();
-	private FastMap<Integer, TIntArrayList> questOnKillInWorld = new FastMap<Integer, TIntArrayList>();
-	private TIntObjectHashMap<TIntArrayList> questOnUseSkill = new TIntObjectHashMap<TIntArrayList>();
+	private FastMap<AbyssRankEnum, IntArrayList> questOnKillRanked = new FastMap<AbyssRankEnum, IntArrayList>();
+	private FastMap<Integer, IntArrayList> questOnKillInWorld = new FastMap<Integer, IntArrayList>();
+	private IntObjectHashMap<IntArrayList> questOnUseSkill = new IntObjectHashMap<IntArrayList>();
 	private FastMap<Integer, QuestDialog> dialogMap = FastMap.newInstance();
 	private Map<Integer, Integer> questOnFailCraft = new HashMap<Integer, Integer>();
 	private Map<Integer, Set<Integer>> questOnEquipItem = new HashMap<Integer, Set<Integer>>();
-	private TIntObjectHashMap<TIntArrayList> questCanAct = new TIntObjectHashMap<TIntArrayList>();
+	private IntObjectHashMap<IntArrayList> questCanAct = new IntObjectHashMap<IntArrayList>();
 	private List<Integer> questOnDredgionReward = new ArrayList<Integer>();
 	private List<Integer> questOnKamarReward = new ArrayList<Integer>();
 	private List<Integer> questOnOphidanReward = new ArrayList<Integer>();
 	private List<Integer> questOnBastionReward = new ArrayList<Integer>();
-	private FastMap<BonusType, TIntArrayList> questOnBonusApply = new FastMap<BonusType, TIntArrayList>();
-	private TIntArrayList reachTarget = new TIntArrayList();
-	private TIntArrayList lostTarget = new TIntArrayList();
-	private TIntArrayList questOnEnterWindStream = new TIntArrayList();
-	private TIntArrayList questRideAction = new TIntArrayList();
-	private TIntArrayList questOnCreativityPoint = new TIntArrayList();
+	private FastMap<BonusType, IntArrayList> questOnBonusApply = new FastMap<BonusType, IntArrayList>();
+	private IntArrayList reachTarget = new IntArrayList();
+	private IntArrayList lostTarget = new IntArrayList();
+	private IntArrayList questOnEnterWindStream = new IntArrayList();
+	private IntArrayList questRideAction = new IntArrayList();
+	private IntArrayList questOnCreativityPoint = new IntArrayList();
 
 	public QuestEngine() {
 	}
@@ -310,7 +310,7 @@ public class QuestEngine implements GameEngine {
 
 	public void onPassFlyingRing(QuestEnv env, String FlyRing) {
 		try {
-			TIntArrayList lists = getOnPassFlyingRingsQuests(FlyRing);
+			IntArrayList lists = getOnPassFlyingRingsQuests(FlyRing);
 			for (int index = 0; index < lists.size(); index++) {
 				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
 				if (questHandler != null) {
@@ -339,7 +339,7 @@ public class QuestEngine implements GameEngine {
 
 	public HandlerResult onItemUseEvent(QuestEnv env, Item item) {
 		try {
-			TIntArrayList lists = getItemRelatedQuests(item.getItemTemplate().getTemplateId());
+			IntArrayList lists = getItemRelatedQuests(item.getItemTemplate().getTemplateId());
 			for (int index = 0; index < lists.size(); index++) {
 				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
 				if (questHandler != null) {
@@ -359,7 +359,7 @@ public class QuestEngine implements GameEngine {
 	}
 
 	public boolean onHouseItemUseEvent(QuestEnv env, int itemId) {
-		TIntArrayList lists = getHouseItemQuests(itemId);
+		IntArrayList lists = getHouseItemQuests(itemId);
 		for (int index = 0; index < lists.size(); index++) {
 			QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
 			if (questHandler != null) {
@@ -386,7 +386,7 @@ public class QuestEngine implements GameEngine {
 	public boolean onKillRanked(QuestEnv env, AbyssRankEnum playerRank) {
 		try {
 			if (playerRank != null) {
-				TIntArrayList questList = getOnKillRankedQuests(playerRank);
+				IntArrayList questList = getOnKillRankedQuests(playerRank);
 				for (int index = 0; index < questList.size(); index++) {
 					int id = questList.get(index);
 					QuestHandler questHandler = getQuestHandlerByQuestId(id);
@@ -406,7 +406,7 @@ public class QuestEngine implements GameEngine {
 	public boolean onKillInWorld(QuestEnv env, int worldId) {
 		try {
 			if (questOnKillInWorld.containsKey(worldId)) {
-				TIntArrayList killInWorldQuests = questOnKillInWorld.get(worldId);
+				IntArrayList killInWorldQuests = questOnKillInWorld.get(worldId);
 				for (int i = 0; i < killInWorldQuests.size(); i++) {
 					QuestHandler questHandler = getQuestHandlerByQuestId(killInWorldQuests.get(i));
 					if (questHandler != null) {
@@ -424,7 +424,7 @@ public class QuestEngine implements GameEngine {
 
 	public boolean onEnterZone(QuestEnv env, ZoneName zoneName) {
 		try {
-			TIntArrayList lists = getOnEnterZoneQuests(zoneName);
+			IntArrayList lists = getOnEnterZoneQuests(zoneName);
 			for (int index = 0; index < lists.size(); index++) {
 				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
 				if (questHandler != null) {
@@ -442,7 +442,7 @@ public class QuestEngine implements GameEngine {
 	public boolean onLeaveZone(QuestEnv env, ZoneName zoneName) {
 		try {
 			if (questOnLeaveZone.containsKey(zoneName)) {
-				TIntArrayList leaveZoneList = questOnLeaveZone.get(zoneName);
+				IntArrayList leaveZoneList = questOnLeaveZone.get(zoneName);
 				for (int i = 0; i < leaveZoneList.size(); i++) {
 					QuestHandler questHandler = getQuestHandlerByQuestId(leaveZoneList.get(i));
 					if (questHandler != null) {
@@ -460,7 +460,7 @@ public class QuestEngine implements GameEngine {
 
 	public boolean onMovieEnd(QuestEnv env, int movieId) {
 		try {
-			TIntArrayList onMovieEndQuests = getOnMovieEndQuests(movieId);
+			IntArrayList onMovieEndQuests = getOnMovieEndQuests(movieId);
 			for (int index = 0; index < onMovieEndQuests.size(); index++) {
 				env.setQuestId(onMovieEndQuests.get(index));
 				QuestHandler questHandler = getQuestHandlerByQuestId(env.getQuestId());
@@ -499,7 +499,7 @@ public class QuestEngine implements GameEngine {
 	public boolean onUseSkill(QuestEnv env, int skillId) {
 		try {
 			if (questOnUseSkill.containsKey(skillId)) {
-				TIntArrayList quests = questOnUseSkill.get(skillId);
+				IntArrayList quests = questOnUseSkill.get(skillId);
 				for (int i = 0; i < quests.size(); i++) {
 					QuestHandler questHandler = getQuestHandlerByQuestId(quests.get(i));
 					if (questHandler != null) {
@@ -544,8 +544,8 @@ public class QuestEngine implements GameEngine {
 	public boolean onCanAct(final QuestEnv env, int templateId, final QuestActionType questActionType,
 			final Object... objects) {
 		if (questCanAct.containsKey(templateId)) {
-			TIntArrayList questIds = questCanAct.get(templateId);
-			return !questIds.forEach(new TIntProcedure() {
+			IntArrayList questIds = questCanAct.get(templateId);
+			return !questIds.forEach(new IntProcedure() {
 				@Override
 				public boolean execute(int value) {
 					QuestHandler questHandler = getQuestHandlerByQuestId(value);
@@ -604,7 +604,7 @@ public class QuestEngine implements GameEngine {
 
 	public HandlerResult onBonusApplyEvent(QuestEnv env, BonusType bonusType, List<QuestItems> rewardItems) {
 		try {
-			TIntArrayList lists = this.getOnBonusApplyQuests(bonusType);
+			IntArrayList lists = this.getOnBonusApplyQuests(bonusType);
 			for (int index = 0; index < lists.size(); index++) {
 				QuestHandler questHandler = getQuestHandlerByQuestId(lists.get(index));
 				if (questHandler != null) {
@@ -716,7 +716,7 @@ public class QuestEngine implements GameEngine {
 
 	public void registerQuestItem(int itemId, int questId) {
 		if (!questItemRelated.containsKey(itemId)) {
-			TIntArrayList itemRelatedQuests = new TIntArrayList();
+			IntArrayList itemRelatedQuests = new IntArrayList();
 			itemRelatedQuests.add(questId);
 			questItemRelated.put(itemId, itemRelatedQuests);
 		} else {
@@ -726,17 +726,17 @@ public class QuestEngine implements GameEngine {
 
 	public void registerQuestHouseItem(int itemId, int questId) {
 		if (!questHouseItems.containsKey(itemId)) {
-			TIntArrayList itemRelatedQuests = new TIntArrayList();
+			IntArrayList itemRelatedQuests = new IntArrayList();
 			itemRelatedQuests.add(questId);
 			questHouseItems.put(itemId, itemRelatedQuests);
 		} else {
-			((TIntArrayList) questHouseItems.get(itemId)).add(questId);
+			((IntArrayList) questHouseItems.get(itemId)).add(questId);
 		}
 	}
 
 	public void registerGetingItem(int itemId, int questId) {
 		if (!questItems.containsKey(itemId)) {
-			TIntArrayList questItemsToReg = new TIntArrayList();
+			IntArrayList questItemsToReg = new IntArrayList();
 			questItemsToReg.add(questId);
 			questItems.put(itemId, questItemsToReg);
 		} else {
@@ -776,7 +776,7 @@ public class QuestEngine implements GameEngine {
 
 	public void registerOnEnterZone(ZoneName zoneName, int questId) {
 		if (!questOnEnterZone.containsKey(zoneName)) {
-			TIntArrayList onEnterZoneQuests = new TIntArrayList();
+			IntArrayList onEnterZoneQuests = new IntArrayList();
 			onEnterZoneQuests.add(questId);
 			questOnEnterZone.put(zoneName, onEnterZoneQuests);
 		} else {
@@ -786,7 +786,7 @@ public class QuestEngine implements GameEngine {
 
 	public void registerOnLeaveZone(ZoneName zoneName, int questId) {
 		if (!questOnLeaveZone.containsKey(zoneName)) {
-			TIntArrayList onLeaveZoneQuests = new TIntArrayList();
+			IntArrayList onLeaveZoneQuests = new IntArrayList();
 			onLeaveZoneQuests.add(questId);
 			questOnLeaveZone.put(zoneName, onLeaveZoneQuests);
 		} else {
@@ -797,7 +797,7 @@ public class QuestEngine implements GameEngine {
 	public void registerOnKillRanked(AbyssRankEnum playerRank, int questId) {
 		for (int rank = playerRank.getId(); rank < 19; rank++) {
 			if (!questOnKillRanked.containsKey(AbyssRankEnum.getRankById(rank))) {
-				TIntArrayList onKillRankedQuests = new TIntArrayList();
+				IntArrayList onKillRankedQuests = new IntArrayList();
 				onKillRankedQuests.add(questId);
 				questOnKillRanked.put(AbyssRankEnum.getRankById(rank), onKillRankedQuests);
 			} else {
@@ -808,7 +808,7 @@ public class QuestEngine implements GameEngine {
 
 	public void registerOnKillInWorld(int worldId, int questId) {
 		if (!questOnKillInWorld.containsKey(worldId)) {
-			TIntArrayList killInWorldQuests = new TIntArrayList();
+			IntArrayList killInWorldQuests = new IntArrayList();
 			killInWorldQuests.add(questId);
 			questOnKillInWorld.put(worldId, killInWorldQuests);
 		} else {
@@ -818,7 +818,7 @@ public class QuestEngine implements GameEngine {
 
 	public void registerOnPassFlyingRings(String flyingRing, int questId) {
 		if (!questOnPassFlyingRings.containsKey(flyingRing)) {
-			TIntArrayList onPassFlyingRingsQuests = new TIntArrayList();
+			IntArrayList onPassFlyingRingsQuests = new IntArrayList();
 			onPassFlyingRingsQuests.add(questId);
 			questOnPassFlyingRings.put(flyingRing, onPassFlyingRingsQuests);
 		} else {
@@ -828,7 +828,7 @@ public class QuestEngine implements GameEngine {
 
 	public void registerOnMovieEndQuest(int moveId, int questId) {
 		if (!questOnMovieEnd.containsKey(moveId)) {
-			TIntArrayList onMovieEndQuests = new TIntArrayList();
+			IntArrayList onMovieEndQuests = new IntArrayList();
 			onMovieEndQuests.add(questId);
 			questOnMovieEnd.put(moveId, onMovieEndQuests);
 		} else {
@@ -850,7 +850,7 @@ public class QuestEngine implements GameEngine {
 
 	public void registerQuestSkill(int skillId, int questId) {
 		if (!questOnUseSkill.containsKey(skillId)) {
-			TIntArrayList questSkills = new TIntArrayList();
+			IntArrayList questSkills = new IntArrayList();
 			questSkills.add(questId);
 			questOnUseSkill.put(skillId, questSkills);
 		} else {
@@ -876,7 +876,7 @@ public class QuestEngine implements GameEngine {
 
 	public void registerCanAct(int questId, int templateId) {
 		if (!questCanAct.containsKey(templateId)) {
-			TIntArrayList questSkills = new TIntArrayList();
+			IntArrayList questSkills = new IntArrayList();
 			questSkills.add(questId);
 			questCanAct.put(templateId, questSkills);
 		} else {
@@ -910,7 +910,7 @@ public class QuestEngine implements GameEngine {
 
 	public void registerOnBonusApply(int questId, BonusType bonusType) {
 		if (!questOnBonusApply.containsKey(bonusType)) {
-			TIntArrayList onBonusApplyQuests = new TIntArrayList();
+			IntArrayList onBonusApplyQuests = new IntArrayList();
 			onBonusApplyQuests.add(questId);
 			questOnBonusApply.put(bonusType, onBonusApplyQuests);
 		} else {
@@ -918,11 +918,11 @@ public class QuestEngine implements GameEngine {
 		}
 	}
 
-	private TIntArrayList getOnBonusApplyQuests(BonusType bonusType) {
+	private IntArrayList getOnBonusApplyQuests(BonusType bonusType) {
 		if (questOnBonusApply.containsKey(bonusType)) {
 			return questOnBonusApply.get(bonusType);
 		}
-		return new TIntArrayList();
+		return new IntArrayList();
 	}
 
 	public void registerOnEnterWindStream(int questId) {
@@ -964,46 +964,46 @@ public class QuestEngine implements GameEngine {
 		return null;
 	}
 
-	private TIntArrayList getItemRelatedQuests(int itemId) {
+	private IntArrayList getItemRelatedQuests(int itemId) {
 		if (questItemRelated.containsKey(itemId)) {
 			return questItemRelated.get(itemId);
 		}
-		return new TIntArrayList();
+		return new IntArrayList();
 	}
 
-	private TIntArrayList getHouseItemQuests(int itemId) {
+	private IntArrayList getHouseItemQuests(int itemId) {
 		if (questHouseItems.containsKey(itemId)) {
-			return (TIntArrayList) questHouseItems.get(itemId);
+			return (IntArrayList) questHouseItems.get(itemId);
 		}
-		return new TIntArrayList();
+		return new IntArrayList();
 	}
 
-	private TIntArrayList getOnEnterZoneQuests(ZoneName zoneName) {
+	private IntArrayList getOnEnterZoneQuests(ZoneName zoneName) {
 		if (questOnEnterZone.containsKey(zoneName)) {
 			return questOnEnterZone.get(zoneName);
 		}
-		return new TIntArrayList();
+		return new IntArrayList();
 	}
 
-	private TIntArrayList getOnKillRankedQuests(AbyssRankEnum playerRank) {
+	private IntArrayList getOnKillRankedQuests(AbyssRankEnum playerRank) {
 		if (questOnKillRanked.containsKey(playerRank)) {
 			return questOnKillRanked.get(playerRank);
 		}
-		return new TIntArrayList();
+		return new IntArrayList();
 	}
 
-	private TIntArrayList getOnPassFlyingRingsQuests(String flyingRing) {
+	private IntArrayList getOnPassFlyingRingsQuests(String flyingRing) {
 		if (questOnPassFlyingRings.containsKey(flyingRing)) {
 			return questOnPassFlyingRings.get(flyingRing);
 		}
-		return new TIntArrayList();
+		return new IntArrayList();
 	}
 
-	private TIntArrayList getOnMovieEndQuests(int moveId) {
+	private IntArrayList getOnMovieEndQuests(int moveId) {
 		if (questOnMovieEnd.containsKey(moveId)) {
 			return questOnMovieEnd.get(moveId);
 		}
-		return new TIntArrayList();
+		return new IntArrayList();
 	}
 
 	private QuestHandler getQuestHandlerByQuestId(int questId) {

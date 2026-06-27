@@ -5,7 +5,7 @@ import java.util.List;
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
 
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.FastList;
 
 public abstract class RewardServiceDAO implements DAO {
 	@Override

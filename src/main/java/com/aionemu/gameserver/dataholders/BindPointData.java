@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.BindPointTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author avol
@@ -39,7 +39,7 @@ public class BindPointData {
 	private List<BindPointTemplate> bplist;
 
 	/** A map containing all bind point location templates */
-	private TIntObjectHashMap<BindPointTemplate> bindplistData = new TIntObjectHashMap<BindPointTemplate>();
+	private IntObjectHashMap<BindPointTemplate> bindplistData = new IntObjectHashMap<BindPointTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (BindPointTemplate bind : bplist) {

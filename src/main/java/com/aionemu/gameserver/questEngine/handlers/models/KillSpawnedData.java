@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.template.KillSpawned;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "KillSpawnedData")

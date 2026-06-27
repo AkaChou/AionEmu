@@ -41,7 +41,7 @@ import org.xml.sax.SAXException;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author KKnD, Rolandas

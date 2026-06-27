@@ -57,7 +57,7 @@ import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class PlayerGroupService {
 	private static final Logger log = LoggerFactory.getLogger(PlayerGroupService.class);

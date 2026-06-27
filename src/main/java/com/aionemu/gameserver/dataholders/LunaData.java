@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.recipe.LunaTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Made by Ghostfur (Aion-Unique)
@@ -39,12 +39,12 @@ public class LunaData {
 	@XmlElement(name = "luna_template")
 	protected List<LunaTemplate> list;
 
-	private TIntObjectHashMap<LunaTemplate> lunaData;
+	private IntObjectHashMap<LunaTemplate> lunaData;
 
 	private List<LunaTemplate> elyos, asmos, any;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		lunaData = new TIntObjectHashMap<LunaTemplate>();
+		lunaData = new IntObjectHashMap<LunaTemplate>();
 		elyos = new ArrayList<>();
 		asmos = new ArrayList<>();
 		any = new ArrayList<>();
@@ -75,7 +75,7 @@ public class LunaData {
 		return lunaData.get(id);
 	}
 
-	public TIntObjectHashMap<LunaTemplate> getLunaTemplates() {
+	public IntObjectHashMap<LunaTemplate> getLunaTemplates() {
 		return lunaData;
 	}
 

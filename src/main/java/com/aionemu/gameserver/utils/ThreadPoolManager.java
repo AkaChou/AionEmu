@@ -34,7 +34,7 @@ import com.aionemu.commons.network.util.ThreadUncaughtExceptionHandler;
 import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
 import com.aionemu.commons.utils.concurrent.RunnableWrapper;
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinPool;
+import java.util.concurrent.ForkJoinPool;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 
 public final class ThreadPoolManager {

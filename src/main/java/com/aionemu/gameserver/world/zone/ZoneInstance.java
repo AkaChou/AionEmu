@@ -30,7 +30,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.handler.AdvencedZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author ATracer

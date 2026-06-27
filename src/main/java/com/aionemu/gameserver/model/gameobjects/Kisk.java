@@ -33,7 +33,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastSet;
+import com.aionemu.commons.utils.collections.FastSet;
 
 public class Kisk extends SummonedObject<Player> {
 	private final Legion ownerLegion;

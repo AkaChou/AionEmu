@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.tower_reward.TowerStageRewardTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by Wnkrz on 17/10/2017.
@@ -42,7 +42,7 @@ public class TowerRewardData {
 	private List<TowerStageRewardTemplate> TowerReward;
 
 	@XmlTransient
-	private TIntObjectHashMap<TowerStageRewardTemplate> templates = new TIntObjectHashMap<TowerStageRewardTemplate>();
+	private IntObjectHashMap<TowerStageRewardTemplate> templates = new IntObjectHashMap<TowerStageRewardTemplate>();
 
 	@XmlTransient
 	private Map<Integer, TowerStageRewardTemplate> templatesMap = new HashMap<Integer, TowerStageRewardTemplate>();

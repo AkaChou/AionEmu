@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.panel_cp.PanelCp;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Ghostfur (Aion-Unique)
@@ -42,7 +42,7 @@ public class PanelCpData {
 	private List<PanelCp> pclist;
 
 	@XmlTransient
-	private TIntObjectHashMap<PanelCp> cpData = new TIntObjectHashMap<PanelCp>();
+	private IntObjectHashMap<PanelCp> cpData = new IntObjectHashMap<PanelCp>();
 
 	@XmlTransient
 	private Map<Integer, PanelCp> cpDataMap = new HashMap<Integer, PanelCp>(1);

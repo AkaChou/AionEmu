@@ -28,7 +28,7 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 import java.util.Set;
 

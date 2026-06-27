@@ -33,7 +33,7 @@ import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.RiftService;
 import com.aionemu.gameserver.services.VortexService;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class MonsterHunt extends QuestHandler {
 	private final int questId;

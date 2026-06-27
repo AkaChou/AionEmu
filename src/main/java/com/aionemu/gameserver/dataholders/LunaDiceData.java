@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.luna_dice.LunaDiceItem;
 import com.aionemu.gameserver.model.templates.luna_dice.LunaDiceTable;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by Wnkrz on 26/07/2017.
@@ -39,7 +39,7 @@ public class LunaDiceData {
 
 	@XmlElement(name = "table")
 	private List<LunaDiceTable> lunaDiceTabTemplate;
-	private TIntObjectHashMap<List<LunaDiceItem>> diceItemList = new TIntObjectHashMap<>();
+	private IntObjectHashMap<List<LunaDiceItem>> diceItemList = new IntObjectHashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		diceItemList.clear();

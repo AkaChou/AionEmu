@@ -21,8 +21,8 @@ import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastList;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class ItemStorage {
 	public static final long FIRST_AVAILABLE_SLOT = 65535L;

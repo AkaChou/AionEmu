@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.gather.GatherableTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author ATracer
@@ -40,7 +40,7 @@ public class GatherableData {
 	private List<GatherableTemplate> gatherables;
 
 	/** A map containing all npc templates */
-	private TIntObjectHashMap<GatherableTemplate> gatherableData = new TIntObjectHashMap<GatherableTemplate>();
+	private IntObjectHashMap<GatherableTemplate> gatherableData = new IntObjectHashMap<GatherableTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (GatherableTemplate gatherable : gatherables) {

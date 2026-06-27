@@ -8,7 +8,7 @@ import com.aionemu.gameserver.model.challenge.ChallengeTask;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeType;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

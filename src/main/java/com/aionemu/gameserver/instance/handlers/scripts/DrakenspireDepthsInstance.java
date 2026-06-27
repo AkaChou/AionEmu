@@ -38,7 +38,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 import java.util.ArrayList;
 import java.util.List;

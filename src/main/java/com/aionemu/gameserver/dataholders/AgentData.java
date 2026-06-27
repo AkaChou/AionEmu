@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.agent.AgentLocation;
 import com.aionemu.gameserver.model.templates.agent.AgentTemplate;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Rinzler (Encom)

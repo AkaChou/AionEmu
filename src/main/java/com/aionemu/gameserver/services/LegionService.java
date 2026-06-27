@@ -87,7 +87,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.container.LegionContainer;
 import com.aionemu.gameserver.world.container.LegionMemberContainer;
 
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.FastList;
 
 /**
  * This class is designed to do all the work related with loading/storing

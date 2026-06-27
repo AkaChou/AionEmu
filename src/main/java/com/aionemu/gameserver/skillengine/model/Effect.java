@@ -58,7 +58,7 @@ import com.aionemu.gameserver.skillengine.periodicaction.PeriodicActions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class Effect implements StatOwner {
 

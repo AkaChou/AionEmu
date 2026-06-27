@@ -20,9 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinPool;
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinPool.ForkJoinWorkerThreadFactory;
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinWorkerThread;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.ForkJoinWorkerThread;
 
 public class WorkStealThreadFactory extends PriorityThreadFactory implements ForkJoinWorkerThreadFactory {
 	public WorkStealThreadFactory(String namePrefix) {

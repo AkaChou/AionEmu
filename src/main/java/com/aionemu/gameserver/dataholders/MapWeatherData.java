@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.world.WeatherTable;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Rolandas
@@ -41,10 +41,10 @@ public class MapWeatherData {
 	@XmlElement(name = "map", required = true)
 	private List<WeatherTable> weatherData;
 	@XmlTransient
-	private TIntObjectHashMap<WeatherTable> mapWeather;
+	private IntObjectHashMap<WeatherTable> mapWeather;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		mapWeather = new TIntObjectHashMap<WeatherTable>();
+		mapWeather = new IntObjectHashMap<WeatherTable>();
 
 		for (WeatherTable table : weatherData) {
 			mapWeather.put(table.getMapId(), table);

@@ -60,8 +60,8 @@ import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandlerClassListener;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author ATracer modified by antness
@@ -70,7 +70,7 @@ public final class ZoneService implements GameEngine {
 
 	private static volatile ObjectProvider<ZoneService> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(ZoneService.class);
-	private TIntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
+	private IntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
 	private final Map<ZoneName, Class<? extends ZoneHandler>> handlers = new HashMap<ZoneName, Class<? extends ZoneHandler>>();
 	private final FastMap<ZoneName, ZoneHandler> collidableHandlers = new FastMap<ZoneName, ZoneHandler>();
 	public static final ZoneHandler DUMMY_ZONE_HANDLER = new GeneralZoneHandler();

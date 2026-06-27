@@ -28,7 +28,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.teleport.TeleporterTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * This is a container holding and serving all {@link NpcTemplate}
@@ -47,7 +47,7 @@ public class TeleporterData {
 	private List<TeleporterTemplate> tlist;
 
 	/** A map containing all trade list templates */
-	private TIntObjectHashMap<TeleporterTemplate> npctlistData = new TIntObjectHashMap<TeleporterTemplate>();
+	private IntObjectHashMap<TeleporterTemplate> npctlistData = new IntObjectHashMap<TeleporterTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TeleporterTemplate template : tlist) {

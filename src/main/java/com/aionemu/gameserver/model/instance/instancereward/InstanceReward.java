@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.FastList;
 
 public class InstanceReward<T extends InstancePlayerReward> {
 	private final Logger log = LoggerFactory.getLogger(InstanceReward.class);

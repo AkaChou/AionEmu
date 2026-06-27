@@ -32,8 +32,8 @@ import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutGroup;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutList;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Rolandas
@@ -67,7 +67,7 @@ public class NpcShoutData {
 	protected List<ShoutGroup> shoutGroups;
 
 	@XmlTransient
-	private TIntObjectHashMap<FastMap<Integer, List<NpcShout>>> shoutsByWorldNpcs = new TIntObjectHashMap<FastMap<Integer, List<NpcShout>>>();
+	private IntObjectHashMap<FastMap<Integer, List<NpcShout>>> shoutsByWorldNpcs = new IntObjectHashMap<FastMap<Integer, List<NpcShout>>>();
 
 	@XmlTransient
 	private int count = 0;

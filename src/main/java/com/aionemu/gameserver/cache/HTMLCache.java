@@ -37,7 +37,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @authors Layane, nbali, savormix, hex1r0, lord_rex

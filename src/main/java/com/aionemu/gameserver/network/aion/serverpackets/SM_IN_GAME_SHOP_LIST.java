@@ -26,13 +26,13 @@ import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
 	private Player player;
 	private int nrList;
 	private int salesRanking;
-	private TIntObjectHashMap<List<IGItem>> allItems = new TIntObjectHashMap<List<IGItem>>();
+	private IntObjectHashMap<List<IGItem>> allItems = new IntObjectHashMap<List<IGItem>>();
 
 	public SM_IN_GAME_SHOP_LIST(Player player, int nrList, int salesRanking) {
 		this.player = player;

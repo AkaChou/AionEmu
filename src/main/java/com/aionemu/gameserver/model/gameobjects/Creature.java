@@ -48,7 +48,7 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public abstract class Creature extends VisibleObject {
 	private static final Logger log = LoggerFactory.getLogger(Creature.class);

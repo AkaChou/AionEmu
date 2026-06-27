@@ -21,7 +21,7 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.google.common.collect.Maps;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

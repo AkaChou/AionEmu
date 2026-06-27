@@ -29,7 +29,7 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.Guides.GuideTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author xTz
@@ -40,7 +40,7 @@ public class GuideHtmlData {
 
 	@XmlElement(name = "guide", type = GuideTemplate.class)
 	private List<GuideTemplate> guideTemplates;
-	private final TIntObjectHashMap<ArrayList<GuideTemplate>> templates = new TIntObjectHashMap<ArrayList<GuideTemplate>>();
+	private final IntObjectHashMap<ArrayList<GuideTemplate>> templates = new IntObjectHashMap<ArrayList<GuideTemplate>>();
 	private final int CLASS_ALL = 255;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
@@ -70,7 +70,7 @@ public class GuideHtmlData {
 		return templates.size();
 	}
 
-	public TIntObjectHashMap<ArrayList<GuideTemplate>> getTemplates() {
+	public IntObjectHashMap<ArrayList<GuideTemplate>> getTemplates() {
 		return templates;
 	}
 

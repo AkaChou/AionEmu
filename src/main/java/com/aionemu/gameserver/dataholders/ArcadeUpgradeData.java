@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.arcadeupgrade.ArcadeTab;
 import com.aionemu.gameserver.model.templates.arcadeupgrade.ArcadeTabItem;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by wanke on 17/02/2017.
@@ -37,7 +37,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 public class ArcadeUpgradeData {
 	@XmlElement(name = "tab")
 	private List<ArcadeTab> arcadeTabTemplate;
-	private TIntObjectHashMap<List<ArcadeTabItem>> arcadeItemList = new TIntObjectHashMap<>();
+	private IntObjectHashMap<List<ArcadeTabItem>> arcadeItemList = new IntObjectHashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		arcadeItemList.clear();

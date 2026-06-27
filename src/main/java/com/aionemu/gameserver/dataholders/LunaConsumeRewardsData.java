@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.luna.LunaConsumeRewardsTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Ranastic
@@ -42,10 +42,10 @@ public class LunaConsumeRewardsData {
 	private List<LunaConsumeRewardsTemplate> lunaList;
 
 	@XmlTransient
-	private TIntObjectHashMap<LunaConsumeRewardsTemplate> lunaData = new TIntObjectHashMap<LunaConsumeRewardsTemplate>();
+	private IntObjectHashMap<LunaConsumeRewardsTemplate> lunaData = new IntObjectHashMap<LunaConsumeRewardsTemplate>();
 
 	@XmlTransient
-	private TIntObjectHashMap<LunaConsumeRewardsTemplate> lunaConsumeCountData = new TIntObjectHashMap<LunaConsumeRewardsTemplate>();
+	private IntObjectHashMap<LunaConsumeRewardsTemplate> lunaConsumeCountData = new IntObjectHashMap<LunaConsumeRewardsTemplate>();
 
 	@XmlTransient
 	private Map<Integer, LunaConsumeRewardsTemplate> lunaDataMap = new HashMap<Integer, LunaConsumeRewardsTemplate>(1);

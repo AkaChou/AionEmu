@@ -42,7 +42,7 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class DuelService {
 	private static Logger log = LoggerFactory.getLogger(DuelService.class);

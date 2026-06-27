@@ -49,7 +49,7 @@ import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
 import com.aionemu.gameserver.model.templates.zone.ZoneTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author ATracer
@@ -65,7 +65,7 @@ public class ZoneData {
 	public List<ZoneTemplate> zoneList;
 
 	@XmlTransient
-	private TIntObjectHashMap<List<ZoneInfo>> zoneNameMap = new TIntObjectHashMap<List<ZoneInfo>>();
+	private IntObjectHashMap<List<ZoneInfo>> zoneNameMap = new IntObjectHashMap<List<ZoneInfo>>();
 
 	@XmlTransient
 	private HashMap<ZoneTemplate, Integer> weatherZoneIds = new HashMap<ZoneTemplate, Integer>();
@@ -117,7 +117,7 @@ public class ZoneData {
 		zoneList = null;
 	}
 
-	public TIntObjectHashMap<List<ZoneInfo>> getZones() {
+	public IntObjectHashMap<List<ZoneInfo>> getZones() {
 		return zoneNameMap;
 	}
 

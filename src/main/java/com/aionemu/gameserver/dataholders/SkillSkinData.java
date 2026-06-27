@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.SkillSkinTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlRootElement(name = "skill_skins")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -34,10 +34,10 @@ public class SkillSkinData {
 
 	@XmlElement(name = "skill_skin")
 	private List<SkillSkinTemplate> sst;
-	private TIntObjectHashMap<SkillSkinTemplate> skillskins;
+	private IntObjectHashMap<SkillSkinTemplate> skillskins;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		skillskins = new TIntObjectHashMap<SkillSkinTemplate>();
+		skillskins = new IntObjectHashMap<SkillSkinTemplate>();
 		for (SkillSkinTemplate st : sst) {
 			skillskins.put(st.getId(), st);
 		}

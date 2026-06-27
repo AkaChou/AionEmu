@@ -2,15 +2,12 @@
  * Decompiled with CFR 0.150.
  * 
  * Could not load the following classes:
- *  javolution.context.ObjectFactory
- *  javolution.lang.Reusable
+ *  object factory
+ *  reusable object
  */
 package com.aionemu.gameserver.geoEngine.math;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
-
-import javolution.context.ObjectFactory;
-import javolution.lang.Reusable;
 
 public class Triangle extends AbstractTriangle implements Reusable {
 	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {

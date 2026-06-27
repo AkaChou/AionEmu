@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinTask;
+import java.util.concurrent.ForkJoinTask;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.Creature;

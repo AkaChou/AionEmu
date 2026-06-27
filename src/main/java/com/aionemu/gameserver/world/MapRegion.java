@@ -46,8 +46,8 @@ import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import javolution.util.FastMap;
-import javolution.util.FastMap.Entry;
+import com.aionemu.commons.utils.collections.FastMap;
+import com.aionemu.commons.utils.collections.FastMap.Entry;
 
 /**
  * Just some part of map.

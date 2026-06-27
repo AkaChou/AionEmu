@@ -35,7 +35,7 @@ import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.geoEngine.scene.mesh.DoorGeometry;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Mr. Poke

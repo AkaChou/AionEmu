@@ -22,7 +22,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /*
  * Rework & Test : MATTY

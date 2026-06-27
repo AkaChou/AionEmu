@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.housing.PlaceableHouseObject;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "housingObjects" })
@@ -50,7 +50,7 @@ public class HousingObjectData {
 	protected List<PlaceableHouseObject> housingObjects;
 
 	@XmlTransient
-	protected TIntObjectHashMap<PlaceableHouseObject> objectTemplatesById = new TIntObjectHashMap<PlaceableHouseObject>();
+	protected IntObjectHashMap<PlaceableHouseObject> objectTemplatesById = new IntObjectHashMap<PlaceableHouseObject>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (housingObjects == null) {

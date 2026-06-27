@@ -31,7 +31,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.QuestService;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author MrPoke
@@ -42,8 +42,8 @@ public class QuestsData {
 
 	@XmlElement(name = "quest", required = true)
 	protected List<QuestTemplate> questsData;
-	private TIntObjectHashMap<QuestTemplate> questData = new TIntObjectHashMap<QuestTemplate>();
-	private TIntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new TIntObjectHashMap<List<QuestTemplate>>();
+	private IntObjectHashMap<QuestTemplate> questData = new IntObjectHashMap<QuestTemplate>();
+	private IntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new IntObjectHashMap<List<QuestTemplate>>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		questData.clear();

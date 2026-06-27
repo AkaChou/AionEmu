@@ -28,8 +28,8 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.skillengine.model.SkinSkillTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Ranastic
@@ -42,7 +42,7 @@ public class SkinSkillData {
 	private List<SkinSkillTemplate> tlist;
 
 	@XmlTransient
-	private TIntObjectHashMap<SkinSkillTemplate> skinSkillData = new TIntObjectHashMap<SkinSkillTemplate>();
+	private IntObjectHashMap<SkinSkillTemplate> skinSkillData = new IntObjectHashMap<SkinSkillTemplate>();
 
 	private final Map<String, SkinSkillTemplate> string = new FastMap<String, SkinSkillTemplate>().shared();
 

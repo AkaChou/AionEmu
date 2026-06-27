@@ -27,14 +27,14 @@ import com.aionemu.gameserver.model.templates.towns.TownLevel;
 import com.aionemu.gameserver.model.templates.towns.TownSpawn;
 import com.aionemu.gameserver.model.templates.towns.TownSpawnMap;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlRootElement(name = "town_spawns_data")
 public class TownSpawnsData {
 	@XmlElement(name = "spawn_map")
 	private List<TownSpawnMap> spawnMap;
 
-	private TIntObjectHashMap<TownSpawnMap> spawnMapsData = new TIntObjectHashMap<TownSpawnMap>();
+	private IntObjectHashMap<TownSpawnMap> spawnMapsData = new IntObjectHashMap<TownSpawnMap>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		spawnMapsData.clear();

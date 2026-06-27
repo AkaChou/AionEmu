@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
 import com.aionemu.gameserver.model.templates.moltenus.MoltenusTemplate;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Rinzler (Encom)

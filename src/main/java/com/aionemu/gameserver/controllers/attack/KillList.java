@@ -22,7 +22,7 @@ import java.util.List;
 
 import com.aionemu.gameserver.configs.main.PvPConfig;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Sarynth

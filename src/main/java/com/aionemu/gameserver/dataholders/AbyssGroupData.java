@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.abyss_bonus.AbyssGroupAttr;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @Author Rinzler (Encom)
@@ -42,7 +42,7 @@ public class AbyssGroupData {
 	protected List<AbyssGroupAttr> abyssGroupattr;
 
 	@XmlTransient
-	private TIntObjectHashMap<AbyssGroupAttr> templates = new TIntObjectHashMap<AbyssGroupAttr>();
+	private IntObjectHashMap<AbyssGroupAttr> templates = new IntObjectHashMap<AbyssGroupAttr>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AbyssGroupAttr template : abyssGroupattr) {

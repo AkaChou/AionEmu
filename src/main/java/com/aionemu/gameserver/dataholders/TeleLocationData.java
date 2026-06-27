@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.teleport.TelelocationTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author orz
@@ -39,7 +39,7 @@ public class TeleLocationData {
 	private List<TelelocationTemplate> tlist;
 
 	/** A map containing all teleport location templates */
-	private TIntObjectHashMap<TelelocationTemplate> loctlistData = new TIntObjectHashMap<TelelocationTemplate>();
+	private IntObjectHashMap<TelelocationTemplate> loctlistData = new IntObjectHashMap<TelelocationTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TelelocationTemplate loc : tlist) {

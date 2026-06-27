@@ -42,7 +42,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FIND_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * Find Group Service

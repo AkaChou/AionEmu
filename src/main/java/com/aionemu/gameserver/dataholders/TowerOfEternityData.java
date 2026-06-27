@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.templates.towerofeternity.TowerOfEternityTemplate;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * Created by Wnkrz on 22/08/2017.

@@ -62,8 +62,8 @@ import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapInstanceFactory;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastList;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class AutoGroupService {
 

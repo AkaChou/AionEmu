@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.pet.PetTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * This is a container holding and serving all {@link PetTemplate}
@@ -42,7 +42,7 @@ public class PetData {
 	private List<PetTemplate> pets;
 
 	/** A map containing all pet templates */
-	private TIntObjectHashMap<PetTemplate> petData = new TIntObjectHashMap<PetTemplate>();
+	private IntObjectHashMap<PetTemplate> petData = new IntObjectHashMap<PetTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PetTemplate pet : pets) {

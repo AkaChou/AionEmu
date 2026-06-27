@@ -37,7 +37,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.restriction.ItemCleanupTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Luno
@@ -50,10 +50,10 @@ public class ItemData extends ReloadableData {
 	private List<ItemTemplate> its;
 
 	@XmlTransient
-	private TIntObjectHashMap<ItemTemplate> items;
+	private IntObjectHashMap<ItemTemplate> items;
 
 	@XmlTransient
-	private TIntObjectHashMap<ItemTemplate> petEggs = new TIntObjectHashMap<ItemTemplate>();
+	private IntObjectHashMap<ItemTemplate> petEggs = new IntObjectHashMap<ItemTemplate>();
 
 	@XmlTransient
 	Map<Integer, List<ItemTemplate>> manastones = new HashMap<Integer, List<ItemTemplate>>();
@@ -62,7 +62,7 @@ public class ItemData extends ReloadableData {
 	Map<Integer, ItemTemplate> allItems;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		items = new TIntObjectHashMap<ItemTemplate>();
+		items = new IntObjectHashMap<ItemTemplate>();
 		allItems = new HashMap<Integer, ItemTemplate>();
 		for (ItemTemplate it : its) {
 			items.put(it.getTemplateId(), it);
@@ -179,7 +179,7 @@ public class ItemData extends ReloadableData {
 		return 0;
 	}
 
-	public TIntObjectHashMap<ItemTemplate> getItemData() {
+	public IntObjectHashMap<ItemTemplate> getItemData() {
 		return items;
 	}
 }

@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 import java.util.ArrayList;
 import java.util.List;

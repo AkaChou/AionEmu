@@ -30,7 +30,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MAIL_SERVICE;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author kosyachok

@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.minion.MinionTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "minions")
@@ -36,7 +36,7 @@ public class MinionData {
 	@XmlElement(name = "minion")
 	private List<MinionTemplate> minionTemplates;
 	@XmlTransient
-	private TIntObjectHashMap<MinionTemplate> minionData = new TIntObjectHashMap<>();
+	private IntObjectHashMap<MinionTemplate> minionData = new IntObjectHashMap<>();
 	@XmlTransient
 	private List<Integer> minionDataList = new ArrayList<Integer>();
 

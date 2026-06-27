@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * This is a container holding and serving all {@link NpcTemplate}
@@ -46,7 +46,7 @@ public class NpcData {
 	private List<NpcTemplate> npcs;
 
 	/** A map containing all npc templates */
-	private TIntObjectHashMap<NpcTemplate> npcData = new TIntObjectHashMap<NpcTemplate>();
+	private IntObjectHashMap<NpcTemplate> npcData = new IntObjectHashMap<NpcTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (NpcTemplate npc : npcs) {
@@ -73,7 +73,7 @@ public class NpcData {
 	/**
 	 * @return the npcData
 	 */
-	public TIntObjectHashMap<NpcTemplate> getNpcData() {
+	public IntObjectHashMap<NpcTemplate> getNpcData() {
 		return npcData;
 	}
 }

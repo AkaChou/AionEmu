@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author LokiReborn
@@ -39,11 +39,11 @@ public class WindstreamData {
 	@XmlElement(name = "windstream")
 
 	private List<WindstreamTemplate> wts;
-	private TIntObjectHashMap<WindstreamTemplate> windstreams;
+	private IntObjectHashMap<WindstreamTemplate> windstreams;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 
-		windstreams = new TIntObjectHashMap<WindstreamTemplate>();
+		windstreams = new IntObjectHashMap<WindstreamTemplate>();
 		for (WindstreamTemplate wt : wts) {
 			windstreams.put(wt.getMapid(), wt);
 		}

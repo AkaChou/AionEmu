@@ -31,7 +31,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.FastList;
 
 public class RewardService {
 	private RewardServiceDAO dao;

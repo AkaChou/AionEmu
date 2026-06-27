@@ -252,7 +252,7 @@ class ModelCollectionImplementationTest {
 				"src/main/java/com/aionemu/gameserver/model/templates/spawns/SpawnTemplate.java");
 		for (String sourcePath : templateSources) {
 			assertSourceOmits(sourcePath, "FastList");
-			assertSourceOmits(sourcePath, "javolution.util");
+			assertSourceOmits(sourcePath, "javo" + "lution.util");
 		}
 	}
 
@@ -282,7 +282,7 @@ class ModelCollectionImplementationTest {
 		for (String sourcePath : sourcePaths) {
 			assertSourceOmits(sourcePath, "FastList<Integer>");
 			assertSourceOmits(sourcePath, "new FastList<Integer>");
-			assertSourceOmits(sourcePath, "import javolution.util.FastList");
+			assertSourceOmits(sourcePath, "import javo" + "lution.util.FastList");
 		}
 	}
 
@@ -297,7 +297,15 @@ class ModelCollectionImplementationTest {
 			assertSourceOmits(sourcePath, "FastList.newInstance()");
 		}
 		assertSourceOmits("src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_PLAYER_INFO.java",
-				"import javolution.util.FastList");
+				"import javo" + "lution.util.FastList");
+	}
+
+	@Test
+	void sourceTreeDoesNotUseLegacyCollectionPackages() throws Exception {
+		assertTreeOmitsLegacyCollectionPackages(Path.of("src/main/java"));
+		assertTreeOmitsLegacyCollectionPackages(Path.of("src/test/java"));
+		assertSourceOmits("pom.xml", "javo" + "lution");
+		assertSourceOmits("pom.xml", "trove4j");
 	}
 
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
@@ -322,5 +330,21 @@ class ModelCollectionImplementationTest {
 	private void assertSourceOmits(String sourcePath, String text) throws Exception {
 		String source = Files.readString(Path.of(sourcePath));
 		assertFalse(source.contains(text));
+	}
+
+	private void assertTreeOmitsLegacyCollectionPackages(Path root) throws Exception {
+		List<String> legacyPackageNames = List.of(
+				"javo" + "lution.",
+				"gnu." + "trove",
+				"com.aionemu.commons.utils.internal." + "chmv8");
+		try (var paths = Files.walk(root)) {
+			for (Path sourcePath : paths.filter(path -> path.toString().endsWith(".java")).toList()) {
+				String source = Files.readString(sourcePath);
+				for (String legacyPackageName : legacyPackageNames) {
+					assertFalse(source.contains(legacyPackageName),
+							() -> sourcePath + " still contains " + legacyPackageName);
+				}
+			}
+		}
 	}
 }

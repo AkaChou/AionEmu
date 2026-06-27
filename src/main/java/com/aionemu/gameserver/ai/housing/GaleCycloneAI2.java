@@ -22,7 +22,7 @@ import com.aionemu.gameserver.controllers.observer.GaleCycloneObserver;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.SkillEngine;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /****/
 /** Author (Encom)

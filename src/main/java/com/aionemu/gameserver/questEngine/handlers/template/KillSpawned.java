@@ -33,15 +33,15 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
-import gnu.trove.list.array.TIntArrayList;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntArrayList;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class KillSpawned extends QuestHandler {
 	private final int questId;
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
 	private final Set<Integer> endNpcs = new HashSet<Integer>();
 	private final FastMap<List<Integer>, SpawnedMonster> spawnedMonsters;
-	private TIntArrayList spawnerObjects;
+	private IntArrayList spawnerObjects;
 
 	public KillSpawned(int questId, List<Integer> startNpcIds, List<Integer> endNpcIds,
 			FastMap<List<Integer>, SpawnedMonster> spawnedMonsters) {
@@ -56,7 +56,7 @@ public class KillSpawned extends QuestHandler {
 			this.endNpcs.remove(0);
 		}
 		this.spawnedMonsters = spawnedMonsters;
-		this.spawnerObjects = new TIntArrayList();
+		this.spawnerObjects = new IntArrayList();
 		for (SpawnedMonster m : spawnedMonsters.values()) {
 			spawnerObjects.add(m.getSpawnerObject());
 		}

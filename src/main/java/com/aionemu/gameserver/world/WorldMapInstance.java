@@ -52,9 +52,9 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import com.aionemu.gameserver.world.zone.ZoneService;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastList;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * World map instance object.
@@ -78,7 +78,7 @@ public abstract class WorldMapInstance {
 	/**
 	 * Map of active regions.
 	 */
-	protected final TIntObjectHashMap<MapRegion> regions = new TIntObjectHashMap<MapRegion>();
+	protected final IntObjectHashMap<MapRegion> regions = new IntObjectHashMap<MapRegion>();
 
 	/**
 	 * All objects spawned in this world map instance

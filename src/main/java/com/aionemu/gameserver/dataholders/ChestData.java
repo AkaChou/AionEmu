@@ -27,8 +27,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.chest.ChestTemplate;
 
-import gnu.trove.map.hash.THashMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Wakizashi
@@ -41,9 +41,9 @@ public class ChestData {
 	private List<ChestTemplate> chests;
 
 	/** A map containing all npc templates */
-	private TIntObjectHashMap<ChestTemplate> chestData = new TIntObjectHashMap<ChestTemplate>();
-	private TIntObjectHashMap<ArrayList<ChestTemplate>> instancesMap = new TIntObjectHashMap<ArrayList<ChestTemplate>>();
-	private THashMap<String, ChestTemplate> namedChests = new THashMap<String, ChestTemplate>();
+	private IntObjectHashMap<ChestTemplate> chestData = new IntObjectHashMap<ChestTemplate>();
+	private IntObjectHashMap<ArrayList<ChestTemplate>> instancesMap = new IntObjectHashMap<ArrayList<ChestTemplate>>();
+	private FastMap<String, ChestTemplate> namedChests = new FastMap<String, ChestTemplate>();
 
 	/**
 	 * - Inititialize all maps for subsequent use - Don't nullify initial chest list

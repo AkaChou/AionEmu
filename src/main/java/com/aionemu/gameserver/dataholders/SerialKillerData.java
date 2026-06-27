@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.serial_killer.RankRestriction;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "rankRestriction" })
@@ -38,7 +38,7 @@ public class SerialKillerData {
 	protected List<RankRestriction> rankRestriction;
 
 	@XmlTransient
-	private TIntObjectHashMap<RankRestriction> templates = new TIntObjectHashMap<RankRestriction>();
+	private IntObjectHashMap<RankRestriction> templates = new IntObjectHashMap<RankRestriction>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (RankRestriction template : rankRestriction) {

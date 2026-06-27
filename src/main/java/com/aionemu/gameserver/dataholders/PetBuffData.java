@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.pet.PetBonusAttr;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "petBonusattr" })
@@ -39,7 +39,7 @@ public class PetBuffData {
 	protected List<PetBonusAttr> petBonusattr;
 
 	@XmlTransient
-	private TIntObjectHashMap<PetBonusAttr> templates = new TIntObjectHashMap<PetBonusAttr>();
+	private IntObjectHashMap<PetBonusAttr> templates = new IntObjectHashMap<PetBonusAttr>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PetBonusAttr template : petBonusattr) {

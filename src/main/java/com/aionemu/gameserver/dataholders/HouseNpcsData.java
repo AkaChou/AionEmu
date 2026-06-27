@@ -30,7 +30,7 @@ import jakarta.xml.bind.annotation.XmlType;
 import com.aionemu.gameserver.model.templates.spawns.HouseSpawn;
 import com.aionemu.gameserver.model.templates.spawns.HouseSpawns;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "houseSpawnsData" })
@@ -41,7 +41,7 @@ public class HouseNpcsData {
 	protected List<HouseSpawns> houseSpawnsData;
 
 	@XmlTransient
-	private TIntObjectHashMap<List<HouseSpawn>> houseSpawnsByAddressId = new TIntObjectHashMap<List<HouseSpawn>>();
+	private IntObjectHashMap<List<HouseSpawn>> houseSpawnsByAddressId = new IntObjectHashMap<List<HouseSpawn>>();
 
 	public List<HouseSpawns> getHouseSpawns() {
 		if (houseSpawnsData == null) {

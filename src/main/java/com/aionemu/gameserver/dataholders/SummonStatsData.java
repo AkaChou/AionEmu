@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.stats.SummonStatsTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlRootElement(name = "summon_stats_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -36,7 +36,7 @@ public class SummonStatsData {
 	@XmlElement(name = "summon_stats", required = true)
 	private List<SummonStatsType> summonTemplatesList = new ArrayList<SummonStatsType>();
 
-	private final TIntObjectHashMap<SummonStatsTemplate> summonTemplates = new TIntObjectHashMap<SummonStatsTemplate>();
+	private final IntObjectHashMap<SummonStatsTemplate> summonTemplates = new IntObjectHashMap<SummonStatsTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (SummonStatsType st : summonTemplatesList) {

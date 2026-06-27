@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.autogroup.AutoGroup;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "autoGroup" })
@@ -38,9 +38,9 @@ public class AutoGroupData {
 	@XmlElement(name = "auto_group")
 	protected List<AutoGroup> autoGroup;
 	@XmlTransient
-	private TIntObjectHashMap<AutoGroup> autoGroupByInstanceId = new TIntObjectHashMap<AutoGroup>();
+	private IntObjectHashMap<AutoGroup> autoGroupByInstanceId = new IntObjectHashMap<AutoGroup>();
 	@XmlTransient
-	private TIntObjectHashMap<AutoGroup> autoGroupByNpcId = new TIntObjectHashMap<AutoGroup>();
+	private IntObjectHashMap<AutoGroup> autoGroupByNpcId = new IntObjectHashMap<AutoGroup>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (AutoGroup ag : autoGroup) {

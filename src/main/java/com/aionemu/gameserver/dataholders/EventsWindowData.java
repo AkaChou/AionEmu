@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.event.EventsWindow;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Ranastic
@@ -42,7 +42,7 @@ public class EventsWindowData {
 	private List<EventsWindow> events_window;
 
 	@XmlTransient
-	private TIntObjectHashMap<EventsWindow> eventData = new TIntObjectHashMap<EventsWindow>();
+	private IntObjectHashMap<EventsWindow> eventData = new IntObjectHashMap<EventsWindow>();
 
 	@XmlTransient
 	private Map<Integer, EventsWindow> eventDataMap = new HashMap<Integer, EventsWindow>(1);

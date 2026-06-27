@@ -32,7 +32,7 @@ import com.aionemu.gameserver.world.World;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	private final AtomicLong totalDamage = new AtomicLong();

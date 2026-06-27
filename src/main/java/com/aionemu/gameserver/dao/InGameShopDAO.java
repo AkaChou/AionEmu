@@ -21,7 +21,7 @@ import java.util.List;
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.ingameshop.IGItem;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author xTz, KID

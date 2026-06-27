@@ -32,7 +32,7 @@ import com.aionemu.gameserver.model.bonus_service.ServiceBuff;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Simple

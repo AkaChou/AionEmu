@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.TitleTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author xavier
@@ -38,10 +38,10 @@ public class TitleData {
 	@XmlElement(name = "title")
 	private List<TitleTemplate> tts;
 
-	private TIntObjectHashMap<TitleTemplate> titles;
+	private IntObjectHashMap<TitleTemplate> titles;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		titles = new TIntObjectHashMap<TitleTemplate>();
+		titles = new IntObjectHashMap<TitleTemplate>();
 		for (TitleTemplate tt : tts) {
 			titles.put(tt.getTitleId(), tt);
 		}

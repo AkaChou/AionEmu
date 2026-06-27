@@ -31,8 +31,8 @@ import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.model.templates.item.upgrade.ItemUpgradeTemplate;
 import com.aionemu.gameserver.model.templates.item.upgrade.UpgradeResultItem;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Ranastic (Encom)
@@ -47,11 +47,11 @@ public class ItemUpgradeData {
 	@XmlElement(name = "item_upgrade")
 	protected List<ItemUpgradeTemplate> itemUpgradeTemplates;
 
-	private TIntObjectHashMap<ItemUpgradeTemplate> itemUpgradeSets;
+	private IntObjectHashMap<ItemUpgradeTemplate> itemUpgradeSets;
 	private FastMap<Integer, FastMap<Integer, UpgradeResultItem>> upgradeResultItemMap;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		itemUpgradeSets = new TIntObjectHashMap<ItemUpgradeTemplate>();
+		itemUpgradeSets = new IntObjectHashMap<ItemUpgradeTemplate>();
 		upgradeResultItemMap = new FastMap<Integer, FastMap<Integer, UpgradeResultItem>>();
 		for (ItemUpgradeTemplate set : itemUpgradeTemplates) {
 			itemUpgradeSets.put(set.getUpgrade_base_item_id(), set);

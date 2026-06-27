@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.templates.teleport.MultiReturn;
 import com.aionemu.gameserver.model.templates.teleport.MultiReturnLocationList;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /****/
 /**
@@ -40,7 +40,7 @@ public class MultiReturnItemData {
 	@XmlElement(name = "item")
 	private List<MultiReturn> ItemList;
 
-	private TIntObjectHashMap<List<MultiReturnLocationList>> ItemLocationList = new TIntObjectHashMap<>();
+	private IntObjectHashMap<List<MultiReturnLocationList>> ItemLocationList = new IntObjectHashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		ItemLocationList.clear();

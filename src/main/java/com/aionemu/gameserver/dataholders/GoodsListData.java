@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.goods.GoodsList;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlRootElement(name = "goodslists")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -40,20 +40,20 @@ public class GoodsListData {
 	@XmlElement(name = "purchase_list")
 	protected List<GoodsList> pList;
 
-	private TIntObjectHashMap<GoodsList> goodsListData;
-	private TIntObjectHashMap<GoodsList> goodsInListData;
-	private TIntObjectHashMap<GoodsList> goodsPurchaseListData;
+	private IntObjectHashMap<GoodsList> goodsListData;
+	private IntObjectHashMap<GoodsList> goodsInListData;
+	private IntObjectHashMap<GoodsList> goodsPurchaseListData;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		goodsListData = new TIntObjectHashMap<GoodsList>();
+		goodsListData = new IntObjectHashMap<GoodsList>();
 		for (GoodsList it : list) {
 			goodsListData.put(it.getId(), it);
 		}
-		goodsInListData = new TIntObjectHashMap<GoodsList>();
+		goodsInListData = new IntObjectHashMap<GoodsList>();
 		for (GoodsList it : inList) {
 			goodsInListData.put(it.getId(), it);
 		}
-		goodsPurchaseListData = new TIntObjectHashMap<GoodsList>();
+		goodsPurchaseListData = new IntObjectHashMap<GoodsList>();
 		for (GoodsList it : pList) {
 			goodsPurchaseListData.put(it.getId(), it);
 		}

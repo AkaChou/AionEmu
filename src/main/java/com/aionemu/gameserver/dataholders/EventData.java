@@ -33,7 +33,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
 
-import gnu.trove.map.hash.THashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * <p>
@@ -75,10 +75,10 @@ public class EventData {
 	protected List<EventTemplate> events;
 
 	@XmlTransient
-	private THashMap<String, EventTemplate> activeEvents = new THashMap<String, EventTemplate>();
+	private FastMap<String, EventTemplate> activeEvents = new FastMap<String, EventTemplate>();
 
 	@XmlTransient
-	private THashMap<String, EventTemplate> allEvents = new THashMap<String, EventTemplate>();
+	private FastMap<String, EventTemplate> allEvents = new FastMap<String, EventTemplate>();
 
 	@XmlTransient
 	private int counter = 0;

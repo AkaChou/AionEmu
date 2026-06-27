@@ -26,7 +26,7 @@ import com.aionemu.gameserver.services.ShieldService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class ShieldController extends VisibleObjectController<Shield> {
 	FastMap<Integer, ActionObserver> observed = new FastMap<Integer, ActionObserver>().shared();

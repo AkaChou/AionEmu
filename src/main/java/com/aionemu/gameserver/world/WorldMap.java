@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.world.zone.ZoneAttributes;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * This object is representing one in-game map and can have instances.

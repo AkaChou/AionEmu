@@ -140,7 +140,7 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 class GameServiceProviderCompatibilityTest {
 
@@ -994,7 +994,7 @@ class GameServiceProviderCompatibilityTest {
 
     private static WorldMapsData worldMaps(int... mapIds) throws ReflectiveOperationException {
         List<WorldMapTemplate> templates = new java.util.ArrayList<>();
-        TIntObjectHashMap<WorldMapTemplate> index = new TIntObjectHashMap<>();
+        IntObjectHashMap<WorldMapTemplate> index = new IntObjectHashMap<>();
         for (int mapId : mapIds) {
             WorldMapTemplate template = new WorldMapTemplate();
             setField(template, "mapId", mapId);

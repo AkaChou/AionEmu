@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.panel_cp.StoneCP;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by Rinzler (Encom)
@@ -41,7 +41,7 @@ public class StoneCpData {
 	private List<StoneCP> stonelist;
 
 	@XmlTransient
-	private TIntObjectHashMap<StoneCP> stoneData = new TIntObjectHashMap<StoneCP>();
+	private IntObjectHashMap<StoneCP> stoneData = new IntObjectHashMap<StoneCP>();
 
 	@XmlTransient
 	private Map<Integer, StoneCP> stoneDataMap = new HashMap<Integer, StoneCP>(1);

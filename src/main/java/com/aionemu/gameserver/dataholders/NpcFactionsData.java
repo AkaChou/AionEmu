@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.factions.NpcFactionTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author vlog
@@ -37,8 +37,8 @@ public class NpcFactionsData {
 
 	@XmlElement(name = "npc_faction", required = true)
 	protected List<NpcFactionTemplate> npcFactionsData;
-	private TIntObjectHashMap<NpcFactionTemplate> factionsById = new TIntObjectHashMap<NpcFactionTemplate>();
-	private TIntObjectHashMap<NpcFactionTemplate> factionsByNpcId = new TIntObjectHashMap<NpcFactionTemplate>();
+	private IntObjectHashMap<NpcFactionTemplate> factionsById = new IntObjectHashMap<NpcFactionTemplate>();
+	private IntObjectHashMap<NpcFactionTemplate> factionsByNpcId = new IntObjectHashMap<NpcFactionTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		factionsById.clear();

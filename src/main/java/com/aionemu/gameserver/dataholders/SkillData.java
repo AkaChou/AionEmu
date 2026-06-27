@@ -29,8 +29,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 @XmlRootElement(name = "skill_data")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,7 +41,7 @@ public class SkillData {
 
 	private HashMap<Integer, ArrayList<Integer>> cooldownGroups;
 
-	private TIntObjectHashMap<SkillTemplate> skillData = new TIntObjectHashMap<SkillTemplate>();
+	private IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<SkillTemplate>();
 
 	private final Map<String, SkillTemplate> skillGroup = new FastMap<String, SkillTemplate>().shared();
 
@@ -96,7 +96,7 @@ public class SkillData {
 		return cooldownGroups.get(delayId);
 	}
 
-	public TIntObjectHashMap<SkillTemplate> getSkillData() {
+	public IntObjectHashMap<SkillTemplate> getSkillData() {
 		return skillData;
 	}
 }

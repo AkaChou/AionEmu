@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.event.AtreianPassport;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Alcapwnd
@@ -42,7 +42,7 @@ public class AtreianPassportData {
 	/**
 	 * A map containing all teleport location templates
 	 */
-	private TIntObjectHashMap<AtreianPassport> passportData = new TIntObjectHashMap<AtreianPassport>();
+	private IntObjectHashMap<AtreianPassport> passportData = new IntObjectHashMap<AtreianPassport>();
 	private Map<Integer, AtreianPassport> passportDataMap = new HashMap<Integer, AtreianPassport>(1);
 
 	/**

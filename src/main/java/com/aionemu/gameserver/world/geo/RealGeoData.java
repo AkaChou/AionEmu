@@ -17,11 +17,11 @@ import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 public class RealGeoData implements GeoData {
     private static final Logger log = LoggerFactory.getLogger(RealGeoData.class);
-    private final TIntObjectHashMap<GeoMap> geoMaps = new TIntObjectHashMap<>();
+    private final IntObjectHashMap<GeoMap> geoMaps = new IntObjectHashMap<>();
     private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     @Override

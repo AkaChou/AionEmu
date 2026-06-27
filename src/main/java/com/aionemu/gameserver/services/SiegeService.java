@@ -78,7 +78,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class SiegeService {
 	private static final Logger log = LoggerFactory.getLogger("SIEGE_LOG");

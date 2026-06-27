@@ -26,9 +26,9 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.petskill.PetSkillTemplate;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.hash.TIntIntHashMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntArrayList;
+import com.aionemu.commons.utils.collections.IntIntHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author ATracer
@@ -41,22 +41,22 @@ public class PetSkillData {
 	private List<PetSkillTemplate> petSkills;
 
 	/** A map containing all npc skill templates */
-	private TIntObjectHashMap<TIntIntHashMap> petSkillData = new TIntObjectHashMap<TIntIntHashMap>();
+	private IntObjectHashMap<IntIntHashMap> petSkillData = new IntObjectHashMap<IntIntHashMap>();
 
-	private TIntObjectHashMap<TIntArrayList> petSkillsMap = new TIntObjectHashMap<TIntArrayList>();
+	private IntObjectHashMap<IntArrayList> petSkillsMap = new IntObjectHashMap<IntArrayList>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PetSkillTemplate petSkill : petSkills) {
-			TIntIntHashMap orderSkillMap = petSkillData.get(petSkill.getOrderSkill());
+			IntIntHashMap orderSkillMap = petSkillData.get(petSkill.getOrderSkill());
 			if (orderSkillMap == null) {
-				orderSkillMap = new TIntIntHashMap();
+				orderSkillMap = new IntIntHashMap();
 				petSkillData.put(petSkill.getOrderSkill(), orderSkillMap);
 			}
 			orderSkillMap.put(petSkill.getPetId(), petSkill.getSkillId());
 
-			TIntArrayList skillList = petSkillsMap.get(petSkill.getPetId());
+			IntArrayList skillList = petSkillsMap.get(petSkill.getPetId());
 			if (skillList == null) {
-				skillList = new TIntArrayList();
+				skillList = new IntArrayList();
 				petSkillsMap.put(petSkill.getPetId(), skillList);
 			}
 			skillList.add(petSkill.getSkillId());

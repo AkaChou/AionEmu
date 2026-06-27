@@ -34,7 +34,7 @@ import com.aionemu.gameserver.model.templates.portal.PortalPath;
 import com.aionemu.gameserver.model.templates.portal.PortalScroll;
 import com.aionemu.gameserver.model.templates.portal.PortalUse;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "portalUse", "portalDialog", "portalScroll" })
@@ -51,10 +51,10 @@ public class Portal2Data {
 	protected List<PortalScroll> portalScroll;
 
 	@XmlTransient
-	private TIntObjectHashMap<PortalUse> portalUses = new TIntObjectHashMap<PortalUse>();
+	private IntObjectHashMap<PortalUse> portalUses = new IntObjectHashMap<PortalUse>();
 
 	@XmlTransient
-	private TIntObjectHashMap<PortalDialog> portalDialogs = new TIntObjectHashMap<PortalDialog>();
+	private IntObjectHashMap<PortalDialog> portalDialogs = new IntObjectHashMap<PortalDialog>();
 
 	@XmlTransient
 	private Map<String, PortalScroll> portalScrolls = new HashMap<String, PortalScroll>();

@@ -6,7 +6,7 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.team.legion.*;
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -23,7 +23,7 @@ import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class PlayerGroup extends TemporaryPlayerTeam<PlayerGroupMember> {
 	private TeamType type;

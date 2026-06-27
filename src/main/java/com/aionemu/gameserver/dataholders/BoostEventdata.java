@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.event.BoostEvents;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by wanke on 02/03/2017.
@@ -42,7 +42,7 @@ public class BoostEventdata {
 	protected List<BoostEvents> bonusServiceBonusattr;
 
 	@XmlTransient
-	private TIntObjectHashMap<BoostEvents> templates = new TIntObjectHashMap<BoostEvents>();
+	private IntObjectHashMap<BoostEvents> templates = new IntObjectHashMap<BoostEvents>();
 
 	@XmlTransient
 	private Map<Integer, BoostEvents> templatesMap = new HashMap<Integer, BoostEvents>();

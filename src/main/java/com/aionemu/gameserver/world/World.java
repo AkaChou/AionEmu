@@ -44,9 +44,9 @@ import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 import com.aionemu.gameserver.world.exceptions.WorldMapNotExistException;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastList;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class World {
 
@@ -54,11 +54,11 @@ public class World {
 	private static volatile ObjectProvider<World> instanceProvider;
 	private final PlayerContainer allPlayers;
 	private final FastMap<Integer, VisibleObject> allObjects;
-	private final TIntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new TIntObjectHashMap<Collection<SiegeNpc>>();
-	private final TIntObjectHashMap<Collection<BaseNpc>> localBaseNpcs = new TIntObjectHashMap<Collection<BaseNpc>>();
-	private final TIntObjectHashMap<Collection<OutpostNpc>> localOutpostNpcs = new TIntObjectHashMap<Collection<OutpostNpc>>();
+	private final IntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new IntObjectHashMap<Collection<SiegeNpc>>();
+	private final IntObjectHashMap<Collection<BaseNpc>> localBaseNpcs = new IntObjectHashMap<Collection<BaseNpc>>();
+	private final IntObjectHashMap<Collection<OutpostNpc>> localOutpostNpcs = new IntObjectHashMap<Collection<OutpostNpc>>();
 	private final FastMap<Integer, Npc> allNpcs;
-	private final TIntObjectHashMap<WorldMap> worldMaps;
+	private final IntObjectHashMap<WorldMap> worldMaps;
 
 	/**
 	 * Constructor.
@@ -68,7 +68,7 @@ public class World {
 		allPlayers = new PlayerContainer();
 		allObjects = new FastMap<Integer, VisibleObject>().shared();
 		allNpcs = new FastMap<Integer, Npc>().shared();
-		worldMaps = new TIntObjectHashMap<WorldMap>();
+		worldMaps = new IntObjectHashMap<WorldMap>();
 		for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
 			worldMaps.put(template.getMapId(), new WorldMap(template, this));
 		}

@@ -26,7 +26,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.CubeExpandTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * This is for the Cube Expanders.
@@ -39,7 +39,7 @@ public class CubeExpandData {
 
 	@XmlElement(name = "cube_npc")
 	private List<CubeExpandTemplate> clist;
-	private TIntObjectHashMap<CubeExpandTemplate> npctlistData = new TIntObjectHashMap<CubeExpandTemplate>();
+	private IntObjectHashMap<CubeExpandTemplate> npctlistData = new IntObjectHashMap<CubeExpandTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (CubeExpandTemplate npc : clist) {

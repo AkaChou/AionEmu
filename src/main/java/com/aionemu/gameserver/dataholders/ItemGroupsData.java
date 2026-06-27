@@ -51,8 +51,8 @@ import com.aionemu.gameserver.model.templates.rewards.CraftRecipe;
 import com.aionemu.gameserver.model.templates.rewards.CraftReward;
 import com.aionemu.gameserver.model.templates.rewards.IdLevelReward;
 
-import javolution.util.FastMap;
-import javolution.util.FastSet;
+import com.aionemu.commons.utils.collections.FastMap;
+import com.aionemu.commons.utils.collections.FastSet;
 
 @XmlRootElement(name = "item_groups")
 @XmlType(name = "", propOrder = { "craftMaterials", "craftShop", "craftBundles", "craftRecipes", "manastonesCommon",

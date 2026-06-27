@@ -31,7 +31,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.stats.CalculatedPlayerStatsTemplate;
 import com.aionemu.gameserver.model.templates.stats.PlayerStatsTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlRootElement(name = "player_stats_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -39,7 +39,7 @@ public class PlayerStatsData {
 	@XmlElement(name = "player_stats", required = true)
 	private List<PlayerStatsType> templatesList = new ArrayList<PlayerStatsType>();
 
-	private final TIntObjectHashMap<PlayerStatsTemplate> playerTemplates = new TIntObjectHashMap<PlayerStatsTemplate>();
+	private final IntObjectHashMap<PlayerStatsTemplate> playerTemplates = new IntObjectHashMap<PlayerStatsTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PlayerStatsType pt : templatesList) {

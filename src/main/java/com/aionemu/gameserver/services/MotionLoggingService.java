@@ -52,7 +52,7 @@ import com.aionemu.gameserver.skillengine.model.Times;
 import com.aionemu.gameserver.skillengine.model.WeaponTypeWrapper;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author kecimis

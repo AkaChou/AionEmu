@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author ATracer, MrPoke, KID
@@ -38,11 +38,11 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 public class RecipeData {
 	@XmlElement(name = "recipe_template")
 	protected List<RecipeTemplate> list;
-	private TIntObjectHashMap<RecipeTemplate> recipeData;
+	private IntObjectHashMap<RecipeTemplate> recipeData;
 	private List<RecipeTemplate> elyos, asmos, any;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		recipeData = new TIntObjectHashMap<RecipeTemplate>();
+		recipeData = new IntObjectHashMap<RecipeTemplate>();
 		elyos = new ArrayList<>();
 		asmos = new ArrayList<>();
 		any = new ArrayList<>();
@@ -94,7 +94,7 @@ public class RecipeData {
 		return recipeData.get(id);
 	}
 
-	public TIntObjectHashMap<RecipeTemplate> getRecipeTemplates() {
+	public IntObjectHashMap<RecipeTemplate> getRecipeTemplates() {
 		return recipeData;
 	}
 

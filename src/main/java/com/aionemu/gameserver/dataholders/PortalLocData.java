@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.portal.PortalLoc;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "portalLoc" })
@@ -39,7 +39,7 @@ public class PortalLocData {
 	protected List<PortalLoc> portalLoc;
 
 	@XmlTransient
-	private TIntObjectHashMap<PortalLoc> portalLocs = new TIntObjectHashMap<PortalLoc>();
+	private IntObjectHashMap<PortalLoc> portalLocs = new IntObjectHashMap<PortalLoc>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (PortalLoc loc : portalLoc) {

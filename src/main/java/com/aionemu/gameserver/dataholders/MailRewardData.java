@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.mail_reward.MailRewardTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by Wnkrz on 26/07/2017.
@@ -43,7 +43,7 @@ public class MailRewardData {
 	private List<MailRewardTemplate> RewardMail;
 
 	@XmlTransient
-	private TIntObjectHashMap<MailRewardTemplate> templates = new TIntObjectHashMap<MailRewardTemplate>();
+	private IntObjectHashMap<MailRewardTemplate> templates = new IntObjectHashMap<MailRewardTemplate>();
 
 	@XmlTransient
 	private Map<Integer, MailRewardTemplate> templatesMap = new HashMap<Integer, MailRewardTemplate>();

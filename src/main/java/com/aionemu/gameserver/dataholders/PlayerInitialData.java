@@ -32,7 +32,7 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
-import gnu.trove.map.hash.THashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * This table contains all nesessary data for new players. <br/>
@@ -52,7 +52,7 @@ public class PlayerInitialData {
 	@XmlElement(name = "asmodian_spawn_location", required = true)
 	private LocationData asmodianSpawnLocation;
 
-	private THashMap<PlayerClass, PlayerCreationData> data = new THashMap<PlayerClass, PlayerCreationData>();
+	private FastMap<PlayerClass, PlayerCreationData> data = new FastMap<PlayerClass, PlayerCreationData>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (PlayerCreationData pt : dataList) {

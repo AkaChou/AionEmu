@@ -38,7 +38,7 @@ import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice
 import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice.SpecialLanding;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class AbyssLandingSpecialService {
 	private static volatile ObjectProvider<AbyssLandingSpecialService> instanceProvider;

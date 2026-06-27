@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Object of this class is containing <tt>WorldMapTemplate</tt> objects for all
@@ -42,7 +42,7 @@ public class WorldMapsData implements Iterable<WorldMapTemplate> {
 	@XmlElement(name = "map")
 	protected List<WorldMapTemplate> worldMaps;
 
-	protected TIntObjectHashMap<WorldMapTemplate> worldIdMap = new TIntObjectHashMap<WorldMapTemplate>();
+	protected IntObjectHashMap<WorldMapTemplate> worldIdMap = new IntObjectHashMap<WorldMapTemplate>();
 
 	protected void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (WorldMapTemplate map : worldMaps) {

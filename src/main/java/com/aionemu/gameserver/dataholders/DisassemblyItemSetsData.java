@@ -2,7 +2,7 @@ package com.aionemu.gameserver.dataholders;
 
 import com.aionemu.gameserver.model.templates.item.DisassembleItemGroups;
 import com.aionemu.gameserver.model.templates.item.DisassemblyItemSet;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -21,7 +21,7 @@ public class DisassemblyItemSetsData
 	@XmlElement(name = "disassemblyitemset")
 	private List<DisassemblyItemSet> DisassemblyItemSet;
 
-	private TIntObjectHashMap<List<DisassembleItemGroups>> disassemblyItemGroups = new TIntObjectHashMap<List<DisassembleItemGroups>>();
+	private IntObjectHashMap<List<DisassembleItemGroups>> disassemblyItemGroups = new IntObjectHashMap<List<DisassembleItemGroups>>();
 	void afterUnmarshal(Unmarshaller u, Object parent)
 	{
 		disassemblyItemGroups.clear();

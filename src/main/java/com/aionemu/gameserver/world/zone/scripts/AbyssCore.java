@@ -26,7 +26,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 import java.io.IOException;
 import java.nio.BufferUnderflowException;

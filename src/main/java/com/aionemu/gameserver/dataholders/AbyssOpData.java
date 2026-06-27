@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.abyss_op.AbyssOp;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Rinzler (Encom)
@@ -42,7 +42,7 @@ public class AbyssOpData {
 	private List<AbyssOp> aolist;
 
 	@XmlTransient
-	private TIntObjectHashMap<AbyssOp> opData = new TIntObjectHashMap<AbyssOp>();
+	private IntObjectHashMap<AbyssOp> opData = new IntObjectHashMap<AbyssOp>();
 
 	@XmlTransient
 	private Map<Integer, AbyssOp> opDataMap = new HashMap<Integer, AbyssOp>(1);

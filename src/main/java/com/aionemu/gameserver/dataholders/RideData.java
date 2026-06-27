@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.ride.RideInfo;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "rides" })
@@ -39,10 +39,10 @@ public class RideData {
 	private List<RideInfo> rides;
 
 	@XmlTransient
-	private TIntObjectHashMap<RideInfo> rideInfos;
+	private IntObjectHashMap<RideInfo> rideInfos;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		rideInfos = new TIntObjectHashMap<RideInfo>();
+		rideInfos = new IntObjectHashMap<RideInfo>();
 
 		for (RideInfo info : rides) {
 			rideInfos.put(info.getNpcId(), info);

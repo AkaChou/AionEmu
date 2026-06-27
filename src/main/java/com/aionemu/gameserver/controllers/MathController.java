@@ -2,7 +2,7 @@
  * Decompiled with CFR 0.150.
  * 
  * Could not load the following classes:
- *  javolution.util.FastMap
+ *  legacy FastMap
  */
 package com.aionemu.gameserver.controllers;
 
@@ -16,7 +16,7 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class MathController extends VisibleObjectController<MathObject> {
 	FastMap<Creature, MathObjectObserver> observers = new FastMap<Creature, MathObjectObserver>().shared();

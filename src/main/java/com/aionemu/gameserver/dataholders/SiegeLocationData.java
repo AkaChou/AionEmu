@@ -30,7 +30,7 @@ import com.aionemu.gameserver.model.siege.FortressLocation;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.templates.siegelocation.SiegeLocationTemplate;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 @XmlRootElement(name = "siege_locations")
 @XmlAccessorType(XmlAccessType.FIELD)

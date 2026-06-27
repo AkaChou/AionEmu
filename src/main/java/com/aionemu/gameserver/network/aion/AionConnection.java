@@ -43,7 +43,7 @@ import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.google.common.base.Preconditions;
 
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.FastList;
 
 /**
  * Object representing connection between GameServer and Aion Client.

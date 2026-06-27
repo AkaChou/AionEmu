@@ -29,7 +29,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.event.GameExperience;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Rinzler (Encom)
@@ -42,7 +42,7 @@ public class GameExperienceData {
 	private List<GameExperience> glist;
 
 	@XmlTransient
-	private TIntObjectHashMap<GameExperience> experienceData = new TIntObjectHashMap<GameExperience>();
+	private IntObjectHashMap<GameExperience> experienceData = new IntObjectHashMap<GameExperience>();
 
 	@XmlTransient
 	private Map<Integer, GameExperience> experienceDataMap = new HashMap<Integer, GameExperience>(1);

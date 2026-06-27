@@ -25,7 +25,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 import java.util.List;
 

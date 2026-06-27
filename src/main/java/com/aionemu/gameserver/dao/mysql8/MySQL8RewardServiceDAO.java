@@ -3,7 +3,7 @@ package com.aionemu.gameserver.dao.mysql8;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

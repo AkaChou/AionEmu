@@ -45,7 +45,7 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class BalaurAssaultService {
 	private static final BalaurAssaultService instance = new BalaurAssaultService();

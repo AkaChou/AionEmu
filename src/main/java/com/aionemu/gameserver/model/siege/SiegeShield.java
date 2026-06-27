@@ -26,7 +26,7 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * Shields have material ID 11 in geo.

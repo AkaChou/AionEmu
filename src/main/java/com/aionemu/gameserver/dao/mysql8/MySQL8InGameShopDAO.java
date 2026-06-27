@@ -3,7 +3,7 @@ package com.aionemu.gameserver.dao.mysql8;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.model.ingameshop.IGItem;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

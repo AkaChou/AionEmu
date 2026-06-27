@@ -22,8 +22,8 @@ import java.util.Map;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastList;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class LegionContainer implements Iterable<Legion> {
 	private final Map<Integer, Legion> legionsById = new FastMap<Integer, Legion>().shared();

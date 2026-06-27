@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import com.aionemu.gameserver.model.outpost.OutpostLocation;
 import com.aionemu.gameserver.model.templates.outpost.OutpostTemplate;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * Created by Wnkrz on 27/08/2017.

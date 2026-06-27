@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.bonus_service.F2pBonusAttr;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by wanke on 12/02/2017.
@@ -43,7 +43,7 @@ public class F2PBonusData {
 	protected List<F2pBonusAttr> f2pBonusattr;
 
 	@XmlTransient
-	private TIntObjectHashMap<F2pBonusAttr> templates = new TIntObjectHashMap<F2pBonusAttr>();
+	private IntObjectHashMap<F2pBonusAttr> templates = new IntObjectHashMap<F2pBonusAttr>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (F2pBonusAttr template : f2pBonusattr) {

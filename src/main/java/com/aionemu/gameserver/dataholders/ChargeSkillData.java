@@ -27,8 +27,8 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.skillengine.model.ChargeSkillTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author Dr.Nism [Ranastic]
@@ -40,10 +40,10 @@ public class ChargeSkillData {
 	@XmlElement(name = "charge_skill")
 	private List<ChargeSkillTemplate> chargeSkills;
 
-	private TIntObjectHashMap<ChargeSkillTemplate> ids = new TIntObjectHashMap<ChargeSkillTemplate>();
+	private IntObjectHashMap<ChargeSkillTemplate> ids = new IntObjectHashMap<ChargeSkillTemplate>();
 	private final Map<String, ChargeSkillTemplate> setName = new FastMap<String, ChargeSkillTemplate>().shared();
-	private TIntObjectHashMap<ChargeSkillTemplate> firstTemplates = new TIntObjectHashMap<ChargeSkillTemplate>();
-	private TIntObjectHashMap<ChargeSkillTemplate> totalTemplates = new TIntObjectHashMap<ChargeSkillTemplate>();
+	private IntObjectHashMap<ChargeSkillTemplate> firstTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
+	private IntObjectHashMap<ChargeSkillTemplate> totalTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ChargeSkillTemplate chargeSkill : chargeSkills) {

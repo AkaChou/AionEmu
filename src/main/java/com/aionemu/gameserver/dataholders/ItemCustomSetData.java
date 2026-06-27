@@ -27,7 +27,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.item.ItemCustomSetTeamplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "item_custom_sets")
@@ -36,7 +36,7 @@ public class ItemCustomSetData {
 	protected List<ItemCustomSetTeamplate> customTemplates;
 
 	@XmlTransient
-	private TIntObjectHashMap<ItemCustomSetTeamplate> custom = new TIntObjectHashMap<ItemCustomSetTeamplate>();
+	private IntObjectHashMap<ItemCustomSetTeamplate> custom = new IntObjectHashMap<ItemCustomSetTeamplate>();
 
 	public ItemCustomSetTeamplate getCustomTemplate(int id) {
 		return custom.get(id);
@@ -48,7 +48,7 @@ public class ItemCustomSetData {
 		}
 	}
 
-	private TIntObjectHashMap<ItemCustomSetTeamplate> getCustomMap() {
+	private IntObjectHashMap<ItemCustomSetTeamplate> getCustomMap() {
 		return custom;
 	}
 

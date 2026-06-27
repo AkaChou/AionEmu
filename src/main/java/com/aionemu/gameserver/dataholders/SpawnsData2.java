@@ -81,8 +81,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 @XmlRootElement(name = "spawns")
 @XmlType(namespace = "", name = "SpawnsData2")
@@ -93,30 +93,30 @@ public class SpawnsData2 {
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
 
-	private TIntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new TIntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<Spawn> customs = new TIntObjectHashMap<Spawn>();
+	private IntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
+	private IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<Spawn> customs = new IntObjectHashMap<Spawn>();
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void afterUnmarshal(Unmarshaller u, Object parent) {

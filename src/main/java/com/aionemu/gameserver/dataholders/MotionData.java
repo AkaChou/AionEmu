@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.skillengine.model.MotionTime;
 
-import gnu.trove.map.hash.THashMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author kecimis
@@ -42,7 +42,7 @@ public class MotionData {
 	protected List<MotionTime> motionTimes;
 
 	@XmlTransient
-	private THashMap<String, MotionTime> motionTimesMap = new THashMap<String, MotionTime>();
+	private FastMap<String, MotionTime> motionTimesMap = new FastMap<String, MotionTime>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (MotionTime motion : motionTimes) {

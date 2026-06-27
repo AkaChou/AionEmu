@@ -42,7 +42,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 public class EffectController {
 	private Creature owner;

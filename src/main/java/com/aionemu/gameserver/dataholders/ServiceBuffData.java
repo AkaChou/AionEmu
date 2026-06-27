@@ -28,7 +28,7 @@ import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.bonus_service.BonusServiceAttr;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Ranastic (Encom)
@@ -42,7 +42,7 @@ public class ServiceBuffData {
 	protected List<BonusServiceAttr> serviceBonusattr;
 
 	@XmlTransient
-	private TIntObjectHashMap<BonusServiceAttr> templates = new TIntObjectHashMap<BonusServiceAttr>();
+	private IntObjectHashMap<BonusServiceAttr> templates = new IntObjectHashMap<BonusServiceAttr>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (BonusServiceAttr template : serviceBonusattr) {

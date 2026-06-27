@@ -34,7 +34,7 @@ import com.aionemu.chatserver.model.channel.ChatChannels;
 import com.aionemu.chatserver.network.aion.serverpackets.SM_PLAYER_AUTH_RESPONSE;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler.State;
-import com.aionemu.commons.utils.internal.chmv8.PlatformDependent;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author ATracer
@@ -46,7 +46,7 @@ public class ChatService {
         return SingletonHolder.INSTANCE;
     }
     private static final Logger log = LoggerFactory.getLogger(ChatService.class);
-    private Map<Integer, ChatClient> players = PlatformDependent.newConcurrentHashMap();
+    private Map<Integer, ChatClient> players = new ConcurrentHashMap<>();
     private final BroadcastService broadcastService;
 
     public ChatService() {

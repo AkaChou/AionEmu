@@ -2,7 +2,7 @@ package com.aionemu.gameserver.dao.mysql8;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

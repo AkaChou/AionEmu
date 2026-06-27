@@ -24,7 +24,7 @@ import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.model.message.Message;
 import com.aionemu.chatserver.network.aion.serverpackets.SM_CHANNEL_MESSAGE;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
-import com.aionemu.commons.utils.internal.chmv8.PlatformDependent;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author ATracer
@@ -35,7 +35,7 @@ public class BroadcastService {
     public static BroadcastService getInstance() {
         return SingletonHolder.INSTANCE;
     }
-    private Map<Integer, ChatClient> clients = PlatformDependent.newConcurrentHashMap();
+    private Map<Integer, ChatClient> clients = new ConcurrentHashMap<>();
 
     /**
      * @param client

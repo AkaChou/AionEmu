@@ -24,7 +24,7 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.FastMap;
 
 /**
  * @author ATracer

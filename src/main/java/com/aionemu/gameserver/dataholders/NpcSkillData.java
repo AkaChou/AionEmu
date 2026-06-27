@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author ATracer
@@ -41,7 +41,7 @@ public class NpcSkillData {
 	private List<NpcSkillTemplates> npcSkills;
 
 	/** A map containing all npc skill templates */
-	private TIntObjectHashMap<NpcSkillTemplates> npcSkillData = new TIntObjectHashMap<NpcSkillTemplates>();
+	private IntObjectHashMap<NpcSkillTemplates> npcSkillData = new IntObjectHashMap<NpcSkillTemplates>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (NpcSkillTemplates npcSkill : npcSkills) {
