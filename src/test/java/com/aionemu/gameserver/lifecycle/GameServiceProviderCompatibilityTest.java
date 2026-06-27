@@ -881,6 +881,7 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(duelService, DuelService.getInstance());
+            assertSame(duelService, GameGameplayServices.duelService());
             assertSame(lifeStatsRestoreService, LifeStatsRestoreService.getInstance());
             assertSame(seasonRankingService, SeasonRankingService.getInstance());
             assertSame(riftManager, RiftManager.getInstance());
@@ -927,7 +928,9 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(dropService, DropService.getInstance());
+            assertSame(dropService, GameCoreGameplayServices.dropService());
             assertSame(mailService, MailService.getInstance());
+            assertSame(mailService, GameCoreGameplayServices.mailService());
             assertSame(pvpService, PvpService.getInstance());
             assertSame(autoGroupService, AutoGroupService.getInstance());
             assertSame(autoGroupService, GameCoreGameplayServices.autoGroupService());
@@ -937,6 +940,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(thievesGuildService, ThievesGuildService.getInstance());
             assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
             assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
+            assertSame(battlefieldUnionService, GameCoreGameplayServices.battlefieldUnionService());
 
             coreGameplayServices.destroy();
             coreGameplayServices = null;

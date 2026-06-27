@@ -16,8 +16,11 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameCoreGameplayServices implements DisposableBean {
 
+    private static volatile ObjectProvider<DropService> dropServiceProvider;
+    private static volatile ObjectProvider<MailService> mailServiceProvider;
     private static volatile ObjectProvider<AutoGroupService> autoGroupServiceProvider;
     private static volatile ObjectProvider<LegionService> legionServiceProvider;
+    private static volatile ObjectProvider<BattlefieldUnionService> battlefieldUnionServiceProvider;
 
     public GameCoreGameplayServices(ObjectProvider<DropService> dropServiceProvider,
             ObjectProvider<MailService> mailServiceProvider,
@@ -28,7 +31,9 @@ public final class GameCoreGameplayServices implements DisposableBean {
             ObjectProvider<ThievesGuildService> thievesGuildServiceProvider,
             ObjectProvider<BalaurAssaultService> balaurAssaultServiceProvider,
             ObjectProvider<BattlefieldUnionService> battlefieldUnionServiceProvider) {
+        GameCoreGameplayServices.dropServiceProvider = dropServiceProvider;
         DropService.setInstanceProvider(dropServiceProvider);
+        GameCoreGameplayServices.mailServiceProvider = mailServiceProvider;
         MailService.setInstanceProvider(mailServiceProvider);
         PvpService.setInstanceProvider(pvpServiceProvider);
         GameCoreGameplayServices.autoGroupServiceProvider = autoGroupServiceProvider;
@@ -38,7 +43,24 @@ public final class GameCoreGameplayServices implements DisposableBean {
         LegionService.setInstanceProvider(legionServiceProvider);
         ThievesGuildService.setInstanceProvider(thievesGuildServiceProvider);
         BalaurAssaultService.setInstanceProvider(balaurAssaultServiceProvider);
+        GameCoreGameplayServices.battlefieldUnionServiceProvider = battlefieldUnionServiceProvider;
         BattlefieldUnionService.setInstanceProvider(battlefieldUnionServiceProvider);
+    }
+
+    public static DropService dropService() {
+        ObjectProvider<DropService> provider = dropServiceProvider;
+        if (provider == null) {
+            return DropService.getInstance();
+        }
+        return provider.getIfAvailable(DropService::getInstance);
+    }
+
+    public static MailService mailService() {
+        ObjectProvider<MailService> provider = mailServiceProvider;
+        if (provider == null) {
+            return MailService.getInstance();
+        }
+        return provider.getIfAvailable(MailService::getInstance);
     }
 
     public static LegionService legionService() {
@@ -57,9 +79,19 @@ public final class GameCoreGameplayServices implements DisposableBean {
         return provider.getIfAvailable(AutoGroupService::getInstance);
     }
 
+    public static BattlefieldUnionService battlefieldUnionService() {
+        ObjectProvider<BattlefieldUnionService> provider = battlefieldUnionServiceProvider;
+        if (provider == null) {
+            return BattlefieldUnionService.getInstance();
+        }
+        return provider.getIfAvailable(BattlefieldUnionService::getInstance);
+    }
+
     @Override
     public void destroy() {
+        dropServiceProvider = null;
         DropService.setInstanceProvider(null);
+        mailServiceProvider = null;
         MailService.setInstanceProvider(null);
         PvpService.setInstanceProvider(null);
         autoGroupServiceProvider = null;
@@ -69,6 +101,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
         LegionService.setInstanceProvider(null);
         ThievesGuildService.setInstanceProvider(null);
         BalaurAssaultService.setInstanceProvider(null);
+        battlefieldUnionServiceProvider = null;
         BattlefieldUnionService.setInstanceProvider(null);
     }
 }
