@@ -42,6 +42,6 @@ public class CM_REQUEST_KICK_ACCOUNT extends LsClientPacket {
 
 	@Override
 	public void runImpl() {
-		LoginServer.getInstance().kickAccount(accountId);
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().kickAccount(accountId);
 	}
 }

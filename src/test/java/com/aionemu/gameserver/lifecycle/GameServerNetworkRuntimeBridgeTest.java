@@ -70,6 +70,8 @@ class GameServerNetworkRuntimeBridgeTest {
             assertSame(bannedMacManager, GameServerNetworkServices.bannedMacManager());
             assertSame(networkController, GameServerNetworkServices.networkController());
             assertSame(packetLoggerService, GameServerNetworkServices.packetLoggerService());
+            assertSame(loginServer, GameServerNetworkServices.loginServer());
+            assertSame(chatServer, GameServerNetworkServices.chatServer());
             assertSame(aionPacketHandlerFactory, GameServerNetworkServices.aionPacketHandlerFactory());
             assertSame(packetFloodFilter, GameServerNetworkServices.packetFloodFilter());
             assertSame(lsPacketHandlerFactory, GameServerNetworkServices.lsPacketHandlerFactory());
@@ -147,6 +149,24 @@ class GameServerNetworkRuntimeBridgeTest {
                 String content = Files.readString(source);
 
                 assertFalse(content.contains("NetworkController.getInstance()"), source.toString());
+            }
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesNetworkBridgeInsteadOfDirectLoginAndChatSingletons() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            for (Path source : stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("network/loginserver/LoginServer.java")))
+                .filter(path -> !path.endsWith(Path.of("network/chatserver/ChatServer.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameServerNetworkFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameServerNetworkServices.java")))
+                .toList()) {
+                String content = Files.readString(source);
+
+                assertFalse(content.contains("LoginServer.getInstance()"), source.toString());
+                assertFalse(content.contains("ChatServer.getInstance()"), source.toString());
             }
         }
     }

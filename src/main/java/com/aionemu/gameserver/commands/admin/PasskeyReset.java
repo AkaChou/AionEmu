@@ -64,7 +64,7 @@ public class PasskeyReset extends AdminCommand {
 		}
 
 		DAOManager.getDAO(PlayerPasskeyDAO.class).updateForcePlayerPasskey(accountId, newPasskey);
-		LoginServer.getInstance().sendBanPacket((byte) 2, accountId, "", -1, player.getObjectId());
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, accountId, "", -1, player.getObjectId());
 	}
 
 	@Override

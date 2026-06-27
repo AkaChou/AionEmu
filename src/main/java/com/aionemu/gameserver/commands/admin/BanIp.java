@@ -50,7 +50,7 @@ public class BanIp extends AdminCommand {
 			}
 		}
 
-		LoginServer.getInstance().sendBanPacket((byte) 2, 0, mask, time, player.getObjectId());
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, 0, mask, time, player.getObjectId());
 	}
 
 	@Override

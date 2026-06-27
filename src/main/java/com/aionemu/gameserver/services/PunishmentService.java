@@ -105,7 +105,7 @@ public class PunishmentService {
 			}
 
 			if (GSConfig.ENABLE_CHAT_SERVER) {
-				ChatServer.getInstance().sendPlayerLogout(player);
+				com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer().sendPlayerLogout(player);
 			}
 			player.setStartPrison(System.currentTimeMillis());
 			TeleportService2.teleportToPrison(player);

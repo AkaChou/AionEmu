@@ -47,10 +47,10 @@ public class AutoBan {
 			PunishmentService.banChar(playerId, dayCount, reason);
 			break;
 		case 3:
-			LoginServer.getInstance().sendBanPacket((byte) 1, accountId, accountIp, time, 0);
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 1, accountId, accountIp, time, 0);
 			break;
 		case 4:
-			LoginServer.getInstance().sendBanPacket((byte) 2, accountId, accountIp, time, 0);
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, accountId, accountIp, time, 0);
 			break;
 		case 5:
 			player.getClientConnection().closeNow();

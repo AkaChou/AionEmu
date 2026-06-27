@@ -283,8 +283,8 @@ public class AionConnection extends AConnection {
 		 */
 		pingChecker.stop();
 		if (getAccount() != null) {
-			LoginServer.getInstance().aionClientDisconnected(getAccount().getId());
-			LoginServer.getInstance().sendPacket(new SM_MAC(getAccount().getId(), macAddress));
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().aionClientDisconnected(getAccount().getId());
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_MAC(getAccount().getId(), macAddress));
 		}
 
 		Player player = getActivePlayer();

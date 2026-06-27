@@ -170,7 +170,7 @@ public class Set extends AdminCommand
 			} catch (NumberFormatException e) {
 				PacketSendUtility.sendMessage(admin, "You should enter valid second params!");
 				return;
-			} if (LoginServer.getInstance().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, target.getClientConnection().getAccount().getLuna(), target.getAcountName()))) {
+			} if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, target.getClientConnection().getAccount().getLuna(), target.getAcountName()))) {
 				target.getClientConnection().getAccount().setToll(toll);
 				PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");
 			} else {

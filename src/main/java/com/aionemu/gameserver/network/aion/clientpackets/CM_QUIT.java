@@ -43,7 +43,7 @@ public class CM_QUIT extends AionClientPacket {
 		if (client.getState() == State.IN_GAME) {
 			player = client.getActivePlayer();
 			if (!logout) {
-				LoginServer.getInstance().aionClientDisconnected(client.getAccount().getId());
+				com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().aionClientDisconnected(client.getAccount().getId());
 			}
 			PlayerLeaveWorldService.startLeaveWorld(player);
 			client.setActivePlayer(null);

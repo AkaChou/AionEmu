@@ -91,7 +91,7 @@ public class Ban extends AdminCommand {
 			}
 		}
 
-		LoginServer.getInstance().sendBanPacket(type, accountId, accountIp, time, admin.getObjectId());
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket(type, accountId, accountIp, time, admin.getObjectId());
 	}
 
 	@Override

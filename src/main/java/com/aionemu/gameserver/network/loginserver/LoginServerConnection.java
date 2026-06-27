@@ -153,7 +153,7 @@ public class LoginServerConnection extends AConnection {
 	 */
 	@Override
 	protected final void onDisconnect() {
-		LoginServer.getInstance().loginServerDown();
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().loginServerDown();
 	}
 
 	/**

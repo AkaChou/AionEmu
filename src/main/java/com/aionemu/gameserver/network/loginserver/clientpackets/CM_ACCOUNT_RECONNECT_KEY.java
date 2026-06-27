@@ -54,6 +54,6 @@ public class CM_ACCOUNT_RECONNECT_KEY extends LsClientPacket {
 	 */
 	@Override
 	public void runImpl() {
-		LoginServer.getInstance().authReconnectionResponse(accountId, reconnectKey);
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().authReconnectionResponse(accountId, reconnectKey);
 	}
 }

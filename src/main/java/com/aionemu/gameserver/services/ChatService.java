@@ -36,7 +36,7 @@ public class ChatService {
 	 * @param player
 	 */
 	public static void onPlayerLogout(Player player) {
-		ChatServer.getInstance().sendPlayerLogout(player);
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer().sendPlayerLogout(player);
 	}
 
 	/**

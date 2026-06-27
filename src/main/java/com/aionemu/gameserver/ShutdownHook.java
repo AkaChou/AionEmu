@@ -155,13 +155,13 @@ public class ShutdownHook extends Thread {
 		log.info("Starting final shutdown sequence...");
 
 		try {
-			LoginServer.getInstance().gameServerDisconnected();
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().gameServerDisconnected();
 			log.info("Disconnected from Login Server");
 		} catch (Exception e) {
 			log.error("Error disconnecting from Login Server", e);
 		}
 		try {
-			ChatServer.getInstance().gameServerDisconnected();
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer().gameServerDisconnected();
 			log.info("Disconnected from Chat Server");
 		} catch (Exception e) {
 			log.error("Error disconnecting from Chat Server", e);

@@ -74,7 +74,7 @@ public class CM_GS_AUTH_RESPONSE extends LsClientPacket {
 		 */
 		if (response == 0) {
 			getConnection().setState(State.AUTHED);
-			sendPacket(new SM_ACCOUNT_LIST(LoginServer.getInstance().getLoggedInAccounts()));
+			sendPacket(new SM_ACCOUNT_LIST(com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().getLoggedInAccounts()));
 			GameServerNetworkServices.networkController().setServerCount(serverCount);
 		}
 

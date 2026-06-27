@@ -189,7 +189,7 @@ public class Gameshop extends AdminCommand {
 					return;
 				}
 
-				if (LoginServer.getInstance().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
+				if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
 					player.getClientConnection().getAccount().setToll(toll);
 					PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
 					PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");
@@ -221,7 +221,7 @@ public class Gameshop extends AdminCommand {
 					player = (Player) target;
 				}
 
-				if (LoginServer.getInstance().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
+				if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
 					player.getClientConnection().getAccount().setToll(toll);
 					PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
 					PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");

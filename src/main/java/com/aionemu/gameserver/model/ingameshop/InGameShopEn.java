@@ -186,7 +186,7 @@ public class InGameShopEn {
 		lastRequestId++;
 		IGRequest request = new IGRequest(lastRequestId, player.getObjectId(), itemObjId);
 		request.accountId = player.getClientConnection().getAccount().getId();
-		if (LoginServer.getInstance().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice())))
+		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice())))
 			activeRequests.add(request);
 		if (AdvCustomConfig.GAMESHOP_LIMIT) {
 			if (item.getCategory() == AdvCustomConfig.GAMESHOP_CATEGORY) {
@@ -227,7 +227,7 @@ public class InGameShopEn {
 		lastRequestId++;
 		IGRequest request = new IGRequest(lastRequestId, player.getObjectId(), receiver, message, itemObjId);
 		request.accountId = player.getClientConnection().getAccount().getId();
-		if (LoginServer.getInstance().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice()))) {
+		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice()))) {
 			activeRequests.add(request);
 		}
 	}
@@ -237,7 +237,7 @@ public class InGameShopEn {
 			lastRequestId++;
 			IGRequest request = new IGRequest(lastRequestId, player.getObjectId(), 0);
 			request.accountId = player.getClientConnection().getAccount().getId();
-			if (LoginServer.getInstance().sendPacket(new SM_PREMIUM_CONTROL(request, cnt * -1))) {
+			if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, cnt * -1))) {
 				activeRequests.add(request);
 			}
 		} else {

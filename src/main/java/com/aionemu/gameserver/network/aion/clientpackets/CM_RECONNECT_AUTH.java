@@ -52,6 +52,6 @@ public class CM_RECONNECT_AUTH extends AionClientPacket {
 	protected void runImpl() {
 		AionConnection client = getConnection();
 		// TODO! check if may reconnect
-		LoginServer.getInstance().requestAuthReconnection(client);
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().requestAuthReconnection(client);
 	}
 }

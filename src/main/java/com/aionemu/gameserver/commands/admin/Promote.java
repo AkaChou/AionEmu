@@ -76,7 +76,7 @@ public class Promote extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 			return;
 		}
-		LoginServer.getInstance().sendLsControlPacket(player.getAcountName(), player.getName(), admin.getName(), mask, type);
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendLsControlPacket(player.getAcountName(), player.getName(), admin.getName(), mask, type);
 
 	}
 

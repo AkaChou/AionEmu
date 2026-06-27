@@ -47,7 +47,7 @@ public class ChatServerConnection extends AConnection {
 	}
 
 	private void init(CsPacketHandler csPacketHandler) {
-		this.chatServer = ChatServer.getInstance();
+		this.chatServer = com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer();
 		this.csPacketHandler = csPacketHandler;
 		state = State.CONNECTED;
 		log.info("Connected to ChatServer!");

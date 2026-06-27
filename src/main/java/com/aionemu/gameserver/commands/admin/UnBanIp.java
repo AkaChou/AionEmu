@@ -37,7 +37,7 @@ public class UnBanIp extends AdminCommand {
 			return;
 		}
 
-		LoginServer.getInstance().sendBanPacket((byte) 2, 0, params[0], -1, player.getObjectId());
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, 0, params[0], -1, player.getObjectId());
 	}
 
 	@Override

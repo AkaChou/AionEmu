@@ -55,7 +55,7 @@ public class CM_LS_CONTROL_RESPONSE extends LsClientPacket {
 		World world = World.getInstance();
 		Player admin = world.findPlayer(Util.convertName(adminName));
 		Player player = world.findPlayer(Util.convertName(playerName));
-		LoginServer.getInstance().accountUpdate(accountId, param, type);
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().accountUpdate(accountId, param, type);
 		switch (type) {
 		case 1:
 			if (!result) {

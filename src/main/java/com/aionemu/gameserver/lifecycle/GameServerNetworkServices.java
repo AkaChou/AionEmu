@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameServerNetworkServices implements DisposableBean {
 
+    private static volatile ObjectProvider<LoginServer> loginServerProvider;
+    private static volatile ObjectProvider<ChatServer> chatServerProvider;
     private static volatile ObjectProvider<BannedMacManager> bannedMacManagerProvider;
     private static volatile ObjectProvider<NetworkController> networkControllerProvider;
     private static volatile ObjectProvider<PacketLoggerService> packetLoggerServiceProvider;
@@ -28,6 +30,8 @@ public final class GameServerNetworkServices implements DisposableBean {
             ObjectProvider<AionPacketHandlerFactory> aionPacketHandlerFactoryProvider,
             ObjectProvider<PacketFloodFilter> packetFloodFilterProvider,
             ObjectProvider<LsPacketHandlerFactory> lsPacketHandlerFactoryProvider) {
+        GameServerNetworkServices.loginServerProvider = loginServerProvider;
+        GameServerNetworkServices.chatServerProvider = chatServerProvider;
         GameServerNetworkServices.bannedMacManagerProvider = bannedMacManagerProvider;
         GameServerNetworkServices.networkControllerProvider = networkControllerProvider;
         GameServerNetworkServices.packetLoggerServiceProvider = packetLoggerServiceProvider;
@@ -67,6 +71,22 @@ public final class GameServerNetworkServices implements DisposableBean {
         return provider.getIfAvailable(GameServerNetworkFallbacks::packetLoggerService);
     }
 
+    public static LoginServer loginServer() {
+        ObjectProvider<LoginServer> provider = loginServerProvider;
+        if (provider == null) {
+            return GameServerNetworkFallbacks.loginServer();
+        }
+        return provider.getIfAvailable(GameServerNetworkFallbacks::loginServer);
+    }
+
+    public static ChatServer chatServer() {
+        ObjectProvider<ChatServer> provider = chatServerProvider;
+        if (provider == null) {
+            return GameServerNetworkFallbacks.chatServer();
+        }
+        return provider.getIfAvailable(GameServerNetworkFallbacks::chatServer);
+    }
+
     public static AionPacketHandlerFactory aionPacketHandlerFactory() {
         ObjectProvider<AionPacketHandlerFactory> provider = aionPacketHandlerFactoryProvider;
         if (provider == null) {
@@ -93,6 +113,8 @@ public final class GameServerNetworkServices implements DisposableBean {
 
     @Override
     public void destroy() {
+        loginServerProvider = null;
+        chatServerProvider = null;
         bannedMacManagerProvider = null;
         networkControllerProvider = null;
         packetLoggerServiceProvider = null;
