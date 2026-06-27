@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.instance.InstanceEngine;
@@ -15,7 +16,10 @@ import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
+import com.aionemu.gameserver.network.PacketFloodFilter;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
+import com.aionemu.gameserver.network.factories.AionPacketHandlerFactory;
+import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
@@ -495,10 +499,13 @@ class GameLegacyServiceBridgeConfigurationTest {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(GameLegacyServiceBridgeConfiguration.class)) {
             assertTrue(context.containsBeanDefinition("dataManager"));
             assertTrue(context.containsBeanDefinition("htmlCache"));
+            assertTrue(context.containsBeanDefinition("xmlDataLoader"));
             assertEquals(DataManager.class, context.getType("dataManager"));
             assertEquals(HTMLCache.class, context.getType("htmlCache"));
+            assertEquals(XmlDataLoader.class, context.getType("xmlDataLoader"));
             assertLazy(context.getBeanFactory(), "dataManager");
             assertLazy(context.getBeanFactory(), "htmlCache");
+            assertLazy(context.getBeanFactory(), "xmlDataLoader");
         }
     }
 
@@ -815,12 +822,21 @@ class GameLegacyServiceBridgeConfigurationTest {
             assertTrue(context.containsBeanDefinition("bannedMacManager"));
             assertTrue(context.containsBeanDefinition("loginServer"));
             assertTrue(context.containsBeanDefinition("chatServer"));
+            assertTrue(context.containsBeanDefinition("aionPacketHandlerFactory"));
+            assertTrue(context.containsBeanDefinition("packetFloodFilter"));
+            assertTrue(context.containsBeanDefinition("lsPacketHandlerFactory"));
             assertEquals(BannedMacManager.class, context.getType("bannedMacManager"));
             assertEquals(LoginServer.class, context.getType("loginServer"));
             assertEquals(ChatServer.class, context.getType("chatServer"));
+            assertEquals(AionPacketHandlerFactory.class, context.getType("aionPacketHandlerFactory"));
+            assertEquals(PacketFloodFilter.class, context.getType("packetFloodFilter"));
+            assertEquals(LsPacketHandlerFactory.class, context.getType("lsPacketHandlerFactory"));
             assertLazy(context.getBeanFactory(), "bannedMacManager");
             assertLazy(context.getBeanFactory(), "loginServer");
             assertLazy(context.getBeanFactory(), "chatServer");
+            assertLazy(context.getBeanFactory(), "aionPacketHandlerFactory");
+            assertLazy(context.getBeanFactory(), "packetFloodFilter");
+            assertLazy(context.getBeanFactory(), "lsPacketHandlerFactory");
         }
     }
 

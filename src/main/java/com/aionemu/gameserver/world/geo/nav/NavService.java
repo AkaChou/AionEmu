@@ -30,6 +30,7 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.NavGeometry;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 /**
@@ -42,7 +43,7 @@ public final class NavService {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(NavService.class);
 	private static volatile ObjectProvider<NavService> instanceProvider;
-	private final NavData navData = NavData.getInstance();
+	private final NavData navData = GameWorldServices.navData();
 	private final ConcurrentHashMap<GroundCacheKey, GroundCacheEntry> groundCache = new ConcurrentHashMap<>();
 	
 	public NavService() {};

@@ -64,6 +64,33 @@ class GameWorldServicesRuntimeBridgeTest {
     }
 
     @Test
+    void worldServicesNavDataAccessorUsesSpringProviderBeforeLegacyFallback() {
+        NavData navData = instance(NavData.class);
+        GameWorldServices worldServices = new GameWorldServices(
+            provider(GeoService.class, instance(GeoService.class)),
+            provider(NavService.class, instance(NavService.class)),
+            provider(NavData.class, navData),
+            provider(DropRegistrationService.class, instance(DropRegistrationService.class))
+        );
+
+        try {
+            assertSame(navData, GameWorldServices.navData());
+            assertSame(navData, NavData.getInstance());
+        } finally {
+            worldServices.destroy();
+            NavData.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void navServiceUsesWorldServicesBridgeForNavData() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/nav/NavService.java"));
+
+        assertFalse(source.contains("NavData.getInstance()"));
+        assertTrue(source.contains("GameWorldServices.navData()"));
+    }
+
+    @Test
     void dropServiceUsesWorldServicesBridgeForDropRegistration() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropService.java"));
 

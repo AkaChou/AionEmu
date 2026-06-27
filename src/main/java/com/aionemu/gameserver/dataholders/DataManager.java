@@ -7,6 +7,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 import com.aionemu.gameserver.model.templates.mail.Mails;
 import com.aionemu.gameserver.utils.Util;
 
@@ -174,7 +175,7 @@ public final class DataManager {
     public DataManager() {
 		Util.printSection(" *** Static Data *** ");
 		log.info("##### Start Loading Static Data 5.8 #####");
-        this.loader = XmlDataLoader.getInstance();
+        this.loader = GameStaticDataServices.xmlDataLoader();
         long start = System.currentTimeMillis();
         // 加载静态数据
         // Load static data

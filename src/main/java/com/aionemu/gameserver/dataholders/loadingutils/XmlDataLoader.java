@@ -36,6 +36,7 @@ import javax.xml.validation.SchemaFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.xml.sax.SAXException;
 
 import com.aionemu.gameserver.configs.Config;
@@ -52,16 +53,25 @@ import com.aionemu.gameserver.dataholders.StaticData;
 public class XmlDataLoader {
 
 	private static final Logger log = LoggerFactory.getLogger(XmlDataLoader.class);
+	private static volatile ObjectProvider<XmlDataLoader> instanceProvider;
 	/** File containing xml schema declaration */
 	private final static String XML_SCHEMA_FILE = "./data/static_data/static_data.xsd";
 	private static final String CACHE_XML_FILE = "./cache/static_data.xml";
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
 
 	public static final XmlDataLoader getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<XmlDataLoader> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
-	private XmlDataLoader() {
+	public static void setInstanceProvider(ObjectProvider<XmlDataLoader> provider) {
+		instanceProvider = provider;
+	}
+
+	public XmlDataLoader() {
 
 	}
 

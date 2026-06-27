@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.network.loginserver;
 
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.nio.ByteBuffer;
@@ -80,7 +81,7 @@ public class LoginServerConnection extends AConnection {
 	}
 
 	private void init() {
-		LsPacketHandlerFactory lsPacketHandlerFactory = LsPacketHandlerFactory.getInstance();
+		LsPacketHandlerFactory lsPacketHandlerFactory = GameServerNetworkServices.lsPacketHandlerFactory();
 		this.lsPacketHandler = lsPacketHandlerFactory.getPacketHandler();
 		state = State.CONNECTED;
 		log.info("Connected to LoginServer!");

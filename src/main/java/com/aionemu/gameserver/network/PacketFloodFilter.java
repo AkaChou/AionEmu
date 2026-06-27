@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.PropertiesUtils;
 import com.aionemu.gameserver.configs.Config;
@@ -30,12 +31,20 @@ import com.aionemu.gameserver.configs.main.SecurityConfig;
  */
 public class PacketFloodFilter {
 
-	private static PacketFloodFilter pff = new PacketFloodFilter();
+	private static volatile ObjectProvider<PacketFloodFilter> instanceProvider;
 
 	private final Logger log = LoggerFactory.getLogger(PacketFloodFilter.class);
 
 	public static PacketFloodFilter getInstance() {
-		return pff;
+		ObjectProvider<PacketFloodFilter> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<PacketFloodFilter> provider) {
+		instanceProvider = provider;
 	}
 
 	private int[] packets;
@@ -63,5 +72,9 @@ public class PacketFloodFilter {
 
 	public final int[] getPackets() {
 		return this.packets;
+	}
+
+	private static final class SingletonHolder {
+		private static final PacketFloodFilter instance = new PacketFloodFilter();
 	}
 }

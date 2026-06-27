@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -54,7 +55,8 @@ class GameCoreServicesRuntimeBridgeTest {
         HTMLCache htmlCache = instance(HTMLCache.class);
         GameStaticDataServices staticDataServices = new GameStaticDataServices(
                 provider(DataManager.class, dataManager),
-                provider(HTMLCache.class, htmlCache));
+                provider(HTMLCache.class, htmlCache),
+                provider(XmlDataLoader.class, instance(XmlDataLoader.class)));
 
         try {
             assertSame(dataManager, GameStaticDataServices.dataManager());

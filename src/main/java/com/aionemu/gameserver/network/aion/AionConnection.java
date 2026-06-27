@@ -35,7 +35,6 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.Crypt;
-import com.aionemu.gameserver.network.PacketFloodFilter;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_KEY;
 import com.aionemu.gameserver.network.factories.AionPacketHandlerFactory;
@@ -131,7 +130,7 @@ public class AionConnection extends AConnection {
 	}
 
 	private void initialize() {
-		AionPacketHandlerFactory aionPacketHandlerFactory = AionPacketHandlerFactory.getInstance();
+		AionPacketHandlerFactory aionPacketHandlerFactory = GameServerNetworkServices.aionPacketHandlerFactory();
 		this.aionPacketHandler = aionPacketHandlerFactory.getPacketHandler();
 
 		state = State.CONNECTED;
@@ -143,7 +142,7 @@ public class AionConnection extends AConnection {
 		pingChecker.start();
 
 		if (SecurityConfig.PFF_ENABLE) {
-			pff = PacketFloodFilter.getInstance().getPackets();
+			pff = GameServerNetworkServices.packetFloodFilter().getPackets();
 			pffRequests = new long[pff.length];
 		}
 	}

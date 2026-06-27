@@ -13,6 +13,7 @@ public final class GameWorldServices implements DisposableBean {
 
     private static volatile ObjectProvider<GeoService> geoServiceProvider;
     private static volatile ObjectProvider<NavService> navServiceProvider;
+    private static volatile ObjectProvider<NavData> navDataProvider;
     private static volatile ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider;
 
     public GameWorldServices(ObjectProvider<GeoService> geoServiceProvider, ObjectProvider<NavService> navServiceProvider,
@@ -20,6 +21,7 @@ public final class GameWorldServices implements DisposableBean {
             ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider) {
         GameWorldServices.geoServiceProvider = geoServiceProvider;
         GameWorldServices.navServiceProvider = navServiceProvider;
+        GameWorldServices.navDataProvider = navDataProvider;
         GameWorldServices.dropRegistrationServiceProvider = dropRegistrationServiceProvider;
         GeoService.setInstanceProvider(geoServiceProvider);
         NavService.setInstanceProvider(navServiceProvider);
@@ -51,10 +53,19 @@ public final class GameWorldServices implements DisposableBean {
         return provider.getIfAvailable(GameWorldServiceFallbacks::navService);
     }
 
+    public static NavData navData() {
+        ObjectProvider<NavData> provider = navDataProvider;
+        if (provider == null) {
+            return GameWorldServiceFallbacks.navData();
+        }
+        return provider.getIfAvailable(GameWorldServiceFallbacks::navData);
+    }
+
     @Override
     public void destroy() {
         geoServiceProvider = null;
         navServiceProvider = null;
+        navDataProvider = null;
         dropRegistrationServiceProvider = null;
         GeoService.setInstanceProvider(null);
         NavService.setInstanceProvider(null);

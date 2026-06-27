@@ -3,6 +3,7 @@ package com.aionemu.gameserver.services;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.eventEngine.EventScheduler;
@@ -13,8 +14,11 @@ import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.BannedMacManager;
 import com.aionemu.gameserver.network.NetworkController;
+import com.aionemu.gameserver.network.PacketFloodFilter;
 import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
+import com.aionemu.gameserver.network.factories.AionPacketHandlerFactory;
+import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.abysslandingservice.LandingUpdateService;
@@ -501,6 +505,12 @@ public class GameLegacyServiceBridgeConfiguration {
 
     @Bean
     @Lazy
+    public XmlDataLoader xmlDataLoader() {
+        return new XmlDataLoader();
+    }
+
+    @Bean
+    @Lazy
     public DisputeLandService disputeLandService() {
         return new DisputeLandService();
     }
@@ -599,6 +609,24 @@ public class GameLegacyServiceBridgeConfiguration {
     @Lazy
     public NetworkController networkController() {
         return new NetworkController();
+    }
+
+    @Bean
+    @Lazy
+    public AionPacketHandlerFactory aionPacketHandlerFactory() {
+        return new AionPacketHandlerFactory();
+    }
+
+    @Bean
+    @Lazy
+    public PacketFloodFilter packetFloodFilter() {
+        return new PacketFloodFilter();
+    }
+
+    @Bean
+    @Lazy
+    public LsPacketHandlerFactory lsPacketHandlerFactory() {
+        return new LsPacketHandlerFactory();
     }
 
     @Bean
