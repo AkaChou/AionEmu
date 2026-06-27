@@ -16,9 +16,10 @@
  */
 package com.aionemu.gameserver.world.zone;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -83,7 +84,7 @@ public class ZoneLevelService {
 	 */
 	private static void scheduleDrowningTask(final Player player) {
 		player.getController().addTask(TaskId.DROWN,
-				ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 					@Override
 					public void run() {

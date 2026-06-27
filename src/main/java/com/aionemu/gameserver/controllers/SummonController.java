@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -35,7 +37,6 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author ATracer
@@ -152,7 +153,7 @@ public class SummonController extends CreatureController<Summon> {
 
 		if (!master.equals(lastAttacker) && !owner.equals(lastAttacker) && !master.getLifeStats().isAlreadyDead()
 				&& !lastAttacker.getLifeStats().isAlreadyDead()) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {
@@ -174,7 +175,7 @@ public class SummonController extends CreatureController<Summon> {
 		if (skill != null) {
 			// If skill succeeds, handle automatic release if expected
 			if (skill.useSkill() && skillId == releaseAfterSkill) {
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 					@Override
 					public void run() {

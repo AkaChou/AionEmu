@@ -3,6 +3,8 @@
  */
 package com.aionemu.gameserver.controllers.observer;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.ScheduledFuture;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -13,7 +15,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class MathObjectObserver extends ActionObserver {
 	private final Creature creature;
@@ -74,7 +75,7 @@ public class MathObjectObserver extends ActionObserver {
 	private void shedulesEvent() {
 		int delay = this.template != null && this.template.getDuration() >= 1000 ? this.template.getDuration()
 				: (this.mathObject.getDuration() >= 1000 ? this.mathObject.getDuration() : 1000);
-		this.shedules = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		this.shedules = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {

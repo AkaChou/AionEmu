@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import static com.aionemu.gameserver.taskmanager.parallel.ForEach.forEach;
 
 import java.util.ArrayList;
@@ -29,7 +31,6 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import com.google.common.base.Predicate;
 
@@ -71,7 +72,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 		final ArrayList<Creature> copy = new ArrayList<Creature>(movingCreatures.values());
 		ForkJoinTask<Creature> task = forEach(copy, CREATURE_MOVE_PREDICATE);
 		if (task != null) {
-			ThreadPoolManager.getInstance().getForkingPool().invoke(task);
+			GameThreadPoolServices.threadPoolManager().getForkingPool().invoke(task);
 		}
 	}
 

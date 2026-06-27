@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
 import com.aionemu.gameserver.model.TaskId;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -85,7 +86,7 @@ public class CM_SILENCE_REPORT extends AionClientPacket {
 					targetPlayer.getController().cancelTask(TaskId.GAG);
 				}
 				targetPlayer.getController().addTask(TaskId.GAG,
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								targetPlayer.setGagged(false);

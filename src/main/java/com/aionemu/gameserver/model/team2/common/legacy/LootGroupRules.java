@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.team2.common.legacy;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.actions.PlayerMode;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.gameobjects.player.InRoll;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +166,7 @@ public class LootGroupRules {
 	}
 
 	public void setPlayersInRoll(final Collection<Player> players, int time, final int index, final int npcId) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				for (Player player : players) {

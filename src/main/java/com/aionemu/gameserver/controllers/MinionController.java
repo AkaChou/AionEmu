@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.controllers.movement.MinionMoveController;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Minion;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -56,9 +57,9 @@ public class MinionController extends VisibleObjectController<Minion> {
         player.getController().cancelTask(TaskId.MINION_UPDATE);
         player.getController().cancelTask(TaskId.MINION_TELEPORT_CHECK);
 
-        player.getController().addTask(TaskId.MINION_UPDATE, ThreadPoolManager.getInstance().scheduleAtFixedRate(new MinionFollowTask(player), 1000, MOVE_UPDATE_RATE));
+        player.getController().addTask(TaskId.MINION_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new MinionFollowTask(player), 1000, MOVE_UPDATE_RATE));
 
-        player.getController().addTask(TaskId.MINION_TELEPORT_CHECK, ThreadPoolManager.getInstance().scheduleAtFixedRate(new MinionTeleportTask(player), 2000, TELEPORT_CHECK_RATE));
+        player.getController().addTask(TaskId.MINION_TELEPORT_CHECK, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new MinionTeleportTask(player), 2000, TELEPORT_CHECK_RATE));
     }
 
     public void stopFollowing(Player player) {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillType;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author ViAl
@@ -59,7 +60,7 @@ public class MagicCounterAtkEffect extends EffectTemplate {
 		ActionObserver observer = new ActionObserver(ObserverType.SKILLUSE) {
 
 			public void skilluse(final Skill skill) {
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 					@Override
 					public void run() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.chatserver;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -26,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class ChatServerConnection extends AConnection {
 	private static final Logger log = LoggerFactory.getLogger(ChatServerConnection.class);
@@ -61,7 +62,7 @@ public class ChatServerConnection extends AConnection {
 	public boolean processData(ByteBuffer data) {
 		CsClientPacket pck = csPacketHandler.handle(data, this);
 		if (pck != null && pck.read()) {
-			ThreadPoolManager.getInstance().executeLsPacket(pck);
+			GameThreadPoolServices.threadPoolManager().executeLsPacket(pck);
 		}
 		return true;
 	}

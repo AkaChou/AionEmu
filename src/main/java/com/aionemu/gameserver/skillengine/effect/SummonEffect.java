@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -30,7 +32,6 @@ import com.aionemu.gameserver.model.summons.SummonMode;
 import com.aionemu.gameserver.model.summons.UnsummonType;
 import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.skillengine.model.Effect;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Simple
@@ -51,7 +52,7 @@ public class SummonEffect extends EffectTemplate {
 		if (time > 0 && (effect.getEffected() instanceof Player)) {
 			final Player effector = (Player) effect.getEffected();
 			final Summon summon = effector.getSummon();
-			Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {

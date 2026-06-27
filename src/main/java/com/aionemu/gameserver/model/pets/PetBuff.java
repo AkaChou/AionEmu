@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.pets;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.change.Func;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class PetBuff implements StatOwner {
 	private List<IStatFunction> functions = new ArrayList<IStatFunction>();
@@ -53,7 +54,7 @@ public class PetBuff implements StatOwner {
 			return;
 		}
 		if (time != 0) {
-			task = ThreadPoolManager.getInstance().schedule(new PetBuffTask(player), time);
+			task = GameThreadPoolServices.threadPoolManager().schedule(new PetBuffTask(player), time);
 		}
 		startTime = System.currentTimeMillis();
 		for (PetPenaltyAttr petPenaltyAttr : petBonusAttr.getPenaltyAttr()) {
@@ -71,7 +72,7 @@ public class PetBuff implements StatOwner {
 
 	private void loopEffect(Player player, int time) {
 		if (time != 0) {
-			task = ThreadPoolManager.getInstance().schedule(new PetBuffTask(player), time);
+			task = GameThreadPoolServices.threadPoolManager().schedule(new PetBuffTask(player), time);
 		}
 		PacketSendUtility.sendPacket(player, new SM_PET(true, 0, 0));// start cheering
 	}

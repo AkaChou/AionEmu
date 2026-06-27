@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -28,7 +30,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import org.slf4j.Logger;
@@ -75,7 +76,7 @@ public class FixNpc extends AdminCommand
                     comment.append(" ").append(target.getObjectTemplate().getRank().name()).append(" ");
                     comment.append("lvl:").append(target.getLevel()).append(")");
                     int time = 9000;
-                    task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+                    task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                         @Override
                         public void run() {
                         	SpawnTemplate spawn2 = SpawnEngine.addNewSpawn(admin.getWorldId(), spawn.getNpcId(), temp.getX(), temp.getY(), adminZ, temp.getHeading(), temp.getRespawnTime());
@@ -120,7 +121,7 @@ public class FixNpc extends AdminCommand
                 }
                 ++counter;
                 time += 3000;
-                task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+                task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                     @Override
                     public void run() {
                         TeleportService2.teleportTo(admin2, template.getWorldId(), template.getX(), template.getY(), template.getZ(), (byte) 0);
@@ -136,7 +137,7 @@ public class FixNpc extends AdminCommand
                     }
                 }, time);
                 time += 3000;
-                task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+                task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                     @Override
                     public void run() {
                         if (npc != null) {
@@ -145,7 +146,7 @@ public class FixNpc extends AdminCommand
                     }
                 }, time);
                 time += 3000;
-                task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+                task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                     @Override
                     public void run() {
                         if (npc != null) {

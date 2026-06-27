@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rolandas
@@ -41,7 +42,7 @@ public class SummonFunctionalNpcEffect extends SummonEffect {
 		Player effected = (Player) effect.getEffected();
 		final Npc functionalNpc = VisibleObjectSpawner.spawnFunctionalNpc(effected, npcId, owner);
 
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (functionalNpc != null && functionalNpc.isSpawned()) {

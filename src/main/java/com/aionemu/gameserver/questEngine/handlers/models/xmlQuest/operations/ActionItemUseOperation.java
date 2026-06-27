@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.handlers.models.xmlQuest.operations;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -28,7 +30,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_USE_OBJECT;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Mr. Poke
@@ -61,7 +62,7 @@ public class ActionItemUseOperation extends QuestOperation {
 				new SM_USE_OBJECT(player.getObjectId(), npc.getObjectId(), defaultUseTime, 1));
 		PacketSendUtility.broadcastPacket(player,
 				new SM_EMOTION(player, EmotionType.START_QUESTLOOT, 0, npc.getObjectId()), true);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -41,7 +43,6 @@ import com.aionemu.gameserver.skillengine.effect.SummonEffect;
 import com.aionemu.gameserver.skillengine.effect.TransformEffect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author ATracer
@@ -133,7 +134,7 @@ public class SkillUseAction extends AbstractItemAction {
 						};
 						player.getObserveController().attach(moveObserver);
 						player.getController().addTask(TaskId.ITEM_USE,
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 									@Override
 									public void run() {

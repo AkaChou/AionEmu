@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_LIST;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * This packet is response for SM_GS_AUTH its notify Gameserver if registration
@@ -92,7 +93,7 @@ public class CM_GS_AUTH_RESPONSE extends LsClientPacket {
 			/**
 			 * try again after 10s
 			 */
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {

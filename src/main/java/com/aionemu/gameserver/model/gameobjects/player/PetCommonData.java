@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.services.toypet.PetAdoptionService;
 import com.aionemu.gameserver.services.toypet.PetFeedProgress;
 import com.aionemu.gameserver.services.toypet.PetHungryLevel;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
 public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
@@ -139,7 +140,7 @@ public class PetCommonData extends VisibleObjectTemplate implements IExpirable {
 
 	public void setReFoodTime(final long reFoodTime) {
 		setFeedingTime(false);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				feedingTime = true;

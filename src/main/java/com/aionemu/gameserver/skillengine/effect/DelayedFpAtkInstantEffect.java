@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import jakarta.xml.bind.annotation.XmlAttribute;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Effect;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class DelayedFpAtkInstantEffect extends EffectTemplate {
 
@@ -37,7 +38,7 @@ public class DelayedFpAtkInstantEffect extends EffectTemplate {
 	}
 
 	public void applyEffect(final Effect effect) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			public void run() {
 				if (effect.getEffector().isEnemy(effect.getEffected())) {

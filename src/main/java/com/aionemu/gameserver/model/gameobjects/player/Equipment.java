@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -62,7 +64,6 @@ import com.aionemu.gameserver.services.StigmaService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
 public class Equipment {
@@ -1184,7 +1185,7 @@ public class Equipment {
 				};
 				player.getObserveController().attach(moveObserver);
 				player.getController().addTask(TaskId.ITEM_USE,
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								player.getObserveController().removeObserver(moveObserver);

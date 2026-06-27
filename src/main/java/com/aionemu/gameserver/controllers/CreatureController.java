@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.List;
 import java.util.concurrent.Future;
 
@@ -51,7 +53,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -352,7 +353,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		if (time == 0) {
 			target.getController().onAttack(getOwner(), damage, true);
 		} else {
-			ThreadPoolManager.getInstance().schedule(new DelayedOnAttack(target, creature, damage), time);
+			GameThreadPoolServices.threadPoolManager().schedule(new DelayedOnAttack(target, creature, damage), time);
 		}
 	}
 

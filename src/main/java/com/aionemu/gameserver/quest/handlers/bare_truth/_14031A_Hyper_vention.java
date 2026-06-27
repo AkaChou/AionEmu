@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.bare_truth;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -201,7 +203,7 @@ public class _14031A_Hyper_vention extends QuestHandler {
                 return HandlerResult.UNKNOWN;
             }
             PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, id, 3000, 0, 0), true);
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 @Override
                 public void run() {
                     removeQuestItem(env, 182215388, 1);
@@ -217,7 +219,7 @@ public class _14031A_Hyper_vention extends QuestHandler {
                 return HandlerResult.UNKNOWN;
             }
             PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, id, 3000, 0, 0), true);
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 @Override
                 public void run() {
                     removeQuestItem(env, 182215389, 1);
@@ -233,7 +235,7 @@ public class _14031A_Hyper_vention extends QuestHandler {
                 return HandlerResult.UNKNOWN;
             }
             PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, id, 3000, 0, 0), true);
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 @Override
                 public void run() {
                     removeQuestItem(env, 182215390, 1);

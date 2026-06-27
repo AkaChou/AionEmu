@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collection;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -94,7 +95,7 @@ public class AuraEffect extends EffectTemplate {
 
 	@Override
 	public void startEffect(final Effect effect) {
-		effect.setPeriodicTask(ThreadPoolManager.getInstance().scheduleAtFixedRate(new AuraTask(effect), 0, 6500),
+		effect.setPeriodicTask(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new AuraTask(effect), 0, 6500),
 				position);
 	}
 

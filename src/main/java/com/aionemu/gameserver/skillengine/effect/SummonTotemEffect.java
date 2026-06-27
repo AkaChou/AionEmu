@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SummonTotemEffect")
@@ -65,7 +66,7 @@ public class SummonTotemEffect extends SummonServantEffect {
 			SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 			final Servant servant = VisibleObjectSpawner.spawnServant(spawn, instanceId, effector, effect.getSkillId(),
 					effect.getSkillLevel(), NpcObjectType.SKILLAREA);
-			Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					servant.getController().delete();

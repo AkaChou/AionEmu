@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.skillengine.task;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public abstract class AbstractInteractionTask {
 
@@ -47,7 +48,7 @@ public abstract class AbstractInteractionTask {
 
 	public void start() {
 		onInteractionStart();
-		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (!validateParticipants()) {

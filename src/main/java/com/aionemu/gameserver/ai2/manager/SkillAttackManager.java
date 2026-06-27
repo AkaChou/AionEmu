@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2.manager;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -29,7 +31,6 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.model.SkillType;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 /**
  * NPC技能攻击管理器
  * 负责处理NPC的技能攻击调度和攻击逻辑
@@ -57,7 +58,7 @@ public class SkillAttackManager {
 		if (npcAI.setSubStateIfNot(AISubState.CAST)) {
 			if (delay > 0) {
 				// 延迟执行技能攻击
-				ThreadPoolManager.getInstance().schedule(new SkillAction(npcAI), delay);
+				GameThreadPoolServices.threadPoolManager().schedule(new SkillAction(npcAI), delay);
 			} else {
 				skillAction(npcAI);
 			}

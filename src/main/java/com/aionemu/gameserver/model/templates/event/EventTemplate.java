@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.model.templates.event;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +47,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -171,7 +172,7 @@ public class EventTemplate {
 			DataManager.SPAWNS_DATA2.clearTemplates();
 		}
 		if (inventoryDrop != null) {
-			invDropTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
 					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
@@ -186,7 +187,7 @@ public class EventTemplate {
 			}, inventoryDrop.getInterval() * 60000, inventoryDrop.getInterval() * 60000);
 		}
 		if (getInventoryDrop() != null) {
-			invDropTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
 					World.getInstance().doOnAllPlayers(new Visitor<Player>() {

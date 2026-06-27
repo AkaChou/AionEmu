@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.archdaeva;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,7 +29,6 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /****/
@@ -178,7 +179,7 @@ public class _20529Building_A_Protection_Artifact_2 extends QuestHandler {
                         if (var == 7) {
 							playQuestMovie(env, 878);
                             changeQuestStep(env, 7, 8, false);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									QuestService.addNewSpawn(301690000, player.getInstanceId(), 244129, (float) 172.000, (float) 156.000, (float) 230.53053, (byte) 96); //.

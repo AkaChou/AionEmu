@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.commands.wedding;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.WeddingCommand;
 
 /**
@@ -62,7 +63,7 @@ public class missyou extends WeddingCommand {
 			PacketSendUtility.sendMessage(player, "Teleported to player " + partner.getName() + ".");
 			player.setCommandUsed(true);
 			
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					player.setCommandUsed(false);

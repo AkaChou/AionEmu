@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutType;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 import com.aionemu.gameserver.services.NpcShoutsService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rolandas
@@ -178,7 +179,7 @@ public final class ShoutEventHandler {
 		if (!npc.mayShout(shout.getPollDelay() / 1000)) {
 			return;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

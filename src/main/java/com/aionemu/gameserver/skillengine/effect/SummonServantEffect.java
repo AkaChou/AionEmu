@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -37,7 +39,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.properties.FirstTargetAttribute;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author ATracer
@@ -84,7 +85,7 @@ public class SummonServantEffect extends SummonEffect {
 		final Servant servant = VisibleObjectSpawner.spawnServant(spawn, instanceId, effector, skillId,
 				effect.getSkillLevel(), npcObjectType);
 
-		Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

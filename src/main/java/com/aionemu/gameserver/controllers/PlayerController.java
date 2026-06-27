@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -119,7 +121,6 @@ import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.World;
@@ -1042,7 +1043,7 @@ public class PlayerController extends CreatureController<Player> {
 			AttackUtil.cancelCastOn((Creature) getOwner());
 			AttackUtil.removeTargetFrom((Creature) getOwner());
 			PacketSendUtility.broadcastPacket(getOwner(), new SM_PLAYER_STATE(getOwner()), true);
-			Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stopProtectionActiveTask();

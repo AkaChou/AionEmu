@@ -16,9 +16,10 @@
  */
 package com.aionemu.gameserver.taskmanager;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author NB4L1 Going to remove this - Nemesiss
@@ -43,7 +44,7 @@ public abstract class FIFOExecutableQueue implements Runnable {
 		} finally {
 			unlock();
 		}
-		ThreadPoolManager.getInstance().execute(this);
+		GameThreadPoolServices.threadPoolManager().execute(this);
 	}
 
 	public final void lock() {

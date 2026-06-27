@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HEADING_UPDATE;
 import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.services.player.PlayerMailboxState;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class CM_CLOSE_DIALOG extends AionClientPacket {
 	private int targetObjectId;
@@ -52,7 +53,7 @@ public class CM_CLOSE_DIALOG extends AionClientPacket {
 			Npc npc = (Npc) obj;
 			npc.getAi2().onCreatureEvent(AIEventType.DIALOG_FINISH, player);
 			DialogService.onCloseDialog(npc, player);
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					client.sendPacket(new SM_HEADING_UPDATE(targetObjectId, (byte) obj.getHeading()));

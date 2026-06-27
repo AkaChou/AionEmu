@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.chatserver.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.network.chatserver.ChatServerConnection.State;
 import com.aionemu.gameserver.network.chatserver.CsClientPacket;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
 import com.aionemu.gameserver.services.ChatService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class CM_CS_AUTH_RESPONSE extends CsClientPacket {
 	protected static final Logger log = LoggerFactory.getLogger(CM_CS_AUTH_RESPONSE.class);
@@ -59,7 +60,7 @@ public class CM_CS_AUTH_RESPONSE extends CsClientPacket {
 			break;
 		case 2: // Already Registered
 			log.info("GameServer is already registered at ChatServer side! trying again...");
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					CM_CS_AUTH_RESPONSE.this.getConnection().sendPacket(new SM_CS_AUTH());

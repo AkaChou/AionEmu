@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.skillengine.model;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -65,7 +67,6 @@ import com.aionemu.gameserver.skillengine.properties.Properties;
 import com.aionemu.gameserver.skillengine.properties.TargetRangeAttribute;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.world.geo.GeoService;
 
@@ -1413,7 +1414,7 @@ public class Skill {
 		}
 
 		else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {
@@ -1478,7 +1479,7 @@ public class Skill {
 	 * Schedule actions/effects of skill (channeled skills)
 	 */
 	private void schedule(int delay) {
-		castingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		castingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				endCast();
 			}

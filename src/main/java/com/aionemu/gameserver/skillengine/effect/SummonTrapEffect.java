@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SummonTrapEffect")
@@ -66,7 +67,7 @@ public class SummonTrapEffect extends SummonEffect {
 		maxTraps(effector);
 		SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 		final Trap trap = VisibleObjectSpawner.spawnTrap(spawn, instanceId, effector);
-		Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				trap.getController().onDelete();

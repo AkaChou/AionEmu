@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.task;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.StaticObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CRAFT_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CRAFT_UPDATE;
 import com.aionemu.gameserver.services.craft.CraftService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 public class MorphingTask extends CraftingTask {
 
@@ -37,7 +38,7 @@ public class MorphingTask extends CraftingTask {
 	@Override
 	public void start() {
 		onInteractionStart();
-		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (!validateParticipants()) {

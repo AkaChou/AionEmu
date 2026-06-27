@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.CountDownLatch;
 
 import com.aionemu.gameserver.instance.InstanceEngine;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 public class InstanceEngineManager extends AdminCommand {
@@ -59,7 +60,7 @@ public class InstanceEngineManager extends AdminCommand {
 			}
 			if (COMMAND_RESTART.equalsIgnoreCase(params[0])) {
 				InstanceEngine.getInstance().shutdown();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						InstanceEngine.getInstance().load(progressLatch);

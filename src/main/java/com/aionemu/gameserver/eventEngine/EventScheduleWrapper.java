@@ -16,9 +16,10 @@
  */
 package com.aionemu.gameserver.eventEngine;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.ScheduledFuture;
 
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Created by wanke on 12/02/2017.
@@ -48,7 +49,7 @@ class EventScheduleWrapper implements Runnable {
 					check();
 				}
 			};
-			last_future = ThreadPoolManager.getInstance().schedule(runnable, RECHECK_DELAY * 60 * 1000);
+			last_future = GameThreadPoolServices.threadPoolManager().schedule(runnable, RECHECK_DELAY * 60 * 1000);
 		}
 	}
 

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ToyPetSpawnAction")
@@ -113,7 +114,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
@@ -132,7 +133,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 				SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcid, x, y, z, heading);
 				final Kisk kisk = VisibleObjectSpawner.spawnKisk(spawn, instanceId, player);
 				Integer objOwnerId = player.getObjectId();
-				Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						kisk.getController().onDelete();

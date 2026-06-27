@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.team2.alliance;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -55,7 +57,6 @@ import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -135,7 +136,7 @@ public class PlayerAllianceService {
 	}
 
 	private static void initializeOfflineCheck() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new OfflinePlayerAllianceChecker(), 1000, 30 * 1000);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new OfflinePlayerAllianceChecker(), 1000, 30 * 1000);
 	}
 
 	@GlobalCallback(AddPlayerToAllianceCallback.class)

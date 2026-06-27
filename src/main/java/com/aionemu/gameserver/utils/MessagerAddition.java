@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.utils;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
@@ -56,7 +58,7 @@ public class MessagerAddition {
 
 	public static void announceAll(final String msg, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
@@ -81,7 +83,7 @@ public class MessagerAddition {
 
 	public static void messageToAll(final String msg, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
@@ -106,7 +108,7 @@ public class MessagerAddition {
 
 	public static void whiteMsgToAll(final String msg, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
@@ -131,7 +133,7 @@ public class MessagerAddition {
 
 	public static void whiteAnnounceToAll(final String msg, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
@@ -156,7 +158,7 @@ public class MessagerAddition {
 
 	public static void yellowMsgToAll(final String msg, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
@@ -181,7 +183,7 @@ public class MessagerAddition {
 
 	public static void yellowAnnounceToAll(final String msg, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					World.getInstance().doOnAllPlayers(new Visitor<Player>() {

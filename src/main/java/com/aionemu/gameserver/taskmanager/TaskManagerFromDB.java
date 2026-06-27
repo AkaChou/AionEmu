@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.taskmanager;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -30,7 +32,6 @@ import com.aionemu.gameserver.model.tasks.TaskFromDB;
 import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.taskmanager.tasks.RestartTask;
 import com.aionemu.gameserver.taskmanager.tasks.ShutdownTask;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Divinity Based on L2J Emulator Global Tasks System
@@ -131,7 +132,7 @@ public class TaskManagerFromDB {
 		if (delay < 0) {
 			delay += 1 * 24 * 60 * 60 * 1000;
 		}
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(handler, delay, 1 * 24 * 60 * 60 * 1000);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(handler, delay, 1 * 24 * 60 * 60 * 1000);
 	}
 
 	/**

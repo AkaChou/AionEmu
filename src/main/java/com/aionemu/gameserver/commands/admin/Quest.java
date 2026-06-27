@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.sql.Timestamp;
@@ -266,7 +267,7 @@ public class Quest extends AdminCommand {
         target.getController().updateZone();
         target.getController().updateNearbyQuests();
 
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (target.isOnline()) {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.loginserver;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -27,7 +29,6 @@ import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Object representing connection between LoginServer and GameServer.
@@ -110,7 +111,7 @@ public class LoginServerConnection extends AConnection {
 		 * Execute packet only if packet exist (!= null) and read was ok.
 		 */
 		if (pck != null && pck.read()) {
-			ThreadPoolManager.getInstance().executeLsPacket(pck);
+			GameThreadPoolServices.threadPoolManager().executeLsPacket(pck);
 		}
 		return true;
 	}

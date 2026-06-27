@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -70,7 +72,6 @@ import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -107,7 +108,7 @@ public class NpcController extends CreatureController<Npc> {
 				
 				DropService.getInstance().see(player, owner);
 				
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (owner.isSpawned() && owner.getLifeStats().isAlreadyDead()) {

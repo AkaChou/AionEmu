@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.nio.ByteBuffer;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
@@ -40,7 +42,6 @@ import com.aionemu.gameserver.network.factories.AionPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MAC;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -465,7 +466,7 @@ public class AionConnection extends AConnection {
 		private void start() {
 			Preconditions.checkState(!started, "PingChecker can be started only one time!");
 			started = true;
-			task = ThreadPoolManager.getInstance().scheduleAtFixedRate(this, checkTime, checkTime);
+			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this, checkTime, checkTime);
 		}
 
 		private void stop() {

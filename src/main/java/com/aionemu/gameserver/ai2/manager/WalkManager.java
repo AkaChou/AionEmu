@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.ai2.manager;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
@@ -39,7 +41,6 @@ import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
@@ -240,7 +241,7 @@ public class WalkManager {
 			npcAI.getOwner().getMoveController().abortMove();
 			npcAI.getOwner().getMoveController().chooseNextStep();
 			
-			ScheduledFuture<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					pendingWalkTasks.remove(npcAI.getOwner().getObjectId());
@@ -265,7 +266,7 @@ public class WalkManager {
 		final int walkRange = Math.max(randomWalkNr, WALK_RANDOM_RANGE);
 		final float distToSpawn = (float) owner.getDistanceToSpawnLocation();
 		
-		ScheduledFuture<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				pendingWalkTasks.remove(npcObjectId);
@@ -399,7 +400,7 @@ public class WalkManager {
 			return;
 		}
 		
-		zCheckTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		zCheckTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				performZCheck();
