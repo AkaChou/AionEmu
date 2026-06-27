@@ -17,7 +17,6 @@ class GameMovementLoopServicesTest {
             sources = stream
                 .filter(path -> path.toString().endsWith(".java"))
                 .filter(path -> !path.endsWith(Path.of("taskmanager/tasks/MovementNotifyTask.java")))
-                .filter(path -> !path.endsWith(Path.of("taskmanager/tasks/MoveTaskManager.java")))
                 .filter(path -> !path.endsWith(Path.of("taskmanager/tasks/PlayerMoveTaskManager.java")))
                 .filter(path -> !path.endsWith(Path.of("world/zone/ZoneUpdateService.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameMovementLoopServices.java")))

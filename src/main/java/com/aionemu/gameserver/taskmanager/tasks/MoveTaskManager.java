@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
 import static com.aionemu.gameserver.taskmanager.parallel.ForEach.forEach;
 
@@ -31,7 +32,6 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
-import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 import com.google.common.base.Predicate;
 
 public class MoveTaskManager extends AbstractPeriodicTaskManager {
@@ -47,7 +47,7 @@ public class MoveTaskManager extends AbstractPeriodicTaskManager {
 			if (creature.getAi2().poll(AIQuestion.DESTINATION_REACHED)) {
 				movingCreatures.remove(creature.getObjectId());
 				creature.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);
-				ZoneUpdateService.getInstance().add(creature);
+				GameMovementLoopServices.zoneUpdateService().add(creature);
 			} else {
 				creature.getAi2().onGeneralEvent(AIEventType.MOVE_VALIDATE);
 			}
