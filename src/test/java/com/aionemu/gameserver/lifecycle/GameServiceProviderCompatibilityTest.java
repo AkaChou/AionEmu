@@ -388,6 +388,7 @@ class GameServiceProviderCompatibilityTest {
             RiftManager.setInstanceProvider(provider(RiftManager.class, riftManager));
 
             assertSame(geoService, GeoService.getInstance());
+            assertSame(geoService, GameWorldServices.geoService());
             assertSame(navService, NavService.getInstance());
             assertSame(dropRegistrationService, DropRegistrationService.getInstance());
             assertSame(landingUpdateService, LandingUpdateService.getInstance());

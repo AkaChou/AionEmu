@@ -11,16 +11,26 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameWorldServices implements DisposableBean {
 
+    private static volatile ObjectProvider<GeoService> geoServiceProvider;
     private static volatile ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider;
 
     public GameWorldServices(ObjectProvider<GeoService> geoServiceProvider, ObjectProvider<NavService> navServiceProvider,
             ObjectProvider<NavData> navDataProvider,
             ObjectProvider<DropRegistrationService> dropRegistrationServiceProvider) {
+        GameWorldServices.geoServiceProvider = geoServiceProvider;
         GameWorldServices.dropRegistrationServiceProvider = dropRegistrationServiceProvider;
         GeoService.setInstanceProvider(geoServiceProvider);
         NavService.setInstanceProvider(navServiceProvider);
         NavData.setInstanceProvider(navDataProvider);
         DropRegistrationService.setInstanceProvider(dropRegistrationServiceProvider);
+    }
+
+    public static GeoService geoService() {
+        ObjectProvider<GeoService> provider = geoServiceProvider;
+        if (provider == null) {
+            return GameWorldServiceFallbacks.geoService();
+        }
+        return provider.getIfAvailable(GameWorldServiceFallbacks::geoService);
     }
 
     public static DropRegistrationService dropRegistrationService() {
@@ -33,6 +43,7 @@ public final class GameWorldServices implements DisposableBean {
 
     @Override
     public void destroy() {
+        geoServiceProvider = null;
         dropRegistrationServiceProvider = null;
         GeoService.setInstanceProvider(null);
         NavService.setInstanceProvider(null);
