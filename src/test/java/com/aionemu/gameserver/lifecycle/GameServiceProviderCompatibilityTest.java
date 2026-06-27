@@ -883,6 +883,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(autoGroupService, AutoGroupService.getInstance());
             assertSame(abyssRankingCache, AbyssRankingCache.getInstance());
             assertSame(legionService, LegionService.getInstance());
+            assertSame(legionService, GameCoreGameplayServices.legionService());
             assertSame(thievesGuildService, ThievesGuildService.getInstance());
             assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
             assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
