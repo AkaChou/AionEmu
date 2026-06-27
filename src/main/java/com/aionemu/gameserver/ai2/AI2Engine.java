@@ -86,7 +86,7 @@ public class AI2Engine implements GameEngine {
 	public final AI2 setupAI(String name, Creature owner) {
 		AbstractAI aiInstance = null;
 		try {
-			aiInstance = aiMap.get(name).newInstance();
+			aiInstance = aiMap.get(name).getDeclaredConstructor().newInstance();
 			aiInstance.setOwner(owner);
 			owner.setAi2(aiInstance);
 			if (AIConfig.ONCREATE_DEBUG) {

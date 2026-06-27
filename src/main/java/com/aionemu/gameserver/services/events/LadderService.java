@@ -240,7 +240,7 @@ public class LadderService {
 					SoloSurvivorBg.class, DeathmatchBg.class, TwoTeamSmallBg.class };
 		}
 		try {
-			bg = (Battleground) bgs[Rnd.get(bgs.length)].newInstance();
+			bg = (Battleground) bgs[Rnd.get(bgs.length)].getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			// log.error("getRandomBg() failed!", e);
 		}

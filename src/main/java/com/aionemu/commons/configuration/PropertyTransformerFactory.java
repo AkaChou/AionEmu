@@ -45,8 +45,8 @@ public class PropertyTransformerFactory {
 
         if (tc != null) {
             try {
-                return (PropertyTransformer)tc.newInstance();
-            } catch (Exception var3) {
+                return tc.getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException var3) {
                 throw new TransformationException("Can't instantiate property transformer", var3);
             }
         } else if (clazzToTransform != Boolean.class && clazzToTransform != Boolean.TYPE) {
