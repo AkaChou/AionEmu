@@ -75,9 +75,9 @@ public class RiftService {
 
 	public boolean isValidId(int id) {
 		if (isRift(id)) {
-			return RiftService.getInstance().getRiftLocations().keySet().contains(id);
+			return getRiftLocations().keySet().contains(id);
 		} else {
-			for (RiftLocation loc : RiftService.getInstance().getRiftLocations().values()) {
+			for (RiftLocation loc : getRiftLocations().values()) {
 				if (loc.getWorldId() == id) {
 					return true;
 				}

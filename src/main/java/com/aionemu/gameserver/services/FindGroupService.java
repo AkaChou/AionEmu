@@ -24,6 +24,7 @@ import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.commons.objects.filter.ObjectFilter;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.autogroup.AutoGroupType;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -239,14 +240,14 @@ public class FindGroupService {
 
 		@Override
 		public void onBeforePlayerAddToGroup(PlayerGroup group, Player player) {
-			FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-			FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		}
 
 		@Override
 		public void onAfterPlayerAddToGroup(PlayerGroup group, Player player) {
 			if (group.isFull()) {
-				FindGroupService.getInstance().removeFindGroup(group.getRace(), 0, group.getObjectId());
+				GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getObjectId());
 			}
 		}
 	}
@@ -255,7 +256,7 @@ public class FindGroupService {
 
 		@Override
 		public void onBeforeGroupDisband(PlayerGroup group) {
-			FindGroupService.getInstance().removeFindGroup(group.getRace(), 0, group.getTeamId());
+			GameRuntimeServices.findGroupService().removeFindGroup(group.getRace(), 0, group.getTeamId());
 		}
 
 		@Override
@@ -271,14 +272,14 @@ public class FindGroupService {
 
 		@Override
 		public void onAfterGroupCreate(Player player) {
-			FindGroup inviterFindGroup = FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00,
+			FindGroup inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00,
 					player.getObjectId());
 			if (inviterFindGroup == null) {
-				inviterFindGroup = FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04,
+				inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04,
 						player.getObjectId());
 			}
 			if (inviterFindGroup != null) {
-				FindGroupService.getInstance().addFindGroupList(player, 0x02, inviterFindGroup.getMessage(),
+				GameRuntimeServices.findGroupService().addFindGroupList(player, 0x02, inviterFindGroup.getMessage(),
 						inviterFindGroup.getGroupType());
 			}
 		}
@@ -288,7 +289,7 @@ public class FindGroupService {
 
 		@Override
 		public void onBeforeAllianceDisband(PlayerAlliance alliance) {
-			FindGroupService.getInstance().removeFindGroup(alliance.getRace(), 0, alliance.getTeamId());
+			GameRuntimeServices.findGroupService().removeFindGroup(alliance.getRace(), 0, alliance.getTeamId());
 		}
 
 		@Override
@@ -304,14 +305,14 @@ public class FindGroupService {
 
 		@Override
 		public void onAfterAllianceCreate(Player player) {
-			FindGroup inviterFindGroup = FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00,
+			FindGroup inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00,
 					player.getObjectId());
 			if (inviterFindGroup == null) {
-				inviterFindGroup = FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04,
+				inviterFindGroup = GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04,
 						player.getObjectId());
 			}
 			if (inviterFindGroup != null) {
-				FindGroupService.getInstance().addFindGroupList(player, 0x02, inviterFindGroup.getMessage(),
+				GameRuntimeServices.findGroupService().addFindGroupList(player, 0x02, inviterFindGroup.getMessage(),
 						inviterFindGroup.getGroupType());
 			}
 		}
@@ -321,14 +322,14 @@ public class FindGroupService {
 
 		@Override
 		public void onBeforePlayerAddToAlliance(PlayerAlliance alliance, Player player) {
-			FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-			FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		}
 
 		@Override
 		public void onAfterPlayerAddToAlliance(PlayerAlliance alliance, Player player) {
 			if (alliance.isFull()) {
-				FindGroupService.getInstance().removeFindGroup(alliance.getRace(), 0, alliance.getObjectId());
+				GameRuntimeServices.findGroupService().removeFindGroup(alliance.getRace(), 0, alliance.getObjectId());
 			}
 		}
 	}

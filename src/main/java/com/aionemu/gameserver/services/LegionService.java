@@ -420,11 +420,11 @@ public class LegionService {
 	 * @return LegionMember (Brigade General)
 	 */
 	public int getLegionBGeneral(int legionId) {
-		Legion legion = LegionService.getInstance().getLegion(legionId);
+		Legion legion = getLegion(legionId);
 		int legionBG = 0;
 
 		for (int memberObjId : legion.getLegionMembers()) {
-			LegionMember legionMember = LegionService.getInstance().getLegionMember(memberObjId);
+			LegionMember legionMember = getLegionMember(memberObjId);
 			if (legionMember.getRank() == LegionRank.BRIGADE_GENERAL) {
 				legionBG = memberObjId;
 			}
@@ -1208,7 +1208,7 @@ public class LegionService {
 						legionEmblem);
 				LegionEmblem emblem = DAOManager.getDAO(LegionDAO.class)
 						.loadLegionEmblem(activePlayer.getLegion().getLegionId());
-				LegionService.getInstance().storeLegionEmblem(activePlayer, emblem);
+				storeLegionEmblem(activePlayer, emblem);
 			}
 		}
 	}
@@ -2119,10 +2119,10 @@ public class LegionService {
 		if (legion != null) {
 			String description = Integer.toString(itemId) + ":" + Long.toString(count);
 			if (sourceStorage.getStorageType() == StorageType.LEGION_WAREHOUSE) {
-				LegionService.getInstance().addHistory(legion, player.getName(), LegionHistoryType.ITEM_WITHDRAW, 2,
+				addHistory(legion, player.getName(), LegionHistoryType.ITEM_WITHDRAW, 2,
 						description);
 			} else if (destStorage.getStorageType() == StorageType.LEGION_WAREHOUSE) {
-				LegionService.getInstance().addHistory(legion, player.getName(), LegionHistoryType.ITEM_DEPOSIT, 2,
+				addHistory(legion, player.getName(), LegionHistoryType.ITEM_DEPOSIT, 2,
 						description);
 			}
 		}
