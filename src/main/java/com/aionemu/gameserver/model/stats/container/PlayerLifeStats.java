@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.stats.container;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -262,7 +264,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		restoreLock.lock();
 		try {
 			if (flyRestoreTask == null && !alreadyDead && !isFlyTimeFullyRestored()) {
-				this.flyRestoreTask = LifeStatsRestoreService.getInstance().scheduleFpRestoreTask(this);
+				this.flyRestoreTask = GameGameplayServices.lifeStatsRestoreService().scheduleFpRestoreTask(this);
 			}
 		} finally {
 			restoreLock.unlock();
@@ -295,7 +297,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 		try {
 			if (flyReduceTask == null && !alreadyDead && owner.getAccessLevel() < AdminConfig.GM_FLIGHT_UNLIMITED
 					&& !owner.isUnderNoFPConsum()) {
-				this.flyReduceTask = LifeStatsRestoreService.getInstance().scheduleFpReduceTask(this, costFp);
+				this.flyReduceTask = GameGameplayServices.lifeStatsRestoreService().scheduleFpReduceTask(this, costFp);
 			}
 		} finally {
 			restoreLock.unlock();

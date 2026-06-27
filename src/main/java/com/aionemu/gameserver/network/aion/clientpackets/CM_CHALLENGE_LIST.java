@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeType;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -52,9 +54,9 @@ public class CM_CHALLENGE_LIST extends AionClientPacket {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
 				return;
 			}
-			ChallengeTaskService.getInstance().showTaskList(player, ChallengeType.LEGION, taskOwner);
+			GameHousingServices.challengeTaskService().showTaskList(player, ChallengeType.LEGION, taskOwner);
 		} else {
-			ChallengeTaskService.getInstance().showTaskList(player, ChallengeType.TOWN, taskOwner);
+			GameHousingServices.challengeTaskService().showTaskList(player, ChallengeType.TOWN, taskOwner);
 		}
 	}
 }

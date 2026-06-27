@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -137,7 +139,7 @@ public final class QuestService {
 			giveReward(env, rewards);
 			giveReward(env, extendedRewards);
 			if (template.getCategory() == QuestCategory.CHALLENGE_TASK) {
-				ChallengeTaskService.getInstance().onChallengeQuestFinish(player, id);
+				GameHousingServices.challengeTaskService().onChallengeQuestFinish(player, id);
 			}
 			return setFinishingState(env, template, reward);
 		}

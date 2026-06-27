@@ -944,8 +944,11 @@ class GameServiceProviderCompatibilityTest {
             assertSame(duelService, DuelService.getInstance());
             assertSame(duelService, GameGameplayServices.duelService());
             assertSame(lifeStatsRestoreService, LifeStatsRestoreService.getInstance());
+            assertSame(lifeStatsRestoreService, GameGameplayServices.lifeStatsRestoreService());
             assertSame(seasonRankingService, SeasonRankingService.getInstance());
+            assertSame(seasonRankingService, GameGameplayServices.seasonRankingService());
             assertSame(riftManager, RiftManager.getInstance());
+            assertSame(riftManager, GameGameplayServices.riftManager());
 
             gameplayServices.destroy();
             gameplayServices = null;
@@ -1170,24 +1173,27 @@ class GameServiceProviderCompatibilityTest {
         MaintenanceTask maintenanceTask = instance(MaintenanceTask.class);
         TownService townService = instance(TownService.class);
         HousingService housingService = instance(HousingService.class);
+        ChallengeTaskService challengeTaskService = instance(ChallengeTaskService.class);
         GameHousingServices housingServices = new GameHousingServices(
                 provider(HousingBidService.class, housingBidService),
                 provider(MaintenanceTask.class, maintenanceTask),
                 provider(TownService.class, townService),
                 provider(HousingService.class, housingService),
-                provider(ChallengeTaskService.class, instance(ChallengeTaskService.class)));
+                provider(ChallengeTaskService.class, challengeTaskService));
 
         try {
             assertSame(housingBidService, GameHousingServices.housingBidService());
             assertSame(maintenanceTask, GameHousingServices.maintenanceTask());
             assertSame(townService, GameHousingServices.townService());
             assertSame(housingService, GameHousingServices.housingService());
+            assertSame(challengeTaskService, GameHousingServices.challengeTaskService());
         } finally {
             housingServices.destroy();
             assertProviderCleared(HousingBidService.class);
             assertProviderCleared(MaintenanceTask.class);
             assertProviderCleared(TownService.class);
             assertProviderCleared(HousingService.class);
+            assertProviderCleared(ChallengeTaskService.class);
         }
     }
 

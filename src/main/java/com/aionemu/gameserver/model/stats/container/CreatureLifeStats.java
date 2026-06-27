@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.stats.container;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -197,7 +199,7 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		restoreLock.lock();
 		try {
 			if (lifeRestoreTask == null && !alreadyDead) {
-				lifeRestoreTask = LifeStatsRestoreService.getInstance().scheduleRestoreTask(this);
+				lifeRestoreTask = GameGameplayServices.lifeStatsRestoreService().scheduleRestoreTask(this);
 			}
 		} finally {
 			restoreLock.unlock();

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.stats.container;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
@@ -58,7 +60,7 @@ public class NpcLifeStats extends CreatureLifeStats<Npc> {
 		restoreLock.lock();
 		try {
 			if (lifeRestoreTask == null && !alreadyDead) {
-				this.lifeRestoreTask = LifeStatsRestoreService.getInstance().scheduleHpRestoreTask(this);
+				this.lifeRestoreTask = GameGameplayServices.lifeStatsRestoreService().scheduleHpRestoreTask(this);
 			}
 		} finally {
 			restoreLock.unlock();

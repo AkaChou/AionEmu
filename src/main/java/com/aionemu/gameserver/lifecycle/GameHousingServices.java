@@ -16,6 +16,7 @@ public final class GameHousingServices implements DisposableBean {
     private static volatile ObjectProvider<MaintenanceTask> maintenanceTaskProvider;
     private static volatile ObjectProvider<TownService> townServiceProvider;
     private static volatile ObjectProvider<HousingService> housingServiceProvider;
+    private static volatile ObjectProvider<ChallengeTaskService> challengeTaskServiceProvider;
 
     public GameHousingServices(ObjectProvider<HousingBidService> housingBidServiceProvider,
             ObjectProvider<MaintenanceTask> maintenanceTaskProvider, ObjectProvider<TownService> townServiceProvider,
@@ -29,6 +30,7 @@ public final class GameHousingServices implements DisposableBean {
         TownService.setInstanceProvider(townServiceProvider);
         GameHousingServices.housingServiceProvider = housingServiceProvider;
         HousingService.setInstanceProvider(housingServiceProvider);
+        GameHousingServices.challengeTaskServiceProvider = challengeTaskServiceProvider;
         ChallengeTaskService.setInstanceProvider(challengeTaskServiceProvider);
     }
 
@@ -64,6 +66,14 @@ public final class GameHousingServices implements DisposableBean {
         return provider.getIfAvailable(GameHousingFallbacks::housingService);
     }
 
+    public static ChallengeTaskService challengeTaskService() {
+        ObjectProvider<ChallengeTaskService> provider = challengeTaskServiceProvider;
+        if (provider == null) {
+            return GameHousingFallbacks.challengeTaskService();
+        }
+        return provider.getIfAvailable(GameHousingFallbacks::challengeTaskService);
+    }
+
     @Override
     public void destroy() {
         housingBidServiceProvider = null;
@@ -74,6 +84,7 @@ public final class GameHousingServices implements DisposableBean {
         TownService.setInstanceProvider(null);
         housingServiceProvider = null;
         HousingService.setInstanceProvider(null);
+        challengeTaskServiceProvider = null;
         ChallengeTaskService.setInstanceProvider(null);
     }
 }

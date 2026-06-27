@@ -28,4 +28,23 @@ class GameHousingServicesTest {
             assertFalse(content.contains("HousingService.getInstance()"), source.toString());
         }
     }
+
+    @Test
+    void gameServerCodeUsesHousingChallengeBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/ChallengeTaskService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameHousingFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameHousingServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("ChallengeTaskService.getInstance()"), source.toString());
+        }
+    }
 }

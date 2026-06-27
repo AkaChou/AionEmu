@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +46,6 @@ public class CM_MY_HISTORY extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		final Player player = this.getConnection().getActivePlayer();
-		SeasonRankingService.getInstance().loadPacketPlayer(player, tableId);
+		GameGameplayServices.seasonRankingService().loadPacketPlayer(player, tableId);
 	}
 }

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -127,7 +129,7 @@ public class VortexService {
 
 	public void spawn(VortexLocation loc, VortexStateType state) {
 		if (state.equals(VortexStateType.INVASION)) {
-			RiftManager.getInstance().spawnVortex(loc);
+			GameGameplayServices.riftManager().spawnVortex(loc);
 			RiftInformer.sendRiftsInfo(loc.getHomeWorldId());
 		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getVortexSpawnsByLocId(loc.getId());

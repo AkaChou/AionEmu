@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -1835,7 +1837,7 @@ public class LegionService {
 				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_LEVEL_CANT_LEVEL_UP);
 				return false;
 			} else if (LegionConfig.ENABLE_GUILD_TASK_REQ && legion.getLegionLevel() >= 5) {
-				if (!ChallengeTaskService.getInstance().canRaiseLegionLevel(legion.getLegionId(),
+				if (!GameHousingServices.challengeTaskService().canRaiseLegionLevel(legion.getLegionId(),
 						legion.getLegionLevel())) {
 					PacketSendUtility.sendPacket(activePlayer,
 							SM_SYSTEM_MESSAGE.STR_GUILD_LEVEL_UP_CHALLENGE_TASK(legion.getLegionLevel()));

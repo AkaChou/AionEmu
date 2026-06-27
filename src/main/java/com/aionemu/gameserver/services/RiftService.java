@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -136,7 +138,7 @@ public class RiftService {
 
 	public void openRifts(RiftLocation location) {
 		location.setOpened(true);
-		RiftManager.getInstance().spawnRift(location);
+		GameGameplayServices.riftManager().spawnRift(location);
 		activeRifts.put(location.getId(), location);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
