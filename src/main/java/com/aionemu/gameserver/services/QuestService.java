@@ -18,6 +18,8 @@ import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -92,7 +94,6 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -305,7 +306,7 @@ public final class QuestService {
 			// Handler can add additional bonuses on repeat (for event quests no data)
 			HandlerResult result = GameEngineServices.questEngine().onBonusApplyEvent(env, bonus.getType(), questItems);
 			if (result != HandlerResult.FAILED) {
-				QuestItems additional = BonusService.getInstance().getQuestBonus(player, template);
+				QuestItems additional = GameFeatureServices.bonusService().getQuestBonus(player, template);
 				if (additional != null) {
 					questItems.add(additional);
 				}

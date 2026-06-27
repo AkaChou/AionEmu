@@ -465,11 +465,14 @@ class GameServiceProviderCompatibilityTest {
             assertSame(dropDistributionService, DropDistributionService.getInstance());
             assertSame(systemMailService, SystemMailService.getInstance());
             assertSame(bonusService, BonusService.getInstance());
+            assertSame(bonusService, GameFeatureServices.bonusService());
             assertSame(petService, PetService.getInstance());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
             assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
             assertSame(coalescenceService, CoalescenceService.getInstance());
+            assertSame(coalescenceService, GameFeatureServices.coalescenceService());
             assertSame(growthEnergy, GrowthEnergy.getInstance());
+            assertSame(growthEnergy, GameFeatureServices.growthEnergy());
             assertSame(expireTimerTask, ExpireTimerTask.getInstance());
             assertSame(teamEffectUpdater, TeamEffectUpdater.getInstance());
             assertSame(teamMoveUpdater, TeamMoveUpdater.getInstance());

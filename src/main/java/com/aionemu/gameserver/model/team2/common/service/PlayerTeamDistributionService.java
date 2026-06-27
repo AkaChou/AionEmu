@@ -41,7 +41,6 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
-import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
@@ -82,7 +81,7 @@ public class PlayerTeamDistributionService {
 			// Aura Of Growth.
 			if (owner.getLevel() >= 66) {
 				if (Rnd.get(1, 100) < RateConfig.AURA_OF_GROWTH) {
-					GrowthEnergy.getInstance().addGrowthEnergy(member);
+					GameFeatureServices.growthEnergy().addGrowthEnergy(member);
 					PacketSendUtility.sendPacket(member, new SM_STATS_INFO(member));
 				}
 			}

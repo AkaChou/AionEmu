@@ -59,11 +59,14 @@ public final class GameFeatureServices implements DisposableBean {
     private static volatile ObjectProvider<RepurchaseService> repurchaseServiceProvider;
     private static volatile ObjectProvider<DropDistributionService> dropDistributionServiceProvider;
     private static volatile ObjectProvider<SystemMailService> systemMailServiceProvider;
+    private static volatile ObjectProvider<BonusService> bonusServiceProvider;
     private static volatile ObjectProvider<BanditService> banditServiceProvider;
     private static volatile ObjectProvider<StaticDoorService> staticDoorServiceProvider;
     private static volatile ObjectProvider<PetService> petServiceProvider;
     private static volatile ObjectProvider<ArcadeUpgradeService> arcadeUpgradeServiceProvider;
     private static volatile ObjectProvider<AtreianBestiaryService> atreianBestiaryServiceProvider;
+    private static volatile ObjectProvider<CoalescenceService> coalescenceServiceProvider;
+    private static volatile ObjectProvider<GrowthEnergy> growthEnergyProvider;
 
     public GameFeatureServices(ObjectProvider<DisputeLandService> disputeLandServiceProvider,
             ObjectProvider<DredgionService2> dredgionServiceProvider,
@@ -115,11 +118,14 @@ public final class GameFeatureServices implements DisposableBean {
         GameFeatureServices.repurchaseServiceProvider = repurchaseServiceProvider;
         GameFeatureServices.dropDistributionServiceProvider = dropDistributionServiceProvider;
         GameFeatureServices.systemMailServiceProvider = systemMailServiceProvider;
+        GameFeatureServices.bonusServiceProvider = bonusServiceProvider;
         GameFeatureServices.banditServiceProvider = banditServiceProvider;
         GameFeatureServices.staticDoorServiceProvider = staticDoorServiceProvider;
         GameFeatureServices.petServiceProvider = petServiceProvider;
         GameFeatureServices.arcadeUpgradeServiceProvider = arcadeUpgradeServiceProvider;
         GameFeatureServices.atreianBestiaryServiceProvider = atreianBestiaryServiceProvider;
+        GameFeatureServices.coalescenceServiceProvider = coalescenceServiceProvider;
+        GameFeatureServices.growthEnergyProvider = growthEnergyProvider;
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
         DredgionService2.setInstanceProvider(dredgionServiceProvider);
         AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
@@ -265,6 +271,10 @@ public final class GameFeatureServices implements DisposableBean {
         return provider.getIfAvailable(SystemMailService::getInstance);
     }
 
+    public static BonusService bonusService() {
+        return getIfAvailable(bonusServiceProvider, BonusService::getInstance);
+    }
+
     public static PetService petService() {
         ObjectProvider<PetService> provider = petServiceProvider;
         if (provider == null) {
@@ -279,6 +289,14 @@ public final class GameFeatureServices implements DisposableBean {
 
     public static AtreianBestiaryService atreianBestiaryService() {
         return getIfAvailable(atreianBestiaryServiceProvider, AtreianBestiaryService::getInstance);
+    }
+
+    public static CoalescenceService coalescenceService() {
+        return getIfAvailable(coalescenceServiceProvider, CoalescenceService::getInstance);
+    }
+
+    public static GrowthEnergy growthEnergy() {
+        return getIfAvailable(growthEnergyProvider, GrowthEnergy::getInstance);
     }
 
     private static <T> T getIfAvailable(ObjectProvider<T> provider, Supplier<T> fallback) {
@@ -309,11 +327,14 @@ public final class GameFeatureServices implements DisposableBean {
         repurchaseServiceProvider = null;
         dropDistributionServiceProvider = null;
         systemMailServiceProvider = null;
+        bonusServiceProvider = null;
         banditServiceProvider = null;
         staticDoorServiceProvider = null;
         petServiceProvider = null;
         arcadeUpgradeServiceProvider = null;
         atreianBestiaryServiceProvider = null;
+        coalescenceServiceProvider = null;
+        growthEnergyProvider = null;
         DisputeLandService.setInstanceProvider(null);
         DredgionService2.setInstanceProvider(null);
         AsyunatarService.setInstanceProvider(null);

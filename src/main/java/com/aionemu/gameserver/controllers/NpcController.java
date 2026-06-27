@@ -76,7 +76,6 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
-import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -433,7 +432,7 @@ public class NpcController extends CreatureController<Npc> {
 					// Aura Of Growth.
 					if (getOwner().getLevel() >= 66) {
 						if (Rnd.get(1, 100) < RateConfig.AURA_OF_GROWTH) {
-							GrowthEnergy.getInstance().addGrowthEnergy(player);
+							GameFeatureServices.growthEnergy().addGrowthEnergy(player);
 							PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 						}
 					}

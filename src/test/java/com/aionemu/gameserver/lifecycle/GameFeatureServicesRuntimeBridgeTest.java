@@ -191,6 +191,9 @@ class GameFeatureServicesRuntimeBridgeTest {
                 .filter(path -> !path.endsWith(Path.of("services/RepurchaseService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/drop/DropDistributionService.java")))
                 .filter(path -> !path.endsWith(Path.of("services/events/ArcadeUpgradeService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/reward/BonusService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/item/CoalescenceService.java")))
+                .filter(path -> !path.endsWith(Path.of("services/player/GrowthEnergy.java")))
                 .filter(path -> !path.endsWith(Path.of("services/player/AtreianBestiaryService.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServices.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameFeatureServicesRuntimeBridge.java")))
@@ -212,6 +215,9 @@ class GameFeatureServicesRuntimeBridgeTest {
             assertFalse(content.contains("RepurchaseService.getInstance()"), source.toString());
             assertFalse(content.contains("DropDistributionService.getInstance()"), source.toString());
             assertFalse(content.contains("ArcadeUpgradeService.getInstance()"), source.toString());
+            assertFalse(content.contains("BonusService.getInstance()"), source.toString());
+            assertFalse(content.contains("CoalescenceService.getInstance()"), source.toString());
+            assertFalse(content.contains("GrowthEnergy.getInstance()"), source.toString());
             assertFalse(content.contains("AtreianBestiaryService.getInstance()"), source.toString());
         }
     }
