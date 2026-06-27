@@ -16,7 +16,9 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +52,6 @@ import com.aionemu.gameserver.world.WorldMapInstanceFactory;
 import com.aionemu.gameserver.world.WorldMapType;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import javolution.util.FastList;
-
 /****/
 /**
  * Reworked by G-Robson26 /
@@ -59,8 +59,8 @@ import javolution.util.FastList;
 
 public class InstanceService {
 	private static final Logger log = LoggerFactory.getLogger(InstanceService.class);
-	private static final FastList<Integer> instanceAggro = new FastList<Integer>();
-	private static final FastList<Integer> instanceCoolDownFilter = new FastList<Integer>();
+	private static final List<Integer> instanceAggro = new ArrayList<Integer>();
+	private static final List<Integer> instanceCoolDownFilter = new ArrayList<Integer>();
 	private static final int SOLO_INSTANCES_DESTROY_DELAY = 2 * 60 * 1000;
 
 	public static void load() {

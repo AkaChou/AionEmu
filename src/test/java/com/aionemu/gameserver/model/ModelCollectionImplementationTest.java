@@ -271,6 +271,21 @@ class ModelCollectionImplementationTest {
 				"FastList.recycle");
 	}
 
+	@Test
+	void integerHelperListsUseJdkLists() throws Exception {
+		List<String> sourcePaths = List.of(
+				"src/main/java/com/aionemu/gameserver/world/geo/GeoService.java",
+				"src/main/java/com/aionemu/gameserver/services/instance/InstanceService.java",
+				"src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_TELEPORT_MAP.java",
+				"src/main/java/com/aionemu/gameserver/skillengine/effect/EffectTemplate.java",
+				"src/main/java/com/aionemu/gameserver/model/instance/instancereward/PvPArenaReward.java");
+		for (String sourcePath : sourcePaths) {
+			assertSourceOmits(sourcePath, "FastList<Integer>");
+			assertSourceOmits(sourcePath, "new FastList<Integer>");
+			assertSourceOmits(sourcePath, "import javolution.util.FastList");
+		}
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();

@@ -2,11 +2,13 @@
  * Decompiled with CFR 0.150.
  * 
  * Could not load the following classes:
- *  javolution.util.FastList
  *  org.slf4j.Logger
  *  org.slf4j.LoggerFactory
  */
 package com.aionemu.gameserver.world.geo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,15 +22,13 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
 
-import javolution.util.FastList;
-
 public class GeoService {
 	private static final Logger log = LoggerFactory.getLogger(GeoService.class);
 	private static volatile ObjectProvider<GeoService> instanceProvider;
-	private static final FastList<Integer> npcsExclude = new FastList<>();
+	private static final List<Integer> npcsExclude = new ArrayList<>();
 	private GeoData geoData;
 
-	public static FastList<Integer> getNpcsExclude() {
+	public static List<Integer> getNpcsExclude() {
 		return npcsExclude;
 	}
 
