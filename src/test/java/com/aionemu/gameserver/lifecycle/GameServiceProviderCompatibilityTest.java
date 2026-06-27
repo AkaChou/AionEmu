@@ -1106,9 +1106,13 @@ class GameServiceProviderCompatibilityTest {
                     provider(ZoneUpdateService.class, zoneUpdateService));
 
             assertSame(movementNotifyTask, MovementNotifyTask.getInstance());
+            assertSame(movementNotifyTask, GameMovementLoopServices.movementNotifyTask());
             assertSame(moveTaskManager, MoveTaskManager.getInstance());
+            assertSame(moveTaskManager, GameMovementLoopServices.moveTaskManager());
             assertSame(playerMoveTaskManager, PlayerMoveTaskManager.getInstance());
+            assertSame(playerMoveTaskManager, GameMovementLoopServices.playerMoveTaskManager());
             assertSame(zoneUpdateService, ZoneUpdateService.getInstance());
+            assertSame(zoneUpdateService, GameMovementLoopServices.zoneUpdateService());
 
             movementLoopServices.destroy();
             movementLoopServices = null;
