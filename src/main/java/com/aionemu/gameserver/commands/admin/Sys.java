@@ -86,11 +86,8 @@ public class Sys extends AdminCommand {
 			System.gc();
 			PacketSendUtility.sendMessage(player, "RAM Used (After): "
 				+ ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576));
-			System.runFinalization();
-			PacketSendUtility.sendMessage(player, "RAM Used (Final): "
-				+ ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576));
 			PacketSendUtility.sendMessage(player,
-				"Garbage Collection and Finalization finished in: " + (System.currentTimeMillis() - time) + " milliseconds...");
+				"Garbage Collection finished in: " + (System.currentTimeMillis() - time) + " milliseconds...");
 		}
 		else if (params[0].equals("shutdown")) {
 			try {

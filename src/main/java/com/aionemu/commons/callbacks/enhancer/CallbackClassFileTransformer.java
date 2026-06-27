@@ -44,9 +44,9 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
             ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         try {
-            // 跳过ExtClassLoader加载的系统类
-            // Skip system classes loaded by ExtClassLoader
-            if (loader != null && !loader.getClass().getName().equals("sun.misc.Launcher$ExtClassLoader")) {
+            // 跳过平台/引导类加载器加载的系统类
+            // Skip system classes loaded by the platform/bootstrap class loaders
+            if (shouldTransform(loader)) {
                 return this.transformClass(loader, classfileBuffer);
             } else {
                 log.trace("Class " + className + " ignored.");
@@ -55,13 +55,21 @@ public abstract class CallbackClassFileTransformer implements ClassFileTransform
         } catch (Exception var8) {
             Error e1 = new Error("Can't transform class " + className, var8);
             log.error(e1.getMessage(), e1);
-            // AppClassLoader加载失败时强制退出
-            // Force exit when AppClassLoader fails to load
-            if (loader.getClass().getName().equals("sun.misc.Launcher$AppClassLoader")) {
+            // 系统类加载器加载失败时强制退出
+            // Force exit when the system class loader fails to load
+            if (isSystemClassLoader(loader)) {
                 AionProcessExit.halt(1);
             }
             throw e1;
         }
+    }
+
+    private boolean shouldTransform(ClassLoader loader) {
+        return loader != null && loader != ClassLoader.getPlatformClassLoader();
+    }
+
+    private boolean isSystemClassLoader(ClassLoader loader) {
+        return loader != null && loader == ClassLoader.getSystemClassLoader();
     }
 
     /**

@@ -19,15 +19,13 @@ package com.aionemu.gameserver.geoEngine;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.Buffer;
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.MappedByteBuffer;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,192 +65,187 @@ public class GeoWorldLoader {
 		DEBUG = debug;
 	}
 
-	@SuppressWarnings("resource")
 	public static Map<String, Spatial> loadMeshs(String fileName) throws IOException {
 		Map<String, Spatial> geoms = new HashMap<String, Spatial>();
 		File geoFile = Config.dataFile(fileName);
-		FileChannel roChannel = null;
-		MappedByteBuffer geo = null;
-		roChannel = new RandomAccessFile(geoFile, "r").getChannel();
-		int size = (int) roChannel.size();
-		geo = roChannel.map(FileChannel.MapMode.READ_ONLY, 0, size).load();
-		geo.order(ByteOrder.LITTLE_ENDIAN);
-		while (geo.hasRemaining()) {
-			short namelenght = geo.getShort();
-			byte[] nameByte = new byte[namelenght];
-			geo.get(nameByte);
-			String name = new String(nameByte).intern();
-			Node node = new Node(DEBUG ? name : null);
-			byte intentions = 0;
-			byte singleChildMaterialId = -1;
-			int modelCount = geo.getShort();
-			for (int c = 0; c < modelCount; c++) {
-				Mesh m = new Mesh();
+		try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r");
+			 FileChannel roChannel = raFile.getChannel();
+			 Arena arena = Arena.ofConfined()) {
+			ByteBuffer geo = mapReadOnly(roChannel, arena);
+			while (geo.hasRemaining()) {
+				short namelenght = geo.getShort();
+				byte[] nameByte = new byte[namelenght];
+				geo.get(nameByte);
+				String name = new String(nameByte).intern();
+				Node node = new Node(DEBUG ? name : null);
+				byte intentions = 0;
+				byte singleChildMaterialId = -1;
+				int modelCount = geo.getShort();
+				for (int c = 0; c < modelCount; c++) {
+					Mesh m = new Mesh();
 
-				int vectorCount;
-				if (GeoDataConfig.GEO_MONONO2_IN_USE) {
-					vectorCount = (geo.getInt()) * 3;
-				} else {
-					vectorCount = (geo.getShort()) * 3;
-				}
+					int vectorCount;
+					if (GeoDataConfig.GEO_MONONO2_IN_USE) {
+						vectorCount = (geo.getInt()) * 3;
+					} else {
+						vectorCount = (geo.getShort()) * 3;
+					}
 
-				ByteBuffer floatBuffer = ByteBuffer.allocateDirect(vectorCount * 4);
-				FloatBuffer vertices = floatBuffer.asFloatBuffer();
-				for (int x = 0; x < vectorCount; x++) {
-					vertices.put(geo.getFloat());
-				}
+					ByteBuffer floatBuffer = ByteBuffer.allocateDirect(vectorCount * 4);
+					FloatBuffer vertices = floatBuffer.asFloatBuffer();
+					for (int x = 0; x < vectorCount; x++) {
+						vertices.put(geo.getFloat());
+					}
 
-				int triangles = geo.getInt();
-				ByteBuffer shortBuffer = ByteBuffer.allocateDirect(triangles * 2);
-				ShortBuffer indexes = shortBuffer.asShortBuffer();
-				for (int x = 0; x < triangles; x++) {
-					indexes.put(geo.getShort());
-				}
+					int triangles = geo.getInt();
+					ByteBuffer shortBuffer = ByteBuffer.allocateDirect(triangles * 2);
+					ShortBuffer indexes = shortBuffer.asShortBuffer();
+					for (int x = 0; x < triangles; x++) {
+						indexes.put(geo.getShort());
+					}
 
-				Geometry geom = null;
-				m.setCollisionFlags(geo.getShort());
-				if ((m.getIntentions() & CollisionIntention.MOVEABLE.getId()) != 0) {
-					// TODO: skip moveable collisions (ships, shugo boxes), not handled yet
-					continue;
-				}
-				intentions |= m.getIntentions();
-				m.setBuffer(VertexBuffer.Type.Position, 3, vertices);
-				m.setBuffer(VertexBuffer.Type.Index, 3, indexes);
-				m.createCollisionData();
-
-				if ((intentions & CollisionIntention.DOOR.getId()) != 0
-						&& (intentions & CollisionIntention.PHYSICAL.getId()) != 0) {
-					if (!GeoDataConfig.GEO_DOORS_ENABLE) {
+					Geometry geom = null;
+					m.setCollisionFlags(geo.getShort());
+					if ((m.getIntentions() & CollisionIntention.MOVEABLE.getId()) != 0) {
+						// TODO: skip moveable collisions (ships, shugo boxes), not handled yet
 						continue;
 					}
-					geom = new DoorGeometry(name, m);
-					// what if doors have few models ?
-				} else {
-					MaterialTemplate mtl = DataManager.MATERIAL_DATA.getTemplate(m.getMaterialId());
-					geom = new Geometry(null, m);
-					if (mtl != null || m.getMaterialId() == 11) {
-						node.setName(name);
-					}
-					if (modelCount == 1) {
-						geom.setName(name);
-						singleChildMaterialId = geom.getMaterialId();
+					intentions |= m.getIntentions();
+					m.setBuffer(VertexBuffer.Type.Position, 3, vertices);
+					m.setBuffer(VertexBuffer.Type.Index, 3, indexes);
+					m.createCollisionData();
+
+					if ((intentions & CollisionIntention.DOOR.getId()) != 0
+							&& (intentions & CollisionIntention.PHYSICAL.getId()) != 0) {
+						if (!GeoDataConfig.GEO_DOORS_ENABLE) {
+							continue;
+						}
+						geom = new DoorGeometry(name, m);
+						// what if doors have few models ?
 					} else {
-						geom.setName(("child" + c + "_" + name).intern());
+						MaterialTemplate mtl = DataManager.MATERIAL_DATA.getTemplate(m.getMaterialId());
+						geom = new Geometry(null, m);
+						if (mtl != null || m.getMaterialId() == 11) {
+							node.setName(name);
+						}
+						if (modelCount == 1) {
+							geom.setName(name);
+							singleChildMaterialId = geom.getMaterialId();
+						} else {
+							geom.setName(("child" + c + "_" + name).intern());
+						}
+						node.attachChild(geom);
 					}
-					node.attachChild(geom);
+					geoms.put(geom.getName(), geom);
 				}
-				geoms.put(geom.getName(), geom);
-			}
-			node.setCollisionFlags((short) (intentions << 8 | singleChildMaterialId & 0xFF));
-			if (!node.getChildren().isEmpty()) {
-				geoms.put(name, node);
+				node.setCollisionFlags((short) (intentions << 8 | singleChildMaterialId & 0xFF));
+				if (!node.getChildren().isEmpty()) {
+					geoms.put(name, node);
+				}
 			}
 		}
-		destroyDirectByteBuffer(geo);
 		return geoms;
 
 	}
 
-	@SuppressWarnings("resource")
 	public static boolean loadWorld(int worldId, Map<String, Spatial> models, GeoMap map) throws IOException {
 		File geoFile = Config.dataFile(GEO_DIR + worldId + ".geo");
-		FileChannel roChannel = null;
-		MappedByteBuffer geo = null;
-		roChannel = new RandomAccessFile(geoFile, "r").getChannel();
-		geo = roChannel.map(FileChannel.MapMode.READ_ONLY, 0, (int) roChannel.size()).load();
-		geo.order(ByteOrder.LITTLE_ENDIAN);
+		try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r");
+			 FileChannel roChannel = raFile.getChannel();
+			 Arena arena = Arena.ofConfined()) {
+			ByteBuffer geo = mapReadOnly(roChannel, arena);
 
-		if (GeoDataConfig.GEO_MONONO2_IN_USE) {
-			if (geo.get() == 0) {
-				// no terrain
-				map.setTerrainData(new short[] { geo.getShort() });
-				/* int cutoutSize = */ geo.getInt();
-			} else {
-				int size = geo.getInt();
-				short[] terrainData = new short[size];
-				for (int i = 0; i < size; i++) {
-					terrainData[i] = geo.getShort();
-				}
-				map.setTerrainData(terrainData);
-
-				// read list of terrain indexes to remove.
-				int cutoutSize = geo.getInt();
-				if (cutoutSize > 0) {
-					int[] cutoutData = new int[cutoutSize];
-					for (int i = 0; i < cutoutSize; i++) {
-						cutoutData[i] = geo.getInt();
-					}
-					map.setTerrainCutouts(cutoutData);
-				}
-			}
-
-		} else {
-
-			if (geo.get() == 0) {
-				map.setTerrainData(new short[] { geo.getShort() });
-			} else {
-				int size = geo.getInt();
-				short[] terrainData = new short[size];
-				for (int i = 0; i < size; i++) {
-					terrainData[i] = geo.getShort();
-				}
-				map.setTerrainData(terrainData);
-			}
-		}
-
-		while (geo.hasRemaining()) {
-			int nameLength = geo.getShort();
-			byte[] nameByte = new byte[nameLength];
-			geo.get(nameByte);
-			String name = new String(nameByte);
-			Vector3f loc = new Vector3f(geo.getFloat(), geo.getFloat(), geo.getFloat());
-			float[] matrix = new float[9];
-			for (int i = 0; i < 9; i++) {
-				matrix[i] = geo.getFloat();
-			}
-
-			float scale;
 			if (GeoDataConfig.GEO_MONONO2_IN_USE) {
-				scale = geo.getFloat();
-				geo.get(); // TODO : use the data: EventType eventType = EventType.fromByte(geo.get());
+				if (geo.get() == 0) {
+					// no terrain
+					map.setTerrainData(new short[] { geo.getShort() });
+					/* int cutoutSize = */ geo.getInt();
+				} else {
+					int size = geo.getInt();
+					short[] terrainData = new short[size];
+					for (int i = 0; i < size; i++) {
+						terrainData[i] = geo.getShort();
+					}
+					map.setTerrainData(terrainData);
+
+					// read list of terrain indexes to remove.
+					int cutoutSize = geo.getInt();
+					if (cutoutSize > 0) {
+						int[] cutoutData = new int[cutoutSize];
+						for (int i = 0; i < cutoutSize; i++) {
+							cutoutData[i] = geo.getInt();
+						}
+						map.setTerrainCutouts(cutoutData);
+					}
+				}
+
 			} else {
-				scale = geo.getFloat();
+
+				if (geo.get() == 0) {
+					map.setTerrainData(new short[] { geo.getShort() });
+				} else {
+					int size = geo.getInt();
+					short[] terrainData = new short[size];
+					for (int i = 0; i < size; i++) {
+						terrainData[i] = geo.getShort();
+					}
+					map.setTerrainData(terrainData);
+				}
 			}
 
-			Matrix3f matrix3f = new Matrix3f();
-			matrix3f.set(matrix);
-			Spatial node = models.get(name.toLowerCase().intern());
-			try {
-				if (node != null) {
-					Spatial nodeClone = node;
-					if (node instanceof DoorGeometry) {
-						try {
-							nodeClone = node.clone();
-						} catch (CloneNotSupportedException e) {
-							e.printStackTrace();
-						}
-						createDoors(nodeClone, worldId, matrix3f, loc, scale);
-						map.attachChild(nodeClone);
-					} else {
-						nodeClone = attachChild(map, node, matrix3f, loc, scale);
-						List<Spatial> children = ((Node) node)
-								.descendantMatches("child\\d+_" + name.replace("\\", "\\\\"));
-						if (children.size() == 0) {
-							createZone(nodeClone, worldId, 0);
+			while (geo.hasRemaining()) {
+				int nameLength = geo.getShort();
+				byte[] nameByte = new byte[nameLength];
+				geo.get(nameByte);
+				String name = new String(nameByte);
+				Vector3f loc = new Vector3f(geo.getFloat(), geo.getFloat(), geo.getFloat());
+				float[] matrix = new float[9];
+				for (int i = 0; i < 9; i++) {
+					matrix[i] = geo.getFloat();
+				}
+
+				float scale;
+				if (GeoDataConfig.GEO_MONONO2_IN_USE) {
+					scale = geo.getFloat();
+					geo.get(); // TODO : use the data: EventType eventType = EventType.fromByte(geo.get());
+				} else {
+					scale = geo.getFloat();
+				}
+
+				Matrix3f matrix3f = new Matrix3f();
+				matrix3f.set(matrix);
+				Spatial node = models.get(name.toLowerCase().intern());
+				try {
+					if (node != null) {
+						Spatial nodeClone = node;
+						if (node instanceof DoorGeometry) {
+							try {
+								nodeClone = node.clone();
+							} catch (CloneNotSupportedException e) {
+								e.printStackTrace();
+							}
+							createDoors(nodeClone, worldId, matrix3f, loc, scale);
+							map.attachChild(nodeClone);
 						} else {
-							for (int c = 0; c < children.size(); c++) {
-								Spatial child = children.get(c);
-								nodeClone = attachChild(map, child, matrix3f, loc, scale);
-								createZone(nodeClone, worldId, c + 1);
+							nodeClone = attachChild(map, node, matrix3f, loc, scale);
+							List<Spatial> children = ((Node) node)
+									.descendantMatches("child\\d+_" + name.replace("\\", "\\\\"));
+							if (children.size() == 0) {
+								createZone(nodeClone, worldId, 0);
+							} else {
+								for (int c = 0; c < children.size(); c++) {
+									Spatial child = children.get(c);
+									nodeClone = attachChild(map, child, matrix3f, loc, scale);
+									createZone(nodeClone, worldId, c + 1);
+								}
 							}
 						}
 					}
+				} catch (Throwable t) {
+					System.out.println(t);
 				}
-			} catch (Throwable t) {
-				System.out.println(t);
 			}
 		}
-		destroyDirectByteBuffer(geo);
 		map.updateModelBound();
 		return true;
 	}
@@ -316,19 +309,13 @@ public class GeoWorldLoader {
 		return (int) ((xIntBits * 73856093 ^ yIntBits * 19349663 ^ zIntBits * 83492791) % 50000);
 	}
 
-	private static void destroyDirectByteBuffer(Buffer toBeDestroyed) {
-		if (!(toBeDestroyed instanceof ByteBuffer)) {
-			return;
+	private static ByteBuffer mapReadOnly(FileChannel channel, Arena arena) throws IOException {
+		long size = channel.size();
+		if (size > Integer.MAX_VALUE) {
+			throw new IOException("Geo file is too large to map into a ByteBuffer: " + size + " bytes");
 		}
-		try {
-			Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
-			Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
-			unsafeField.setAccessible(true);
-			Object unsafe = unsafeField.get(null);
-			Method invokeCleaner = unsafeClass.getMethod("invokeCleaner", ByteBuffer.class);
-			invokeCleaner.invoke(unsafe, (ByteBuffer) toBeDestroyed);
-		} catch (Throwable ignored) {
-			// The mapped buffer will be reclaimed by the JVM if explicit cleanup is unavailable.
-		}
+		MemorySegment segment = channel.map(FileChannel.MapMode.READ_ONLY, 0, size, arena);
+		segment.load();
+		return segment.asByteBuffer().order(ByteOrder.LITTLE_ENDIAN);
 	}
 }

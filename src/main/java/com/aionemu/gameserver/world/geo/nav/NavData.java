@@ -17,13 +17,11 @@ package com.aionemu.gameserver.world.geo.nav;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.foreign.Arena;
+import java.lang.foreign.MemorySegment;
 import java.lang.ref.SoftReference;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -321,107 +319,103 @@ public class NavData {
      */
     private boolean loadNavMesh(int worldId, File navFile, GeoMap map) throws IOException {
         try (RandomAccessFile raFile = new RandomAccessFile(navFile, "r");
-             FileChannel roChannel = raFile.getChannel()) {
+             FileChannel roChannel = raFile.getChannel();
+             Arena arena = Arena.ofConfined()) {
             
-            MappedByteBuffer nav = roChannel.map(FileChannel.MapMode.READ_ONLY, 0, (int) roChannel.size());
-            nav.load();
-            nav.order(ByteOrder.LITTLE_ENDIAN);
-            
-            try {
-                // Validate file size
-                if (nav.remaining() < HEADER_SIZE_BYTES) {
-                    throw new IOException("File too small: missing float count");
-                }
-                
-                // Read floatCount (legacy format - total number of floats, not vertices)
-                int floatCount = nav.getInt();
-                if (floatCount <= 0 || floatCount > 3000000) {
-                    throw new IOException("Invalid float count: " + floatCount);
-                }
-                
-                // Calculate vertex count (each vertex has 3 floats: x, y, z)
-                int vertexCount = floatCount / VERTEX_COMPONENTS;
-                if (vertexCount <= 0 || vertexCount > 1000000) {
-                    throw new IOException("Invalid vertex count: " + vertexCount);
-                }
-                
-                // Save the start position of vertex data (right after the header)
-                int vertexDataStart = nav.position();
-                
-                // Calculate total vertex data size in bytes
-                int vertexDataSize = floatCount * FLOAT_SIZE_BYTES;
-                
-                // Validate we have enough data
-                if (nav.remaining() < vertexDataSize) {
-                    throw new IOException("Vertex data truncated: need " + vertexDataSize + " bytes, have " + nav.remaining());
-                }
-                
-                // Skip vertex data for now (will be accessed via getVertices)
-                nav.position(vertexDataStart + vertexDataSize);
-                
-                // Read triangle count
-                if (nav.remaining() < INT_SIZE_BYTES) {
-                    throw new IOException("Missing triangle count");
-                }
-                int triangleCount = nav.getInt();
-                if (triangleCount <= 0 || triangleCount > 1000000) {
-                    throw new IOException("Invalid triangle count: " + triangleCount);
-                }
-                
-                // Calculate expected triangle data size: each triangle has 6 ints (3 indices + 3 connections)
-                int expectedTriangleDataBytes = triangleCount * INT_SIZE_BYTES * 6;
-                if (nav.remaining() < expectedTriangleDataBytes) {
-                    throw new IOException("Triangle data truncated: need " + expectedTriangleDataBytes + " bytes, have " + nav.remaining());
-                }
-                
-                // Parse triangles
-                NavGeometry[] triangles = new NavGeometry[triangleCount];
-                int[][] connections = new int[triangleCount][3];
-                
-                for (int i = 0; i < triangleCount; i++) {
-                    // Read vertex indices
-                    int[] indices = new int[3];
-                    indices[0] = nav.getInt();
-                    indices[1] = nav.getInt();
-                    indices[2] = nav.getInt();
-                    
-                    // Validate indices
-                    if (indices[0] < 0 || indices[0] >= vertexCount ||
-                        indices[1] < 0 || indices[1] >= vertexCount ||
-                        indices[2] < 0 || indices[2] >= vertexCount) {
-                        throw new IOException("Invalid vertex index in triangle " + i + ": [" + indices[0] + ", " + indices[1] + ", " + indices[2] + "] max vertex index: " + (vertexCount - 1));
-                    }
-                    
-                    // Create triangle geometry with vertices
-                    float[] vertices = getVertices(nav, vertexDataStart, indices);
-                    triangles[i] = new NavGeometry(null, vertices);
-                    
-                    // Read edge connections
-                    connections[i][0] = nav.getInt();
-                    connections[i][1] = nav.getInt();
-                    connections[i][2] = nav.getInt();
-                }
-                
-                // Build adjacency links
-                for (int i = 0; i < triangleCount; i++) {
-                    if (connections[i][0] != -1 && connections[i][0] < triangleCount) 
-                        triangles[i].setEdge1(triangles[connections[i][0]]);
-                    if (connections[i][1] != -1 && connections[i][1] < triangleCount) 
-                        triangles[i].setEdge2(triangles[connections[i][1]]);
-                    if (connections[i][2] != -1 && connections[i][2] < triangleCount) 
-                        triangles[i].setEdge3(triangles[connections[i][2]]);
-                    
-                    triangles[i].updateModelBound();
-                    map.attachChild(triangles[i]);
-                }
-                
-                map.updateModelBound();
-                logDebug("Successfully loaded {} triangles for map {}", triangleCount, worldId);
-                
-            } finally {
-                // Always release native buffer, even on error
-                releaseDirectBuffer(nav);
+            ByteBuffer nav = mapReadOnly(roChannel, arena);
+
+            // Validate file size
+            if (nav.remaining() < HEADER_SIZE_BYTES) {
+                throw new IOException("File too small: missing float count");
             }
+
+            // Read floatCount (legacy format - total number of floats, not vertices)
+            int floatCount = nav.getInt();
+            if (floatCount <= 0 || floatCount > 3000000) {
+                throw new IOException("Invalid float count: " + floatCount);
+            }
+
+            // Calculate vertex count (each vertex has 3 floats: x, y, z)
+            int vertexCount = floatCount / VERTEX_COMPONENTS;
+            if (vertexCount <= 0 || vertexCount > 1000000) {
+                throw new IOException("Invalid vertex count: " + vertexCount);
+            }
+
+            // Save the start position of vertex data (right after the header)
+            int vertexDataStart = nav.position();
+
+            // Calculate total vertex data size in bytes
+            int vertexDataSize = floatCount * FLOAT_SIZE_BYTES;
+
+            // Validate we have enough data
+            if (nav.remaining() < vertexDataSize) {
+                throw new IOException("Vertex data truncated: need " + vertexDataSize + " bytes, have " + nav.remaining());
+            }
+
+            // Skip vertex data for now (will be accessed via getVertices)
+            nav.position(vertexDataStart + vertexDataSize);
+
+            // Read triangle count
+            if (nav.remaining() < INT_SIZE_BYTES) {
+                throw new IOException("Missing triangle count");
+            }
+            int triangleCount = nav.getInt();
+            if (triangleCount <= 0 || triangleCount > 1000000) {
+                throw new IOException("Invalid triangle count: " + triangleCount);
+            }
+
+            // Calculate expected triangle data size: each triangle has 6 ints (3 indices + 3 connections)
+            int expectedTriangleDataBytes = triangleCount * INT_SIZE_BYTES * 6;
+            if (nav.remaining() < expectedTriangleDataBytes) {
+                throw new IOException("Triangle data truncated: need " + expectedTriangleDataBytes + " bytes, have " + nav.remaining());
+            }
+
+            // Parse triangles
+            NavGeometry[] triangles = new NavGeometry[triangleCount];
+            int[][] connections = new int[triangleCount][3];
+
+            for (int i = 0; i < triangleCount; i++) {
+                // Read vertex indices
+                int[] indices = new int[3];
+                indices[0] = nav.getInt();
+                indices[1] = nav.getInt();
+                indices[2] = nav.getInt();
+
+                // Validate indices
+                if (indices[0] < 0 || indices[0] >= vertexCount ||
+                    indices[1] < 0 || indices[1] >= vertexCount ||
+                    indices[2] < 0 || indices[2] >= vertexCount) {
+                    throw new IOException("Invalid vertex index in triangle " + i + ": [" + indices[0] + ", " + indices[1] + ", " + indices[2] + "] max vertex index: " + (vertexCount - 1));
+                }
+
+                // Create triangle geometry with vertices
+                float[] vertices = getVertices(nav, vertexDataStart, indices);
+                triangles[i] = new NavGeometry(null, vertices);
+
+                // Read edge connections
+                connections[i][0] = nav.getInt();
+                connections[i][1] = nav.getInt();
+                connections[i][2] = nav.getInt();
+            }
+
+            // Build adjacency links
+            for (int i = 0; i < triangleCount; i++) {
+                if (connections[i][0] != -1 && connections[i][0] < triangleCount) {
+                    triangles[i].setEdge1(triangles[connections[i][0]]);
+                }
+                if (connections[i][1] != -1 && connections[i][1] < triangleCount) {
+                    triangles[i].setEdge2(triangles[connections[i][1]]);
+                }
+                if (connections[i][2] != -1 && connections[i][2] < triangleCount) {
+                    triangles[i].setEdge3(triangles[connections[i][2]]);
+                }
+
+                triangles[i].updateModelBound();
+                map.attachChild(triangles[i]);
+            }
+
+            map.updateModelBound();
+            logDebug("Successfully loaded {} triangles for map {}", triangleCount, worldId);
         }
         
         return true;
@@ -435,7 +429,7 @@ public class NavData {
      * @param indices Indices of vertices to extract (3 indices per triangle)
      * @return Array of vertex coordinates [x,y,z, x,y,z, x,y,z] (9 floats for a triangle)
      */
-    private static float[] getVertices(MappedByteBuffer nav, int vertexDataStart, int[] indices) {
+    private static float[] getVertices(ByteBuffer nav, int vertexDataStart, int[] indices) {
         float[] vertices = new float[indices.length * VERTEX_COMPONENTS];
         
         for (int i = 0; i < indices.length; i++) {
@@ -451,25 +445,14 @@ public class NavData {
         return vertices;
     }
 
-    /**
-     * Safely releases a direct byte buffer's native memory.
-     * Uses reflection to avoid a compile-time dependency on Unsafe.
-     */
-    private static void releaseDirectBuffer(Buffer buffer) {
-        if (!(buffer instanceof ByteBuffer) || !buffer.isDirect()) {
-            return;
+    private static ByteBuffer mapReadOnly(FileChannel channel, Arena arena) throws IOException {
+        long size = channel.size();
+        if (size > Integer.MAX_VALUE) {
+            throw new IOException("Navigation mesh is too large to map into a ByteBuffer: " + size + " bytes");
         }
-        
-        try {
-            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
-            Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
-            unsafeField.setAccessible(true);
-            Object unsafe = unsafeField.get(null);
-            Method invokeCleaner = unsafeClass.getMethod("invokeCleaner", ByteBuffer.class);
-            invokeCleaner.invoke(unsafe, (ByteBuffer) buffer);
-        } catch (Exception e) {
-            logDebug("Failed to release direct buffer: {}", e.getMessage());
-        }
+        MemorySegment segment = channel.map(FileChannel.MapMode.READ_ONLY, 0, size, arena);
+        segment.load();
+        return segment.asByteBuffer().order(ByteOrder.LITTLE_ENDIAN);
     }
 
     /**
