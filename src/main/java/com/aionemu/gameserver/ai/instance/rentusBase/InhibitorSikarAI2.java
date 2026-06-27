@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -41,7 +43,7 @@ public class InhibitorSikarAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 19657, 1, getOwner()).useNoAnimationSkill(); //Dragon Breath.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19657, 1, getOwner()).useNoAnimationSkill(); //Dragon Breath.
 				startLifeTask();
 			}
 		}, 1000);

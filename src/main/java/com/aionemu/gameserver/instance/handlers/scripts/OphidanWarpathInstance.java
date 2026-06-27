@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -773,11 +775,11 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 701947: //Elyos Field Gun.
 			case 701949: //Elyos Field Gun.
-                SkillEngine.getInstance().getSkill(npc, 21065, 1, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 21065, 1, player).useNoAnimationSkill();
             break;
 			case 701948: //Asmodians Field Gun.
 			case 701950: //Asmodians Field Gun.
-                SkillEngine.getInstance().getSkill(npc, 21066, 1, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 21066, 1, player).useNoAnimationSkill();
             break;
 			case 833935: //? ? .
 				point = 1000;
@@ -791,14 +793,14 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 							sendMsgByRace(1403449, Race.PC_ALL, 0);
 						    sp(802036, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 0); //North Post Flag.
 							sp(806391, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 3); //North Power Generator.
-							SkillEngine.getInstance().getSkill(npc, 21336, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
+							GameEngineServices.skillEngine().getSkill(npc, 21336, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
 						break;
 					    case ASMODIANS:
 						    //The Asmodians have activated the Beritra Power Generator.
 							sendMsgByRace(1403450, Race.PC_ALL, 0);
 						    sp(802037, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 0); //North Post Flag.
 						    sp(806391, 589.974180f, 407.85278f, 610.20313f, (byte) 0, 3); //North Power Generator.
-							SkillEngine.getInstance().getSkill(npc, 21337, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
+							GameEngineServices.skillEngine().getSkill(npc, 21337, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
 						break;
 					}
 				}
@@ -818,14 +820,14 @@ public class OphidanWarpathInstance extends GeneralInstanceHandler
 							sendMsgByRace(1403449, Race.PC_ALL, 0);
 						    sp(802039, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 0); //South Post Flag.
 						    sp(806392, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 42); //South Power Generator.
-							SkillEngine.getInstance().getSkill(npc, 21336, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
+							GameEngineServices.skillEngine().getSkill(npc, 21336, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
 						break;
 					    case ASMODIANS:
 						    //The Asmodians have activated the Beritra Power Generator.
 							sendMsgByRace(1403450, Race.PC_ALL, 0);
 						    sp(802040, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 0); //South Post Flag.
 						    sp(806392, 605.049130f, 553.60150f, 591.49310f, (byte) 0, 42); //South Idle Power Generator.
-							SkillEngine.getInstance().getSkill(npc, 21337, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
+							GameEngineServices.skillEngine().getSkill(npc, 21337, 1, player).useNoAnimationSkill(); //Shugo Alchemical Enhancement Device.
 						break;
 					}
 				}

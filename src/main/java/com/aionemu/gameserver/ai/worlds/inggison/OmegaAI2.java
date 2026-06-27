@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.inggison;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -77,7 +79,7 @@ public class OmegaAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 18671, 60, getOwner()).useNoAnimationSkill(); //Magic Ward.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18671, 60, getOwner()).useNoAnimationSkill(); //Magic Ward.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

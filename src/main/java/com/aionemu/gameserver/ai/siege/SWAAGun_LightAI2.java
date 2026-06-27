@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.siege;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -59,7 +61,7 @@ public class SWAAGun_LightAI2 extends NpcAI2
 				case 252170:
 				//Empty Aetheric Cannon [Reshanta]
 				case 881981:
-				    SkillEngine.getInstance().getSkill(player, 21517, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(player, 21517, 1, player).useNoAnimationSkill();
 				break;
 			}
 		}

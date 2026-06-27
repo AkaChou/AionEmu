@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -89,7 +91,7 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelBombTaskTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 19412, 1, getOwner()).useNoAnimationSkill(); //Drop The Drana Bomb.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19412, 1, getOwner()).useNoAnimationSkill(); //Drop The Drana Bomb.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

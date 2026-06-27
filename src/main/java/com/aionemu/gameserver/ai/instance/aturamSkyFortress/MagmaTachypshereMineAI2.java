@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -41,7 +43,7 @@ public class MagmaTachypshereMineAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 21804, 60, getOwner()).useNoAnimationSkill(); //Explosion.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21804, 60, getOwner()).useNoAnimationSkill(); //Explosion.
 				startLifeTask();
 			}
 		}, 1000);

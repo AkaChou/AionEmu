@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -128,7 +130,7 @@ public class ProvokerEffect extends ShieldEffect {
 	}
 
 	private void createProvokedEffect(Creature effector, Creature target) {
-		SkillEngine.getInstance().applyEffectDirectly(skillId, effector, target, 0);
+		GameEngineServices.skillEngine().applyEffectDirectly(skillId, effector, target, 0);
 	}
 
 	private Creature getProvokeTarget(ProvokeTarget provokeTarget, Creature effector, Creature target) {

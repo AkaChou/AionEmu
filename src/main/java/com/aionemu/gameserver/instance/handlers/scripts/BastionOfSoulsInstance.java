@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -577,10 +579,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().getSkill(npc, 17649, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost.
+					    GameEngineServices.skillEngine().getSkill(npc, 17649, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost.
 					break;
 					case 2:
-					    SkillEngine.getInstance().getSkill(npc, 17672, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost_2.
+					    GameEngineServices.skillEngine().getSkill(npc, 17672, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost_2.
 					break;
 				}
 			break;

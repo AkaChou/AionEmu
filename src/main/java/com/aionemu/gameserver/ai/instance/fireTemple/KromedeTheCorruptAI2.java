@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.fireTemple;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -96,7 +98,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 17056, 1, getOwner()).useNoAnimationSkill(); //Miserably Struggle.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 17056, 1, getOwner()).useNoAnimationSkill(); //Miserably Struggle.
 				}
 			}
 		}, 3000, 10000);
@@ -109,7 +111,7 @@ public class KromedeTheCorruptAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 16674, 1, getOwner()).useNoAnimationSkill(); //Guilty Verdict.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 16674, 1, getOwner()).useNoAnimationSkill(); //Guilty Verdict.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

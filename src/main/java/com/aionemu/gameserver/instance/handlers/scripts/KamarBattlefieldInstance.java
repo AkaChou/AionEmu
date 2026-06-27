@@ -751,17 +751,17 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 			case 701909: //Kamar Tank Elyos.
 			case 701912: //Kamar Tank Elyos.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21403, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21403, 1, player).useNoAnimationSkill();
 			break;
 			case 701910: //Kamar Tank Asmodians.
 			case 701911: //Kamar Tank Asmodians.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21404, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21404, 1, player).useNoAnimationSkill();
 			break;
 			case 701806: //Kamar Cannon.
             case 701902: //Kamar Cannon.
                 despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21409, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21409, 1, player).useNoAnimationSkill();
             break;
         }
         updateScore(player, npc, point, false);

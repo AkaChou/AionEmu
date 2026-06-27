@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.idgelDome;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -77,7 +79,7 @@ public class IdgelDomeFireAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelEventTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 20070, 1, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20070, 1, getOwner()).useNoAnimationSkill();
 				}
 			}
 		}, 1000, 1000);

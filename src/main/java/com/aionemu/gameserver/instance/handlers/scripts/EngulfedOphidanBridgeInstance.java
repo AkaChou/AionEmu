@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -849,7 +851,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
                 if (player.getInventory().decreaseByItemId(164000277, 1)) { //Power Breaker.
 				    //You've used one Power Breaker.
 					sendMsgByRace(1402010,  Race.PC_ALL, 1000);
-					SkillEngine.getInstance().getSkill(player, 21065, 1, player).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(player, 21065, 1, player).useNoAnimationSkill();
 			    } else {
 					//You need a Power Breaker.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402006));
@@ -860,7 +862,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
                 if (player.getInventory().decreaseByItemId(164000277, 1)) { //Power Breaker.
 				    //You've used one Power Breaker.
 					sendMsgByRace(1402010,  Race.PC_ALL, 1000);
-					SkillEngine.getInstance().getSkill(player, 21066, 1, player).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(player, 21066, 1, player).useNoAnimationSkill();
 			    } else {
 					//You need a Power Breaker.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402006));

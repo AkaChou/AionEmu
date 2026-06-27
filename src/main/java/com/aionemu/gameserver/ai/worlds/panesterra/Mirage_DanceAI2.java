@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.panesterra;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -90,7 +92,7 @@ public class Mirage_DanceAI2 extends NpcAI2
 	
 	protected void handleUseItemFinish(Player player) {
 		artifactCasting();
-		SkillEngine.getInstance().getSkill(getOwner(), 21746, 1, getOwner()).useNoAnimationSkill(); //Mirage Dance.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21746, 1, getOwner()).useNoAnimationSkill(); //Mirage Dance.
 	}
 	
 	@Override

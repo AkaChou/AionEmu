@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.illuminaryObelisk;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -277,7 +279,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			case 702022: //Danuar Cannon.
 			case 702023: //Danuar Cannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21511, 60, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21511, 60, player).useNoAnimationSkill();
 			break;
 		}
 	}

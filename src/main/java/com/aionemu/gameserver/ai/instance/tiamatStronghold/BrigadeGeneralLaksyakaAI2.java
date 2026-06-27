@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -167,7 +169,7 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 			}
 		}
 		Player player = !players.isEmpty() ? players.get(Rnd.get(players.size())) : null;
-		SkillEngine.getInstance().applyEffectDirectly(20865, tiamatEye, player, 30000); //Body Snatch.
+		GameEngineServices.skillEngine().applyEffectDirectly(20865, tiamatEye, player, 30000); //Body Snatch.
 	}
 	
 	private List<Player> getLifedPlayers() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -40,7 +42,7 @@ public class Jotun_GruntAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		SkillEngine.getInstance().getSkill(getOwner(), 23014, 60, getOwner()).useNoAnimationSkill(); //Sacrificial Rite.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 23014, 60, getOwner()).useNoAnimationSkill(); //Sacrificial Rite.
 		startLifeTask();
 	}
 	

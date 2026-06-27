@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.steelRake;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
@@ -47,7 +49,7 @@ public class Main_Deck_Mobile_CannonAI2 extends ActionItemNpcAI2
 		WorldPosition worldPosition = player.getPosition();
 		if (worldPosition.isInstanceMap()) {
 			if (worldPosition.getMapId() == 300100000) {
-				SkillEngine.getInstance().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); //Destroy Seal.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21126, 60, getOwner()).useNoAnimationSkill(); //Destroy Seal.
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {

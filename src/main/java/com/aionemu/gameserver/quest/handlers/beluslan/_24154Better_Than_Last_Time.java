@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.beluslan;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -37,7 +39,7 @@ public class _24154Better_Than_Last_Time extends QuestHandler {
     public _24154Better_Than_Last_Time() {
         super(questId);
     }
-	
+
     @Override
     public void register() {
 		qe.registerOnDie(questId);
@@ -46,13 +48,13 @@ public class _24154Better_Than_Last_Time extends QuestHandler {
 		qe.registerQuestItem(182215463, questId);
         qe.registerOnMovieEndQuest(249, questId);
         qe.registerOnMovieEndQuest(250, questId);
-    	qe.registerQuestNpc(204774).addOnQuestStart(questId); //Tristran
+	qe.registerQuestNpc(204774).addOnQuestStart(questId); //Tristran
         qe.registerQuestNpc(204774).addOnTalkEvent(questId); //Tristran
         qe.registerQuestNpc(204809).addOnTalkEvent(questId); //Stua
         qe.registerQuestNpc(700349).addOnKillEvent(questId); //Research Center Power Generator
 		qe.registerQuestNpc(700359).addOnTalkEvent(questId); //Secret Port Entrance
     }
-	
+
     @Override
     public boolean onDialogEvent(final QuestEnv env) {
         final Player player = env.getPlayer();
@@ -60,100 +62,100 @@ public class _24154Better_Than_Last_Time extends QuestHandler {
 		int targetId = env.getTargetId();
         if (qs == null || qs.getStatus() == QuestStatus.NONE) {
             if (targetId == 204774) { //Tristran
-            	switch (env.getDialog()) {
-        			case START_DIALOG: {
-        				return sendQuestDialog(env, 4762);
-        			} case ASK_ACCEPTION: {
-        				return sendQuestDialog(env, 4);
-        			} case ACCEPT_QUEST: {
-        				playQuestMovie(env, 249);
-        				return sendQuestStartDialog(env);
-        			} case REFUSE_QUEST: {
-        				return sendQuestDialog(env, 1004);
-        			}
-            	}
+	switch (env.getDialog()) {
+			case START_DIALOG: {
+				return sendQuestDialog(env, 4762);
+			} case ASK_ACCEPTION: {
+				return sendQuestDialog(env, 4);
+			} case ACCEPT_QUEST: {
+				playQuestMovie(env, 249);
+				return sendQuestStartDialog(env);
+			} case REFUSE_QUEST: {
+				return sendQuestDialog(env, 1004);
+			}
+	}
             }
         }
         if (qs == null) {
 		    return false;
-		} 
+		}
         else if (qs.getStatus() == QuestStatus.START) {
-           int var = qs.getQuestVarById(0); 
+           int var = qs.getQuestVarById(0);
             switch (targetId) {
-            	case 204809: { //Stua
+	case 204809: { //Stua
                 if (var == 1) {
-            		switch (env.getDialog()) {
-            			case START_DIALOG: {
-            				return sendQuestDialog(env, 1352);
-            			 }   
+		switch (env.getDialog()) {
+			case START_DIALOG: {
+				return sendQuestDialog(env, 1352);
+			 }
                          case SELECT_ACTION_1353: {
                             giveQuestItem(env, 182215463, 1);
-            				giveQuestItem(env, 185000006, 1);  
-            				return sendQuestDialog(env, 1353);
-                         } 
+				giveQuestItem(env, 185000006, 1);
+				return sendQuestDialog(env, 1353);
+                         }
                          case STEP_TO_2: {
-            				qs.setQuestVar(2);
-            				updateQuestStatus(env);
-            				SkillEngine.getInstance().applyEffectDirectly(267, player, player, (350 * 1000));
-            				return closeDialogWindow(env);
+				qs.setQuestVar(2);
+				updateQuestStatus(env);
+				GameEngineServices.skillEngine().applyEffectDirectly(267, player, player, (350 * 1000));
+				return closeDialogWindow(env);
                             }
-            			}
-            		}
+			}
+		}
                     return false;
-            	}
+	}
                 case 700359: { //Secret Port Entrance
-            		if (env.getDialog() == QuestDialog.USE_OBJECT && var == 2) {
-            			return playQuestMovie(env, 250);
-            		}
-            	}
+		if (env.getDialog() == QuestDialog.USE_OBJECT && var == 2) {
+			return playQuestMovie(env, 250);
+		}
+	}
             }
         }
         else if (qs.getStatus() == QuestStatus.REWARD) {
-        	if (targetId == 204774) { // Tristran
-    			if (env.getDialog() == QuestDialog.USE_OBJECT) {
-    				return sendQuestDialog(env, 10002);
-    			} else {
-    				return sendQuestEndDialog(env);
-    			}
-        	}
+	if (targetId == 204774) { // Tristran
+			if (env.getDialog() == QuestDialog.USE_OBJECT) {
+				return sendQuestDialog(env, 10002);
+			} else {
+				return sendQuestEndDialog(env);
+			}
+	}
         }
         return false;
     }
-	
+
     @Override
     public boolean onMovieEndEvent(QuestEnv env, int movieId) {
         final Player player = env.getPlayer();
         final QuestState qs = player.getQuestStateList().getQuestState(questId);
-       	if (qs != null && qs.getStatus() == QuestStatus.START) {
+	if (qs != null && qs.getStatus() == QuestStatus.START) {
             if (movieId == 249) {
                changeQuestStep(env, 0, 1, false);
             }
-    		if (movieId == 250) {
-    			TeleportService2.teleportTo(player, 220040000, 2452f, 2471f, 673f, (byte) 28);
+		if (movieId == 250) {
+			TeleportService2.teleportTo(player, 220040000, 2452f, 2471f, 673f, (byte) 28);
                 changeQuestStep(env, 2, 3, false);
                 return true;
-    		}
+		}
         }
 		return false;
     }
-	
+
     @Override
     public boolean onKillEvent(QuestEnv env) {
         return defaultOnKillEvent(env, 700349, 3, 4); //Research Center Power Generator
     }
-	
+
     @Override
     public HandlerResult onItemUseEvent(final QuestEnv env, Item item) {
         final Player player = env.getPlayer();
         if (item.getItemId() != 182215463) {
             return HandlerResult.UNKNOWN;
         } if (player.isInsideZone(ZoneName.get("DF3_ITEMUSEAREA_Q2058"))) {
-              player.getEffectController().removeEffect(267); 
+              player.getEffectController().removeEffect(267);
             return HandlerResult.fromBoolean(useQuestItem(env, item, 4, 4, true, 251));
         }
         return HandlerResult.FAILED;
     }
-    
+
     @Override
     public boolean onDieEvent(QuestEnv env) {
         final Player player = env.getPlayer();
@@ -168,7 +170,7 @@ public class _24154Better_Than_Last_Time extends QuestHandler {
         }
         return false;
     }
-	
+
     @Override
     public boolean onLogOutEvent(QuestEnv env) {
         final Player player = env.getPlayer();
@@ -182,7 +184,7 @@ public class _24154Better_Than_Last_Time extends QuestHandler {
         }
         return false;
     }
-	
+
     @Override
     public boolean onEnterWorldEvent(QuestEnv env) {
         final Player player = env.getPlayer();

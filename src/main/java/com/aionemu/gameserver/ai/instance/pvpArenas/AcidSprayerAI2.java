@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.pvpArenas;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -66,7 +68,7 @@ public class AcidSprayerAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelEventTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 20400, 1, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20400, 1, getOwner()).useNoAnimationSkill();
 				}
 			}
 		}, 1000, 1000);

@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.bare_truth;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -125,7 +127,7 @@ public class _14030Retrieved_Memory extends QuestHandler
                         } case STEP_TO_5: {
                             if (var == 4) {
                                 removeQuestItem(env, 182215387, 1);
-                                SkillEngine.getInstance().applyEffectDirectly(281, player, player, 0);
+                                GameEngineServices.skillEngine().applyEffectDirectly(281, player, player, 0);
                                 player.setState(CreatureState.FLIGHT_TELEPORT);
                                 player.unsetState(CreatureState.ACTIVE);
                                 player.setFlightTeleportId(1001);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.actions.NpcActions;
@@ -72,7 +74,7 @@ public class ElementisForestInstance extends GeneralInstanceHandler {
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 			case 282440:
-				SkillEngine.getInstance().getSkill(npc, 19402, 60, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 19402, 60, player).useNoAnimationSkill();
 				npc.getController().onDelete();
 				break;
 			case 799637:
@@ -81,11 +83,11 @@ public class ElementisForestInstance extends GeneralInstanceHandler {
 			case 799643:
 			case 799645:
 			case 799647:
-				SkillEngine.getInstance().getSkill(npc, 19692, 60, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 19692, 60, player).useNoAnimationSkill();
 				npc.getController().onDelete();
 				break;
 			case 282308:
-				SkillEngine.getInstance().getSkill(npc, 19517, 40, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 19517, 40, player).useNoAnimationSkill();
 				WorldPosition p = npc.getPosition();
 				if (p != null && p.getWorldMapInstance() != null) {
 					spawn(282441, p.getX(), p.getY(), p.getZ(), p.getHeading());

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -86,7 +88,7 @@ public class NochsanaTrainingCampInstance extends GeneralInstanceHandler
 		switch(npc.getNpcId()) {
 			case 700437: //Nochsana Artifact.
 				//sendMsg("You win effect <Shield Of Compassion>");
-				SkillEngine.getInstance().getSkill(npc, 276, 10, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 276, 10, player).useNoAnimationSkill();
 			break;
 		}
 	}

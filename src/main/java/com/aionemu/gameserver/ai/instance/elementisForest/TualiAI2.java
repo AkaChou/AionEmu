@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -57,7 +59,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						SkillEngine.getInstance().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
 						int size = getPosition().getWorldMapInstance().getNpcs(282308).size();
 						for (int i = 0; i < 6; i++) {
 							if (size >= 12) {
@@ -94,7 +96,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void buff() {
-		SkillEngine.getInstance().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500456, getObjectId(), true, 0, 0);
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 1401041, 3500);
 	}

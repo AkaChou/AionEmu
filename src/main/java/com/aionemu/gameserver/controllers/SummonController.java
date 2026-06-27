@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -171,7 +173,7 @@ public class SummonController extends CreatureController<Summon> {
 			// hackers!)
 			return;
 		}
-		Skill skill = SkillEngine.getInstance().getSkill(creature, skillId, 1, target);
+		Skill skill = GameEngineServices.skillEngine().getSkill(creature, skillId, 1, target);
 		if (skill != null) {
 			// If skill succeeds, handle automatic release if expected
 			if (skill.useSkill() && skillId == releaseAfterSkill) {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -88,20 +90,20 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			case ELYOS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
 					break;
 					case 2:
-					    SkillEngine.getInstance().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
 					break;
 				}
 			break;
 			case ASMODIANS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
 					break;
 					case 2:
-					    SkillEngine.getInstance().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
 					break;
 				}
 			break;
@@ -490,20 +492,20 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			case ELYOS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
 					break;
 					case 2:
-					    SkillEngine.getInstance().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
 					break;
 				}
 			break;
 			case ASMODIANS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
 					break;
 					case 2:
-					    SkillEngine.getInstance().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
 					break;
 				}
 			break;

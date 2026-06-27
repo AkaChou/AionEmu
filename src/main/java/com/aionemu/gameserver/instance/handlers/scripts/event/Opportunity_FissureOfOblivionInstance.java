@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.event;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -806,7 +808,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
            spawnByPlayerLevel(player);
            spawned = true;
         }
-        SkillEngine.getInstance().applyEffectDirectly(4831, player, player, 1800000 * 1);
+        GameEngineServices.skillEngine().applyEffectDirectly(4831, player, player, 1800000 * 1);
     }
     
     private void startPrepareTimer() {

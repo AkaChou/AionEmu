@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.housing;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.controllers.observer.GaleCycloneObserver;
@@ -45,7 +47,7 @@ public class GaleCycloneAI2 extends NpcAI2
 				@Override
 				public void onMove() {
 					if (!blocked) {
-						SkillEngine.getInstance().getSkill(getOwner(), 20528, 50, player).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), 20528, 50, player).useNoAnimationSkill();
 					}
 				}
 			};

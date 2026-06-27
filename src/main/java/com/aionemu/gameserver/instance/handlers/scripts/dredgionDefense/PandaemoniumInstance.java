@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgionDefense;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -400,7 +402,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 220780: //Boardable Pandaemonium Defense Turret.
 				despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
+				GameEngineServices.skillEngine().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
 			break;
 			case 220783: //Turret Generator.
 				sp(221022, 2244.9700f, 1277.0400f, 187.97000f, (byte) 0, 239, 2000, 0, null);

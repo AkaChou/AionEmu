@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -38,7 +40,7 @@ public class Fiery_TyphonAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		SkillEngine.getInstance().getSkill(getOwner(), 23035, 60, getOwner()).useNoAnimationSkill(); //Typhons Pollutant.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 23035, 60, getOwner()).useNoAnimationSkill(); //Typhons Pollutant.
 		startLifeTask();
 	}
 	

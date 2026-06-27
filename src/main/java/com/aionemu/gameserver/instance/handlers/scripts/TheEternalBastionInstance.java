@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -357,11 +359,11 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 701625: //Lysander's Siege Cannon.
 				despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21065, 60, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21065, 60, player).useNoAnimationSkill();
 			break;
 			case 701922: //Granir's Siege Cannon.
 				despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21066, 60, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21066, 60, player).useNoAnimationSkill();
 			break;
 		}
 	}

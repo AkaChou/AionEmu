@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.esoterrace;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -52,7 +54,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 	private void startTaskEvent() {
 		VisibleObject target = getTarget();
 		if (target != null && target instanceof Player) {
-			SkillEngine.getInstance().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
 		}
 		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -62,7 +64,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 				} else {
 					//I'll get rid of the cursed ones first!
 					sendMsg(1500193, getObjectId(), false, 0);
-					SkillEngine.getInstance().getSkill(getOwner(), 19325, 1, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19325, 1, getOwner()).useNoAnimationSkill();
 					if (getLifeStats().getHpPercentage() <= 50) {
 						specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
@@ -72,7 +74,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 									sendMsg(1500193, getObjectId(), false, 0);
 									VisibleObject target = getTarget();
 									if (target != null && target instanceof Player) {
-										SkillEngine.getInstance().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
+										GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
 									}
 									specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 										@Override
@@ -80,7 +82,7 @@ public class Captain_MuruganAI2 extends AggressiveNpcAI2
 											if (!isAlreadyDead()) {
 												VisibleObject target = getTarget();
 												if (target != null && target instanceof Player) {
-													SkillEngine.getInstance().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
+													GameEngineServices.skillEngine().getSkill(getOwner(), 19324, 1, target).useNoAnimationSkill();
 												}
 											}
 										}

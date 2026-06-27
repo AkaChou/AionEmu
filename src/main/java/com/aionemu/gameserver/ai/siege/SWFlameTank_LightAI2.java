@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.siege;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -76,7 +78,7 @@ public class SWFlameTank_LightAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
-		SkillEngine.getInstance().applyEffectDirectly(21085, player, player, 3600000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(21085, player, player, 3600000 * 1);
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}

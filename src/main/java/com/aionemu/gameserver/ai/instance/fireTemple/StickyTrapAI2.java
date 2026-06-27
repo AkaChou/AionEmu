@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.fireTemple;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -41,7 +43,7 @@ public class StickyTrapAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 16675, 10, getOwner()).useNoAnimationSkill(); //Strong Contrary Wind.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 16675, 10, getOwner()).useNoAnimationSkill(); //Strong Contrary Wind.
 				startLifeTask();
 			}
 		}, 1000);

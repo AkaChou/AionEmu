@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.trialsOfEternity;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -38,7 +40,7 @@ public class Obelisk_Of_GaneshAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		SkillEngine.getInstance().getSkill(getOwner(), 17746, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 17746, 60, getOwner()).useNoAnimationSkill();
 	}
 	
 	@Override

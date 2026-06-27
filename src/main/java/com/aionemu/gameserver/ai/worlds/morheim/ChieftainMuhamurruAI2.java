@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.morheim;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -61,7 +63,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 19660, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19660, 60, getOwner()).useNoAnimationSkill();
 					sendMsg(1500398);
 					startEvent(2000, 1500399, 19661);
 					startEvent(6000, 1500399, 19661);
@@ -83,7 +85,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 							target = (Creature) npcTarget;
 						}
 					} if (target != null && isInRange(target, 5)) {
-						SkillEngine.getInstance().getSkill(getOwner(), skill, 60, target).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), skill, 60, target).useNoAnimationSkill();
 					}
 					getEffectController().removeEffect(19660);
 					sendMsg(msg);

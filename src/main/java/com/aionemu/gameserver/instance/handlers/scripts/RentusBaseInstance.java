@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -280,7 +282,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			case 702681: //Rentus Siege Weapon.
 			case 702682: //Rentus Siege Weapon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21806, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
+				GameEngineServices.skillEngine().getSkill(npc, 21806, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
 			break;
 			case 702683: //Rentus Siege Weapon.
 			case 702684: //Rentus Siege Weapon.
@@ -289,7 +291,7 @@ public class RentusBaseInstance extends GeneralInstanceHandler
 			case 702687: //Rentus Siege Weapon.
 			case 702688: //Rentus Siege Weapon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21805, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
+				GameEngineServices.skillEngine().getSkill(npc, 21805, 60, player).useNoAnimationSkill(); //Mount Anti-Aircraft Gun.
 			break;
 			case 701151: //Reian Combat Ration.
 			case 701152: //Reian Emergency Rations.

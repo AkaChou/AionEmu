@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.siege;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -76,7 +78,7 @@ public class Ab1_1011_Outside_Tank_LiAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
-		SkillEngine.getInstance().applyEffectDirectly(21592, player, player, 7200000 * 1); //Board The Weapon.
+		GameEngineServices.skillEngine().applyEffectDirectly(21592, player, player, 7200000 * 1); //Board The Weapon.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -80,11 +82,11 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					SkillEngine.getInstance().getSkill(getOwner(), 19691, 1, getTarget()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19691, 1, getTarget()).useNoAnimationSkill();
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
-							SkillEngine.getInstance().getSkill(getOwner(), 17954, 10, getTarget()).useNoAnimationSkill();
+							GameEngineServices.skillEngine().getSkill(getOwner(), 17954, 10, getTarget()).useNoAnimationSkill();
 						}
 					}, 4000);
 				}
@@ -96,7 +98,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 		eventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 19624, 10, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19624, 10, getOwner()).useNoAnimationSkill();
 			}
 		}, 180 * 1000);
 	}
@@ -108,7 +110,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelTasks();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 17951, 10, getTarget()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 17951, 10, getTarget()).useNoAnimationSkill();
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -123,7 +125,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 									break;
 								}
 								spawnBabyConsierd(players.get(Rnd.get(players.size())));
-								SkillEngine.getInstance().getSkill(getOwner(), 17952, 10, getTarget()).useNoAnimationSkill();
+								GameEngineServices.skillEngine().getSkill(getOwner(), 17952, 10, getTarget()).useNoAnimationSkill();
 							}
 						}
 					}
@@ -173,7 +175,7 @@ public class KingConsierdAI2 extends AggressiveNpcAI2
 				if (percent == 75) {
 					startSkillTask();
 				} else if (percent == 25) {
-					SkillEngine.getInstance().getSkill(getOwner(), 19690, 1, getTarget()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19690, 1, getTarget()).useNoAnimationSkill();
 				}
 				break;
 			}

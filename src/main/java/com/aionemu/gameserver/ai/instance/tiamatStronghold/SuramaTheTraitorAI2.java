@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
@@ -45,13 +47,13 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		super.handleSpawned();
 		moveToRaksha();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 390845, getOwner().getObjectId(), 0, 2000);
 	}
-	
+
 	private void moveToRaksha() {
 		setStateIfNot(AIState.WALKING);
 		getOwner().setState(1);
@@ -60,11 +62,11 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 		    @Override
 		    public void run() {
-		  	    startDialog();
+			    startDialog();
 		    }
 	    }, 10000);
 	}
-	
+
 	private void startDialog() {
 		final Npc laksyaka = getPosition().getWorldMapInstance().getNpc(219356); //Brigade General Laksyaka.
 		NpcShoutsService.getInstance().sendMsg(getOwner(), 390841, getOwner().getObjectId(), 0, 0);
@@ -73,11 +75,11 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 		    @Override
 		    public void run() {
-		  	    WorldMapInstance instance = getPosition().getWorldMapInstance();
-		  	    laksyaka.setTarget(getOwner());
-		  	    SkillEngine.getInstance().getSkill(laksyaka, 20952, 60, getOwner()).useNoAnimationSkill();
-		  	    laksyaka.setNpcType(NpcType.ATTACKABLE);
-		  	    for (Player player: instance.getPlayersInside()) {
+			    WorldMapInstance instance = getPosition().getWorldMapInstance();
+			    laksyaka.setTarget(getOwner());
+			    GameEngineServices.skillEngine().getSkill(laksyaka, 20952, 60, getOwner()).useNoAnimationSkill();
+			    laksyaka.setNpcType(NpcType.ATTACKABLE);
+			    for (Player player: instance.getPlayersInside()) {
 					if (MathUtil.isIn3dRange(player, laksyaka, 100)) {
 						player.clearKnownlist();
 						player.updateKnownlist();

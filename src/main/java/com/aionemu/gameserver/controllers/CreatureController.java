@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
@@ -465,7 +467,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	public boolean useSkill(int skillId, int skillLevel) {
 		try {
 			Creature creature = getOwner();
-			Skill skill = SkillEngine.getInstance().getSkill(creature, skillId, skillLevel, creature.getTarget());
+			Skill skill = GameEngineServices.skillEngine().getSkill(creature, skillId, skillLevel, creature.getTarget());
 			if (skill != null) {
 				return skill.useSkill();
 			}

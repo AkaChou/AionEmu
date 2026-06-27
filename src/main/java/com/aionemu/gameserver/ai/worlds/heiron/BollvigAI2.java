@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.heiron;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveFirstSkillAI2;
@@ -163,7 +165,7 @@ public class BollvigAI2 extends AggressiveFirstSkillAI2
 	}
 	
 	private void useSkill(int skillId) {
-		SkillEngine.getInstance().getSkill(getOwner(), skillId, 50, getTarget()).useSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 50, getTarget()).useSkill();
 	}
 	
 	private void addPercent() {

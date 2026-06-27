@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -265,7 +267,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			break;
 			case 703425: //Door Activator.
 				doors.get(19).setOpen(true);
-				SkillEngine.getInstance().applyEffectDirectly(17619, player, player, 900000 * 1); //Shabby Kumuki Transformation.
+				GameEngineServices.skillEngine().applyEffectDirectly(17619, player, player, 900000 * 1); //Shabby Kumuki Transformation.
 			break;
 			case 703426: //Door Activator.
 				doors.get(3).setOpen(true);
@@ -277,13 +279,13 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				doors.get(2).setOpen(true);
 			break;
 			case 835026: //Suspicious Wagon.
-				//SkillEngine.getInstance().getSkill(npc, 16973, 60, player).useNoAnimationSkill(); //Riding A Wagon.
+				//GameEngineServices.skillEngine().getSkill(npc, 16973, 60, player).useNoAnimationSkill(); //Riding A Wagon.
 			break;
 			case 835028: //Suspicious Basket.
-				//SkillEngine.getInstance().getSkill(npc, 16974, 60, player).useNoAnimationSkill(); //In Basket Camouflage.
+				//GameEngineServices.skillEngine().getSkill(npc, 16974, 60, player).useNoAnimationSkill(); //In Basket Camouflage.
 			break;
 			case 835071: //Suspicious Ginseng Snack.
-			    SkillEngine.getInstance().applyEffectDirectly(17623, player, player, 4000 * 1); //Ginseng Transformation.
+			    GameEngineServices.skillEngine().applyEffectDirectly(17623, player, player, 4000 * 1); //Ginseng Transformation.
 			break;
 		}
 	}

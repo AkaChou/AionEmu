@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.IDAb1_Heroes;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -89,7 +91,7 @@ public class IDAb1_Heroes_Boss_73_AhAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 18100, 60, getOwner()).useNoAnimationSkill(); //IDAb1_Heroes_Boss_Shield_Summon.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18100, 60, getOwner()).useNoAnimationSkill(); //IDAb1_Heroes_Boss_Shield_Summon.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

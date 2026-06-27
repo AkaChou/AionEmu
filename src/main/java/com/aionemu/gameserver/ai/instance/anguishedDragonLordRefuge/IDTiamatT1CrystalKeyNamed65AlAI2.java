@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.anguishedDragonLordRefuge;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -97,7 +99,7 @@ public class IDTiamatT1CrystalKeyNamed65AlAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 20159, 60, getOwner()).useNoAnimationSkill(); //Petrification Crystal.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20159, 60, getOwner()).useNoAnimationSkill(); //Petrification Crystal.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

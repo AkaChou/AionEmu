@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -81,7 +83,7 @@ public class Cruel_LamiaAI2 extends AggressiveNpcAI2
 				} else {
 					getOwner().getController().cancelCurrentSkill();
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500230, getObjectId(), 0, 0);
-					SkillEngine.getInstance().getSkill(getOwner(), 19551, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19551, 60, getOwner()).useNoAnimationSkill();
 				}
 			}
 		}, 3000, 15000);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -58,7 +60,7 @@ public class SacrificialSoulAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleMoveArrived() {
 		if (boss != null && !NpcActions.isAlreadyDead(boss)) {
-			SkillEngine.getInstance().getSkill(getOwner(), 18960, 55, boss).useNoAnimationSkill(); //Call Of The Grave.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 18960, 55, boss).useNoAnimationSkill(); //Call Of The Grave.
 			AI2Actions.deleteOwner(this);
 		}
 	}

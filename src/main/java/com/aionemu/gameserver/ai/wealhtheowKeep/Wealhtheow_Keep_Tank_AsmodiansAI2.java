@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.wealhtheowKeep;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -76,7 +78,7 @@ public class Wealhtheow_Keep_Tank_AsmodiansAI2 extends NpcAI2
 	}
 	
 	protected void handleUseItemFinish(Player player) {
-		SkillEngine.getInstance().applyEffectDirectly(21593, player, player, 3600000 * 1); //Board The Weapon.
+		GameEngineServices.skillEngine().applyEffectDirectly(21593, player, player, 3600000 * 1); //Board The Weapon.
 		AI2Actions.deleteOwner(this);
 		AI2Actions.scheduleRespawn(this);
 	}

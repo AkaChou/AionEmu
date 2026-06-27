@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.heiron;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -142,7 +144,7 @@ public class _14153A_Storm_Of_Vengeance extends QuestHandler {
         }
         qs.setQuestVar(3);
         updateQuestStatus(env);
-        SkillEngine.getInstance().applyEffectDirectly(10217, player, player, 15000);
+        GameEngineServices.skillEngine().applyEffectDirectly(10217, player, player, 15000);
         return true;
     }
 	

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.agentFight;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.Race;
@@ -176,8 +178,8 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 			@Override
 			public void visit(Player player) {
 				if (player.getCommonData().getRace() == Race.ELYOS) {
-				    SkillEngine.getInstance().applyEffectDirectly(12119, player, player, 0); //Veille's Energy.
-					SkillEngine.getInstance().applyEffectDirectly(20410, player, player, 0); //Victory Salute.
+				    GameEngineServices.skillEngine().applyEffectDirectly(12119, player, player, 0); //Veille's Energy.
+					GameEngineServices.skillEngine().applyEffectDirectly(20410, player, player, 0); //Victory Salute.
 				}
 			}
 		});

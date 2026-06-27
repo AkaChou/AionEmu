@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ public class CuringZoneService {
 						public void visit(Player player) {
 							if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
 									&& (!player.getEffectController().hasAbnormalEffect(8751))) {
-								SkillEngine.getInstance().getSkill(player, 8751, 1, player).useNoAnimationSkill();
+								GameEngineServices.skillEngine().getSkill(player, 8751, 1, player).useNoAnimationSkill();
 							}
 						}
 					});

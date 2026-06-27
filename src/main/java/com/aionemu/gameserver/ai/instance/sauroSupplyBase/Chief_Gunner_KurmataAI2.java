@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -47,8 +49,8 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 21194, 1, getOwner()).useNoAnimationSkill(); //Iron Guardian.
-		SkillEngine.getInstance().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21194, 1, getOwner()).useNoAnimationSkill(); //Iron Guardian.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
 	}
 	
 	@Override
@@ -77,7 +79,7 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			SkillEngine.getInstance().getSkill(getOwner(), 20701, 60, getOwner()).useNoAnimationSkill(); //Blessing of Blood.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20701, 60, getOwner()).useNoAnimationSkill(); //Blessing of Blood.
 		}
 	}
 	
@@ -86,7 +88,7 @@ public class Chief_Gunner_KurmataAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			SkillEngine.getInstance().getSkill(getOwner(), 20858, 60, getOwner()).useNoAnimationSkill(); //Thunder Crash Fallout.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20858, 60, getOwner()).useNoAnimationSkill(); //Thunder Crash Fallout.
 			scheduleDelayStage2(delay);
 		}
 	}

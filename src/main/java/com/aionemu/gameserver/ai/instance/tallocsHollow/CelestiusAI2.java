@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tallocsHollow;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -70,7 +72,7 @@ public class CelestiusAI2 extends AggressiveNpcAI2
 					cancelHelpersTask();
 				} else {
 					deleteHelpers();
-					SkillEngine.getInstance().getSkill(getOwner(), 18981, 44, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18981, 44, getOwner()).useNoAnimationSkill();
 					startCelestiusRushEvent();
 				}
 			}

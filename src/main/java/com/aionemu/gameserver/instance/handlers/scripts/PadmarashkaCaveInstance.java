@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -74,7 +76,7 @@ public class PadmarashkaCaveInstance extends GeneralInstanceHandler
 		Npc npc = instance.getNpc(218756); //Padmarashka.
 		if (npc != null) {
 			npc.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-			SkillEngine.getInstance().getSkill(npc, 19186, 60, npc).useNoAnimationSkill(); //Protective Slumber.
+			GameEngineServices.skillEngine().getSkill(npc, 19186, 60, npc).useNoAnimationSkill(); //Protective Slumber.
 		}
 	}
 	

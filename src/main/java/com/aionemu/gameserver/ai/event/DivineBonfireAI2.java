@@ -58,7 +58,7 @@ public class DivineBonfireAI2 extends GeneralNpcAI2 {
         if (dialogId == 10000) {
 
             //
-            SkillEngine.getInstance().getSkill(getOwner(), 21493, 1, player).useWithoutPropSkill();
+            GameEngineServices.skillEngine().getSkill(getOwner(), 21493, 1, player).useWithoutPropSkill();
         } else if (dialogId == QuestDialog.START_DIALOG.id() && questId != 0) {
             PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
         }

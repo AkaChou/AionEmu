@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -51,11 +53,11 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 	private boolean isFinalBuff;
 	private boolean isGravityEvent;
 	private boolean canThink = true;
-	
+
 	private AtomicBoolean isHome = new AtomicBoolean(true);
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
 	private List<Integer> percents = new ArrayList<Integer>();
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -71,7 +73,7 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 		}
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void startSkillTask() {
 		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
@@ -84,24 +86,24 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 			}
 		}, 5000, 30000);
 	}
-	
+
 	private void cancelskillTask() {
 		if (skillTask != null && !skillTask.isCancelled()) {
 			skillTask.cancel(true);
 		}
 	}
-	
+
 	private void gravityDistortionEvent() {
-		SkillEngine.getInstance().getSkill(getOwner(), 20739, 55, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20739, 55, getOwner()).useNoAnimationSkill();
 			spawn(283096, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0);
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-	  		@Override
-	  		public void run() {
-	  			SkillEngine.getInstance().getSkill(getOwner(), 20741, 55, getOwner()).useNoAnimationSkill();
-	  		}
-	  	}, 5000);
+			@Override
+			public void run() {
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20741, 55, getOwner()).useNoAnimationSkill();
+			}
+		}, 5000);
 	}
-	
+
 	private synchronized void checkPercentage(int hpPercentage) {
 		for (Integer percent : percents) {
 			if (hpPercentage <= percent && !isGravityEvent) {
@@ -111,37 +113,37 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 				cancelskillTask();
 				spawn(283158, 1056.8f, 297.6f, 409.9f, (byte) 0);
 				spawn(283158, 1002.07f, 297.4f, 409.85f, (byte) 0);
-				SkillEngine.getInstance().getSkill(getOwner(), 20737, 55, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20737, 55, getOwner()).useNoAnimationSkill();
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				  	@Override
-				  	public void run() {
-				  		EmoteManager.emoteStopAttacking(getOwner());
-				  		setStateIfNot(AIState.WALKING);
-				  		getOwner().getMoveController().moveToPoint(getOwner().getSpawn().getX(), getOwner().getSpawn().getY(), getOwner().getSpawn().getZ());
-				  		WalkManager.startWalking(BrigadeGeneralTerathAI2.this);
+					@Override
+					public void run() {
+						EmoteManager.emoteStopAttacking(getOwner());
+						setStateIfNot(AIState.WALKING);
+						getOwner().getMoveController().moveToPoint(getOwner().getSpawn().getX(), getOwner().getSpawn().getY(), getOwner().getSpawn().getZ());
+						WalkManager.startWalking(BrigadeGeneralTerathAI2.this);
 						getOwner().setState(1);
 						PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
-				  	}
+					}
 			    }, 4000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
-				  		spawn(283109, 1029.93f, 297.31f, 409.08f, (byte) 0);
+						spawn(283109, 1029.93f, 297.31f, 409.08f, (byte) 0);
 						spawn(283110, 1029.9f, 297.26f, 409.08f, (byte) 0);
-				  	}
+					}
 				}, 10000);
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				  	@Override
-				  	public void run() {
-				  		WorldMapInstance instance = getPosition().getWorldMapInstance();
-				  		deleteNpcs(instance.getNpcs(283158));
-				  		deleteNpcs(instance.getNpcs(283109));
+					@Override
+					public void run() {
+						WorldMapInstance instance = getPosition().getWorldMapInstance();
+						deleteNpcs(instance.getNpcs(283158));
+						deleteNpcs(instance.getNpcs(283109));
 						deleteNpcs(instance.getNpcs(283110));
-				  		getEffectController().removeEffect(20737);
-				  		canThink = true;
-				  		isGravityEvent = false;
-				  		startSkillTask();
-				  		Creature creature = getAggroList().getMostHated();
+						getEffectController().removeEffect(20737);
+						canThink = true;
+						isGravityEvent = false;
+						startSkillTask();
+						Creature creature = getAggroList().getMostHated();
 						if (creature == null || creature.getLifeStats().isAlreadyDead() || !getOwner().canSee(creature)) {
 							setStateIfNot(AIState.FIGHT);
 							think();
@@ -157,13 +159,13 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 							getOwner().getMoveController().moveToTargetObject();
 							PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
 						}
-				  	}
+					}
 				}, 30000);
 		    }
 			break;
 		}
 	}
-	
+
     private void deleteNpcs(List<Npc> npcs) {
 		for (Npc npc : npcs) {
 			if (npc != null) {
@@ -171,7 +173,7 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
@@ -180,7 +182,7 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 		aethericField.getController().onDelete();
 		getPosition().getWorldMapInstance().getDoors().get(706).setOpen(true);
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		super.handleBackHome();
@@ -192,7 +194,7 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 		isHome.set(true);
 		aethericField.getController().onDelete();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		super.handleDespawned();
@@ -204,12 +206,12 @@ public class BrigadeGeneralTerathAI2 extends AggressiveNpcAI2
 		super.handleSpawned();
 		addPercent();
 	}
-	
+
 	private void addPercent() {
 		percents.clear();
 		Collections.addAll(percents, new Integer[]{90, 70, 50, 30, 25});
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;

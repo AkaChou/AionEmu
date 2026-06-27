@@ -1,6 +1,8 @@
 
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -511,33 +513,33 @@ public final class PlayerEnterWorldService {
 				serviceBuff = new ServiceBuff(2);
 				serviceBuff.applyEffect(player, 2);
 				// Homerun Energy.
-				SkillEngine.getInstance().applyEffectDirectly(323, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
                 // [Event] Stigma Preservation.
-				SkillEngine.getInstance().applyEffectDirectly(4714, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
 				// [Event] Accessory Ascension
-				SkillEngine.getInstance().applyEffectDirectly(4843, player, player, 0); 
+				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
 			}
 			// Service Security Buff.
 			if (player.getMembership() >= 1) {
 				serviceBuff = new ServiceBuff(220599);
 				serviceBuff.applyEffect(player, 220599);
 				// Homerun Energy.
-				SkillEngine.getInstance().applyEffectDirectly(323, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
                 // [Event] Stigma Preservation.
-				SkillEngine.getInstance().applyEffectDirectly(4714, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
 				// [Event] Accessory Ascension
-				SkillEngine.getInstance().applyEffectDirectly(4843, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
 			}
 			// Service Security Buff.
 			if (player.getMembership() >= 2) {
 				serviceBuff = new ServiceBuff(230599);
 				serviceBuff.applyEffect(player, 230599);
 				// Homerun Energy.
-				SkillEngine.getInstance().applyEffectDirectly(323, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
                 // [Event] Stigma Preservation.
-				SkillEngine.getInstance().applyEffectDirectly(4714, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
 				// [Event] Accessory Ascension
-				SkillEngine.getInstance().applyEffectDirectly(4843, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
 			}
 			// PC Cafe Login Benefits.
 			if (player.getClientConnection().getAccount().getMembership() == 2 && player.getLevel() >= 66 && player.getLevel() <= 83) {

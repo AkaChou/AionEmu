@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
@@ -48,9 +50,9 @@ public class KuharaBombAI2 extends AggressiveNpcAI2
 	protected void handleMoveArrived() {
 		if (isDestroyed.compareAndSet(false, true)) {
 			if (kuharaTheVolatile1 != null && !NpcActions.isAlreadyDead(kuharaTheVolatile1)) {
-				SkillEngine.getInstance().getSkill(getOwner(), 19659, 60, kuharaTheVolatile1).useNoAnimationSkill();  //Bomb Explosion.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19659, 60, kuharaTheVolatile1).useNoAnimationSkill();  //Bomb Explosion.
 			} else if (kuharaTheVolatile2 != null && !NpcActions.isAlreadyDead(kuharaTheVolatile2)) {
-				SkillEngine.getInstance().getSkill(getOwner(), 19659, 60, kuharaTheVolatile2).useNoAnimationSkill();  //Bomb Explosion.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19659, 60, kuharaTheVolatile2).useNoAnimationSkill();  //Bomb Explosion.
 			}
 		}
 	}

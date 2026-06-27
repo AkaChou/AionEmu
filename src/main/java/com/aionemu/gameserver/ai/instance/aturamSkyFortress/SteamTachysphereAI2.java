@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.Race;
@@ -57,7 +59,7 @@ public class SteamTachysphereAI2 extends NpcAI2
 				//The Steam Tachysphere spews hot Drana! You may put that skill in your QuickBar.
 				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400925, 0);
 				PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, 0, 471, 16777216));
-				SkillEngine.getInstance().getSkill(player, 19502, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(player, 19502, 1, player).useNoAnimationSkill();
 			}
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));

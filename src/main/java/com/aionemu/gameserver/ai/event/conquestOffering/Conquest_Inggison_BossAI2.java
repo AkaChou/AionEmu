@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.event.conquestOffering;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -114,7 +116,7 @@ public class Conquest_Inggison_BossAI2 extends AggressiveNpcAI2
 	}
 	
 	private void boostDefense() {
-		SkillEngine.getInstance().getSkill(getOwner(), 21923, 1, getOwner()).useNoAnimationSkill(); //Boost Defense.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21923, 1, getOwner()).useNoAnimationSkill(); //Boost Defense.
 	}
 	
 	private void sendGuide() {

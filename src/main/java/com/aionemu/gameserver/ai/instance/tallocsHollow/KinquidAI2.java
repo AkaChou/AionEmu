@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tallocsHollow;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -85,12 +87,12 @@ public class KinquidAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelSkillTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 19233, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19233, 60, getOwner()).useNoAnimationSkill();
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isAlreadyDead() && getPosition().isSpawned()) {
-								SkillEngine.getInstance().getSkill(getOwner(), 19234, 60, getOwner()).useNoAnimationSkill();
+								GameEngineServices.skillEngine().getSkill(getOwner(), 19234, 60, getOwner()).useNoAnimationSkill();
 							}
 						}
 					}, 3500);

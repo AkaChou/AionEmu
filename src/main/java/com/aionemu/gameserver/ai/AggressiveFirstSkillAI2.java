@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 
@@ -32,7 +34,7 @@ public class AggressiveFirstSkillAI2 extends AggressiveNpcAI2
 		if (getSkillList().getUseInSpawnedSkill() != null) {
 			int skillId = getSkillList().getUseInSpawnedSkill().getSkillId();
 			int skillLevel = getSkillList().getSkillLevel(skillId);
-			SkillEngine.getInstance().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
 		}
 	}
 	
@@ -42,7 +44,7 @@ public class AggressiveFirstSkillAI2 extends AggressiveNpcAI2
 		if (getSkillList().getUseInSpawnedSkill() != null) {
 			int skillId = getSkillList().getUseInSpawnedSkill().getSkillId();
 			int skillLevel = getSkillList().getSkillLevel(skillId);
-			SkillEngine.getInstance().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
 		}
 	}
 	
@@ -52,7 +54,7 @@ public class AggressiveFirstSkillAI2 extends AggressiveNpcAI2
 		if (getSkillList().getUseInSpawnedSkill() != null) {
 			int skillId = getSkillList().getUseInSpawnedSkill().getSkillId();
 			int skillLevel = getSkillList().getSkillLevel(skillId);
-			SkillEngine.getInstance().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, skillLevel, getOwner()).useSkill();
 		}
 	}
 }

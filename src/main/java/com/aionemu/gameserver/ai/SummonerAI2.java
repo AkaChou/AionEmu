@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -108,13 +110,13 @@ public class SummonerAI2 extends AggressiveNpcAI2
 	}
 	
 	private void anuhartBravery() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 18168, 1, getOwner()).useNoAnimationSkill(); //Anuhart's Bravery.
 	}
 	private void bellowingRoar() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 22659, 1, getOwner()).useNoAnimationSkill(); //Bellowing Roar.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 22659, 1, getOwner()).useNoAnimationSkill(); //Bellowing Roar.
 	}
 	private void elementalLordship() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
 	}
 	
 	@Override

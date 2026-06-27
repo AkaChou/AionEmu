@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -149,16 +151,16 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
     public void handleUseItemFinish(Player player, Npc npc) {
         switch (npc.getNpcId()) {
             case 701001: //Transformation Bonfire.
-                SkillEngine.getInstance().getSkill(npc, 19316, 60, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 19316, 60, player).useNoAnimationSkill();
             break;
             case 701002: //Spirit's Bucket.
-                SkillEngine.getInstance().getSkill(npc, 19317, 60, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 19317, 60, player).useNoAnimationSkill();
             break;
             case 701003: //Magic Pinwheel.
-                SkillEngine.getInstance().getSkill(npc, 19318, 60, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 19318, 60, player).useNoAnimationSkill();
             break;
             case 701004: //Magical Soil Mound.
-                SkillEngine.getInstance().getSkill(npc, 19319, 60, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 19319, 60, player).useNoAnimationSkill();
             break;
 			case 856547: //Drained Hetgolem.
 				if (player.getInventory().decreaseByItemId(185000242, 1)) { //Rechargeable Electric Fuel.
@@ -436,16 +438,16 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 		if (npc != null) {
 			switch (Rnd.get(1, 4)) {
 				case 1: //Resistance: Water.
-				    SkillEngine.getInstance().getSkill(npc, 19312, 60, npc).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 19312, 60, npc).useNoAnimationSkill();
 				break;
 				case 2: //Resistance: Fire.
-				    SkillEngine.getInstance().getSkill(npc, 19313, 60, npc).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 19313, 60, npc).useNoAnimationSkill();
 				break;
 				case 3: //Resistance: Earth.
-				    SkillEngine.getInstance().getSkill(npc, 19314, 60, npc).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 19314, 60, npc).useNoAnimationSkill();
 				break;
 				case 4: //Resistance: Wind.
-				    SkillEngine.getInstance().getSkill(npc, 19315, 60, npc).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 19315, 60, npc).useNoAnimationSkill();
 				break;
 			}
 		}

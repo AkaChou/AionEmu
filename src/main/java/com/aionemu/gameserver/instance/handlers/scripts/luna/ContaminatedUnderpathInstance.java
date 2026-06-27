@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.instance.handlers.scripts.luna;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -945,11 +947,11 @@ public class ContaminatedUnderpathInstance extends GeneralInstanceHandler
 		
 		final int lunaDetachement = skillRace == Race.ASMODIANS ? 21346 : 21345;
 		//if (player.getRace().equals(Race.ASMODIANS)) {
-		//	SkillEngine.getInstance().applyEffectDirectly(21346, player, player, 0);
+		//	GameEngineServices.skillEngine().applyEffectDirectly(21346, player, player, 0);
 		//} else {
-		//	SkillEngine.getInstance().applyEffectDirectly(21345, player, player, 0);
+		//	GameEngineServices.skillEngine().applyEffectDirectly(21345, player, player, 0);
 		//}
-		SkillEngine.getInstance().applyEffectDirectly(lunaDetachement, player, player, 3000000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(lunaDetachement, player, player, 3000000 * 1);
 		//final int lunaHeal = spawnRace == Race.ASMODIANS ? 703477 : 703477;
 		final int lunaHeal = spawnRace == Race.ASMODIANS ? 834491 : 834491;
 		

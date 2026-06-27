@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.seizedDanuarSanctuary;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -68,7 +70,7 @@ public class Warmage_SuyarokaAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			SkillEngine.getInstance().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); //Summoning Ritual.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20657, 1, getOwner()).useNoAnimationSkill(); //Summoning Ritual.
 			ShebanMysticalTyrhund();
 			scheduleDelayStage1(delay);
 		}

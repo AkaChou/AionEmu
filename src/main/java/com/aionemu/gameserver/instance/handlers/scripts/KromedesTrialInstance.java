@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -63,7 +65,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	@Override
 	public void onEnterInstance(Player player) {
 		final int transformation = skillRace == Race.ASMODIANS ? 19270 : 19220;
-		SkillEngine.getInstance().applyEffectDirectly(transformation, player, player, 3600000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000 * 1);
 		sendMovie(player, 453);
 		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/kromedeTrial.xhtml"));
 	}
@@ -345,10 +347,10 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 			case 282093: //Mana Relic.
-				SkillEngine.getInstance().getSkill(npc, 19248, 1, player).useNoAnimationSkill(); //Mana Relic Effect.
+				GameEngineServices.skillEngine().getSkill(npc, 19248, 1, player).useNoAnimationSkill(); //Mana Relic Effect.
 			break;
 			case 282095: //Strength Relic.
-			    SkillEngine.getInstance().getSkill(npc, 19247, 1, player).useNoAnimationSkill(); //Strength Relic Effect.
+			    GameEngineServices.skillEngine().getSkill(npc, 19247, 1, player).useNoAnimationSkill(); //Strength Relic Effect.
 			break;
 		}
 	}

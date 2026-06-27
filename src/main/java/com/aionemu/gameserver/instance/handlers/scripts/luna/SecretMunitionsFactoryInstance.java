@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.luna;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -479,7 +481,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		startPrepareTimer();
 		//spawnLunaDetachment();
 		final int lunaDetachement = skillRace == Race.ASMODIANS ? 21348 : 21347;
-		SkillEngine.getInstance().applyEffectDirectly(lunaDetachement, player, player, 3000000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(lunaDetachement, player, player, 3000000 * 1);
 	}
 	
 	private void startPrepareTimer() {

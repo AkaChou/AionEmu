@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.ishalgen;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.model.EmotionType;
@@ -154,7 +156,7 @@ public class _2002Wheres_Rae extends QuestHandler {
                 break;
                 case 700045:
                     if (var == 11 && env.getDialog() == QuestDialog.USE_OBJECT) {
-                        SkillEngine.getInstance().applyEffectDirectly(8343, player, player, 0);
+                        GameEngineServices.skillEngine().applyEffectDirectly(8343, player, player, 0);
                         return true;
                     }
                 case 203538:

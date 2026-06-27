@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -90,7 +92,7 @@ public class TraitorKumbandaAI2 extends AggressiveNpcAI2
 					cancelPhaseTask();
 				} else {
 					sendMsg(1500708);
-					SkillEngine.getInstance().getSkill(getOwner(), 20726, 10, getOwner()).useNoAnimationSkill(); //Time Speed.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20726, 10, getOwner()).useNoAnimationSkill(); //Time Speed.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

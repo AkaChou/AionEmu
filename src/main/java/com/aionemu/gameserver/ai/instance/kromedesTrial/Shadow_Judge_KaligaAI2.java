@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.kromedesTrial;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -54,7 +56,7 @@ public class Shadow_Judge_KaligaAI2 extends AggressiveNpcAI2
 			final Player player = (Player) creature;
 			if (MathUtil.getDistance(getOwner(), player) <= 25) {
 				if (startedEvent.compareAndSet(false, true)) {
-					SkillEngine.getInstance().getSkill(getOwner(), 19246, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19246, 60, getOwner()).useNoAnimationSkill();
 					//This is my first judgment!
 				    sendMsg(1500171, getObjectId(), false, 3000);
 				    //This is my second judgment!

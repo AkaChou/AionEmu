@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.pvpArenas;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -58,7 +60,7 @@ public class AntiAirCraftGunAI2 extends ActionItemNpcAI2
 				morphSkill = 0x4E5238;
 			break;
 		}
-		SkillEngine.getInstance().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useNoAnimationSkill();
 		AI2Actions.scheduleRespawn(this);
 		AI2Actions.deleteOwner(this);
 	}

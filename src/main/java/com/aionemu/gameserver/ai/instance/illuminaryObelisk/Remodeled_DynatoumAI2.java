@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -214,7 +216,7 @@ public class Remodeled_DynatoumAI2 extends AggressiveNpcAI2
 	}
 	
 	private void boost() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 21671, 1, getOwner()).useNoAnimationSkill(); //Boost.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21671, 1, getOwner()).useNoAnimationSkill(); //Boost.
 	}
 	
 	private void deleteNpcs(List<Npc> npcs) {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.theEternalBastion;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -59,7 +61,7 @@ public class Defense_CannonAI2 extends NpcAI2
 			    case 701605:
 			    case 701606:
 			    case 701607:
-				    SkillEngine.getInstance().getSkill(player, 21065, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(player, 21065, 1, player).useNoAnimationSkill();
 				break;
 				//Defense Cannon Asmodians.
 				case 701610:
@@ -74,7 +76,7 @@ public class Defense_CannonAI2 extends NpcAI2
 				case 701619:
 				case 701620:
 				case 701621:
-				    SkillEngine.getInstance().getSkill(player, 21066, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(player, 21066, 1, player).useNoAnimationSkill();
 				break;
 			}
 		}

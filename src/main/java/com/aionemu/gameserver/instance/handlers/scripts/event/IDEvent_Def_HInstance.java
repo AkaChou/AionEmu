@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.event;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -556,7 +558,7 @@ public class IDEvent_Def_HInstance extends GeneralInstanceHandler
 		* Basically, you can use the 'Berta' skill, you cannot use your skills.
 		*/
 		final int IDEventDef = skillRace == Race.ASMODIANS ? 4940 : 4935;
-		SkillEngine.getInstance().applyEffectDirectly(IDEventDef, player, player, 1200000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(IDEventDef, player, player, 1200000 * 1);
 	}
 	
 	private void startPrepareTimer() {

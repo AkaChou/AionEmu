@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.panesterra;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -90,7 +92,7 @@ public class Chaos_WindAI2 extends NpcAI2
 	
 	protected void handleUseItemFinish(Player player) {
 		artifactCasting();
-		SkillEngine.getInstance().getSkill(getOwner(), 21747, 1, getOwner()).useNoAnimationSkill(); //Chaos Wind.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21747, 1, getOwner()).useNoAnimationSkill(); //Chaos Wind.
 	}
 	
 	@Override

@@ -764,7 +764,7 @@ public class PlayerController extends CreatureController<Player> {
 	public void useSkill(int skillId, int targetType, float x, float y, float z, int time) {
 		Player player = getOwner();
 
-		Skill skill = SkillEngine.getInstance().getSkillFor(player, skillId, player.getTarget());
+		Skill skill = GameEngineServices.skillEngine().getSkillFor(player, skillId, player.getTarget());
 
 		if (skill != null) {
 			if (!RestrictionsManager.canUseSkill(player, skill)) {
@@ -787,11 +787,11 @@ public class PlayerController extends CreatureController<Player> {
 	public void useSkill(SkillTemplate template, int targetType, float x, float y, float z, int clientHitTime, int skillLevel) {
 		Player player = getOwner();
 
-		Skill skill = SkillEngine.getInstance().getSkillFor(player, template, player.getTarget());
+		Skill skill = GameEngineServices.skillEngine().getSkillFor(player, template, player.getTarget());
 		if ((skill == null) && (player.isTransformed())) {
 			SkillPanel panel = DataManager.PANEL_SKILL_DATA.getSkillPanel(player.getTransformModel().getPanelId());
 			if ((panel != null) && (panel.canUseSkill(template.getSkillId(), skillLevel))) {
-				skill = SkillEngine.getInstance().getSkillFor(player, template, player.getTarget(), skillLevel);
+				skill = GameEngineServices.skillEngine().getSkillFor(player, template, player.getTarget(), skillLevel);
 			}
 		}
 
@@ -876,7 +876,7 @@ public class PlayerController extends CreatureController<Player> {
 	public void updatePassiveStats() {
 		Player player = getOwner();
 		for (PlayerSkillEntry skillEntry : player.getSkillList().getAllSkills()) {
-			Skill skill = SkillEngine.getInstance().getSkillFor(player, skillEntry.getSkillId(), player.getTarget());
+			Skill skill = GameEngineServices.skillEngine().getSkillFor(player, skillEntry.getSkillId(), player.getTarget());
 			if (skill != null && skill.isPassive()) {
 				skill.useSkill();
 			}
@@ -1159,7 +1159,7 @@ public class PlayerController extends CreatureController<Player> {
 			if (skillId == 0) {
 				skillId = 8291;
 			}
-			SkillEngine.getInstance().getSkill(player, skillId, deathCount, player).useSkill();
+			GameEngineServices.skillEngine().getSkill(player, skillId, deathCount, player).useSkill();
 		}
 	}
 

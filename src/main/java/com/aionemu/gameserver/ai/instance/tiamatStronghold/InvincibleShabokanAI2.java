@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -89,7 +91,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 				} else {
 					sendMsg(1500702);
 					spawn(283081, 1216.7513f, 1069.1871f, 491.32993f, (byte) 59); //Shabokhan EarthQuake.
-					SkillEngine.getInstance().getSkill(getOwner(), 20717, 10, getOwner()).useNoAnimationSkill(); //Tremor.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20717, 10, getOwner()).useNoAnimationSkill(); //Tremor.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

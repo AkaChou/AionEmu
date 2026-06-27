@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.gelkmaros;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -83,7 +85,7 @@ public class RagnarokAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 18679, 60, getOwner()).useNoAnimationSkill(); //Self Harm.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18679, 60, getOwner()).useNoAnimationSkill(); //Self Harm.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -48,7 +50,7 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
 	}
 	
 	@Override
@@ -77,7 +79,7 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			SkillEngine.getInstance().getSkill(getOwner(), 17888, 60, getOwner()).useNoAnimationSkill(); //Fear Casting.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 17888, 60, getOwner()).useNoAnimationSkill(); //Fear Casting.
 			scheduleDelayStage1(delay);
 		}
 	}
@@ -87,7 +89,7 @@ public class Derakanak_The_ReaverAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else { //16918: Flame Spurt & 16881: Magic Missile.
-			SkillEngine.getInstance().getSkill(getOwner(), Rnd.get(2) == 0 ? 16918 : 16881, 60, getTarget()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), Rnd.get(2) == 0 ? 16918 : 16881, 60, getTarget()).useNoAnimationSkill();
 			scheduleDelayStage2(delay);
 		}
 	}

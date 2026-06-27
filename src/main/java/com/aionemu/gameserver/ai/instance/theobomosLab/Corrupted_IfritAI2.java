@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.theobomosLab;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -56,7 +58,7 @@ public class Corrupted_IfritAI2 extends AggressiveNpcAI2
 	}
 	
 	private void elementalLordship() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
 	}
 	
 	@Override
@@ -110,7 +112,7 @@ public class Corrupted_IfritAI2 extends AggressiveNpcAI2
 				} else {
 					//A massive blast of elemental power will soon explode with destructive force.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_03, 0);
-					SkillEngine.getInstance().getSkill(getOwner(), 22743, 10, getOwner()).useNoAnimationSkill(); //Elemental Explosion.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 22743, 10, getOwner()).useNoAnimationSkill(); //Elemental Explosion.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

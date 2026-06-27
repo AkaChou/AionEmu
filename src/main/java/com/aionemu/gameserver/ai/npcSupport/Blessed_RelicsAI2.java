@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.npcSupport;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.ChatType;
@@ -51,7 +53,7 @@ public class Blessed_RelicsAI2 extends NpcAI2
 				case 831988: //Minor Blessed Relics.
 				case 831989: //Major Blessed Relics.
 				case 831990: //Greater Blessed Relics.
-					SkillEngine.getInstance().applyEffectDirectly(21650, player, player, 1800000 * 1); //Prestigious Blessing.
+					GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000 * 1); //Prestigious Blessing.
 				break;
 			}
 		}

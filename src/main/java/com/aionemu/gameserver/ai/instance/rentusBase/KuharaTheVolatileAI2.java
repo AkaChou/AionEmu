@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -166,7 +168,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 					canThink = false;
 					EmoteManager.emoteStopAttacking(getOwner());
 					setStateIfNot(AIState.WALKING);
-					SkillEngine.getInstance().getSkill(getOwner(), 19703, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19703, 60, getOwner()).useNoAnimationSkill();
 					spawnBombEvent();
 					bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
@@ -187,7 +189,7 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 									getOwner().getGameStats().renewLastSkillTime();
 									setStateIfNot(AIState.FIGHT);
 									handleMoveValidate();
-									SkillEngine.getInstance().getSkill(getOwner(), 19375, 60, getOwner()).useNoAnimationSkill();
+									GameEngineServices.skillEngine().getSkill(getOwner(), 19375, 60, getOwner()).useNoAnimationSkill();
 								}
 								deleteNpcs(getPosition().getWorldMapInstance().getNpcs(282396)); //Kuhara Bomb.
 							}
@@ -243,12 +245,12 @@ public class KuharaTheVolatileAI2 extends AggressiveNpcAI2
 						@Override
 						public void run() {
 							if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-								SkillEngine.getInstance().getSkill(getOwner(), 19704, 60, getOwner()).useNoAnimationSkill();
+								GameEngineServices.skillEngine().getSkill(getOwner(), 19704, 60, getOwner()).useNoAnimationSkill();
 								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-											SkillEngine.getInstance().getSkill(getOwner(), 19705, 60, getOwner()).useNoAnimationSkill();
+											GameEngineServices.skillEngine().getSkill(getOwner(), 19705, 60, getOwner()).useNoAnimationSkill();
 										}
 									}
 								}, 3500);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.*;
@@ -252,7 +254,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		Npc npc = instance.getNpc(216245); //Macunbello.
 		if (npc != null) {
 			npc.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-			SkillEngine.getInstance().getSkill(npc, 19046, 60, npc).useNoAnimationSkill(); //Soul Starved I.
+			GameEngineServices.skillEngine().getSkill(npc, 19046, 60, npc).useNoAnimationSkill(); //Soul Starved I.
 		}
     }
 	
@@ -336,12 +338,12 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 					    //Macunbello's power is weakening.
 					    sendMsgByRace(1400466, Race.PC_ALL, 2000);
 						macunbello.getEffectController().removeEffect(19046); //Soul Starved I.
-						SkillEngine.getInstance().applyEffectDirectly(19047, macunbello, macunbello, 0); //Soul Starved II.
+						GameEngineServices.skillEngine().applyEffectDirectly(19047, macunbello, macunbello, 0); //Soul Starved II.
 				    } else if (macunbelloSoul == 14) {
 					    //Macunbello's power has weakened.
 					    sendMsgByRace(1400467, Race.PC_ALL, 2000);
 						macunbello.getEffectController().removeEffect(19047); //Soul Starved II.
-						SkillEngine.getInstance().applyEffectDirectly(19048, macunbello, macunbello, 0); //Soul Starved III.
+						GameEngineServices.skillEngine().applyEffectDirectly(19048, macunbello, macunbello, 0); //Soul Starved III.
 				    } else if (macunbelloSoul == 21) {
 					    //Macunbello has been crippled.
 					    sendMsgByRace(1400468, Race.PC_ALL, 2000);

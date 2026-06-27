@@ -1164,7 +1164,7 @@ public class Skill {
 		if (penaltySkill == 0) {
 			return;
 		}
-		SkillEngine.getInstance().applyEffectDirectly(penaltySkill, firstTarget, effector, 0);
+		GameEngineServices.skillEngine().applyEffectDirectly(penaltySkill, firstTarget, effector, 0);
 	}
 
 	/**

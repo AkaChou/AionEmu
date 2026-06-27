@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.darkPoeta;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -63,7 +65,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 			if (hpPercentage <= percent) {
 				if (percent == 60) {
 					EmoteManager.emoteStopAttacking(getOwner());
-					SkillEngine.getInstance().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
@@ -72,7 +74,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 					}, 3000);
 				} else {
 					EmoteManager.emoteStopAttacking(getOwner());
-					SkillEngine.getInstance().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18233, 50, getOwner()).useSkill();
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
@@ -110,7 +112,7 @@ public class CalindiFlamelordAI2 extends AggressiveNpcAI2
 				if (!isAlreadyDead()) {
 					EmoteManager.emoteStopAttacking(getOwner());
 					NpcShoutsService.getInstance().sendMsg(getOwner(), 1400259);
-					SkillEngine.getInstance().getSkill(getOwner(), 19679, 50, getTarget()).useSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19679, 50, getTarget()).useSkill();
 					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {

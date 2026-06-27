@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -231,33 +233,33 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 				if (player.getCommonData().getRace() == Race.ELYOS) {
 				    effectController.removeEffect(21376);
 				    effectController.removeEffect(21377);
-				    SkillEngine.getInstance().getSkill(npc, 21375, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21375, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 					effectController.removeEffect(21379);
 				    effectController.removeEffect(21380);
-				    SkillEngine.getInstance().getSkill(npc, 21378, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21378, 1, player).useNoAnimationSkill();
 				}
 			break;
 			case 834056: //GM Shine.
 			    if (player.getCommonData().getRace() == Race.ELYOS) {
 				    effectController.removeEffect(21375);
 				    effectController.removeEffect(21377);
-				    SkillEngine.getInstance().getSkill(npc, 21376, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21376, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 				    effectController.removeEffect(21378);
 				    effectController.removeEffect(21380);
-				    SkillEngine.getInstance().getSkill(npc, 21379, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21379, 1, player).useNoAnimationSkill();
 				}
 			break;
 			case 834057: //GM Iris.
 			    if (player.getCommonData().getRace() == Race.ELYOS) {
 				    effectController.removeEffect(21375);
 				    effectController.removeEffect(21376);
-				    SkillEngine.getInstance().getSkill(npc, 21377, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21377, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 				    effectController.removeEffect(21378);
 				    effectController.removeEffect(21379);
-				    SkillEngine.getInstance().getSkill(npc, 21380, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21380, 1, player).useNoAnimationSkill();
 				}
 			break;
 		}

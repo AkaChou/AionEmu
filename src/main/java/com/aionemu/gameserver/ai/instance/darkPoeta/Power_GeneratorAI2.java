@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.darkPoeta;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -84,7 +86,7 @@ public class Power_GeneratorAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 18126, 46, getOwner()).useNoAnimationSkill(); //Electrocution.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18126, 46, getOwner()).useNoAnimationSkill(); //Electrocution.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

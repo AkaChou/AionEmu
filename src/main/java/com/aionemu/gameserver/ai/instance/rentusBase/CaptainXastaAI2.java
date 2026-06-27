@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -87,7 +89,7 @@ public class CaptainXastaAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 19729, 60, getOwner()).useNoAnimationSkill(); //Mana Treatment V.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19729, 60, getOwner()).useNoAnimationSkill(); //Mana Treatment V.
 					sendMsg(1500392);
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {

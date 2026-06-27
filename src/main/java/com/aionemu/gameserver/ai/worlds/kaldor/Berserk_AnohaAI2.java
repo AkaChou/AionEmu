@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.kaldor;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -112,7 +114,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 					case 23:
 						think = false;
 						EmoteManager.emoteStopAttacking(getOwner());
-						SkillEngine.getInstance().getSkill(getOwner(), 21765, 60, getOwner()).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), 21765, 60, getOwner()).useNoAnimationSkill();
 						//I fight for Ereshkigal. You shall not distrub her.
 						sendMsg(1501393, getObjectId(), false, 0);
 						//Leave Ereshkigal's fortress!
@@ -121,7 +123,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 							@Override
 							public void run() {
 								if (!isAlreadyDead()) {
-									SkillEngine.getInstance().getSkill(getOwner(), 21767, 60, getOwner()).useNoAnimationSkill();
+									GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 60, getOwner()).useNoAnimationSkill();
 									startThinkTask();
 									int total = explosiveSacrifice(855262); //Explosive Sacrifice.
 									if (total == 0 || (6 - total) != 0) {
@@ -186,7 +188,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		SkillEngine.getInstance().getSkill(getOwner(), 21755, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21755, 60, getOwner()).useNoAnimationSkill();
 		//You must want to perish. So be it!
 		sendMsg(1501395, getObjectId(), false, 0);
 		//Freeze and face oblivion!
@@ -213,23 +215,23 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(getOwner(), 21761, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 21761, 60, getOwner()).useNoAnimationSkill();
 					specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isAlreadyDead()) {
-								SkillEngine.getInstance().getSkill(getOwner(), 21762, 60, getOwner()).useNoAnimationSkill();
+								GameEngineServices.skillEngine().getSkill(getOwner(), 21762, 60, getOwner()).useNoAnimationSkill();
 								specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										if (!isAlreadyDead()) {
-											SkillEngine.getInstance().getSkill(getOwner(), 21763, 60, getOwner()).useNoAnimationSkill();
+											GameEngineServices.skillEngine().getSkill(getOwner(), 21763, 60, getOwner()).useNoAnimationSkill();
 											if (curentPercent <= 63) {
 												specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 													@Override
 													public void run() {
 														if (!isAlreadyDead()) {
-															SkillEngine.getInstance().getSkill(getOwner(), 21764, 60, getOwner()).useNoAnimationSkill();
+															GameEngineServices.skillEngine().getSkill(getOwner(), 21764, 60, getOwner()).useNoAnimationSkill();
 															//Muhahaha! Experience true power!
 															sendMsg(1501157, getObjectId(), false, 0);
 															GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

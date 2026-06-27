@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -78,7 +80,7 @@ public class OrissanAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 21635, 46, getOwner()).useNoAnimationSkill(); //Summon Crystal.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 21635, 46, getOwner()).useNoAnimationSkill(); //Summon Crystal.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

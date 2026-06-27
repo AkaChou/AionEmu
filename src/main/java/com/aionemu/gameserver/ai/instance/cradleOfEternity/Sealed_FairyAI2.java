@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -47,8 +49,8 @@ public class Sealed_FairyAI2 extends NpcAI2
 			    case 834009: //Sealed Fairy.
 				    //Once you leave the garden, the Sylfae Queen’s power will disappear.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_41, 5000);
-					SkillEngine.getInstance().applyEffectDirectly(21340, player, player, 3600000 * 1); //Sealed Fairy.
-					SkillEngine.getInstance().applyEffectDirectly(21344, player, player, 3600000 * 1); //Beguiling Visions.
+					GameEngineServices.skillEngine().applyEffectDirectly(21340, player, player, 3600000 * 1); //Sealed Fairy.
+					GameEngineServices.skillEngine().applyEffectDirectly(21344, player, player, 3600000 * 1); //Beguiling Visions.
 			    break;
 			}
 		}

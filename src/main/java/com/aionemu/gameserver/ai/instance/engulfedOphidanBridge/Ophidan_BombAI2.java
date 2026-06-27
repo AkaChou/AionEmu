@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.engulfedOphidanBridge;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -42,7 +44,7 @@ public class Ophidan_BombAI2 extends AggressiveNpcAI2
 			@Override
 			public void run() {
 				startLifeTask();
-				SkillEngine.getInstance().getSkill(getOwner(), 21709, 60, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21709, 60, getOwner()).useNoAnimationSkill();
 			}
 		}, 1000);
 	}

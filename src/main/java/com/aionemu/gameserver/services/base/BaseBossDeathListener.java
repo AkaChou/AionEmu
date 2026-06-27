@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.base;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AbstractAI;
 import com.aionemu.gameserver.ai2.eventcallback.OnDieEventCallback;
@@ -132,7 +134,7 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 			@Override
 			public void visit(Player player) {
 				if (player.getCommonData().getRace() == Race.ELYOS) {
-					SkillEngine.getInstance().applyEffectDirectly(12115, player, player, 0); // Kaisinel's Bane.
+					GameEngineServices.skillEngine().applyEffectDirectly(12115, player, player, 0); // Kaisinel's Bane.
 					// The power of Kaisinel's Protection surrounds you.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_LIGHT_GAIN,
 							5000);
@@ -140,7 +142,7 @@ public class BaseBossDeathListener extends OnDieEventCallback {
 					PacketSendUtility.playerSendPacketTime(player,
 							SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_DARK_WARNING, 10000);
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					SkillEngine.getInstance().applyEffectDirectly(12117, player, player, 0); // Marchutan's Bane.
+					GameEngineServices.skillEngine().applyEffectDirectly(12117, player, player, 0); // Marchutan's Bane.
 					// The power of Marchutan's Protection surrounds you.
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_WEAK_RACE_BUFF_DARK_GAIN,
 							5000);

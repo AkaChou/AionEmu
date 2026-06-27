@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -52,7 +54,7 @@ public class DelayedSkillEffect extends EffectTemplate {
 							@Override
 							public void visit(VisibleObject object) {
 								if (MathUtil.getDistance(effect.getEffected(), object) <= template.getProperties().getRevisionDistance()) {
-									SkillEngine.getInstance().applyEffectDirectly(template.getSkillId(), effect.getEffected(), (Creature) object, template.getDuration());
+									GameEngineServices.skillEngine().applyEffectDirectly(template.getSkillId(), effect.getEffected(), (Creature) object, template.getDuration());
 									e.applyEffect();
 									e.initialize();
 								}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -86,7 +88,7 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 		doors = instance.getDoors();
 		Npc npc = instance.getNpc(277224); //Ahserion.
 		if (npc != null) {
-			SkillEngine.getInstance().getSkill(npc, 21571, 60, npc).useNoAnimationSkill(); //Ereshkigal's Reign.
+			GameEngineServices.skillEngine().getSkill(npc, 21571, 60, npc).useNoAnimationSkill(); //Ereshkigal's Reign.
 		}
 	}
 	
@@ -344,43 +346,43 @@ public class TransidiumAnnexInstance extends GeneralInstanceHandler
 			case 277227: //Atanatos Camp Defense Cannon.
 			case 277228: //Disilon Camp Defense Cannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21652, 60, player).useNoAnimationSkill(); //Armaments Thief.
+				GameEngineServices.skillEngine().getSkill(npc, 21652, 60, player).useNoAnimationSkill(); //Armaments Thief.
 			break;
 			//**/////////**//
 			//**/////////**//
 			case 297331: //Belus Chariot.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21582, 60, player).useNoAnimationSkill(); //Board The Chariot.
+				GameEngineServices.skillEngine().getSkill(npc, 21582, 60, player).useNoAnimationSkill(); //Board The Chariot.
 			break;
 			case 297332: //Aspida Chariot.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21589, 60, player).useNoAnimationSkill(); //Board The Chariot.
+				GameEngineServices.skillEngine().getSkill(npc, 21589, 60, player).useNoAnimationSkill(); //Board The Chariot.
 			break;
 			case 297333: //Atanatos Chariot.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21590, 60, player).useNoAnimationSkill(); //Board The Chariot.
+				GameEngineServices.skillEngine().getSkill(npc, 21590, 60, player).useNoAnimationSkill(); //Board The Chariot.
 			break;
 			case 297334: //Disilon Chariot.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21591, 60, player).useNoAnimationSkill(); //Board The Chariot.
+				GameEngineServices.skillEngine().getSkill(npc, 21591, 60, player).useNoAnimationSkill(); //Board The Chariot.
 			break;
 			//**/////////**//
 			//**/////////**//
 			case 297472: //Belus Chariot.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21579, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
+				GameEngineServices.skillEngine().getSkill(npc, 21579, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 			case 297473: //Aspida Chariot.
                 despawnNpc(npc);			
-				SkillEngine.getInstance().getSkill(npc, 21586, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
+				GameEngineServices.skillEngine().getSkill(npc, 21586, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 			case 297474: //Atanatos Chariot.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21587, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
+				GameEngineServices.skillEngine().getSkill(npc, 21587, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 			case 297475: //Disilon Chariot.
 				despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21588, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
+				GameEngineServices.skillEngine().getSkill(npc, 21588, 60, player).useNoAnimationSkill(); //Board The Ignus Engine.
 			break;
 		}
 	}

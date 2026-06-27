@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.Iterator;
 
 import org.slf4j.Logger;
@@ -282,7 +284,7 @@ public class EventAi extends AdminCommand {
                     Player player = ita.next();
 
                     if(player.getWorldId() == admin.getWorldId() && player.getAccessLevel() < 1 && GeoService.getInstance().canSee(admin,player)){
-                        SkillEngine.getInstance().applyEffectDirectly(8256, admin, player, (10 * 1000));
+                        GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, player, (10 * 1000));
                     }
                 }
                 log.info("[eventai-stop{all}] GM : " + admin.getName() + " paralyzed everyone in mapId '" + admin.getWorldId() + "'");
@@ -297,8 +299,8 @@ public class EventAi extends AdminCommand {
                 return;
             }
 
-            SkillEngine.getInstance().applyEffectDirectly(8256, admin, (Creature) target, (10 * 1000));
-            SkillEngine.getInstance().applyEffectDirectly(8256, admin, (Creature) targetsTarget, (10 * 1000));
+            GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, (Creature) target, (10 * 1000));
+            GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, (Creature) targetsTarget, (10 * 1000));
             log.info("[eventai-stop{target}] GM : " + admin.getName() + " paralyzed both [" + target.getName() + "][" + targetsTarget.getName() +"] in mapId '" + admin.getWorldId() + "'");
             }
         }else if(params[0].equalsIgnoreCase("returnall_inzone")){

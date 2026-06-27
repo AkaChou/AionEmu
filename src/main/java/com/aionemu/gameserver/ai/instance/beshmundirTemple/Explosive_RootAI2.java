@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -42,7 +44,7 @@ public class Explosive_RootAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 18900, 60, getOwner()).useNoAnimationSkill(); //Root.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18900, 60, getOwner()).useNoAnimationSkill(); //Root.
 				startLifeTask();
 			}
 		}, 1000);

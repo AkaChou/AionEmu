@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.miren;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -42,18 +44,18 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		//bossShield();
 		announceUnsealedMiren();
     }
-	
+
 	private void bossShield() {
-   		SkillEngine.getInstance().getSkill(getOwner(), 18296, 60, getOwner()).useNoAnimationSkill(); //Boss Shield.
- 	}
-	
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18296, 60, getOwner()).useNoAnimationSkill(); //Boss Shield.
+	}
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
@@ -72,7 +74,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	private void treasureChest() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -82,7 +84,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceUnsealedMiren() {
 		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -94,7 +96,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void spawnTreasureChest(int npcId) {
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
@@ -103,7 +105,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
 	}
-	
+
 	private Npc rndSpawnInRange(int npcId, float distance) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * distance);

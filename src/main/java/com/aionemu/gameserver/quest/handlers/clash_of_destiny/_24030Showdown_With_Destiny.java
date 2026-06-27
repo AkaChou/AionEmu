@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.clash_of_destiny;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -143,7 +145,7 @@ public class _24030Showdown_With_Destiny extends QuestHandler
                         } case STEP_TO_6: {
                             if (var == 5) {
                                 removeQuestItem(env, 182215392, 1);
-                                SkillEngine.getInstance().applyEffectDirectly(281, player, player, 0);
+                                GameEngineServices.skillEngine().applyEffectDirectly(281, player, player, 0);
                                 player.setState(CreatureState.FLIGHT_TELEPORT);
                                 player.unsetState(CreatureState.ACTIVE);
                                 player.setFlightTeleportId(1001);

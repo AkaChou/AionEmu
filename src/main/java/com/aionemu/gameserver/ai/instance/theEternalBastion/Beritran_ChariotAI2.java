@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.theEternalBastion;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -48,7 +50,7 @@ public class Beritran_ChariotAI2 extends NpcAI2
 		    switch (getNpcId()) {
 			    case 701624: //Beritran Chariot.
 				case 702689: //Beritran Chariot.
-				    SkillEngine.getInstance().getSkill(player, 21141, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(player, 21141, 1, player).useNoAnimationSkill();
 				break;
 			}
 		}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.rvr.kenovikan;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -44,20 +46,20 @@ public class Armored_Transport_BetaAI2 extends GeneralNpcAI2
 	private String walkerId = "220110002";
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
 	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private void removeF6RewardTrans() {
-   		getOwner().getEffectController().removeEffect(17774);
- 	}
-	
+		getOwner().getEffectController().removeEffect(17774);
+	}
+
 	private void F6RewardTrans() {
-   		SkillEngine.getInstance().getSkill(getOwner(), 17774, 1, getOwner()).useNoAnimationSkill();
- 	}
-	
+		GameEngineServices.skillEngine().getSkill(getOwner(), 17774, 1, getOwner()).useNoAnimationSkill();
+	}
+
 	@Override
 	protected void handleCreatureMoved(Creature creature) {
 		if (creature instanceof Player) {
@@ -73,7 +75,7 @@ public class Armored_Transport_BetaAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -85,7 +87,7 @@ public class Armored_Transport_BetaAI2 extends GeneralNpcAI2
 			}
 		}
 	}
-	
+
 	private void announceF6RaidSumAtta01Light() {
 		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -109,19 +111,19 @@ public class Armored_Transport_BetaAI2 extends GeneralNpcAI2
 			}
 		});
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
-  		F6RewardTrans();
+		F6RewardTrans();
 		super.handleSpawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		F6RewardTrans();
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		removeF6RewardTrans();

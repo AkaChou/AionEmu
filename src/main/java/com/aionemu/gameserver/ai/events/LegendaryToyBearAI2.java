@@ -49,7 +49,7 @@ public class LegendaryToyBearAI2 extends ActionItemNpcAI2 {
 			return true;
 		}
 		if (dialogId == 10000) {
-			SkillEngine.getInstance().getSkill(getOwner(), 22788, 1, player).useWithoutPropSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 22788, 1, player).useWithoutPropSkill();
 		}
 		return true;
 	}

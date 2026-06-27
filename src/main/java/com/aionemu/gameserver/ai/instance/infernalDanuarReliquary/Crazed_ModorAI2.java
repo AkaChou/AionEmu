@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.infernalDanuarReliquary;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -186,18 +188,18 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
         switch (Rnd.get(1, 2)) {
             case 1:
                 AI2Actions.targetSelf(Crazed_ModorAI2.this);
-                SkillEngine.getInstance().getSkill(getOwner(), 21171, 60, getOwner()).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(getOwner(), 21171, 60, getOwner()).useNoAnimationSkill();
             break;
             case 2:
                 AI2Actions.targetSelf(Crazed_ModorAI2.this);
-                SkillEngine.getInstance().getSkill(getOwner(), 21176, 60, getOwner()).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(getOwner(), 21176, 60, getOwner()).useNoAnimationSkill();
             break;
         }
     }
 	
 	private void VengefullOrbEvent() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
-		SkillEngine.getInstance().getSkill(getOwner(), 21177, 1, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21177, 1, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
@@ -215,7 +217,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	private void Teleport() {
 		//Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
-		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
                 modorNpc();
@@ -227,7 +229,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	
     private void Teleport2() {
         AI2Actions.targetSelf(Crazed_ModorAI2.this);
-        SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+        GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run(){
@@ -249,7 +251,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	
 	private void Teleport3() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
-		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc();
@@ -261,11 +263,11 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	
 	private void skillfear() {
 		AI2Actions.targetSelf(Crazed_ModorAI2.this);
-		SkillEngine.getInstance().getSkill(getOwner(), 21268, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21268, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				AI2Actions.targetSelf(Crazed_ModorAI2.this);
-				SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					public void run() {
 				        World.getInstance().updatePosition(getOwner(), 232, 263, 249, (byte) 115);
@@ -279,7 +281,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	private void Teleport4() {
 		//Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
-		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc();
@@ -291,7 +293,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	
     private void Teleport5() {
         AI2Actions.targetSelf(Crazed_ModorAI2.this);
-        SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+        GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
@@ -314,7 +316,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	private void Teleport6() {
 		//Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
-		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc2();
@@ -326,7 +328,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	
     private void Teleport7() {
         AI2Actions.targetSelf(Crazed_ModorAI2.this);
-        SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+        GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
@@ -349,7 +351,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	private void Teleport8() {
 		//Rise, my children, rise!
 		sendMsg(1500749, getObjectId(), false, 2000);
-		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				modorNpc2();
@@ -447,7 +449,7 @@ public class Crazed_ModorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void eternalGrudge() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 21169, 1, getOwner()).useNoAnimationSkill(); //Eternal Grudge.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21169, 1, getOwner()).useNoAnimationSkill(); //Eternal Grudge.
 	}
 	
 	private void despawnNpcs(int npcId) {

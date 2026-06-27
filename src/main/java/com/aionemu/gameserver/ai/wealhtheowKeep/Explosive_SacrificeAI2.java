@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.wealhtheowKeep;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -38,7 +40,7 @@ public class Explosive_SacrificeAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		SkillEngine.getInstance().getSkill(getOwner(), 21760, 46, getOwner()).useNoAnimationSkill(); //Explosion.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21760, 46, getOwner()).useNoAnimationSkill(); //Explosion.
 		startLifeTask();
 	}
 	

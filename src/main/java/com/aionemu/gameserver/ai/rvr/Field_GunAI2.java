@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.rvr;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -82,7 +84,7 @@ public class Field_GunAI2 extends NpcAI2
 	protected void handleUseItemFinish(Player player) {
 		if (canUse.compareAndSet(true, false)) {
 			int morphSkill = getMorphSkill();
-			SkillEngine.getInstance().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useNoAnimationSkill();
 			AI2Actions.deleteOwner(this);
 			AI2Actions.scheduleRespawn(this);
 		}

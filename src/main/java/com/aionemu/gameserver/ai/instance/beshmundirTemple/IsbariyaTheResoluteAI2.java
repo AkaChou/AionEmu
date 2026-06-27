@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -108,7 +110,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead())
 					cancelSkillTask();
 				else
-					SkillEngine.getInstance().getSkill(getOwner(), 18912 + Rnd.get(2), 55, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18912 + Rnd.get(2), 55, getOwner()).useNoAnimationSkill();
 			}
 		},0 , 24000);
 	}
@@ -125,7 +127,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 		int delay = 10000;
 		switch (stage) {
 			case 1:
-				SkillEngine.getInstance().getSkill(getOwner(), 18959, 50, getTargetPlayer()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18959, 50, getTargetPlayer()).useNoAnimationSkill();
 				spawnSouls();
 				delay = 25000;
 			break;

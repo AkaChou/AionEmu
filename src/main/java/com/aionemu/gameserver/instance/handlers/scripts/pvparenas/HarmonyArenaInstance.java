@@ -404,7 +404,7 @@ public class HarmonyArenaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void useSkill(Npc npc, Player player, int skillId, int level) {
-		SkillEngine.getInstance().getSkill(npc, skillId, level, player).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(npc, skillId, level, player).useNoAnimationSkill();
 	}
 	
 	@Override

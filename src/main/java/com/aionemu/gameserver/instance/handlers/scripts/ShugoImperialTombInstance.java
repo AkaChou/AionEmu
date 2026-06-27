@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -868,7 +870,7 @@ public class ShugoImperialTombInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 			case 831095: //Shugo Warrior Transformation Device.
-				SkillEngine.getInstance().getSkill(npc, 21096, 60, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21096, 60, player).useNoAnimationSkill();
 			break;
 		}
 	}

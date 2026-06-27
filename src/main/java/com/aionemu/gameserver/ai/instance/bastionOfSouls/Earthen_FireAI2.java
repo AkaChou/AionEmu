@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.bastionOfSouls;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -41,7 +43,7 @@ public class Earthen_FireAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 17655, 60, getOwner()).useNoAnimationSkill(); //IDAb1_Ere_Smigol_AreaFire.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 17655, 60, getOwner()).useNoAnimationSkill(); //IDAb1_Ere_Smigol_AreaFire.
 				startLifeTask();
 			}
 		}, 1000);

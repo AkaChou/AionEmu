@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -103,7 +105,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 		sendMsgByRace(1403376, Race.PC_ALL, 5000);
 		Npc npc = instance.getNpc(220450); //Akhal The Oracle.
 		if (npc != null) {
-			SkillEngine.getInstance().getSkill(npc, 21791, 60, npc).useNoAnimationSkill(); //Turning Tide.
+			GameEngineServices.skillEngine().getSkill(npc, 21791, 60, npc).useNoAnimationSkill(); //Turning Tide.
 		}
 	}
 	

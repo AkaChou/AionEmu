@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.verteron;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
@@ -67,7 +69,7 @@ public class _14114Revolution_Intervention extends QuestHandler {
 						}
 					} case STEP_TO_1: {
 						playQuestMovie(env, 30);
-                        SkillEngine.getInstance().applyEffectDirectly(8197, player, player, 0); //Transforming Plumis.
+                        GameEngineServices.skillEngine().applyEffectDirectly(8197, player, player, 0); //Transforming Plumis.
                         updateQuestStatus(env);
                         return defaultCloseDialog(env, 0, 1);
                     } case STEP_TO_2: {

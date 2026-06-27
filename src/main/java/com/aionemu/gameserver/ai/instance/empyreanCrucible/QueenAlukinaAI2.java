@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -73,7 +75,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startEvent(int percent) {
-		SkillEngine.getInstance().getSkill(getOwner(), 17899, 41, getTarget()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 17899, 41, getTarget()).useNoAnimationSkill();
 		switch (percent) {
 			case 75:
 				scheduleSkill(17900, 4500);
@@ -92,7 +94,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 					if (isAlreadyDead()) {
 						cancelTask();
 					} else {
-						SkillEngine.getInstance().getSkill(getOwner(), 17901, 41, getTarget()).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), 17901, 41, getTarget()).useNoAnimationSkill();
 						scheduleSkill(17902, 5500);
 						scheduleSkill(17902, 7500);
 					}
@@ -112,7 +114,7 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(getOwner(), skillId, 41, getTarget()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 41, getTarget()).useNoAnimationSkill();
 				}
 			}
 		}, delay);

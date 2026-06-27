@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tallocsHollow;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -35,7 +37,7 @@ public class KinquidDebuffAI2 extends AggressiveNpcAI2
 		if (creature instanceof Npc && isInRange(creature, 10)) {
 			Npc npc = (Npc) creature;
 			if (npc.getNpcId() == 215467) { //Kindquid.
-				SkillEngine.getInstance().getSkill(getOwner(), getNpcId() == 282008 ? 19235 : 19236, 46, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), getNpcId() == 282008 ? 19235 : 19236, 46, getOwner()).useNoAnimationSkill();
 			}
 		}
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -41,7 +43,7 @@ public class BlackHoleAI2 extends AggressiveNpcAI2
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 20738, 1, getOwner()).useNoAnimationSkill(); //Gravity Reduction.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20738, 1, getOwner()).useNoAnimationSkill(); //Gravity Reduction.
 				startLifeTask();
 			}
 		}, 1000);

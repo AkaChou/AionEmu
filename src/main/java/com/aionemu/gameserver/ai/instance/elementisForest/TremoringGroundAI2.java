@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
@@ -49,7 +51,7 @@ public class TremoringGroundAI2 extends GeneralNpcAI2 {
 
 						@Override
 						public void run() {
-							SkillEngine.getInstance().getSkill(getOwner(), 19442, 51, player).useNoAnimationSkill();
+							GameEngineServices.skillEngine().getSkill(getOwner(), 19442, 51, player).useNoAnimationSkill();
 							AI2Actions.deleteOwner(TremoringGroundAI2.this);
 						}
 

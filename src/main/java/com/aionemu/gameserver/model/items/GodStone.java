@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.model.items;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import org.slf4j.Logger;
@@ -192,7 +194,7 @@ public class GodStone extends ItemStone {
     }
 
     private Skill createSkill(Player player, Creature creature) {
-        return SkillEngine.getInstance().getSkill(player, godstoneInfo.getSkillid(), godstoneInfo.getSkilllvl(), player.getTarget(), godItem);
+        return GameEngineServices.skillEngine().getSkill(player, godstoneInfo.getSkillid(), godstoneInfo.getSkilllvl(), player.getTarget(), godItem);
     }
 
     private void applySkillEffect(Player player, Creature creature, Skill skill) {

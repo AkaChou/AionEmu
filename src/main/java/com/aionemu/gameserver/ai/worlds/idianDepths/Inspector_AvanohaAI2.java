@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.idianDepths;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -78,7 +80,7 @@ public class Inspector_AvanohaAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			SkillEngine.getInstance().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 60, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
 		}
 	}
 	
@@ -93,10 +95,10 @@ public class Inspector_AvanohaAI2 extends AggressiveNpcAI2
 	}	
 	
 	private void skill() {
-		SkillEngine.getInstance().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); //Wrathful Venom Burst.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18158, 100, getOwner()).useNoAnimationSkill(); //Wrathful Venom Burst.
 		   GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
-                SkillEngine.getInstance().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); //Virulence.
+                GameEngineServices.skillEngine().getSkill(getOwner(), 18160, 100, getOwner()).useNoAnimationSkill(); //Virulence.
 			}
 		}, 4000);
 	}

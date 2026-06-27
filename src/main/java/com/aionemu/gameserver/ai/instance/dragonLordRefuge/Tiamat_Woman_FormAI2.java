@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -53,7 +55,7 @@ public class Tiamat_Woman_FormAI2 extends AggressiveNpcAI2
 				sendMsg(1500616, getObjectId(), false, 21000);
 				//I... yes. We are grateful. I don't know what we'd have done without your help...
 				sendMsg(1500617, getObjectId(), false, 27000);
-				SkillEngine.getInstance().getSkill(getOwner(), 20917, 1, getOwner()).useNoAnimationSkill(); //Charge Siel's Relics.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20917, 1, getOwner()).useNoAnimationSkill(); //Charge Siel's Relics.
 			}
 		}, 1000);
 	}

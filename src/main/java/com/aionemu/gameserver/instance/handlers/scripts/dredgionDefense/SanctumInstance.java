@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgionDefense;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -392,7 +394,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 220778: //Boardable Sanctum Defense Turret.
 				despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
+				GameEngineServices.skillEngine().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
 			break;
 			case 220782: //Turret Generator.
 				sp(221022, 1794.3324f, 2132.3911f, 545.47992f, (byte) 0, 624, 2000, 0, null);

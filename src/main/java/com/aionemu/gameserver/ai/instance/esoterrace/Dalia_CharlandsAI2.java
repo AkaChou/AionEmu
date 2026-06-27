@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.esoterrace;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -86,7 +88,7 @@ public class Dalia_CharlandsAI2 extends AggressiveNpcAI2
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 19323, 10, getOwner()).useNoAnimationSkill(); //Saccage De Souffrance.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19323, 10, getOwner()).useNoAnimationSkill(); //Saccage De Souffrance.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();

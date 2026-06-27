@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -1411,7 +1413,7 @@ public class EmpyreanCrucibleInstance extends CrucibleInstance
 			case 217597:
                 Npc counterpart = getNpc(npc.getNpcId() == 217596 ? 217597 : 217596);
 				if (counterpart != null && !NpcActions.isAlreadyDead(counterpart)) {
-					SkillEngine.getInstance().getSkill(counterpart, 19624, 10, counterpart).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(counterpart, 19624, 10, counterpart).useNoAnimationSkill();
 				}
 				despawnNpc(npc);
                 if (getNpcs(217596).isEmpty() &&

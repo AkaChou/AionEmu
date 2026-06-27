@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -44,28 +46,28 @@ public class Empyrean_BlessingAI2 extends ActionItemNpcAI2
                 effectController.removeEffect(22739);
 				effectController.removeEffect(22740);
 				effectController.removeEffect(22741);
-                SkillEngine.getInstance().getSkill(player, 22742, 1, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(player, 22742, 1, player).useNoAnimationSkill();
             break;
 			case 883957: //Redemption Life Energy.
 			case 883961: //Harbinger Life Energy.
 			    effectController.removeEffect(22739);
 				effectController.removeEffect(22740);
 				effectController.removeEffect(22742);
-                SkillEngine.getInstance().getSkill(player, 22741, 1, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(player, 22741, 1, player).useNoAnimationSkill();
             break;
 			case 883958: //Redemption Battle Energy.
 			case 883962: //Harbinger Battle Energy.
 			    effectController.removeEffect(22739);
 				effectController.removeEffect(22741);
 				effectController.removeEffect(22742);
-                SkillEngine.getInstance().getSkill(player, 22740, 1, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(player, 22740, 1, player).useNoAnimationSkill();
             break;
 			case 883959: //Redemption Defense Energy.
 			case 883963: //Harbinger Defense Energy.
 			    effectController.removeEffect(22740);
 				effectController.removeEffect(22741);
 				effectController.removeEffect(22742);
-                SkillEngine.getInstance().getSkill(player, 22739, 1, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(player, 22739, 1, player).useNoAnimationSkill();
             break;
 		}
 	}

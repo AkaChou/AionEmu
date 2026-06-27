@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -85,13 +87,13 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 						cancelspecialSkillTask();
 						think = false;
 						EmoteManager.emoteStopAttacking(getOwner());
-						SkillEngine.getInstance().getSkill(getOwner(), 20483, 60, getOwner()).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), 20483, 60, getOwner()).useNoAnimationSkill();
 						sendMsg(1500501);
 						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								if (!isAlreadyDead()) {
-									SkillEngine.getInstance().getSkill(getOwner(), 20216, 60, getOwner()).useNoAnimationSkill();
+									GameEngineServices.skillEngine().getSkill(getOwner(), 20216, 60, getOwner()).useNoAnimationSkill();
 									startThinkTask();
 								}
 							}
@@ -152,7 +154,7 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		SkillEngine.getInstance().getSkill(getOwner(), 20481, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20481, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500500);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
@@ -170,23 +172,23 @@ public class Lava_Arm_CruegoAI2 extends AggressiveNpcAI2
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(getOwner(), 20223, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20223, 60, getOwner()).useNoAnimationSkill();
 					specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isAlreadyDead()) {
-								SkillEngine.getInstance().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
+								GameEngineServices.skillEngine().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
 								specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										if (!isAlreadyDead()) {
-											SkillEngine.getInstance().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
+											GameEngineServices.skillEngine().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
 											if (curentPercent <= 63) {
 												specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 													@Override
 													public void run() {
 														if (!isAlreadyDead()) {
-															SkillEngine.getInstance().getSkill(getOwner(), 20480, 60, getOwner()).useNoAnimationSkill();
+															GameEngineServices.skillEngine().getSkill(getOwner(), 20480, 60, getOwner()).useNoAnimationSkill();
 															sendMsg(1500502);
 														}
 													}

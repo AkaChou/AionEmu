@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -75,7 +77,7 @@ public class SkillUseAction extends AbstractItemAction {
 
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
-		Skill skill = SkillEngine.getInstance().getSkill(player, skillid, level, player.getTarget(),
+		Skill skill = GameEngineServices.skillEngine().getSkill(player, skillid, level, player.getTarget(),
 				parentItem.getItemTemplate());
 		if (skill == null) {
 			return false;
@@ -117,7 +119,7 @@ public class SkillUseAction extends AbstractItemAction {
 
 	@Override
 	public void act(final Player player, final Item parentItem, Item targetItem) {
-		final Skill skill = SkillEngine.getInstance().getSkill(player, skillid, level, player.getTarget(),
+		final Skill skill = GameEngineServices.skillEngine().getSkill(player, skillid, level, player.getTarget(),
 				parentItem.getItemTemplate());
 		if (skill != null) {
 			if (skill.getSkillId() == 8198) {

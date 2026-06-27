@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -70,7 +72,7 @@ public class TwilightBattlefieldStoreroomInstance extends GeneralInstanceHandler
 		switch(npc.getNpcId()) {
 			case 215415: //Miren Chamber Artifact.
 				sendMsg("You win effect <Shield Of Compassion>");
-				SkillEngine.getInstance().getSkill(npc, 276, 10, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 276, 10, player).useNoAnimationSkill();
 			break;
 		}
 	}

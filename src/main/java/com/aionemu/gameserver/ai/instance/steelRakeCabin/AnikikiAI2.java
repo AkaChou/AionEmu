@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.steelRakeCabin;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -89,7 +91,7 @@ public class AnikikiAI2 extends AggressiveNpcAI2 {
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					SkillEngine.getInstance().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
 					getLifeStats().setCurrentHp(getLifeStats().getMaxHp());
 				}
 			}, 5000);

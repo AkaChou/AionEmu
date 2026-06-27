@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.event.prestigeCoins;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.ChatType;
@@ -48,7 +50,7 @@ public class Prestige_Society_Medical_AttendantAI2 extends NpcAI2
 		if (dialogId == 10000 && player.getInventory().decreaseByItemId(186000344, 1)) { //Prestige Coin.
 		    switch (getNpcId()) {
 		        case 833764: //Prestige Society Medical Attendant.
-				    SkillEngine.getInstance().applyEffectDirectly(21650, player, player, 1800000 * 1); //Prestigious Blessing.
+				    GameEngineServices.skillEngine().applyEffectDirectly(21650, player, player, 1800000 * 1); //Prestigious Blessing.
 				break;
 			}
 		}

@@ -3,6 +3,8 @@
  */
 package com.aionemu.gameserver.controllers.observer;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
@@ -97,7 +99,7 @@ public class MathObjectObserver extends ActionObserver {
 			if (this.template == null) {
 				return;
 			}
-			SkillEngine.getInstance().applyEffectDirectly(this.mathObject.getSkillId(), this.mathObject.getMaster(),
+			GameEngineServices.skillEngine().applyEffectDirectly(this.mathObject.getSkillId(), this.mathObject.getMaster(),
 					this.creature, this.template.getDuration());
 			break;
 		}

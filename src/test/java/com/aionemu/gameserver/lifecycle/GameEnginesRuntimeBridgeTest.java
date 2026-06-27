@@ -112,6 +112,24 @@ class GameEnginesRuntimeBridgeTest {
         }
     }
 
+    @Test
+    void gameServerCodeUsesEngineSkillBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("skillengine/SkillEngine.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEngineServiceFallbacks.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("SkillEngine.getInstance()"), source.toString());
+        }
+    }
+
     private <T> T instance(Class<T> type) {
         return objenesis.newInstance(type);
     }

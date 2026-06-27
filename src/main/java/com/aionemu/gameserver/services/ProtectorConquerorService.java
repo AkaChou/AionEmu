@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -374,7 +376,7 @@ public class ProtectorConquerorService {
 				@Override
 				public void visit(Player player) {
 					if (killer.getRace().equals(player.getRace()) && MathUtil.isIn3dRange(victim, player, 30)) {
-						SkillEngine.getInstance().applyEffectDirectly(buffId(killer, info), player, player, 0);
+						GameEngineServices.skillEngine().applyEffectDirectly(buffId(killer, info), player, player, 0);
 					}
 				}
 			});
@@ -384,7 +386,7 @@ public class ProtectorConquerorService {
 				@Override
 				public void visit(Player player) {
 					if (killer.getRace().equals(player.getRace()) && MathUtil.isIn3dRange(victim, player, 30)) {
-						SkillEngine.getInstance().applyEffectDirectly(buffId(killer, conqueror), player, player, 0);
+						GameEngineServices.skillEngine().applyEffectDirectly(buffId(killer, conqueror), player, player, 0);
 					}
 				}
 			});

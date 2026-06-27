@@ -504,7 +504,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 				if (player.getEffectController().hasAbnormalEffect(getSiegeLocation().getBuffId())) {
 					player.getEffectController().removeEffect(getSiegeLocation().getBuffId());
 				} else {
-					SkillEngine.getInstance().applyEffectDirectly(getSiegeLocation().getBuffId(), player, player, 0);
+					GameEngineServices.skillEngine().applyEffectDirectly(getSiegeLocation().getBuffId(), player, player, 0);
 				}
 				// Buff for Asmodians or Elyos.
 				if (player.getEffectController().hasAbnormalEffect(getSiegeLocation().getBuffIdA())) {
@@ -514,10 +514,10 @@ public class FortressSiege extends Siege<FortressLocation> {
 					player.getEffectController().removeEffect(getSiegeLocation().getBuffIdE());
 				}
 				if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					SkillEngine.getInstance().applyEffectDirectly(getSiegeLocation().getBuffIdA(), player, player, 0);
+					GameEngineServices.skillEngine().applyEffectDirectly(getSiegeLocation().getBuffIdA(), player, player, 0);
 				}
 				if (player.getCommonData().getRace() == Race.ELYOS) {
-					SkillEngine.getInstance().applyEffectDirectly(getSiegeLocation().getBuffIdE(), player, player, 0);
+					GameEngineServices.skillEngine().applyEffectDirectly(getSiegeLocation().getBuffIdE(), player, player, 0);
 				}
 			}
 		});

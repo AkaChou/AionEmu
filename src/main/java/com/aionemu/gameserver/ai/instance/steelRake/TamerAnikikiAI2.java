@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.steelRake;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -91,7 +93,7 @@ public class TamerAnikikiAI2 extends AggressiveNpcAI2
 			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					SkillEngine.getInstance().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
 					getLifeStats().setCurrentHp(getLifeStats().getMaxHp());
 				}
 			}, 5000);

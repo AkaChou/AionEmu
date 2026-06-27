@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.mission;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
@@ -74,7 +76,7 @@ public class _24015Totem_Plowed extends QuestHandler {
 						}
 					} case STEP_TO_1: {
                         if (var == 0) {
-							SkillEngine.getInstance().applyEffectDirectly(272, player, player, 0); //Mau Transformation.
+							GameEngineServices.skillEngine().applyEffectDirectly(272, player, player, 0); //Mau Transformation.
 							return defaultCloseDialog(env, 0, 1);
 						}
                     }

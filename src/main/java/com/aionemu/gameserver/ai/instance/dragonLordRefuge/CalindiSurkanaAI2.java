@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -46,7 +48,7 @@ public class CalindiSurkanaAI2 extends NpcAI2
 		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-			    SkillEngine.getInstance().applyEffectDirectly(20891, getOwner(), calindi, 0);
+			    GameEngineServices.skillEngine().applyEffectDirectly(20891, getOwner(), calindi, 0);
 			}
 		}, 3000, 10000);
 	}

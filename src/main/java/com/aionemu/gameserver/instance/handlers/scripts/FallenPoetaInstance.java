@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -253,27 +255,27 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 703302: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
 			break;
 			case 703303: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
 			break;
 			case 703304: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
 			break;
 			case 703306: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
 			break;
 			case 703307: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
 			break;
 			case 703308: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
 			break;
 		}
 	}

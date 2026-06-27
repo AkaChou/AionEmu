@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.event;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -83,7 +85,7 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 		Npc npc = instance.getNpc(217371); //Weapon Hugen.
 		if (npc != null) {
 			npc.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-			SkillEngine.getInstance().getSkill(npc, 21571, 60, npc).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(npc, 21571, 60, npc).useNoAnimationSkill();
 		}
 	}
 	
@@ -420,18 +422,18 @@ public class Event_AturamSkyFortressInstance extends GeneralInstanceHandler
 			case 731533: //Magma Tachysphere.
 			    despawnNpc(npc);
 				sp(731533, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 0, 20000, 0, null); //Board Swift Runner.
-				SkillEngine.getInstance().getSkill(npc, 21807, 60, player).useNoAnimationSkill(); //Board Swift Runner.
+				GameEngineServices.skillEngine().getSkill(npc, 21807, 60, player).useNoAnimationSkill(); //Board Swift Runner.
 			break;
 			case 731534: //Magma Tachysphere.
 			    despawnNpc(npc);
 				sp(731534, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 0, 20000, 0, null); //Board Swift Runner.
-				SkillEngine.getInstance().getSkill(npc, 21808, 60, player).useNoAnimationSkill(); //Board Swift Runner.
+				GameEngineServices.skillEngine().getSkill(npc, 21808, 60, player).useNoAnimationSkill(); //Board Swift Runner.
 			break;
 			case 730397: //Recharger.
 			    despawnNpc(npc);
 				//You feel more physically fit as the energy covers you.
 				sendMsgByRace(1400926, Race.PC_ALL, 0);
-				SkillEngine.getInstance().getSkill(npc, 19520, 51, player).useNoAnimationSkill(); //Overclock.
+				GameEngineServices.skillEngine().getSkill(npc, 19520, 51, player).useNoAnimationSkill(); //Overclock.
 			break;
 			case 730398: //Flagon.
 				despawnNpc(npc);

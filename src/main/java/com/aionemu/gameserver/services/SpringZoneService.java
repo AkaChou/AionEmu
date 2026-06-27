@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -62,7 +64,7 @@ public class SpringZoneService {
 							if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
 									&& (!player.getEffectController().hasAbnormalEffect(17560))) { // Bless Of Guardian
 																									// Spring.
-								SkillEngine.getInstance().getSkill(player, 17560, 1, player).useNoAnimationSkill();
+								GameEngineServices.skillEngine().getSkill(player, 17560, 1, player).useNoAnimationSkill();
 							}
 						}
 					});

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers.observer;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
@@ -145,7 +147,7 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 								PacketSendUtility.sendMessage(player, "Use skill=" + actSkill.getId());
 							}
 						}
-						Skill skill = SkillEngine.getInstance().getSkill(creature, actSkill.getId(),
+						Skill skill = GameEngineServices.skillEngine().getSkill(creature, actSkill.getId(),
 								actSkill.getSkillLevel(), creature);
 						skill.getEffectedList().add(creature);
 						skill.useWithoutPropSkill();

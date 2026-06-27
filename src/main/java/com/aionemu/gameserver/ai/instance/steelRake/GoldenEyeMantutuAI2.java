@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.steelRake;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -165,7 +167,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 						skill = 20490; //Thirst.
 					break;
 				}
-				SkillEngine.getInstance().getSkill(getOwner(), skill, 20, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), skill, 20, getOwner()).useNoAnimationSkill();
 			}
 		}, 10000, 30000);
 	}

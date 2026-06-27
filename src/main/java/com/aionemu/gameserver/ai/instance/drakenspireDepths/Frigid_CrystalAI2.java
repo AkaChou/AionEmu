@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
@@ -38,7 +40,7 @@ public class Frigid_CrystalAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		SkillEngine.getInstance().getSkill(getOwner(), 21638, 46, getOwner()).useNoAnimationSkill(); //Frozen Blur.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21638, 46, getOwner()).useNoAnimationSkill(); //Frozen Blur.
 		startLifeTask();
 	}
 	

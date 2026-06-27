@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -191,7 +193,7 @@ public class DragonLordRefugeInstance extends GeneralInstanceHandler
 				    public void visit(Player player) {
 						//Dragon Lord Tiamat used its Death Roar to defeat the Empyrean Lord.
 						sendMsgByRace(1401542, Race.PC_ALL, 0);
-						SkillEngine.getInstance().applyEffectDirectly(20920, player, player, 30000); //Dragon Lord's Roar.
+						GameEngineServices.skillEngine().applyEffectDirectly(20920, player, player, 30000); //Dragon Lord's Roar.
 				    }
 			    });
 			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
