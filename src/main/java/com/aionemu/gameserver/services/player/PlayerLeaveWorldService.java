@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -86,8 +88,8 @@ public class PlayerLeaveWorldService {
 		log.info("Player Logged Out: " + player.getName() + " Account: "
 				+ (player.getClientConnection() != null ? player.getClientConnection().getAccount().getName()
 						: "Disconnected"));
-		FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-		FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		player.onLoggedOut();
 		PetService.getInstance().onPlayerLogout(player);
 		BrokerService.getInstance().removePlayerCache(player);

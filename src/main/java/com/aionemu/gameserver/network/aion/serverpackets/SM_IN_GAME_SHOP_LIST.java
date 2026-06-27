@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +47,7 @@ public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
 		byte category = player.inGameShop.getCategory();
 		byte subCategory = player.inGameShop.getSubCategory();
 		if (salesRanking == 1) {
-			Collection<IGItem> items = InGameShopEn.getInstance().getItems(category);
+			Collection<IGItem> items = GameRuntimeServices.inGameShopEn().getItems(category);
 			int size = 0;
 			int tabSize = 9;
 			int f = 0;
@@ -75,10 +77,10 @@ public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
 				}
 			}
 		} else {
-			List<Integer> salesRankingItems = InGameShopEn.getInstance().getTopSales(subCategory, category);
+			List<Integer> salesRankingItems = GameRuntimeServices.inGameShopEn().getTopSales(subCategory, category);
 			writeD(salesRanking);
 			writeD(nrList);
-			writeD((InGameShopEn.getInstance().getMaxList(subCategory, category) + 1) * 9);
+			writeD((GameRuntimeServices.inGameShopEn().getMaxList(subCategory, category) + 1) * 9);
 			writeH(salesRankingItems.size());
 			for (int id : salesRankingItems) {
 				writeD(id);

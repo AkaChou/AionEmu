@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -252,7 +254,7 @@ public class Gameshop extends AdminCommand {
 				}
 
 				PacketSendUtility.sendMessage(admin, "You added " + toll + " tolls to Player: " + name);
-				InGameShopEn.getInstance().addToll(player, toll);
+				GameRuntimeServices.inGameShopEn().addToll(player, toll);
 			}
 			if (params.length == 2) {
 				try {
@@ -274,7 +276,7 @@ public class Gameshop extends AdminCommand {
 				}
 
 				PacketSendUtility.sendMessage(admin, "You added " + toll + " tolls to Player: " + player.getName());
-				InGameShopEn.getInstance().addToll(player, toll);
+				GameRuntimeServices.inGameShopEn().addToll(player, toll);
 			}
 		}
 		else {

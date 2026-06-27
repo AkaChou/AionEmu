@@ -6,9 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -45,6 +49,17 @@ class GameRuntimeServicesLifecycleTest {
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "findGroupServiceProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "inGameShopEnProvider"));
         assertEquals(ObjectProvider.class, fieldType(GameRuntimeServicesGateway.class, "runtimeServiceBridgeProvider"));
+    }
+
+    @Test
+    void gameServerCodeUsesRuntimeServicesBridgeInsteadOfDirectSingletons() throws IOException {
+        Map<String, Path> serviceSources = Map.of(
+            "FindGroupService", Path.of("services/FindGroupService.java"),
+            "InGameShopEn", Path.of("model/ingameshop/InGameShopEn.java"));
+
+        for (Map.Entry<String, Path> serviceSource : serviceSources.entrySet()) {
+            assertNoDirectSingletonAccess(serviceSource.getKey(), serviceSource.getValue());
+        }
     }
 
     @Test
@@ -151,6 +166,23 @@ class GameRuntimeServicesLifecycleTest {
             return field.getType();
         } catch (NoSuchFieldException e) {
             throw new AssertionError("Missing field: " + name, e);
+        }
+    }
+
+    private static void assertNoDirectSingletonAccess(String serviceName, Path serviceSource) throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(serviceSource))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameRuntimeServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains(serviceName + ".getInstance()"), source.toString());
         }
     }
 

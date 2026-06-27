@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.model.team2.common.service;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
@@ -278,7 +280,7 @@ public class PlayerTeamDistributionService {
 				if (Rnd.get(0, 100) > CustomConfig.TOLL_PVE_CHANCE) {
 					for (String worldIds : CustomConfig.TOLL_PVE_WORLDID.split(",")) {
 						if (member.getWorldId() == Integer.parseInt(worldIds)) {
-							InGameShopEn.getInstance().addToll(member, CustomConfig.TOLL_PVE_QUANTITY);
+							GameRuntimeServices.inGameShopEn().addToll(member, CustomConfig.TOLL_PVE_QUANTITY);
 							PacketSendUtility.sendMessage(member, "You have received " + CustomConfig.TOLL_PVE_QUANTITY + " tolls from PvE!");
 						}
 					}

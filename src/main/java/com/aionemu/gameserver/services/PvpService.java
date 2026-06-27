@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
@@ -129,7 +131,7 @@ public class PvpService {
 			// PvP Toll Reward
 			if (PvPConfig.ENABLE_TOLL_REWARD) {
 				if (Rnd.get(0, 100) > PvPConfig.TOLL_CHANCE) {
-					InGameShopEn.getInstance().addToll(winner, PvPConfig.TOLL_QUANTITY);
+					GameRuntimeServices.inGameShopEn().addToll(winner, PvPConfig.TOLL_QUANTITY);
 					PacketSendUtility.sendMessage(winner,
 							"You've received " + PvPConfig.TOLL_QUANTITY + " tolls from PvP!");
 				}
@@ -205,7 +207,7 @@ public class PvpService {
 				if ((PvPConfig.ENABLE_TOLL_REWARD)
 						&& (Rnd.get() * 100.0F < PvPRewardService.getTollRewardChance(winner, victim))) {
 					int qt = PvPRewardService.getTollQuantity(winner, victim);
-					InGameShopEn.getInstance().addToll(winner, qt);
+					GameRuntimeServices.inGameShopEn().addToll(winner, qt);
 					if (qt == 1)
 						PacketSendUtility.sendBrightYellowMessage(winner, "You obtained " + qt + " point toll.");
 					else {

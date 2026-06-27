@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.configs.Config;
@@ -154,7 +156,7 @@ public class Reload extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "NpcDrops successfully reloaded!");
 		}
 		else if (params[0].equals("gameshop")) {
-			InGameShopEn.getInstance().reload();
+			GameRuntimeServices.inGameShopEn().reload();
 			PacketSendUtility.sendMessage(admin, "Gameshop successfully reloaded!");
 		}
 		else if (params[0].equals("events")) {

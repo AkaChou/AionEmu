@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -254,7 +256,7 @@ public class NpcController extends CreatureController<Npc> {
 						Player player = (Player) attacker;
 						for (String worldIds : CustomConfig.TOLL_PVE_WORLDID.split(",")) {
 							if (player.getWorldId() == Integer.parseInt(worldIds)) {
-								InGameShopEn.getInstance().addToll(player, CustomConfig.TOLL_PVE_QUANTITY);
+								GameRuntimeServices.inGameShopEn().addToll(player, CustomConfig.TOLL_PVE_QUANTITY);
 								PacketSendUtility.sendMessage(player, "You have received " + CustomConfig.TOLL_PVE_QUANTITY + " tolls from PvE!");
 							}
 						}

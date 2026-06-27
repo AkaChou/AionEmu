@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -431,7 +433,7 @@ public class FFAService {
 		if (player.getKillStreak() == 5) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_1;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -445,7 +447,7 @@ public class FFAService {
 		if (player.getKillStreak() == 10) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_2;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -459,7 +461,7 @@ public class FFAService {
 		if (player.getKillStreak() == 15) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_3;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -473,7 +475,7 @@ public class FFAService {
 		if (player.getKillStreak() == 20) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_4;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -487,7 +489,7 @@ public class FFAService {
 		if (player.getKillStreak() == 25) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_5;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -501,7 +503,7 @@ public class FFAService {
 		if (player.getKillStreak() == 30) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_6;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -515,7 +517,7 @@ public class FFAService {
 		if (player.getKillStreak() == 35) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_7;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -529,7 +531,7 @@ public class FFAService {
 		if (player.getKillStreak() == 40) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_8;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -543,7 +545,7 @@ public class FFAService {
 		if (player.getKillStreak() == 45) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_9;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -557,7 +559,7 @@ public class FFAService {
 		if (player.getKillStreak() >= 50 && player.getKillStreak() <= 999) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_10;
 				instance.doOnAllPlayers(new Visitor<Player>() {

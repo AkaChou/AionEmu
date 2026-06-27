@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.configs.ingameshop.InGameShopProperty;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.model.templates.ingameshop.IGCategory;
@@ -31,7 +33,7 @@ public class SM_IN_GAME_SHOP_CATEGORY_LIST extends AionServerPacket {
 	public SM_IN_GAME_SHOP_CATEGORY_LIST(int type, int category) {
 		this.type = type;
 		categoryId = category;
-		ing = InGameShopEn.getInstance().getIGSProperty();
+		ing = GameRuntimeServices.inGameShopEn().getIGSProperty();
 	}
 
 	@Override

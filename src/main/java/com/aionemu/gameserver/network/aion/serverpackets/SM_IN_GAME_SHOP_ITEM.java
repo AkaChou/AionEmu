@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.ingameshop.IGItem;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
@@ -26,7 +28,7 @@ public class SM_IN_GAME_SHOP_ITEM extends AionServerPacket {
 	private IGItem item;
 
 	public SM_IN_GAME_SHOP_ITEM(Player player, int objectItem) {
-		item = InGameShopEn.getInstance().getIGItem(objectItem);
+		item = GameRuntimeServices.inGameShopEn().getIGItem(objectItem);
 	}
 
 	@Override

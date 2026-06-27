@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -122,7 +124,7 @@ public class EventAi extends AdminCommand {
 										PacketSendUtility.sendMessage(player, "You Received " + GP + " Glory Point(s) from Event!");
 									}
                                     if(toll != 0){
-                                        InGameShopEn.getInstance().addToll(player, toll);
+                                        GameRuntimeServices.inGameShopEn().addToll(player, toll);
                                         PacketSendUtility.sendMessage(player, "You Received " + toll + " Toll Point(s) from Event!");
                                     }
                                     PacketSendUtility.sendWhiteMessage(admin, "Player: \uE020" + player.getName() + "\uE020 Has Been Successfully Rewarded!");

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 
@@ -42,6 +44,6 @@ public class CM_PREMIUM_RESPONSE extends LsClientPacket {
 
 	@Override
 	protected void runImpl() {
-		InGameShopEn.getInstance().finishRequest(requestId, result, points, luna);
+		GameRuntimeServices.inGameShopEn().finishRequest(requestId, result, points, luna);
 	}
 }
