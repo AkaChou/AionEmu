@@ -590,6 +590,7 @@ class GameServiceProviderCompatibilityTest {
     @Test
     void gameFeatureServicesRegistersAndClearsPlayerActionProviders() throws Exception {
         BonusService bonusService = instance(BonusService.class);
+        NpcShoutsService npcShoutsService = instance(NpcShoutsService.class);
         PetService petService = instance(PetService.class);
         ArcadeUpgradeService arcadeUpgradeService = instance(ArcadeUpgradeService.class);
         AtreianBestiaryService atreianBestiaryService = instance(AtreianBestiaryService.class);
@@ -601,7 +602,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(DredgionService2.class, instance(DredgionService2.class)),
                 provider(AsyunatarService.class, instance(AsyunatarService.class)),
                 provider(PlayerLimitService.class, instance(PlayerLimitService.class)),
-                provider(NpcShoutsService.class, instance(NpcShoutsService.class)),
+                provider(NpcShoutsService.class, npcShoutsService),
                 provider(ShieldService.class, instance(ShieldService.class)),
                 provider(RewardService.class, instance(RewardService.class)),
                 provider(WeddingService.class, instance(WeddingService.class)),
@@ -628,6 +629,7 @@ class GameServiceProviderCompatibilityTest {
                 provider(GrowthEnergy.class, growthEnergy));
 
         try {
+            assertSame(npcShoutsService, GameFeatureServices.npcShoutsService());
             assertSame(bonusService, BonusService.getInstance());
             assertSame(petService, PetService.getInstance());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());

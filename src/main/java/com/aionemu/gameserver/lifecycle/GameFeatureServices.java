@@ -36,6 +36,8 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameFeatureServices implements DisposableBean {
 
+    private static volatile ObjectProvider<NpcShoutsService> npcShoutsServiceProvider;
+
     public GameFeatureServices(ObjectProvider<DisputeLandService> disputeLandServiceProvider,
             ObjectProvider<DredgionService2> dredgionServiceProvider,
             ObjectProvider<AsyunatarService> asyunatarServiceProvider,
@@ -65,6 +67,7 @@ public final class GameFeatureServices implements DisposableBean {
             ObjectProvider<AtreianBestiaryService> atreianBestiaryServiceProvider,
             ObjectProvider<CoalescenceService> coalescenceServiceProvider,
             ObjectProvider<GrowthEnergy> growthEnergyProvider) {
+        GameFeatureServices.npcShoutsServiceProvider = npcShoutsServiceProvider;
         DisputeLandService.setInstanceProvider(disputeLandServiceProvider);
         DredgionService2.setInstanceProvider(dredgionServiceProvider);
         AsyunatarService.setInstanceProvider(asyunatarServiceProvider);
@@ -96,8 +99,17 @@ public final class GameFeatureServices implements DisposableBean {
         GrowthEnergy.setInstanceProvider(growthEnergyProvider);
     }
 
+    public static NpcShoutsService npcShoutsService() {
+        ObjectProvider<NpcShoutsService> provider = npcShoutsServiceProvider;
+        if (provider == null) {
+            return NpcShoutsService.getInstance();
+        }
+        return provider.getIfAvailable(NpcShoutsService::getInstance);
+    }
+
     @Override
     public void destroy() {
+        npcShoutsServiceProvider = null;
         DisputeLandService.setInstanceProvider(null);
         DredgionService2.setInstanceProvider(null);
         AsyunatarService.setInstanceProvider(null);
