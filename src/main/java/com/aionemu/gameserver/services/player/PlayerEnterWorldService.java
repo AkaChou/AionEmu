@@ -1,6 +1,8 @@
 
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -111,7 +113,6 @@ import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.F2pService;
 import com.aionemu.gameserver.services.HTMLService;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
@@ -610,7 +611,7 @@ public final class PlayerEnterWorldService {
 			MinionService.getInstance().onPlayerLogin(player);
 			WindyGorgeService.getInstance().onLogin(player);
 			MailService.getInstance().onPlayerLogin(player);
-			HousingService.getInstance().onPlayerLogin(player);
+			GameHousingServices.housingService().onPlayerLogin(player);
 			BrokerService.getInstance().onPlayerLogin(player);
 			sendMacroList(client, player);
 			client.sendPacket(new SM_FRIEND_STATUS((byte) 1));

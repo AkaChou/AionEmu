@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -869,7 +871,7 @@ public class DialogService {
             }
             case 96: {
                 // Housing Studio.
-                HousingService.getInstance().recreatePlayerStudio(player);
+                GameHousingServices.housingService().recreatePlayerStudio(player);
                 break;
             }
             case 100: {

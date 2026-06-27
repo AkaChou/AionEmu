@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.model.templates.housing.BuildingType;
 import com.aionemu.gameserver.model.templates.housing.HouseAddress;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OWNER_INFO;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
@@ -61,7 +62,7 @@ public class HouseCommand extends AdminCommand
 				PacketSendUtility.sendMessage(admin, "Syntax: //house tp <HOUSE_Id>");
 				return;
 			}
-			House house = HousingService.getInstance().getHouseByName(params[1].toUpperCase());
+			House house = GameHousingServices.housingService().getHouseByName(params[1].toUpperCase());
 			if (house == null) {
 				PacketSendUtility.sendMessage(admin, "No such house!");
 				return;
@@ -84,7 +85,7 @@ public class HouseCommand extends AdminCommand
 				PacketSendUtility.sendMessage(admin, "Player can not own more than 2 houses!");
 				return;
 			}
-			House house = HousingService.getInstance().getHouseByName(houseName);
+			House house = GameHousingServices.housingService().getHouseByName(houseName);
 			if (house == null) {
 				PacketSendUtility.sendMessage(admin, "No such house!");
 				return;

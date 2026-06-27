@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,7 +119,6 @@ import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_TOLL_INFO;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.conquerors.Conqueror;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.bg.Battleground;
@@ -2455,7 +2456,7 @@ public class Player extends Creature {
 
 	public List<House> getHouses() {
 		if (houses == null) {
-			List<House> found = HousingService.getInstance().searchPlayerHouses(this.getObjectId());
+			List<House> found = GameHousingServices.housingService().searchPlayerHouses(this.getObjectId());
 			if (found.size() > 0) {
 				houses = found;
 			} else {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -40,7 +42,6 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.network.aion.SystemMessageId;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AutoGroupService;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.StaticDoorSpawnManager;
@@ -122,7 +123,7 @@ public class InstanceService {
 		if (instance instanceof WorldMap2DInstance) {
 			WorldMap2DInstance w2d = (WorldMap2DInstance) instance;
 			if (w2d.isPersonal()) {
-				HousingService.getInstance().onInstanceDestroy(w2d.getOwnerId());
+				GameHousingServices.housingService().onInstanceDestroy(w2d.getOwnerId());
 			}
 		}
 	}

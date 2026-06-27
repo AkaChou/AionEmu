@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.io.ByteArrayOutputStream;
@@ -60,7 +62,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnType;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
 import com.aionemu.gameserver.services.HousingBidService;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -359,7 +360,7 @@ public class House extends VisibleObject {
 	}
 
 	public boolean isInGracePeriod() {
-		return playerObjectId > 0 && HousingService.getInstance().searchPlayerHouses(playerObjectId).size() == 2
+		return playerObjectId > 0 && GameHousingServices.housingService().searchPlayerHouses(playerObjectId).size() == 2
 				&& (status == HouseStatus.ACTIVE || status == HouseStatus.SELL_WAIT) && sellStarted != null
 				&& sellStarted.getTime() <= HousingBidService.getInstance().getAuctionStartTime();
 	}
@@ -419,7 +420,7 @@ public class House extends VisibleObject {
 		}
 		getRegistry().despawnObjects();
 		if (this.getBuilding().getType() == BuildingType.PERSONAL_INS) {
-			HousingService.getInstance().removeStudio(playerObjectId);
+			GameHousingServices.housingService().removeStudio(playerObjectId);
 			DAOManager.getDAO(HousesDAO.class).deleteHouse(playerObjectId);
 			return true;
 		}
@@ -431,7 +432,7 @@ public class House extends VisibleObject {
 		Building defaultBuilding = getLand().getDefaultBuilding();
 		setOwnerId(0);
 		if (defaultBuilding != building) {
-			HousingService.getInstance().switchHouseBuilding(this, defaultBuilding.getId());
+			GameHousingServices.housingService().switchHouseBuilding(this, defaultBuilding.getId());
 		}
 		setStatus(HouseStatus.NOSALE);
 		save();

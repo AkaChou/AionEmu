@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.HousingService;
 
 public class SM_LEGION_MEMBERLIST extends AionServerPacket {
 	private static final int OFFLINE = 0x00, ONLINE = 0x01;
@@ -53,11 +54,11 @@ public class SM_LEGION_MEMBERLIST extends AionServerPacket {
 			writeS(legionMember.getSelfIntro());
 			writeS(legionMember.getNickname());
 			writeD(legionMember.getLastOnline());
-			int address = HousingService.getInstance().getPlayerAddress(legionMember.getObjectId());
+			int address = GameHousingServices.housingService().getPlayerAddress(legionMember.getObjectId());
 			if (address > 0) {
-				House house = HousingService.getInstance().getPlayerStudio(legionMember.getObjectId());
+				House house = GameHousingServices.housingService().getPlayerStudio(legionMember.getObjectId());
 				if (house == null) {
-					house = HousingService.getInstance().getHouseByAddress(address);
+					house = GameHousingServices.housingService().getHouseByAddress(address);
 				}
 				writeD(address);
 				writeD(house.getDoorState().getPacketValue());

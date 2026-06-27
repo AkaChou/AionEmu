@@ -12,13 +12,14 @@
  */
 package com.aionemu.gameserver.quest.handlers.pernon;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.services.HousingService;
 
 /****/
 /** Author Ghostfur & Unknown (Aion-Unique)
@@ -72,7 +73,7 @@ public class _28802Be_It_Ever_So_Humble extends QuestHandler
 		} else if (qs.getStatus() == QuestStatus.REWARD) {
 			if (targetId == 830153) {
 				if (dialog.equals(QuestDialog.SELECT_NO_REWARD)) {
-					HousingService.getInstance().registerPlayerStudio(player);
+					GameHousingServices.housingService().registerPlayerStudio(player);
 				}
 				return sendQuestEndDialog(env);
 			}

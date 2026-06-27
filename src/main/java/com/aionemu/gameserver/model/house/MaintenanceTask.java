@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.Instant;
@@ -36,7 +38,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OWNER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HousingBidService;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -119,7 +120,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			return;
 		}
 		Date now = new Date();
-		List<House> houses = HousingService.getInstance().getCustomHouses();
+		List<House> houses = GameHousingServices.housingService().getCustomHouses();
 		for (House house : houses) {
 			if (house.getStatus() == HouseStatus.INACTIVE) {
 				continue;

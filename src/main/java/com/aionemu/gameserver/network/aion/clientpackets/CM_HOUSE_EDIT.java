@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -40,7 +42,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_EDIT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_REGISTRY;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
@@ -167,7 +168,7 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 				AuditLogger.info(player, "Try house renovation without coupon");
 				return;
 			}
-			HousingService.getInstance().switchHouseBuilding(house, buildingId);
+			GameHousingServices.housingService().switchHouseBuilding(house, buildingId);
 			player.setHouseRegistry(house.getRegistry());
 			((HouseController) house.getController()).updateAppearance();
 		}

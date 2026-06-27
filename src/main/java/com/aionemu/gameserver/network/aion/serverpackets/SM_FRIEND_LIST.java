@@ -16,12 +16,13 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Friend;
 import com.aionemu.gameserver.model.gameobjects.player.FriendList;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.HousingService;
 
 public class SM_FRIEND_LIST extends AionServerPacket {
 	@Override
@@ -39,11 +40,11 @@ public class SM_FRIEND_LIST extends AionServerPacket {
 			writeD(friend.getLastOnlineTime());
 			writeS(friend.getNote());
 			writeC(friend.getStatus().getId());
-			int address = HousingService.getInstance().getPlayerAddress(friend.getOid());
+			int address = GameHousingServices.housingService().getPlayerAddress(friend.getOid());
 			if (address > 0) {
-				House house = HousingService.getInstance().getPlayerStudio(friend.getOid());
+				House house = GameHousingServices.housingService().getPlayerStudio(friend.getOid());
 				if (house == null) {
-					house = HousingService.getInstance().getHouseByAddress(address);
+					house = GameHousingServices.housingService().getHouseByAddress(address);
 					writeD(house.getAddress().getId());
 				} else {
 					writeD(address);

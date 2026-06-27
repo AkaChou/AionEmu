@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.house.HouseBidEntry;
 import com.aionemu.gameserver.model.house.HouseStatus;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
 import com.aionemu.gameserver.services.HousingBidService;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.zone.ZoneName;
@@ -58,7 +59,7 @@ public class Auction extends AdminCommand {
 			List<House> housesToRemove = new ArrayList<House>();
 
 			if ("HOUSE".equals(param.split("_")[0])) {
-				House house = HousingService.getInstance().getHouseByName(params[1].toUpperCase());
+				House house = GameHousingServices.housingService().getHouseByName(params[1].toUpperCase());
 				if (house == null || house.getStatus() != HouseStatus.SELL_WAIT) {
 					PacketSendUtility.sendMessage(admin, "No such house!");
 				}
@@ -69,7 +70,7 @@ public class Auction extends AdminCommand {
 					PacketSendUtility.sendMessage(admin, "No such zone!");
 					return;
 				}
-				for (House house : HousingService.getInstance().getCustomHouses()) {
+				for (House house : GameHousingServices.housingService().getCustomHouses()) {
 					if (house.getStatus() != HouseStatus.SELL_WAIT) {
 						continue;
 					}
@@ -143,7 +144,7 @@ public class Auction extends AdminCommand {
 			boolean found = false;
 			int counter = 0;
 
-			for (House house : HousingService.getInstance().getCustomHouses()) {
+			for (House house : GameHousingServices.housingService().getCustomHouses()) {
 				if (house.getOwnerId() != 0 || house.getHouseType() != houseType) {
 					continue;
 				}
@@ -232,7 +233,7 @@ public class Auction extends AdminCommand {
 			}
 
 			int counter = 0;
-			List<House> houses = HousingService.getInstance().getCustomHouses();
+			List<House> houses = GameHousingServices.housingService().getCustomHouses();
 			while (!houses.isEmpty() && counter < count) {
 				House house = houses.get(Rnd.get(houses.size()));
 				houses.remove(house);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -52,7 +54,6 @@ import com.aionemu.gameserver.model.templates.spawns.towerofeternityspawns.Tower
 import com.aionemu.gameserver.model.templates.spawns.vortexspawns.VortexSpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.ZorshivDredgionSpawnTemplate;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -332,7 +333,7 @@ public class SpawnEngine {
 			WalkerFormator.organizeAndSpawn(worldId, instanceId);
 		}
 		log.info("Spawned " + worldId + " [" + instanceId + "] : " + spawnedCounter);
-		HousingService.getInstance().spawnHouses(worldId, instanceId, ownerId);
+		GameHousingServices.housingService().spawnHouses(worldId, instanceId, ownerId);
 	}
 
 	private static boolean checkPool(SpawnGroup2 spawn) {

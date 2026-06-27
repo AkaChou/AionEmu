@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.commons.database.DatabaseFactory;
@@ -10,7 +12,6 @@ import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.house.HouseRegistry;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
 import com.aionemu.gameserver.model.templates.housing.PartType;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
@@ -70,10 +71,10 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
     
     @Override
     public void loadRegistry(int playerId) {
-        House house = HousingService.getInstance().getPlayerStudio(playerId);
+        House house = GameHousingServices.housingService().getPlayerStudio(playerId);
         if (house == null) {
-            int address = HousingService.getInstance().getPlayerAddress(playerId);
-            house = HousingService.getInstance().getHouseByAddress(address);
+            int address = GameHousingServices.housingService().getPlayerAddress(playerId);
+            house = GameHousingServices.housingService().getHouseByAddress(address);
         }
         
         if (house == null) {

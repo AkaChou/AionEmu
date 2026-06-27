@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.pernon;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.questEngine.model.QuestDialog;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.services.HousingService;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -71,10 +72,10 @@ public class _28828TheManyFacetsOfFriendship extends QuestHandler {
 		if (!butlers.contains(targetId))
 			return false;
 
-		House house = HousingService.getInstance().getPlayerStudio(player.getObjectId());
+		House house = GameHousingServices.housingService().getPlayerStudio(player.getObjectId());
 		if (house == null) {
-			int address = HousingService.getInstance().getPlayerAddress(player.getObjectId());
-			HousingService.getInstance().getHouseByAddress(address);
+			int address = GameHousingServices.housingService().getPlayerAddress(player.getObjectId());
+			GameHousingServices.housingService().getHouseByAddress(address);
 		}
 		if (house == null || house.getButler() == null || house.getButler().getNpcId() != targetId)
 			return false;

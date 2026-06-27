@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.nio.charset.Charset;
 
 import com.aionemu.gameserver.controllers.HouseController;
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class CM_HOUSE_SETTINGS extends AionClientPacket {
@@ -51,10 +52,10 @@ public class CM_HOUSE_SETTINGS extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		House house = HousingService.getInstance().getPlayerStudio(player.getObjectId());
+		House house = GameHousingServices.housingService().getPlayerStudio(player.getObjectId());
 		if (house == null) {
-			int address = HousingService.getInstance().getPlayerAddress(player.getObjectId());
-			house = HousingService.getInstance().getHouseByAddress(address);
+			int address = GameHousingServices.housingService().getPlayerAddress(player.getObjectId());
+			house = GameHousingServices.housingService().getHouseByAddress(address);
 		}
 		HousePermissions doorPermission = HousePermissions.getPacketDoorState(doorState);
 		house.setDoorState(doorPermission);
