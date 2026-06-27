@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.network.BannedMacManager;
+import com.aionemu.gameserver.network.NetworkController;
 import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
@@ -26,6 +27,10 @@ final class GameServerNetworkFallbacks {
         return PacketLoggerServiceFallback.INSTANCE;
     }
 
+    static NetworkController networkController() {
+        return NetworkControllerFallback.INSTANCE;
+    }
+
     private static final class BannedMacManagerFallback {
         private static final BannedMacManager INSTANCE = BannedMacManager.getInstance();
     }
@@ -40,5 +45,9 @@ final class GameServerNetworkFallbacks {
 
     private static final class PacketLoggerServiceFallback {
         private static final PacketLoggerService INSTANCE = PacketLoggerService.getInstance();
+    }
+
+    private static final class NetworkControllerFallback {
+        private static final NetworkController INSTANCE = NetworkController.getInstance();
     }
 }

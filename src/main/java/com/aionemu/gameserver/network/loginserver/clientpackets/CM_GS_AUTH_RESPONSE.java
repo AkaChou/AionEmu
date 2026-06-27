@@ -16,13 +16,13 @@
  */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.network.GameServerAuthFailure;
-import com.aionemu.gameserver.network.NetworkController;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
@@ -75,7 +75,7 @@ public class CM_GS_AUTH_RESPONSE extends LsClientPacket {
 		if (response == 0) {
 			getConnection().setState(State.AUTHED);
 			sendPacket(new SM_ACCOUNT_LIST(LoginServer.getInstance().getLoggedInAccounts()));
-			NetworkController.getInstance().setServerCount(serverCount);
+			GameServerNetworkServices.networkController().setServerCount(serverCount);
 		}
 
 		/**

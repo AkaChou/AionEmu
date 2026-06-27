@@ -113,6 +113,7 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
 import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
+import com.aionemu.gameserver.network.NetworkController;
 import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
@@ -278,6 +279,7 @@ class GameServiceProviderCompatibilityTest {
         LifeStatsRestoreService lifeStatsRestoreService = instance(LifeStatsRestoreService.class);
         SeasonRankingService seasonRankingService = instance(SeasonRankingService.class);
         RiftManager riftManager = instance(RiftManager.class);
+        NetworkController networkController = instance(NetworkController.class);
         PacketLoggerService packetLoggerService = instance(PacketLoggerService.class);
 
         try {
@@ -390,6 +392,7 @@ class GameServiceProviderCompatibilityTest {
             LifeStatsRestoreService.setInstanceProvider(provider(LifeStatsRestoreService.class, lifeStatsRestoreService));
             SeasonRankingService.setInstanceProvider(provider(SeasonRankingService.class, seasonRankingService));
             RiftManager.setInstanceProvider(provider(RiftManager.class, riftManager));
+            NetworkController.setInstanceProvider(provider(NetworkController.class, networkController));
             PacketLoggerService.setInstanceProvider(provider(PacketLoggerService.class, packetLoggerService));
 
             assertSame(geoService, GeoService.getInstance());
@@ -521,6 +524,8 @@ class GameServiceProviderCompatibilityTest {
             assertSame(lifeStatsRestoreService, LifeStatsRestoreService.getInstance());
             assertSame(seasonRankingService, SeasonRankingService.getInstance());
             assertSame(riftManager, RiftManager.getInstance());
+            assertSame(networkController, NetworkController.getInstance());
+            assertSame(networkController, GameServerNetworkServices.networkController());
             assertSame(packetLoggerService, PacketLoggerService.getInstance());
             assertSame(packetLoggerService, GameServerNetworkServices.packetLoggerService());
         } finally {
@@ -632,6 +637,7 @@ class GameServiceProviderCompatibilityTest {
             LifeStatsRestoreService.setInstanceProvider(null);
             SeasonRankingService.setInstanceProvider(null);
             RiftManager.setInstanceProvider(null);
+            NetworkController.setInstanceProvider(null);
             PacketLoggerService.setInstanceProvider(null);
         }
     }
