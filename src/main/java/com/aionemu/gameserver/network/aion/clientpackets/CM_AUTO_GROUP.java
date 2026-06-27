@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.autogroup.EntryRequestType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
@@ -70,16 +71,16 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			if (ert == null) {
 				return;
 			}
-			AutoGroupService.getInstance().startLooking(player, instanceMaskId, ert);
+			GameCoreGameplayServices.autoGroupService().startLooking(player, instanceMaskId, ert);
 			break;
 		case 101:
-			AutoGroupService.getInstance().unregisterLooking(player, instanceMaskId);
+			GameCoreGameplayServices.autoGroupService().unregisterLooking(player, instanceMaskId);
 			break;
 		case 102:
-			AutoGroupService.getInstance().pressEnter(player, instanceMaskId);
+			GameCoreGameplayServices.autoGroupService().pressEnter(player, instanceMaskId);
 			break;
 		case 103:
-			AutoGroupService.getInstance().cancelEnter(player, instanceMaskId);
+			GameCoreGameplayServices.autoGroupService().cancelEnter(player, instanceMaskId);
 			break;
 		case 104:
 			DredgionService2.getInstance().showWindow(player, instanceMaskId);

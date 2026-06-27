@@ -47,7 +47,6 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DELETE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ChatService;
 import com.aionemu.gameserver.services.DuelService;
@@ -95,7 +94,7 @@ public class PlayerLeaveWorldService {
 		ExchangeService.getInstance().cancelExchange(player);
 		RepurchaseService.getInstance().removeRepurchaseItems(player);
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			AutoGroupService.getInstance().onPlayerLogOut(player);
+			GameCoreGameplayServices.autoGroupService().onPlayerLogOut(player);
 		}
 		ProtectorConquerorService.getInstance().onLogout(player);
 		InstanceService.onLogOut(player);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -41,7 +43,6 @@ import com.aionemu.gameserver.model.team2.league.League;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.network.aion.SystemMessageId;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.StaticDoorSpawnManager;
@@ -305,7 +306,7 @@ public class InstanceService {
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
 		player.getPosition().getWorldMapInstance().getInstanceHandler().onEnterInstance(player);
-		AutoGroupService.getInstance().onEnterInstance(player);
+		GameCoreGameplayServices.autoGroupService().onEnterInstance(player);
 		for (Item item : player.getInventory().getItems()) {
 			if (item.getItemTemplate().getOwnershipWorld() == 0) {
 				continue;
@@ -324,7 +325,7 @@ public class InstanceService {
 			}
 		}
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			AutoGroupService.getInstance().onLeaveInstance(player);
+			GameCoreGameplayServices.autoGroupService().onLeaveInstance(player);
 		}
 	}
 

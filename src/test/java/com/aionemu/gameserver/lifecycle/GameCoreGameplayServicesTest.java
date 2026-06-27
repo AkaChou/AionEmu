@@ -27,4 +27,22 @@ class GameCoreGameplayServicesTest {
             assertFalse(content.contains("LegionService.getInstance()"), source.toString());
         }
     }
+
+    @Test
+    void gameServerCodeUsesCoreAutoGroupBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/AutoGroupService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameCoreGameplayServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("AutoGroupService.getInstance()"), source.toString());
+        }
+    }
 }

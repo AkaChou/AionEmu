@@ -105,7 +105,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_YOUTUBE_VIDEO;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.AStationService;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.services.DisputeLandService;
@@ -618,7 +617,7 @@ public final class PlayerEnterWorldService {
 			client.sendPacket(new SM_RECIPE_LIST(player.getRecipeList().getRecipeList()));
 			PetitionService.getInstance().onPlayerLogin(player);
 			if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-				AutoGroupService.getInstance().onPlayerLogin(player);
+				GameCoreGameplayServices.autoGroupService().onPlayerLogin(player);
 			}
 			ClassChangeService.showClassChangeDialog(player);
 			// GMService.getInstance().onPlayerLogin(player); TODO Make Config File!!

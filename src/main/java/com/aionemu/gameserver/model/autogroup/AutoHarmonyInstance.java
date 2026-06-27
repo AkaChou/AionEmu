@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.autogroup;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
@@ -74,7 +75,7 @@ public class AutoHarmonyInstance extends AutoInstance {
 			players.remove(player.getObjectId());
 			PacketSendUtility.sendPacket(player, new SM_AUTO_GROUP(instanceMaskId, 5));
 			if (players.isEmpty()) {
-				AutoGroupService.getInstance().unRegisterInstance(instance.getInstanceId());
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(instance.getInstanceId());
 			}
 			return;
 		}

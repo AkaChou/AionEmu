@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -40,7 +42,6 @@ import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.EvergaleCanyonPlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
@@ -305,7 +306,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 					for (Player player : instance.getPlayersInside()) {
 						onExitInstance(player);
 					}
-					AutoGroupService.getInstance().unRegisterInstance(instanceId);
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
 		}, 60000);

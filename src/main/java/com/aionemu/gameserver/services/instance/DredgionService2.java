@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -32,7 +34,6 @@ import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
@@ -89,9 +90,9 @@ public class DredgionService2 {
 			public void run() {
 				registerAvailable = false;
 				playersWithCooldown.clear();
-				AutoGroupService.getInstance().unRegisterInstance(maskLvlGradeA);
-				AutoGroupService.getInstance().unRegisterInstance(maskLvlGradeB);
-				AutoGroupService.getInstance().unRegisterInstance(maskLvlGradeC);
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeA);
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeB);
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeC);
 				Iterator<Player> iter = World.getInstance().getPlayersIterator();
 				while (iter.hasNext()) {
 					Player player = iter.next();
