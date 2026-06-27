@@ -390,6 +390,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(geoService, GeoService.getInstance());
             assertSame(geoService, GameWorldServices.geoService());
             assertSame(navService, NavService.getInstance());
+            assertSame(navService, GameWorldServices.navService());
             assertSame(dropRegistrationService, DropRegistrationService.getInstance());
             assertSame(landingUpdateService, LandingUpdateService.getInstance());
             assertSame(abyssLandingSpecialService, AbyssLandingSpecialService.getInstance());

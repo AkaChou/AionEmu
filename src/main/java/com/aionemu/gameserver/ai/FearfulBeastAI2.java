@@ -36,7 +36,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.PositionUtil;
 import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.world.geo.nav.NavService;
 
 /****/
 /** Author (Encom)
@@ -115,7 +114,7 @@ public class FearfulBeastAI2 extends GeneralNpcAI2
         float targetX = (float) (x + Math.cos(radian) * FLEE_DISTANCE);
         float targetY = (float) (y + Math.sin(radian) * FLEE_DISTANCE);
         
-        float[][] path = NavService.getInstance().navigateToLocation(npc, targetX, targetY, z);
+        float[][] path = GameWorldServices.navService().navigateToLocation(npc, targetX, targetY, z);
         
         if (path != null && path.length > 0) {
             npc.getMoveController().resetMove();

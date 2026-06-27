@@ -17,6 +17,7 @@ class GameWorldServicesTest {
             sources = stream
                 .filter(path -> path.toString().endsWith(".java"))
                 .filter(path -> !path.endsWith(Path.of("world/geo/GeoService.java")))
+                .filter(path -> !path.endsWith(Path.of("world/geo/nav/NavService.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldServiceFallbacks.java")))
                 .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldServices.java")))
                 .toList();
@@ -26,6 +27,7 @@ class GameWorldServicesTest {
             String content = Files.readString(source);
 
             assertFalse(content.contains("GeoService.getInstance()"), source.toString());
+            assertFalse(content.contains("NavService.getInstance()"), source.toString());
         }
     }
 }

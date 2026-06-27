@@ -38,7 +38,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.collections.LastUsedCache;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.nav.NavService;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -193,7 +192,7 @@ public class NpcMoveController
                         cachedPathValid = false;
                     }
                     if (!cachedPathValid || cachedPath == null) {
-                        cachedPath = NavService.getInstance().navigateToTarget(owner, (Creature) target);
+                        cachedPath = GameWorldServices.navService().navigateToTarget(owner, (Creature) target);
                         if (cachedPath != null) { //Add a bit of randomness to the last point to prevent entities from stacking directly ontop of eachother.
                             //TODO: Move to NavService and make sure this random point is on the navmesh!
                             if (cachedPath.length != 1) {
@@ -246,7 +245,7 @@ public class NpcMoveController
             }
             case HOME: {
                 if ((!cachedPathValid || cachedPath == null) && (returnAttempts<3)) {
-                    cachedPath = NavService.getInstance().navigateToLocation(owner, pointX, pointY, pointZ);
+                    cachedPath = GameWorldServices.navService().navigateToLocation(owner, pointX, pointY, pointZ);
                     returnAttempts++;
                     cachedPathValid = true;
                 }
