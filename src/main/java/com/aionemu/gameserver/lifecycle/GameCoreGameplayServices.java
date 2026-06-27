@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public final class GameCoreGameplayServices implements DisposableBean {
 
+    private static volatile ObjectProvider<AutoGroupService> autoGroupServiceProvider;
     private static volatile ObjectProvider<LegionService> legionServiceProvider;
 
     public GameCoreGameplayServices(ObjectProvider<DropService> dropServiceProvider,
@@ -30,6 +31,7 @@ public final class GameCoreGameplayServices implements DisposableBean {
         DropService.setInstanceProvider(dropServiceProvider);
         MailService.setInstanceProvider(mailServiceProvider);
         PvpService.setInstanceProvider(pvpServiceProvider);
+        GameCoreGameplayServices.autoGroupServiceProvider = autoGroupServiceProvider;
         AutoGroupService.setInstanceProvider(autoGroupServiceProvider);
         AbyssRankingCache.setInstanceProvider(abyssRankingCacheProvider);
         GameCoreGameplayServices.legionServiceProvider = legionServiceProvider;
@@ -47,11 +49,20 @@ public final class GameCoreGameplayServices implements DisposableBean {
         return provider.getIfAvailable(LegionService::getInstance);
     }
 
+    public static AutoGroupService autoGroupService() {
+        ObjectProvider<AutoGroupService> provider = autoGroupServiceProvider;
+        if (provider == null) {
+            return AutoGroupService.getInstance();
+        }
+        return provider.getIfAvailable(AutoGroupService::getInstance);
+    }
+
     @Override
     public void destroy() {
         DropService.setInstanceProvider(null);
         MailService.setInstanceProvider(null);
         PvpService.setInstanceProvider(null);
+        autoGroupServiceProvider = null;
         AutoGroupService.setInstanceProvider(null);
         AbyssRankingCache.setInstanceProvider(null);
         legionServiceProvider = null;
