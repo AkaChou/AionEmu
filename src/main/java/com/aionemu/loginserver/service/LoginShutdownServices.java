@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public final class LoginShutdownServices implements DisposableBean {
 
     private static volatile ObjectProvider<Shutdown> shutdownProvider;
+    private static volatile Shutdown resolvedShutdown;
 
     public LoginShutdownServices(ObjectProvider<Shutdown> shutdownProvider) {
         setShutdownProvider(shutdownProvider);
@@ -21,9 +22,13 @@ public final class LoginShutdownServices implements DisposableBean {
     public static Shutdown shutdown() {
         ObjectProvider<Shutdown> provider = shutdownProvider;
         if (provider == null) {
-            return fallbackShutdown();
+            Shutdown resolved = resolvedShutdown;
+            if (resolved != null) {
+                return resolved;
+            }
+            return remember(fallbackShutdown());
         }
-        return provider.getIfAvailable(LoginShutdownServices::fallbackShutdown);
+        return remember(provider.getIfAvailable(LoginShutdownServices::fallbackShutdown));
     }
 
     @Override
@@ -33,6 +38,16 @@ public final class LoginShutdownServices implements DisposableBean {
 
     private static Shutdown fallbackShutdown() {
         return Fallbacks.SHUTDOWN;
+    }
+
+    private static Shutdown remember(Shutdown shutdown) {
+        resolvedShutdown = shutdown;
+        return shutdown;
+    }
+
+    public static void resetForTests() {
+        shutdownProvider = null;
+        resolvedShutdown = null;
     }
 
     private static final class Fallbacks {

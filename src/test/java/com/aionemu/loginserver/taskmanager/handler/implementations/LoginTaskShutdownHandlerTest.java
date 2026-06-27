@@ -20,7 +20,7 @@ class LoginTaskShutdownHandlerTest {
     void resetEmbeddedMode() {
         System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
         AionEmbeddedShutdownHandler.clear();
-        LoginShutdownServices.setShutdownProvider(null);
+        LoginShutdownServices.resetForTests();
     }
 
     @Test
