@@ -1,9 +1,13 @@
 package com.aionemu.gameserver.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,11 +16,14 @@ import org.junit.jupiter.api.Test;
 
 import com.aionemu.gameserver.model.gameobjects.PetAction;
 import com.aionemu.gameserver.model.gameobjects.PetEmote;
+import com.aionemu.gameserver.model.house.HouseRegistry;
+import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.templates.item.ItemEnchantTemplate;
 import com.aionemu.gameserver.model.templates.towns.TownSpawn;
 import com.aionemu.gameserver.model.templates.towns.TownSpawnMap;
 import com.aionemu.gameserver.model.team2.common.events.TeamCommand;
 import com.aionemu.gameserver.model.trade.Exchange;
+import com.aionemu.gameserver.services.HousingService;
 
 class ModelCollectionImplementationTest {
 
@@ -49,8 +56,32 @@ class ModelCollectionImplementationTest {
 		assertInstanceOf(ArrayList.class, itemsToUpdate);
 	}
 
+	@Test
+	void housingRegistriesUseJdkCollectionInterfaces() throws Exception {
+		assertEquals(Map.class, fieldType(HouseRegistry.class, "objects"));
+		assertEquals(Map.class, fieldType(HouseRegistry.class, "customParts"));
+		assertEquals(List.class, fieldType(MaintenanceTask.class, "maintainedHouses"));
+
+		assertEquals(List.class, methodReturnType(HouseRegistry.class, "getObjects"));
+		assertEquals(List.class, methodReturnType(HouseRegistry.class, "getSpawnedObjects"));
+		assertEquals(List.class, methodReturnType(HouseRegistry.class, "getNotSpawnedObjects"));
+		assertEquals(List.class, methodReturnType(HouseRegistry.class, "getCustomParts"));
+		assertEquals(List.class, methodReturnType(HouseRegistry.class, "getDefaultParts"));
+		assertEquals(List.class, methodReturnType(HouseRegistry.class, "getAllParts"));
+		assertEquals(List.class, methodReturnType(HousingService.class, "getCustomHouses"));
+
+		String houseObjectsPacket = Files
+				.readString(Path.of("src/main/java/com/aionemu/gameserver/network/aion/serverpackets/SM_HOUSE_OBJECTS.java"));
+		assertFalse(houseObjectsPacket.contains("FastList<HouseObject<?>>"));
+	}
+
 	private Class<?> fieldType(Class<?> owner, String name) throws NoSuchFieldException {
 		Field field = owner.getDeclaredField(name);
 		return field.getType();
+	}
+
+	private Class<?> methodReturnType(Class<?> owner, String name) throws NoSuchMethodException {
+		Method method = owner.getDeclaredMethod(name);
+		return method.getReturnType();
 	}
 }

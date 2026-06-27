@@ -28,7 +28,6 @@ import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -233,7 +232,7 @@ public class Auction extends AdminCommand {
 			}
 
 			int counter = 0;
-			FastList<House> houses = HousingService.getInstance().getCustomHouses();
+			List<House> houses = HousingService.getInstance().getCustomHouses();
 			while (!houses.isEmpty() && counter < count) {
 				House house = houses.get(Rnd.get(houses.size()));
 				houses.remove(house);

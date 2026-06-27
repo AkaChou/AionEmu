@@ -12,7 +12,6 @@ import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
-import javolution.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -187,8 +186,8 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
     
     @Override
     public boolean store(HouseRegistry registry, int playerId) {
-        FastList<HouseObject<?>> objects = registry.getObjects();
-        FastList<HouseDecoration> decors = registry.getAllParts();
+        List<HouseObject<?>> objects = registry.getObjects();
+        List<HouseDecoration> decors = registry.getAllParts();
         
         Collection<HouseObject<?>> objectsToAdd = new ArrayList<>();
         Collection<HouseObject<?>> objectsToUpdate = new ArrayList<>();

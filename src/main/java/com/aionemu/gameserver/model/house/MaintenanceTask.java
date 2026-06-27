@@ -19,7 +19,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,16 +42,14 @@ import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
-
 public class MaintenanceTask extends AbstractCronTask {
 
 	private static volatile ObjectProvider<MaintenanceTask> instanceProvider;
 	private static final Logger log = LoggerFactory.getLogger(MaintenanceTask.class);
-	private static final FastList<House> maintainedHouses;
+	private static final List<House> maintainedHouses;
 
 	static {
-		maintainedHouses = FastList.newInstance();
+		maintainedHouses = new ArrayList<House>();
 	}
 
 	public static final MaintenanceTask getInstance() {
@@ -119,7 +119,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			return;
 		}
 		Date now = new Date();
-		FastList<House> houses = HousingService.getInstance().getCustomHouses();
+		List<House> houses = HousingService.getInstance().getCustomHouses();
 		for (House house : houses) {
 			if (house.getStatus() == HouseStatus.INACTIVE) {
 				continue;
