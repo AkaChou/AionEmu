@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -86,20 +88,20 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			break;
 		case 104:
 			DredgionService2.getInstance().showWindow(player, instanceMaskId);
-			KamarBattlefieldService.getInstance().showWindow(player, instanceMaskId);
-			EngulfedOphidanBridgeService.getInstance().showWindow(player, instanceMaskId);
-			IronWallWarfrontService.getInstance().showWindow(player, instanceMaskId);
-			IdgelDomeService.getInstance().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.kamarBattlefieldService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.engulfedOphidanBridgeService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.ironWallWarfrontService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.idgelDomeService().showWindow(player, instanceMaskId);
 			// Ver. 5.1
 			AsyunatarService.getInstance().showWindow(player, instanceMaskId);
-			IdgelDomeLandmarkService.getInstance().showWindow(player, instanceMaskId);
-			SuspiciousOphidanBridgeService.getInstance().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.idgelDomeLandmarkService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.suspiciousOphidanBridgeService().showWindow(player, instanceMaskId);
 			// Ver. 5.3
-			HallOfTenacityService.getInstance().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.hallOfTenacityService().showWindow(player, instanceMaskId);
 			// Ver. 5.6
-			GrandArenaTrainingCampService.getInstance().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.grandArenaTrainingCampService().showWindow(player, instanceMaskId);
 			// Ver. 5.8
-			IDRunService.getInstance().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.idRunService().showWindow(player, instanceMaskId);
 			break;
 		case 105:
 			break;

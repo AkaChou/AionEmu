@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.autogroup;
 
+import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -84,7 +86,7 @@ public class AutoIdgelDomeInstance extends AutoInstance {
 	@Override
 	public void onPressEnter(Player player) {
 		super.onPressEnter(player);
-		IdgelDomeService.getInstance().addCoolDown(player);
+		GameBattlefieldServices.idgelDomeService().addCoolDown(player);
 		((IdgelDomeReward) instance.getInstanceHandler().getInstanceReward()).portToPosition(player);
 	}
 

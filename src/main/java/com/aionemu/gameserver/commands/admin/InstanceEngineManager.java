@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.CountDownLatch;
@@ -69,10 +71,10 @@ public class InstanceEngineManager extends AdminCommand {
 				}, 5000);
 			}
 			if (COMMAND_STARTHOT.equalsIgnoreCase(params[0])) {
-				HallOfTenacityService.getInstance().startHallOfTenacityRegistration();
+				GameBattlefieldServices.hallOfTenacityService().startHallOfTenacityRegistration();
 			}
 			if (COMMAND_STARTKAR.equalsIgnoreCase(params[0])) {
-				KamarBattlefieldService.getInstance().startKamarRegistration();
+				GameBattlefieldServices.kamarBattlefieldService().startKamarRegistration();
 			}
 		}
 	}

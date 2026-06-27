@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -60,6 +61,34 @@ class GameBattlefieldRuntimeBridgeTest {
         assertFalse(source.contains("HallOfTenacityService.getInstance()"));
         assertFalse(source.contains("GrandArenaTrainingCampService.getInstance()"));
         assertFalse(source.contains("IDRunService.getInstance()"));
+    }
+
+    @Test
+    void gameServerCodeUsesBattlefieldBridgeInsteadOfDirectSingletons() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.toString().contains("services/instance/"))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameBattlefieldServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameBattlefieldFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameBattlefieldRuntimeBridge.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("KamarBattlefieldService.getInstance()"), source.toString());
+            assertFalse(content.contains("EngulfedOphidanBridgeService.getInstance()"), source.toString());
+            assertFalse(content.contains("SuspiciousOphidanBridgeService.getInstance()"), source.toString());
+            assertFalse(content.contains("IronWallWarfrontService.getInstance()"), source.toString());
+            assertFalse(content.contains("IdgelDomeService.getInstance()"), source.toString());
+            assertFalse(content.contains("IdgelDomeLandmarkService.getInstance()"), source.toString());
+            assertFalse(content.contains("HallOfTenacityService.getInstance()"), source.toString());
+            assertFalse(content.contains("GrandArenaTrainingCampService.getInstance()"), source.toString());
+            assertFalse(content.contains("IDRunService.getInstance()"), source.toString());
+        }
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {
