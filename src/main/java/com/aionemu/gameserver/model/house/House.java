@@ -362,7 +362,7 @@ public class House extends VisibleObject {
 	public boolean isInGracePeriod() {
 		return playerObjectId > 0 && GameHousingServices.housingService().searchPlayerHouses(playerObjectId).size() == 2
 				&& (status == HouseStatus.ACTIVE || status == HouseStatus.SELL_WAIT) && sellStarted != null
-				&& sellStarted.getTime() <= HousingBidService.getInstance().getAuctionStartTime();
+				&& sellStarted.getTime() <= GameHousingServices.housingBidService().getAuctionStartTime();
 	}
 
 	public synchronized Npc getButler() {
@@ -403,7 +403,7 @@ public class House extends VisibleObject {
 		if (status == HouseStatus.NOSALE) {
 			npcId = getLand().getNosaleSignNpcId();
 		} else if (status == HouseStatus.SELL_WAIT) {
-			if (HousingBidService.getInstance().isBiddingAllowed()) {
+			if (GameHousingServices.housingBidService().isBiddingAllowed()) {
 				npcId = getLand().getSaleSignNpcId();
 			}
 		} else if (playerObjectId != 0) {

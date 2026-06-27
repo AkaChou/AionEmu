@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIState;
@@ -74,8 +76,8 @@ public class TalkEventHandler {
 			case 831234:
 			case 831236:
 			case 831237:
-				int playerTownId = TownService.getInstance().getTownResidence(player);
-				int currentTownId = TownService.getInstance().getTownIdByPosition(player);
+				int playerTownId = GameHousingServices.townService().getTownResidence(player);
+				int currentTownId = GameHousingServices.townService().getTownIdByPosition(player);
 				if (playerTownId != currentTownId) {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npcAI.getOwner().getObjectId(), 44));
 					return;

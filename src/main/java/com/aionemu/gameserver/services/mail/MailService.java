@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.mail;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -453,7 +455,7 @@ public class MailService {
 		public void run() {
 			player.setMailbox(DAOManager.getDAO(MailDAO.class).loadPlayerMailbox(player));
 			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(player.getMailbox()));
-			HousingBidService.getInstance().onPlayerLogin(player);
+			GameHousingServices.housingBidService().onPlayerLogin(player);
 		}
 	}
 

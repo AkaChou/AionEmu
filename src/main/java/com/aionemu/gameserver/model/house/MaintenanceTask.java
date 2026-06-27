@@ -208,7 +208,7 @@ public class MaintenanceTask extends AbstractCronTask {
 
 	private void putHouseToAuction(House house, PlayerCommonData playerCommonData) {
 		house.revokeOwner();
-		HousingBidService.getInstance().addHouseToAuction(house);
+		GameHousingServices.housingBidService().addHouseToAuction(house);
 		house.save();
 		if (playerCommonData == null) {
 			return;

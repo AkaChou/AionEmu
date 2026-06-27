@@ -98,7 +98,7 @@ public class Auction extends AdminCommand {
 			}
 
 			for (House house : housesToRemove) {
-				if (HousingBidService.getInstance().removeHouseFromAuction(house, noSale)) {
+				if (GameHousingServices.housingBidService().removeHouseFromAuction(house, noSale)) {
 					PacketSendUtility.sendMessage(admin, "Succesfully removed house " + house.getName());
 				} else {
 					PacketSendUtility.sendMessage(admin, "Failed to remove house " + house.getName());
@@ -153,7 +153,7 @@ public class Auction extends AdminCommand {
 				}
 				if (house.getStatus() == HouseStatus.SELL_WAIT) {
 					// check to see if the bid entry exists
-					HouseBidEntry entry = HousingBidService.getInstance().getHouseBid(house.getObjectId());
+					HouseBidEntry entry = GameHousingServices.housingBidService().getHouseBid(house.getObjectId());
 					if (entry == null) {
 						// reset status
 						house.setStatus(HouseStatus.ACTIVE);
@@ -167,7 +167,7 @@ public class Auction extends AdminCommand {
 				if (house.getPosition().getMapRegion().isInsideZone(zoneName, x, y, z)) {
 					found = true;
 					long price = bidPrice > 0 ? bidPrice : house.getDefaultAuctionPrice();
-					if (HousingBidService.getInstance().addHouseToAuction(house, price)) {
+					if (GameHousingServices.housingBidService().addHouseToAuction(house, price)) {
 						house.save();
 						counter++;
 					}
@@ -258,7 +258,7 @@ public class Auction extends AdminCommand {
 				}
 				if (house.getStatus() == HouseStatus.SELL_WAIT) {
 					// check to see if the bid entry exists
-					HouseBidEntry entry = HousingBidService.getInstance().getHouseBid(house.getObjectId());
+					HouseBidEntry entry = GameHousingServices.housingBidService().getHouseBid(house.getObjectId());
 					if (entry == null) {
 						// reset status
 						house.setStatus(HouseStatus.ACTIVE);
@@ -268,7 +268,7 @@ public class Auction extends AdminCommand {
 				}
 
 				long price = bidPrice > 0 ? bidPrice : house.getDefaultAuctionPrice();
-				if (HousingBidService.getInstance().addHouseToAuction(house, price)) {
+				if (GameHousingServices.housingBidService().addHouseToAuction(house, price)) {
 					house.save();
 					counter++;
 				}

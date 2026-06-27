@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -118,7 +120,7 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// Territory
 		TerritoryService.getInstance().onEnterWorld(activePlayer);
 		// Town 3.9
-		TownService.getInstance().onEnterWorld(activePlayer);
+		GameHousingServices.townService().onEnterWorld(activePlayer);
 		// Protector Conqueror
 		ProtectorConquerorService.getInstance().onEnterMap(activePlayer);
 		// Base 4.3

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -39,8 +41,8 @@ public class CM_GET_HOUSE_BIDS extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		HouseBidEntry playerBid = HousingBidService.getInstance().getLastPlayerBid(player.getObjectId());
-		List<HouseBidEntry> houseBids = HousingBidService.getInstance().getHouseBidEntries(player.getRace());
+		HouseBidEntry playerBid = GameHousingServices.housingBidService().getLastPlayerBid(player.getObjectId());
+		List<HouseBidEntry> houseBids = GameHousingServices.housingBidService().getHouseBidEntries(player.getRace());
 		ListSplitter<HouseBidEntry> splitter = new ListSplitter<HouseBidEntry>(houseBids, 181);
 		while (!splitter.isLast()) {
 			List<HouseBidEntry> packetBids = splitter.getNext();

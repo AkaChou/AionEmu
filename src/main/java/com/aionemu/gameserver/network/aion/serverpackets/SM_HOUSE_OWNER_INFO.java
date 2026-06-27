@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
@@ -51,7 +53,7 @@ public class SM_HOUSE_OWNER_INFO extends AionServerPacket {
 		writeC(player.getBuildingOwnerStates());
 		int townLevel = 1;
 		if (activeHouse != null && activeHouse.getAddress().getTownId() != 0) {
-			Town town = TownService.getInstance().getTownById(activeHouse.getAddress().getTownId());
+			Town town = GameHousingServices.townService().getTownById(activeHouse.getAddress().getTownId());
 			townLevel = town.getLevel();
 		}
 		writeC(townLevel);
@@ -61,15 +63,15 @@ public class SM_HOUSE_OWNER_INFO extends AionServerPacket {
 			Timestamp nextPay = activeHouse.getNextPay();
 			float diff;
 			if (nextPay == null) {
-				diff = MaintenanceTask.getInstance().getPeriod();
+				diff = GameHousingServices.maintenanceTask().getPeriod();
 			} else {
 				long paytime = activeHouse.getNextPay().getTime();
-				diff = paytime - ((long) MaintenanceTask.getInstance().getRunTime() * 1000);
+				diff = paytime - ((long) GameHousingServices.maintenanceTask().getRunTime() * 1000);
 			}
 			if (diff < 0) {
 				writeC(0);
 			} else {
-				int weeks = (int) (Math.round(diff / MaintenanceTask.getInstance().getPeriod()));
+				int weeks = (int) (Math.round(diff / GameHousingServices.maintenanceTask().getPeriod()));
 				
 				// Check if today is Sunday (day 7)
 				ZonedDateTime now = ZonedDateTime.now();

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.ArrayList;
@@ -89,7 +91,7 @@ public class ChallengeTaskService {
 				ownerLevel = player.getLegion().getLegionLevel();
 				break;
 			case TOWN:
-				ownerLevel = TownService.getInstance().getTownById(ownerId).getLevel();
+				ownerLevel = GameHousingServices.townService().getTownById(ownerId).getLevel();
 				break;
 			default:
 				break;
@@ -109,7 +111,7 @@ public class ChallengeTaskService {
 		} else if (challengeType == ChallengeType.TOWN) {
 			taskMap = cityTasks;
 		}
-		int playerTownId = TownService.getInstance().getTownResidence(player);
+		int playerTownId = GameHousingServices.townService().getTownResidence(player);
 		List<ChallengeTask> availableTasks = new ArrayList<ChallengeTask>();
 		if (!taskMap.containsKey(ownerId)) {
 			Map<Integer, ChallengeTask> tasks = DAOManager.getDAO(ChallengeTasksDAO.class).load(ownerId, challengeType);
@@ -167,9 +169,9 @@ public class ChallengeTaskService {
 	}
 
 	private void onCityTaskFinish(Player player, ChallengeTaskTemplate taskTemplate, int questId) {
-		int townId = TownService.getInstance().getTownIdByPosition(player);
+		int townId = GameHousingServices.townService().getTownIdByPosition(player);
 		if (cityTasks.get(townId) == null) {
-			buildTaskList(player, ChallengeType.TOWN, townId, TownService.getInstance().getTownById(townId).getLevel());
+			buildTaskList(player, ChallengeType.TOWN, townId, GameHousingServices.townService().getTownById(townId).getLevel());
 			if (cityTasks.get(townId) == null) {
 				return;
 			}
@@ -186,7 +188,7 @@ public class ChallengeTaskService {
 			task.updateCompleteTime();
 			quest.increaseCompleteCount();
 			DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
-			Town town = TownService.getInstance().getTownById(townId);
+			Town town = GameHousingServices.townService().getTownById(townId);
 			if (town != null) {
 				int oldLevel = town.getLevel();
 				town.increasePoints(quest.getScorePerQuest());
