@@ -14,8 +14,7 @@ import java.util.ListIterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.ApplicationArguments;
@@ -25,10 +24,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class AionServiceLauncher implements ApplicationRunner, DisposableBean, ApplicationContextAware {
-
-    private static final Logger log = LoggerFactory.getLogger(AionServiceLauncher.class);
 
     private final AionServicesProperties services;
     private final AionTransportBoundary transportBoundary;

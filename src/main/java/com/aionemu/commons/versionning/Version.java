@@ -7,15 +7,14 @@ import java.io.OutputStream;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 版本信息管理类，用于获取和管理JAR包的版本相关信息
  * Version information management class for retrieving and managing JAR package version information
  */
+@Slf4j
 public class Version {
-    private static final Logger log = LoggerFactory.getLogger(Version.class);
     
     // 版本控制相关属性 Version control related properties
     private String revision;     // 修订版本号 Revision number

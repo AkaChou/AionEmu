@@ -24,8 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.chatserver.model.ChannelType;
 import com.aionemu.chatserver.model.ChatClient;
@@ -39,13 +38,13 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author ATracer
  */
+@Slf4j
 public class ChatService {
 
     @Deprecated(since = "boot-migration")
     public static ChatService getInstance() {
         return SingletonHolder.INSTANCE;
     }
-    private static final Logger log = LoggerFactory.getLogger(ChatService.class);
     private Map<Integer, ChatClient> players = new ConcurrentHashMap<>();
     private final BroadcastService broadcastService;
 

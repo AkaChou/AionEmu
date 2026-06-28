@@ -5,13 +5,12 @@ import com.aionemu.chatserver.ShutdownHook;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public final class ChatRestartRequest {
 
-    private static final Logger log = LoggerFactory.getLogger(ChatRestartRequest.class);
     private static volatile ObjectProvider<ChatProcessRuntimeBridge> processBridgeProvider;
 
     private ChatRestartRequest() {

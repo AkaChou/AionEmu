@@ -24,16 +24,15 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author nrg
  */
+@Slf4j
 public class RestartService {
 
-    private static final Logger log = LoggerFactory.getLogger(RestartService.class);
     private Timer timer;
 
     public RestartService() {

@@ -9,15 +9,14 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 类工具类，提供了类的继承关系判断、包成员判断和类名获取等功能
  * Class utility for checking inheritance relationships, package membership and class name retrieval
  */
+@Slf4j
 public class ClassUtils {
-    private static final Logger log = LoggerFactory.getLogger(ClassUtils.class);
 
     /**
      * 判断类a是否是类b的子类或实现了接口b

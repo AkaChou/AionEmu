@@ -4,8 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Savepoint;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 数据库事务管理类
@@ -17,8 +16,8 @@ import org.slf4j.LoggerFactory;
  * 使用该类可以确保多个数据库操作在一个事务中执行，保证数据的一致性。
  * Using this class ensures multiple database operations are executed within a single transaction, maintaining data consistency.
  */
+@Slf4j
 public class Transaction {
-    private static final Logger log = LoggerFactory.getLogger(Transaction.class);
     private Connection connection;
 
     /**

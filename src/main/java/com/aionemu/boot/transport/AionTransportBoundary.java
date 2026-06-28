@@ -5,16 +5,14 @@ import com.aionemu.boot.config.AionServicesProperties.TransportMode;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class AionTransportBoundary implements DisposableBean {
-
-    private static final Logger log = LoggerFactory.getLogger(AionTransportBoundary.class);
 
     private final AionServicesProperties services;
     private final Map<TransportMode, AionTransportLifecycle> transportsByMode;

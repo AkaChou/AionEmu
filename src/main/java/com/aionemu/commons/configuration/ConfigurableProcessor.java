@@ -3,8 +3,7 @@ package com.aionemu.commons.configuration;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 配置处理器类，用于处理带有@Property注解的类字段的配置加载
@@ -15,8 +14,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author SunAion
  */
+@Slf4j
 public class ConfigurableProcessor {
-    private static final Logger log = LoggerFactory.getLogger(ConfigurableProcessor.class);
 
     /**
      * 处理对象或类的配置

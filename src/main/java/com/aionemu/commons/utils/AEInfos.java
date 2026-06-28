@@ -3,15 +3,14 @@ package com.aionemu.commons.utils;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 系统信息工具类，用于获取和打印系统相关信息
  * System information utility class for retrieving and printing system-related information
  */
+@Slf4j
 public class AEInfos {
-    private static final Logger log = LoggerFactory.getLogger(AEInfos.class);
 
     /**
      * 获取内存使用信息
