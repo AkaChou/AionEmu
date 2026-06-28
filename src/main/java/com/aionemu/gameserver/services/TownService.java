@@ -19,8 +19,7 @@ package com.aionemu.gameserver.services;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -40,9 +39,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
+@Slf4j
 public class TownService {
 	private static volatile ObjectProvider<TownService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(TownService.class);
 	private Map<Integer, Town> elyosTowns;
 	private Map<Integer, Town> asmosTowns;
 

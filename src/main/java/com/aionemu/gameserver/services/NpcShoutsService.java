@@ -21,8 +21,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -48,9 +47,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  * 
  * @author Rolandas
  */
+@Slf4j
 public class NpcShoutsService {
 
-	private static final Logger log = LoggerFactory.getLogger(NpcShoutsService.class);
 	private static volatile ObjectProvider<NpcShoutsService> instanceProvider;
 
 	NpcShoutData shoutsCache = DataManager.NPC_SHOUT_DATA;

@@ -3,8 +3,7 @@ package com.aionemu.gameserver.services;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -21,8 +20,8 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class WebshopService {
-	private static final Logger log = LoggerFactory.getLogger(WebshopService.class);
 	private static volatile ObjectProvider<WebshopService> instanceProvider;
 
 	public WebshopService() {

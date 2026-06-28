@@ -18,8 +18,7 @@ package com.aionemu.gameserver.taskmanager.tasks;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
 import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
@@ -32,9 +31,8 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * @author Divinity
  */
+@Slf4j
 public class RestartTask extends TaskFromDBHandler {
-
-	private static final Logger log = LoggerFactory.getLogger(RestartTask.class);
 
 	private int countDown;
 	private int announceInterval;
