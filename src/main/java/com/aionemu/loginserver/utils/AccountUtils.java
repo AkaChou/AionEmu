@@ -22,22 +22,16 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.utils.Base64;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class with usefull methods to use with accounts
  *
  * @author SoulKeeper
  */
+@Slf4j
 public class AccountUtils {
-
-    /**
-     * Logger :)
-     */
-    private static final Logger log = LoggerFactory.getLogger(AccountUtils.class);
 
     /**
      * Encodes password. SHA-1 is used to encode password bytes, Base64 wraps
