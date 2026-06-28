@@ -16,12 +16,19 @@
  */
 package com.aionemu.gameserver.model.trade;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * @author Simple
  */
 public class TradePSItem extends TradeItem {
 
+	@Getter
+	@Setter
 	private int itemObjId;
+	@Getter
+	@Setter
 	private long price;
 
 	/**
@@ -34,31 +41,4 @@ public class TradePSItem extends TradeItem {
 		this.setItemObjId(itemObjId);
 	}
 
-	/**
-	 * @param price the price to set
-	 */
-	public void setPrice(long price) {
-		this.price = price;
-	}
-
-	/**
-	 * @return the price
-	 */
-	public long getPrice() {
-		return price;
-	}
-
-	/**
-	 * @param itemObjId the itemObjId to set
-	 */
-	public void setItemObjId(int itemObjId) {
-		this.itemObjId = itemObjId;
-	}
-
-	/**
-	 * @return the itemObjId
-	 */
-	public int getItemObjId() {
-		return itemObjId;
-	}
 }

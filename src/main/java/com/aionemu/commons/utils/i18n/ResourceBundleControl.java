@@ -33,6 +33,9 @@ import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * This class allows us to read ResourceBundles with custom encodings, so we don't have write \\uxxxx symbols and use utilities like native2ascii to
  * convert files.
@@ -66,6 +69,8 @@ public class ResourceBundleControl extends ResourceBundle.Control {
      * 资源文件编码格式 (Resource file encoding format)
      * 默认使用UTF-8编码 (Default to UTF-8 encoding)
      */
+    @Getter
+    @Setter
     private String encoding = "UTF-8";
 
     /**
@@ -176,19 +181,4 @@ public class ResourceBundleControl extends ResourceBundle.Control {
         }
     }
 
-    /**
-     * 获取当前编码格式 (Get current encoding format)
-     * @return 当前使用的字符编码 (Currently used character encoding)
-     */
-    public String getEncoding() {
-        return encoding;
-    }
-
-    /**
-     * 设置新的编码格式 (Set new encoding format)
-     * @param encoding 新的字符编码 (New character encoding)
-     */
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
 }

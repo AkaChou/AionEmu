@@ -17,10 +17,12 @@
 package com.aionemu.gameserver.model.items;
 
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
+import lombok.Getter;
 
 /**
  * @author Rolandas
  */
+@Getter
 public class RandomBonusResult {
 
 	private final ModifiersTemplate template;
@@ -31,11 +33,4 @@ public class RandomBonusResult {
 		this.templateNumber = number;
 	}
 
-	public ModifiersTemplate getTemplate() {
-		return template;
-	}
-
-	public int getTemplateNumber() {
-		return templateNumber;
-	}
 }

@@ -19,33 +19,26 @@ package com.aionemu.gameserver.model.assemblednpc;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+
 /**
  *
  * @author xTz
  */
 public class AssembledNpc {
 
+	@Getter
 	private List<AssembledNpcPart> assembledParts = new ArrayList<>();
 	private long spawnTime = System.currentTimeMillis();
+	@Getter
 	private int routeId;
+	@Getter
 	private int mapId;
 
 	public AssembledNpc(int routeId, int mapId, int liveTime, List<AssembledNpcPart> assembledParts) {
 		this.assembledParts = new ArrayList<>(assembledParts);
 		this.routeId = routeId;
 		this.mapId = mapId;
-	}
-
-	public List<AssembledNpcPart> getAssembledParts() {
-		return assembledParts;
-	}
-
-	public int getRouteId() {
-		return routeId;
-	}
-
-	public int getMapId() {
-		return mapId;
 	}
 
 	public long getTimeOnMap() {

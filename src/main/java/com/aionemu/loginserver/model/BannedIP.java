@@ -20,11 +20,16 @@ package com.aionemu.loginserver.model;
 
 import java.sql.Timestamp;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * This class represents banned ip
  *
  * @author SoulKeeper
  */
+@Getter
+@Setter
 public class BannedIP {
 
     /**
@@ -47,60 +52,6 @@ public class BannedIP {
      */
     public boolean isActive() {
         return timeEnd == null || timeEnd.getTime() > System.currentTimeMillis();
-    }
-
-    /**
-     * Returns ban id
-     *
-     * @return ban id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * Sets ban id
-     *
-     * @param id ban id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * Retuns ip mask
-     *
-     * @return ip mask
-     */
-    public String getMask() {
-        return mask;
-    }
-
-    /**
-     * Sets ip mask
-     *
-     * @param mask ip mask
-     */
-    public void setMask(String mask) {
-        this.mask = mask;
-    }
-
-    /**
-     * Returns expiration time of ban
-     *
-     * @return expiration time of ban
-     */
-    public Timestamp getTimeEnd() {
-        return timeEnd;
-    }
-
-    /**
-     * Sets expiration time of ban
-     *
-     * @param timeEnd expiration time of ban
-     */
-    public void setTimeEnd(Timestamp timeEnd) {
-        this.timeEnd = timeEnd;
     }
 
     /**

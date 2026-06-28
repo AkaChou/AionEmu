@@ -22,13 +22,16 @@ import com.aionemu.chatserver.model.ChannelType;
 import com.aionemu.chatserver.model.Gender;
 import com.aionemu.chatserver.model.PlayerClass;
 import com.aionemu.chatserver.model.Race;
+import lombok.Getter;
 
 /**
  * @author ATracer
  */
 public class JobChannel extends RaceChannel {
 
+    @Getter
     private PlayerClass playerClass;
+    @Getter
     private Gender gender;
 
     /**
@@ -41,14 +44,4 @@ public class JobChannel extends RaceChannel {
         this.gender = gender;
     }
 
-    /**
-     * @return the playerClass
-     */
-    public PlayerClass getPlayerClass() {
-        return playerClass;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
 }

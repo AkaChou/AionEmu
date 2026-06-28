@@ -22,8 +22,10 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import lombok.Getter;
 
 public class ManaStone extends ItemStone {
+	@Getter
 	private List<StatFunction> modifiers;
 
 	public ManaStone(int itemObjId, int itemId, int slot, PersistentState persistentState) {
@@ -32,10 +34,6 @@ public class ManaStone extends ItemStone {
 		if (stoneTemplate != null && stoneTemplate.getModifiers() != null) {
 			this.modifiers = stoneTemplate.getModifiers();
 		}
-	}
-
-	public List<StatFunction> getModifiers() {
-		return modifiers;
 	}
 
 	public StatFunction getFirstModifier() {

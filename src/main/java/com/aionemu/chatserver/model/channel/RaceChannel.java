@@ -20,12 +20,14 @@ package com.aionemu.chatserver.model.channel;
 
 import com.aionemu.chatserver.model.ChannelType;
 import com.aionemu.chatserver.model.Race;
+import lombok.Getter;
 
 /**
  * @author ATracer
  */
 public abstract class RaceChannel extends Channel {
 
+    @Getter
     protected Race race;
 
     public RaceChannel(ChannelType channelType, Race race, String identifier) {
@@ -33,10 +35,4 @@ public abstract class RaceChannel extends Channel {
         this.race = race;
     }
 
-    /**
-     * @return the race
-     */
-    public Race getRace() {
-        return race;
-    }
 }

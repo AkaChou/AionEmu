@@ -19,6 +19,9 @@ package com.aionemu.gameserver.model.items;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+
+@Getter
 public enum ItemSlot {
 	MAIN_HAND(1L), SUB_HAND(1L << 1), HELMET(1L << 2), TORSO(1L << 3), GLOVES(1L << 4), BOOTS(1L << 5),
 	EARRINGS_LEFT(1L << 6), EARRINGS_RIGHT(1L << 7), RING_LEFT(1L << 8), RING_RIGHT(1L << 9), NECKLACE(1L << 10),
@@ -68,14 +71,6 @@ public enum ItemSlot {
 	private ItemSlot(long mask, boolean combo) {
 		this.slotIdMask = mask;
 		this.combo = combo;
-	}
-
-	public long getSlotIdMask() {
-		return slotIdMask;
-	}
-
-	public boolean isCombo() {
-		return combo;
 	}
 
 	public static boolean isRegularStigma(long slot) {

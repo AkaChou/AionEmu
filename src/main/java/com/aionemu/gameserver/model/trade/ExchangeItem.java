@@ -17,15 +17,22 @@
 package com.aionemu.gameserver.model.trade;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author ATracer
  */
 public class ExchangeItem {
 
+	@Getter
 	private int itemObjId;
+	@Getter
 	private long itemCount;
+	@Getter
 	private int itemDesc;
+	@Getter
+	@Setter
 	private Item item;
 
 	/**
@@ -43,13 +50,6 @@ public class ExchangeItem {
 	}
 
 	/**
-	 * @param item the item to set
-	 */
-	public void setItem(Item item) {
-		this.item = item;
-	}
-
-	/**
 	 * @param countToAdd
 	 */
 	public void addCount(long countToAdd) {
@@ -57,31 +57,4 @@ public class ExchangeItem {
 		this.item.setItemCount(itemCount);
 	}
 
-	/**
-	 * @return the newItem
-	 */
-	public Item getItem() {
-		return item;
-	}
-
-	/**
-	 * @return the itemObjId
-	 */
-	public int getItemObjId() {
-		return itemObjId;
-	}
-
-	/**
-	 * @return the itemCount
-	 */
-	public long getItemCount() {
-		return itemCount;
-	}
-
-	/**
-	 * @return the itemDesc
-	 */
-	public int getItemDesc() {
-		return itemDesc;
-	}
 }

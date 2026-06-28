@@ -22,14 +22,18 @@ import java.io.UnsupportedEncodingException;
 
 import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.model.channel.Channel;
+import lombok.Getter;
 
 /**
  * @author ATracer
  */
 public class Message {
 
+    @Getter
     private Channel channel;
+    @Getter
     private byte[] text;
+    @Getter
     private ChatClient sender;
 
     /**
@@ -50,29 +54,8 @@ public class Message {
         }
     }
 
-    /**
-     * @return the channel
-     */
-    public Channel getChannel() {
-        return channel;
-    }
-
-    /**
-     * @return the text
-     */
-    public byte[] getText() {
-        return text;
-    }
-
     public int size() {
         return text.length;
-    }
-
-    /**
-     * @return the sender
-     */
-    public ChatClient getSender() {
-        return sender;
     }
 
     public String getSenderString() {

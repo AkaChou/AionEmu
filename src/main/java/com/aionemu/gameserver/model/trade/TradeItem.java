@@ -17,48 +17,24 @@
 package com.aionemu.gameserver.model.trade;
 
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author ATracer
  */
+@Getter
 public class TradeItem {
 
 	private int itemId;
 	private long count;
+	@Setter
 	private ItemTemplate itemTemplate;
 
 	public TradeItem(int itemId, long count) {
 		super();
 		this.itemId = itemId;
 		this.count = count;
-	}
-
-	/**
-	 * @return the itemTemplate
-	 */
-	public ItemTemplate getItemTemplate() {
-		return itemTemplate;
-	}
-
-	/**
-	 * @param itemTemplate the itemTemplate to set
-	 */
-	public void setItemTemplate(ItemTemplate itemTemplate) {
-		this.itemTemplate = itemTemplate;
-	}
-
-	/**
-	 * @return the itemId
-	 */
-	public int getItemId() {
-		return itemId;
-	}
-
-	/**
-	 * @return the count
-	 */
-	public long getCount() {
-		return count;
 	}
 
 	/**

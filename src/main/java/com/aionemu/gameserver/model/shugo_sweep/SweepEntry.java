@@ -16,9 +16,12 @@
  */
 package com.aionemu.gameserver.model.shugo_sweep;
 
+import lombok.Getter;
+
 /**
  * Created by Wnkrz on 24/10/2017.
  */
+@Getter
 public class SweepEntry {
 
 	private int id;
@@ -29,11 +32,4 @@ public class SweepEntry {
 		this.isReward = isReward;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public boolean isReward() {
-		return isReward;
-	}
 }
