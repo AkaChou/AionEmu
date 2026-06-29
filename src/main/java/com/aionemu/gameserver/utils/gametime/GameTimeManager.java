@@ -18,14 +18,12 @@ package com.aionemu.gameserver.utils.gametime;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GameTimeManager {
-	private static final Logger log = LoggerFactory.getLogger(GameTimeManager.class);
 	private static GameTime instance;
 	private static GameTimeUpdater updater;
 	private static boolean clockStarted = false;

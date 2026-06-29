@@ -25,10 +25,8 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.configs.main.GSConfig;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Utility class for date and time operations using Java 8 Time API. Applies configured time zone from GSConfig while preserving calendar field values
@@ -37,9 +35,8 @@ import com.aionemu.gameserver.configs.main.GSConfig;
  * @author Rolandas (original Joda-Time version)
  * @author (your name) (Java 8 migration)
  */
+@Slf4j
 public final class DateTimeUtil {
-    
-    private static final Logger log = LoggerFactory.getLogger(DateTimeUtil.class);
     
     private static ZoneId configuredZoneId;
     private static boolean useConfiguredZone = false;

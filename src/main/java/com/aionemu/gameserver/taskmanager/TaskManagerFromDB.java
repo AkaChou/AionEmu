@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -32,14 +30,15 @@ import com.aionemu.gameserver.model.tasks.TaskFromDB;
 import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.taskmanager.tasks.RestartTask;
 import com.aionemu.gameserver.taskmanager.tasks.ShutdownTask;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Divinity Based on L2J Emulator Global Tasks System
  * @author From L2J : Layane
  */
+@Slf4j
 public class TaskManagerFromDB {
 
-	private static final Logger log = LoggerFactory.getLogger(TaskManagerFromDB.class);
 	private static volatile ObjectProvider<TaskManagerFromDB> instanceProvider;
 
 	private ArrayList<TaskFromDB> tasksList;
