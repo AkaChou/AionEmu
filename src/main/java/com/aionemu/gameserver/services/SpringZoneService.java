@@ -23,8 +23,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -41,9 +40,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  * Author Rinzler (Encom) /
  ****/
 
+@Slf4j
 public class SpringZoneService {
 	private static volatile ObjectProvider<SpringZoneService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(SpringZoneService.class);
 	private List<SpringObject> springObjects = new ArrayList<SpringObject>();
 
 	public SpringZoneService() {

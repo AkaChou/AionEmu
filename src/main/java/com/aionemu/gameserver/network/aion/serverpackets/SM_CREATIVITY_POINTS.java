@@ -18,8 +18,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.cp.PlayerCPEntry;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -36,9 +35,9 @@ import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
  * @author Falke_34, FrozenKiller
  * @Rework By Xnemonix
  */
+@Slf4j
 public class SM_CREATIVITY_POINTS extends AionServerPacket {
 
-	Logger log = LoggerFactory.getLogger(SM_CREATIVITY_POINTS.class);
 	private int totalPoint;
 	@SuppressWarnings("unused")
 	private int dotStep;

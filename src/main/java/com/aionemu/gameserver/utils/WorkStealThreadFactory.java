@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
 import java.util.concurrent.ForkJoinPool;
@@ -46,8 +45,8 @@ public class WorkStealThreadFactory extends PriorityThreadFactory implements For
 		return new WorkStealThread(pool);
 	}
 
+	@Slf4j
 	private static class WorkStealThread extends ForkJoinWorkerThread {
-		private static final Logger log = LoggerFactory.getLogger(WorkStealThread.class);
 
 		public WorkStealThread(ForkJoinPool pool) {
 			super(pool);

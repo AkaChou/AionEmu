@@ -27,8 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -73,14 +72,13 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Slf4j
 public class DropRegistrationService {
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
 
 	private Map<Integer, Set<DropItem>> currentDropMap = new LinkedHashMap<Integer, Set<DropItem>>();
 	private Map<Integer, DropNpc> dropRegistrationMap = new LinkedHashMap<Integer, DropNpc>();
 	private List<Integer> noReductionMaps;
-
-	Logger log = LoggerFactory.getLogger(DropRegistrationService.class);
 
 	public void registerDrop(Npc npc, Player player, Collection<Player> groupMembers) {
 		registerDrop(npc, player, player.getLevel(), groupMembers);

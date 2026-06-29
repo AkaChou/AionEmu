@@ -21,8 +21,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.Collection;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -53,10 +52,10 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+@Slf4j
 public class PetService {
 
 	private static volatile ObjectProvider<PetService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(PetService.class);
 
 	private PetBuff PetBuff;
 	private boolean autoSeel = false;

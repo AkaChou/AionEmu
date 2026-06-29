@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -32,8 +31,8 @@ import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+@Slf4j
 public class CM_ENCHANMENT_STONES extends AionClientPacket {
-	Logger log = LoggerFactory.getLogger(CM_ENCHANMENT_STONES.class);
 
 	private int npcObjId;
 	private int slotNum;

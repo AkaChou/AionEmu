@@ -18,14 +18,13 @@ package com.aionemu.gameserver.model.gameobjects.player;
 
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
+@Slf4j
 public class AbyssRank {
-	Logger log = LoggerFactory.getLogger(AbyssRank.class);
 
 	// AP
 	private int dailyAP;

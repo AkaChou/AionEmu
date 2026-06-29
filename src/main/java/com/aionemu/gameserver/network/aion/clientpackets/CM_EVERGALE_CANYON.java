@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -28,8 +27,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * Ranastic
  */
 
+@Slf4j
 public class CM_EVERGALE_CANYON extends AionClientPacket {
-	Logger log = LoggerFactory.getLogger(CM_EVERGALE_CANYON.class);
 
 	public int action;
 

@@ -21,16 +21,15 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.BrokerService;
 
+@Slf4j
 public class CM_BROKER_SEARCH extends AionClientPacket {
-	Logger log = LoggerFactory.getLogger(CM_BROKER_SEARCH.class);
 
 	@SuppressWarnings("unused")
 	private int brokerId;

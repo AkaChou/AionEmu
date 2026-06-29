@@ -23,8 +23,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.configs.main.AdvCustomConfig;
@@ -50,8 +49,8 @@ import com.aionemu.gameserver.utils.stats.XPLossEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
+@Slf4j
 public class PlayerCommonData extends VisibleObjectTemplate {
-	static Logger log = LoggerFactory.getLogger(PlayerCommonData.class);
 	private final int playerObjId;
 	private Race race;
 	private String name;

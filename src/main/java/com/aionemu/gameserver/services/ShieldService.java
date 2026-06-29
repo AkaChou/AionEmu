@@ -21,8 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
@@ -38,9 +37,9 @@ import com.aionemu.gameserver.model.siege.SiegeShield;
 import com.aionemu.gameserver.model.templates.shield.ShieldTemplate;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
+@Slf4j
 public class ShieldService {
 	private static volatile ObjectProvider<ShieldService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(ShieldService.class);
 
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {

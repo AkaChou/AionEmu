@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.configs.main.ArchDaevaConfig;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -46,9 +45,8 @@ import com.aionemu.gameserver.services.SkillLearnService;
 /**
  * @author xavier modified by Wakizashi
  */
+@Slf4j
 public class ItemEquipmentListener {
-
-	static Logger log = LoggerFactory.getLogger(ItemEquipmentListener.class);
 
 	/**
 	 * @param item

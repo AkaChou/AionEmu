@@ -26,8 +26,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
@@ -47,10 +46,10 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 /**
  * @author Rolandas
  */
+@Slf4j
 public class EventService {
 
 	private static volatile ObjectProvider<EventService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(EventService.class);
 
 	private final int CHECK_TIME_PERIOD = 1000 * 60 * 5;
 

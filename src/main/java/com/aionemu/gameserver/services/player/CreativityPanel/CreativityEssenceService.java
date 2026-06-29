@@ -19,8 +19,7 @@ import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -46,11 +45,11 @@ import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
 import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+@Slf4j
 public class CreativityEssenceService {
 
 	private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
 
-	Logger log = LoggerFactory.getLogger(CreativityEssenceService.class);
 	PlayerCreativityPointsDAO cpDAO = DAOManager.getDAO(PlayerCreativityPointsDAO.class);
 	private int point;
 	public static int currentCp;
