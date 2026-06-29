@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.services.antihack;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.controllers.movement.MovementMask;
 import com.aionemu.gameserver.controllers.movement.PlayerMoveController;
@@ -33,9 +31,9 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.world.World;
+@Slf4j
 
 public class AntiHackService {
-	private static final Logger log = LoggerFactory.getLogger(AntiHackService.class);
 
 	public static boolean canMove(Player player, float x, float y, float z, float speed, byte type) {
 

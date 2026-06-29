@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
@@ -38,9 +36,9 @@ import com.aionemu.gameserver.model.templates.zone.Point2D;
  * @author vlog
  * @modified Rolandas
  */
+@Slf4j
 public class WalkerGroup {
 
-	private static final Logger log = LoggerFactory.getLogger(WalkerGroup.class);
 
 	private List<ClusteredNpc> members;
 	private WalkerGroupType type;

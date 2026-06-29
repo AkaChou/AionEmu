@@ -14,6 +14,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -32,9 +33,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -101,11 +99,11 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+@Slf4j
 
 public final class QuestService {
 
 	static QuestsData questsData = DataManager.QUEST_DATA;
-	private static final Logger log = LoggerFactory.getLogger(QuestService.class);
 	private static Multimap<Integer, QuestDrop> questDrop = ArrayListMultimap.create();
 
 	public static boolean finishQuest(QuestEnv env) {

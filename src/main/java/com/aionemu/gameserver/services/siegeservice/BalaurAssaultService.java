@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -27,8 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -53,11 +52,11 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+@Slf4j(topic = "SIEGE_LOG")
 
 public class BalaurAssaultService {
 	private static final BalaurAssaultService instance = new BalaurAssaultService();
 	private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
-	private Logger log = LoggerFactory.getLogger("SIEGE_LOG");
 	private final Map<Integer, FortressAssault> fortressAssaults = new LinkedHashMap<Integer, FortressAssault>();
 
 	public static BalaurAssaultService getInstance() {

@@ -14,6 +14,7 @@
  */
 package com.aionemu.gameserver.world;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -25,9 +26,6 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -56,9 +54,9 @@ import java.util.Map.Entry;
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class MapRegion {
 
-	private static final Logger log = LoggerFactory.getLogger(MapRegion.class);
 
 	/**
 	 * Region id of this map region [NOT WORLD ID!]

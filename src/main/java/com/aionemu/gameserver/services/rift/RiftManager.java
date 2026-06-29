@@ -16,14 +16,13 @@
  */
 package com.aionemu.gameserver.services.rift;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.controllers.RVController;
@@ -45,10 +44,10 @@ import java.util.List;
 /**
  * Author Rinzler (Encom) /
  ****/
+@Slf4j
 
 public class RiftManager {
 
-	private static Logger log = LoggerFactory.getLogger(RiftManager.class);
 	private static volatile ObjectProvider<RiftManager> instanceProvider;
 	private static List<Npc> rifts = new CopyOnWriteArrayList<Npc>(); 
 	private static Map<String, SpawnTemplate> riftGroups = new HashMap<String, SpawnTemplate>();

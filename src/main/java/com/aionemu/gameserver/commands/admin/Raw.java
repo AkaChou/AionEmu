@@ -16,15 +16,13 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET.PacketElementType;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.util.List;
 
@@ -36,11 +34,11 @@ import java.nio.file.Files;
  * @author Luno
  * @author Aquanox
  */
+@Slf4j
 public class Raw extends AdminCommand {
 
 	private static final File ROOT = new File("data/packets/");
 
-	private static final Logger logger = LoggerFactory.getLogger(Raw.class);
 
 	public Raw() {
 		super("raw");
@@ -91,7 +89,7 @@ public class Raw extends AdminCommand {
 		}
 		catch (Exception e) {
 			PacketSendUtility.sendMessage(admin, "An error has occurred.");
-			logger.warn("IO Error.", e);
+			log.warn("IO Error.", e);
 		}
 	}
 

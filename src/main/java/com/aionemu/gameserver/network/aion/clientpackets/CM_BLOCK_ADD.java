@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -30,9 +28,9 @@ import com.aionemu.gameserver.world.World;
 /**
  * @author Ben
  */
+@Slf4j
 public class CM_BLOCK_ADD extends AionClientPacket {
 
-	private static Logger log = LoggerFactory.getLogger(CM_BLOCK_ADD.class);
 
 	private String targetName;
 	private String reason;

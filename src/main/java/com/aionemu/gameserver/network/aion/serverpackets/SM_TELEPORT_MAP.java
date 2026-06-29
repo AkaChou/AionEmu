@@ -16,11 +16,9 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -35,13 +33,13 @@ import com.aionemu.gameserver.world.World;
 /**
  * @author alexa026 , orz
  */
+@Slf4j
 public class SM_TELEPORT_MAP extends AionServerPacket {
 
 	private int targetObjectId;
 	private Player player;
 	private TeleporterTemplate teleport;
 	public Npc npc;
-	private static final Logger log = LoggerFactory.getLogger(SM_TELEPORT_MAP.class);
 	private static final List<Integer> disableTeleportNpcs = new ArrayList<Integer>();
 
 	public SM_TELEPORT_MAP(Player player, int targetObjectId, TeleporterTemplate teleport) {

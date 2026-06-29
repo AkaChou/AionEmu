@@ -1,14 +1,12 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.dao.BannedMacDAO;
@@ -19,9 +17,9 @@ import com.aionemu.loginserver.model.base.BannedMacEntry;
  * 
  * @author Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8BannedMacDAO extends BannedMacDAO {
 
-    private static Logger log = LoggerFactory.getLogger(MySQL8BannedMacDAO.class);
 
     @Override
     public Map<String, BannedMacEntry> load() {

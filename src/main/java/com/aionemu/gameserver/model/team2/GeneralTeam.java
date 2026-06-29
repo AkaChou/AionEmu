@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.model.team2;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.google.common.base.Function;
@@ -35,9 +33,9 @@ import com.google.common.collect.Collections2;
 /**
  * @author ATracer
  */
+@Slf4j
 public abstract class GeneralTeam<M extends AionObject, TM extends TeamMember<M>> extends AionObject
 		implements Team<M, TM> {
-	private final static Logger log = LoggerFactory.getLogger(GeneralTeam.class);
 	protected final Map<Integer, TM> members = new ConcurrentHashMap<Integer, TM>();
 	protected final Lock teamLock = new ReentrantLock();
 	private TM leader;

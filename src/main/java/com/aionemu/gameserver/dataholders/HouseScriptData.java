@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -58,8 +59,8 @@ import com.aionemu.gameserver.model.templates.housing.LBox;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "lboxes")
+@Slf4j
 public class HouseScriptData {
-	private static final Logger log = LoggerFactory.getLogger(HouseScriptData.class);
 	private static Marshaller marshaller;
 
 	@XmlElement(name = "lbox", required = true)

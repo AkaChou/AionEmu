@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -31,8 +32,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -102,9 +101,9 @@ import java.util.List;
  *
  * @author Simple modified by cura, Source
  */
+@Slf4j
 public class LegionService {
 
-	private static final Logger log = LoggerFactory.getLogger(LegionService.class);
 	private static volatile ObjectProvider<LegionService> instanceProvider;
 	private final LegionContainer allCachedLegions = new LegionContainer();
 	private final LegionMemberContainer allCachedLegionMembers = new LegionMemberContainer();

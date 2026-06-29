@@ -14,6 +14,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -21,8 +22,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -50,13 +49,13 @@ import java.util.Map;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class IuService {
 	private static volatile ObjectProvider<IuService> instanceProvider;
 	private Map<Integer, IuLocation> iu;
 	private static final int duration = CustomConfig.IU_DURATION;
 	private final Map<Integer, Iu<?>> activeConcert = new LinkedHashMap<Integer, Iu<?>>();
-	private static Logger log = LoggerFactory.getLogger(IuService.class);
 
 	public void initConcertLocations() {
 		if (CustomConfig.IU_ENABLED) {

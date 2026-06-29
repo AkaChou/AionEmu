@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.SiegeDAO;
@@ -45,9 +43,9 @@ import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+@Slf4j
 
 public class ArtifactSiege extends Siege<ArtifactLocation> {
-	private static final Logger log = LoggerFactory.getLogger(ArtifactSiege.class.getName());
 
 	public ArtifactSiege(ArtifactLocation siegeLocation) {
 		super(siegeLocation);

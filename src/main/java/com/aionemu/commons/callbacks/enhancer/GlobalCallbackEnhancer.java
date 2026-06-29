@@ -1,5 +1,6 @@
 package com.aionemu.commons.callbacks.enhancer;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.callbacks.CallbackResult;
 import com.aionemu.commons.callbacks.metadata.GlobalCallback;
 import com.aionemu.commons.callbacks.util.CallbacksUtil;
@@ -16,9 +17,6 @@ import javassist.CtMethod;
 import javassist.LoaderClassPath;
 import javassist.Modifier;
 import javassist.NotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 全局回调增强器，用于处理类级别的回调方法增强
  * Global callback enhancer for handling class-level callback method enhancement
@@ -32,13 +30,9 @@ import org.slf4j.LoggerFactory;
  * 2. 在方法前后插入回调逻辑 / Insert callback logic before and after methods
  * 3. 支持静态和非静态方法的回调处理 / Support callback handling for both static and non-static methods
  */
+@Slf4j
 public class GlobalCallbackEnhancer extends CallbackClassFileTransformer {
     
-    /**
-     * 日志记录器
-     * Logger instance
-     */
-    private static final Logger log = LoggerFactory.getLogger(GlobalCallbackEnhancer.class);
 
     /**
      * 执行类转换操作，增强带有@GlobalCallback注解的方法

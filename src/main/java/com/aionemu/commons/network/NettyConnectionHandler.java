@@ -1,5 +1,6 @@
 package com.aionemu.commons.network;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.services.ServiceContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -11,12 +12,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@Slf4j
 public class NettyConnectionHandler extends ChannelInboundHandlerAdapter implements ConnectionTransport {
 
-    private static final Logger log = LoggerFactory.getLogger(NettyConnectionHandler.class);
 
     private final NettyConnectionFactory connectionFactory;
     private final Executor disconnectionExecutor;

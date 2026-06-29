@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -34,8 +35,6 @@ import java.util.Map;
 
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -85,9 +84,9 @@ import com.google.common.collect.Maps;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+@Slf4j(topic = "SIEGE_LOG")
 
 public class SiegeService {
-	private static final Logger log = LoggerFactory.getLogger("SIEGE_LOG");
 
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
 	private static volatile ObjectProvider<SiegeService> instanceProvider;

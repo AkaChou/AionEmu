@@ -7,6 +7,7 @@
  */
 package com.aionemu.gameserver.world.geo;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +22,9 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.MathUtil;
+@Slf4j
 
 public class GeoService {
-	private static final Logger log = LoggerFactory.getLogger(GeoService.class);
 	private static volatile ObjectProvider<GeoService> instanceProvider;
 	private static final List<Integer> npcsExclude = new ArrayList<>();
 	private GeoData geoData;

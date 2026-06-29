@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
@@ -33,9 +34,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
@@ -77,9 +75,9 @@ import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+@Slf4j
 
 public class PlayerLeaveWorldService {
-	private static final Logger log = LoggerFactory.getLogger(PlayerLeaveWorldService.class);
 
 	public static final void startLeaveWorldDelay(final Player player, int delay) {
 		player.getController().stopMoving();

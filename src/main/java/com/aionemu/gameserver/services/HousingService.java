@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -56,10 +55,10 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
+@Slf4j
 
 public class HousingService {
 
-	private static final Logger log = LoggerFactory.getLogger(HousingService.class);
 	private static volatile ObjectProvider<HousingService> instanceProvider;
 	private static final Map<Integer, List<House>> housesByMapId = new HashMap<Integer, List<House>>();
 	private final Map<Integer, House> customHouses;

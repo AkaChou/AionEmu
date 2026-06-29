@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Pet;
@@ -42,10 +40,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author M@xx, xTz
  */
+@Slf4j
 public class CM_PET extends AionClientPacket {
 
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(CM_PET.class);
 	private int actionId;
 	private PetAction action;
 	private int petId;

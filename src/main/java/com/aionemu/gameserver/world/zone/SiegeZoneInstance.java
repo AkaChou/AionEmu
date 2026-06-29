@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.world.zone;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
@@ -31,9 +29,9 @@ import java.util.Map;
  * @author MrPoke
  *
  */
+@Slf4j
 public class SiegeZoneInstance extends ZoneInstance {
 
-	private static final Logger log = LoggerFactory.getLogger(SiegeZoneInstance.class);
 
 	private Map<Integer, Player> players = new LinkedHashMap<Integer, Player>();
 

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
 import com.aionemu.gameserver.lifecycle.GameCraftServices;
@@ -29,7 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
@@ -159,9 +159,9 @@ import java.util.Map;
  *  modified by Sippolo
  *  modified by yayaya
  */
+@Slf4j
 public class PlayerController extends CreatureController<Player> {
 
-	private static final Logger log = LoggerFactory.getLogger(PlayerController.class);
 	private boolean isInShutdownProgress;
 	private long lastAttackMilis = 0;
 	private long lastAttackedMilis = 0;

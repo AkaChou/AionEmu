@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerNpcFactionsDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -7,9 +8,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.ENpcFactionQuestState;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFaction;
 import com.aionemu.gameserver.model.gameobjects.player.npcFaction.NpcFactions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,9 +17,9 @@ import java.sql.SQLException;
  * @author MrPoke
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8PlayerNpcFactionsDAO extends PlayerNpcFactionsDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerNpcFactionsDAO.class);
 	
 	private static final String SELECT_QUERY = "SELECT `faction_id`, `active`, `time`, `state`, `quest_id` FROM player_npc_factions WHERE `player_id`=?";
 	private static final String INSERT_QUERY = "INSERT INTO player_npc_factions (`player_id`, `faction_id`, `active`, `time`, `state`, `quest_id`) VALUES (?,?,?,?,?,?)";

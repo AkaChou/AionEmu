@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,9 +48,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropGroup;
 import com.aionemu.gameserver.model.drop.NpcDrop;
@@ -61,9 +59,9 @@ import com.aionemu.gameserver.model.drop.NpcDrop;
 @XmlRootElement(name = "npc_drops")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "npcDropData", propOrder = { "npcDrop" })
+@Slf4j
 public class NpcDropData {
 
-	private static final Logger log = LoggerFactory.getLogger(NpcDropData.class);
 	private static final int DEFAULT_CACHE_MAX_ENTRIES = 2000;
 	private static final long DEFAULT_CACHE_EXPIRE_AFTER_ACCESS_MILLIS = TimeUnit.MINUTES.toMillis(60);
 

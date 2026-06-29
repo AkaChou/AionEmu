@@ -1,5 +1,6 @@
 package com.aionemu.commons.database;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.configs.DatabaseConfig;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,12 +16,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@Slf4j
 final class DatabaseSchemaInitializer {
 
-    private static final Logger log = LoggerFactory.getLogger(DatabaseSchemaInitializer.class);
     private static final Map<String, String> BASELINE_SCHEMAS = Map.of(
         "al_server_gs", "db/mysql/al_server_gs.sql",
         "al_server_ls", "db/mysql/al_server_ls.sql"

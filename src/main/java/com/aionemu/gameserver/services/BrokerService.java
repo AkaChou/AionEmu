@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -30,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -72,13 +71,13 @@ import java.util.Map;
  * @author ATracer
  * @author Antraxx
  */
+@Slf4j(topic = "EXCHANGE_LOG")
 public class BrokerService {
 
 	private Map<Integer, BrokerItem> elyosBrokerItems = new LinkedHashMap<Integer, BrokerItem>();
 	private Map<Integer, BrokerItem> elyosSettledItems = new LinkedHashMap<Integer, BrokerItem>();
 	private Map<Integer, BrokerItem> asmodianBrokerItems = new LinkedHashMap<Integer, BrokerItem>();
 	private Map<Integer, BrokerItem> asmodianSettledItems = new LinkedHashMap<Integer, BrokerItem>();
-	private static final Logger log = LoggerFactory.getLogger("EXCHANGE_LOG");
 	private final int DELAY_BROKER_SAVE = (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000) >= 6000
 			? (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000)
 			: 6000;

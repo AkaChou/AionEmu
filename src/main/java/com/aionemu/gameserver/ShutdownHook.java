@@ -1,13 +1,11 @@
 package com.aionemu.gameserver;
 
+import lombok.extern.slf4j.Slf4j;
 import static com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE.STR_SERVER_SHUTDOWN;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
@@ -31,9 +29,9 @@ import com.aionemu.gameserver.world.World;
 /**
  * @author lord_rex
  */
+@Slf4j
 public class ShutdownHook extends Thread {
 
-	private static final Logger log = LoggerFactory.getLogger(ShutdownHook.class);
 
 	public static ShutdownHook getInstance() {
 		return SingletonHolder.INSTANCE;

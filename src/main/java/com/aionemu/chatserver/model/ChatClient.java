@@ -18,10 +18,8 @@
 
 package com.aionemu.chatserver.model;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.model.channel.Channel;
@@ -31,9 +29,9 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author ATracer
  */
+@Slf4j
 public class ChatClient {
 
-    private final Logger log = LoggerFactory.getLogger(ChatClient.class);
     /**
      * Id of chat client (player id)
      */

@@ -16,12 +16,11 @@
  */
 package com.aionemu.gameserver.instance;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
@@ -37,10 +36,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+@Slf4j
 
 public class InstanceEngine implements GameEngine {
 	private static volatile ObjectProvider<InstanceEngine> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(InstanceEngine.class);
 	public static final InstanceHandler DUMMY_INSTANCE_HANDLER = new GeneralInstanceHandler();
 
 	private Map<Integer, Class<? extends InstanceHandler>> handlers = new HashMap<Integer, Class<? extends InstanceHandler>>();

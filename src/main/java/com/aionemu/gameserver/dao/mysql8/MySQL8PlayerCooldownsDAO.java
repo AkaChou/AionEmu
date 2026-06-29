@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerCooldownsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,9 +13,9 @@ import java.util.function.Predicate;
  * MySQL 8 implementation of PlayerCooldownsDAO
  * @author nrg, Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8PlayerCooldownsDAO extends PlayerCooldownsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerCooldownsDAO.class);
 
     private static final String INSERT_QUERY = "INSERT INTO `player_cooldowns` (`player_id`, `cooldown_id`, `reuse_delay`) " + "VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `reuse_delay` = VALUES(`reuse_delay`)";
     

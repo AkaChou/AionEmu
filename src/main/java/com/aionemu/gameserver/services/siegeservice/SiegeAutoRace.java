@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
@@ -39,9 +37,9 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+@Slf4j(topic = "SIEGE_LOG")
 
 public class SiegeAutoRace {
-	private static final Logger log = LoggerFactory.getLogger("SIEGE_LOG");
 	private static String[] siegeIds = SiegeConfig.SIEGE_AUTO_LOCID.split(";");
 
 	public static void AutoSiegeRace(final int locid) {

@@ -23,14 +23,12 @@
  */
 package com.aionemu.commons.callbacks.enhancer;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.ByteArrayInputStream;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.Callback;
 import com.aionemu.commons.callbacks.CallbackResult;
@@ -64,9 +62,9 @@ import javassist.NotFoundException;
  *
  * @author SoulKeeper
  */
+@Slf4j
 public class ObjectCallbackEnhancer extends CallbackClassFileTransformer {
 
-    private static final Logger log = LoggerFactory.getLogger(ObjectCallbackEnhancer.class);
 
     /**
      * 回调映射字段名称

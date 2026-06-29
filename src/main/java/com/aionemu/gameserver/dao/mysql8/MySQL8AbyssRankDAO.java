@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
@@ -11,9 +12,6 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,9 +25,9 @@ import java.util.Map;
  * MySQL 8 implementation of AbyssRankDAO
  * Fixed connection leaks
  */
+@Slf4j
 public class MySQL8AbyssRankDAO extends AbyssRankDAO {
     
-    private static final Logger log = LoggerFactory.getLogger(MySQL8AbyssRankDAO.class);
     
     public static final String SELECT_QUERY = "SELECT daily_ap, daily_gp, weekly_ap, weekly_gp, ap, gp, `rank`, " + "top_ranking, daily_kill, weekly_kill, all_kill, max_rank, last_kill, " + "last_ap, last_gp, last_update FROM abyss_rank WHERE player_id = ?";
     

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -28,8 +29,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.objects.filter.ObjectFilter;
@@ -68,9 +67,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * @author ATracer, xTz
  */
+@Slf4j
 public class DropService {
 
-	private static final Logger log = LoggerFactory.getLogger(DropService.class);
 	private static volatile ObjectProvider<DropService> instanceProvider;
 
 	public static DropService getInstance() {

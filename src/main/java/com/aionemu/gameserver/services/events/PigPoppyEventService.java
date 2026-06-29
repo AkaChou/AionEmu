@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -44,8 +42,8 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class PigPoppyEventService {
-	private static final Logger log = LoggerFactory.getLogger(PigPoppyEventService.class);
 	private static List<float[]> floatArray = new ArrayList<float[]>();
 	private static final String PIG_POPPY_EVENT_SCHEDULE = EventsConfig.PIG_POPPY_EVENT_SCHEDULE;
 	private static int WORLD_ELY = 110010000; // Sanctum

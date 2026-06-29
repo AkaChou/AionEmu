@@ -14,11 +14,9 @@
  */
 package com.aionemu.gameserver.world.geo.nav;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.scene.NavGeometry;
@@ -29,13 +27,9 @@ import com.aionemu.gameserver.world.geo.nav.NavService.NavPathway;
  * 
  * @author Yon (Aion Reconstruction Project)
  */
+@Slf4j
 class NavHelper {
 	
-	/**
-	 * The {@link Logger} for this class. This is only ever written to if
-	 * {@link #retrace(NavHeapNode)} gives up early (for debugging purposes).
-	 */
-	private final Logger LOG = LoggerFactory.getLogger(NavHelper.class);
 	
 	/**
 	 * A value used when attempting to pathfind to a target that is not on the Nav Mesh.
@@ -429,7 +423,7 @@ class NavHelper {
 			 * Could be related to pathCost.
 			 */
 			if (ret.size() > corridorLength) {
-				LOG.error("Retracing path produced too many portals: (" + x1 + ", " + y1 + ", " + z1 + ") --> (" + x2 + ", " + y2 + ", " + z2 + ")");
+				log.error("Retracing path produced too many portals: (" + x1 + ", " + y1 + ", " + z1 + ") --> (" + x2 + ", " + y2 + ", " + z2 + ")");
 				return new NavPathway[0];
 			}
 			child = parent;

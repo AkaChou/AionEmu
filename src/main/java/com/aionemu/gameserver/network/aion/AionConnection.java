@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.network.aion;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
@@ -51,12 +49,9 @@ import java.util.List;
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class AionConnection extends AConnection {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(AionConnection.class);
 
 	private static final PacketProcessor<AionConnection> packetProcessor = new PacketProcessor<AionConnection>(
 			NetworkConfig.PACKET_PROCESSOR_MIN_THREADS, NetworkConfig.PACKET_PROCESSOR_MAX_THREADS,

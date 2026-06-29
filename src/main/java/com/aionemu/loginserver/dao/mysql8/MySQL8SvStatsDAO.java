@@ -1,11 +1,9 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.dao.SvStatsDAO;
@@ -15,9 +13,9 @@ import com.aionemu.loginserver.dao.SvStatsDAO;
  * 
  * @author Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8SvStatsDAO extends SvStatsDAO {
     
-    private static final Logger log = LoggerFactory.getLogger(MySQL8SvStatsDAO.class);
     
     private static final String UPDATE_ONLINE = "UPDATE `svstats` SET status = ?, current = ?, max = ?, last_update = NOW() WHERE server = ?";
     private static final String UPDATE_OFFLINE = "UPDATE `svstats` SET status = ?, current = ?, last_update = NOW() WHERE server = ?";

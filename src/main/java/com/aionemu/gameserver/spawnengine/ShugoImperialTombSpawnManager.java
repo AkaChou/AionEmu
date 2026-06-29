@@ -16,13 +16,12 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
@@ -37,9 +36,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * Author Rinzler (Encom) /
  ****/
+@Slf4j
 
 public class ShugoImperialTombSpawnManager {
-	private static final Logger log = LoggerFactory.getLogger(ShugoImperialTombSpawnManager.class);
 	private static volatile ObjectProvider<ShugoImperialTombSpawnManager> instanceProvider;
 	private static final ConcurrentLinkedQueue<VisibleObject> tomb = new ConcurrentLinkedQueue<VisibleObject>();
 

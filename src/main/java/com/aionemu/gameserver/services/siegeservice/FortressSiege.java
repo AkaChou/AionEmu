@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -26,9 +27,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.commons.database.dao.DAOManager;
@@ -63,9 +61,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import com.google.common.collect.Lists;
+@Slf4j(topic = "SIEGE_LOG")
 
 public class FortressSiege extends Siege<FortressLocation> {
-	private static final Logger log = LoggerFactory.getLogger("SIEGE_LOG");
 	private final AbyssPointsListener addAPListener = new AbyssPointsListener(this);
 
 	public FortressSiege(FortressLocation fortress) {

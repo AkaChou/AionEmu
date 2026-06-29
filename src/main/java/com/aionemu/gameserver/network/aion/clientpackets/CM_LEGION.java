@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.Legion;
@@ -32,9 +30,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author Simple
  */
+@Slf4j
 public class CM_LEGION extends AionClientPacket {
 
-	private static final Logger log = LoggerFactory.getLogger(CM_LEGION.class);
 
 	/**
 	 * exOpcode and the rest

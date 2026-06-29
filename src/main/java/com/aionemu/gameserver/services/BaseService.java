@@ -16,12 +16,11 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -42,10 +41,10 @@ import java.util.Map;
 /**
  * @author Rinzler
  */
+@Slf4j
 
 public class BaseService {
 	private static volatile ObjectProvider<BaseService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(BaseService.class);
 	private final Map<Integer, Base<?>> active = new LinkedHashMap<Integer, Base<?>>();
 	private Map<Integer, BaseLocation> bases;
 

@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.CraftCooldownsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * MySQL 8 implementation of CraftCooldownsDAO
  * @author synchro2, Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8CraftCooldownsDAO extends CraftCooldownsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8CraftCooldownsDAO.class);
 
     private static final String INSERT_QUERY = "INSERT INTO `craft_cooldowns` (`player_id`, `delay_id`, `reuse_time`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `reuse_time` = VALUES(`reuse_time`)";
     private static final String DELETE_QUERY = "DELETE FROM `craft_cooldowns` WHERE `player_id` = ?";

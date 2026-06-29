@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerBindPointDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.BindPointPosition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +15,9 @@ import java.sql.SQLException;
  * @author evilset
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8PlayerBindPointDAO extends PlayerBindPointDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerBindPointDAO.class);
 
 	private static final String INSERT_QUERY = "REPLACE INTO `player_bind_point` (`player_id`, `map_id`, `x`, `y`, `z`, `heading`) VALUES (?,?,?,?,?,?)";
 	private static final String SELECT_QUERY = "SELECT `map_id`, `x`, `y`, `z`, `heading` FROM `player_bind_point` WHERE `player_id`=?";

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -30,9 +31,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -83,9 +81,9 @@ import com.aionemu.gameserver.utils.stats.StatFunctions;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+@Slf4j
 
 public class NpcController extends CreatureController<Npc> {
-	private static final Logger log = LoggerFactory.getLogger(NpcController.class);
 
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {

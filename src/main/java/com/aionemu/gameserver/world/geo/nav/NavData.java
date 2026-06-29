@@ -14,6 +14,7 @@
  */
 package com.aionemu.gameserver.world.geo.nav;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -29,8 +30,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.Config;
@@ -48,9 +47,9 @@ import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
  * 
  * @author Yon (Aion Reconstruction Project)
  */
+@Slf4j
 public class NavData {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NavData.class);
     private static volatile ObjectProvider<NavData> instanceProvider;
 
     /** Navigation data directory */
@@ -274,7 +273,7 @@ public class NavData {
         
         WorldMapTemplate template = DataManager.WORLD_MAPS_DATA.getTemplate(worldId);
         if (template == null) {
-            LOG.error("World map template not found for ID: {}", worldId);
+            log.error("World map template not found for ID: {}", worldId);
             return null;
         }
         
@@ -292,9 +291,9 @@ public class NavData {
                 return geoMap;
             }
         } catch (IOException e) {
-            LOG.error("Failed to load navigation file for map {}: {}", worldId, e.getMessage(), e);
+            log.error("Failed to load navigation file for map {}: {}", worldId, e.getMessage(), e);
         } catch (Exception e) {
-            LOG.error("Unexpected error loading navigation for map {}: {}", worldId, e.getMessage(), e);
+            log.error("Unexpected error loading navigation for map {}: {}", worldId, e.getMessage(), e);
         }
         
         return null;
@@ -529,13 +528,13 @@ public class NavData {
 
     private static void logInfo(String message, Object... arguments) {
         if (GeoDataConfig.GEO_NAV_LOG_LEVEL >= 1) {
-            LOG.info(message, arguments);
+            log.info(message, arguments);
         }
     }
 
     private static void logDebug(String message, Object... arguments) {
         if (GeoDataConfig.GEO_NAV_LOG_LEVEL >= 2) {
-            LOG.debug(message, arguments);
+            log.debug(message, arguments);
         }
     }
 

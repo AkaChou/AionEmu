@@ -15,6 +15,7 @@
  */
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -32,18 +33,15 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /*
  * @Rework: MATTY
  */
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AnimationAddAction")
+@Slf4j
 public class AnimationAddAction extends AbstractItemAction {
 
-	private static final Logger log = LoggerFactory.getLogger(AnimationAddAction.class);
 
 	@XmlAttribute
 	protected Integer idle;

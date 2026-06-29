@@ -16,13 +16,11 @@
  */
 package com.aionemu.gameserver.model.templates.quest;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
@@ -31,9 +29,9 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 /**
  * @author MrPoke
  */
+@Slf4j
 public class QuestNpc {
 
-	private static final Logger log = LoggerFactory.getLogger(QuestNpc.class);
 	private final List<Integer> onQuestStart;
 	private final List<Integer> onKillEvent;
 	private final List<Integer> onTalkEvent;

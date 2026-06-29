@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,8 +36,6 @@ import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.aionemu.gameserver.configs.Config;
@@ -57,9 +56,9 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "")
 @XmlRootElement(name = "zones")
+@Slf4j
 public class ZoneData {
 
-	private static final Logger log = LoggerFactory.getLogger(ZoneData.class);
 
 	@XmlElement(name = "zone")
 	public List<ZoneTemplate> zoneList;

@@ -16,13 +16,12 @@
  */
 package com.aionemu.gameserver.services.reward;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -35,10 +34,10 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 
 import java.util.ArrayList;
 import java.util.List;
+@Slf4j
 
 public class RewardService {
 	private RewardServiceDAO dao;
-	private static final Logger log = LoggerFactory.getLogger(RewardService.class);
 	private static volatile ObjectProvider<RewardService> instanceProvider;
 
 	public static RewardService getInstance() {

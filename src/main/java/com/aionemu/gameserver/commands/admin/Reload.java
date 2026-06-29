@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -37,8 +38,6 @@ import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -57,9 +56,9 @@ import static org.apache.commons.io.filefilter.FileFilterUtils.*;
 /**
  * @author MrPoke
  */
+@Slf4j
 public class Reload extends AdminCommand {
 
-	private static final Logger log = LoggerFactory.getLogger(Reload.class);
 
 	public Reload() {
 		super("reload");

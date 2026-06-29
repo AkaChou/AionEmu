@@ -14,6 +14,7 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -21,8 +22,6 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -41,10 +40,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
  * @author Rinzler (Encom)
  * @rework FrozenKiller
  */
+@Slf4j
 public class EventWindowService {
 
 	private static volatile ObjectProvider<EventWindowService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(EventWindowService.class);
 	private Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
 	private HashMap<Integer, EventsWindow> activeEvents = new HashMap<Integer, EventsWindow>();
 	private HashMap<Integer, EventsWindow> activeEventsForPlayer = new HashMap<Integer, EventsWindow>();

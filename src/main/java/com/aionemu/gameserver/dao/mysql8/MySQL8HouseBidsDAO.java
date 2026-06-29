@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.HouseBidsDAO;
 import com.aionemu.gameserver.model.house.PlayerHouseBid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,9 +14,9 @@ import java.util.Map;
  * MySQL 8 implementation of HouseBidsDAO
  * @author Rolandas, Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8HouseBidsDAO extends HouseBidsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8HouseBidsDAO.class);
 
     private static final String LOAD_QUERY = "SELECT * FROM `house_bids` ORDER BY `house_id`, `bid` DESC";
     private static final String INSERT_QUERY = "INSERT INTO `house_bids` (`player_id`, `house_id`, `bid`, `bid_time`) VALUES (?, ?, ?, ?)";

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -27,9 +28,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -61,9 +59,9 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 /**
  * Reworked by G-Robson26 /
  ****/
+@Slf4j
 
 public class InstanceService {
-	private static final Logger log = LoggerFactory.getLogger(InstanceService.class);
 	private static final List<Integer> instanceAggro = new ArrayList<Integer>();
 	private static final List<Integer> instanceCoolDownFilter = new ArrayList<Integer>();
 	private static final int SOLO_INSTANCES_DESTROY_DELAY = 2 * 60 * 1000;

@@ -16,12 +16,11 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.DuelResult;
@@ -45,9 +44,9 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+@Slf4j
 
 public class DuelService {
-	private static Logger log = LoggerFactory.getLogger(DuelService.class);
 	private static volatile ObjectProvider<DuelService> instanceProvider;
 
 	private Map<Integer, Integer> duels;

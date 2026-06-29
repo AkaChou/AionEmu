@@ -14,6 +14,7 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -27,9 +28,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -69,6 +67,7 @@ import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+@Slf4j
 
 public class Equipment {
 
@@ -76,7 +75,6 @@ public class Equipment {
 	private Set<Long> markedFreeSlots = new HashSet<Long>();
 	private PersistentState persistentState = PersistentState.UPDATED;
 	private SortedMap<Long, Item> equipment = new TreeMap<Long, Item>();
-	private static final Logger log = LoggerFactory.getLogger(Equipment.class);
 
 	private static final long[] ARMOR_SLOTS = new long[] { ItemSlot.BOOTS.getSlotIdMask(), ItemSlot.GLOVES.getSlotIdMask(), ItemSlot.PANTS.getSlotIdMask(), ItemSlot.SHOULDER.getSlotIdMask(), ItemSlot.TORSO.getSlotIdMask() };
 

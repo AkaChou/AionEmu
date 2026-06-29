@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.instance;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.lang.reflect.Modifier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.scripting.classlistener.ClassListener;
 import com.aionemu.commons.utils.ClassUtils;
@@ -30,9 +28,9 @@ import com.aionemu.gameserver.instance.handlers.InstanceHandler;
 /**
  * @author ATracer
  */
+@Slf4j
 public class InstanceHandlerClassListener implements ClassListener {
 
-	private static final Logger log = LoggerFactory.getLogger(InstanceHandlerClassListener.class);
 
 	@SuppressWarnings("unchecked")
 	@Override

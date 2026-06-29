@@ -15,6 +15,7 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
@@ -22,9 +23,6 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
@@ -144,10 +142,10 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.CreatureAwareKnownList;
 import com.aionemu.gameserver.world.knownlist.NpcKnownList;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
+@Slf4j
 
 public class VisibleObjectSpawner {
 
-    private static final Logger log = LoggerFactory.getLogger(VisibleObjectSpawner.class);
     
     private static final java.util.concurrent.ConcurrentHashMap<Integer, NpcStatsTemplate> ORIGINAL_STATS = new java.util.concurrent.ConcurrentHashMap<>();
 

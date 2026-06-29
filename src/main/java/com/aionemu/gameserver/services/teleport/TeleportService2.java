@@ -15,14 +15,12 @@
  */
 package com.aionemu.gameserver.services.teleport;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -88,10 +86,10 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapType;
 import com.aionemu.gameserver.world.WorldPosition;
+@Slf4j
 
 public class TeleportService2 {
 
-	private static final Logger log = LoggerFactory.getLogger(TeleportService2.class);
 	private static final int TELEPORT_DEFAULT_DELAY = 2200;
 	private static final int BEAM_DEFAULT_DELAY = 3000;
 

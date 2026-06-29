@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.model.ingameshop.IGItem;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +13,9 @@ import java.util.List;
 /**
  * @author xTz
  */
+@Slf4j
 public class MySQL8InGameShopDAO extends InGameShopDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8InGameShopDAO.class);
     
     private static final String SELECT_QUERY = "SELECT `object_id`, `item_id`, `item_count`, `item_price`, `category`, `sub_category`, `list`, `sales_ranking`, `item_type`, `gift`, `title_description`, `description` FROM `ingameshop`";
     

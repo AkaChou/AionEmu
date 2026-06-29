@@ -1,5 +1,6 @@
 package com.aionemu.commons.database.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import static com.aionemu.commons.database.DatabaseFactory.getDatabaseMajorVersion;
 import static com.aionemu.commons.database.DatabaseFactory.getDatabaseMinorVersion;
 import static com.aionemu.commons.database.DatabaseFactory.getDatabaseName;
@@ -8,9 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.services.ServiceContext;
 
@@ -27,13 +25,9 @@ import com.aionemu.commons.services.ServiceContext;
  * @author SoulKeeper
  * @author Saelya
  */
+@Slf4j
 public class DAOManager {
 
-    /**
-     * DAOManager类的日志记录器
-     * Logger for DAOManager class
-     */
-    private static final Logger log = LoggerFactory.getLogger(DAOManager.class);
 
     /**
      * 已注册的DAO集合

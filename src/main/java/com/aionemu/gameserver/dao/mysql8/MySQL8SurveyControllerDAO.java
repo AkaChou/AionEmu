@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.SurveyControllerDAO;
 import com.aionemu.gameserver.model.templates.survey.SurveyItem;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +15,9 @@ import java.sql.SQLException;
  * @author KID
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8SurveyControllerDAO extends SurveyControllerDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8SurveyControllerDAO.class);
 	
 	private static final String UPDATE_QUERY = "UPDATE `surveys` SET `used`=?, used_time=NOW() WHERE `unique_id`=?";
 	private static final String SELECT_QUERY = "SELECT * FROM `surveys` WHERE `used`=?";

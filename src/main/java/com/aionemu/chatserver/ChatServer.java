@@ -18,6 +18,7 @@
 
 package com.aionemu.chatserver;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,17 +37,12 @@ import ch.qos.logback.core.joran.spi.JoranException;
 
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import org.slf4j.Logger;
-
 /**
  * @author ATracer, KID, nrg
  */
+@Slf4j
 public class ChatServer {
 
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
 
     static void initializeLogger() {
         if (AionRuntimeMode.isBootEmbedded()) {

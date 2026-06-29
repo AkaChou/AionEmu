@@ -16,17 +16,15 @@
  */
 package com.aionemu.gameserver.network.chatserver;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.network.chatserver.ChatServerConnection.State;
+@Slf4j
 
 public class CsPacketHandler {
-	private static final Logger log = LoggerFactory.getLogger(CsPacketHandler.class);
 	private Map<State, Map<Integer, CsClientPacket>> packetPrototypes = new HashMap<State, Map<Integer, CsClientPacket>>();
 
 	public CsClientPacket handle(ByteBuffer data, ChatServerConnection client) {

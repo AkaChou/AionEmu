@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -25,8 +26,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.sql.Timestamp;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -47,9 +46,9 @@ import com.aionemu.gameserver.utils.captcha.CAPTCHAUtil;
 /**
  * Thieves Guild Service 5.0.6
  */
+@Slf4j
 public class ThievesGuildService {
 
-	private static final Logger log = LoggerFactory.getLogger(ThievesGuildService.class);
 	private static volatile ObjectProvider<ThievesGuildService> instanceProvider;
 
 	public void onEnterWorld(Player player) {

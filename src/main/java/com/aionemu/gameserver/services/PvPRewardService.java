@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.PvPConfig;
@@ -33,9 +31,9 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j(topic = "PVP_LOG")
 
 public class PvPRewardService {
-	private static final Logger log = LoggerFactory.getLogger("PVP_LOG");
 
 	private static final String plate = "188055157,188055160";
 	private static final String chain = "188055157,188055162";

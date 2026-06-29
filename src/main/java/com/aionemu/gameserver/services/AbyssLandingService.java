@@ -16,13 +16,12 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -55,10 +54,10 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+@Slf4j
 
 public class AbyssLandingService {
 	private static volatile ObjectProvider<AbyssLandingService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(AbyssLandingService.class);
 	private static Map<Integer, LandingLocation> abyssLanding;
 	private final Map<Integer, Landing<?>> activeLanding = new LinkedHashMap<Integer, Landing<?>>();
 	private final int questRate = AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE;

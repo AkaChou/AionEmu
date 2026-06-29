@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -23,9 +24,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.util.Iterator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -48,12 +46,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * Created by Ataba
  */
+@Slf4j(topic = "GM_MONITOR_LOG")
 public class EventAi extends AdminCommand {
     public EventAi() {
         super("eventai");
     }
 
-    private static final Logger log = LoggerFactory.getLogger("GM_MONITOR_LOG");
 
     public void execute(final Player admin, String...params){
         if(params.length < 1){

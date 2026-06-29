@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.model.EmotionType;
@@ -33,10 +31,9 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * @author ATracer
  */
+@Slf4j
 public class FlyController {
 
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(FlyController.class);
 
 	private static final long FLY_REUSE_TIME = 10000;
 	private Player player;

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.configs.main.EnchantsConfig;
@@ -13,9 +14,6 @@ import com.aionemu.gameserver.model.items.ItemStone.ItemStoneType;
 import com.aionemu.gameserver.model.items.ManaStone;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,9 +23,9 @@ import java.util.Set;
 /**
  * MySQL 8 implementation of ItemStoneListDAO
  */
+@Slf4j
 public class MySQL8ItemStoneListDAO extends ItemStoneListDAO {
     
-    private static final Logger log = LoggerFactory.getLogger(MySQL8ItemStoneListDAO.class);
     
     public static final String INSERT_QUERY = "INSERT INTO `item_stones` " + "(`item_unique_id`, `item_id`, `slot`, `category`, `polishNumber`, `polishCharge`) " + "VALUES (?, ?, ?, ?, ?, ?)";
     

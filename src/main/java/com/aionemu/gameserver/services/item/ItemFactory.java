@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -29,9 +27,9 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 /**
  * @author ATracer
  */
+@Slf4j
 public class ItemFactory {
 
-	private static final Logger log = LoggerFactory.getLogger(ItemFactory.class);
 
 	public static final Item newItem(int itemId) {
 		ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);

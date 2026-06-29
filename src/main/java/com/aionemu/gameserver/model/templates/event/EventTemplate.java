@@ -15,6 +15,7 @@
  */
 package com.aionemu.gameserver.model.templates.event;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.time.ZonedDateTime;
@@ -33,9 +34,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.SpawnsData2;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -53,9 +51,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EventTemplate")
+@Slf4j
 public class EventTemplate {
 
-	private static Logger log = LoggerFactory.getLogger(EventTemplate.class);
 
 	@XmlElement(name = "event_drops", required = false)
 	protected EventDrops eventDrops;

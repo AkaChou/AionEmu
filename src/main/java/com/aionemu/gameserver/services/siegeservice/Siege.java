@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -23,9 +24,6 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.EnhancedObject;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -41,9 +39,9 @@ import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_STATE;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.World;
+@Slf4j
 
 public abstract class Siege<SL extends SiegeLocation> {
-	private static final Logger log = LoggerFactory.getLogger(Siege.class);
 	private final SiegeBossDeathListener siegeBossDeathListener = new SiegeBossDeathListener(this);
 	private final SiegeBossDoAddDamageListener siegeBossDoAddDamageListener = new SiegeBossDoAddDamageListener(this);
 	private final AtomicBoolean finished = new AtomicBoolean();

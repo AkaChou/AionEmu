@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.ai2;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import java.lang.reflect.Modifier;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.scripting.classlistener.ClassListener;
 import com.aionemu.commons.utils.ClassUtils;
@@ -29,9 +27,9 @@ import com.aionemu.commons.utils.ClassUtils;
 /**
  * @author ATracer
  */
+@Slf4j
 public class AI2HandlerClassListener implements ClassListener {
 
-	private static final Logger log = LoggerFactory.getLogger(AI2HandlerClassListener.class);
 
 	@SuppressWarnings("unchecked")
 	@Override

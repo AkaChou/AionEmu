@@ -18,9 +18,7 @@
 
 package com.aionemu.loginserver.network.gameserver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.network.packet.BaseClientPacket;
 
 /**
@@ -28,15 +26,12 @@ import com.aionemu.commons.network.packet.BaseClientPacket;
  *
  * @author -Nemesiss-
  */
+@Slf4j
 public abstract class GsClientPacket extends BaseClientPacket<GsConnection> {
 
     public GsClientPacket() {
         super(0);
     }
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(GsClientPacket.class);
 
     /**
      * run runImpl catching and logging Throwable.

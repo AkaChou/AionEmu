@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -44,8 +42,8 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class TreasureAbyssService {
-	private static final Logger log = LoggerFactory.getLogger(TreasureAbyssService.class);
 	private static List<float[]> floatArray = new ArrayList<float[]>();
 	private static final String ABYSS_EVENT_SCHEDULE = EventsConfig.ABYSS_EVENT_SCHEDULE;
 	private static int WORLD_ID = 400010000;

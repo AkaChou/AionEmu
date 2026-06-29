@@ -16,15 +16,13 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -34,11 +32,11 @@ import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.SiegeService;
+@Slf4j
 
 public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 	private int infoType;
 	private Map<Integer, SiegeLocation> locations;
-	private static final Logger log = LoggerFactory.getLogger(SM_SIEGE_LOCATION_INFO.class);
 
 	public SM_SIEGE_LOCATION_INFO() {
 		this.infoType = 0;

@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.utils.stats;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -50,10 +48,10 @@ import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Preconditions;
+@Slf4j
 
 public class StatFunctions {
 
-	private static final Logger log = LoggerFactory.getLogger(StatFunctions.class);
 	private static SkillElement elements = null;
 	// 从配置文件中读取伤害倍数常量
     private static float DAMAGE_MULTIPLIER;

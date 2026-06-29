@@ -18,15 +18,13 @@
 
 package com.aionemu.chatserver.network.netty.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.chatserver.common.netty.ByteBufPacketWriter;
 import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.model.ChatClient;
@@ -37,9 +35,9 @@ import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 /**
  * @author ATracer
  */
+@Slf4j
 public class ClientChannelHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ClientChannelHandler.class);
     private final ClientPacketHandler clientPacketHandler;
     private State state;
     private ChatClient chatClient;

@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.HouseObjectCooldownsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * MySQL 8 implementation of HouseObjectCooldownsDAO
  * @author Rolandas, Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8HouseObjectCooldownsDAO extends HouseObjectCooldownsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8HouseObjectCooldownsDAO.class);
 
     private static final String INSERT_QUERY = "INSERT INTO `house_object_cooldowns` (`player_id`, `object_id`, `reuse_time`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `reuse_time` = VALUES(`reuse_time`)";
     private static final String DELETE_QUERY = "DELETE FROM `house_object_cooldowns` WHERE `player_id` = ?";

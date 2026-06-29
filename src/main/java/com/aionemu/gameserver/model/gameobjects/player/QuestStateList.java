@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.QuestsData;
@@ -34,9 +32,9 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 /**
  * @author MrPoke
  */
+@Slf4j
 public class QuestStateList {
 
-	private static final Logger log = LoggerFactory.getLogger(QuestStateList.class);
 
 	private final SortedMap<Integer, QuestState> _quests;
 	private QuestsData _questData = DataManager.QUEST_DATA;

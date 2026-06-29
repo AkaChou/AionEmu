@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.transfers;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import java.nio.ByteBuffer;
@@ -50,8 +51,8 @@ import java.util.Map;
 /**
  * @author KID
  */
+@Slf4j
 public class PlayerTransferService {
-	private final Logger log = LoggerFactory.getLogger(PlayerTransferService.class);
 	private final Logger textLog = LoggerFactory.getLogger("PLAYERTRANSFER");
 	private static volatile ObjectProvider<PlayerTransferService> instanceProvider;
 

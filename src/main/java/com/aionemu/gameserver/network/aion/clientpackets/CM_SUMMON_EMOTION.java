@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,9 +25,9 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+@Slf4j
 
 public class CM_SUMMON_EMOTION extends AionClientPacket {
-	private static final Logger log = LoggerFactory.getLogger(CM_SUMMON_EMOTION.class);
 
 	@SuppressWarnings("unused")
 	private int objId;

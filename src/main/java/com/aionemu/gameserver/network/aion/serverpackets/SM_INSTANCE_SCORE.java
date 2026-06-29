@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -73,8 +71,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("rawtypes")
+@Slf4j
 public class SM_INSTANCE_SCORE extends AionServerPacket {
-	private final Logger log = LoggerFactory.getLogger(SM_INSTANCE_SCORE.class);
 
 	private int type;
 	private int mapId;

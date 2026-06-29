@@ -1,10 +1,8 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.OldNamesDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,9 +12,9 @@ import java.sql.SQLException;
  * @author synchro2
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8OldNamesDAO extends OldNamesDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8OldNamesDAO.class);
 
 	private static final String INSERT_QUERY = "INSERT INTO `old_names` (`player_id`, `old_name`, `new_name`) VALUES (?,?,?)";
 	private static final String CHECK_QUERY = "SELECT count(player_id) as cnt FROM old_names WHERE ? = old_names.old_name";

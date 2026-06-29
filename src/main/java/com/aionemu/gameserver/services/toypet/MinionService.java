@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.toypet;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
@@ -23,8 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -63,12 +62,12 @@ import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
  * Reworked by G-Robson26
  * Rework & Test : MATTY
  */
+@Slf4j
 public class MinionService {
 
 	private static volatile ObjectProvider<MinionService> instanceProvider;
 	private static List<Integer> minions;
 	private MinionBuff minionbuff;
-	private Logger log = LoggerFactory.getLogger(MinionService.class);
 
 	public void init() {
 		minions = DataManager.MINION_DATA.getAll();

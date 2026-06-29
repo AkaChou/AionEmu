@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
@@ -30,10 +28,9 @@ import com.aionemu.gameserver.services.item.ItemUpgradeService;
 /**
  * @author Ranastic (Encom)
  */
+@Slf4j
 
 public class CM_PURIFICATION_ITEM extends AionClientPacket {
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(CM_PURIFICATION_ITEM.class);
 	int playerObjectId;
 	int upgradedItemObjectId;
 	int resultItemId;

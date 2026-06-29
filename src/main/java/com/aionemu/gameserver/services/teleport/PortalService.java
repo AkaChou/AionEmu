@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.services.teleport;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -52,9 +50,9 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
+@Slf4j
 
 public class PortalService {
-	private static Logger log = LoggerFactory.getLogger(PortalService.class);
 
 	public static void port(final PortalPath portalPath, final Player player, int npcObjectId) {
 		if (!CustomConfig.ENABLE_INSTANCES) {

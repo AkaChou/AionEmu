@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.team2.alliance;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -25,9 +26,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.metadata.GlobalCallback;
 import com.aionemu.gameserver.configs.main.GroupConfig;
@@ -63,9 +61,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+@Slf4j
 
 public class PlayerAllianceService {
-	private static final Logger log = LoggerFactory.getLogger(PlayerAllianceService.class);
 	private static final Map<Integer, PlayerAlliance> alliances = new ConcurrentHashMap<Integer, PlayerAlliance>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
 

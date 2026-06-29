@@ -1,5 +1,6 @@
 package com.aionemu.commons.network;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.network.packet.BaseClientPacket;
 import com.aionemu.commons.services.ServiceContext;
 import com.google.common.base.Preconditions;
@@ -11,9 +12,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 数据包处理器,负责管理和处理客户端数据包
  * Packet processor responsible for managing and processing client packets
@@ -27,13 +25,9 @@ import org.slf4j.LoggerFactory;
  *
  * @param <T> 连接类型 / Connection type
  */
+@Slf4j
 public class PacketProcessor<T extends AConnection> {
     
-    /**
-     * 日志记录器
-     * Logger for PacketProcessor
-     */
-    private static final Logger log = LoggerFactory.getLogger(PacketProcessor.class.getName());
     
     /**
      * 线程创建阈值

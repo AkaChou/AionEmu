@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.ArrayList;
@@ -23,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -36,9 +35,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_LEGION
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_PLAYERS;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+@Slf4j
 
 public class AbyssRankingCache {
-	private static final Logger log = LoggerFactory.getLogger(AbyssRankingCache.class);
 	private static volatile ObjectProvider<AbyssRankingCache> instanceProvider;
 	private int lastUpdate;
 	private final Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new HashMap<>();

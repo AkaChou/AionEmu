@@ -16,24 +16,23 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.CleaningConfig;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.services.player.PlayerService;
+@Slf4j
 
 public class DatabaseCleaningService {
 
 	private static volatile ObjectProvider<DatabaseCleaningService> instanceProvider;
-	private Logger log = LoggerFactory.getLogger(DatabaseCleaningService.class);
 	private PlayerDAO dao = (PlayerDAO) DAOManager.getDAO(PlayerDAO.class);
 
 	private final int SECURITY_MINIMUM_PERIOD = 30;

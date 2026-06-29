@@ -16,10 +16,9 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -40,10 +39,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class ShugoSweepService {
 
 	private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(ShugoSweepService.class);
 	private final int boardId = EventsConfig.EVENT_SHUGOSWEEP_BOARD;
 
 	public void initShugoSweep() {

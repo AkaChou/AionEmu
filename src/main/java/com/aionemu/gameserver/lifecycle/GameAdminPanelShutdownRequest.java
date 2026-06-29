@@ -1,21 +1,20 @@
 package com.aionemu.gameserver.lifecycle;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.boot.lifecycle.AionProcessRuntimeBridge;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.gameserver.GameServer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public final class GameAdminPanelShutdownRequest implements DisposableBean {
 
-    private static final Logger log = LoggerFactory.getLogger(GameAdminPanelShutdownRequest.class);
     private static volatile ObjectProvider<AionProcessRuntimeBridge> processRuntimeBridgeProvider;
 
     @Autowired

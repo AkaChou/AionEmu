@@ -16,20 +16,18 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author Rolandas
  */
+@Slf4j
 public class InstanceWalkerFormations {
 
-	private static final Logger log = LoggerFactory.getLogger(InstanceWalkerFormations.class);
 
 	private Map<String, List<ClusteredNpc>> groupedSpawnObjects;
 	private Map<String, WalkerGroup> walkFormations;

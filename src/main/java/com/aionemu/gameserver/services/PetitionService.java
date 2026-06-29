@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,8 +24,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -38,9 +37,9 @@ import com.aionemu.gameserver.world.World;
 /**
  * @author zdead
  */
+@Slf4j
 public class PetitionService {
 
-	private static Logger log = LoggerFactory.getLogger(PetitionService.class);
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
 
 	private static SortedMap<Integer, Petition> registeredPetitions = new TreeMap<Integer, Petition>();

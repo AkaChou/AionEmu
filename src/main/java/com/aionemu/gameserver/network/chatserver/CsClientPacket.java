@@ -16,13 +16,11 @@
  */
 package com.aionemu.gameserver.network.chatserver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.network.packet.BaseClientPacket;
+@Slf4j
 
 public abstract class CsClientPacket extends BaseClientPacket<ChatServerConnection> implements Cloneable {
-	private static final Logger log = LoggerFactory.getLogger(CsClientPacket.class);
 
 	protected CsClientPacket(int opcode) {
 		super(opcode);

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,8 +35,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.aionemu.gameserver.configs.Config;
@@ -49,9 +48,9 @@ import java.util.Map;
  */
 @XmlRootElement(name = "npc_walker")
 @XmlAccessorType(XmlAccessType.FIELD)
+@Slf4j
 public class WalkerData {
 
-	private static final Logger log = LoggerFactory.getLogger(WalkerData.class);
 
 	@XmlElement(name = "walker_template")
 	private List<WalkerTemplate> walkerlist;

@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.model.templates.spawns;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.taskmanager.AbstractLockManager;
 import com.aionemu.commons.utils.Rnd;
@@ -70,9 +68,9 @@ import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityStateType;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionStateType;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
+@Slf4j
 
 public class SpawnGroup2 extends AbstractLockManager {
-	private static final Logger log = LoggerFactory.getLogger(SpawnGroup2.class);
 
 	private int worldId;
 	private int npcId;

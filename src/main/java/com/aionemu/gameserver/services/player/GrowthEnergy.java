@@ -16,10 +16,9 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -35,10 +34,10 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * Created by wanke on 26/02/2017.
  */
+@Slf4j
 
 public class GrowthEnergy {
 	private static volatile ObjectProvider<GrowthEnergy> instanceProvider;
-	private Logger log = LoggerFactory.getLogger(GrowthEnergy.class);
 	private boolean dailyGenerated = true;
 
 	public void init() {

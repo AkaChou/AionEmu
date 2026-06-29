@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.model.Race;
@@ -46,9 +44,9 @@ import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
+@Slf4j
 
 public class CM_HOUSE_EDIT extends AionClientPacket {
-	private static final Logger log = LoggerFactory.getLogger(CM_HOUSE_EDIT.class);
 	private HousingAction action;
 	private int actionId;
 	int itemObjectId;

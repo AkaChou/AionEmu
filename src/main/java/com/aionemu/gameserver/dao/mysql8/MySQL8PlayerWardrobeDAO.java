@@ -1,14 +1,12 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
 import com.aionemu.gameserver.model.dorinerk_wardrobe.PlayerWardrobeEntry;
 import com.aionemu.gameserver.model.dorinerk_wardrobe.PlayerWardrobeList;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +14,9 @@ import java.util.List;
 /**
  * @author Ranastic
  */
+@Slf4j
 public class MySQL8PlayerWardrobeDAO extends PlayerWardrobeDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerWardrobeDAO.class);
     
     private static final String INSERT_OR_UPDATE = "INSERT INTO `player_wardrobe` (`player_id`, `item_id`, `slot`, `reskin_count`) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE `item_id` = VALUES(`item_id`), `slot` = VALUES(`slot`)";
     

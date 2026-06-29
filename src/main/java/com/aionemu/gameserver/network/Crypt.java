@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.network;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 
@@ -30,9 +28,9 @@ import com.aionemu.commons.utils.Rnd;
  * @author kao
  * @author -Nemesiss-
  */
+@Slf4j
 public class Crypt {
 
-	private final static Logger log = LoggerFactory.getLogger(Crypt.class);
 	/**
 	 * Second byte of server packet must be equal to this
 	 */

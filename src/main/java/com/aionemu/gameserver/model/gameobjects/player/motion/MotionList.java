@@ -15,6 +15,7 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player.motion;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import java.util.Collections;
@@ -29,15 +30,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /*
  * @Rework: MATTY
  */
+@Slf4j
 
 public class MotionList {
-    private static final Logger log = LoggerFactory.getLogger(MotionList.class); // Добавьте это
     private Player owner;
     private Map<Integer, Motion> activeMotions;
     private Map<Integer, Motion> motions;

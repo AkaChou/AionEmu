@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import static com.aionemu.gameserver.services.item.ItemPacketService.sendStorageUpdatePacket;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -38,9 +36,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author ATracer
  */
+@Slf4j
 public class ItemSplitService {
 
-	private static final Logger log = LoggerFactory.getLogger(ItemSplitService.class);
 
 	/**
 	 * Move part of stack into different slot

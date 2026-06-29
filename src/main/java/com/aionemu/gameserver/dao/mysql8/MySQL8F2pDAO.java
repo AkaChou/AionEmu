@@ -1,22 +1,20 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.F2pDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.f2p.F2p;
 import com.aionemu.gameserver.model.gameobjects.player.f2p.F2pAccount;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 
 /**
  * MySQL 8 implementation of F2pDAO
  * @author Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8F2pDAO extends F2pDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8F2pDAO.class);
 
     private static final String INSERT_QUERY = "INSERT INTO `f2paccount` (`player_id`, `time`) VALUES (?, ?) " + "ON DUPLICATE KEY UPDATE `time` = VALUES(`time`)";
     private static final String SELECT_QUERY = "SELECT `time` FROM `f2paccount` WHERE `player_id` = ?";

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -27,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -59,9 +58,9 @@ import com.aionemu.gameserver.utils.stats.StatFunctions;
 /**
  * @author (Encom)
  */
+@Slf4j(topic = "KILL_LOG")
 public class PvpService {
 
-	private static Logger log = LoggerFactory.getLogger("KILL_LOG");
 	private static volatile ObjectProvider<PvpService> instanceProvider;
 
 	public static final PvpService getInstance() {

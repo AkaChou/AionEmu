@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.ai;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
@@ -38,9 +39,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /****/
@@ -48,10 +46,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /****/
 
 @AIName("resurrect")
+@Slf4j
 public class ResurrectAI2 extends NpcAI2
 {
 	private AtomicBoolean startedEvent = new AtomicBoolean(false);
-	private static Logger log = LoggerFactory.getLogger(ResurrectAI2.class);
 	
 	@Override
     protected void handleCreatureSee(Creature creature) {

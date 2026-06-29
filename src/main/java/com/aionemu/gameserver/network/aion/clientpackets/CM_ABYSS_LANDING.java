@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -28,9 +26,9 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 /**
  * @author Ranastic & Lightning (Encom)
  */
+@Slf4j
 
 public class CM_ABYSS_LANDING extends AionClientPacket {
-	private static Logger log = LoggerFactory.getLogger(CM_ABYSS_LANDING.class);
 
 	public CM_ABYSS_LANDING(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

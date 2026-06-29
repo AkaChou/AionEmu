@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -24,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -56,12 +55,12 @@ import java.util.Map;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class SvsService {
 	private static volatile ObjectProvider<SvsService> instanceProvider;
 	private SvsSchedule svsSchedule;
 	private Map<Integer, SvsLocation> svs;
-	private static Logger log = LoggerFactory.getLogger(SvsService.class);
 	private static final int duration = CustomConfig.SVS_DURATION;
 	// Transidium Annex 4.7
 	private Map<Integer, VisibleObject> advanceCorridor = new HashMap<>();

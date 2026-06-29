@@ -16,12 +16,11 @@
  */
 package com.aionemu.gameserver.world;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.GenericValidator;
@@ -49,10 +48,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
+@Slf4j
 
 public class World {
 
-	private static final Logger log = LoggerFactory.getLogger(World.class);
 	private static volatile ObjectProvider<World> instanceProvider;
 	private final PlayerContainer allPlayers;
 	private final Map<Integer, VisibleObject> allObjects;

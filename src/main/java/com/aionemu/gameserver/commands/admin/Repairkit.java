@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -24,22 +25,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 /**
  * Created by Kill3r
  */
+@Slf4j(topic = "GM_MONITOR_LOG")
 public class Repairkit extends AdminCommand {
 
     public Repairkit(){
         super("repairkit");
     }
 
-    private Logger log = LoggerFactory.getLogger("GM_MONITOR_LOG");
 
     public void execute(Player admin, String...params){
         if(params.length == 0){

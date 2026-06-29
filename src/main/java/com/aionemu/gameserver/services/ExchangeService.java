@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
@@ -23,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -49,9 +48,9 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * @author ATracer
  */
+@Slf4j(topic = "EXCHANGE_LOG")
 public class ExchangeService {
 
-	private static final Logger log = LoggerFactory.getLogger("EXCHANGE_LOG");
 
 	private Map<Integer, Exchange> exchanges = new HashMap<Integer, Exchange>();
 

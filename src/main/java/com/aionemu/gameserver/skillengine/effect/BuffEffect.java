@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,9 +24,6 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
@@ -43,12 +41,12 @@ import com.aionemu.gameserver.skillengine.model.Effect;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "BuffEffect")
+@Slf4j
 public abstract class BuffEffect extends EffectTemplate {
 
 	@XmlAttribute
 	protected boolean maxstat;
 
-	private static final Logger log = LoggerFactory.getLogger(BuffEffect.class);
 
 	@Override
 	public void applyEffect(Effect effect) {

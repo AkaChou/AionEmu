@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -23,9 +24,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -55,9 +53,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author ATracer, Wakizashi, xTz
  */
+@Slf4j
 public class Item extends AionObject implements IExpirable, StatOwner {
 
-	private final Logger log = LoggerFactory.getLogger(Item.class);
 	private long itemCount = 1;
 	private int itemColor = 0;
 	private int colorExpireTime = 0;

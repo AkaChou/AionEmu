@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.GuideDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.guide.Guide;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +13,9 @@ import java.util.List;
  * @author xTz
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8GuideDAO extends GuideDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8GuideDAO.class);
 	
 	private static final String DELETE_QUERY = "DELETE FROM `guides` WHERE `guide_id`=?";
 	private static final String SELECT_QUERY = "SELECT * FROM `guides` WHERE `player_id`=?";

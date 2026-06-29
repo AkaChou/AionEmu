@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeRace;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,9 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * MySQL 8 implementation of SiegeDAO
  * @author Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8SiegeDAO extends SiegeDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8SiegeDAO.class);
 
     private static final String SELECT_QUERY = "SELECT `id`, `race`, `legion_id` FROM `siege_locations` ORDER BY `id`";
     private static final String INSERT_QUERY = "INSERT INTO `siege_locations` (`id`, `race`, `legion_id`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `race` = VALUES(`race`), `legion_id` = VALUES(`legion_id`)";

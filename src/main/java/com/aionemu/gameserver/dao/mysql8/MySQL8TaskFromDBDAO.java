@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.TaskFromDBDAO;
 import com.aionemu.gameserver.model.tasks.TaskFromDB;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -13,9 +11,9 @@ import java.util.ArrayList;
  * @author Divinity
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8TaskFromDBDAO extends TaskFromDBDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8TaskFromDBDAO.class);
 	
 	private static final String SELECT_ALL_QUERY = "SELECT * FROM tasks ORDER BY id";
 	private static final String UPDATE_QUERY = "UPDATE tasks SET last_activation = ? WHERE id = ?";

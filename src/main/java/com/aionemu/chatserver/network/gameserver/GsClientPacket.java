@@ -18,10 +18,8 @@
 
 package com.aionemu.chatserver.network.gameserver;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.packet.BaseClientPacket;
 
@@ -30,12 +28,12 @@ import com.aionemu.commons.network.packet.BaseClientPacket;
  * @author KID
  *
  */
+@Slf4j
 public abstract class GsClientPacket extends BaseClientPacket<GsConnection> {
 
     public GsClientPacket(ByteBuffer buffer, GsConnection connection, int opCode) {
         super(opCode);
     }
-    private static final Logger log = LoggerFactory.getLogger(GsClientPacket.class);
 
     @Override
     public final void run() {

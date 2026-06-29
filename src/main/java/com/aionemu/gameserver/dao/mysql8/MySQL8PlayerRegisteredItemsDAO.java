@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -15,9 +16,6 @@ import com.aionemu.gameserver.model.templates.housing.PartType;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,9 +26,9 @@ import java.util.List;
  * MySQL 8 implementation of PlayerRegisteredItemsDAO
  * Fixed connection leaks
  */
+@Slf4j
 public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
     
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerRegisteredItemsDAO.class);
     
     public static final String CLEAN_PLAYER_QUERY = "DELETE FROM `player_registered_items` WHERE `player_id` = ?";
     

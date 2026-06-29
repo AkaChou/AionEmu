@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.controllers.StaticObjectController;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -39,9 +37,9 @@ import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 /**
  * @author MrPoke
  */
+@Slf4j
 public class StaticDoorSpawnManager {
 
-	private static Logger log = LoggerFactory.getLogger(StaticDoorSpawnManager.class);
 
 	/**
 	 * @param spawnGroup

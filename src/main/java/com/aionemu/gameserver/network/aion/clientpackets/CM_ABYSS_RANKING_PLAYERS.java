@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank.AbyssRankUpdateType;
@@ -34,13 +32,13 @@ import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 /**
  * @author SheppeR
  */
+@Slf4j
 public class CM_ABYSS_RANKING_PLAYERS extends AionClientPacket {
 
 	private Race queriedRace;
 	private int raceId;
 	private AbyssRankUpdateType updateType;
 
-	private static final Logger log = LoggerFactory.getLogger(CM_ABYSS_RANKING_PLAYERS.class);
 
 	public CM_ABYSS_RANKING_PLAYERS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

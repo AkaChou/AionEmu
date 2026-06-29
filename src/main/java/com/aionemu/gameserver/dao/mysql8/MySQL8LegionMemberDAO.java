@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.commons.database.DatabaseFactory;
@@ -8,9 +9,6 @@ import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.model.team.legion.LegionRank;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -18,9 +16,9 @@ import java.util.ArrayList;
  * @author Simple
  * Updated for MySQL 8 - Fixed connection leaks and SQL syntax
  */
+@Slf4j
 public class MySQL8LegionMemberDAO extends LegionMemberDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8LegionMemberDAO.class);
     
     private static final String INSERT_LEGIONMEMBER_QUERY = "INSERT INTO legion_members (`legion_id`, `player_id`, `rank`) VALUES (?, ?, ?)";
     

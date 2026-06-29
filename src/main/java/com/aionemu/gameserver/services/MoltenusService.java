@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -23,8 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -56,6 +55,7 @@ import java.util.Map;
  * @author Rinzler (Encom)
  *         http://aion.power.plaync.com/wiki/%EB%B6%84%EB%85%B8%EC%9D%98+%ED%8C%8C%ED%8E%B8+%EB%A9%94%EB%85%B8%ED%8B%B0%EC%98%A4%EC%8A%A4
  */
+@Slf4j
 
 public class MoltenusService {
 	private static volatile ObjectProvider<MoltenusService> instanceProvider;
@@ -63,7 +63,6 @@ public class MoltenusService {
 	private Map<Integer, MoltenusLocation> moltenus;
 	private static final int duration = CustomConfig.MOLTENUS_DURATION;
 	private final Map<Integer, MoltenusFight<?>> activeMoltenus = new LinkedHashMap<Integer, MoltenusFight<?>>();
-	private static final Logger log = LoggerFactory.getLogger(MoltenusService.class);
 
 	public void initMoltenusLocations() {
 		if (CustomConfig.MOLTENUS_ENABLED) {

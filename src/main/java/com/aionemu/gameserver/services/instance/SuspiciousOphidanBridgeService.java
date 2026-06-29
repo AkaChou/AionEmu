@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -25,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -42,10 +41,10 @@ import com.aionemu.gameserver.world.World;
 /**
  * Author Rinzler (Encom) /
  ****/
+@Slf4j
 
 public class SuspiciousOphidanBridgeService {
 	private static volatile ObjectProvider<SuspiciousOphidanBridgeService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(SuspiciousOphidanBridgeService.class);
 	private boolean registerAvailable;
 	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
 	public static final byte minLevel = 66, capLevel = 76;

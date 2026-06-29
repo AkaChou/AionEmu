@@ -1,5 +1,6 @@
 package com.aionemu.commons.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.services.cron.CronServiceException;
 import com.aionemu.commons.services.cron.RunnableRunner;
 import com.aionemu.commons.utils.GenericValidator;
@@ -44,9 +45,8 @@ import org.slf4j.LoggerFactory;
  * 3. 提供任务的添加、删除、查询等管理功能
  *    Provides task management functions including add, delete and query
  */
+@Slf4j
 public final class CronService {
-    /** 日志记录器 Logger instance */
-    private static final Logger log = LoggerFactory.getLogger(CronService.class);
     
     /** 单例实例 Singleton instances */
     private static final Map<String, CronService> instances = new ConcurrentHashMap<String, CronService>();

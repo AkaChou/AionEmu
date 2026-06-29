@@ -16,15 +16,13 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -51,9 +49,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /****/
 
 @InstanceID(302320000)
+@Slf4j
 public class HallOfTenacityInstance extends GeneralInstanceHandler {
 
-	private Logger log = LoggerFactory.getLogger(HallOfTenacityInstance.class);
 	private long instanceTime;
 	private boolean isInstanceDestroyed = false;
 	protected HallOfTenacityReward instanceReward;

@@ -15,12 +15,10 @@
  */
 package com.aionemu.gameserver.world.knownlist;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -40,9 +38,9 @@ import java.util.Map;
  * @author -Nemesiss-
  * @modified kosyachok
  */
+@Slf4j
 public class KnownList {
 
-	private static final Logger log = LoggerFactory.getLogger(KnownList.class);
 
 	/**
 	 * Owner of this KnownList.

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.BlockListDAO;
@@ -8,9 +9,6 @@ import com.aionemu.gameserver.model.gameobjects.player.BlockList;
 import com.aionemu.gameserver.model.gameobjects.player.BlockedPlayer;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,9 +20,9 @@ import java.util.Map;
  * @author Ben
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8BlockListDAO extends BlockListDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8BlockListDAO.class);
 	
 	private static final String LOAD_QUERY = "SELECT blocked_player, reason FROM blocks WHERE player=?";
 	private static final String ADD_QUERY = "INSERT INTO blocks (player, blocked_player, reason) VALUES (?, ?, ?)";

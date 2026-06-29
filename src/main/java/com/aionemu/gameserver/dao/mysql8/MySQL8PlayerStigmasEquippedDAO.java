@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
@@ -10,17 +11,14 @@ import com.aionemu.gameserver.model.skill.linked_skill.PlayerEquippedStigmaList;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+@Slf4j
 
 public class MySQL8PlayerStigmasEquippedDAO extends PlayerStigmasEquippedDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerStigmasEquippedDAO.class);
     
     private static final String INSERT_QUERY = "INSERT INTO `player_stigmas_equipped` (`player_id`, `item_id`, `item_name`) VALUES (?,?,?)";
     

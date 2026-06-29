@@ -1,17 +1,15 @@
 package com.aionemu.commons.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 系统属性工具类，提供对系统属性的安全访问和类型转换功能
  * System property utility class providing safe access and type conversion for system properties
  */
+@Slf4j
 public final class SystemPropertyUtil {
    private static boolean initializedLogger = true;
-   private static final Logger logger = LoggerFactory.getLogger(SystemPropertyUtil.class);
    private static boolean loggedException;
    private static final Pattern INTEGER_PATTERN = Pattern.compile("-?[0-9]+");
 
@@ -165,7 +163,7 @@ public final class SystemPropertyUtil {
 
    private static void log(String msg) {
       if (initializedLogger) {
-         logger.warn(msg);
+         log.warn(msg);
       } else {
          java.util.logging.Logger.getLogger(SystemPropertyUtil.class.getName()).log(Level.WARNING, msg);
       }
@@ -174,7 +172,7 @@ public final class SystemPropertyUtil {
 
    private static void log(String msg, Exception e) {
       if (initializedLogger) {
-         logger.warn(msg, e);
+         log.warn(msg, e);
       } else {
          java.util.logging.Logger.getLogger(SystemPropertyUtil.class.getName()).log(Level.WARNING, msg, e);
       }

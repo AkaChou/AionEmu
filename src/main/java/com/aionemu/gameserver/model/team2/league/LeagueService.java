@@ -16,13 +16,11 @@
  */
 package com.aionemu.gameserver.model.team2.league;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -37,9 +35,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Preconditions;
+@Slf4j
 
 public class LeagueService {
-	private static final Logger log = LoggerFactory.getLogger(LeagueService.class);
 	private static final Map<Integer, League> leagues = new ConcurrentHashMap<Integer, League>();
 
 	static {

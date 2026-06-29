@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Player macrosses collection, contains all player macrosses.
@@ -30,12 +28,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Aquanox, nrg
  */
+@Slf4j
 public class MacroList {
 
-	/**
-	 * Class logger
-	 */
-	private static final Logger logger = LoggerFactory.getLogger(MacroList.class);
 
 	/**
 	 * Container of macrosses, position to xml.
@@ -96,7 +91,7 @@ public class MacroList {
 		String m = macrosses.remove(macroPosition);
 		if (m == null)//
 		{
-			logger.warn("Trying to remove non existing macro.");
+			log.warn("Trying to remove non existing macro.");
 			return false;
 		}
 		return true;

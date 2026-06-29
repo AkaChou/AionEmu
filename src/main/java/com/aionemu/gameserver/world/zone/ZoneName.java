@@ -16,18 +16,16 @@
  */
 package com.aionemu.gameserver.world.zone;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * @author Rolandas
  */
+@Slf4j
 public final class ZoneName {
 
-	private final static Logger log = LoggerFactory.getLogger(ZoneName.class);
 
 	private static final Map<String, ZoneName> zoneNames = new LinkedHashMap<String, ZoneName>();
 	public static final String NONE = "NONE";

@@ -15,6 +15,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -23,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -59,13 +58,13 @@ import java.util.Map;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class AnohaService {
 	private static volatile ObjectProvider<AnohaService> instanceProvider;
 	private AnohaSchedule anohaSchedule;
 	private Map<Integer, AnohaLocation> anoha;
 	private static final int duration = CustomConfig.ANOHA_DURATION;
-	private static final Logger log = LoggerFactory.getLogger(AnohaService.class);
 
 	// Berserk Anoha 4.7
 	private Map<Integer, VisibleObject> adventSwordEffect = new HashMap<>();

@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.network;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MACBAN_CONTROL;
@@ -29,9 +27,9 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MACBAN_CONTRO
 /**
  * @author KID
  */
+@Slf4j
 public class BannedMacManager {
 	private static BannedMacManager manager = new BannedMacManager();
-	private final Logger log = LoggerFactory.getLogger(BannedMacManager.class);
 
 	public static BannedMacManager getInstance() {
 		return manager;

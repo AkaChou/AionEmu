@@ -16,14 +16,13 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -37,13 +36,13 @@ import com.aionemu.gameserver.world.zone.ZoneAttributes;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class DisputeLandService {
 	private static volatile ObjectProvider<DisputeLandService> instanceProvider;
 	private boolean active;
 	private List<Integer> worlds = new ArrayList<>();
 	private static final int duration = CustomConfig.DISPUTE_LAND_DURATION;
-	private static final Logger log = LoggerFactory.getLogger(DisputeLandService.class);
 
 	public DisputeLandService() {
 	}

@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.TownDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.town.Town;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,9 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * MySQL 8 implementation of TownDAO
  * @author ViAl, Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8TownDAO extends TownDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8TownDAO.class);
 
     private static final String SELECT_QUERY = "SELECT * FROM `towns` WHERE `race` = ? ORDER BY `id`";
     private static final String SELECT_ALL_QUERY = "SELECT * FROM `towns` ORDER BY `race`, `id`";

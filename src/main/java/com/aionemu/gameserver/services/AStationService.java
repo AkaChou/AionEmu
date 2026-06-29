@@ -16,11 +16,10 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.AStationConfig;
@@ -34,10 +33,10 @@ import com.aionemu.gameserver.world.WorldType;
 /**
  * @author Ranastic
  */
+@Slf4j
 
 public class AStationService {
 	private static volatile ObjectProvider<AStationService> instanceProvider;
-	private Logger log = LoggerFactory.getLogger(AStationService.class);
 	private Map<Integer, Player> accountsOnAStation = new HashMap<Integer, Player>(1);
 
 	public static AStationService getInstance() {

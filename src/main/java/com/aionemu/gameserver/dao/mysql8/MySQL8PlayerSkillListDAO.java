@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.dao.PlayerSkillListDAO;
@@ -10,9 +11,6 @@ import com.aionemu.gameserver.model.skill.PlayerSkillList;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,9 +21,9 @@ import java.util.List;
  * @author IceReaper, orfeo087, Avol, AEJTester
  * Updated for MySQL 8 support
  */
+@Slf4j
 public class MySQL8PlayerSkillListDAO extends PlayerSkillListDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerSkillListDAO.class);
     
     public static final String INSERT_QUERY = "INSERT INTO `player_skills` (`player_id`, `skill_id`, `skill_level`) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE `skill_level` = VALUES(`skill_level`)";
     

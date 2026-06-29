@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.GameServerError;
@@ -24,9 +25,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUSTOM_PACKET.PacketElementType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
@@ -51,6 +49,7 @@ import java.util.List;
  * 
  * @author Aquanox
  */
+@Slf4j
 public class Send extends AdminCommand {
 
 	public Send() {
@@ -64,7 +63,6 @@ public class Send extends AdminCommand {
 		}
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(Send.class);
 
 	private static final File FOLDER = new File("./data/packets");
 
@@ -80,8 +78,8 @@ public class Send extends AdminCommand {
 		final String mappingName = params[0];
 		final Player target = getTargetPlayer(admin);
 
-		// logger.debug("Mapping: " + mappingName);
-		// logger.debug("Target: " + target);
+		// log.debug("Mapping: " + mappingName);
+		// log.debug("Target: " + target);
 
 		File packetsData = new File(FOLDER, mappingName + ".xml");
 
@@ -96,7 +94,7 @@ public class Send extends AdminCommand {
 			packetsTemplate = (Packets) unmarshaller.unmarshal(packetsData);
 		}
 		catch (JAXBException e) {
-			logger.error("Unmarshalling error", e);
+			log.error("Unmarshalling error", e);
 			return;
 		}
 
@@ -114,7 +112,7 @@ public class Send extends AdminCommand {
 
 		long delay = 0;
 		for (final Packet packetTemplate : packets) {
-			// logger.debug("Processing: " + packetTemplate);
+			// log.debug("Processing: " + packetTemplate);
 
 			final SM_CUSTOM_PACKET packet = new SM_CUSTOM_PACKET(packetTemplate.getOpcode());
 
@@ -146,7 +144,7 @@ public class Send extends AdminCommand {
 
 				@Override
 				public void run() {
-					// logger.debug("Sending: " + packetTemplate);
+					// log.debug("Sending: " + packetTemplate);
 					PacketSendUtility.sendPacket(target, packet);
 				}
 			}, delay);

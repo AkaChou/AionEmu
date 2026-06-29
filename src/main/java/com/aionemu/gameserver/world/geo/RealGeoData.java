@@ -1,14 +1,12 @@
 package com.aionemu.gameserver.world.geo;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.GeoWorldLoader;
@@ -18,9 +16,9 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+@Slf4j
 
 public class RealGeoData implements GeoData {
-    private static final Logger log = LoggerFactory.getLogger(RealGeoData.class);
     private final IntObjectHashMap<GeoMap> geoMaps = new IntObjectHashMap<>();
     private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 

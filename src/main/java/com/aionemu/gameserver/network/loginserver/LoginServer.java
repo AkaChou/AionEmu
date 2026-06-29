@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.network.loginserver;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Collections;
@@ -24,8 +25,6 @@ import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.NettyClient;
@@ -49,12 +48,9 @@ import com.aionemu.gameserver.services.AccountService;
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class LoginServer {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(LoginServer.class);
 	private static volatile ObjectProvider<LoginServer> instanceProvider;
 
 	/**

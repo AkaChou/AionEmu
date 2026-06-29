@@ -1,14 +1,12 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerABDAO;
 import com.aionemu.gameserver.model.atreian_bestiary.PlayerABEntry;
 import com.aionemu.gameserver.model.atreian_bestiary.PlayerABList;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +14,9 @@ import java.util.List;
 /**
  * @author Ranastic
  */
+@Slf4j
 public class MySQL8PlayerAtreianBestiaryDAO extends PlayerABDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerAtreianBestiaryDAO.class);
     
     private static final String INSERT_OR_UPDATE = "INSERT INTO `player_atreian_bestiary` (`player_id`, `id`, `kill_count`, `level`, `claim_reward`) VALUES(?,?,?,?,?) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`), `kill_count` = VALUES(`kill_count`), `level` = VALUES(`level`), `claim_reward` = VALUES(`claim_reward`)";
     

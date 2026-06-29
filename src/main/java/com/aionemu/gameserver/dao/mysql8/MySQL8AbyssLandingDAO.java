@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.AbyssLandingDAO;
 import com.aionemu.gameserver.model.landing.LandingLocation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +11,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+@Slf4j
 
 public class MySQL8AbyssLandingDAO extends AbyssLandingDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8AbyssLandingDAO.class);
     
     private static final String SELECT_QUERY = "SELECT * FROM `abyss_landing`";
     private static final String UPDATE_QUERY = "UPDATE `abyss_landing` SET `level` = ?, `siege` = ?, `commander` = ?, `artefact` = ?, `base` = ?, `monuments` = ?, `quest` = ?, `facility` = ?, `points` = ? WHERE `id` = ?";

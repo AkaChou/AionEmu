@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.utils.Rnd;
@@ -24,9 +25,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SELECT_ITEM_ADD;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -41,12 +39,12 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DisassemblyAction")
+@Slf4j
 public class DisassemblyAction extends AbstractItemAction
 {
 	// we have an mode 0 (disassembly) and an mode 1 (disassembly select box)
 	@XmlAttribute(name = "mode")
 	public int mode;
-	private static final Logger log = LoggerFactory.getLogger(DisassemblyAction.class);
 
 	// we can set the speed over config (3000 makes probs)
 	private static final int USAGE_DELAY = 2000;

@@ -14,15 +14,13 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
+@Slf4j
 
 public class CM_S_REP_WEB_SESSIONKEY extends AionClientPacket {
 
-	private static Logger log = LoggerFactory.getLogger(CM_S_REP_WEB_SESSIONKEY.class);
 
 	private int unk;
 	private String text;

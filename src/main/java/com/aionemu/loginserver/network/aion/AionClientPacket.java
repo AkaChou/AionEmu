@@ -18,10 +18,8 @@
 
 package com.aionemu.loginserver.network.aion;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.packet.BaseClientPacket;
 import com.aionemu.loginserver.model.Account;
@@ -31,12 +29,9 @@ import com.aionemu.loginserver.model.Account;
  *
  * @author -Nemesiss-
  */
+@Slf4j
 public abstract class AionClientPacket extends BaseClientPacket<LoginConnection> {
 
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(AionClientPacket.class);
 
     /**
      * Constructs new client packet.

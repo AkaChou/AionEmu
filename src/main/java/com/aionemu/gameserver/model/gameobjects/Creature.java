@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.AI2Engine;
@@ -54,9 +52,9 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+@Slf4j
 
 public abstract class Creature extends VisibleObject {
-	private static final Logger log = LoggerFactory.getLogger(Creature.class);
 	protected AI2 ai2;
 	private boolean isDespawnDelayed = false;
 	private CreatureLifeStats<? extends Creature> lifeStats;

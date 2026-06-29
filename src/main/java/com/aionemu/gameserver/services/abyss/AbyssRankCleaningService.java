@@ -16,14 +16,13 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -33,11 +32,11 @@ import com.aionemu.gameserver.model.AbyssRankingResult;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
+@Slf4j
 
 public class AbyssRankCleaningService {
 
 	private static volatile ObjectProvider<AbyssRankCleaningService> instanceProvider;
-	private Logger log = LoggerFactory.getLogger(AbyssRankCleaningService.class);
 
 	private final int SECURITY_MINIMUM_PERIOD = 30;
 

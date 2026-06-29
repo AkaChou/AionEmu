@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -30,8 +31,6 @@ import java.util.Iterator;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -74,11 +73,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.LinkedHashMap;
 import java.util.Map;
+@Slf4j
 
 public class AutoGroupService {
 
 	private static volatile ObjectProvider<AutoGroupService> instanceProvider;
-	private Logger log = LoggerFactory.getLogger(AutoGroupService.class);
 	private Map<Integer, LookingForParty> searchers = new LinkedHashMap<Integer, LookingForParty>();
 	private Map<Integer, AutoInstance> autoInstances = new LinkedHashMap<Integer, AutoInstance>();
 	private Collection<Integer> penaltys = new ArrayList<Integer>();

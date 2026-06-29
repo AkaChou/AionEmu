@@ -1,22 +1,20 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PortalCooldownsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PortalCooldownItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+@Slf4j
 
 public class MySQL8PortalCooldownsDAO extends PortalCooldownsDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8PortalCooldownsDAO.class);
 
 	private static final String INSERT_QUERY = "INSERT INTO `portal_cooldowns` (`player_id`, `world_id`, `reuse_time`, `entry_count`) VALUES (?,?,?,?) " + "ON DUPLICATE KEY UPDATE `reuse_time` = VALUES(`reuse_time`), `entry_count` = VALUES(`entry_count`)";
 	private static final String DELETE_QUERY = "DELETE FROM `portal_cooldowns` WHERE `player_id`=?";

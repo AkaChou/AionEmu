@@ -23,6 +23,7 @@
  */
 package com.aionemu.commons.utils.concurrent;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.PrintStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -37,9 +38,6 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 运行时统计管理器，用于收集和分析方法执行时间统计信息
  * Runtime statistics manager for collecting and analyzing method execution time statistics
@@ -47,9 +45,9 @@ import org.slf4j.LoggerFactory;
  * @author NB4L1
  */
 @SuppressWarnings("unchecked")
+@Slf4j
 public final class RunnableStatsManager {
     
-    private static final Logger log = LoggerFactory.getLogger(RunnableStatsManager.class);
     
     // 类统计信息映射表 Class statistics mapping
     private static final Map<Class<?>, ClassStat> classStats = new HashMap<Class<?>, ClassStat>();

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -25,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -62,11 +61,11 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * Reworked by G-Robson26 /
  ****/
+@Slf4j
 
 public class LunaShopService {
 
 	private static volatile ObjectProvider<LunaShopService> instanceProvider;
-	private Logger log = LoggerFactory.getLogger(LunaShopService.class);
 	PlayerWardrobeDAO wDAO = DAOManager.getDAO(PlayerWardrobeDAO.class);
 	private boolean dailyGenerated = true;
 	private boolean specialGenerated = true;

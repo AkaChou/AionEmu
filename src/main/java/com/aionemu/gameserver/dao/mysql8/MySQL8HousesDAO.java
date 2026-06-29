@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -9,9 +10,6 @@ import com.aionemu.gameserver.model.templates.housing.Building;
 import com.aionemu.gameserver.model.templates.housing.BuildingType;
 import com.aionemu.gameserver.model.templates.housing.HouseAddress;
 import com.aionemu.gameserver.model.templates.housing.HousingLand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.*;
@@ -25,9 +23,9 @@ import java.util.Map;
  * MySQL 8 implementation of HousesDAO
  * Fixed connection leaks
  */
+@Slf4j
 public class MySQL8HousesDAO extends HousesDAO {
     
-    private static final Logger log = LoggerFactory.getLogger(MySQL8HousesDAO.class);
     
     private static final String SELECT_HOUSES_QUERY = "SELECT * FROM houses WHERE address <> 2001 AND address <> 3001";
     private static final String SELECT_STUDIOS_QUERY = "SELECT * FROM houses WHERE address = 2001 OR address = 3001";

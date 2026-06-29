@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.utils.xml;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -16,8 +17,6 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.Validator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import java.net.URL;
@@ -31,9 +30,9 @@ import javax.xml.validation.SchemaFactory;
  * @author ginho1
  * @author Dezalmado (compilation error correction)
  */
+@Slf4j
 public class JAXBUtil {
 
-	private static final Logger log = LoggerFactory.getLogger(JAXBUtil.class);
 
 	public static <T> T unmarshal(InputStream is, Class<T> clazz) {
 		try {

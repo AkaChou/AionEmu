@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -64,9 +62,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  * 
  * @author Luno modified by ATracer, Source, Wakizashi, xTz, nrg
  */
+@Slf4j
 public class SpawnEngine {
 
-	private static Logger log = LoggerFactory.getLogger(SpawnEngine.class);
 
 	/**
 	 * Creates VisibleObject instance and spawns it using given

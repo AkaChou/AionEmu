@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.PvPModConfig;
@@ -44,9 +42,9 @@ import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+@Slf4j
 
 public class CM_AUTO_GROUP extends AionClientPacket {
-	private Logger log = LoggerFactory.getLogger(CM_AUTO_GROUP.class);
 	private byte instanceMaskId;
 	private byte windowId;
 	private byte entryRequestId;

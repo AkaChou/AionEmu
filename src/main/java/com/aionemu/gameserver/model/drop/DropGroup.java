@@ -15,12 +15,10 @@
  */
 package com.aionemu.gameserver.model.drop;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -32,9 +30,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dropGroup", propOrder = { "drop" })
+@Slf4j
 public class DropGroup implements DropCalculator {
 
-    private static final Logger log = LoggerFactory.getLogger(DropGroup.class);
 
 	protected List<Drop> drop;
 	@XmlAttribute

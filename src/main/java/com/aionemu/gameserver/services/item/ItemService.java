@@ -16,15 +16,13 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.Collection;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
@@ -60,9 +58,9 @@ import com.google.common.collect.Collections2;
 /**
  * @author KID
  */
+@Slf4j(topic = "ITEM_LOG")
 public class ItemService {
 
-	private static final Logger log = LoggerFactory.getLogger("ITEM_LOG");
 
 	public static final ItemUpdatePredicate DEFAULT_UPDATE_PREDICATE = new ItemUpdatePredicate(ItemAddType.ITEM_COLLECT,
 			ItemUpdateType.INC_ITEM_COLLECT);

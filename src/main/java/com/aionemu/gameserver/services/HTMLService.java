@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
@@ -24,9 +25,6 @@ import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.cache.HTMLCache;
@@ -50,9 +48,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  * 
  * @author lhw, xTz
  */
+@Slf4j(topic = "ITEM_HTML_LOG")
 public class HTMLService {
 
-	private static final Logger log = LoggerFactory.getLogger("ITEM_HTML_LOG");
 
 	public static String getHTMLTemplate(GuideTemplate template) {
 		String context = GameStaticDataServices.htmlCache().getHTML("guideTemplate.xhtml");

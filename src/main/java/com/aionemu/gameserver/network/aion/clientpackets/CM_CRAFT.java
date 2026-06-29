@@ -16,18 +16,16 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.craft.CraftService;
 import com.aionemu.gameserver.utils.MathUtil;
+@Slf4j
 
 public class CM_CRAFT extends AionClientPacket {
-	private static final Logger log = LoggerFactory.getLogger(CM_CRAFT.class);
 	private int itemID;
 	private long itemCount;
 	private int unk;

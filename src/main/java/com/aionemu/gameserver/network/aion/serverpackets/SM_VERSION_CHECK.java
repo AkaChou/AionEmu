@@ -15,10 +15,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.time.Instant;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.IPRange;
 import com.aionemu.gameserver.configs.main.GSConfig;
@@ -36,10 +34,10 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
  * @modified by Novo, cura
  * @author GiGatR00n, NewLives
  */
+@Slf4j
 
 public class SM_VERSION_CHECK extends AionServerPacket {
 
-	private static final Logger log = LoggerFactory.getLogger(SM_VERSION_CHECK.class);
 	/**
 	 * Aion Client version
 	 */

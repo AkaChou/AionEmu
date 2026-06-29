@@ -16,11 +16,9 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Iterator;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.GameServer;
@@ -56,9 +54,9 @@ import com.aionemu.gameserver.world.World;
  * @author Luno
  * @modified cura
  */
+@Slf4j
 public class AccountService {
 
-	private static final Logger log = LoggerFactory.getLogger(AccountService.class);
 
 	private static CacheMap<Integer, Account> accountsMap = CacheMapFactory.createSoftCacheMap("Account", "account");
 

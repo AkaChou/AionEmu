@@ -15,6 +15,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -33,8 +34,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.quartz.CronExpression;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -71,11 +70,11 @@ import com.aionemu.gameserver.world.WorldMapType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+@Slf4j(topic = "HOUSE_AUCTION_LOG")
 
 public class HousingBidService extends AbstractCronTask {
 
 	private static volatile ObjectProvider<HousingBidService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger("HOUSE_AUCTION_LOG");
 	private static CronExpression registerDateExpr;
 	private static final Map<Integer, HouseBidEntry> houseBids;
 	private static final Map<Integer, HouseBidEntry> playerBids;

@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -26,8 +24,8 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 /**
  * @author Ranastic
  */
+@Slf4j
 public class CM_HOT_SPECTATE extends AionClientPacket {
-	private static final Logger log = LoggerFactory.getLogger(CM_HOT_SPECTATE.class);
 
 	public CM_HOT_SPECTATE(int opcode, AionConnection.State state, AionConnection.State... restStates) {
 		super(opcode, state, restStates);

@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.ai.siege;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
@@ -16,13 +17,10 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @AIName("treasure_box_success_boss")
+@Slf4j
 public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 
-    private static final Logger log = LoggerFactory.getLogger(Treasure_Box_Success_BossAI2.class);
 
     private static final int TREASURE_CHEST_ID = 701481; // ID chest
     private static final int NUMBER_OF_CHESTS = 6; // Number of chests

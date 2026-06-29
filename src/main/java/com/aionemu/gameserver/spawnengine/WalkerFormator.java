@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
@@ -34,9 +32,9 @@ import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
  * @based on Imaginary's imagination
  * @modified Rolandas
  */
+@Slf4j
 public class WalkerFormator {
 
-	private static final Logger log = LoggerFactory.getLogger(WalkerFormator.class);
 
 	/**
 	 * If it's the instance first spawn, WalkerFormator verifies and creates groups;

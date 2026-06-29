@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.configs.main.CacheConfig;
@@ -24,9 +25,6 @@ import com.google.common.collect.Maps;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.*;
 
@@ -34,9 +32,9 @@ import java.util.*;
  * MySQL 8 implementation of PlayerDAO
  * Fixed connection leaks - removed all DB.insertUpdate() and DB.prepareStatement()
  */
+@Slf4j
 public class MySQL8PlayerDAO extends PlayerDAO {
     
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerDAO.class);
     
     private Map<Integer, PlayerCommonData> playerCommonData = new LinkedHashMap<Integer, PlayerCommonData>();
     private Map<String, PlayerCommonData> playerCommonDataByName = new LinkedHashMap<String, PlayerCommonData>();

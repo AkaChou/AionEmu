@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.drop;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -29,8 +30,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -39,6 +38,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
+@Slf4j
 
 public class DropLists {
 
@@ -46,7 +46,6 @@ public class DropLists {
 	private static List<Element> drops = new ArrayList<Element>();
 	private static List<Element> allnpcs = new ArrayList<Element>();
 	private static List<Integer> npcids = new ArrayList<Integer>();
-	private static final Logger log = LoggerFactory.getLogger(DropLists.class);
 
 	public static void Xmlmian(int min, int max) {
 

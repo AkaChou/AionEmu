@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -23,8 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -55,6 +54,7 @@ import java.util.Map;
 /**
  * Created by Wnkrz on 22/08/2017.
  */
+@Slf4j
 
 public class TowerOfEternityService {
 	private static volatile ObjectProvider<TowerOfEternityService> instanceProvider;
@@ -62,7 +62,6 @@ public class TowerOfEternityService {
 	private static final int duration = CustomConfig.TOWER_OF_ETERNITY_DURATION;
 	private final Map<Integer, TowerOfEternity<?>> activeTowerOfEternity = new LinkedHashMap<Integer, TowerOfEternity<?>>()
 			;
-	private static Logger log = LoggerFactory.getLogger(TowerOfEternityService.class);
 
 	public void initTowerOfEternityLocation() {
 		if (CustomConfig.TOWER_OF_ETERNITY_ENABLED) {

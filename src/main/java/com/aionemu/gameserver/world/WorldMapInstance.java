@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.world;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -27,9 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.WorldConfig;
 import com.aionemu.gameserver.instance.handlers.InstanceHandler;
@@ -65,12 +63,9 @@ import java.util.Map;
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public abstract class WorldMapInstance {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(WorldMapInstance.class);
 	/**
 	 * Size of region
 	 */

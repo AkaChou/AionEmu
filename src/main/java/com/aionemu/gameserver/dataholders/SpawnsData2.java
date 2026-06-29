@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,9 +38,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
@@ -88,8 +86,8 @@ import java.util.Map;
 @XmlRootElement(name = "spawns")
 @XmlType(namespace = "", name = "SpawnsData2")
 @XmlAccessorType(XmlAccessType.NONE)
+@Slf4j
 public class SpawnsData2 {
-	private static final Logger log = LoggerFactory.getLogger(SpawnsData2.class);
 
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;

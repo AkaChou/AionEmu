@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.skillengine.properties;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 import org.apache.commons.lang3.Range;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.Trap;
@@ -34,9 +32,9 @@ import com.aionemu.gameserver.utils.PositionUtil;
 /**
  * @author ATracer
  */
+@Slf4j
 public class TargetRangeProperty {
 
-	private static final Logger log = LoggerFactory.getLogger(TargetRangeProperty.class);
 
 	/**
 	 * @param skill

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -26,8 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -65,9 +64,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class FFAService {
 	private static volatile ObjectProvider<FFAService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(FFAService.class);
 	private Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
 	private WorldMapInstance activeInstance;
 	private List<ArenaMap> maps = new ArrayList<ArenaMap>();

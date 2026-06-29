@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team.legion.LegionHistory;
@@ -31,9 +29,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author Simple, xTz
  */
+@Slf4j
 public class CM_LEGION_TABS extends AionClientPacket {
 
-	private static final Logger log = LoggerFactory.getLogger(CM_LEGION_TABS.class);
 
 	private int page;
 	private int tab;

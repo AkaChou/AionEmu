@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.ai2;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,8 +24,6 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
@@ -42,10 +41,10 @@ import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 /**
  * @author ATracer
  */
+@Slf4j
 public class AI2Engine implements GameEngine {
 
 	private static volatile ObjectProvider<AI2Engine> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(AI2Engine.class);
 	private final Map<String, Class<? extends AbstractAI>> aiMap = new HashMap<String, Class<? extends AbstractAI>>();
 
 	@Override

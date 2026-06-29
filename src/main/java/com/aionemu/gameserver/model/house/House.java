@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
@@ -30,9 +31,6 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.controllers.HouseController;
@@ -69,9 +67,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+@Slf4j
 
 public class House extends VisibleObject {
-	private static final Logger log = LoggerFactory.getLogger(House.class);
 	private HousingLand land;
 	private HouseAddress address;
 	private Building building;

@@ -22,10 +22,8 @@
  */
 package com.aionemu.commons.network.util;
 
+import lombok.extern.slf4j.Slf4j;
 import java.lang.Thread.UncaughtExceptionHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 线程未捕获异常处理器，用于处理线程中未被捕获的异常
  * Thread Uncaught Exception Handler for handling uncaught exceptions in threads
@@ -42,9 +40,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author AionEmu Project
  */
+@Slf4j
 public class ThreadUncaughtExceptionHandler implements UncaughtExceptionHandler {
     
-    private static final Logger log = LoggerFactory.getLogger(ThreadUncaughtExceptionHandler.class);
     
     /**
      * 处理未捕获的线程异常

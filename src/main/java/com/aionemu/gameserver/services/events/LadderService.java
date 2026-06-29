@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -28,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -60,9 +59,9 @@ import java.util.Map;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class LadderService {
 	private static volatile ObjectProvider<LadderService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(LadderService.class);
 	private List<AionObject> eventQueueList = new ArrayList<AionObject>();
 	private List<AionObject> normalQueueList = new ArrayList<AionObject>();
 	private Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());

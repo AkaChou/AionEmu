@@ -16,28 +16,26 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_RESURRECT;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collection;
 import java.util.Iterator;
 
 /**
  * Created by Kill3r
  */
+@Slf4j(topic = "GM_MONITOR_LOG")
 public class EventCaller extends AdminCommand {
 
     public EventCaller(){
         super("eventcaller");
     }
 
-    private static final Logger log = LoggerFactory.getLogger("GM_MONITOR_LOG");
 
     public void execute(Player player, String...params){
         if(params.length == 0){

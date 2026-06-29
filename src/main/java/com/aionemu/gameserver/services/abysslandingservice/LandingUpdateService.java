@@ -17,20 +17,19 @@
  */
 package com.aionemu.gameserver.services.abysslandingservice;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.AbyssLandingConfig;
 import com.aionemu.gameserver.model.landing.LandingLocation;
+@Slf4j
 
 public class LandingUpdateService {
 	private static volatile ObjectProvider<LandingUpdateService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(LandingUpdateService.class);
 
 	final LandingLocation redemptionLanding = GameLocationBootstrapServices.abyssLandingService().redemptionLanding();
 	final LandingLocation harbingerLanding = GameLocationBootstrapServices.abyssLandingService().harbingerLanding();

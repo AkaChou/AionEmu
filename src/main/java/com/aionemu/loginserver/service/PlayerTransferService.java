@@ -18,13 +18,11 @@
 
 package com.aionemu.loginserver.service;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.GameServerInfo;
@@ -42,9 +40,9 @@ import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
 /**
  * @author KID
  */
+@Slf4j
 public class PlayerTransferService {
 
-    private final Logger log = LoggerFactory.getLogger(PlayerTransferService.class);
 
     @Deprecated(since = "boot-migration")
     public static PlayerTransferService getInstance() {

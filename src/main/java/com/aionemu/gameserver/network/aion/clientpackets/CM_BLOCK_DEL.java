@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.BlockedPlayer;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -29,9 +27,9 @@ import com.aionemu.gameserver.services.SocialService;
 /**
  * @author Ben
  */
+@Slf4j
 public class CM_BLOCK_DEL extends AionClientPacket {
 
-	private static Logger log = LoggerFactory.getLogger(CM_BLOCK_DEL.class);
 
 	private String targetName;
 

@@ -1,10 +1,8 @@
 package com.aionemu.commons.network.packet;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.network.AConnection;
 import java.nio.ByteBuffer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 客户端数据包基类
  * Base class for client-side packets
@@ -14,8 +12,8 @@ import org.slf4j.LoggerFactory;
  *
  * @param <T> 连接类型 / Connection type
  */
+@Slf4j
 public abstract class BaseClientPacket<T extends AConnection> extends BasePacket implements Runnable {
-    private static final Logger log = LoggerFactory.getLogger(BaseClientPacket.class);
     
     /**
      * 客户端连接实例

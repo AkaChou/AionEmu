@@ -1,15 +1,13 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerPasskeyDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
+@Slf4j
 
 public class MySQL8PlayerPasskeyDAO extends PlayerPasskeyDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerPasskeyDAO.class);
     
     private static final String INSERT_QUERY = "INSERT INTO `player_passkey` (`account_id`, `passkey`) VALUES (?,?)";
     private static final String UPDATE_QUERY = "UPDATE `player_passkey` SET `passkey`=? WHERE `account_id`=? AND `passkey`=?";

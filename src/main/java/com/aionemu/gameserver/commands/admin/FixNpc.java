@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -32,17 +33,14 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
+@Slf4j
 
 public class FixNpc extends AdminCommand
 {
-	private static final Logger log = LoggerFactory.getLogger(FixNpc.class);
 	private Npc npc = null;
     private int numofspawns = 0;
     private int spawned = 0;

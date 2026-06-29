@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.MailDAO;
@@ -37,9 +35,9 @@ import com.aionemu.gameserver.services.player.PlayerService;
  *
  * @author Nemesiss, AEJTester
  */
+@Slf4j
 public class SM_CHARACTER_LIST extends PlayerInfo {
 
-	private static Logger log = LoggerFactory.getLogger(SM_CHARACTER_LIST.class);
 
 	/**
 	 * PlayOk2 - we dont care...

@@ -16,13 +16,11 @@
  */
 package com.aionemu.gameserver.model.siege;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -34,9 +32,9 @@ import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+@Slf4j
 
 public class SiegeLocation implements ZoneHandler {
-	private static final Logger log = LoggerFactory.getLogger(SiegeLocation.class);
 	public static final int STATE_INVULNERABLE = 0;
 	public static final int STATE_VULNERABLE = 1;
 

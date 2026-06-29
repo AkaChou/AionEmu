@@ -7,6 +7,7 @@
  */
 package com.aionemu.gameserver.controllers.movement;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -43,10 +44,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.aionemu.gameserver.movement.Global;
 import com.aionemu.gameserver.movement.processors.movement.motor.FollowMotor;
+@Slf4j
 
 public class NpcMoveController
         extends CreatureMoveController<Npc> {
-    private static final Logger log = LoggerFactory.getLogger(NpcMoveController.class);
     public static final float MOVE_CHECK_OFFSET = 0.1f;
     private static final float MOVE_OFFSET = 0.05f;
     private int returnAttempts;

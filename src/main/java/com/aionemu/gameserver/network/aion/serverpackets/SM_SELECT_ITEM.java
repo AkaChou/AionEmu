@@ -16,21 +16,19 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 import com.aionemu.gameserver.model.templates.item.DisassembleItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+@Slf4j
 
 public class SM_SELECT_ITEM extends AionServerPacket {
 	private int uniqueItemId;
 	private List<DisassembleItem> selsetitems;
-	private static final Logger log = LoggerFactory.getLogger(SM_SELECT_ITEM.class);
 
 	public SM_SELECT_ITEM(List<DisassembleItem> selsetitem, int uniqueItemId) {
 		this.uniqueItemId = uniqueItemId;

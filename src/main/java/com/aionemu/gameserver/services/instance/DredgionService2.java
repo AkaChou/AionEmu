@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.instance;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -25,8 +26,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -36,10 +35,10 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
+@Slf4j
 
 
 public class DredgionService2 {
-	private static final Logger log = LoggerFactory.getLogger(DredgionService2.class);
 	private static volatile ObjectProvider<DredgionService2> instanceProvider;
 
 	private boolean registerAvailable;

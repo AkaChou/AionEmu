@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.world.zone;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import java.util.ArrayList;
@@ -27,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
@@ -69,10 +68,10 @@ import java.util.Map;
 /**
  * @author ATracer modified by antness
  */
+@Slf4j
 public final class ZoneService implements GameEngine {
 
 	private static volatile ObjectProvider<ZoneService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(ZoneService.class);
 	private IntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
 	private final Map<ZoneName, Class<? extends ZoneHandler>> handlers = new HashMap<ZoneName, Class<? extends ZoneHandler>>();
 	private final Map<ZoneName, ZoneHandler> collidableHandlers = new LinkedHashMap<ZoneName, ZoneHandler>();

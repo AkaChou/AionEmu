@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.geoEngine;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -29,9 +30,6 @@ import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
@@ -54,10 +52,9 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 /**
  * @author Mr. Poke
  */
+@Slf4j
 public class GeoWorldLoader {
 
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(GeoWorldLoader.class);
 	private static String GEO_DIR = "data/geo/";
 	private static boolean DEBUG = false;
 

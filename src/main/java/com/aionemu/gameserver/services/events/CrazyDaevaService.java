@@ -16,13 +16,12 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -41,10 +40,10 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class CrazyDaevaService {
 
 	private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(CrazyDaevaService.class);
 	int crazyCount = 0;
 
 	// calculate time

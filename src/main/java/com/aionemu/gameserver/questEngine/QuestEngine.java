@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.questEngine;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -27,8 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
@@ -77,10 +76,10 @@ import java.util.Map;
  * @author MrPoke, Hilgert
  * @modified vlog
  */
+@Slf4j
 public class QuestEngine implements GameEngine {
 
 	private static volatile ObjectProvider<QuestEngine> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(QuestEngine.class);
 	private static final Map<Integer, QuestHandler> questHandlers = new LinkedHashMap<Integer, QuestHandler>();
 	private IntObjectHashMap<QuestNpc> questNpcs = new IntObjectHashMap<QuestNpc>();
 	private IntObjectHashMap<IntArrayList> questItemRelated = new IntObjectHashMap<IntArrayList>();

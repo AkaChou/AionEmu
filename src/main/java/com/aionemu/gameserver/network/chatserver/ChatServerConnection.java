@@ -16,21 +16,19 @@
  */
 package com.aionemu.gameserver.network.chatserver;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
+@Slf4j
 
 public class ChatServerConnection extends AConnection {
-	private static final Logger log = LoggerFactory.getLogger(ChatServerConnection.class);
 
 	public static enum State {
 		CONNECTED, AUTHED

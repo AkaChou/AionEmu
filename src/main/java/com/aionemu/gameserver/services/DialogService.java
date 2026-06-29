@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
@@ -7,9 +8,6 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameCraftServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -51,9 +49,9 @@ import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+@Slf4j
 
 public class DialogService {
-    private static final Logger log = LoggerFactory.getLogger(DialogService.class);
 
     public static void onCloseDialog(Npc npc, Player player) {
         switch (npc.getObjectTemplate().getTitleId()) {

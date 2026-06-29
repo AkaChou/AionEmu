@@ -18,12 +18,10 @@
 
 package com.aionemu.chatserver.network.gameserver.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.network.gameserver.GsClientPacket;
@@ -34,9 +32,9 @@ import com.aionemu.chatserver.service.ChatCoreServices;
 /**
  * @author ATracer
  */
+@Slf4j
 public class CM_PLAYER_AUTH extends GsClientPacket {
 
-    private static final Logger log = LoggerFactory.getLogger(CM_PLAYER_AUTH.class);
     private int playerId;
     private String playerLogin;
     private String nick;

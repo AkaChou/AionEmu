@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.PvPConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -29,8 +27,8 @@ import com.aionemu.gameserver.world.World;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j(topic = "PVP_LOG")
 public class PvPSpreeService {
-	private static final Logger log = LoggerFactory.getLogger("PVP_LOG");
 	private static final String STRING_SPREE1 = "Bloody Storm";
 	private static final String STRING_SPREE2 = "Carnage";
 	private static final String STRING_SPREE3 = "Genocide";

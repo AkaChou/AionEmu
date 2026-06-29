@@ -14,6 +14,7 @@
  */
 package com.aionemu.gameserver.skillengine.model;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
@@ -26,9 +27,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AISubState;
@@ -78,6 +76,7 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * @author ATracer Modified by Wakzashi
  */
+@Slf4j
 public class Skill {
 
 	private SkillMethod skillMethod = SkillMethod.CAST;
@@ -119,7 +118,6 @@ public class Skill {
 		CAST, ITEM, PASSIVE, PROVOKED;
 	}
 
-	private Logger log = LoggerFactory.getLogger(Skill.class);
 
 	/**
 	 * Each skill is a separate object upon invocation Skill level will be populated

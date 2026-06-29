@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
@@ -9,9 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.GoodsListData;
@@ -46,9 +44,9 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  *  Fix: MATTY (ADev.Team)
  */
+@Slf4j
 
 public class TradeService {
-	private static final Logger log = LoggerFactory.getLogger(TradeService.class);
 	private static final TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
 	private static final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 

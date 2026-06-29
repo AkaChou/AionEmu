@@ -1,22 +1,20 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerTitleListDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.title.Title;
 import com.aionemu.gameserver.model.gameobjects.player.title.TitleList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 
 /**
  * MySQL 8 implementation of PlayerTitleListDAO
  * @author xavier, Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8PlayerTitleListDAO extends PlayerTitleListDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerTitleListDAO.class);
 
     private static final String LOAD_QUERY = "SELECT `title_id`, `remaining` FROM `player_titles` WHERE `player_id` = ? ORDER BY `title_id`";
     private static final String INSERT_QUERY = "INSERT INTO `player_titles` (`player_id`, `title_id`, `remaining`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `remaining` = VALUES(`remaining`)";

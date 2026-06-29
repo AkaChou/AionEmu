@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.lifecycle.GameMaintenanceServices;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -29,9 +27,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
 /**
  * Created by Wnkrz on 24/07/2017.
  */
+@Slf4j
 
 public class CM_SEASON_RANKING extends AionClientPacket {
-	private static Logger log = LoggerFactory.getLogger(CM_SEASON_RANKING.class);
 	private int tableId;
 	private int serverSwitch;
 

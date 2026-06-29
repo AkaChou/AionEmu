@@ -1,5 +1,6 @@
 package com.aionemu.commons.network;
 
+import lombok.extern.slf4j.Slf4j;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -15,12 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@Slf4j
 public class NettyServer implements ServerTransport {
 
-    private static final Logger log = LoggerFactory.getLogger(NettyServer.class);
 
     private final NettyServerCfg[] cfgs;
     private final Supplier<Executor> connectionExecutor;

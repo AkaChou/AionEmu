@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerSettingsDAO;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +15,9 @@ import java.sql.SQLException;
  * @author ATracer
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8PlayerSettingsDAO extends PlayerSettingsDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerSettingsDAO.class);
 	
 	private static final String SELECT_QUERY = "SELECT * FROM player_settings WHERE player_id = ?";
 	private static final String REPLACE_QUERY = "REPLACE INTO player_settings VALUES (?, ?, ?)";

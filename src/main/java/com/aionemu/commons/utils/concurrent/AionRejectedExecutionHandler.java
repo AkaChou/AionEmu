@@ -1,11 +1,9 @@
 package com.aionemu.commons.utils.concurrent;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 线程池拒绝策略处理器（Thread Pool Rejected Execution Handler）
  * 
@@ -13,10 +11,9 @@ import org.slf4j.LoggerFactory;
  * - 高优先级线程(>5)创建新线程执行
  * - 低优先级线程直接在当前线程执行
  */
+@Slf4j
 public final class AionRejectedExecutionHandler implements RejectedExecutionHandler {
     
-    // 日志记录器（Logger instance）
-    private static final Logger log = LoggerFactory.getLogger(AionRejectedExecutionHandler.class);
 
     /**
      * 拒绝任务处理方法（Rejected task handling method）

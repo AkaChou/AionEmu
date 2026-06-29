@@ -16,12 +16,11 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -38,10 +37,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author xTz
  */
+@Slf4j
 public class DropDistributionService {
 
 	private static volatile ObjectProvider<DropDistributionService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(DropDistributionService.class);
 
 	public static DropDistributionService getInstance() {
 		ObjectProvider<DropDistributionService> provider = instanceProvider;

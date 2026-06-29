@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerVarsDAO;
 import java.util.LinkedHashMap;
@@ -10,15 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author KID
  */
+@Slf4j
 public class MySQL8PlayerVarsDAO extends PlayerVarsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerVarsDAO.class);
 
     private static final String SELECT_QUERY = "SELECT param,value FROM player_vars WHERE player_id=?";
     private static final String INSERT_QUERY = "INSERT INTO player_vars (`player_id`, `param`, `value`, `time`) VALUES (?,?,?,NOW())";

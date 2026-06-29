@@ -17,6 +17,7 @@
 
 package com.aionemu.gameserver;
 
+import lombok.extern.slf4j.Slf4j;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Frame;
@@ -26,9 +27,6 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -46,9 +44,9 @@ import com.aionemu.gameserver.world.World;
  * @mod yayaya ServerCommandProcessor implements a background thread to process
  *      commands from the console - either OS shell or a java-based launcher
  */
+@Slf4j
 
 public class ServerCommandProcessor {
-	private static final Logger log = LoggerFactory.getLogger(ServerCommandProcessor.class);
 
 	Frame f = new Frame("Ya-admin panel 5.8");
 

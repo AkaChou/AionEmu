@@ -15,6 +15,7 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -23,9 +24,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.List;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2;
@@ -71,9 +69,9 @@ import java.util.Map;
  * @author -Nemesiss-, ATracer(2009-09-29), Sarynth
  * @modified by Wakizashi
  */
+@Slf4j
 public abstract class CreatureController<T extends Creature> extends VisibleObjectController<Creature> {
 
-	private static final Logger log = LoggerFactory.getLogger(CreatureController.class);
 	private Map<Integer, Future<?>> tasks = new LinkedHashMap<Integer, Future<?>>();
 	private float healingSkillBoost = 1.0f;
 	private int SimpleAttackType;

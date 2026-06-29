@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -34,8 +35,6 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.DatabaseFactory;
@@ -58,10 +57,10 @@ import java.util.Map;
 /**
  * @author kecimis
  */
+@Slf4j
 public class MotionLoggingService {
 
 	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(MotionLoggingService.class);
 
 	private Map<String, MotionLog> motionsMap = new LinkedHashMap<String, MotionLog>();
 

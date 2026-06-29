@@ -16,23 +16,22 @@
  */
 package com.aionemu.gameserver.eventEngine;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 
 /**
  * Created by wanke on 12/02/2017.
  */
+@Slf4j
 
 public class EventScheduler implements Runnable {
 
-	private static final Logger log = LoggerFactory.getLogger(EventScheduler.class);
 	private static volatile ObjectProvider<EventScheduler> instanceProvider;
 	private static final int TIMEOUT = 15; // in minutes
 	private static final int WORKING_DELAY = 1000; // in msec

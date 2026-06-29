@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,9 +36,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author KID
  */
+@Slf4j
 public class AdminService {
 	private static volatile ObjectProvider<AdminService> instanceProvider;
-	private final Logger log = LoggerFactory.getLogger(AdminService.class);
 	private static final Logger itemLog = LoggerFactory.getLogger("GMITEMRESTRICTION");
 	private List<Integer> list;
 

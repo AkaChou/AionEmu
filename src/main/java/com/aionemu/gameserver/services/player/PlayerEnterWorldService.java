@@ -1,6 +1,7 @@
 
 package com.aionemu.gameserver.services.player;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
@@ -31,9 +32,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.versionning.Version;
@@ -162,10 +160,10 @@ import com.aionemu.gameserver.utils.rates.Rates;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+@Slf4j(topic = "GAMECONNECTION_LOG")
 
 public final class PlayerEnterWorldService {
 
-	private static final Logger log = LoggerFactory.getLogger("GAMECONNECTION_LOG");
 	private static final String serverInfo;
 	private static final String alInfo;
 	private static final Set<Integer> pendingEnterWorld = new HashSet<Integer>();

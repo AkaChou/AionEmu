@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PetitionDAO;
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.PetitionStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,9 +12,9 @@ import java.util.Set;
 /**
  * @author zdead
  */
+@Slf4j
 public class MySQL8PetitionDAO extends PetitionDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PetitionDAO.class);
 
     @Override
     public synchronized int getNextAvailableId() {

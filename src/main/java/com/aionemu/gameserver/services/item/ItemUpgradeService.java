@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.services.item;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -37,9 +35,9 @@ import java.util.Map;
 /**
  * @author Ranastic (Encom)
  */
+@Slf4j
 
 public class ItemUpgradeService {
-	private static final Logger log = LoggerFactory.getLogger(ItemUpgradeService.class);
 
 	public static boolean checkItemUpgrade(Player player, Item baseItem, int resultItemId) {
 		ItemUpgradeTemplate itemUpgardeTemplate = DataManager.ITEM_UPGRADE_DATA

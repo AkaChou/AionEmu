@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.craft;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
@@ -25,9 +26,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
@@ -56,9 +54,9 @@ import com.aionemu.gameserver.services.item.ItemService.ItemUpdatePredicate;
 import com.aionemu.gameserver.skillengine.task.CraftingTask;
 import com.aionemu.gameserver.skillengine.task.MorphingTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+@Slf4j(topic = "CRAFT_LOG")
 
 public class CraftService {
-	private static final Logger log = LoggerFactory.getLogger("CRAFT_LOG");
 
 	public static void finishCrafting(final Player player, RecipeTemplate recipetemplate, int critCount, int bonus) {
 		if (recipetemplate.getMaxProductionCount() != null) {

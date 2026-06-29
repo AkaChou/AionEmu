@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -34,8 +35,6 @@ import jakarta.xml.bind.annotation.XmlElement;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.xml.sax.SAXException;
 
@@ -50,9 +49,9 @@ import com.aionemu.gameserver.dataholders.StaticData;
  * 
  * @author Luno
  */
+@Slf4j
 public class XmlDataLoader {
 
-	private static final Logger log = LoggerFactory.getLogger(XmlDataLoader.class);
 	private static volatile ObjectProvider<XmlDataLoader> instanceProvider;
 	/** File containing xml schema declaration */
 	private final static String XML_SCHEMA_FILE = "./data/static_data/static_data.xsd";

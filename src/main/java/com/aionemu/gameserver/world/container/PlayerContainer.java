@@ -16,11 +16,9 @@
  */
 package com.aionemu.gameserver.world.container;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.Iterator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
@@ -34,9 +32,9 @@ import java.util.Map;
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class PlayerContainer implements Iterable<Player> {
 
-	private static final Logger log = LoggerFactory.getLogger(PlayerContainer.class);
 
 	/**
 	 * Map<ObjectId,Player>

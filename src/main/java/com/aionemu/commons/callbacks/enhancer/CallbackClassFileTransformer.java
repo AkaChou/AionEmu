@@ -1,11 +1,9 @@
 package com.aionemu.commons.callbacks.enhancer;
 
+import lombok.extern.slf4j.Slf4j;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.utils.AionProcessExit;
 
 /**
@@ -21,13 +19,9 @@ import com.aionemu.commons.utils.AionProcessExit;
  * 2. 提供字节码转换的统一入口 / Provide unified entry point for bytecode transformation
  * 3. 处理转换过程中的异常 / Handle exceptions during transformation process
  */
+@Slf4j
 public abstract class CallbackClassFileTransformer implements ClassFileTransformer {
     
-    /**
-     * 日志记录器
-     * Logger instance
-     */
-    private static final Logger log = LoggerFactory.getLogger(CallbackClassFileTransformer.class);
 
     /**
      * 实现ClassFileTransformer接口的transform方法

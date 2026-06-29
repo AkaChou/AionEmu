@@ -18,9 +18,7 @@
 
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.model.Account;
@@ -34,12 +32,9 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_ACCOUNT_RECON
  *
  * @author -Nemesiss-
  */
+@Slf4j
 public class CM_ACCOUNT_RECONNECT_KEY extends GsClientPacket {
 
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(CM_ACCOUNT_RECONNECT_KEY.class);
     /**
      * accoundId of account that will be reconnecting.
      */

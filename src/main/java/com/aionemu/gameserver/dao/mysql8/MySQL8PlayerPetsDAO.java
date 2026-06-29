@@ -1,14 +1,12 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.PetCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.pet.PetDopingBag;
 import com.aionemu.gameserver.services.toypet.PetHungryLevel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +14,9 @@ import java.util.List;
 /**
  * @author M@xx, xTz, Rolandas
  */
+@Slf4j
 public class MySQL8PlayerPetsDAO extends PlayerPetsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerPetsDAO.class);
 
     @Override
     public void saveFeedStatus(Player player, int petId, int hungryLevel, int feedProgress, long reuseTime) {

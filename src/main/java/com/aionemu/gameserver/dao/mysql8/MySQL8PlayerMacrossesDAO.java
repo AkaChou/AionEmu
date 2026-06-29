@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerMacrossesDAO;
 import com.aionemu.gameserver.model.gameobjects.player.MacroList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +15,9 @@ import java.util.Map;
  * @author Aquanox
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8PlayerMacrossesDAO extends PlayerMacrossesDAO {
 
-	private static Logger log = LoggerFactory.getLogger(MySQL8PlayerMacrossesDAO.class);
 	
 	private static final String INSERT_QUERY = "INSERT INTO `player_macrosses` (`player_id`, `order`, `macro`) VALUES (?,?,?)";
 	private static final String UPDATE_QUERY = "UPDATE `player_macrosses` SET `macro`=? WHERE `player_id`=? AND `order`=?";

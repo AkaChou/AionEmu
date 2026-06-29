@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
@@ -24,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -51,10 +50,10 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 /**
  * @author Ranastic
  */
+@Slf4j
 
 public class CoalescenceService {
 	private static volatile ObjectProvider<CoalescenceService> instanceProvider;
-	private Logger log = LoggerFactory.getLogger(CoalescenceService.class);
 
 	public void letsCoalescence(final Player player, int core_item_object_id, final List<Integer> material_item_object_id_collection) {
 		final Item core_item = player.getInventory().getItemByObjId(core_item_object_id);

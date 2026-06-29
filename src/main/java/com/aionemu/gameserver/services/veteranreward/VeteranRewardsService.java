@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services.veteranreward;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.lifecycle.GameCronServices;
@@ -24,8 +25,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Collection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -56,6 +55,7 @@ import com.aionemu.gameserver.world.World;
 
 import java.util.HashSet;
 import java.util.Set;
+@Slf4j(topic = "VETERANREWARD_LOG")
 
 public class VeteranRewardsService {
 	private static volatile ObjectProvider<VeteranRewardsService> instanceProvider;
@@ -78,7 +78,6 @@ public class VeteranRewardsService {
 		}
 	}
 
-	private static final Logger log = LoggerFactory.getLogger("VETERANREWARD_LOG");
 
 	private Collection<VeteranRewards> veteran_rewards;
 

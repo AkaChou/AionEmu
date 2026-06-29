@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.ChallengeTasksDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -10,9 +11,6 @@ import com.aionemu.gameserver.model.templates.challenge.ChallengeQuestTemplate;
 import com.aionemu.gameserver.model.templates.challenge.ChallengeType;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +18,9 @@ import java.util.Map;
 /**
  * @author ViAl
  */
+@Slf4j
 public class MySQL8ChallengeTasksDAO extends ChallengeTasksDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8ChallengeTasksDAO.class);
     
     private static final String SELECT_QUERY = "SELECT * FROM `challenge_tasks` WHERE `owner_id` = ? AND `owner_type` = ?";
     

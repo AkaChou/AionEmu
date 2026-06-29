@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
@@ -23,8 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -54,6 +53,7 @@ import java.util.Map;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class InstanceRiftService {
 	private static volatile ObjectProvider<InstanceRiftService> instanceProvider;
@@ -61,7 +61,6 @@ public class InstanceRiftService {
 	private Map<Integer, InstanceRiftLocation> instanceRift;
 	private static final int duration = CustomConfig.INSTANCE_RIFT_DURATION;
 	private final Map<Integer, RiftInstance<?>> activeInstanceRift = new LinkedHashMap<Integer, RiftInstance<?>>();
-	private static final Logger log = LoggerFactory.getLogger(InstanceRiftService.class);
 
 	public void initInstanceLocations() {
 		if (CustomConfig.INSTANCE_RIFT_ENABLED) {
