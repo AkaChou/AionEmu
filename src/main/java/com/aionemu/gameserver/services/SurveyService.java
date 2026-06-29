@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -43,13 +41,14 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author KID
  */
+@Slf4j
 public class SurveyService {
 
-	private static final Logger log = LoggerFactory.getLogger(SurveyService.class);
 	private static volatile ObjectProvider<SurveyService> instanceProvider;
 	private Map<Integer, SurveyItem> activeItems;
 	private final String htmlTemplate;

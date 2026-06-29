@@ -23,8 +23,6 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.Iterator;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -36,13 +34,14 @@ import com.aionemu.gameserver.model.team.legion.Legion;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author ATracer
  */
+@Slf4j
 public class PeriodicSaveService {
 
-	private static final Logger log = LoggerFactory.getLogger(PeriodicSaveService.class);
 	private static volatile ObjectProvider<PeriodicSaveService> instanceProvider;
 
 	private Future<?> legionWhUpdateTask;

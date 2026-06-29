@@ -18,8 +18,6 @@ package com.aionemu.gameserver.services.player;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
@@ -29,10 +27,11 @@ import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class PlayerEventService {
 	private static volatile ObjectProvider<PlayerEventService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(PlayerEventService.class);
 
 	public PlayerEventService() {
 		/**

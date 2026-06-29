@@ -20,20 +20,19 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.Iterator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.world.World;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author ATracer
  */
+@Slf4j
 public class DebugService {
 
-	private static final Logger log = LoggerFactory.getLogger(DebugService.class);
 	private static volatile ObjectProvider<DebugService> instanceProvider;
 
 	private static final int ANALYZE_PLAYERS_INTERVAL = 30 * 60 * 1000;

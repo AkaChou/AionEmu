@@ -20,8 +20,6 @@ import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -34,9 +32,10 @@ import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate.TradeT
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LimitedItemTradeService {
-	private static final Logger log = LoggerFactory.getLogger(LimitedItemTradeService.class);
 	private static volatile ObjectProvider<LimitedItemTradeService> instanceProvider;
 	private GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 	private TradeListData tradeListData = DataManager.TRADE_LIST_DATA;

@@ -16,21 +16,19 @@
  */
 package com.aionemu.gameserver.services.player;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.World;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Source
  */
+@Slf4j
 class ItemUpdateTask implements Runnable {
 
-	private static final Logger log = LoggerFactory.getLogger(ItemUpdateTask.class);
 	private final int playerId;
 
 	ItemUpdateTask(int playerId) {

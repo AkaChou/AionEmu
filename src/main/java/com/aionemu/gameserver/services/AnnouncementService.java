@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -40,18 +38,16 @@ import com.aionemu.gameserver.world.World;
 
 import java.util.HashSet;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Automatic Announcement System
  * 
  * @author Divinity
  */
+@Slf4j
 public class AnnouncementService {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(AnnouncementService.class);
 	private static volatile ObjectProvider<AnnouncementService> instanceProvider;
 
 	private Collection<Announcement> announcements;

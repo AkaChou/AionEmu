@@ -26,8 +26,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -54,10 +52,11 @@ import com.aionemu.gameserver.world.World;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ChallengeTaskService {
 	private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(ChallengeTaskService.class);
 	private Map<Integer, Map<Integer, ChallengeTask>> cityTasks;
 	private Map<Integer, Map<Integer, ChallengeTask>> legionTasks;
 
