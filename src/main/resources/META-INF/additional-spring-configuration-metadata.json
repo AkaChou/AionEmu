@@ -5,6 +5,21 @@
       "type": "java.lang.Boolean",
       "description": "Whether the game server prints startup progress messages.",
       "defaultValue": true
+    },
+    {
+      "name": "aion.legacy.game.property",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "description": "Game server legacy .properties entries exposed for Spring Boot binding."
+    },
+    {
+      "name": "aion.legacy.login.property",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "description": "Login server legacy .properties entries exposed for Spring Boot binding."
+    },
+    {
+      "name": "aion.legacy.chat.property",
+      "type": "java.util.Map<java.lang.String,java.lang.String>",
+      "description": "Chat server legacy .properties entries exposed for Spring Boot binding."
     }
   ]
 }

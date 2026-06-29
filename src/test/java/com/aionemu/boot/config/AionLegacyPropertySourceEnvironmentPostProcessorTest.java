@@ -10,6 +10,8 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.StandardEnvironment;
 
@@ -72,6 +74,14 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
         assertEquals("3", environment.getProperty("aion.legacy.game.property.gameserver.network.login.gsid"));
         assertEquals("2206", environment.getProperty("aion.legacy.login.property.loginserver.network.client.port"));
         assertEquals("2", environment.getProperty("aion.legacy.chat.property.chatserver.chat.lang"));
+
+        LegacyGameProperties gameProperties = bindLegacyGameProperties(environment);
+        LegacyLoginProperties loginProperties = bindLegacyLoginProperties(environment);
+        LegacyChatProperties chatProperties = bindLegacyChatProperties(environment);
+
+        assertEquals("3", gameProperties.getProperty().get("gameserver.network.login.gsid"));
+        assertEquals("2206", loginProperties.getProperty().get("loginserver.network.client.port"));
+        assertEquals("2", chatProperties.getProperty().get("chatserver.chat.lang"));
     }
 
     @Test
@@ -81,5 +91,23 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
                 "com.aionemu.boot.config.AionLegacyPropertySourceEnvironmentPostProcessor"
             ));
         }
+    }
+
+    private LegacyGameProperties bindLegacyGameProperties(StandardEnvironment environment) {
+        LegacyGameProperties properties = new LegacyGameProperties();
+        Binder.get(environment).bind("aion.legacy.game", Bindable.ofInstance(properties));
+        return properties;
+    }
+
+    private LegacyLoginProperties bindLegacyLoginProperties(StandardEnvironment environment) {
+        LegacyLoginProperties properties = new LegacyLoginProperties();
+        Binder.get(environment).bind("aion.legacy.login", Bindable.ofInstance(properties));
+        return properties;
+    }
+
+    private LegacyChatProperties bindLegacyChatProperties(StandardEnvironment environment) {
+        LegacyChatProperties properties = new LegacyChatProperties();
+        Binder.get(environment).bind("aion.legacy.chat", Bindable.ofInstance(properties));
+        return properties;
     }
 }
