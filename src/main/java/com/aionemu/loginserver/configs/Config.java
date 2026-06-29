@@ -39,6 +39,7 @@ public class Config {
      * Logger for this class.
      */
     protected static final Logger log = LoggerFactory.getLogger(Config.class);
+    private static volatile Properties bootOverrides = new Properties();
     @Property(key = "accounts.charset", defaultValue = "ISO8859_2")
     public static String ACCOUNT_CHARSET;
     @Property(key = "network.fastreconnection.time", defaultValue = "10")
@@ -119,6 +120,14 @@ public class Config {
         return System.getProperty("aion.login.config.dir", "./config");
     }
 
+    public static void setBootOverrides(Properties properties) {
+        Properties copy = new Properties();
+        if (properties != null) {
+            copy.putAll(properties);
+        }
+        bootOverrides = copy;
+    }
+
     /**
      * Load configs from files.
      */
@@ -135,6 +144,7 @@ public class Config {
             String network = configDir() + "/network";
             Properties[] props = PropertiesUtils.loadAllFromDirectory(network);
             PropertiesUtils.overrideProperties(props, myProps);
+            PropertiesUtils.overrideProperties(props, bootOverrides);
             log.info("Loading: " + network + "/network.properties");
             ConfigurableProcessor.process(Config.class, props);
             log.info("Loading: " + network + "/svstats.properties");

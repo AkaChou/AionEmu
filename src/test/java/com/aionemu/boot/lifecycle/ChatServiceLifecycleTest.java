@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.boot.config.LegacyChatConfigOverrides;
+import com.aionemu.boot.config.LegacyChatProperties;
 import com.aionemu.chatserver.ChatProcessRuntimeBridge;
 import com.aionemu.chatserver.ChatServerRuntime;
 import com.aionemu.chatserver.ChatServerStartupBridge;
@@ -47,6 +49,7 @@ class ChatServiceLifecycleTest {
         ChatServerLifecycleGateway gateway = new RecordingChatServerLifecycleGateway(events, true);
         ChatServiceLifecycle lifecycle = new ChatServiceLifecycle(
             new AionServicesProperties(),
+            new RecordingLegacyChatConfigOverrides(events),
             gateway
         );
 
@@ -56,11 +59,11 @@ class ChatServiceLifecycleTest {
         );
 
         assertEquals("chat failed", thrown.getMessage());
-        assertEquals(List.of("start", "stop"), events);
+        assertEquals(List.of("apply", "start", "stop"), events);
 
         lifecycle.stop();
 
-        assertEquals(List.of("start", "stop"), events);
+        assertEquals(List.of("apply", "start", "stop"), events);
     }
 
     @Test
@@ -70,6 +73,7 @@ class ChatServiceLifecycleTest {
         ChatServerLifecycleGateway gateway = new RecordingChatServerLifecycleGateway(events, false);
         ChatServiceLifecycle lifecycle = new ChatServiceLifecycle(
             new AionServicesProperties(),
+            new RecordingLegacyChatConfigOverrides(events),
             gateway
         );
 
@@ -77,7 +81,22 @@ class ChatServiceLifecycleTest {
         lifecycle.stop();
         lifecycle.stop();
 
-        assertEquals(List.of("start:1", "stop"), events);
+        assertEquals(List.of("apply", "start:1", "stop"), events);
+    }
+
+    @Test
+    void startAppliesLegacyConfigOverridesBeforeStartingChatServer() {
+        System.setProperty("aion.chat.config.dir", chatConfig.toString());
+        List<String> events = new ArrayList<>();
+        ChatServiceLifecycle lifecycle = new ChatServiceLifecycle(
+            new AionServicesProperties(),
+            new RecordingLegacyChatConfigOverrides(events),
+            new RecordingChatServerLifecycleGateway(events, false)
+        );
+
+        lifecycle.start(new DefaultApplicationArguments("--chat=true"));
+
+        assertEquals(List.of("apply", "start:1"), events);
     }
 
     @Test
@@ -185,6 +204,21 @@ class ChatServiceLifecycleTest {
         @Override
         public void stop() {
             events.add("stop");
+        }
+    }
+
+    private static final class RecordingLegacyChatConfigOverrides extends LegacyChatConfigOverrides {
+
+        private final List<String> events;
+
+        private RecordingLegacyChatConfigOverrides(List<String> events) {
+            super(new LegacyChatProperties());
+            this.events = events;
+        }
+
+        @Override
+        public void applyToChatConfig() {
+            events.add("apply");
         }
     }
 
