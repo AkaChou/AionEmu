@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -28,6 +28,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MAC_INFO;
  * 
  * @author -Nemesiss-, KID
  */
+@Slf4j
 public class CM_MAC_ADDRESS extends AionClientPacket {
 	/**
 	 * Mac Addres send by client in the same format as: ipconfig /all [ie:
@@ -68,9 +69,8 @@ public class CM_MAC_ADDRESS extends AionClientPacket {
 		if (GameServerNetworkServices.bannedMacManager().isBanned(macAddress)) {
 			// TODO some information packets
 			this.getConnection().closeNow();
-			LoggerFactory.getLogger(CM_MAC_ADDRESS.class).info(
-					"[MAC_AUDIT] " + macAddress + " (" + this.getConnection().getIP() + ") was kicked due to mac ban");
-			LoggerFactory.getLogger(CM_MAC_ADDRESS.class).info("[Hard_AUDIT] " + HardName + " (" + HardName + ")");
+			log.info("[MAC_AUDIT] " + macAddress + " (" + this.getConnection().getIP() + ") was kicked due to mac ban");
+			log.info("[Hard_AUDIT] " + HardName + " (" + HardName + ")");
 		} else {
 			this.getConnection().setMacAddress(macAddress);
 			sendPacket(new SM_MAC_INFO(macAddress, HardName, localIP));

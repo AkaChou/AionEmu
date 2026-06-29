@@ -24,7 +24,7 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 
@@ -33,6 +33,7 @@ import com.aionemu.commons.utils.collections.IntObjectHashMap;
 /**
  * @author ATracer
  */
+@Slf4j
 @XmlRootElement(name = "npc_skill_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NpcSkillData {
@@ -48,7 +49,7 @@ public class NpcSkillData {
 			npcSkillData.put(npcSkill.getNpcId(), npcSkill);
 
 			if (npcSkill.getNpcSkills() == null) {
-				LoggerFactory.getLogger(NpcSkillData.class).error("NO SKILL");
+				log.error("NO SKILL");
 			}
 		}
 	}

@@ -29,13 +29,14 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 
 /**
  * @author ATracer
  */
+@Slf4j
 public class Ai2Command extends AdminCommand {
 
 	public Ai2Command() {
@@ -71,7 +72,7 @@ public class Ai2Command extends AdminCommand {
 		}
 
 		if (param0.equals("say")) {
-			LoggerFactory.getLogger(Ai2Command.class).info("[AI2] marker: " + params[1]);
+			log.info("[AI2] marker: " + params[1]);
 		}
 
 		/**

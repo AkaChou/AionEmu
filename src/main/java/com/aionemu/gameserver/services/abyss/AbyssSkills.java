@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 
+@Slf4j
 enum AbyssSkills {
 	SUPREME_COMMANDER(Race.ELYOS, AbyssRankEnum.SUPREME_COMMANDER,
 			new int[] { 11889, 11898, 11900, 11903, 11904, 11905, 11906 }),
@@ -59,7 +60,7 @@ enum AbyssSkills {
 				return aSkills.skills;
 			}
 		}
-		LoggerFactory.getLogger(AbyssSkills.class).warn("No abyss skills for: " + race + " " + rank);
+		log.warn("No abyss skills for: " + race + " " + rank);
 		return new int[0];
 	}
 }

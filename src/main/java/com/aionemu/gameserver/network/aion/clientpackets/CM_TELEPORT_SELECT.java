@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -32,6 +32,7 @@ import com.aionemu.gameserver.utils.MathUtil;
 /**
  * 0000: CB 06 00 00 04 00 00 00 00 00
  */
+@Slf4j
 public class CM_TELEPORT_SELECT extends AionClientPacket {
 	public int targetObjectId;
 	public int locId;
@@ -63,11 +64,10 @@ public class CM_TELEPORT_SELECT extends AionClientPacket {
 			if (teleport != null) {
 				TeleportService2.teleport(teleport, locId, player, npc, TeleportAnimation.JUMP_ANIMATION);
 			} else {
-				LoggerFactory.getLogger(CM_TELEPORT_SELECT.class)
-						.warn("teleportation id " + locId + " was not found on npc " + npcId);
+				log.warn("teleportation id " + locId + " was not found on npc " + npcId);
 			}
 		} else {
-			LoggerFactory.getLogger(CM_TELEPORT_SELECT.class).debug("player " + player.getName() + " requested npc "
+			log.debug("player " + player.getName() + " requested npc "
 					+ targetObjectId + " for teleportation " + locId + ", but he doesnt have such npc in knownlist");
 		}
 	}

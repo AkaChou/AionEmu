@@ -30,8 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.Future;
 
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
@@ -188,11 +186,11 @@ public class PlayerController extends CreatureController<Player> {
 			if (player.isInPlayerMode(PlayerMode.RIDE)) {
 				PacketSendUtility.sendPacket(getOwner(), new SM_EMOTION(player, EmotionType.RIDE, 0, player.ride.getNpcId()));
 			} else if (player.getPet() != null) {
-				LoggerFactory.getLogger(PlayerController.class).debug("Player " + getOwner().getName() + " sees " + object.getName() + " that has Toypet");
+				log.debug("Player " + getOwner().getName() + " sees " + object.getName() + " that has Toypet");
 				PacketSendUtility.sendPacket(getOwner(), new SM_PET(3, player.getPet()));
 			}
 			if (player.getMinion() != null) {
-				LoggerFactory.getLogger(PlayerController.class).debug("Player " + getOwner().getName() + " sees " + object.getName() + " that has minion");
+				log.debug("Player " + getOwner().getName() + " sees " + object.getName() + " that has minion");
 				MinionCommonData commonData = player.getMinionList().getMinion(object.getObjectId());
 				PacketSendUtility.sendPacket(getOwner(), new SM_MINIONS(5, commonData));
 			}

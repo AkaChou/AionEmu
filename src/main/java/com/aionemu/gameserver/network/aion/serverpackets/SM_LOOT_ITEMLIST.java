@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropItem;
@@ -30,6 +30,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
+@Slf4j
 public class SM_LOOT_ITEMLIST extends AionServerPacket {
 	private int targetObjectId;
 	private List<DropItem> dropItems;
@@ -38,7 +39,7 @@ public class SM_LOOT_ITEMLIST extends AionServerPacket {
 		this.targetObjectId = targetObjectId;
 		this.dropItems = new ArrayList<>();
 		if (setItems == null) {
-			LoggerFactory.getLogger(SM_LOOT_ITEMLIST.class).warn("null Set<DropItem>, skip");
+			log.warn("null Set<DropItem>, skip");
 			return;
 		}
 		for (DropItem item : setItems) {

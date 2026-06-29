@@ -18,7 +18,7 @@
 
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.loginserver.controller.AccountController;
 import com.aionemu.loginserver.network.gameserver.GsClientPacket;
@@ -28,6 +28,7 @@ import com.aionemu.loginserver.network.gameserver.GsClientPacket;
  * @author nrg
  *
  */
+@Slf4j
 public class CM_MAC extends GsClientPacket {
 
     private int accountId;
@@ -42,7 +43,7 @@ public class CM_MAC extends GsClientPacket {
     @Override
     protected void runImpl() {
         if (!AccountController.refreshAccountsLastMac(accountId, address)) {
-            LoggerFactory.getLogger(CM_MAC.class).error("[WARN] We just weren't able to update account_data.last_mac for accountId " + accountId);
+            log.error("[WARN] We just weren't able to update account_data.last_mac for accountId " + accountId);
         }
     }
 }
