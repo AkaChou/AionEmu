@@ -20,20 +20,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.lifecycle.GameEventServices;
 import com.aionemu.gameserver.eventEngine.events.BattlegroundEvent;
-import com.aionemu.gameserver.services.EventService;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j(topic = "com.aionemu.gameserver.services.EventService")
 public class BGService {
 	private static volatile ObjectProvider<BGService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(EventService.class);
 	private static final int DELAY = 60 * 100;
 	private List<ScheduledFuture<?>> futures = new ArrayList<ScheduledFuture<?>>();
 

@@ -24,10 +24,6 @@ import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.model.templates.item.upgrade.ItemUpgradeTemplate;
 import com.aionemu.gameserver.model.templates.item.upgrade.UpgradeResultItem;
 
@@ -42,8 +38,6 @@ import java.util.Map;
 @XmlRootElement(name = "item_upgrades")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ItemUpgradeData {
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(GameServer.class);
 
 	@XmlElement(name = "item_upgrade")
 	protected List<ItemUpgradeTemplate> itemUpgradeTemplates;

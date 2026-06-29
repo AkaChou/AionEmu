@@ -18,9 +18,6 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -31,7 +28,6 @@ import com.aionemu.gameserver.services.ranking.SeasonRankingService;
  */
 
 public class CM_MY_HISTORY extends AionClientPacket {
-	private static Logger log = LoggerFactory.getLogger(CM_SEASON_RANKING.class);
 	private int tableId;
 
 	public CM_MY_HISTORY(int opcode, AionConnection.State state, AionConnection.State... restStates) {

@@ -48,8 +48,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -116,8 +114,8 @@ public class HouseScriptData {
 		}
 	}
 
+	@Slf4j
 	public static class XmlFormatter {
-		private static final Logger log = LoggerFactory.getLogger(XmlFormatter.class);
 		private static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		private static DocumentBuilder db;
 
