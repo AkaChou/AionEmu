@@ -18,7 +18,6 @@
 
 package com.aionemu.chatserver;
 
-import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -40,7 +39,6 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 /**
  * @author ATracer, KID, nrg
  */
-@Slf4j
 public class ChatServer {
 
 
@@ -97,23 +95,6 @@ public class ChatServer {
     }
 
     static void start(String[] args, ChatServerDependencies dependencies) {
-        ChatServerStartupBridge startupBridge = dependencies.startupBridge();
-        long start = startupBridge.currentTimeMillis();
-
-        startupBridge.initializeLogger();
-
-        startupBridge.loadConfig();
-        startupBridge.printInfos();
-        dependencies.idFactory();
-        dependencies.gameServerService();
-        dependencies.broadcastService();
-        dependencies.chatService();
-        dependencies.nettyServer();
-        dependencies.restartService();
-
-        if (!startupBridge.isBootEmbedded()) {
-            startupBridge.registerShutdownHook();
-        }
-        log.info("AL Chat Server started in " + (startupBridge.currentTimeMillis() - start) / 1000 + " seconds.");
+        ChatServerStartupSequence.start(dependencies);
     }
 }

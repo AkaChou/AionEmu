@@ -166,6 +166,14 @@ class ChatServerTest {
         assertTrue(legacyDependenciesSource.contains("ChatRestartServices.restartService()"));
     }
 
+    @Test
+    void bootRuntimeStartsThroughSharedStartupSequenceWithoutStaticServerDelegation() throws IOException {
+        String runtimeSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServerRuntime.java"));
+
+        assertFalse(runtimeSource.contains("ChatServer.start(args, this)"));
+        assertTrue(runtimeSource.contains("ChatServerStartupSequence.start(this)"));
+    }
+
     private static final class RecordingChatServerDependencies implements ChatServerDependencies {
 
         private final List<String> events;
