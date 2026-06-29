@@ -24,6 +24,7 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -398,7 +399,7 @@ public class SiegeService {
 
 	public void deSpawnNpcs(int siegeLocationId) {
 		Collection<SiegeNpc> siegeNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalSiegeNpcs(siegeLocationId);
-		for (SiegeNpc npc : siegeNpcs) {
+		for (SiegeNpc npc : new ArrayList<SiegeNpc>(siegeNpcs)) {
 			npc.getController().onDelete();
 		}
 	}

@@ -26,6 +26,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
@@ -44,7 +45,9 @@ public class QuestsData {
 
 	@XmlElement(name = "quest", required = true)
 	protected List<QuestTemplate> questsData;
+	@XmlTransient
 	private IntObjectHashMap<QuestTemplate> questData = new IntObjectHashMap<QuestTemplate>();
+	@XmlTransient
 	private IntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new IntObjectHashMap<List<QuestTemplate>>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {

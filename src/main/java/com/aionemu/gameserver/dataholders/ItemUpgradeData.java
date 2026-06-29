@@ -23,6 +23,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.item.upgrade.ItemUpgradeTemplate;
 import com.aionemu.gameserver.model.templates.item.upgrade.UpgradeResultItem;
@@ -42,7 +43,9 @@ public class ItemUpgradeData {
 	@XmlElement(name = "item_upgrade")
 	protected List<ItemUpgradeTemplate> itemUpgradeTemplates;
 
+	@XmlTransient
 	private IntObjectHashMap<ItemUpgradeTemplate> itemUpgradeSets;
+	@XmlTransient
 	private Map<Integer, Map<Integer, UpgradeResultItem>> upgradeResultItemMap;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {

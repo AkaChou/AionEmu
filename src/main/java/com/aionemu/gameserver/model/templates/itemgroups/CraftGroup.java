@@ -22,6 +22,8 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.Range;
 
+import jakarta.xml.bind.annotation.XmlTransient;
+
 import com.aionemu.gameserver.model.templates.rewards.CraftReward;
 
 import java.util.LinkedHashMap;
@@ -32,6 +34,7 @@ import java.util.Map;
  */
 public abstract class CraftGroup extends BonusItemGroup {
 
+	@XmlTransient
 	private Map<Integer, Map<Range<Integer>, List<CraftReward>>> dataHolder;
 
 	public ItemRaceEntry[] getRewards(Integer skillId) {

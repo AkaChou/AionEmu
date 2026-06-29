@@ -23,6 +23,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.teleport.MultiReturn;
 import com.aionemu.gameserver.model.templates.teleport.MultiReturnLocationList;
@@ -40,6 +41,7 @@ public class MultiReturnItemData {
 	@XmlElement(name = "item")
 	private List<MultiReturn> ItemList;
 
+	@XmlTransient
 	private IntObjectHashMap<List<MultiReturnLocationList>> ItemLocationList = new IntObjectHashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {

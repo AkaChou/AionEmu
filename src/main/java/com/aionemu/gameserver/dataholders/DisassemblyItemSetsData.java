@@ -9,6 +9,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import java.util.List;
 
 /**
@@ -21,6 +22,7 @@ public class DisassemblyItemSetsData
 	@XmlElement(name = "disassemblyitemset")
 	private List<DisassemblyItemSet> DisassemblyItemSet;
 
+	@XmlTransient
 	private IntObjectHashMap<List<DisassembleItemGroups>> disassemblyItemGroups = new IntObjectHashMap<List<DisassembleItemGroups>>();
 	void afterUnmarshal(Unmarshaller u, Object parent)
 	{

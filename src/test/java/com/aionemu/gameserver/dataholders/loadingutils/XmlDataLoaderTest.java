@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.dataholders.loadingutils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -8,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
+
+import jakarta.xml.bind.JAXBContext;
 
 import com.aionemu.gameserver.dataholders.StaticData;
 import org.junit.jupiter.api.Test;
@@ -56,6 +59,11 @@ class XmlDataLoaderTest {
 		assertEquals(2, counts.get("ItemData"));
 		assertEquals(3, counts.get("NpcDropData"));
 		assertEquals(1, counts.get("GlobalDropData"));
+	}
+
+	@Test
+	void staticDataJaxbContextIgnoresRuntimeLookupCaches() {
+		assertDoesNotThrow(() -> JAXBContext.newInstance(StaticData.class));
 	}
 
 	@Test
