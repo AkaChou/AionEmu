@@ -2,8 +2,7 @@ package com.aionemu.gameserver.dao.mysql8;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,9 +13,8 @@ import java.sql.SQLException;
  * @author Ben
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j(topic = "com.aionemu.gameserver.dao.ServerVariablesDAO")
 public class MySQL8ServerVariablesDAO extends ServerVariablesDAO {
-
-	private static Logger log = LoggerFactory.getLogger(ServerVariablesDAO.class);
 	
 	private static final String SELECT_QUERY = "SELECT `value` FROM `server_variables` WHERE `key`=?";
 	private static final String REPLACE_QUERY = "REPLACE INTO `server_variables` (`key`,`value`) VALUES (?,?)";

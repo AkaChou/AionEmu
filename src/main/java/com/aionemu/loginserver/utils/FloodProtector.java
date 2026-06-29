@@ -22,23 +22,18 @@ import java.sql.Timestamp;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.network.aion.clientpackets.CM_LOGIN;
 import com.aionemu.loginserver.service.LoginProtectionServices;
 
 /**
  * @author Mr. Poke
  *
  */
+@Slf4j(topic = "com.aionemu.loginserver.network.aion.clientpackets.CM_LOGIN")
 public class FloodProtector {
 
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(CM_LOGIN.class);
     private final Map<String, Long> flood = new ConcurrentHashMap<>();
     private final Map<String, Long> ban = new ConcurrentHashMap<>();
 
