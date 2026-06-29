@@ -24,8 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -57,12 +56,12 @@ import java.util.Map;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j(topic = "com.aionemu.gameserver.services.SvsService")
 public class RvrService {
 	private static volatile ObjectProvider<RvrService> instanceProvider;
 	private RvrSchedule rvrSchedule;
 	private Map<Integer, RvrLocation> rvr;
 	private static final int duration = CustomConfig.RVR_DURATION;
-	private static Logger log = LoggerFactory.getLogger(SvsService.class);
 
 	// Brigade General's Urgent Order 4.9.1
 	private final Map<Integer, Rvrlf3df3<?>> activeRvr = new LinkedHashMap<Integer, Rvrlf3df3<?>>();

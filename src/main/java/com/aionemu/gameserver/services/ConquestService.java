@@ -23,8 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -54,6 +53,7 @@ import java.util.Map;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j(topic = "com.aionemu.gameserver.services.ZorshivDredgionService")
 public class ConquestService {
 	private static volatile ObjectProvider<ConquestService> instanceProvider;
 	private ConquestSchedule conquestSchedule;
@@ -61,7 +61,6 @@ public class ConquestService {
 	private static final int duration = CustomConfig.CONQUEST_DURATION;
 	private final Map<Integer, ConquestOffering<?>> activeConquest = new LinkedHashMap<Integer, ConquestOffering<?>>()
 			;
-	private static final Logger log = LoggerFactory.getLogger(ZorshivDredgionService.class);
 
 	public void initConquestLocations() {
 		if (CustomConfig.CONQUEST_ENABLED) {

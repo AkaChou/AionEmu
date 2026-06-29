@@ -19,8 +19,7 @@ package com.aionemu.gameserver.services;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -41,9 +40,9 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Slf4j(topic = "com.aionemu.gameserver.services.AbyssLandingService")
 public class AbyssLandingSpecialService {
 	private static volatile ObjectProvider<AbyssLandingSpecialService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(AbyssLandingService.class);
 	private static Map<Integer, LandingSpecialLocation> abyssSpecialLanding;
 	private final Map<Integer, SpecialLanding<?>> activeSpecialLanding = new LinkedHashMap<Integer, SpecialLanding<?>>()
 			;
