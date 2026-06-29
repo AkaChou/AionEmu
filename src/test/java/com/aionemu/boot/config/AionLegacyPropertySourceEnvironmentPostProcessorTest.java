@@ -69,6 +69,9 @@ class AionLegacyPropertySourceEnvironmentPostProcessorTest {
         assertEquals("3", environment.getProperty("gameserver.network.login.gsid"));
         assertEquals("2206", environment.getProperty("loginserver.network.client.port"));
         assertEquals("2", environment.getProperty("chatserver.chat.lang"));
+        assertEquals("3", environment.getProperty("aion.legacy.game.property.gameserver.network.login.gsid"));
+        assertEquals("2206", environment.getProperty("aion.legacy.login.property.loginserver.network.client.port"));
+        assertEquals("2", environment.getProperty("aion.legacy.chat.property.chatserver.chat.lang"));
     }
 
     @Test

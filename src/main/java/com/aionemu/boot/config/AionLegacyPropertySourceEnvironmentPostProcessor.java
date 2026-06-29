@@ -37,29 +37,32 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
 
     private void loadGameProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
         Path configDir = configDir(environment, "aion.game.config.dir");
-        loadDirectory(target, configDir.resolve("administration"));
-        loadDirectory(target, configDir.resolve("main"));
-        loadDirectory(target, configDir.resolve("network"));
-        loadFile(target, configDir.resolve("mygs.properties"));
+        String legacyPrefix = "aion.legacy.game.property.";
+        loadDirectory(target, configDir.resolve("administration"), legacyPrefix);
+        loadDirectory(target, configDir.resolve("main"), legacyPrefix);
+        loadDirectory(target, configDir.resolve("network"), legacyPrefix);
+        loadFile(target, configDir.resolve("mygs.properties"), legacyPrefix);
     }
 
     private void loadLoginProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
         Path configDir = configDir(environment, "aion.login.config.dir");
-        loadDirectory(target, configDir.resolve("network"));
-        loadFile(target, configDir.resolve("myls.properties"));
+        String legacyPrefix = "aion.legacy.login.property.";
+        loadDirectory(target, configDir.resolve("network"), legacyPrefix);
+        loadFile(target, configDir.resolve("myls.properties"), legacyPrefix);
     }
 
     private void loadChatProperties(ConfigurableEnvironment environment, Map<String, Object> target) {
         Path configDir = configDir(environment, "aion.chat.config.dir");
-        loadDirectory(target, configDir);
-        loadFile(target, configDir.resolve("mycs.properties"));
+        String legacyPrefix = "aion.legacy.chat.property.";
+        loadDirectory(target, configDir, legacyPrefix);
+        loadFile(target, configDir.resolve("mycs.properties"), legacyPrefix);
     }
 
     private Path configDir(ConfigurableEnvironment environment, String propertyName) {
         return Path.of(environment.getProperty(propertyName, "./config"));
     }
 
-    private void loadDirectory(Map<String, Object> target, Path directory) {
+    private void loadDirectory(Map<String, Object> target, Path directory, String legacyPrefix) {
         if (!Files.isDirectory(directory)) {
             return;
         }
@@ -68,13 +71,13 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
                 .filter(Files::isRegularFile)
                 .filter(path -> path.getFileName().toString().endsWith(".properties"))
                 .sorted(Comparator.comparing(Path::toString))
-                .forEach(path -> loadFile(target, path));
+                .forEach(path -> loadFile(target, path, legacyPrefix));
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load legacy properties from " + directory, e);
         }
     }
 
-    private void loadFile(Map<String, Object> target, Path file) {
+    private void loadFile(Map<String, Object> target, Path file, String legacyPrefix) {
         if (!Files.isRegularFile(file)) {
             return;
         }
@@ -84,6 +87,11 @@ public class AionLegacyPropertySourceEnvironmentPostProcessor implements Environ
         } catch (IOException e) {
             throw new IllegalStateException("Failed to load legacy properties from " + file, e);
         }
-        properties.forEach((key, value) -> target.put(String.valueOf(key), value));
+        properties.forEach((key, value) -> addLegacyProperty(target, legacyPrefix, String.valueOf(key), value));
+    }
+
+    private void addLegacyProperty(Map<String, Object> target, String legacyPrefix, String key, Object value) {
+        target.put(key, value);
+        target.put(legacyPrefix + key, value);
     }
 }
