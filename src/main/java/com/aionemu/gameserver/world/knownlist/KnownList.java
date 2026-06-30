@@ -16,6 +16,7 @@
 package com.aionemu.gameserver.world.knownlist;
 
 import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
@@ -186,7 +187,7 @@ public class KnownList {
 	 * forget out of distance objects.
 	 */
 	private void forgetObjects() {
-		for (VisibleObject object : knownObjects.values()) {
+		for (VisibleObject object : new ArrayList<>(knownObjects.values())) {
 			if (!checkObjectInRange(object) && !object.getKnownList().checkReversedObjectInRange(owner)) {
 				del(object, true);
 				object.getKnownList().del(owner, true);

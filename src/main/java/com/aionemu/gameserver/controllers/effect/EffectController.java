@@ -114,7 +114,7 @@ public class EffectController {
 					 * idea here is that effects with same effectId shouldnt stack effect with
 					 * higher basiclvl takes priority
 					 */
-					for (Effect effect : mapToUpdate.values()) {
+					for (Effect effect : new ArrayList<>(mapToUpdate.values())) {
 						if (effect.getTargetSlot() == nextEffect.getTargetSlot()) {
 							for (EffectTemplate et : effect.getEffectTemplates()) {
 								if (et.getEffectid() == 0) {
@@ -156,7 +156,6 @@ public class EffectController {
 					Iterator<Effect> iter = mapToUpdate.values().iterator();
 					Effect effect = iter.next();
 					effect.endEffect();
-					iter.remove();
 				}
 			}
 			// Max 4 Chants Effect
@@ -353,19 +352,19 @@ public class EffectController {
 	 * @param skillid
 	 */
 	public void removeEffect(int skillid) {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
 		}
 
-		for (Effect effect : passiveEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(passiveEffectMap.values())) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
 		}
 
-		for (Effect effect : noshowEffects.values()) {
+		for (Effect effect : new ArrayList<>(noshowEffects.values())) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
@@ -373,7 +372,7 @@ public class EffectController {
 	}
 
 	public void removeHideEffects() {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			if (effect.isHideEffect() && owner.getVisualState() < 10) {
 				effect.endEffect();
 				abnormalEffectMap.remove(effect.getStack());
@@ -386,7 +385,7 @@ public class EffectController {
 	 * 
 	 */
 	public void removeParalyzeEffects() {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			if (effect.isParalyzeEffect()) {
 				effect.endEffect();
 				abnormalEffectMap.remove(effect.getStack());
@@ -398,7 +397,7 @@ public class EffectController {
 	 * @param effectId
 	 */
 	public void removeEffectByEffectId(int effectId) {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			if (effect.containsEffectId(effectId)) {
 				effect.endEffect();
 			}
@@ -452,7 +451,7 @@ public class EffectController {
 
 	public void removeEffectByDispelCat(DispelCategoryType dispelCat, SkillTargetSlot targetSlot, int count,
 			int dispelLevel, int power, boolean itemTriggered) {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			if (count == 0) {
 				break;
 			}
@@ -538,7 +537,7 @@ public class EffectController {
 	}
 
 	public void dispelBuffCounterAtkEffect(int count, int dispelLevel, int power) {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			DispelCategoryType dispelCat = effect.getDispelCategory();
 			SkillTargetSlot tragetSlot = effect.getSkillTemplate().getTargetSlot();
 			if (count == 0) {
@@ -601,7 +600,7 @@ public class EffectController {
 	}
 
 	public void removeEffectByEffectType(EffectType effectType) {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			for (EffectTemplate et : effect.getSuccessEffect()) {
 				if (effectType == et.getEffectType()) {
 					effect.endEffect();
@@ -626,7 +625,7 @@ public class EffectController {
 	 * @param skillid
 	 */
 	public void removePassiveEffect(int skillid) {
-		for (Effect effect : passiveEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(passiveEffectMap.values())) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
@@ -637,7 +636,7 @@ public class EffectController {
 	 * @param skillid
 	 */
 	public void removeNoshowEffect(int skillid) {
-		for (Effect effect : noshowEffects.values()) {
+		for (Effect effect : new ArrayList<>(noshowEffects.values())) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
@@ -649,7 +648,7 @@ public class EffectController {
 	 * @param targetSlot
 	 */
 	public void removeAbnormalEffectsByTargetSlot(SkillTargetSlot targetSlot) {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			if (effect.getTargetSlot() == targetSlot.ordinal()) {
 				effect.endEffect();
 			}
@@ -666,9 +665,7 @@ public class EffectController {
 
 	public void removeAllEffects(boolean logout) {
 		if (!logout) {
-			Iterator<Map.Entry<String, Effect>> it = abnormalEffectMap.entrySet().iterator();
-			while (it.hasNext()) {
-				Map.Entry<String, Effect> entry = it.next();
+			for (Map.Entry<String, Effect> entry : new ArrayList<>(abnormalEffectMap.entrySet())) {
 				if (!entry.getValue().getSkillTemplate().isNoRemoveAtDie() && !entry.getValue().isXpBoost()
 						&& !entry.getValue().isApBoost() && !entry.getValue().isDrBoost()
 						&& !entry.getValue().isBdrBoost() && !entry.getValue().isEnchantBoost()
@@ -677,25 +674,25 @@ public class EffectController {
 						&& !entry.getValue().isEnchantOptionBoost() && !entry.getValue().isDeathPenaltyReduce()
 						&& !entry.getValue().isOdellaRecoverIncrease()) {
 					entry.getValue().endEffect();
-					it.remove();
+					abnormalEffectMap.remove(entry.getKey());
 				}
 			}
 
-			for (Effect effect : noshowEffects.values()) {
+			for (Effect effect : new ArrayList<>(noshowEffects.values())) {
 				effect.endEffect();
 			}
 			noshowEffects.clear();
 		} else {
 			// remove all effects on logout
-			for (Effect effect : abnormalEffectMap.values()) {
+			for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 				effect.endEffect();
 			}
 			abnormalEffectMap.clear();
-			for (Effect effect : noshowEffects.values()) {
+			for (Effect effect : new ArrayList<>(noshowEffects.values())) {
 				effect.endEffect();
 			}
 			noshowEffects.clear();
-			for (Effect effect : passiveEffectMap.values()) {
+			for (Effect effect : new ArrayList<>(passiveEffectMap.values())) {
 				effect.endEffect();
 			}
 			passiveEffectMap.clear();
@@ -922,7 +919,7 @@ public class EffectController {
 		if (priorityStigmaEffect(nextEffect) || checkExtraEffect(nextEffect)) {
 			return false;
 		}
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			if (effect.getSkillSubType().equals(nextEffect.getSkillSubType())
 					|| effect.getTargetSlotEnum().equals(nextEffect.getTargetSlotEnum())) {
 				for (EffectTemplate et : effect.getEffectTemplates()) {
@@ -951,7 +948,7 @@ public class EffectController {
 	}
 
 	private boolean priorityStigmaEffect(Effect nextEffect) {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
 			if (effect.getSkillTemplate().getStigmaType().getId() < nextEffect.getSkillTemplate().getStigmaType()
 					.getId() && effect.getTargetSlot() == nextEffect.getTargetSlot()
 					&& effect.getTargetSlotLevel() == nextEffect.getTargetSlotLevel()) {
