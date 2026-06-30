@@ -2,6 +2,7 @@ package com.aionemu.boot.callback;
 
 import com.aionemu.commons.callbacks.weaver.CallbackBuildTimeWeaver;
 import java.net.URI;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -37,6 +38,9 @@ public final class CallbackWeavingBootstrap {
         }
         URI location = anchorClass.getProtectionDomain().getCodeSource().getLocation().toURI();
         Path path = Path.of(location);
+        if (!path.getFileSystem().equals(FileSystems.getDefault())) {
+            return null;
+        }
         return Files.isDirectory(path) ? path : null;
     }
 }
