@@ -350,10 +350,18 @@ public class NpcDropData {
 	}
 
 	private static JAXBContext createNpcDropContext() {
+		Thread thread = Thread.currentThread();
+		ClassLoader originalClassLoader = thread.getContextClassLoader();
+		ClassLoader npcDropClassLoader = NpcDrop.class.getClassLoader();
 		try {
+			if (npcDropClassLoader != null) {
+				thread.setContextClassLoader(npcDropClassLoader);
+			}
 			return JAXBContext.newInstance(NpcDrop.class);
 		} catch (JAXBException e) {
 			throw new IllegalStateException("Failed to create NPC drop JAXB context", e);
+		} finally {
+			thread.setContextClassLoader(originalClassLoader);
 		}
 	}
 

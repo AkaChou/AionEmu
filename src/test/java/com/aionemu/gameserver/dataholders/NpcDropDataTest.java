@@ -53,6 +53,29 @@ class NpcDropDataTest {
 	}
 
 	@Test
+	void lazyLoaderCreatesJaxbContextWhenThreadContextClassLoaderCannotSeeJaxbRuntime() throws Exception {
+		writeDrops("poeta.xml", """
+			<npc_drops>
+				<npc_drop npc_id="100">
+					<drop_group name="base">
+						<drop item_id="111" min_amount="1" max_amount="1" chance="100"/>
+					</drop_group>
+				</npc_drop>
+			</npc_drops>
+			""");
+		Thread thread = Thread.currentThread();
+		ClassLoader originalClassLoader = thread.getContextClassLoader();
+		thread.setContextClassLoader(ClassLoader.getPlatformClassLoader());
+		try {
+			NpcDropData data = NpcDropData.loadLazy(tempDir.toFile(), 10, TimeUnit.MINUTES.toMillis(5), () -> 1_000L);
+
+			assertEquals(100, data.getDrop(100).getNpcId());
+		} finally {
+			thread.setContextClassLoader(originalClassLoader);
+		}
+	}
+
+	@Test
 	void eagerJaxbLoadingStillIgnoresLazyRuntimeFields() throws Exception {
 		NpcDropData data = (NpcDropData) JAXBContext.newInstance(NpcDropData.class)
 			.createUnmarshaller()
