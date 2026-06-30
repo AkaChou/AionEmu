@@ -82,9 +82,10 @@ aion-server 是 AionEmu 同源的 4.8 版本,启动 10s。unmarshal 本体两边
 |---|---|---|---|---|
 | 基线 | 21.8s | 8.9s | 3.7s | **36s** |
 | 实测(#1+#2+#3,#4 回退) | 18.6s | 2.2s | 3.5s | **26s** |
+| +Fast Infoset(#6) | 回退 | — | — | — |
 
 > 实测累计省 10s(-28%):#1 geo -6.7s、#2 staticData 预扫描 -3.4s。
-> staticData 18.6s 仍是最大头(unmarshal 13.9s 本身),要再降需 FastinfoSet(+1 依赖,预期总 →~16s)。
+> #6 Fast Infoset 实测失败回退:FI 编码器对 >1MB 文本节点硬限制(`Integer > 1,048,576`),static_data 含超大 quest 脚本/HTML 触顶,格式与数据根本不兼容。
 > spawn(3.5s)经核查线程安全风险过高,保留串行。
 
 ## 验证方法
@@ -102,3 +103,4 @@ aion-server 是 AionEmu 同源的 4.8 版本,启动 10s。unmarshal 本体两边
 - [x] #3 异步预热 JAXBContext (编译+测试通过；实测 context 创建非大头，收益微弱但无害)
 - [~] #4 geo loadMeshes 批量读取 (实测后回退：slice order 陷阱 + 异常类型破坏 AbyssCore fallback)
 - [~] #5 spawn 并行化 (经核查放弃：线程安全风险≫收益)
+- [~] #6 Fast Infoset 二进制缓存 (实测回退：FI 对 >1MB 文本节点硬限制，与数据不兼容)
