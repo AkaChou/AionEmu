@@ -213,7 +213,7 @@
                                     <message>This project must be built with JDK 25 or newer. Bytecode target remains Java 25.</message>
                                 </requireJavaVersion>
                                 <requireMavenVersion>
-                                    <version>[3.9.0,)</version>
+                                    <version>[3.7.0,)</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
