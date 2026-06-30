@@ -4,7 +4,8 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT_DIR"
 
-LOG_DIR="${AION_LOG_DIR:-$ROOT_DIR/logs}"
+AION_HOME="${AION_HOME:-$ROOT_DIR/aion}"
+LOG_DIR="${AION_LOG_DIR:-$AION_HOME/log}"
 PID_FILE="${AION_PID_FILE:-$LOG_DIR/aionemu.pid}"
 STOP_TIMEOUT="${AION_STOP_TIMEOUT:-30}"
 FORCE_STOP="${AION_FORCE_STOP:-true}"

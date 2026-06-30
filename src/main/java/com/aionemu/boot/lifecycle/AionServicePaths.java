@@ -43,15 +43,7 @@ final class AionServicePaths {
         }
 
         String resourcePath = "logback-spring.xml";
-        Path sourceFile = RUNTIME_PROPERTIES.resolveHome("src/main/resources")
-            .resolve(resourcePath)
-            .normalize();
-        if (Files.isRegularFile(sourceFile)) {
-            RUNTIME_PROPERTIES.set(property, sourceFile);
-            return;
-        }
-
-        Path targetFile = RUNTIME_PROPERTIES.resolveHome(resourcePath);
+        Path targetFile = RUNTIME_PROPERTIES.resolveHome("log").resolve(resourcePath).normalize();
         RUNTIME_PROPERTIES.set(property, targetFile);
         materializeDefaultFile(resourcePath, targetFile);
     }
@@ -65,7 +57,7 @@ final class AionServicePaths {
     }
 
     private static void configureConfig(String property, String defaultPath, String resourcePath) {
-        if (configureSourceResourceDirectory(property, resourcePath)) {
+        if (RUNTIME_PROPERTIES.has(property)) {
             return;
         }
         configureResourceDirectory(property, defaultPath, resourcePath);
@@ -192,7 +184,7 @@ final class AionServicePaths {
         }
 
         private Path resolveHome(String path) {
-            return Path.of(System.getProperty(AION_HOME, ".")).resolve(path).normalize();
+            return Path.of(System.getProperty(AION_HOME, "aion")).resolve(path).normalize();
         }
     }
 }
