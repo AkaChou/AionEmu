@@ -8,6 +8,7 @@ JAR_FILE="${AION_JAR_FILE:-$ROOT_DIR/target/AionEmu.jar}"
 LOG_DIR="${AION_LOG_DIR:-$ROOT_DIR/logs}"
 LOG_FILE="${AION_LOG_FILE:-$LOG_DIR/aionemu.log}"
 PID_FILE="${AION_PID_FILE:-$LOG_DIR/aionemu.pid}"
+read -r -a STARTUP_CLEAN_DIRS <<< "${AION_STARTUP_CLEAN_DIRS:-game login}"
 
 mkdir -p "$LOG_DIR"
 
@@ -25,6 +26,15 @@ if [ ! -f "$JAR_FILE" ]; then
   echo "Run ./maven-package.sh first."
   exit 1
 fi
+
+for dir in "${STARTUP_CLEAN_DIRS[@]}"; do
+  if [ -z "$dir" ] || [ "$dir" = "." ] || [ "$dir" = "/" ] || [[ "$dir" = /* ]] || [[ "$dir" == *".."* ]]; then
+    echo "Invalid startup clean directory: $dir"
+    exit 1
+  fi
+  rm -rf -- "$ROOT_DIR/$dir"
+  echo "Cleaned startup directory: $dir"
+done
 
 AION_HEAP_OPTS="${AION_HEAP_OPTS:--Xms2g -Xmx8g}"
 AION_GC_OPTS="${AION_GC_OPTS:--XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=30 -XX:+ParallelRefProcEnabled -XX:+UseStringDeduplication}"
