@@ -16,10 +16,6 @@
  */
 package com.aionemu.gameserver.skillengine.properties;
 
-import lombok.extern.slf4j.Slf4j;
-import java.util.List;
-
-import org.apache.commons.lang3.Range;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.Trap;
@@ -28,6 +24,11 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PositionUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.Range;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ATracer
@@ -63,7 +64,8 @@ public class TargetRangeProperty {
 			// 【重要修复】使用施法者的已知对象列表，确保AOE技能能正确检测到附近的NPC
 			// 修复前：使用 firstTarget.getKnownList()，当 firstTarget != effector 时，可能导致NPC太贴近玩家反而不会被AOE打中
 			// 修复后：使用 skill.getEffector().getKnownList()，确保始终使用施法者的已知对象列表
-			for (VisibleObject nextCreature : skill.getEffector().getKnownList().getKnownObjects().values())
+			List<VisibleObject> areaKnownObjects = new ArrayList<>(skill.getEffector().getKnownList().getKnownObjects().values());
+			for (VisibleObject nextCreature : areaKnownObjects) {
 				if (((nextCreature instanceof Creature)) && (firstTarget != nextCreature)
 						&& (((Creature) nextCreature).getLifeStats() != null)
 						&& (!((Creature) nextCreature).getLifeStats().isAlreadyDead())
@@ -116,6 +118,7 @@ public class TargetRangeProperty {
 						}
 					}
 				}
+			}
 			break;
 		case PARTY:
 			// fix for Bodyguard(417)
@@ -196,7 +199,8 @@ public class TargetRangeProperty {
 			}
 			break;
 		case POINT:
-			for (VisibleObject nextCreature : skill.getEffector().getKnownList().getKnownObjects().values()) {
+			List<VisibleObject> pointKnownObjects = new ArrayList<>(skill.getEffector().getKnownList().getKnownObjects().values());
+			for (VisibleObject nextCreature : pointKnownObjects) {
 				if (!(nextCreature instanceof Creature)) {
 					continue;
 				}

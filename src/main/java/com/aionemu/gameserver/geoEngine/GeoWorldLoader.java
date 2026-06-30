@@ -110,7 +110,7 @@ public class GeoWorldLoader {
 					intentions |= m.getIntentions();
 					m.setBuffer(VertexBuffer.Type.Position, 3, vertices);
 					m.setBuffer(VertexBuffer.Type.Index, 3, indexes);
-					m.createCollisionData();
+					// ponytail: 碰撞树不再同步构建，改由 RealGeoData 后台并行预构建，避免阻塞启动
 
 					if ((intentions & CollisionIntention.DOOR.getId()) != 0
 							&& (intentions & CollisionIntention.PHYSICAL.getId()) != 0) {

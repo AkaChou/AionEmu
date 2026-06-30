@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.aionemu.gameserver.GameServer;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -53,6 +54,7 @@ public class GameStartupSequenceLifecycle {
     private final GameChatServerOverrideLifecycle chatServerOverrideLifecycle;
 
     public void start(Boolean chatServerEnabledOverride) {
+        XmlDataLoader.preloadContextAsync(); // 尽早异步预热 StaticData JAXBContext，与后续启动步骤并行（借鉴 aion-server GameServer:93）
         systemPropertiesLifecycle.start();
         long start = startupLogLifecycle.start();
 

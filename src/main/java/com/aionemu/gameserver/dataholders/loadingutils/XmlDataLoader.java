@@ -20,11 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
 import javax.xml.XMLConstants;
@@ -75,6 +79,18 @@ public class XmlDataLoader {
 		instanceProvider = provider;
 	}
 
+	private static volatile Future<JAXBContext> preloadedContext;
+
+	/**
+	 * Starts asynchronous preloading of the StaticData JAXBContext so it is ready when unmarshalling begins.
+	 * Modeled after aion-server JAXBUtil.preLoadContextAsync. Call as early as possible during startup.
+	 */
+	public static void preloadContextAsync() {
+		if (preloadedContext == null) {
+			preloadedContext = ForkJoinPool.commonPool().submit(() -> JAXBContext.newInstance(StaticData.class));
+		}
+	}
+
 	public XmlDataLoader() {
 
 	}
@@ -103,7 +119,7 @@ public class XmlDataLoader {
 
 		try {
 			long unmarshalStart = System.currentTimeMillis();
-			Map<String, Integer> sectionEntryCounts = staticDataSectionEntryCounts(cachedXml);
+			Map<String, Integer> sectionEntryCounts = loadSectionEntryCounts(cachedXml);
 			int totalSections = sectionEntryCounts.size();
 			progressReporter.start(totalSections);
 			log.info("Unmarshalling static data from {}", cachedXml.getPath());
@@ -134,7 +150,8 @@ public class XmlDataLoader {
 
 	Unmarshaller createStaticDataUnmarshaller(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts)
 			throws Exception {
-		JAXBContext jc = JAXBContext.newInstance(StaticData.class);
+		Future<JAXBContext> task = preloadedContext;
+		JAXBContext jc = task != null ? task.get() : JAXBContext.newInstance(StaticData.class);
 		Unmarshaller un = jc.createUnmarshaller();
 		un.setEventHandler(new XmlValidationHandler());
 		// Schema validation is intentionally not wired into JAXB unmarshalling; it is slow and is run only for rebuilt caches.
@@ -214,6 +231,42 @@ public class XmlDataLoader {
 		}
 		counts.replaceAll((sectionName, count) -> Math.max(1, count));
 		return counts;
+	}
+
+	/**
+	 * Returns section entry counts, cached in a sidecar file to avoid re-scanning the 239MB XML on every warm start.
+	 * Cache is rebuilt only when the XML cache file is newer than the counts file.
+	 */
+	Map<String, Integer> loadSectionEntryCounts(File cachedXml) throws Exception {
+		File countsFile = new File(cachedXml.getParentFile(), "static_data.counts");
+		if (countsFile.exists() && countsFile.lastModified() >= cachedXml.lastModified()) {
+			return loadCountsFile(countsFile);
+		}
+		Map<String, Integer> counts = staticDataSectionEntryCounts(cachedXml);
+		saveCountsFile(countsFile, counts);
+		return counts;
+	}
+
+	private static Map<String, Integer> loadCountsFile(File countsFile) throws IOException {
+		Properties props = new Properties();
+		try (FileReader reader = new FileReader(countsFile)) {
+			props.load(reader);
+		}
+		Map<String, Integer> counts = new HashMap<>();
+		for (String name : props.stringPropertyNames()) {
+			counts.put(name, Integer.valueOf(props.getProperty(name)));
+		}
+		return counts;
+	}
+
+	private static void saveCountsFile(File countsFile, Map<String, Integer> counts) {
+		Properties props = new Properties();
+		counts.forEach((name, count) -> props.setProperty(name, count.toString()));
+		try (FileWriter writer = new FileWriter(countsFile)) {
+			props.store(writer, "static_data section entry counts (avoids re-scanning XML on warm start)");
+		} catch (IOException e) {
+			log.warn("Could not save section counts cache: {}", countsFile.getPath(), e);
+		}
 	}
 
 	private static Map<String, String> staticDataSectionNamesByXmlElement() {
