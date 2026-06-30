@@ -10,6 +10,7 @@ public class ChatServerLifecycleGateway {
 
     private ObjectProvider<ChatServerRuntime> chatServerRuntimeProvider;
     private ObjectProvider<ChatServerRuntimeBridge> runtimeBridgeProvider;
+    private ChatServerRuntimeBridge runtimeBridge;
 
     public ChatServerLifecycleGateway() {
     }
@@ -25,11 +26,13 @@ public class ChatServerLifecycleGateway {
     }
 
     public void start(String[] args) {
+        ChatServerRuntimeBridge bridge = runtimeBridge();
         ChatServerRuntime chatServerRuntime = chatServerRuntime();
         if (chatServerRuntime == null) {
-            runtimeBridge().start(args);
+            bridge.start(args);
             return;
         }
+        bridge.prepareShutdown();
         chatServerRuntime.start(args);
     }
 
@@ -44,10 +47,14 @@ public class ChatServerLifecycleGateway {
         return chatServerRuntimeProvider.getIfAvailable();
     }
 
-    private ChatServerRuntimeBridge runtimeBridge() {
-        if (runtimeBridgeProvider == null) {
-            return new ChatServerRuntimeBridge();
+    private synchronized ChatServerRuntimeBridge runtimeBridge() {
+        if (runtimeBridge == null) {
+            if (runtimeBridgeProvider == null) {
+                runtimeBridge = new ChatServerRuntimeBridge();
+            } else {
+                runtimeBridge = runtimeBridgeProvider.getIfAvailable(ChatServerRuntimeBridge::new);
+            }
         }
-        return runtimeBridgeProvider.getIfAvailable(ChatServerRuntimeBridge::new);
+        return runtimeBridge;
     }
 }

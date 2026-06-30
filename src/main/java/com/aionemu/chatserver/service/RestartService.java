@@ -47,6 +47,10 @@ public class RestartService {
     }
 
     private synchronized void setTimer(RestartFrequency frequency) {
+        if (frequency == RestartFrequency.NEVER) {
+            return;
+        }
+
         //get time to restart
         String[] time = getRestartTime();
         int hour = Integer.parseInt(time[0]);
@@ -61,8 +65,6 @@ public class RestartService {
 
         //switch frequency
         switch (frequency) {
-            case NEVER:
-                return;
             case DAILY:
                 if (isMissed) //execute next day if we missed the time today (what is mostly the case)
                 {

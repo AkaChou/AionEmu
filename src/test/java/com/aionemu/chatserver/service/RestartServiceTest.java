@@ -1,5 +1,6 @@
 package com.aionemu.chatserver.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.chatserver.configs.Config;
@@ -33,6 +34,16 @@ class RestartServiceTest {
 
         assertTrue(Modifier.isPublic(RestartService.class.getDeclaredConstructor().getModifiers()));
         assertTrue(RestartService.class.getMethod("getInstance").isAnnotationPresent(Deprecated.class));
+
+        restartService.shutdown();
+    }
+
+    @Test
+    void missingRestartConfigDefaultsToDisabledRestartInsteadOfFailingStartup() {
+        Config.CHATSERVER_RESTART_FREQUENCY = null;
+        Config.CHATSERVER_RESTART_TIME = null;
+
+        RestartService restartService = assertDoesNotThrow(RestartService::new);
 
         restartService.shutdown();
     }

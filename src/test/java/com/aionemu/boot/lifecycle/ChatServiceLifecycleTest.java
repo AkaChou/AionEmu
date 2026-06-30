@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -135,6 +136,37 @@ class ChatServiceLifecycleTest {
     }
 
     @Test
+    void chatGatewayReusesRuntimeBridgeResolvedDuringStartupForShutdown() {
+        List<String> events = new ArrayList<>();
+        ChatServerLifecycleGateway gateway = new ChatServerLifecycleGateway();
+        gateway.setChatServerRuntimeProvider(emptyProvider(ChatServerRuntime.class));
+        gateway.setRuntimeBridgeProvider(oneShotProvider(new RecordingChatServerRuntimeBridge(events)));
+
+        gateway.start(new String[] {"--chat=true"});
+        gateway.stop();
+
+        assertEquals(List.of("bridge:start:1", "shutdown:false"), events);
+    }
+
+    @Test
+    void chatGatewayPreparesRuntimeBridgeBeforeStartingRuntimeBean() {
+        List<String> events = new ArrayList<>();
+        ChatServerRuntimeBridge runtimeBridge = new ChatServerRuntimeBridge();
+        runtimeBridge.setProcessBridgeProvider(oneShotProvider(new RecordingChatProcessRuntimeBridge(events)));
+        ChatServerLifecycleGateway gateway = new ChatServerLifecycleGateway();
+        gateway.setChatServerRuntimeProvider(provider(
+            ChatServerRuntime.class,
+            new RecordingChatServerRuntime(events)
+        ));
+        gateway.setRuntimeBridgeProvider(provider(ChatServerRuntimeBridge.class, runtimeBridge));
+
+        gateway.start(new String[] {"--chat=true"});
+        gateway.stop();
+
+        assertEquals(List.of("process:shutdownHook", "runtime:start:1", "process:shutdown:false"), events);
+    }
+
+    @Test
     void chatRuntimeBridgeUsesRuntimeProviderWhenAvailable() {
         List<String> events = new ArrayList<>();
         ChatServerRuntimeBridge runtimeBridge = new ChatServerRuntimeBridge();
@@ -160,6 +192,22 @@ class ChatServiceLifecycleTest {
         runtimeBridge.shutdown(true);
 
         assertEquals(List.of("process:shutdown:true"), events);
+    }
+
+    @Test
+    void chatRuntimeBridgePreparesProcessBridgeBeforeStartingServer() {
+        List<String> events = new ArrayList<>();
+        ChatServerRuntimeBridge runtimeBridge = new ChatServerRuntimeBridge();
+        runtimeBridge.setChatServerRuntimeProvider(provider(
+            ChatServerRuntime.class,
+            new RecordingChatServerRuntime(events)
+        ));
+        runtimeBridge.setProcessBridgeProvider(oneShotProvider(new RecordingChatProcessRuntimeBridge(events)));
+
+        runtimeBridge.start(new String[] {"--chat=true"});
+        runtimeBridge.shutdown(false);
+
+        assertEquals(List.of("process:shutdownHook", "runtime:start:1", "process:shutdown:false"), events);
     }
 
     @Test
@@ -275,6 +323,12 @@ class ChatServiceLifecycleTest {
         }
 
         @Override
+        public Thread shutdownHook() {
+            events.add("process:shutdownHook");
+            return new Thread();
+        }
+
+        @Override
         public void shutdown(boolean restart) {
             events.add("process:shutdown:" + restart);
         }
@@ -332,5 +386,31 @@ class ChatServiceLifecycleTest {
 
     private static <T> ObjectProvider<T> emptyProvider(Class<T> type) {
         return new DefaultListableBeanFactory().getBeanProvider(type);
+    }
+
+    private static <T> ObjectProvider<T> oneShotProvider(T instance) {
+        AtomicBoolean used = new AtomicBoolean();
+        return new ObjectProvider<>() {
+            @Override
+            public T getObject(Object... args) {
+                return getIfAvailable();
+            }
+
+            @Override
+            public T getIfAvailable() {
+                if (!used.compareAndSet(false, true)) {
+                    throw new ProviderUsedAfterPreparationException();
+                }
+                return instance;
+            }
+
+            @Override
+            public T getObject() {
+                return getIfAvailable();
+            }
+        };
+    }
+
+    private static final class ProviderUsedAfterPreparationException extends RuntimeException {
     }
 }
