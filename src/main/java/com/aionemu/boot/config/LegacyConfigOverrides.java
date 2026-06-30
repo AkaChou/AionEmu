@@ -8,6 +8,9 @@ import java.util.Properties;
 @Component
 public class LegacyConfigOverrides {
 
+    private static final String LOGIN_ADDRESS_KEY = "gameserver.network.login.address";
+    private static final String IPCONFIG_DEFAULT_KEY = "gameserver.network.ipconfig.default";
+
     private final LegacyGameProperties legacyGameProperties;
     private final AionGameProperties gameProperties;
 
@@ -19,6 +22,7 @@ public class LegacyConfigOverrides {
     public Properties gameProperties() {
         Properties properties = new Properties();
         legacyGameProperties.getProperty().forEach(properties::setProperty);
+        addNetworkAliases(properties);
         addGamePropertyAlias(properties);
         return properties;
     }
@@ -36,5 +40,30 @@ public class LegacyConfigOverrides {
         if (startupProgressEnabled != null) {
             properties.setProperty(legacyKey, startupProgressEnabled.toString());
         }
+    }
+
+    private void addNetworkAliases(Properties properties) {
+        String externalIp = gameProperties.getNetwork().getExternalIp();
+        if (externalIp == null || externalIp.isBlank()) {
+            return;
+        }
+
+        externalIp = externalIp.trim();
+        properties.setProperty(IPCONFIG_DEFAULT_KEY, externalIp);
+        properties.setProperty(LOGIN_ADDRESS_KEY, replaceLoginAddressHost(
+            properties.getProperty(LOGIN_ADDRESS_KEY),
+            externalIp
+        ));
+    }
+
+    private String replaceLoginAddressHost(String loginAddress, String host) {
+        if (loginAddress == null || loginAddress.isBlank()) {
+            return host + ":9014";
+        }
+        int portSeparator = loginAddress.lastIndexOf(':');
+        if (portSeparator < 0 || portSeparator == loginAddress.length() - 1) {
+            return host;
+        }
+        return host + loginAddress.substring(portSeparator);
     }
 }

@@ -8,7 +8,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "aion.game")
 public class AionGameProperties {
 
+    private final Network network = new Network();
     private final Startup startup = new Startup();
+
+    @Getter
+    @Setter
+    public static class Network {
+
+        private String externalIp;
+    }
 
     @Getter
     public static class Startup {

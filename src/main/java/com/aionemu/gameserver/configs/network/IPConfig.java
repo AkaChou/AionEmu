@@ -64,11 +64,15 @@ public class IPConfig {
 						throws SAXException {
 
 					if (qName.equals("ipconfig")) {
+						String defaultAddressValue = Config.bootOverride("gameserver.network.ipconfig.default");
+						if (defaultAddressValue == null || defaultAddressValue.isBlank()) {
+							defaultAddressValue = attributes.getValue("default");
+						}
 						try {
-							defaultAddress = InetAddress.getByName(attributes.getValue("default")).getAddress();
+							defaultAddress = InetAddress.getByName(defaultAddressValue).getAddress();
 						} catch (UnknownHostException e) {
 							throw new RuntimeException(
-									"Failed to resolve DSN for address: " + attributes.getValue("default"), e);
+									"Failed to resolve DSN for address: " + defaultAddressValue, e);
 						}
 					} else if (qName.equals("iprange")) {
 						String min = attributes.getValue("min");

@@ -72,6 +72,49 @@ class LegacyConfigOverridesTest {
     }
 
     @Test
+    void gamePropertiesMapExternalIpToLoginAddressAndIpConfigDefault() {
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource(
+            "applicationConfig",
+            Map.of(
+                "aion.game.network.external-ip", "203.0.113.10",
+                "aion.legacy.game.property.gameserver.network.login.address", "192.168.1.18:9014"
+            )
+        ));
+
+        AionGameProperties gameProperties = bindAionGameProperties(environment);
+        LegacyGameProperties legacyGameProperties = bindLegacyGameProperties(environment);
+
+        Properties properties = new LegacyConfigOverrides(
+            legacyGameProperties,
+            gameProperties
+        ).gameProperties();
+
+        assertEquals("203.0.113.10:9014", properties.getProperty("gameserver.network.login.address"));
+        assertEquals("203.0.113.10", properties.getProperty("gameserver.network.ipconfig.default"));
+    }
+
+    @Test
+    void gamePropertiesKeepLegacyNetworkPropertiesWhenExternalIpIsNotConfigured() {
+        StandardEnvironment environment = new StandardEnvironment();
+        environment.getPropertySources().addFirst(new MapPropertySource(
+            "applicationConfig",
+            Map.of("aion.legacy.game.property.gameserver.network.login.address", "192.168.1.18:9014")
+        ));
+
+        AionGameProperties gameProperties = bindAionGameProperties(environment);
+        LegacyGameProperties legacyGameProperties = bindLegacyGameProperties(environment);
+
+        Properties properties = new LegacyConfigOverrides(
+            legacyGameProperties,
+            gameProperties
+        ).gameProperties();
+
+        assertEquals("192.168.1.18:9014", properties.getProperty("gameserver.network.login.address"));
+        assertFalse(properties.containsKey("gameserver.network.ipconfig.default"));
+    }
+
+    @Test
     void legacyGamePropertiesBindExistingDottedPropertyKeys() {
         StandardEnvironment environment = new StandardEnvironment();
         environment.getPropertySources().addFirst(new MapPropertySource(
@@ -111,6 +154,7 @@ class LegacyConfigOverridesTest {
             assertFalse(metadata.contains("aion.game.static-data.progress.enabled"));
             assertFalse(metadata.contains("aion.game.static-data.summary-log.enabled"));
             assertEquals(true, metadata.contains("\"name\": \"aion.game.startup.progress.enabled\""));
+            assertEquals(true, metadata.contains("\"name\": \"aion.game.network.external-ip\""));
             assertEquals(true, metadata.contains("\"name\": \"aion.legacy.game.property\""));
         }
     }

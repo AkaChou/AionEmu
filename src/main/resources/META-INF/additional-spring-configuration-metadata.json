@@ -7,6 +7,11 @@
       "defaultValue": true
     },
     {
+      "name": "aion.game.network.external-ip",
+      "type": "java.lang.String",
+      "description": "External game server IP used to override the host in gameserver.network.login.address and the default ipconfig address."
+    },
+    {
       "name": "aion.legacy.game.property",
       "type": "java.util.Map<java.lang.String,java.lang.String>",
       "description": "Game server legacy .properties entries exposed for Spring Boot binding."
