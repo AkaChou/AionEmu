@@ -146,7 +146,7 @@ public class XmlMerger {
 	 * @throws FileNotFoundException when source file doesn't exists.
 	 * @throws XMLStreamException    when XML processing error was occurred.
 	 */
-	public void process() throws Exception {
+	public boolean process() throws Exception {
 		log.debug("Processing " + sourceFile + " files into " + destFile);
 
 		if (!sourceFile.exists()) {
@@ -170,6 +170,7 @@ public class XmlMerger {
 			log.debug("Modifications found. Updating...");
 			try {
 				doUpdate();
+				return true;
 			} catch (Exception e) {
 				FileUtils.deleteQuietly(destFile);
 				FileUtils.deleteQuietly(metaDataFile);
@@ -177,6 +178,7 @@ public class XmlMerger {
 			}
 		} else {
 			log.debug("Files are up-to-date");
+			return false;
 		}
 	}
 

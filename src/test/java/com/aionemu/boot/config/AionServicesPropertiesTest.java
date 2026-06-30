@@ -1,12 +1,6 @@
 package com.aionemu.boot.config;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.aionemu.boot.config.AionServicesProperties.TransportMode;
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.context.properties.bind.Bindable;
@@ -16,6 +10,10 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.ClassPathResource;
+
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class AionServicesPropertiesTest {
 
@@ -48,7 +46,7 @@ class AionServicesPropertiesTest {
 
     @Test
     void chatProfileEnablesChatService() throws IOException {
-        AionServicesProperties properties = bindFromYaml("application-chat.yml", "application.yml");
+        AionServicesProperties properties = bindFromYaml("application.yml");
 
         assertTrue(properties.getLogin().isEnabled());
         assertTrue(properties.getGame().isEnabled());

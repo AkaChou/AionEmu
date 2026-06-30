@@ -20,15 +20,18 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.Reader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Future;
 
 import javax.xml.XMLConstants;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.sax.SAXSource;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -36,10 +39,12 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.springframework.beans.factory.ObjectProvider;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * This class is responsible for loading xml files. It uses JAXB to do the
@@ -90,8 +95,11 @@ public class XmlDataLoader {
 		File cleanMainXml = Config.dataFile(MAIN_XML_FILE);
 		long cacheStart = System.currentTimeMillis();
 		log.info("Preparing static data cache: {}", cachedXml.getPath());
-		mergeXmlFiles(cachedXml, cleanMainXml);
+		boolean cacheRebuilt = mergeXmlFiles(cachedXml, cleanMainXml);
 		log.info("Prepared static data cache in {} ms", System.currentTimeMillis() - cacheStart);
+		if (cacheRebuilt) {
+			validateCacheAsync(cachedXml);
+		}
 
 		try {
 			long unmarshalStart = System.currentTimeMillis();
@@ -99,11 +107,7 @@ public class XmlDataLoader {
 			int totalSections = sectionEntryCounts.size();
 			progressReporter.start(totalSections);
 			log.info("Unmarshalling static data from {}", cachedXml.getPath());
-			JAXBContext jc = JAXBContext.newInstance(StaticData.class);
-			Unmarshaller un = jc.createUnmarshaller();
-			un.setEventHandler(new XmlValidationHandler());
-			un.setSchema(getSchema());
-			un.setListener(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
+			Unmarshaller un = createStaticDataUnmarshaller(progressReporter, totalSections, sectionEntryCounts);
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
@@ -126,6 +130,37 @@ public class XmlDataLoader {
 			log.error("Error while loading static data", e);
 		}
 		return null;
+	}
+
+	Unmarshaller createStaticDataUnmarshaller(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts)
+			throws Exception {
+		JAXBContext jc = JAXBContext.newInstance(StaticData.class);
+		Unmarshaller un = jc.createUnmarshaller();
+		un.setEventHandler(new XmlValidationHandler());
+		// Schema validation is intentionally not wired into JAXB unmarshalling; it is slow and is run only for rebuilt caches.
+		un.setListener(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
+		return un;
+	}
+
+	Future<?> validateCacheAsync(File cachedXml) {
+		return submitValidationTask(() -> validateCache(cachedXml));
+	}
+
+	Future<?> submitValidationTask(Runnable task) {
+		return ThreadPoolManager.getInstance().submitLongRunning(task);
+	}
+
+	private void validateCache(File cachedXml) {
+		long validationStart = System.currentTimeMillis();
+		log.info("Validating static data cache in background: {}", cachedXml.getPath());
+		try (Reader reader = new FileReader(cachedXml)) {
+			getSchema().newValidator().validate(new SAXSource(new InputSource(reader)));
+			log.info("Validated static data cache in {} ms", System.currentTimeMillis() - validationStart);
+		} catch (Throwable t) {
+			cachedXml.setLastModified(0);
+			log.error("Error validating static data cache: {}", cachedXml.getPath(), t);
+			throw new Error("Error validating static data cache", t);
+		}
 	}
 
 	static String staticDataSectionName(Object target, Object parent) {
@@ -277,10 +312,10 @@ public class XmlDataLoader {
 	 * @param cleanMainXml
 	 * @throws Error is thrown if some problem occured.
 	 */
-	private void mergeXmlFiles(File cachedXml, File cleanMainXml) throws Error {
+	private boolean mergeXmlFiles(File cachedXml, File cleanMainXml) throws Error {
 		XmlMerger merger = new XmlMerger(cleanMainXml, cachedXml);
 		try {
-			merger.process();
+			return merger.process();
 		} catch (Exception e) {
 			log.error("Error while merging xml files", e);
 			throw new Error("Error while merging xml files", e);

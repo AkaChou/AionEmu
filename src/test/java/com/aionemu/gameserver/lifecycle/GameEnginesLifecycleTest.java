@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
@@ -58,6 +59,42 @@ class GameEnginesLifecycleTest {
         assertEquals(List.of("quest", "instance", "ai", "chat"), events);
         assertTrue(lifecycle.getLoadTimeMillis() >= 0);
         assertEquals(null, lifecycle.getLastFailure());
+    }
+
+    @Test
+    void startSubmitsEngineLoadsInParallelBeforeWaitingForCompletion() throws Exception {
+        int engineCount = 4;
+        CountDownLatch allStarted = new CountDownLatch(engineCount);
+        CountDownLatch releaseEngines = new CountDownLatch(1);
+        List<Thread> workers = new ArrayList<>();
+        List<GameEngine> engines = new ArrayList<>();
+        for (int i = 0; i < engineCount; i++) {
+            engines.add(new BlockingEngine(allStarted, releaseEngines));
+        }
+        GameEnginesLifecycle lifecycle = new GameEnginesLifecycle(
+            new RecordingGameEnginesGateway(engines, task -> {
+                Thread worker = new Thread(task);
+                workers.add(worker);
+                worker.start();
+            }));
+
+        Thread starter = new Thread(lifecycle::start);
+        starter.start();
+
+        try {
+            assertTrue(allStarted.await(2, TimeUnit.SECONDS));
+            assertTrue(starter.isAlive());
+        } finally {
+            releaseEngines.countDown();
+        }
+        starter.join(2000);
+
+        assertFalse(starter.isAlive());
+        assertTrue(lifecycle.isLoaded());
+        for (Thread worker : workers) {
+            worker.join(2000);
+            assertFalse(worker.isAlive());
+        }
     }
 
     @Test
@@ -152,6 +189,33 @@ class GameEnginesLifecycleTest {
         public void load(CountDownLatch progressLatch) {
             events.add(name);
             progressLatch.countDown();
+        }
+
+        @Override
+        public void shutdown() {
+        }
+    }
+
+    private static final class BlockingEngine implements GameEngine {
+
+        private final CountDownLatch allStarted;
+        private final CountDownLatch release;
+
+        private BlockingEngine(CountDownLatch allStarted, CountDownLatch release) {
+            this.allStarted = allStarted;
+            this.release = release;
+        }
+
+        @Override
+        public void load(CountDownLatch progressLatch) {
+            allStarted.countDown();
+            try {
+                release.await();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } finally {
+                progressLatch.countDown();
+            }
         }
 
         @Override

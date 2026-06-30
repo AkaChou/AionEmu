@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dataholders.loadingutils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,6 +12,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.dataholders.StaticData;
 import org.junit.jupiter.api.Test;
@@ -64,6 +66,26 @@ class XmlDataLoaderTest {
 	@Test
 	void staticDataJaxbContextIgnoresRuntimeLookupCaches() {
 		assertDoesNotThrow(() -> JAXBContext.newInstance(StaticData.class));
+	}
+
+	@Test
+	void staticDataUnmarshallerDoesNotInstallSynchronousSchemaValidation() throws Exception {
+		Unmarshaller unmarshaller = new XmlDataLoader()
+			.createStaticDataUnmarshaller(StaticDataProgressReporter.noop(), 0, Map.of());
+
+		assertNull(unmarshaller.getSchema());
+	}
+
+	@Test
+	void xmlMergerReportsWhetherCacheWasRebuilt() throws Exception {
+		Path source = tempDir.resolve("static_data.xml");
+		Path cache = tempDir.resolve("cache/static_data.xml");
+		Files.createDirectories(cache.getParent());
+		Files.writeString(source, "<ae_static_data><global_rules/></ae_static_data>", StandardCharsets.UTF_8);
+		XmlMerger merger = new XmlMerger(source.toFile(), cache.toFile(), tempDir.toFile());
+
+		assertTrue(merger.process());
+		assertFalse(merger.process());
 	}
 
 	@Test
