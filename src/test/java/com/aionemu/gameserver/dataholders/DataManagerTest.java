@@ -2,9 +2,12 @@ package com.aionemu.gameserver.dataholders;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
+import java.lang.reflect.Field;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -42,6 +45,51 @@ class DataManagerTest {
 		assertSame(staticData, loaded.staticData());
 		assertSame(itemData, loaded.itemData());
 		assertNotNull(loaded);
+	}
+
+	@Test
+	void staticDataAssignmentFailureAbortsStartup() {
+		RuntimeException cause = new RuntimeException("boom");
+		CompletableFuture<Void> future = new CompletableFuture<>();
+		future.completeExceptionally(cause);
+
+		IllegalStateException thrown = assertThrows(IllegalStateException.class,
+			() -> DataManager.awaitStaticDataAssignment(future));
+
+		assertSame(cause, thrown.getCause());
+	}
+
+	@Test
+	void staticDataAssignmentInterruptRestoresInterruptFlag() {
+		CompletableFuture<Void> future = new CompletableFuture<>();
+		Thread.currentThread().interrupt();
+
+		try {
+			assertThrows(IllegalStateException.class, () -> DataManager.awaitStaticDataAssignment(future));
+			assertTrue(Thread.currentThread().isInterrupted());
+		} finally {
+			Thread.interrupted();
+		}
+	}
+
+	@Test
+	void duplicateConstructionFailsFastBeforeLoadingData() throws Exception {
+		AtomicBoolean constructed = constructionGuard();
+		constructed.set(true);
+
+		try {
+			IllegalStateException thrown = assertThrows(IllegalStateException.class, DataManager::new);
+
+			assertTrue(thrown.getMessage().contains("Duplicate"));
+		} finally {
+			constructed.set(false);
+		}
+	}
+
+	private AtomicBoolean constructionGuard() throws ReflectiveOperationException {
+		Field field = DataManager.class.getDeclaredField("CONSTRUCTED");
+		field.setAccessible(true);
+		return (AtomicBoolean) field.get(null);
 	}
 
 	private boolean await(CountDownLatch latch) {

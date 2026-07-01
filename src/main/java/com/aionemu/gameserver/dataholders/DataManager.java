@@ -16,10 +16,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class DataManager {
     static Logger log = LoggerFactory.getLogger(DataManager.class);
     private static volatile ObjectProvider<DataManager> instanceProvider;
+    private static final AtomicBoolean CONSTRUCTED = new AtomicBoolean(false);
     public static NpcData NPC_DATA;
     public static NpcDropData NPC_DROP_DATA;
     public static NpcShoutData NPC_SHOUT_DATA;
@@ -174,8 +176,13 @@ public final class DataManager {
     // 私有构造函数，确保单例模式
     // Private constructor to ensure singleton pattern
     public DataManager() {
-		Util.printSection(" *** Static Data *** ");
-		log.info("##### Start Loading Static Data 5.8 #####");
+        if (!CONSTRUCTED.compareAndSet(false, true)) {
+            throw new IllegalStateException("Duplicate DataManager construction detected");
+        }
+        boolean loaded = false;
+        try {
+            Util.printSection(" *** Static Data *** ");
+            log.info("##### Start Loading Static Data 5.8 #####");
         this.loader = GameStaticDataServices.xmlDataLoader();
         long start = System.currentTimeMillis();
         // 加载静态数据
@@ -325,21 +332,34 @@ public final class DataManager {
             SKILL_SKIN_DATA = data.skillSkinData;
         });
 
-        try {
-            // 等待异步任务完成
-            // Wait for async task to complete
-            future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            // 记录加载错误日志
-            // Log loading error
-            log.error("Error loading data", e);
-        }
+        awaitStaticDataAssignment(future);
 
         long timeMillis = System.currentTimeMillis() - start;
         // 使用TimeUnit进行时间转换
         // Convert time using TimeUnit
         log.info("##### End Loading Static Data #####");
         log.info("##### [Loading Time: {} seconds] #####", TimeUnit.MILLISECONDS.toSeconds(timeMillis));
+        loaded = true;
+        } finally {
+            if (!loaded) {
+                CONSTRUCTED.set(false);
+            }
+        }
+    }
+
+    static void awaitStaticDataAssignment(CompletableFuture<Void> future) {
+        try {
+            // 等待异步任务完成
+            // Wait for async task to complete
+            future.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Error loading data", e);
+            throw new IllegalStateException("Static data loading was interrupted", e);
+        } catch (ExecutionException e) {
+            log.error("Error loading data", e);
+            throw new IllegalStateException("Failed to load static data", e.getCause() == null ? e : e.getCause());
+        }
     }
 
     static LoadedStaticData loadStaticData(XmlDataLoader loader) {

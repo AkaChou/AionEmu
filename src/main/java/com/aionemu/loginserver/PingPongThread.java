@@ -111,10 +111,10 @@ public class PingPongThread implements Runnable {
     public void closeMe() {
         uptime = false;
 
-        if(SvStatsConfig.SVSTATS_ENABLE)
-		{
-			int currentID = connection.getGameServerInfo().getId();
-			DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Offline(currentID, 0, 0);
-		}
+        GameServerInfo gameServerInfo = connection.getGameServerInfo();
+        if (SvStatsConfig.SVSTATS_ENABLE && gameServerInfo != null) {
+            int currentID = gameServerInfo.getId();
+            DAOManager.getDAO(SvStatsDAO.class).update_SvStats_Offline(currentID, 0, 0);
+        }
     }
 }
