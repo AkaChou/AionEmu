@@ -42,6 +42,7 @@ public enum ChatType {
 	/**
 	 * Global chat types
 	 */
+	WHITE_LOW(0x1F, true), // Client GM/system message (White)
 	GOLDEN_YELLOW(0x20, true), // Same with 0x21 System message (Dark Yellow), most commonly used, no "center"
 								// equivalent.
 
