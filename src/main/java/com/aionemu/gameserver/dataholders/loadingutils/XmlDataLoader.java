@@ -18,6 +18,7 @@ package com.aionemu.gameserver.dataholders.loadingutils;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import jakarta.xml.bind.JAXBContext;
@@ -62,6 +63,9 @@ public class XmlDataLoader {
 	private final static String XML_SCHEMA_FILE = "./data/static_data/static_data.xsd";
 	private static final String CACHE_XML_FILE = "./cache/static_data.xml";
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
+	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
+	private static final String ITEM_DATA_DIR = "./data/static_data/items";
+	private static final String ITEM_SOURCE_XML = "<item_templates><import file=\"item\" skipRoot=\"true\"/></item_templates>";
 
 	public static final XmlDataLoader getInstance() {
 		ObjectProvider<XmlDataLoader> provider = instanceProvider;
@@ -144,6 +148,50 @@ public class XmlDataLoader {
 			log.error("Error while loading static data", e);
 		}
 		return null;
+	}
+
+	public ItemData loadItemData() {
+		return loadItemData(Config.cacheFile(ITEM_CACHE_XML_FILE), Config.dataFile(ITEM_DATA_DIR));
+	}
+
+	ItemData loadItemData(File cachedXml, File itemDataDir) {
+		makeCacheDirectory(cachedXml.getParentFile());
+		File sourceXml = itemDataSourceXml(cachedXml.getParentFile());
+		prepareItemDataSource(sourceXml);
+		long cacheStart = System.currentTimeMillis();
+		log.info("Preparing item data cache: {}", cachedXml.getPath());
+		mergeXmlFiles(cachedXml, sourceXml, itemDataDir);
+		log.info("Prepared item data cache in {} ms", System.currentTimeMillis() - cacheStart);
+
+		long unmarshalStart = System.currentTimeMillis();
+		log.info("Unmarshalling item data from {}", cachedXml.getPath());
+		try (FileReader reader = new FileReader(cachedXml)) {
+			JAXBContext jc = JAXBContext.newInstance(ItemData.class);
+			Unmarshaller un = jc.createUnmarshaller();
+			un.setEventHandler(new XmlValidationHandler());
+			ItemData data = (ItemData) un.unmarshal(reader);
+			log.info("Unmarshalled item data in {} ms", System.currentTimeMillis() - unmarshalStart);
+			return data;
+		} catch (Exception e) {
+			log.error("Error while loading item data", e);
+			throw new Error("Error while loading item data", e);
+		}
+	}
+
+	private File itemDataSourceXml(File cacheDir) {
+		return new File(cacheDir, "item_templates.source.xml");
+	}
+
+	private void prepareItemDataSource(File sourceXml) {
+		if (sourceXml.exists()) {
+			return;
+		}
+		try (FileWriter writer = new FileWriter(sourceXml)) {
+			writer.write(ITEM_SOURCE_XML);
+		} catch (IOException e) {
+			throw new Error("Error while preparing item data source", e);
+		}
+		sourceXml.setLastModified(0L);
 	}
 
 	Unmarshaller createStaticDataUnmarshaller(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts)
@@ -408,7 +456,11 @@ public class XmlDataLoader {
 	 * @throws Error is thrown if some problem occured.
 	 */
 	private boolean mergeXmlFiles(File cachedXml, File cleanMainXml) throws Error {
-		XmlMerger merger = new XmlMerger(cleanMainXml, cachedXml);
+		return mergeXmlFiles(cachedXml, cleanMainXml, cleanMainXml.getParentFile());
+	}
+
+	private boolean mergeXmlFiles(File cachedXml, File cleanMainXml, File baseDir) throws Error {
+		XmlMerger merger = new XmlMerger(cleanMainXml, cachedXml, baseDir);
 		try {
 			return merger.process();
 		} catch (Exception e) {

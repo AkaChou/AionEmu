@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.world.container;
 
 import java.util.Iterator;
+import java.util.Collections;
 
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
@@ -27,8 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 public class LegionContainer implements Iterable<Legion> {
-	private final Map<Integer, Legion> legionsById = new LinkedHashMap<Integer, Legion>();
-	private final Map<String, Legion> legionsByName = new LinkedHashMap<String, Legion>();
+	private final Map<Integer, Legion> legionsById = Collections.synchronizedMap(new LinkedHashMap<Integer, Legion>());
+	private final Map<String, Legion> legionsByName = Collections.synchronizedMap(new LinkedHashMap<String, Legion>());
 
 	public void add(Legion legion) {
 		if (legion == null || legion.getLegionName() == null) {
@@ -56,9 +57,9 @@ public class LegionContainer implements Iterable<Legion> {
 	}
 
 	public List<Legion> getAllLegions() {
-		List<Legion> list = new ArrayList<Legion>();
-		list.addAll(legionsByName.values());
-		return list;
+		synchronized (legionsByName) {
+			return new ArrayList<Legion>(legionsByName.values());
+		}
 	}
 
 	public boolean contains(int legionId) {
@@ -71,7 +72,9 @@ public class LegionContainer implements Iterable<Legion> {
 
 	@Override
 	public Iterator<Legion> iterator() {
-		return new ArrayList<Legion>(legionsById.values()).iterator();
+		synchronized (legionsById) {
+			return new ArrayList<Legion>(legionsById.values()).iterator();
+		}
 	}
 
 	public void clear() {

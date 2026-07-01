@@ -48,7 +48,7 @@ public class MonolithicAmbusherAI2 extends AggressiveNpcAI2
 	}
 	
 	private void help(Creature creature) {
-		for (VisibleObject object : new java.util.ArrayList<>(getKnownList().getKnownObjects().values())) {
+		for (VisibleObject object : getKnownList().getKnownObjectsSnapshot()) {
 			if (object instanceof Npc && isInRange(object, 60)) {
 				Npc npc = (Npc) object;
 				if (!npc.getLifeStats().isAlreadyDead() && npc.getNpcId() == 216215 && (int) npc.getSpawn().getY() == (int) getSpawnTemplate().getY()) {

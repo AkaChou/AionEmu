@@ -68,8 +68,8 @@ public class World {
 	public World() {
 		Util.printSection(" *** World *** ");
 		allPlayers = new PlayerContainer();
-		allObjects = new LinkedHashMap<Integer, VisibleObject>();
-		allNpcs = new LinkedHashMap<Integer, Npc>();
+		allObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
+		allNpcs = Collections.synchronizedMap(new LinkedHashMap<Integer, Npc>());
 		worldMaps = new IntObjectHashMap<WorldMap>();
 		for (WorldMapTemplate template : DataManager.WORLD_MAPS_DATA) {
 			worldMaps.put(template.getMapId(), new WorldMap(template, this));
@@ -207,7 +207,9 @@ public class World {
 	}
 
 	public Collection<Npc> getNpcs() {
-		return new ArrayList<Npc>(allNpcs.values());
+		synchronized (allNpcs) {
+			return new ArrayList<Npc>(allNpcs.values());
+		}
 	}
 
 	/**
@@ -457,7 +459,7 @@ public class World {
 	 */
 	public void doOnAllObjects(Visitor<VisibleObject> visitor) {
 		try {
-			for (VisibleObject object : allObjects.values()) {
+			for (VisibleObject object : allObjectsSnapshot()) {
 				if (object != null) {
 					visitor.visit(object);
 				}
@@ -470,5 +472,11 @@ public class World {
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 		protected static final World instance = new World();
+	}
+
+	private List<VisibleObject> allObjectsSnapshot() {
+		synchronized (allObjects) {
+			return new ArrayList<VisibleObject>(allObjects.values());
+		}
 	}
 }

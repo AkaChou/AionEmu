@@ -118,7 +118,7 @@ public class FortressLocation extends SiegeLocation {
 	}
 
 	public void clearLocation() {
-		for (Creature creature : getCreatures().values()) {
+		for (Creature creature : getCreaturesSnapshot()) {
 			if ((isEnemy(creature)) && ((creature instanceof Kisk))) {
 				Kisk kisk = (Kisk) creature;
 				kisk.getController().die();

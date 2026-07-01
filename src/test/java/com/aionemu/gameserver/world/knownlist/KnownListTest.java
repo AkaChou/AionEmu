@@ -3,10 +3,16 @@ package com.aionemu.gameserver.world.knownlist;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import com.aionemu.gameserver.controllers.VisibleObjectController;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -51,6 +57,43 @@ class KnownListTest {
 		});
 
 		assertEquals(List.of(2, 3), visited);
+	}
+
+	@Test
+	void doOnAllNpcsWithOwnerSnapshotsKnownObjectsUnderMapLock() throws Exception {
+		TestVisibleObject owner = visibleObject(1);
+		TestKnownList knownList = (TestKnownList) owner.getKnownList();
+		knownList.addKnown(npc(2));
+		knownList.addKnown(npc(3));
+		CountDownLatch locked = new CountDownLatch(1);
+		CountDownLatch release = new CountDownLatch(1);
+		Thread holder = new Thread(() -> {
+			synchronized (knownList.getKnownObjects()) {
+				locked.countDown();
+				try {
+					release.await(5, TimeUnit.SECONDS);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+		});
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+
+		holder.start();
+		try {
+			assertTrue(locked.await(1, TimeUnit.SECONDS));
+			Future<Integer> result = executor.submit(() -> knownList.doOnAllNpcsWithOwner((npc, ignoredOwner) -> {
+			}, Integer.MAX_VALUE));
+			Thread.sleep(100);
+
+			assertFalse(result.isDone());
+			release.countDown();
+			assertEquals(2, result.get(1, TimeUnit.SECONDS));
+		} finally {
+			release.countDown();
+			holder.join();
+			executor.shutdownNow();
+		}
 	}
 
 	@Test

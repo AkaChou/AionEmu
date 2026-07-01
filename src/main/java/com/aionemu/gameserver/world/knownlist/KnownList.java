@@ -18,6 +18,7 @@ package com.aionemu.gameserver.world.knownlist;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -31,7 +32,6 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.MapRegion;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * KnownList.
@@ -51,7 +51,7 @@ public class KnownList {
 	/**
 	 * List of objects that this KnownList owner known
 	 */
-	protected final Map<Integer, VisibleObject> knownObjects = new LinkedHashMap<Integer, VisibleObject>();
+	protected final Map<Integer, VisibleObject> knownObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 
 	/**
 	 * List of player that this KnownList owner known
@@ -61,7 +61,7 @@ public class KnownList {
 	/**
 	 * List of objects that this KnownList owner known
 	 */
-	protected final Map<Integer, VisibleObject> visualObjects = new LinkedHashMap<Integer, VisibleObject>();
+	protected final Map<Integer, VisibleObject> visualObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 
 	/**
 	 * List of player that this KnownList owner known
@@ -94,7 +94,7 @@ public class KnownList {
 	 * Clear known list. Used when object is despawned.
 	 */
 	public void clear() {
-		for (VisibleObject object : new ArrayList<>(knownObjects.values())) {
+		for (VisibleObject object : knownObjectsSnapshot()) {
 			object.getKnownList().del(owner, false);
 		}
 		knownObjects.clear();
@@ -187,7 +187,7 @@ public class KnownList {
 	 * forget out of distance objects.
 	 */
 	private void forgetObjects() {
-		for (VisibleObject object : new ArrayList<>(knownObjects.values())) {
+		for (VisibleObject object : knownObjectsSnapshot()) {
 			if (!checkObjectInRange(object) && !object.getKnownList().checkReversedObjectInRange(owner)) {
 				del(object, true);
 				object.getKnownList().del(owner, true);
@@ -205,8 +205,7 @@ public class KnownList {
 		MapRegion[] regions = owner.getActiveRegion().getNeighbours();
 		for (int i = 0; i < regions.length; i++) {
 			MapRegion r = regions[i];
-			Map<Integer, VisibleObject> objects = r.getObjects();
-			for (VisibleObject newObject : objects.values()) {
+			for (VisibleObject newObject : r.getObjectsSnapshot()) {
 				if (newObject == owner || newObject == null) {
 					continue;
 				}
@@ -265,7 +264,7 @@ public class KnownList {
 	public int doOnAllNpcs(Visitor<Npc> visitor, int iterationLimit) {
 		int counter = 0;
 		try {
-			for (VisibleObject newObject : new ArrayList<>(knownObjects.values())) {
+			for (VisibleObject newObject : knownObjectsSnapshot()) {
 				if (newObject != null && newObject instanceof Npc) {
 					if ((++counter) == iterationLimit) {
 						break;
@@ -286,7 +285,7 @@ public class KnownList {
 	public int doOnAllNpcsWithOwner(VisitorWithOwner<Npc, VisibleObject> visitor, int iterationLimit) {
 		int counter = 0;
 		try {
-			for (VisibleObject newObject : new ArrayList<>(knownObjects.values())) {
+			for (VisibleObject newObject : knownObjectsSnapshot()) {
 				if (newObject != null && newObject instanceof Npc) {
 					if ((++counter) == iterationLimit) {
 						break;
@@ -305,7 +304,7 @@ public class KnownList {
 			return;
 		}
 		try {
-			for (Player player : new ArrayList<>(knownPlayers.values())) {
+			for (Player player : knownPlayersSnapshot()) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -317,7 +316,7 @@ public class KnownList {
 
 	public void doOnAllObjects(Visitor<VisibleObject> visitor) {
 		try {
-			for (VisibleObject newObject : new ArrayList<>(knownObjects.values())) {
+			for (VisibleObject newObject : knownObjectsSnapshot()) {
 				if (newObject != null) {
 					visitor.visit(newObject);
 				}
@@ -331,23 +330,58 @@ public class KnownList {
 		return knownObjects;
 	}
 
+	public List<VisibleObject> getKnownObjectsSnapshot() {
+		return knownObjectsSnapshot();
+	}
+
+	public List<VisibleObject> getVisibleObjectsSnapshot() {
+		synchronized (visualObjects) {
+			return new ArrayList<>(visualObjects.values());
+		}
+	}
+
+	private List<VisibleObject> knownObjectsSnapshot() {
+		synchronized (knownObjects) {
+			return new ArrayList<>(knownObjects.values());
+		}
+	}
+
+	private List<Player> knownPlayersSnapshot() {
+		if (knownPlayers == null) {
+			return Collections.emptyList();
+		}
+		synchronized (knownPlayers) {
+			return new ArrayList<>(knownPlayers.values());
+		}
+	}
+
 	public Map<Integer, VisibleObject> getVisibleObjects() {
 		return visualObjects;
 	}
 
 	public Map<Integer, Player> getKnownPlayers() {
-		return knownPlayers != null ? new LinkedHashMap<Integer, Player>(knownPlayers) : Collections.<Integer, Player>emptyMap();
+		if (knownPlayers == null) {
+			return Collections.emptyMap();
+		}
+		synchronized (knownPlayers) {
+			return new LinkedHashMap<Integer, Player>(knownPlayers);
+		}
 	}
 
 	public Map<Integer, Player> getVisiblePlayers() {
-		return visualPlayers != null ? visualPlayers : Collections.<Integer, Player>emptyMap();
+		if (visualPlayers == null) {
+			return Collections.emptyMap();
+		}
+		synchronized (visualPlayers) {
+			return new LinkedHashMap<Integer, Player>(visualPlayers);
+		}
 	}
 
 	final void checkKnownPlayersInitialized() {
 		if (knownPlayers == null) {
 			synchronized (this) {
 				if (knownPlayers == null) {
-					knownPlayers = new LinkedHashMap<Integer, Player>();
+					knownPlayers = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 				}
 			}
 		}
@@ -357,7 +391,7 @@ public class KnownList {
 		if (visualPlayers == null) {
 			synchronized (this) {
 				if (visualPlayers == null) {
-					visualPlayers = new LinkedHashMap<Integer, Player>();
+					visualPlayers = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 				}
 			}
 		}

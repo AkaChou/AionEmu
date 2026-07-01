@@ -18,7 +18,9 @@ package com.aionemu.gameserver.controllers.effect;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -42,15 +44,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public class EffectController {
 	private Creature owner;
 
-	protected Map<String, Effect> passiveEffectMap = new LinkedHashMap<String, Effect>();
-	protected Map<String, Effect> noshowEffects = new LinkedHashMap<String, Effect>();
-	protected Map<String, Effect> abnormalEffectMap = new LinkedHashMap<String, Effect>();
+	protected Map<String, Effect> passiveEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+	protected Map<String, Effect> noshowEffects = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
+	protected Map<String, Effect> abnormalEffectMap = Collections.synchronizedMap(new LinkedHashMap<String, Effect>());
 
 	private final Lock lock = new ReentrantLock();
 
@@ -114,7 +113,7 @@ public class EffectController {
 					 * idea here is that effects with same effectId shouldnt stack effect with
 					 * higher basiclvl takes priority
 					 */
-					for (Effect effect : new ArrayList<>(mapToUpdate.values())) {
+					for (Effect effect : effectsSnapshot(mapToUpdate)) {
 						if (effect.getTargetSlot() == nextEffect.getTargetSlot()) {
 							for (EffectTemplate et : effect.getEffectTemplates()) {
 								if (et.getEffectid() == 0) {
@@ -153,7 +152,7 @@ public class EffectController {
 					mts = 1;
 				}
 				if (mapToUpdate.size() >= mts) {
-					Iterator<Effect> iter = mapToUpdate.values().iterator();
+					Iterator<Effect> iter = effectsSnapshot(mapToUpdate).iterator();
 					Effect effect = iter.next();
 					effect.endEffect();
 				}
@@ -256,7 +255,7 @@ public class EffectController {
 		if (conflictId == 0) {
 			return null;
 		}
-		for (Effect effect : mapToUpdate.values()) {
+		for (Effect effect : effectsSnapshot(mapToUpdate)) {
 			if (effect.getSkillTemplate().getConflictId() == conflictId) {
 				return effect;
 			}
@@ -292,7 +291,7 @@ public class EffectController {
 	 * @return
 	 */
 	public boolean hasAbnormalEffect(int skillId) {
-		Iterator<Effect> localIterator = this.abnormalEffectMap.values().iterator();
+		Iterator<Effect> localIterator = effectsSnapshot(abnormalEffectMap).iterator();
 		while (localIterator.hasNext()) {
 			Effect localEffect = localIterator.next();
 			if (localEffect.getSkillId() == skillId) {
@@ -302,18 +301,18 @@ public class EffectController {
 		return false;
 	}
 
-    public boolean hasEffectById(int effectId) {
-        Collection<Effect> allEffects = new ArrayList<>();
-        allEffects.addAll(abnormalEffectMap.values());
-        allEffects.addAll(noshowEffects.values());
-        allEffects.addAll(passiveEffectMap.values());
-        for (Effect effect : allEffects) {
-        if (effect.containsEffectId(effectId)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	public boolean hasEffectById(int effectId) {
+		Collection<Effect> allEffects = new ArrayList<>();
+		allEffects.addAll(effectsSnapshot(abnormalEffectMap));
+		allEffects.addAll(effectsSnapshot(noshowEffects));
+		allEffects.addAll(effectsSnapshot(passiveEffectMap));
+		for (Effect effect : allEffects) {
+			if (effect.containsEffectId(effectId)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	public void broadCastEffects() {
 		owner.addPacketBroadcastMask(BroadcastMode.BROAD_CAST_EFFECTS);
@@ -352,19 +351,19 @@ public class EffectController {
 	 * @param skillid
 	 */
 	public void removeEffect(int skillid) {
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
 		}
 
-		for (Effect effect : new ArrayList<>(passiveEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(passiveEffectMap)) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
 		}
 
-		for (Effect effect : new ArrayList<>(noshowEffects.values())) {
+		for (Effect effect : effectsSnapshot(noshowEffects)) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
@@ -372,7 +371,7 @@ public class EffectController {
 	}
 
 	public void removeHideEffects() {
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.isHideEffect() && owner.getVisualState() < 10) {
 				effect.endEffect();
 				abnormalEffectMap.remove(effect.getStack());
@@ -385,7 +384,7 @@ public class EffectController {
 	 * 
 	 */
 	public void removeParalyzeEffects() {
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.isParalyzeEffect()) {
 				effect.endEffect();
 				abnormalEffectMap.remove(effect.getStack());
@@ -397,7 +396,7 @@ public class EffectController {
 	 * @param effectId
 	 */
 	public void removeEffectByEffectId(int effectId) {
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.containsEffectId(effectId)) {
 				effect.endEffect();
 			}
@@ -417,7 +416,7 @@ public class EffectController {
 	public int calculateNumberOfEffects(int dispelLevel) {
 		int number = 0;
 
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			DispelCategoryType dispelCat = effect.getDispelCategory();
 			SkillTargetSlot tragetSlot = effect.getSkillTemplate().getTargetSlot();
 			// effects with duration 86400000 cant be dispelled
@@ -451,7 +450,7 @@ public class EffectController {
 
 	public void removeEffectByDispelCat(DispelCategoryType dispelCat, SkillTargetSlot targetSlot, int count,
 			int dispelLevel, int power, boolean itemTriggered) {
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (count == 0) {
 				break;
 			}
@@ -537,7 +536,7 @@ public class EffectController {
 	}
 
 	public void dispelBuffCounterAtkEffect(int count, int dispelLevel, int power) {
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			DispelCategoryType dispelCat = effect.getDispelCategory();
 			SkillTargetSlot tragetSlot = effect.getSkillTemplate().getTargetSlot();
 			if (count == 0) {
@@ -600,7 +599,7 @@ public class EffectController {
 	}
 
 	public void removeEffectByEffectType(EffectType effectType) {
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			for (EffectTemplate et : effect.getSuccessEffect()) {
 				if (effectType == et.getEffectType()) {
 					effect.endEffect();
@@ -625,7 +624,7 @@ public class EffectController {
 	 * @param skillid
 	 */
 	public void removePassiveEffect(int skillid) {
-		for (Effect effect : new ArrayList<>(passiveEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(passiveEffectMap)) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
@@ -636,7 +635,7 @@ public class EffectController {
 	 * @param skillid
 	 */
 	public void removeNoshowEffect(int skillid) {
-		for (Effect effect : new ArrayList<>(noshowEffects.values())) {
+		for (Effect effect : effectsSnapshot(noshowEffects)) {
 			if (effect.getSkillId() == skillid) {
 				effect.endEffect();
 			}
@@ -648,7 +647,7 @@ public class EffectController {
 	 * @param targetSlot
 	 */
 	public void removeAbnormalEffectsByTargetSlot(SkillTargetSlot targetSlot) {
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.getTargetSlot() == targetSlot.ordinal()) {
 				effect.endEffect();
 			}
@@ -665,7 +664,7 @@ public class EffectController {
 
 	public void removeAllEffects(boolean logout) {
 		if (!logout) {
-			for (Map.Entry<String, Effect> entry : new ArrayList<>(abnormalEffectMap.entrySet())) {
+			for (Map.Entry<String, Effect> entry : effectEntriesSnapshot(abnormalEffectMap)) {
 				if (!entry.getValue().getSkillTemplate().isNoRemoveAtDie() && !entry.getValue().isXpBoost()
 						&& !entry.getValue().isApBoost() && !entry.getValue().isDrBoost()
 						&& !entry.getValue().isBdrBoost() && !entry.getValue().isEnchantBoost()
@@ -678,21 +677,21 @@ public class EffectController {
 				}
 			}
 
-			for (Effect effect : new ArrayList<>(noshowEffects.values())) {
+			for (Effect effect : effectsSnapshot(noshowEffects)) {
 				effect.endEffect();
 			}
 			noshowEffects.clear();
 		} else {
 			// remove all effects on logout
-			for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+			for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 				effect.endEffect();
 			}
 			abnormalEffectMap.clear();
-			for (Effect effect : new ArrayList<>(noshowEffects.values())) {
+			for (Effect effect : effectsSnapshot(noshowEffects)) {
 				effect.endEffect();
 			}
 			noshowEffects.clear();
-			for (Effect effect : new ArrayList<>(passiveEffectMap.values())) {
+			for (Effect effect : effectsSnapshot(passiveEffectMap)) {
 				effect.endEffect();
 			}
 			passiveEffectMap.clear();
@@ -703,7 +702,7 @@ public class EffectController {
 	 * Return true if skillId is present among creature's abnormals
 	 */
 	public boolean isAbnormalPresentBySkillId(int skillId) {
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.getSkillId() == skillId) {
 				return true;
 			}
@@ -712,7 +711,7 @@ public class EffectController {
 	}
 
 	public boolean isNoshowPresentBySkillId(int skillId) {
-		for (Effect effect : noshowEffects.values()) {
+		for (Effect effect : effectsSnapshot(noshowEffects)) {
 			if (effect.getSkillId() == skillId) {
 				return true;
 			}
@@ -721,7 +720,7 @@ public class EffectController {
 	}
 
 	public boolean isPassivePresentBySkillId(int skillId) {
-		for (Effect effect : passiveEffectMap.values()) {
+		for (Effect effect : effectsSnapshot(passiveEffectMap)) {
 			if (effect.getSkillId() == skillId) {
 				return true;
 			}
@@ -761,7 +760,7 @@ public class EffectController {
 	 * @return list of effects to display as top icons
 	 */
 	public Collection<Effect> getAbnormalEffectsToShow() {
-		return Collections2.filter(abnormalEffectMap.values(), new Predicate<Effect>() {
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
 			@Override
 			public boolean apply(Effect effect) {
 				return effect.getSkillTemplate().getTargetSlot() != SkillTargetSlot.NOSHOW;
@@ -770,7 +769,7 @@ public class EffectController {
 	}
 
 	public Collection<Effect> getChantEffects() {
-		return Collections2.filter(abnormalEffectMap.values(), new Predicate<Effect>() {
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
 			@Override
 			public boolean apply(Effect effect) {
 				return effect.isChant();
@@ -779,7 +778,7 @@ public class EffectController {
 	}
 
 	public Collection<Effect> getRangerEffects() {
-		return Collections2.filter(abnormalEffectMap.values(), new Predicate<Effect>() {
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
 			@Override
 			public boolean apply(Effect effect) {
 				return effect.isRangerBuff();
@@ -788,7 +787,7 @@ public class EffectController {
 	}
 
 	public Collection<Effect> getBuffEffects() {
-		return Collections2.filter(abnormalEffectMap.values(), new Predicate<Effect>() {
+		return Collections2.filter(effectsSnapshot(abnormalEffectMap), new Predicate<Effect>() {
 			@Override
 			public boolean apply(Effect effect) {
 				return effect.isBuff();
@@ -807,7 +806,7 @@ public class EffectController {
 
 	public void unsetAbnormal(int mask) {
 		int count = 0;
-		for (Effect effect : abnormalEffectMap.values()) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if ((effect.getAbnormals() & mask) == mask) {
 				count++;
 			}
@@ -846,7 +845,7 @@ public class EffectController {
 	 * @return
 	 */
 	public Iterator<Effect> iterator() {
-		return abnormalEffectMap.values().iterator();
+		return effectsSnapshot(abnormalEffectMap).iterator();
 	}
 
 	public TransformType getTransformType() {
@@ -915,11 +914,23 @@ public class EffectController {
 		return false;
 	}
 
+	private static List<Effect> effectsSnapshot(Map<String, Effect> effects) {
+		synchronized (effects) {
+			return new ArrayList<Effect>(effects.values());
+		}
+	}
+
+	private static List<Map.Entry<String, Effect>> effectEntriesSnapshot(Map<String, Effect> effects) {
+		synchronized (effects) {
+			return new ArrayList<Map.Entry<String, Effect>>(effects.entrySet());
+		}
+	}
+
 	private boolean searchConflict(Effect nextEffect) {
 		if (priorityStigmaEffect(nextEffect) || checkExtraEffect(nextEffect)) {
 			return false;
 		}
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.getSkillSubType().equals(nextEffect.getSkillSubType())
 					|| effect.getTargetSlotEnum().equals(nextEffect.getTargetSlotEnum())) {
 				for (EffectTemplate et : effect.getEffectTemplates()) {
@@ -948,7 +959,7 @@ public class EffectController {
 	}
 
 	private boolean priorityStigmaEffect(Effect nextEffect) {
-		for (Effect effect : new ArrayList<>(abnormalEffectMap.values())) {
+		for (Effect effect : effectsSnapshot(abnormalEffectMap)) {
 			if (effect.getSkillTemplate().getStigmaType().getId() < nextEffect.getSkillTemplate().getStigmaType()
 					.getId() && effect.getTargetSlot() == nextEffect.getTargetSlot()
 					&& effect.getTargetSlotLevel() == nextEffect.getTargetSlotLevel()) {
@@ -972,7 +983,7 @@ public class EffectController {
 	}
 
 	public boolean hasPhysicalStateEffect() {
-		Iterator<Effect> effectIterator = this.abnormalEffectMap.values().iterator();
+		Iterator<Effect> effectIterator = effectsSnapshot(abnormalEffectMap).iterator();
 		while (effectIterator.hasNext()) {
 			Effect localEffect = effectIterator.next();
 			if (localEffect.isPhysicalState()) {

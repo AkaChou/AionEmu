@@ -82,12 +82,12 @@ public abstract class WorldMapInstance {
 	/**
 	 * All objects spawned in this world map instance
 	 */
-	private final Map<Integer, VisibleObject> worldMapObjects = new LinkedHashMap<Integer, VisibleObject>();
+	private final Map<Integer, VisibleObject> worldMapObjects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 
 	/**
 	 * All players spawned in this world map instance
 	 */
-	private final Map<Integer, Player> worldMapPlayers = new LinkedHashMap<Integer, Player>();
+	private final Map<Integer, Player> worldMapPlayers = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 
 	private final Set<Integer> registeredObjects = Collections.newSetFromMap(new LinkedHashMap<Integer, Boolean>());
 
@@ -357,14 +357,14 @@ public abstract class WorldMapInstance {
 	 * @return
 	 */
 	public Iterator<VisibleObject> objectIterator() {
-		return new ArrayList<>(worldMapObjects.values()).iterator();
+		return worldMapObjectsSnapshot().iterator();
 	}
 
 	/**
 	 * @return
 	 */
 	public Iterator<Player> playerIterator() {
-		return new ArrayList<Player>(worldMapPlayers.values()).iterator();
+		return worldMapPlayersSnapshot().iterator();
 	}
 
 	public void registerGroup(PlayerGroup group) {
@@ -446,7 +446,7 @@ public abstract class WorldMapInstance {
 	}
 
 	public Player getPlayer(Integer object) {
-		for (Player player : worldMapPlayers.values()) {
+		for (Player player : worldMapPlayersSnapshot()) {
 			if (object == player.getObjectId()) {
 				return player;
 			}
@@ -459,7 +459,7 @@ public abstract class WorldMapInstance {
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (Player player : new ArrayList<Player>(worldMapPlayers.values())) {
+			for (Player player : worldMapPlayersSnapshot()) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -512,5 +512,17 @@ public abstract class WorldMapInstance {
 
 	public Integer getSoloPlayerObj() {
 		return soloPlayer;
+	}
+
+	private List<VisibleObject> worldMapObjectsSnapshot() {
+		synchronized (worldMapObjects) {
+			return new ArrayList<VisibleObject>(worldMapObjects.values());
+		}
+	}
+
+	private List<Player> worldMapPlayersSnapshot() {
+		synchronized (worldMapPlayers) {
+			return new ArrayList<Player>(worldMapPlayers.values());
+		}
 	}
 }

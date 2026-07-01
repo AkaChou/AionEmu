@@ -22,7 +22,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.zone.ZoneInfo;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +34,7 @@ import java.util.Map;
 @Slf4j
 public class InvasionZoneInstance extends ZoneInstance {
 
-	private Map<Integer, Player> players = new LinkedHashMap<Integer, Player>();
+	private final Map<Integer, Player> players = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 
 	/**
 	 * @param mapId
@@ -66,13 +69,19 @@ public class InvasionZoneInstance extends ZoneInstance {
 
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (Player player : players.values()) {
+			for (Player player : playersSnapshot()) {
 				if (player != null) {
 					visitor.visit(player);
 				}
 			}
 		} catch (Exception ex) {
 			log.error("Exception when running visitor on all players" + ex);
+		}
+	}
+
+	private List<Player> playersSnapshot() {
+		synchronized (players) {
+			return new ArrayList<Player>(players.values());
 		}
 	}
 }

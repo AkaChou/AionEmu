@@ -37,7 +37,7 @@ public class SurkanaAI2 extends OneDmgPerHitAI2
 	}
 	
 	private void checkForSupport(Creature creature) {
-		for (VisibleObject object : new java.util.ArrayList<>(getKnownList().getKnownObjects().values())) {
+		for (VisibleObject object : getKnownList().getKnownObjectsSnapshot()) {
 			if (object instanceof Npc && isInRange(object, 20)) {
 				((Npc) object).getAi2().onCreatureEvent(AIEventType.CREATURE_AGGRO, creature);
 			}

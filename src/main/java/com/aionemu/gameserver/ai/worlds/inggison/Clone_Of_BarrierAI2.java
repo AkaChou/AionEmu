@@ -30,7 +30,7 @@ public class Clone_Of_BarrierAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleDied() {
-		for (VisibleObject object: new java.util.ArrayList<>(getKnownList().getKnownObjects().values())) {
+		for (VisibleObject object: getKnownList().getKnownObjectsSnapshot()) {
 			if (object instanceof Npc) {
 				Npc npc = (Npc) object;
 				if (npc.getNpcId() == 216516) { //Omega.

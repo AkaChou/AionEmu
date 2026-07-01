@@ -18,8 +18,9 @@ package com.aionemu.gameserver.model.siege;
 
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -30,8 +31,6 @@ import com.aionemu.gameserver.world.zone.SiegeZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 @Slf4j
 
 public class SiegeLocation implements ZoneHandler {
@@ -53,8 +52,8 @@ public class SiegeLocation implements ZoneHandler {
 	private boolean canTeleport;
 	protected int siegeDuration;
 	protected int influenceValue;
-	private Map<Integer, Creature> creatures = new LinkedHashMap<Integer, Creature>();
-	private Map<Integer, Player> players = new HashMap<>();
+	private final Map<Integer, Creature> creatures = Collections.synchronizedMap(new LinkedHashMap<Integer, Creature>());
+	private final Map<Integer, Player> players = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 	protected int buffId;
 	protected int buffIdA;
 	protected int buffIdE;
@@ -190,7 +189,7 @@ public class SiegeLocation implements ZoneHandler {
 	}
 
 	@Override
-	public void onEnterZone(Creature creature, ZoneInstance zone) {
+	public synchronized void onEnterZone(Creature creature, ZoneInstance zone) {
 		if (!creatures.containsKey(creature.getObjectId())) {
 			creatures.put(creature.getObjectId(), creature);
 			if (creature instanceof Player) {
@@ -200,7 +199,7 @@ public class SiegeLocation implements ZoneHandler {
 	}
 
 	@Override
-	public void onLeaveZone(Creature creature, ZoneInstance zone) {
+	public synchronized void onLeaveZone(Creature creature, ZoneInstance zone) {
 		if (!this.isInsideLocation(creature)) {
 			creatures.remove(creature.getObjectId());
 			players.remove(creature.getObjectId());
@@ -209,7 +208,7 @@ public class SiegeLocation implements ZoneHandler {
 
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (Player player : players.values()) {
+			for (Player player : playersSnapshot()) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -223,8 +222,20 @@ public class SiegeLocation implements ZoneHandler {
 		return creatures;
 	}
 
+	public List<Creature> getCreaturesSnapshot() {
+		synchronized (creatures) {
+			return new ArrayList<Creature>(creatures.values());
+		}
+	}
+
 	public Map<Integer, Player> getPlayers() {
 		return players;
+	}
+
+	private List<Player> playersSnapshot() {
+		synchronized (players) {
+			return new ArrayList<Player>(players.values());
+		}
 	}
 
 	public int getBuffId() {

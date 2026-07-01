@@ -19,7 +19,9 @@ package com.aionemu.gameserver.world.container;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
@@ -40,11 +42,11 @@ public class PlayerContainer implements Iterable<Player> {
 	/**
 	 * Map<ObjectId,Player>
 	 */
-	private final Map<Integer, Player> playersById = new LinkedHashMap<Integer, Player>();
+	private final Map<Integer, Player> playersById = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 	/**
 	 * Map<Name,Player>
 	 */
-	private final Map<String, Player> playersByName = new LinkedHashMap<String, Player>();
+	private final Map<String, Player> playersByName = Collections.synchronizedMap(new LinkedHashMap<String, Player>());
 
 	/**
 	 * Add Player to this Container.
@@ -94,7 +96,7 @@ public class PlayerContainer implements Iterable<Player> {
 
 	@Override
 	public Iterator<Player> iterator() {
-		return new ArrayList<Player>(playersById.values()).iterator();
+		return playersSnapshot().iterator();
 	}
 
 	/**
@@ -103,7 +105,7 @@ public class PlayerContainer implements Iterable<Player> {
 	@SuppressWarnings("unused")
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (Player player : new ArrayList<Player>(playersById.values())) {
+			for (Player player : playersSnapshot()) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -114,6 +116,12 @@ public class PlayerContainer implements Iterable<Player> {
 	}
 
 	public Collection<Player> getAllPlayers() {
-		return new ArrayList<Player>(playersById.values());
+		return playersSnapshot();
+	}
+
+	private List<Player> playersSnapshot() {
+		synchronized (playersById) {
+			return new ArrayList<Player>(playersById.values());
+		}
 	}
 }
