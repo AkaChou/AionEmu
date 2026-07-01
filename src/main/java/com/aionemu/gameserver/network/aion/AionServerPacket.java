@@ -67,7 +67,7 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	 * @param con
 	 * @param buf
 	 */
-	public final void write(AionConnection con, ByteBuffer buffer) {
+	public final synchronized void write(AionConnection con, ByteBuffer buffer) {
 		if (con.getState().equals(AionConnection.State.IN_GAME)
 				&& con.getActivePlayer().getPlayerAccount().getAccessLevel() == 5 && NetworkConfig.DISPLAY_PACKETS) {
 			if (!this.getPacketName().equals("SM_MESSAGE")) {
