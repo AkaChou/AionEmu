@@ -160,7 +160,7 @@ public class PlayerInfo extends AdminCommand
 		} else if (params[1].equals("knownlist")) {
 			if (params[2].equals("info")) {
 				PacketSendUtility.sendMessage(admin, "KnownList of " + target.getName());
-				for (VisibleObject obj : new java.util.ArrayList<>(target.getKnownList().getKnownObjects().values())) {
+				for (VisibleObject obj : target.getKnownList().getKnownObjectsSnapshot()) {
 					PacketSendUtility.sendMessage(admin, obj.getName() + " objectId:" + obj.getObjectId());
 				}
 			} else if (params[2].equals("add")) {
@@ -179,7 +179,7 @@ public class PlayerInfo extends AdminCommand
 		} else if (params[1].equals("visual")) {
 			if (params[2].equals("info")) {
 				PacketSendUtility.sendMessage(admin, "VisualList of " + target.getName());
-				for (VisibleObject obj : new java.util.ArrayList<>(target.getKnownList().getVisibleObjects().values())) {
+				for (VisibleObject obj : target.getKnownList().getVisibleObjectsSnapshot()) {
 					PacketSendUtility.sendMessage(admin, obj.getName() + " objectId:" + obj.getObjectId());
 				}
 			} else if (params[2].equals("see")) {

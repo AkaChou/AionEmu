@@ -19,6 +19,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -73,7 +74,7 @@ public class MapRegion {
 	/**
 	 * Objects on this map region.
 	 */
-	private final Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
+	private final Map<Integer, VisibleObject> objects = Collections.synchronizedMap(new LinkedHashMap<Integer, VisibleObject>());
 
 	private final AtomicInteger playerCount = new AtomicInteger(0);
 
@@ -144,9 +145,15 @@ public class MapRegion {
 		return objects;
 	}
 
+	public List<VisibleObject> getObjectsSnapshot() {
+		synchronized (objects) {
+			return new ArrayList<>(objects.values());
+		}
+	}
+
 	public Map<Integer, StaticDoor> getDoors() {
 		Map<Integer, StaticDoor> doors = new HashMap<Integer, StaticDoor>();
-		for (VisibleObject obj : objects.values()) {
+		for (VisibleObject obj : getObjectsSnapshot()) {
 			if (obj instanceof StaticDoor) {
 				StaticDoor door = (StaticDoor) obj;
 				doors.put(door.getSpawn().getEntityId(), door);
@@ -259,7 +266,7 @@ public class MapRegion {
 	 * Send ACTIVATE event to all objects with AI2
 	 */
 	private final void activateObjects() {
-		for (VisibleObject visObject : objects.values()) {
+		for (VisibleObject visObject : getObjectsSnapshot()) {
 			if (visObject instanceof Creature) {
 				Creature creature = (Creature) visObject;
 				creature.getAi2().onGeneralEvent(AIEventType.ACTIVATE);
@@ -277,7 +284,7 @@ public class MapRegion {
 	 * Send DEACTIVATE event to all objects with AI2
 	 */
 	private void deactivateObjects() {
-		for (VisibleObject visObject : objects.values()) {
+		for (VisibleObject visObject : getObjectsSnapshot()) {
 			if (visObject instanceof Creature && !(SiegeConfig.BALAUR_AUTO_ASSAULT && visObject instanceof SiegeNpc || !(visObject instanceof BaseNpc))) { // Tweak
 				Creature creature = (Creature) visObject;
 				creature.getAi2().onGeneralEvent(AIEventType.DEACTIVATE);

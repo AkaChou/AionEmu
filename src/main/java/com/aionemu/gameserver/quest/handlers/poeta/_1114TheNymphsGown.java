@@ -127,7 +127,7 @@ public class _1114TheNymphsGown extends QuestHandler {
 			switch (env.getDialog()) {
 				case USE_OBJECT:
 					if (var == 1) {
-						for (VisibleObject obj : new java.util.ArrayList<>(player.getKnownList().getKnownObjects().values())) {
+						for (VisibleObject obj : player.getKnownList().getKnownObjectsSnapshot()) {
 							if (!(obj instanceof Npc))
 								continue;
 							if (((Npc) obj).getNpcId() != 203175) // Seirenia

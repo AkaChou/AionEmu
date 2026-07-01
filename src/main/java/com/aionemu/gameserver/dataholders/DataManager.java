@@ -14,6 +14,7 @@ import com.aionemu.gameserver.utils.Util;
 import java.util.concurrent.TimeUnit;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 
 public final class DataManager {
@@ -179,7 +180,9 @@ public final class DataManager {
         long start = System.currentTimeMillis();
         // 加载静态数据
         // Load static data
-        StaticData data = loader.loadStaticData();
+        LoadedStaticData loadedData = loadStaticData(loader);
+        StaticData data = loadedData.staticData();
+        ItemData itemData = loadedData.itemData();
         // 启动异步任务加载各数据对象
         // Start asynchronous task to load data objects
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
@@ -190,7 +193,7 @@ public final class DataManager {
             PLAYER_STATS_DATA = data.playerStatsData;
             SUMMON_STATS_DATA = data.summonStatsData;
             ITEM_CLEAN_UP = data.itemCleanup;
-            ITEM_DATA = data.itemData;
+            ITEM_DATA = itemData;
             ITEM_RANDOM_BONUSES = data.itemRandomBonuses;
             NPC_DATA = data.npcData;
             NPC_SHOUT_DATA = data.npcShoutData;
@@ -337,6 +340,29 @@ public final class DataManager {
         // Convert time using TimeUnit
         log.info("##### End Loading Static Data #####");
         log.info("##### [Loading Time: {} seconds] #####", TimeUnit.MILLISECONDS.toSeconds(timeMillis));
+    }
+
+    static LoadedStaticData loadStaticData(XmlDataLoader loader) {
+        CompletableFuture<ItemData> itemDataFuture = CompletableFuture.supplyAsync(loader::loadItemData);
+        try {
+            StaticData staticData = loader.loadStaticData();
+            return new LoadedStaticData(staticData, itemDataFuture.join());
+        } catch (CompletionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof Error error) {
+                throw error;
+            }
+            if (cause instanceof RuntimeException runtimeException) {
+                throw runtimeException;
+            }
+            throw e;
+        } catch (RuntimeException | Error e) {
+            itemDataFuture.cancel(true);
+            throw e;
+        }
+    }
+
+    record LoadedStaticData(StaticData staticData, ItemData itemData) {
     }
 
     @SuppressWarnings("synthetic-access")

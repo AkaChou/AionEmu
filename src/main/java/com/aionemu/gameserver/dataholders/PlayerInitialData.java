@@ -25,7 +25,6 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlIDREF;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.PlayerClass;
@@ -114,14 +113,13 @@ public class PlayerInitialData {
 		public static class ItemType {
 
 			@XmlAttribute(name = "id")
-			@XmlIDREF
-			public ItemTemplate template;
+			public int templateId;
 
 			@XmlAttribute(name = "count")
 			public int count;
 
 			public ItemTemplate getTemplate() {
-				return template;
+				return DataManager.ITEM_DATA.getItemTemplate(templateId);
 			}
 
 			public int getCount() {
@@ -132,7 +130,7 @@ public class PlayerInitialData {
 			public String toString() {
 				final StringBuilder sb = new StringBuilder();
 				sb.append("ItemType");
-				sb.append("{template=").append(template);
+				sb.append("{templateId=").append(templateId);
 				sb.append(", count=").append(count);
 				sb.append('}');
 				return sb.toString();

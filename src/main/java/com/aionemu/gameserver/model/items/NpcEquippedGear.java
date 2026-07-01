@@ -23,6 +23,7 @@ import java.util.TreeMap;
 
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.loadingutils.adapters.NpcEquipmentList;
 import com.aionemu.gameserver.dataholders.loadingutils.adapters.NpcEquippedGearAdapter;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
@@ -68,7 +69,12 @@ public class NpcEquippedGear implements Iterable<Entry<ItemSlot, ItemTemplate>> 
 		synchronized (this) {
 			if (items == null) {
 				items = new TreeMap<ItemSlot, ItemTemplate>();
-				for (ItemTemplate item : v.items) {
+				int[] itemIds = v.itemIds != null ? v.itemIds : new int[0];
+				for (int itemId : itemIds) {
+					ItemTemplate item = DataManager.ITEM_DATA.getItemTemplate(itemId);
+					if (item == null) {
+						continue;
+					}
 					ItemSlot[] itemSlots = ItemSlot.getSlotsFor(item.getItemSlot());
 					for (ItemSlot itemSlot : itemSlots) {
 						if (items.get(itemSlot) == null) {

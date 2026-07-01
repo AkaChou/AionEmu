@@ -29,9 +29,11 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.LongSupplier;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,6 +66,7 @@ public class NpcDropData {
 
 	private static final int DEFAULT_CACHE_MAX_ENTRIES = 2000;
 	private static final long DEFAULT_CACHE_EXPIRE_AFTER_ACCESS_MILLIS = TimeUnit.MINUTES.toMillis(60);
+	private static final String INDEX_CACHE_FILE = ".npc_drop_index.properties";
 
 	@XmlElement(name = "npc_drop")
 	protected List<NpcDrop> npcDrop;
@@ -281,13 +284,19 @@ public class NpcDropData {
 		if (npcDropsDirectory == null || !npcDropsDirectory.isDirectory()) {
 			throw new IllegalStateException("NPC drop directory not found: " + npcDropsDirectory);
 		}
+		List<File> files = listXmlFiles(npcDropsDirectory.toPath());
+		File indexCache = new File(npcDropsDirectory, INDEX_CACHE_FILE);
+		Map<Integer, List<File>> cachedIndex = loadIndexCache(indexCache, npcDropsDirectory.toPath(), files);
+		if (cachedIndex != null) {
+			return cachedIndex;
+		}
 		Map<Integer, List<File>> index = new HashMap<>();
-		for (File file : listXmlFiles(npcDropsDirectory.toPath())) {
+		for (File file : files) {
 			indexFile(file, index);
 		}
-		Map<Integer, List<File>> immutableIndex = new HashMap<>();
-		index.forEach((npcId, files) -> immutableIndex.put(npcId, Collections.unmodifiableList(files)));
-		return Collections.unmodifiableMap(immutableIndex);
+		Map<Integer, List<File>> immutableIndex = immutableIndex(index);
+		saveIndexCache(indexCache, npcDropsDirectory.toPath(), immutableIndex);
+		return immutableIndex;
 	}
 
 	private static List<File> listXmlFiles(Path root) {
@@ -311,6 +320,48 @@ public class NpcDropData {
 		} catch (IOException e) {
 			return true;
 		}
+	}
+
+	private static Map<Integer, List<File>> loadIndexCache(File indexCache, Path root, List<File> files) {
+		if (!indexCache.isFile() || files.stream().anyMatch(file -> file.lastModified() > indexCache.lastModified())) {
+			return null;
+		}
+		Properties props = new Properties();
+		try (var reader = Files.newBufferedReader(indexCache.toPath())) {
+			props.load(reader);
+			Map<Integer, List<File>> index = new HashMap<>();
+			for (String npcId : props.stringPropertyNames()) {
+				List<File> dropFiles = List.of(props.getProperty(npcId).split(Pattern.quote(File.pathSeparator))).stream()
+					.filter(path -> !path.isBlank())
+					.map(path -> root.resolve(path).toFile())
+					.toList();
+				if (!dropFiles.isEmpty() && dropFiles.stream().allMatch(File::isFile)) {
+					index.put(Integer.valueOf(npcId), dropFiles);
+				}
+			}
+			return immutableIndex(index);
+		} catch (Exception e) {
+			log.warn("Could not load NPC drop index cache: {}", indexCache.getPath(), e);
+			return null;
+		}
+	}
+
+	private static void saveIndexCache(File indexCache, Path root, Map<Integer, List<File>> index) {
+		Properties props = new Properties();
+		index.forEach((npcId, files) -> props.setProperty(npcId.toString(), files.stream()
+			.map(file -> root.relativize(file.toPath()).toString())
+			.collect(Collectors.joining(File.pathSeparator))));
+		try (var writer = Files.newBufferedWriter(indexCache.toPath())) {
+			props.store(writer, "npc_drops lazy index");
+		} catch (IOException e) {
+			log.warn("Could not save NPC drop index cache: {}", indexCache.getPath(), e);
+		}
+	}
+
+	private static Map<Integer, List<File>> immutableIndex(Map<Integer, List<File>> index) {
+		Map<Integer, List<File>> immutableIndex = new HashMap<>();
+		index.forEach((npcId, files) -> immutableIndex.put(npcId, Collections.unmodifiableList(files)));
+		return Collections.unmodifiableMap(immutableIndex);
 	}
 
 	private static void indexFile(File file, Map<Integer, List<File>> index) {

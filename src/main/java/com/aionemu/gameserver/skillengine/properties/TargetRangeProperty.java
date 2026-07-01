@@ -27,7 +27,6 @@ import com.aionemu.gameserver.utils.PositionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.Range;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,7 +63,7 @@ public class TargetRangeProperty {
 			// 【重要修复】使用施法者的已知对象列表，确保AOE技能能正确检测到附近的NPC
 			// 修复前：使用 firstTarget.getKnownList()，当 firstTarget != effector 时，可能导致NPC太贴近玩家反而不会被AOE打中
 			// 修复后：使用 skill.getEffector().getKnownList()，确保始终使用施法者的已知对象列表
-			List<VisibleObject> areaKnownObjects = new ArrayList<>(skill.getEffector().getKnownList().getKnownObjects().values());
+			List<VisibleObject> areaKnownObjects = skill.getEffector().getKnownList().getKnownObjectsSnapshot();
 			for (VisibleObject nextCreature : areaKnownObjects) {
 				if (((nextCreature instanceof Creature)) && (firstTarget != nextCreature)
 						&& (((Creature) nextCreature).getLifeStats() != null)
@@ -199,7 +198,7 @@ public class TargetRangeProperty {
 			}
 			break;
 		case POINT:
-			List<VisibleObject> pointKnownObjects = new ArrayList<>(skill.getEffector().getKnownList().getKnownObjects().values());
+			List<VisibleObject> pointKnownObjects = skill.getEffector().getKnownList().getKnownObjectsSnapshot();
 			for (VisibleObject nextCreature : pointKnownObjects) {
 				if (!(nextCreature instanceof Creature)) {
 					continue;

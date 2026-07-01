@@ -18,6 +18,7 @@ package com.aionemu.gameserver.dataholders.loadingutils;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import jakarta.xml.bind.JAXBContext;
@@ -37,7 +38,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -60,6 +63,9 @@ public class XmlDataLoader {
 	private final static String XML_SCHEMA_FILE = "./data/static_data/static_data.xsd";
 	private static final String CACHE_XML_FILE = "./cache/static_data.xml";
 	private static final String MAIN_XML_FILE = "./data/static_data/static_data.xml";
+	private static final String ITEM_CACHE_XML_FILE = "./cache/item_templates.xml";
+	private static final String ITEM_DATA_DIR = "./data/static_data/items";
+	private static final String ITEM_SOURCE_XML = "<item_templates><import file=\"item\" skipRoot=\"true\"/></item_templates>";
 
 	public static final XmlDataLoader getInstance() {
 		ObjectProvider<XmlDataLoader> provider = instanceProvider;
@@ -117,11 +123,13 @@ public class XmlDataLoader {
 			int totalSections = sectionEntryCounts.size();
 			progressReporter.start(totalSections);
 			log.info("Unmarshalling static data from {}", cachedXml.getPath());
-			Unmarshaller un = createStaticDataUnmarshaller(progressReporter, totalSections, sectionEntryCounts);
+			StaticDataProgressListener progressListener = new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts);
+			Unmarshaller un = createStaticDataUnmarshaller(progressListener);
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
 				progressReporter.finish(totalSections, elapsed);
+				logSlowSectionTimings(progressListener.sectionElapsedTimes());
 				log.info("Unmarshalled static data in {} ms", elapsed);
 				return data;
 			}
@@ -142,14 +150,62 @@ public class XmlDataLoader {
 		return null;
 	}
 
+	public ItemData loadItemData() {
+		return loadItemData(Config.cacheFile(ITEM_CACHE_XML_FILE), Config.dataFile(ITEM_DATA_DIR));
+	}
+
+	ItemData loadItemData(File cachedXml, File itemDataDir) {
+		makeCacheDirectory(cachedXml.getParentFile());
+		File sourceXml = itemDataSourceXml(cachedXml.getParentFile());
+		prepareItemDataSource(sourceXml);
+		long cacheStart = System.currentTimeMillis();
+		log.info("Preparing item data cache: {}", cachedXml.getPath());
+		mergeXmlFiles(cachedXml, sourceXml, itemDataDir);
+		log.info("Prepared item data cache in {} ms", System.currentTimeMillis() - cacheStart);
+
+		long unmarshalStart = System.currentTimeMillis();
+		log.info("Unmarshalling item data from {}", cachedXml.getPath());
+		try (FileReader reader = new FileReader(cachedXml)) {
+			JAXBContext jc = JAXBContext.newInstance(ItemData.class);
+			Unmarshaller un = jc.createUnmarshaller();
+			un.setEventHandler(new XmlValidationHandler());
+			ItemData data = (ItemData) un.unmarshal(reader);
+			log.info("Unmarshalled item data in {} ms", System.currentTimeMillis() - unmarshalStart);
+			return data;
+		} catch (Exception e) {
+			log.error("Error while loading item data", e);
+			throw new Error("Error while loading item data", e);
+		}
+	}
+
+	private File itemDataSourceXml(File cacheDir) {
+		return new File(cacheDir, "item_templates.source.xml");
+	}
+
+	private void prepareItemDataSource(File sourceXml) {
+		if (sourceXml.exists()) {
+			return;
+		}
+		try (FileWriter writer = new FileWriter(sourceXml)) {
+			writer.write(ITEM_SOURCE_XML);
+		} catch (IOException e) {
+			throw new Error("Error while preparing item data source", e);
+		}
+		sourceXml.setLastModified(0L);
+	}
+
 	Unmarshaller createStaticDataUnmarshaller(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts)
 			throws Exception {
+		return createStaticDataUnmarshaller(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
+	}
+
+	private Unmarshaller createStaticDataUnmarshaller(StaticDataProgressListener progressListener) throws Exception {
 		Future<JAXBContext> task = preloadedContext;
 		JAXBContext jc = task != null ? task.get() : JAXBContext.newInstance(StaticData.class);
 		Unmarshaller un = jc.createUnmarshaller();
 		un.setEventHandler(new XmlValidationHandler());
 		// Schema validation is intentionally not wired into JAXB unmarshalling; it is slow and is run only for rebuilt caches.
-		un.setListener(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
+		un.setListener(progressListener);
 		return un;
 	}
 
@@ -285,6 +341,24 @@ public class XmlDataLoader {
 		return sectionNamesByXmlElement;
 	}
 
+	static List<Map.Entry<String, Long>> slowestSectionTimings(Map<String, Long> timings, int limit) {
+		return timings.entrySet().stream()
+			.sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+			.limit(limit)
+			.toList();
+	}
+
+	private static void logSlowSectionTimings(Map<String, Long> timings) {
+		List<Map.Entry<String, Long>> slowest = slowestSectionTimings(timings, 5);
+		if (slowest.isEmpty()) {
+			return;
+		}
+		log.info("Static data section timings (ms, slowest first):");
+		for (Map.Entry<String, Long> timing : slowest) {
+			log.info("  {} {}", String.format("%-32s", timing.getKey()), timing.getValue());
+		}
+	}
+
 	private static final class StaticDataProgressListener extends Unmarshaller.Listener {
 
 		private final StaticDataProgressReporter progressReporter;
@@ -292,6 +366,8 @@ public class XmlDataLoader {
 		private final Map<String, Integer> sectionEntryCounts;
 		private final Set<String> sectionNames;
 		private final Map<String, Integer> sectionEntriesLoaded = new HashMap<>();
+		private final Map<String, Long> sectionStartTimes = new HashMap<>();
+		private final Map<String, Long> sectionElapsedTimes = new HashMap<>();
 		private int sectionIndex;
 
 		private StaticDataProgressListener(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts) {
@@ -308,6 +384,7 @@ public class XmlDataLoader {
 				return;
 			}
 			sectionEntriesLoaded.put(sectionName, 0);
+			sectionStartTimes.put(sectionName, System.currentTimeMillis());
 			progressReporter.sectionStarted(++sectionIndex, totalSections, sectionName, sectionEntryCounts.getOrDefault(sectionName, 1));
 		}
 
@@ -315,6 +392,10 @@ public class XmlDataLoader {
 		public void afterUnmarshal(Object target, Object parent) {
 			String sectionName = staticDataSectionName(target, parent);
 			if (sectionName != null) {
+				Long startTime = sectionStartTimes.remove(sectionName);
+				if (startTime != null) {
+					sectionElapsedTimes.put(sectionName, System.currentTimeMillis() - startTime);
+				}
 				progressReporter.sectionFinished(sectionIndex, totalSections, sectionName, sectionEntryCounts.getOrDefault(sectionName, 1));
 				return;
 			}
@@ -325,6 +406,10 @@ public class XmlDataLoader {
 			int totalEntries = sectionEntryCounts.getOrDefault(parentSectionName, 1);
 			int currentEntries = Math.min(totalEntries, sectionEntriesLoaded.merge(parentSectionName, 1, Integer::sum));
 			progressReporter.sectionProgress(sectionIndex, totalSections, parentSectionName, currentEntries, totalEntries);
+		}
+
+		private Map<String, Long> sectionElapsedTimes() {
+			return sectionElapsedTimes;
 		}
 	}
 
@@ -371,7 +456,11 @@ public class XmlDataLoader {
 	 * @throws Error is thrown if some problem occured.
 	 */
 	private boolean mergeXmlFiles(File cachedXml, File cleanMainXml) throws Error {
-		XmlMerger merger = new XmlMerger(cleanMainXml, cachedXml);
+		return mergeXmlFiles(cachedXml, cleanMainXml, cleanMainXml.getParentFile());
+	}
+
+	private boolean mergeXmlFiles(File cachedXml, File cleanMainXml, File baseDir) throws Error {
+		XmlMerger merger = new XmlMerger(cleanMainXml, cachedXml, baseDir);
 		try {
 			return merger.process();
 		} catch (Exception e) {

@@ -18,15 +18,15 @@ package com.aionemu.gameserver.world;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.world.zone.ZoneAttributes;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * This object is representing one in-game map and can have instances.
@@ -41,7 +41,7 @@ public class WorldMap {
 	/**
 	 * List of instances.
 	 */
-	private Map<Integer, WorldMapInstance> instances = new LinkedHashMap<Integer, WorldMapInstance>();
+	private final Map<Integer, WorldMapInstance> instances = Collections.synchronizedMap(new LinkedHashMap<Integer, WorldMapInstance>());
 
 	/** World to which belongs this WorldMap */
 	private World world;
@@ -247,21 +247,29 @@ public class WorldMap {
 	 * @return
 	 */
 	public Iterator<WorldMapInstance> iterator() {
-		return new ArrayList<WorldMapInstance>(instances.values()).iterator();
+		return instancesSnapshot().iterator();
 	}
 
 	/**
 	 * All instance ids of this map
 	 */
 	public Collection<Integer> getAvailableInstanceIds() {
-		return new ArrayList<Integer>(instances.keySet());
+		synchronized (instances) {
+			return new ArrayList<Integer>(instances.keySet());
+		}
 	}
 
 	public Collection<WorldMapInstance> getInstances() {
-		return new ArrayList<WorldMapInstance>(instances.values());
+		return instancesSnapshot();
 	}
 
 	public WorldDropType getWorldDropType() {
 		return worldMapTemplate.getWorldDropType();
+	}
+
+	private List<WorldMapInstance> instancesSnapshot() {
+		synchronized (instances) {
+			return new ArrayList<WorldMapInstance>(instances.values());
+		}
 	}
 }

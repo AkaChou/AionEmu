@@ -39,7 +39,7 @@ public class Betrayer_IcaronixAI2 extends AggressiveNpcAI2
 	}
 	
 	private void checkForSupport(Creature creature) {
-		for (VisibleObject object: new java.util.ArrayList<>(getKnownList().getKnownObjects().values())) {
+		for (VisibleObject object: getKnownList().getKnownObjectsSnapshot()) {
 			if (object instanceof Npc && isInRange(object, 40)) {
 				((Npc) object).getAi2().onCreatureEvent(AIEventType.CREATURE_AGGRO, creature);
 			}

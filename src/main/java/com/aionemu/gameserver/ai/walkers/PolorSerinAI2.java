@@ -36,7 +36,7 @@ public class PolorSerinAI2 extends WalkGeneralRunnerAI2
 	@Override
 	protected void handleMoveArrived() {
 		boolean adultsNear = false;
-		for (VisibleObject object : new java.util.ArrayList<>(getOwner().getKnownList().getKnownObjects().values())) {
+		for (VisibleObject object : getOwner().getKnownList().getKnownObjectsSnapshot()) {
 			if (object instanceof Npc) {
 				Npc npc = (Npc)object;
 				if (!ArrayUtils.contains(stopAdults, npc.getNpcId()))

@@ -11,12 +11,15 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.StaticData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -103,6 +106,21 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
+	void slowestSectionTimingsAreSortedAndLimited() {
+		Map<String, Long> timings = new LinkedHashMap<>();
+		timings.put("NpcData", 700L);
+		timings.put("ItemData", 1200L);
+		timings.put("SpawnsData2", 900L);
+
+		List<Map.Entry<String, Long>> slowest = XmlDataLoader.slowestSectionTimings(timings, 2);
+
+		assertEquals("ItemData", slowest.get(0).getKey());
+		assertEquals(1200L, slowest.get(0).getValue());
+		assertEquals("SpawnsData2", slowest.get(1).getKey());
+		assertEquals(2, slowest.size());
+	}
+
+	@Test
 	void staticDataJaxbContextIgnoresRuntimeLookupCaches() {
 		assertDoesNotThrow(() -> JAXBContext.newInstance(StaticData.class));
 	}
@@ -133,5 +151,25 @@ class XmlDataLoaderTest {
 
 		assertTrue(!staticData.contains("<npc_drops>"));
 		assertTrue(!staticData.contains("file=\"npc_drops\""));
+		assertTrue(!staticData.contains("<item_templates>"));
+		assertTrue(!staticData.contains("file=\"items/item\""));
+	}
+
+	@Test
+	void itemDataCanBeLoadedFromSeparateMergedCache() throws Exception {
+		Path itemDir = tempDir.resolve("item");
+		Path cache = tempDir.resolve("cache/item_templates.xml");
+		Files.createDirectories(itemDir);
+		Files.createDirectories(cache.getParent());
+		Files.writeString(itemDir.resolve("item_misc_templates.xml"), """
+			<item_templates>
+				<item_template id="100000001" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
+			</item_templates>
+			""", StandardCharsets.UTF_8);
+
+		ItemData itemData = new XmlDataLoader().loadItemData(cache.toFile(), tempDir.toFile());
+
+		assertEquals(1, itemData.size());
+		assertTrue(Files.readString(cache, StandardCharsets.UTF_8).contains("<item_template"));
 	}
 }

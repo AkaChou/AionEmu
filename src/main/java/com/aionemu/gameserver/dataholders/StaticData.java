@@ -305,7 +305,9 @@ public class StaticData {
 		DataManager.log.info("Loaded " + playerStatsData.size() + " Player Stats Template");
 		DataManager.log.info("Loaded " + summonStatsData.size() + " Summon Stats Template");
 		DataManager.log.info("Loaded " + itemCleanup.size() + " Item Cleanup");
-		DataManager.log.info("Loaded " + itemData.size() + " Item Template");
+		if (itemData != null) {
+			DataManager.log.info("Loaded " + itemData.size() + " Item Template");
+		}
 		DataManager.log.info("Loaded " + itemRandomBonuses.size() + " Random Bonus Template");
 		DataManager.log.info("Loaded " + itemGroupsData.bonusSize() + " Bonus Item Group Template");
 		DataManager.log.info("Loaded " + itemGroupsData.petFoodSize() + " Pet Food Item");
