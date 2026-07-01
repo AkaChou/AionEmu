@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.world;
 
 import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -206,7 +207,7 @@ public class World {
 	}
 
 	public Collection<Npc> getNpcs() {
-		return allNpcs.values();
+		return new ArrayList<Npc>(allNpcs.values());
 	}
 
 	/**

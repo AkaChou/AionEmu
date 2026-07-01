@@ -80,7 +80,7 @@ public class ShutdownHook extends Thread {
 	private void sendShutdownStatus(boolean status) {
 		if (ShutdownConfig.DESPAWN_NPCS) {
 			if (status) {
-				for (Npc npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
+				for (Npc npc : new ArrayList<Npc>(com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs())) {
 					npc.getController().onDelete();
 				}
 			}

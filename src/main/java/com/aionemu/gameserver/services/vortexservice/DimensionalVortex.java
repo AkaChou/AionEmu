@@ -18,6 +18,7 @@ package com.aionemu.gameserver.services.vortexservice;
 
 import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.commons.callbacks.EnhancedObject;
@@ -83,7 +84,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 
 	protected void initRiftGenerator() {
 		Npc gen = null;
-		for (VisibleObject obj : getVortexLocation().getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(getVortexLocation().getSpawned())) {
 			int npcId = ((Npc) obj).getNpcId();
 			if (npcId == 209486 || npcId == 209487) {
 				gen = (Npc) obj;

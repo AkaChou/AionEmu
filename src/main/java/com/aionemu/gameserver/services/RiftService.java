@@ -157,7 +157,7 @@ public class RiftService {
 
 	public void closeRift(RiftLocation location) {
 		location.setOpened(false);
-		for (VisibleObject npc : location.getSpawned()) {
+		for (VisibleObject npc : new ArrayList<VisibleObject>(location.getSpawned())) {
 			((Npc) npc).getController().cancelTask(TaskId.RESPAWN);
 			npc.getController().onDelete();
 		}
