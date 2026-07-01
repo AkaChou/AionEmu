@@ -30,6 +30,7 @@ class StartSilentScriptTest {
         assertEquals(0, result.exitCode(), result.output());
         assertTrue(Files.exists(marker));
         assertTrue(Files.exists(root.resolve("aion/log/aionemu.pid")));
+        assertTrue(result.output().contains("查看日志: tail -f \"" + root.resolve("aion/log/aionemu.log") + "\""));
         List<String> args = waitForLines(javaArgs);
         assertTrue(args.contains("-Daion.home=" + root.resolve("aion")));
         assertTrue(args.contains("-Daion.log.dir=" + root.resolve("aion/log")));

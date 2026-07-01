@@ -63,4 +63,5 @@ echo "$PID" >"$PID_FILE"
 
 echo "AionEmu started silently: pid=$PID"
 echo "Log: $LOG_FILE"
+echo "查看日志: tail -f \"$LOG_FILE\""
 echo "Pid: $PID_FILE"
