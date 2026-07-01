@@ -78,7 +78,14 @@ public class CM_GS_AUTH extends GsClientPacket {
         int size = readD();
         ipRanges = new ArrayList<IPRange>(size);
         for (int i = 0; i < size; i++) {
-            ipRanges.add(new IPRange(readB(readC()), readB(readC()), readB(readC())));
+            byte[] min = readB(readC());
+            byte[] max = readB(readC());
+            byte[] address = readB(readC());
+            try {
+                ipRanges.add(new IPRange(min, max, address));
+            } catch (IllegalArgumentException e) {
+                log.warn("Skipping malformed IP range entry #{} in CM_GS_AUTH: {}", i, e.getMessage());
+            }
         }
 
         port = readH();

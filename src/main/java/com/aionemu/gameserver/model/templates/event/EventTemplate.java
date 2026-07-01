@@ -47,7 +47,6 @@ import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.knownlist.Visitor;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EventTemplate")
@@ -173,14 +172,7 @@ public class EventTemplate {
 			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							if (player.getCommonData().getLevel() >= inventoryDrop.getStartLevel()) {
-								ItemService.dropItemToInventory(player, inventoryDrop.getDropItem());
-							}
-						}
-					});
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(EventTemplate.this::dropInventoryItem);
 				}
 			}, inventoryDrop.getInterval() * 60000, inventoryDrop.getInterval() * 60000);
 		}
@@ -188,16 +180,7 @@ public class EventTemplate {
 			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
-						@Override
-						public void visit(Player player) {
-							int itemId = getInventoryDrop().getDropItem();
-							if (player.getCommonData().getLevel() >= getInventoryDrop().getStartLevel() && player.getCommonData().getLevel() <= getInventoryDrop().getEndLevel() && player.getItemMaxThisCount(itemId) < getInventoryDrop().getMaxCountOfDay()) {
-								ItemService.dropItemToInventory(player, getInventoryDrop().getDropItem());
-								player.addItemMaxCountOfDay(itemId, player.getItemMaxThisCount(itemId) + 1);
-							}
-						}
-					});
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(EventTemplate.this::dropLimitedInventoryItem);
 				}
 			}, getInventoryDrop().getInterval() * 60000, getInventoryDrop().getInterval() * 60000);
 		}
@@ -210,6 +193,22 @@ public class EventTemplate {
 			}
 		}
 		isStarted = true;
+	}
+
+	private void dropInventoryItem(Player player) {
+		if (player.getCommonData().getLevel() >= inventoryDrop.getStartLevel()) {
+			ItemService.dropItemToInventory(player, inventoryDrop.getDropItem());
+		}
+	}
+
+	private void dropLimitedInventoryItem(Player player) {
+		int itemId = getInventoryDrop().getDropItem();
+		if (player.getCommonData().getLevel() >= getInventoryDrop().getStartLevel()
+				&& player.getCommonData().getLevel() <= getInventoryDrop().getEndLevel()
+				&& player.getItemMaxThisCount(itemId) < getInventoryDrop().getMaxCountOfDay()) {
+			ItemService.dropItemToInventory(player, getInventoryDrop().getDropItem());
+			player.addItemMaxCountOfDay(itemId, player.getItemMaxThisCount(itemId) + 1);
+		}
 	}
 
 	public void Stop() {

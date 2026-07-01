@@ -38,8 +38,8 @@ public class IPRange {
      * @param address 目标IP地址 / Target IP address
      */
     public IPRange(String min, String max, String address) {
-        this.min = toLong(toByteArray(min));
-        this.max = toLong(toByteArray(max));
+        this.min = toLong("min", toByteArray(min));
+        this.max = toLong("max", toByteArray(max));
         this.address = toByteArray(address);
     }
 
@@ -52,8 +52,9 @@ public class IPRange {
      * @param address 目标IP地址字节数组 / Target IP address byte array
      */
     public IPRange(byte[] min, byte[] max, byte[] address) {
-        this.min = toLong(min);
-        this.max = toLong(max);
+        requireIpv4Bytes("address", address);
+        this.min = toLong("min", min);
+        this.max = toLong("max", max);
         this.address = address;
     }
 
@@ -65,7 +66,7 @@ public class IPRange {
      * @return 如果在范围内返回true / Returns true if in range
      */
     public boolean isInRange(String address) {
-        long addr = toLong(toByteArray(address));
+        long addr = toLong("address", toByteArray(address));
         return addr >= this.min && addr <= this.max;
     }
 
@@ -106,13 +107,21 @@ public class IPRange {
      * @param bytes 字节数组 / Byte array
      * @return 转换后的长整型值 / Converted long value
      */
-    private static long toLong(byte[] bytes) {
+    private static long toLong(String field, byte[] bytes) {
+        requireIpv4Bytes(field, bytes);
         long result = 0L;
         result |= (bytes[3] & 0xFF);
         result |= ((bytes[2] & 0xFF) << 8);
         result |= ((bytes[1] & 0xFF) << 16);
         result |= ((long)(bytes[0] & 0xFF) << 24);
         return result & 0xFFFFFFFFL;
+    }
+
+    private static void requireIpv4Bytes(String field, byte[] bytes) {
+        if (bytes == null || bytes.length != 4) {
+            throw new IllegalArgumentException("IPRange " + field + " must be 4 bytes, got "
+                + (bytes == null ? "null" : bytes.length));
+        }
     }
 
     /**

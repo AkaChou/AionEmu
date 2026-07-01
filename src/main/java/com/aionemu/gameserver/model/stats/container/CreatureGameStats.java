@@ -284,22 +284,25 @@ public abstract class CreatureGameStats<T extends Creature> {
 	public abstract Stat2 getAllSpeed();
 
 	public int getMagicalDefenseFor(SkillElement element) {
-		switch (element) {
-		case EARTH:
+		if (element == SkillElement.EARTH) {
 			return getStat(StatEnum.EARTH_RESISTANCE, 0).getCurrent();
-		case FIRE:
-			return getStat(StatEnum.FIRE_RESISTANCE, 0).getCurrent();
-		case WATER:
-			return getStat(StatEnum.WATER_RESISTANCE, 0).getCurrent();
-		case WIND:
-			return getStat(StatEnum.WIND_RESISTANCE, 0).getCurrent();
-		case LIGHT:
-			return getStat(StatEnum.ELEMENTAL_RESISTANCE_LIGHT, 0).getCurrent();
-		case DARK:
-			return getStat(StatEnum.ELEMENTAL_RESISTANCE_DARK, 0).getCurrent();
-		default:
-			return 0;
 		}
+		if (element == SkillElement.FIRE) {
+			return getStat(StatEnum.FIRE_RESISTANCE, 0).getCurrent();
+		}
+		if (element == SkillElement.WATER) {
+			return getStat(StatEnum.WATER_RESISTANCE, 0).getCurrent();
+		}
+		if (element == SkillElement.WIND) {
+			return getStat(StatEnum.WIND_RESISTANCE, 0).getCurrent();
+		}
+		if (element == SkillElement.LIGHT) {
+			return getStat(StatEnum.ELEMENTAL_RESISTANCE_LIGHT, 0).getCurrent();
+		}
+		if (element == SkillElement.DARK) {
+			return getStat(StatEnum.ELEMENTAL_RESISTANCE_DARK, 0).getCurrent();
+		}
+		return 0;
 	}
 
 	public float getMovementSpeedFloat() {
