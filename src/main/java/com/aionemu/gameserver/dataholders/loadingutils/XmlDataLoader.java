@@ -37,7 +37,9 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -117,11 +119,13 @@ public class XmlDataLoader {
 			int totalSections = sectionEntryCounts.size();
 			progressReporter.start(totalSections);
 			log.info("Unmarshalling static data from {}", cachedXml.getPath());
-			Unmarshaller un = createStaticDataUnmarshaller(progressReporter, totalSections, sectionEntryCounts);
+			StaticDataProgressListener progressListener = new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts);
+			Unmarshaller un = createStaticDataUnmarshaller(progressListener);
 			try (FileReader reader = new FileReader(cachedXml)) {
 				StaticData data = (StaticData) un.unmarshal(reader);
 				long elapsed = System.currentTimeMillis() - unmarshalStart;
 				progressReporter.finish(totalSections, elapsed);
+				logSlowSectionTimings(progressListener.sectionElapsedTimes());
 				log.info("Unmarshalled static data in {} ms", elapsed);
 				return data;
 			}
@@ -144,12 +148,16 @@ public class XmlDataLoader {
 
 	Unmarshaller createStaticDataUnmarshaller(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts)
 			throws Exception {
+		return createStaticDataUnmarshaller(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
+	}
+
+	private Unmarshaller createStaticDataUnmarshaller(StaticDataProgressListener progressListener) throws Exception {
 		Future<JAXBContext> task = preloadedContext;
 		JAXBContext jc = task != null ? task.get() : JAXBContext.newInstance(StaticData.class);
 		Unmarshaller un = jc.createUnmarshaller();
 		un.setEventHandler(new XmlValidationHandler());
 		// Schema validation is intentionally not wired into JAXB unmarshalling; it is slow and is run only for rebuilt caches.
-		un.setListener(new StaticDataProgressListener(progressReporter, totalSections, sectionEntryCounts));
+		un.setListener(progressListener);
 		return un;
 	}
 
@@ -285,6 +293,24 @@ public class XmlDataLoader {
 		return sectionNamesByXmlElement;
 	}
 
+	static List<Map.Entry<String, Long>> slowestSectionTimings(Map<String, Long> timings, int limit) {
+		return timings.entrySet().stream()
+			.sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+			.limit(limit)
+			.toList();
+	}
+
+	private static void logSlowSectionTimings(Map<String, Long> timings) {
+		List<Map.Entry<String, Long>> slowest = slowestSectionTimings(timings, 5);
+		if (slowest.isEmpty()) {
+			return;
+		}
+		log.info("Static data section timings (ms, slowest first):");
+		for (Map.Entry<String, Long> timing : slowest) {
+			log.info("  {} {}", String.format("%-32s", timing.getKey()), timing.getValue());
+		}
+	}
+
 	private static final class StaticDataProgressListener extends Unmarshaller.Listener {
 
 		private final StaticDataProgressReporter progressReporter;
@@ -292,6 +318,8 @@ public class XmlDataLoader {
 		private final Map<String, Integer> sectionEntryCounts;
 		private final Set<String> sectionNames;
 		private final Map<String, Integer> sectionEntriesLoaded = new HashMap<>();
+		private final Map<String, Long> sectionStartTimes = new HashMap<>();
+		private final Map<String, Long> sectionElapsedTimes = new HashMap<>();
 		private int sectionIndex;
 
 		private StaticDataProgressListener(StaticDataProgressReporter progressReporter, int totalSections, Map<String, Integer> sectionEntryCounts) {
@@ -308,6 +336,7 @@ public class XmlDataLoader {
 				return;
 			}
 			sectionEntriesLoaded.put(sectionName, 0);
+			sectionStartTimes.put(sectionName, System.currentTimeMillis());
 			progressReporter.sectionStarted(++sectionIndex, totalSections, sectionName, sectionEntryCounts.getOrDefault(sectionName, 1));
 		}
 
@@ -315,6 +344,10 @@ public class XmlDataLoader {
 		public void afterUnmarshal(Object target, Object parent) {
 			String sectionName = staticDataSectionName(target, parent);
 			if (sectionName != null) {
+				Long startTime = sectionStartTimes.remove(sectionName);
+				if (startTime != null) {
+					sectionElapsedTimes.put(sectionName, System.currentTimeMillis() - startTime);
+				}
 				progressReporter.sectionFinished(sectionIndex, totalSections, sectionName, sectionEntryCounts.getOrDefault(sectionName, 1));
 				return;
 			}
@@ -325,6 +358,10 @@ public class XmlDataLoader {
 			int totalEntries = sectionEntryCounts.getOrDefault(parentSectionName, 1);
 			int currentEntries = Math.min(totalEntries, sectionEntriesLoaded.merge(parentSectionName, 1, Integer::sum));
 			progressReporter.sectionProgress(sectionIndex, totalSections, parentSectionName, currentEntries, totalEntries);
+		}
+
+		private Map<String, Long> sectionElapsedTimes() {
+			return sectionElapsedTimes;
 		}
 	}
 

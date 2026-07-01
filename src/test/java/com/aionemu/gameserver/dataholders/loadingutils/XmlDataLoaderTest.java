@@ -11,6 +11,8 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import jakarta.xml.bind.JAXBContext;
@@ -100,6 +102,21 @@ class XmlDataLoaderTest {
 		} finally {
 			GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = previous;
 		}
+	}
+
+	@Test
+	void slowestSectionTimingsAreSortedAndLimited() {
+		Map<String, Long> timings = new LinkedHashMap<>();
+		timings.put("NpcData", 700L);
+		timings.put("ItemData", 1200L);
+		timings.put("SpawnsData2", 900L);
+
+		List<Map.Entry<String, Long>> slowest = XmlDataLoader.slowestSectionTimings(timings, 2);
+
+		assertEquals("ItemData", slowest.get(0).getKey());
+		assertEquals(1200L, slowest.get(0).getValue());
+		assertEquals("SpawnsData2", slowest.get(1).getKey());
+		assertEquals(2, slowest.size());
 	}
 
 	@Test

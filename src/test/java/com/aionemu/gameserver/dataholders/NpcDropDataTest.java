@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.attribute.FileTime;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -50,6 +51,27 @@ class NpcDropDataTest {
 		assertEquals(100, drop.getNpcId());
 		assertEquals(1, data.cachedDropCount());
 		assertEquals(List.of(111), itemIds(drop));
+	}
+
+	@Test
+	void lazyLoaderReusesFreshNpcDropIndexCache() throws Exception {
+		Path dropsFile = writeDrops("poeta.xml", """
+			<npc_drops>
+				<npc_drop npc_id="100">
+					<drop_group name="base">
+						<drop item_id="111" min_amount="1" max_amount="1" chance="100"/>
+					</drop_group>
+				</npc_drop>
+			</npc_drops>
+			""");
+		NpcDropData.loadLazy(tempDir.toFile(), 10, TimeUnit.MINUTES.toMillis(5), () -> 1_000L);
+		Path indexCache = tempDir.resolve(".npc_drop_index.properties");
+		Files.writeString(dropsFile, "<not xml", StandardCharsets.UTF_8);
+		Files.setLastModifiedTime(dropsFile, FileTime.fromMillis(Files.getLastModifiedTime(indexCache).toMillis() - 1_000));
+
+		NpcDropData data = NpcDropData.loadLazy(tempDir.toFile(), 10, TimeUnit.MINUTES.toMillis(5), () -> 1_000L);
+
+		assertEquals(1, data.size());
 	}
 
 	@Test
@@ -162,8 +184,10 @@ class NpcDropDataTest {
 		assertNotSame(reloadedAfterCapacityEviction, reloadedAfterTtlEviction);
 	}
 
-	private void writeDrops(String fileName, String xml) throws Exception {
-		Files.writeString(tempDir.resolve(fileName), xml, StandardCharsets.UTF_8);
+	private Path writeDrops(String fileName, String xml) throws Exception {
+		Path file = tempDir.resolve(fileName);
+		Files.writeString(file, xml, StandardCharsets.UTF_8);
+		return file;
 	}
 
 	private static List<Integer> itemIds(NpcDrop drop) {
