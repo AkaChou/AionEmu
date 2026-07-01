@@ -63,7 +63,7 @@ public class Kill extends AdminCommand {
 					return;
 				}
 			}
-			for (VisibleObject obj : admin.getKnownList().getKnownObjects().values()) {
+			for (VisibleObject obj : new java.util.ArrayList<>(admin.getKnownList().getKnownObjects().values())) {
 				if (obj instanceof Creature) {
 					Creature creature = (Creature) obj;
 					if (range < 0 || MathUtil.isIn3dRange(admin, obj, range))

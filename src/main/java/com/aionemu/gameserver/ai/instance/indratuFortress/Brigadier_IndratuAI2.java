@@ -37,7 +37,7 @@ public class Brigadier_IndratuAI2 extends AggressiveNpcAI2
 	}
 	
 	private void checkForSupport(Creature creature) {
-		for (VisibleObject object: getKnownList().getKnownObjects().values()) {
+		for (VisibleObject object: new java.util.ArrayList<>(getKnownList().getKnownObjects().values())) {
 			if (object instanceof Npc && isInRange(object, 40)) {
 				((Npc) object).getAi2().onCreatureEvent(AIEventType.CREATURE_AGGRO, creature);
 			}

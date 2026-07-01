@@ -21,7 +21,9 @@ import com.aionemu.gameserver.lifecycle.GameGameplayServices;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -139,7 +141,12 @@ public class RiftService {
 	public void openRifts(RiftLocation location) {
 		location.setOpened(true);
 		GameGameplayServices.riftManager().spawnRift(location);
-		activeRifts.put(location.getId(), location);
+		closing.lock();
+		try {
+			activeRifts.put(location.getId(), location);
+		} finally {
+			closing.unlock();
+		}
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
@@ -158,14 +165,16 @@ public class RiftService {
 	}
 
 	public void closeRifts() {
+		List<RiftLocation> rifts;
 		closing.lock();
 		try {
-			for (RiftLocation rift : activeRifts.values()) {
-				closeRift(rift);
-			}
+			rifts = new ArrayList<>(activeRifts.values());
 			activeRifts.clear();
 		} finally {
 			closing.unlock();
+		}
+		for (RiftLocation rift : rifts) {
+			closeRift(rift);
 		}
 	}
 

@@ -50,9 +50,13 @@ public class Version {
 
         try {
             jarName = Locator.getClassSource(c);
-            if (jarName == null || !jarName.isFile()) {
+            if (jarName == null) {
                 useUnknownInformation();
                 log.warn("Unable to get Soft information for {} from class source '{}'", c.getName(), jarName);
+                return;
+            }
+            if (!jarName.isFile()) {
+                useUnknownInformation();
                 return;
             }
             try (JarFile jarFile = new JarFile(jarName)) {

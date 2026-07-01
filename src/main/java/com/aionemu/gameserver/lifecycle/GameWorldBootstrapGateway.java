@@ -5,6 +5,12 @@ import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.zone.ZoneService;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,11 +68,13 @@ public class GameWorldBootstrapGateway {
         long start = System.currentTimeMillis();
         progressReporter.start("game world");
         try {
-            loadStep("IDFactory", this::initializeIDFactory);
-            loadStep("Zone", this::loadZoneService);
-            loadStep("Hotspot Teleport", this::initializeHotspotTeleportService);
-            loadStep("Road", this::initializeRoadService);
-            loadStep("World", this::initializeWorld);
+            loadStepsInParallel(List.of(
+                new BootstrapStep("IDFactory", this::initializeIDFactory),
+                new BootstrapStep("Zone", this::loadZoneService),
+                new BootstrapStep("Hotspot Teleport", this::initializeHotspotTeleportService),
+                new BootstrapStep("Road", this::initializeRoadService),
+                new BootstrapStep("World", this::initializeWorld)
+            ));
             progressReporter.finish("game world", System.currentTimeMillis() - start);
         } catch (RuntimeException | Error e) {
             progressReporter.failed();
@@ -140,5 +148,38 @@ public class GameWorldBootstrapGateway {
         progressReporter.stepStarted(stepName);
         loader.run();
         progressReporter.stepFinished(stepName);
+    }
+
+    private void loadStepsInParallel(List<BootstrapStep> steps) {
+        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            List<Future<?>> futures = new ArrayList<>(steps.size());
+            for (BootstrapStep step : steps) {
+                futures.add(executor.submit(() -> loadStep(step.name(), step.loader())));
+            }
+            for (Future<?> future : futures) {
+                await(future);
+            }
+        }
+    }
+
+    private void await(Future<?> future) {
+        try {
+            future.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while loading game world", e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException runtimeException) {
+                throw runtimeException;
+            }
+            if (cause instanceof Error error) {
+                throw error;
+            }
+            throw new IllegalStateException("Failed to load game world", cause);
+        }
+    }
+
+    private record BootstrapStep(String name, Runnable loader) {
     }
 }

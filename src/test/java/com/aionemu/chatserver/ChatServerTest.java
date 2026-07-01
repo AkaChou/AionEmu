@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -102,6 +103,22 @@ class ChatServerTest {
     }
 
     @Test
+    void shutdownHookPreparationDoesNotInstantiateRestartServiceBeforeConfigLoads() {
+        AtomicBoolean restartServiceRequested = new AtomicBoolean();
+        ShutdownHook shutdownHook = new ShutdownHook(
+            new ChatProcessRuntimeBridge(),
+            trackingProvider(RestartService.class, restartServiceRequested, null),
+            provider(GameServerService.class, new GameServerService())
+        );
+        ChatProcessRuntimeBridge runtimeBridge = new ChatProcessRuntimeBridge();
+        runtimeBridge.setShutdownHookProvider(provider(ShutdownHook.class, shutdownHook));
+
+        runtimeBridge.shutdownHook();
+
+        assertFalse(restartServiceRequested.get());
+    }
+
+    @Test
     void shutdownHookDelegatesJvmHaltToProcessBridge() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ShutdownHook.java"));
 
@@ -127,7 +144,8 @@ class ChatServerTest {
         assertFalse(source.contains("return RestartService.getInstance();"));
         assertFalse(source.contains("ShutdownHook.getInstance(processBridge, restartService, gameServerService)"));
         assertTrue(source.contains("return new RestartService();"));
-        assertTrue(source.contains("return new ShutdownHook(processBridge, restartService, gameServerService);"));
+        assertTrue(source.contains("ObjectProvider<RestartService> restartServiceProvider"));
+        assertTrue(source.contains("return new ShutdownHook(processBridge, restartServiceProvider, gameServerServiceProvider);"));
     }
 
     @Test
@@ -293,6 +311,26 @@ class ChatServerTest {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         beanFactory.registerSingleton(type.getName(), instance);
         return beanFactory.getBeanProvider(type);
+    }
+
+    private static <T> ObjectProvider<T> trackingProvider(Class<T> type, AtomicBoolean used, T instance) {
+        return new ObjectProvider<>() {
+            @Override
+            public T getObject(Object... args) {
+                return getObject();
+            }
+
+            @Override
+            public T getIfAvailable() {
+                return getObject();
+            }
+
+            @Override
+            public T getObject() {
+                used.set(true);
+                return instance;
+            }
+        };
     }
 
     private static ObjectProvider<ShutdownHook> throwingProvider(ProviderUsedException exception) {

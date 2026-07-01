@@ -8,6 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -61,6 +64,28 @@ class GameWorldBootstrapLifecycleTest {
         assertEquals(null, lifecycle.getLastFailure());
     }
 
+    @Test
+    void bootstrapStartsWorldStepsInParallelBeforeWaitingForCompletion() throws Exception {
+        int stepCount = 5;
+        CountDownLatch allStarted = new CountDownLatch(stepCount);
+        CountDownLatch releaseSteps = new CountDownLatch(1);
+        BlockingGameWorldBootstrapGateway gateway = new BlockingGameWorldBootstrapGateway(allStarted, releaseSteps);
+
+        Thread starter = new Thread(gateway::bootstrap);
+        starter.start();
+
+        try {
+            assertTrue(allStarted.await(2, TimeUnit.SECONDS));
+            assertTrue(starter.isAlive());
+        } finally {
+            releaseSteps.countDown();
+        }
+        starter.join(2000);
+
+        assertFalse(starter.isAlive());
+        assertEquals(stepCount, gateway.completedSteps());
+    }
+
     private static final class RecordingGameWorldBootstrapGateway extends GameWorldBootstrapGateway {
 
         private final List<String> events;
@@ -77,6 +102,59 @@ class GameWorldBootstrapLifecycleTest {
             if (events.size() == 1 && firstFailure != null) {
                 throw firstFailure;
             }
+        }
+    }
+
+    private static final class BlockingGameWorldBootstrapGateway extends GameWorldBootstrapGateway {
+
+        private final CountDownLatch allStarted;
+        private final CountDownLatch releaseSteps;
+        private final AtomicInteger completedSteps = new AtomicInteger();
+
+        private BlockingGameWorldBootstrapGateway(CountDownLatch allStarted, CountDownLatch releaseSteps) {
+            super(StartupProgressReporter.noop());
+            this.allStarted = allStarted;
+            this.releaseSteps = releaseSteps;
+        }
+
+        @Override
+        protected void initializeIDFactory() {
+            blockStep();
+        }
+
+        @Override
+        protected void loadZoneService() {
+            blockStep();
+        }
+
+        @Override
+        protected void initializeHotspotTeleportService() {
+            blockStep();
+        }
+
+        @Override
+        protected void initializeRoadService() {
+            blockStep();
+        }
+
+        @Override
+        protected void initializeWorld() {
+            blockStep();
+        }
+
+        private void blockStep() {
+            allStarted.countDown();
+            try {
+                releaseSteps.await();
+                completedSteps.incrementAndGet();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new AssertionError(e);
+            }
+        }
+
+        private int completedSteps() {
+            return completedSteps.get();
         }
     }
 

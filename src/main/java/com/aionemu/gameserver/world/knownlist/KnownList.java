@@ -94,7 +94,7 @@ public class KnownList {
 	 * Clear known list. Used when object is despawned.
 	 */
 	public void clear() {
-		for (VisibleObject object : knownObjects.values()) {
+		for (VisibleObject object : new ArrayList<>(knownObjects.values())) {
 			object.getKnownList().del(owner, false);
 		}
 		knownObjects.clear();
@@ -265,7 +265,7 @@ public class KnownList {
 	public int doOnAllNpcs(Visitor<Npc> visitor, int iterationLimit) {
 		int counter = 0;
 		try {
-			for (VisibleObject newObject : knownObjects.values()) {
+			for (VisibleObject newObject : new ArrayList<>(knownObjects.values())) {
 				if (newObject != null && newObject instanceof Npc) {
 					if ((++counter) == iterationLimit) {
 						break;
@@ -286,7 +286,7 @@ public class KnownList {
 	public int doOnAllNpcsWithOwner(VisitorWithOwner<Npc, VisibleObject> visitor, int iterationLimit) {
 		int counter = 0;
 		try {
-			for (VisibleObject newObject : knownObjects.values()) {
+			for (VisibleObject newObject : new ArrayList<>(knownObjects.values())) {
 				if (newObject != null && newObject instanceof Npc) {
 					if ((++counter) == iterationLimit) {
 						break;
@@ -305,7 +305,7 @@ public class KnownList {
 			return;
 		}
 		try {
-			for (Player player : knownPlayers.values()) {
+			for (Player player : new ArrayList<>(knownPlayers.values())) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -317,7 +317,7 @@ public class KnownList {
 
 	public void doOnAllObjects(Visitor<VisibleObject> visitor) {
 		try {
-			for (VisibleObject newObject : knownObjects.values()) {
+			for (VisibleObject newObject : new ArrayList<>(knownObjects.values())) {
 				if (newObject != null) {
 					visitor.visit(newObject);
 				}
