@@ -6,7 +6,7 @@ spring:
 aion:
   game:
     network:
-      external-ip: 192.168.1.18
+      external-ip:
     startup:
       progress:
         enabled: true
