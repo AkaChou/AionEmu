@@ -1,12 +1,21 @@
 package com.aionemu.loginserver.network.gameserver;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 
 import org.junit.jupiter.api.Test;
 
 class GsServerPacketTest {
+
+	@Test
+	void writeSerializesSharedPacketInstances() throws Exception {
+		assertTrue(Modifier.isSynchronized(GsServerPacket.class
+				.getDeclaredMethod("write", GsConnection.class, ByteBuffer.class)
+				.getModifiers()));
+	}
 
 	@Test
 	void writesFrameAndPayloadAsLittleEndian() {

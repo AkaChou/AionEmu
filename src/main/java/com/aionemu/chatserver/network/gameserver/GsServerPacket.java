@@ -44,7 +44,7 @@ public abstract class GsServerPacket extends BaseServerPacket {
      * @param con
      * @param buf
      */
-    public final void write(GsConnection con, ByteBuffer buffer) {
+    public final synchronized void write(GsConnection con, ByteBuffer buffer) {
         setBuf(buffer);
         buf.putShort((short) 0);
         writeImpl(con);

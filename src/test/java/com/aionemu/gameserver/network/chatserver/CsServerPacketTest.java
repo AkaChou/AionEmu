@@ -1,12 +1,21 @@
 package com.aionemu.gameserver.network.chatserver;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Modifier;
 import java.nio.ByteBuffer;
 
 import org.junit.jupiter.api.Test;
 
 class CsServerPacketTest {
+
+	@Test
+	void writeSerializesSharedPacketInstances() throws Exception {
+		assertTrue(Modifier.isSynchronized(CsServerPacket.class
+				.getDeclaredMethod("write", ChatServerConnection.class, ByteBuffer.class)
+				.getModifiers()));
+	}
 
 	@Test
 	void writesFrameAndPayloadAsLittleEndian() {

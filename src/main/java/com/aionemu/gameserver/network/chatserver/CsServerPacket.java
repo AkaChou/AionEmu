@@ -25,7 +25,7 @@ public abstract class CsServerPacket extends BaseServerPacket {
 		super(opcode);
 	}
 
-	public final void write(ChatServerConnection con, ByteBuffer buffer) {
+	public final synchronized void write(ChatServerConnection con, ByteBuffer buffer) {
 		setBuf(buffer);
 		buf.putShort((short) 0);
 		buf.put((byte) getOpcode());

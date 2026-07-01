@@ -42,7 +42,7 @@ public abstract class LsServerPacket extends BaseServerPacket {
 	 * @param con
 	 * @param buf
 	 */
-	public final void write(LoginServerConnection con, ByteBuffer buffer) {
+	public final synchronized void write(LoginServerConnection con, ByteBuffer buffer) {
 		setBuf(buffer);
 		buf.putShort((short) 0);
 		buf.put((byte) this.getOpcode());
