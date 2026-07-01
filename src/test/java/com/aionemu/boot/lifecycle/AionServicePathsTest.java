@@ -79,6 +79,19 @@ class AionServicePathsTest {
     }
 
     @Test
+    void keepsExistingRuntimeGameConfigFiles() throws Exception {
+        Path gameServerConfig = aionHome.resolve("game/config/main/gameserver.properties");
+        java.nio.file.Files.createDirectories(gameServerConfig.getParent());
+        java.nio.file.Files.writeString(gameServerConfig, "custom = keep");
+
+        System.setProperty("aion.home", aionHome.toString());
+
+        AionServicePaths.configureGame();
+
+        assertEquals("custom = keep", java.nio.file.Files.readString(gameServerConfig));
+    }
+
+    @Test
     void prefersRuntimeLogbackFileOverProjectResources() throws Exception {
         Path sourceLogback = aionHome.resolve("src/main/resources/logback-spring.xml");
         java.nio.file.Files.createDirectories(sourceLogback.getParent());

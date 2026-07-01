@@ -134,6 +134,19 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
+	void staticDataUnmarshallerCreatesJaxbContextWhenThreadContextClassLoaderCannotSeeJaxbRuntime() throws Exception {
+		Thread thread = Thread.currentThread();
+		ClassLoader originalClassLoader = thread.getContextClassLoader();
+		thread.setContextClassLoader(ClassLoader.getPlatformClassLoader());
+		try {
+			assertDoesNotThrow(() -> new XmlDataLoader()
+				.createStaticDataUnmarshaller(StaticDataProgressReporter.noop(), 0, Map.of()));
+		} finally {
+			thread.setContextClassLoader(originalClassLoader);
+		}
+	}
+
+	@Test
 	void xmlMergerReportsWhetherCacheWasRebuilt() throws Exception {
 		Path source = tempDir.resolve("static_data.xml");
 		Path cache = tempDir.resolve("cache/static_data.xml");
@@ -171,5 +184,28 @@ class XmlDataLoaderTest {
 
 		assertEquals(1, itemData.size());
 		assertTrue(Files.readString(cache, StandardCharsets.UTF_8).contains("<item_template"));
+	}
+
+	@Test
+	void itemDataCreatesJaxbContextWhenThreadContextClassLoaderCannotSeeJaxbRuntime() throws Exception {
+		Path itemDir = tempDir.resolve("item");
+		Path cache = tempDir.resolve("cache/item_templates.xml");
+		Files.createDirectories(itemDir);
+		Files.createDirectories(cache.getParent());
+		Files.writeString(itemDir.resolve("item_misc_templates.xml"), """
+			<item_templates>
+				<item_template id="100000001" restrict="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1"/>
+			</item_templates>
+			""", StandardCharsets.UTF_8);
+		Thread thread = Thread.currentThread();
+		ClassLoader originalClassLoader = thread.getContextClassLoader();
+		thread.setContextClassLoader(ClassLoader.getPlatformClassLoader());
+		try {
+			ItemData itemData = new XmlDataLoader().loadItemData(cache.toFile(), tempDir.toFile());
+
+			assertEquals(1, itemData.size());
+		} finally {
+			thread.setContextClassLoader(originalClassLoader);
+		}
 	}
 }

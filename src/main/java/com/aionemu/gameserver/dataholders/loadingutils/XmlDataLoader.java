@@ -87,7 +87,7 @@ public class XmlDataLoader {
 	 */
 	public static void preloadContextAsync() {
 		if (preloadedContext == null) {
-			preloadedContext = ForkJoinPool.commonPool().submit(() -> JAXBContext.newInstance(StaticData.class));
+			preloadedContext = ForkJoinPool.commonPool().submit(() -> createJaxbContext(StaticData.class));
 		}
 	}
 
@@ -166,7 +166,7 @@ public class XmlDataLoader {
 		long unmarshalStart = System.currentTimeMillis();
 		log.info("Unmarshalling item data from {}", cachedXml.getPath());
 		try (FileReader reader = new FileReader(cachedXml)) {
-			JAXBContext jc = JAXBContext.newInstance(ItemData.class);
+			JAXBContext jc = createJaxbContext(ItemData.class);
 			Unmarshaller un = jc.createUnmarshaller();
 			un.setEventHandler(new XmlValidationHandler());
 			ItemData data = (ItemData) un.unmarshal(reader);
@@ -201,12 +201,26 @@ public class XmlDataLoader {
 
 	private Unmarshaller createStaticDataUnmarshaller(StaticDataProgressListener progressListener) throws Exception {
 		Future<JAXBContext> task = preloadedContext;
-		JAXBContext jc = task != null ? task.get() : JAXBContext.newInstance(StaticData.class);
+		JAXBContext jc = task != null ? task.get() : createJaxbContext(StaticData.class);
 		Unmarshaller un = jc.createUnmarshaller();
 		un.setEventHandler(new XmlValidationHandler());
 		// Schema validation is intentionally not wired into JAXB unmarshalling; it is slow and is run only for rebuilt caches.
 		un.setListener(progressListener);
 		return un;
+	}
+
+	private static JAXBContext createJaxbContext(Class<?> boundType) throws jakarta.xml.bind.JAXBException {
+		Thread thread = Thread.currentThread();
+		ClassLoader originalClassLoader = thread.getContextClassLoader();
+		ClassLoader boundTypeClassLoader = boundType.getClassLoader();
+		try {
+			if (boundTypeClassLoader != null) {
+				thread.setContextClassLoader(boundTypeClassLoader);
+			}
+			return JAXBContext.newInstance(boundType);
+		} finally {
+			thread.setContextClassLoader(originalClassLoader);
+		}
 	}
 
 	Future<?> validateCacheAsync(File cachedXml) {
