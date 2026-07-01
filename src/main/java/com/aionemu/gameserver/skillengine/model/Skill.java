@@ -975,26 +975,19 @@ public class Skill {
 			return;
 		}
 		duration = effector.getGameStats().getPositiveReverseStat(StatEnum.BOOST_CASTING_TIME, skillTemplate.getDuration());
-		switch (skillTemplate.getSubType()) {
-		case SUMMON:
+		SkillSubType subType = skillTemplate.getSubType();
+		if (subType == SkillSubType.SUMMON) {
 			duration = effector.getGameStats().getPositiveReverseStat(StatEnum.BOOST_CASTING_TIME_SUMMON, duration);
-			break;
-		case SUMMONHOMING:
+		} else if (subType == SkillSubType.SUMMONHOMING) {
 			duration = effector.getGameStats().getPositiveReverseStat(StatEnum.BOOST_CASTING_TIME_SUMMONHOMING, duration);
-			break;
-		case SUMMONTRAP:
+		} else if (subType == SkillSubType.SUMMONTRAP) {
 			duration = effector.getGameStats().getPositiveReverseStat(StatEnum.BOOST_CASTING_TIME_TRAP, duration);
-			break;
-		case HEAL:
+		} else if (subType == SkillSubType.HEAL) {
 			duration = effector.getGameStats().getPositiveReverseStat(StatEnum.BOOST_CASTING_TIME_HEAL, duration);
-			break;
-		case ATTACK:
+		} else if (subType == SkillSubType.ATTACK) {
 			if (skillTemplate.getType() == SkillType.MAGICAL) {
 				duration = effector.getGameStats().getPositiveReverseStat(StatEnum.BOOST_CASTING_TIME_ATTACK, duration);
 			}
-			break;
-		default:
-			break;
 		}
 
 		// 70% of base skill duration cap
@@ -1417,13 +1410,7 @@ public class Skill {
 		}
 
 		else {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					applyEffect(effects);
-				}
-			}, hitTime);
+			GameThreadPoolServices.threadPoolManager().schedule(() -> applyEffect(effects), hitTime);
 		}
 		if (skillMethod == SkillMethod.CAST || skillMethod == SkillMethod.ITEM) {
 			sendCastspellEnd(spellStatus, dashStatus, effects);
@@ -1482,11 +1469,7 @@ public class Skill {
 	 * Schedule actions/effects of skill (channeled skills)
 	 */
 	private void schedule(int delay) {
-		castingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			public void run() {
-				endCast();
-			}
-		}, delay);
+		castingTask = GameThreadPoolServices.threadPoolManager().schedule(this::endCast, delay);
 
 		castStart = System.currentTimeMillis();
 	}

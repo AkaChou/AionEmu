@@ -357,14 +357,14 @@ public abstract class WorldMapInstance {
 	 * @return
 	 */
 	public Iterator<VisibleObject> objectIterator() {
-		return worldMapObjects.values().iterator();
+		return new ArrayList<>(worldMapObjects.values()).iterator();
 	}
 
 	/**
 	 * @return
 	 */
 	public Iterator<Player> playerIterator() {
-		return worldMapPlayers.values().iterator();
+		return new ArrayList<Player>(worldMapPlayers.values()).iterator();
 	}
 
 	public void registerGroup(PlayerGroup group) {
@@ -459,7 +459,7 @@ public abstract class WorldMapInstance {
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (Player player : worldMapPlayers.values()) {
+			for (Player player : new ArrayList<Player>(worldMapPlayers.values())) {
 				if (player != null) {
 					visitor.visit(player);
 				}

@@ -90,6 +90,23 @@ class KnownListTest {
 	}
 
 	@Test
+	void getKnownPlayersReturnsSnapshotSafeForRemovalDuringIteration() {
+		TestVisibleObject owner = visibleObject(1);
+		TestKnownList knownList = (TestKnownList) owner.getKnownList();
+		Player first = player(2);
+		Player second = player(3);
+		knownList.addKnown(first);
+		knownList.addKnown(second);
+
+		assertDoesNotThrow(() -> {
+			for (Player player : knownList.getKnownPlayers().values()) {
+				knownList.removeKnown(player);
+			}
+		});
+		assertEquals(List.of(), new ArrayList<Player>(knownList.getKnownPlayers().values()));
+	}
+
+	@Test
 	void doOnAllObjectsUsesStableSnapshotWhenKnownObjectsChangeDuringVisit() {
 		TestVisibleObject owner = visibleObject(1);
 		TestKnownList knownList = (TestKnownList) owner.getKnownList();
@@ -141,6 +158,11 @@ class KnownListTest {
 
 		private void addKnown(VisibleObject object) {
 			add(object);
+		}
+
+		private void removeKnown(Player player) {
+			knownObjects.remove(player.getObjectId());
+			knownPlayers.remove(player.getObjectId());
 		}
 
 		@Override

@@ -29,7 +29,9 @@ import com.aionemu.gameserver.model.skill.NpcSkillEntry;
 import com.aionemu.gameserver.model.skill.NpcSkillList;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillType;
+import com.aionemu.gameserver.skillengine.properties.FirstTargetAttribute;
 import com.aionemu.gameserver.utils.MathUtil;
 /**
  * NPC技能攻击管理器
@@ -58,7 +60,7 @@ public class SkillAttackManager {
 		if (npcAI.setSubStateIfNot(AISubState.CAST)) {
 			if (delay > 0) {
 				// 延迟执行技能攻击
-				GameThreadPoolServices.threadPoolManager().schedule(new SkillAction(npcAI), delay);
+				GameThreadPoolServices.threadPoolManager().schedule(() -> skillAction(npcAI), delay);
 			} else {
 				skillAction(npcAI);
 			}
@@ -88,24 +90,18 @@ public class SkillAttackManager {
 			if (npcAI.isLogging()) {
 				AI2Logger.info(npcAI, "Using skill " + skillId + " level: " + skillLevel + " duration: " + duration);
 			}
-			switch (template.getSubType()) {
-			case BUFF:
-				switch (template.getProperties().getFirstTarget()) {
-				case ME:
+			if (template.getSubType() == SkillSubType.BUFF) {
+				if (template.getProperties().getFirstTarget() == FirstTargetAttribute.ME) {
 					if (npcAI.getOwner().getEffectController().isAbnormalPresentBySkillId(skillId)) {
 						afterUseSkill(npcAI);
 						return;
 					}
-					break;
-				default:
+				} else {
 					if (target.getEffectController().isAbnormalPresentBySkillId(skillId)) {
 						afterUseSkill(npcAI);
 						return;
 					}
 				}
-				break;
-			default:
-				break;
 			}
 			boolean success = npcAI.getOwner().getController().useSkill(skillId, skillLevel);
 			if (!success) {
@@ -164,20 +160,5 @@ public class SkillAttackManager {
 			}
 		}
 		return null;
-	}
-
-	// 技能攻击动作：执行实际的技能攻击
-	private final static class SkillAction implements Runnable {
-		private NpcAI2 npcAI;
-
-		SkillAction(NpcAI2 npcAI) {
-			this.npcAI = npcAI;
-		}
-
-		@Override
-		public void run() {
-			skillAction(npcAI);
-			npcAI = null;
-		}
 	}
 }

@@ -336,7 +336,7 @@ public class KnownList {
 	}
 
 	public Map<Integer, Player> getKnownPlayers() {
-		return knownPlayers != null ? knownPlayers : Collections.<Integer, Player>emptyMap();
+		return knownPlayers != null ? new LinkedHashMap<Integer, Player>(knownPlayers) : Collections.<Integer, Player>emptyMap();
 	}
 
 	public Map<Integer, Player> getVisiblePlayers() {

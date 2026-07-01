@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.world;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -246,18 +247,18 @@ public class WorldMap {
 	 * @return
 	 */
 	public Iterator<WorldMapInstance> iterator() {
-		return instances.values().iterator();
+		return new ArrayList<WorldMapInstance>(instances.values()).iterator();
 	}
 
 	/**
 	 * All instance ids of this map
 	 */
 	public Collection<Integer> getAvailableInstanceIds() {
-		return instances.keySet();
+		return new ArrayList<Integer>(instances.keySet());
 	}
 
 	public Collection<WorldMapInstance> getInstances() {
-		return instances.values();
+		return new ArrayList<WorldMapInstance>(instances.values());
 	}
 
 	public WorldDropType getWorldDropType() {

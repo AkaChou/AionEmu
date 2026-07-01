@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.world.container;
 
 import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -93,7 +94,7 @@ public class PlayerContainer implements Iterable<Player> {
 
 	@Override
 	public Iterator<Player> iterator() {
-		return playersById.values().iterator();
+		return new ArrayList<Player>(playersById.values()).iterator();
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class PlayerContainer implements Iterable<Player> {
 	@SuppressWarnings("unused")
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (Player player : playersById.values()) {
+			for (Player player : new ArrayList<Player>(playersById.values())) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -113,6 +114,6 @@ public class PlayerContainer implements Iterable<Player> {
 	}
 
 	public Collection<Player> getAllPlayers() {
-		return playersById.values();
+		return new ArrayList<Player>(playersById.values());
 	}
 }

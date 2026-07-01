@@ -17,14 +17,13 @@
 package com.aionemu.gameserver.world.container;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LegionContainer implements Iterable<Legion> {
@@ -72,7 +71,7 @@ public class LegionContainer implements Iterable<Legion> {
 
 	@Override
 	public Iterator<Legion> iterator() {
-		return legionsById.values().iterator();
+		return new ArrayList<Legion>(legionsById.values()).iterator();
 	}
 
 	public void clear() {
