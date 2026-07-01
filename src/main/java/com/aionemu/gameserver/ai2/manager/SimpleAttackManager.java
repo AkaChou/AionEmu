@@ -113,10 +113,7 @@ public class SimpleAttackManager {
     }
     
     try {
-        if (npc.getTarget() == null) {
-            return false;
-        }
-        if (!GameWorldServices.geoService().canSee(npc, npc.getTarget())) {
+        if (!GameWorldServices.geoService().canSee(npc, target)) {
             return false;
         }
     } catch (NullPointerException e) {
