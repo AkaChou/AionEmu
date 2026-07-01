@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -43,7 +45,7 @@ public class MailReward extends AdminCommand
             PacketSendUtility.sendMessage(admin, "Parameter must be an integer, or cancel.");
             return;
         }
-        SystemMailService.getInstance().sendTemplateRewardMail(param, admin.getCommonData());
+        GameFeatureServices.systemMailService().sendTemplateRewardMail(param, admin.getCommonData());
     }
 	
     @Override

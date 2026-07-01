@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.iuservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.iu.IuLocation;
@@ -62,11 +64,11 @@ public abstract class Iu<IUL extends IuLocation> {
 	}
 
 	protected void spawn(IuStateType type) {
-		IuService.getInstance().spawn(getIuLocation(), type);
+		GameLocationBootstrapServices.iuService().spawn(getIuLocation(), type);
 	}
 
 	protected void despawn() {
-		IuService.getInstance().despawn(getIuLocation());
+		GameLocationBootstrapServices.iuService().despawn(getIuLocation());
 	}
 
 	public boolean isFinished() {

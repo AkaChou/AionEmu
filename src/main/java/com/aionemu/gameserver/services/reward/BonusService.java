@@ -16,13 +16,12 @@
  */
 package com.aionemu.gameserver.services.reward;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -45,12 +44,12 @@ import com.aionemu.gameserver.model.templates.rewards.MedalItem;
 /**
  * @author Rolandas
  */
+@Slf4j
 public class BonusService {
 
 	private static BonusService instance = new BonusService();
 	private static volatile ObjectProvider<BonusService> instanceProvider;
 	private ItemGroupsData itemGroups = DataManager.ITEM_GROUPS_DATA;
-	private static final Logger log = LoggerFactory.getLogger(BonusService.class);
 
 	public BonusService() {
 

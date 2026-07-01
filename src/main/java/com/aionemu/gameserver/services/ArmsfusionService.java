@@ -16,9 +16,6 @@
  */
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -30,9 +27,10 @@ import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ArmsfusionService {
-	private static final Logger log = LoggerFactory.getLogger(ArmsfusionService.class);
 
 	public static void fusionWeapons(Player player, int firstItemUniqueId, int secondItemUniqueId) {
 		Item firstItem = player.getInventory().getItemByObjId(firstItemUniqueId);

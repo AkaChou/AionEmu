@@ -18,9 +18,12 @@ package com.aionemu.gameserver.utils.audit;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -32,18 +35,26 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
-
 public class GMService {
+	private static volatile ObjectProvider<GMService> instanceProvider;
+
 	public static final GMService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<GMService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
 	}
 
-	private Map<Integer, Player> gms = new FastMap<Integer, Player>();
+	public static void setInstanceProvider(ObjectProvider<GMService> instanceProvider) {
+		GMService.instanceProvider = instanceProvider;
+	}
+
+	private Map<Integer, Player> gms = new HashMap<Integer, Player>();
 	private boolean announceAny = false;
 	private List<Byte> announceList;
 
-	private GMService() {
+	public GMService() {
 		announceList = new ArrayList<Byte>();
 		announceAny = AdminConfig.ANNOUNCE_LEVEL_LIST.equals("*");
 		if (!announceAny) {
@@ -100,7 +111,7 @@ public class GMService {
 			}
 
 
-			Iterator<Player> iter = World.getInstance().getPlayersIterator();
+			Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			while (iter.hasNext()) {
 				PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), "Information : " + String.format(adminTag, player.getName()) + " is now available for support!");
 			}
@@ -134,7 +145,7 @@ public class GMService {
 			}
 		}
 
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), "Information : " + String.format(adminTag, player.getName()) + " is now unavailable for support!");
 		}

@@ -16,8 +16,12 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.configs.main.PvPModConfig;
@@ -25,7 +29,6 @@ import com.aionemu.gameserver.model.autogroup.EntryRequestType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.instance.AsyunatarService;
 import com.aionemu.gameserver.services.instance.DredgionService2;
@@ -39,9 +42,9 @@ import com.aionemu.gameserver.services.instance.IronWallWarfrontService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.services.instance.SuspiciousOphidanBridgeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+@Slf4j
 
 public class CM_AUTO_GROUP extends AionClientPacket {
-	private Logger log = LoggerFactory.getLogger(CM_AUTO_GROUP.class);
 	private byte instanceMaskId;
 	private byte windowId;
 	private byte entryRequestId;
@@ -70,39 +73,39 @@ public class CM_AUTO_GROUP extends AionClientPacket {
 			if (ert == null) {
 				return;
 			}
-			AutoGroupService.getInstance().startLooking(player, instanceMaskId, ert);
+			GameCoreGameplayServices.autoGroupService().startLooking(player, instanceMaskId, ert);
 			break;
 		case 101:
-			AutoGroupService.getInstance().unregisterLooking(player, instanceMaskId);
+			GameCoreGameplayServices.autoGroupService().unregisterLooking(player, instanceMaskId);
 			break;
 		case 102:
-			AutoGroupService.getInstance().pressEnter(player, instanceMaskId);
+			GameCoreGameplayServices.autoGroupService().pressEnter(player, instanceMaskId);
 			break;
 		case 103:
-			AutoGroupService.getInstance().cancelEnter(player, instanceMaskId);
+			GameCoreGameplayServices.autoGroupService().cancelEnter(player, instanceMaskId);
 			break;
 		case 104:
-			DredgionService2.getInstance().showWindow(player, instanceMaskId);
-			KamarBattlefieldService.getInstance().showWindow(player, instanceMaskId);
-			EngulfedOphidanBridgeService.getInstance().showWindow(player, instanceMaskId);
-			IronWallWarfrontService.getInstance().showWindow(player, instanceMaskId);
-			IdgelDomeService.getInstance().showWindow(player, instanceMaskId);
+			GameFeatureServices.dredgionService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.kamarBattlefieldService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.engulfedOphidanBridgeService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.ironWallWarfrontService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.idgelDomeService().showWindow(player, instanceMaskId);
 			// Ver. 5.1
-			AsyunatarService.getInstance().showWindow(player, instanceMaskId);
-			IdgelDomeLandmarkService.getInstance().showWindow(player, instanceMaskId);
-			SuspiciousOphidanBridgeService.getInstance().showWindow(player, instanceMaskId);
+			GameFeatureServices.asyunatarService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.idgelDomeLandmarkService().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.suspiciousOphidanBridgeService().showWindow(player, instanceMaskId);
 			// Ver. 5.3
-			HallOfTenacityService.getInstance().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.hallOfTenacityService().showWindow(player, instanceMaskId);
 			// Ver. 5.6
-			GrandArenaTrainingCampService.getInstance().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.grandArenaTrainingCampService().showWindow(player, instanceMaskId);
 			// Ver. 5.8
-			IDRunService.getInstance().showWindow(player, instanceMaskId);
+			GameBattlefieldServices.idRunService().showWindow(player, instanceMaskId);
 			break;
 		case 105:
 			break;
 		}
 		if (PvPModConfig.BG_ENABLED) {
-			LadderService.getInstance().handleWindow(player, windowId, entryRequestId);
+			GameFeatureServices.ladderService().handleWindow(player, windowId, entryRequestId);
 		}
 	}
 }

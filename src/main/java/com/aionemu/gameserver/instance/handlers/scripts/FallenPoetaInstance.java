@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -28,14 +32,11 @@ import com.aionemu.gameserver.model.gameobjects.*;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-
-import javolution.util.*;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -51,7 +52,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	private Race spawnRace;
 	private Future<?> anuhartTaskA1;
 	protected boolean isInstanceDestroyed = false;
-	private final FastList<Future<?>> fallenTask = FastList.newInstance();
+	private final List<Future<?>> fallenTask = new ArrayList<Future<?>>();
 	
 	@Override
 	public void onEnterInstance(Player player) {
@@ -86,7 +87,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -94,24 +95,24 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			case 703373: //Kroban's Treasure Chest.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166040001, 1)); //Essence Core Solution.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188057622, 1)); //Base Major Enchant Supplement Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166040001, 1)); //Essence Core Solution.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188057622, 1)); //Base Major Enchant Supplement Bundle.
 						switch (Rnd.get(1, 5)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057623, 1)); //Kroban's Accessory Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057623, 1)); //Kroban's Accessory Box.
 				            break;
 							case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055385, 1)); //Krobans Treasure.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055385, 1)); //Krobans Treasure.
 				            break;
 					        case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055389, 1)); //Kroban's Illusion Godstone Bundle.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055389, 1)); //Kroban's Illusion Godstone Bundle.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055390, 1)); //Krobans Conditioning Bundle.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055390, 1)); //Krobans Conditioning Bundle.
 				            break;
 							case 5:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053783, 1)); //Stigma Sack.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053783, 1)); //Stigma Sack.
 				            break;
 						}
 				    }
@@ -120,7 +121,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 			case 833862: //Supply Box.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 164002346, 2)); //Thorn Tentacle Trap.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 164002346, 2)); //Thorn Tentacle Trap.
 				    }
 				}
 			break;
@@ -133,7 +134,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		fallenTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		fallenTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startAnuhartPath();
@@ -145,7 +146,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	private void startAnuhartPath() {
-		anuhartTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		anuhartTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(243682, 285.35428f, 998.8121f, 112.34111f, (byte) 85, 0, "3016600001"); //Lieutenant Anuhart.
@@ -167,7 +168,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar1 = spawnRace == Race.ASMODIANS ? 833858 : 833854;
                 spawn(Kantil_Animar1, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						seaOfFlames1();
@@ -184,7 +185,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar2 = spawnRace == Race.ASMODIANS ? 833859 : 833855;
                 spawn(Kantil_Animar2, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						seaOfFlames2();
@@ -201,7 +202,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar3 = spawnRace == Race.ASMODIANS ? 833860 : 833856;
                 spawn(Kantil_Animar3, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						seaOfFlames3();
@@ -219,7 +220,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403421, Race.PC_ALL, 5000);
 				final int Kantil_Animar4 = spawnRace == Race.ASMODIANS ? 833861 : 833857;
                 spawn(Kantil_Animar4, 299.75082f, 916.8568f, 105.5561f, (byte) 106);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						seaOfFlames4();
@@ -254,27 +255,27 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 703302: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
 			break;
 			case 703303: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
 			break;
 			case 703304: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21805, 1, player).useNoAnimationSkill();
 			break;
 			case 703306: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
 			break;
 			case 703307: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
 			break;
 			case 703308: //Megalithic Spore Road Aethercannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21806, 1, player).useNoAnimationSkill();
 			break;
 		}
 	}
@@ -590,7 +591,7 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -606,15 +607,15 @@ public class FallenPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = fallenTask.head(), end = fallenTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : fallenTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        fallenTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        fallenTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {

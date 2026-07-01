@@ -117,7 +117,7 @@ public class Exploration_Area_FlagAI2 extends ActionItemNpcAI2
 	}
 	
 	private void announceF6Invasion() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Vanguard Commanders are preparing exploration area defenses. It will be established in 10 minutes.

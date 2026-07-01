@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.illuminaryObelisk;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -31,14 +35,13 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,10 +96,10 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	private Map<Integer, StaticDoor> doors;
 	protected boolean isInstanceDestroyed = false;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> illuminaryTask1 = FastList.newInstance();
-	private final FastList<Future<?>> illuminaryTask2 = FastList.newInstance();
-	private final FastList<Future<?>> illuminaryTask3 = FastList.newInstance();
-	private final FastList<Future<?>> illuminaryTask4 = FastList.newInstance();
+	private final List<Future<?>> illuminaryTask1 = new ArrayList<>();
+	private final List<Future<?>> illuminaryTask2 = new ArrayList<>();
+	private final List<Future<?>> illuminaryTask3 = new ArrayList<>();
+	private final List<Future<?>> illuminaryTask4 = new ArrayList<>();
 	
    /**
 	* Reward:
@@ -104,43 +107,43 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	* Boxes are for all the members and the wings only for one person in the group.
 	*/
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 702018: //Supply Box.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053100, 1)); //Pure Dynatoum's Equipment Crux Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053100, 1)); //Pure Dynatoum's Equipment Crux Box.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052830, 1)); //Dynatoum's Brazen Weapon Box.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052830, 1)); //Dynatoum's Brazen Weapon Box.
 				        break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052831, 1)); //Dynatoum's Brazen Armor Box.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052831, 1)); //Dynatoum's Brazen Armor Box.
 				        break;
 					}
 				}
 			break;
 			case 702658: //Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
 		    break;
 			case 702659: //Noble Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
 		    break;
 		   /**
 			* Each "Shield Generator" unit needs 3 ide items, 12 items in total, you can find them all around the instance.
 			*/
 			case 730884: //Flourishing Idium.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000289, 3));
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000289, 3));
 			break;
 		   /**
 			* Bombs to use the cannons appear in chests around the instance in a different place every time, collect them too.
 			*/
 			case 730885: //Danuar Cannonballs.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000290, 3));
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000290, 3));
 			break;
 		}
 	}
@@ -177,7 +180,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
-			instanceTimer = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startIlluminaryTimer();
@@ -276,7 +279,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 			case 702022: //Danuar Cannon.
 			case 702023: //Danuar Cannon.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21511, 60, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21511, 60, player).useNoAnimationSkill();
 			break;
 		}
 	}
@@ -313,7 +316,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				killNpc(getNpcs(233734)); //Pashid Destruction Unit Elite Striker.
 				//The eastern shield power generator has been destroyed.
 				sendMsgByRace(1402139, Race.PC_ALL, 0);
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(702010, 255.47392f, 293.56177f, 321.18497f, (byte) 89); //Eastern Shield Generator.
@@ -344,7 +347,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				killNpc(getNpcs(233734)); //Pashid Destruction Unit Elite Striker.
 				//The western shield power generator has been destroyed.
 				sendMsgByRace(1402140, Race.PC_ALL, 0);
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(702011, 255.55742f, 216.03549f, 321.21344f, (byte) 30); //Western Shield Generator.
@@ -375,7 +378,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				killNpc(getNpcs(233734)); //Pashid Destruction Unit Elite Striker.
 				//The southern shield power generator has been destroyed.
 				sendMsgByRace(1402141, Race.PC_ALL, 0);
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(702012, 294.20718f, 254.60352f, 295.7729f, (byte) 60); //Southern Shield Generator.
@@ -406,7 +409,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				killNpc(getNpcs(233734)); //Pashid Destruction Unit Elite Striker.
 				//The northern shield power generator has been destroyed.
 				sendMsgByRace(1402142, Race.PC_ALL, 0);
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(702013, 216.97739f, 254.4616f, 295.77353f, (byte) 0); //Northern Shield Generator.
@@ -451,7 +454,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	//=== Eastern Shield Task ===//
 	//===========================//
 	protected void startEasternTask() {
-		illuminaryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startEasternShield2();
@@ -463,7 +466,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				spawn(702218, 255.56438f, 297.59488f, 321.39154f, (byte) 29); //Eastern Defence Charge 01.
             }
         }, 120000)); //...2Min
-		illuminaryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startEasternShield3();
@@ -475,7 +478,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				spawn(702219, 255.56438f, 297.59488f, 321.39154f, (byte) 29); //Eastern Defence Charge 02.
             }
         }, 240000)); //...4Min
-		illuminaryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startEasternShield4();
@@ -486,7 +489,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 360000)); //...6Min
-		illuminaryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				spawn(702220, 255.56438f, 297.59488f, 321.39154f, (byte) 29); //Eastern Defence Charge 03.
@@ -506,7 +509,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	//=== Western Shield Task ===//
 	//===========================//
 	protected void startWesternTask() {
-		illuminaryTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startWesternShield2();
@@ -518,7 +521,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				spawn(702221, 255.38777f, 212.00926f, 321.37292f, (byte) 90); //Western Defence Charge 01.
             }
         }, 120000)); //...2Min
-		illuminaryTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startWesternShield3();
@@ -530,7 +533,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				spawn(702222, 255.38777f, 212.00926f, 321.37292f, (byte) 90); //Western Defence Charge 02.
             }
         }, 240000)); //...4Min
-		illuminaryTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startWesternShield4();
@@ -541,7 +544,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 360000)); //...6Min
-		illuminaryTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				spawn(702223, 255.38777f, 212.00926f, 321.37292f, (byte) 90); //Western Defence Charge 03.
@@ -561,7 +564,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	//== Southern Shield Task ==//
 	//==========================//
 	protected void startSouthernTask() {
-		illuminaryTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startSouthernShield2();
@@ -573,7 +576,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				spawn(702224, 298.13452f, 254.48087f, 295.93027f, (byte) 119); //Southern Defence Charge 01.
             }
         }, 120000)); //...2Min
-		illuminaryTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startSouthernShield3();
@@ -585,7 +588,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				spawn(702225, 298.13452f, 254.48087f, 295.93027f, (byte) 119); //Southern Defence Charge 02.
             }
         }, 240000)); //...4Min
-		illuminaryTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startSouthernShield4();
@@ -596,7 +599,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 360000)); //...6Min
-		illuminaryTask3.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask3.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				spawn(702226, 298.13452f, 254.48087f, 295.93027f, (byte) 119); //Southern Defence Charge 03.
@@ -616,7 +619,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	//== Northern Shield Task ==//
 	//==========================//
 	protected void startNorthernTask() {
-		illuminaryTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startNorthernShield2();
@@ -628,7 +631,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				spawn(702227, 212.96484f, 254.4526f, 295.90784f, (byte) 60); //Northern Defence Charge 01.
             }
         }, 120000)); //...2Min
-		illuminaryTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startNorthernShield3();
@@ -640,7 +643,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				spawn(702228, 212.96484f, 254.4526f, 295.90784f, (byte) 60); //Northern Defence Charge 02.
             }
         }, 240000)); //...4Min
-		illuminaryTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startNorthernShield4();
@@ -651,7 +654,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 360000)); //...6Min
-		illuminaryTask4.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		illuminaryTask4.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				spawn(702229, 212.96484f, 254.4526f, 295.90784f, (byte) 60); //Northern Defence Charge 03.
@@ -676,7 +679,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	* Eastern Shield Generator *
 	****************************/
 	private void startEasternShield1() {
-		easternTaskE1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		easternTaskE1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -686,7 +689,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233724, 259.83197f, 333.34024f, 325.64847f, (byte) 90));
 			}
 		}, 1000);
-		easternTaskE1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		easternTaskE1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -698,7 +701,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startEasternShield2() {
-		easternTaskE2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		easternTaskE2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233730, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -708,7 +711,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233734, 259.83197f, 333.34024f, 325.64847f, (byte) 90));
 			}
 		}, 1000);
-		easternTaskE2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		easternTaskE2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -720,7 +723,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startEasternShield3() {
-		easternTaskE3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		easternTaskE3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -730,7 +733,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233729, 259.83197f, 333.34024f, 325.64847f, (byte) 90));
 			}
 		}, 1000);
-		easternTaskE3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		easternTaskE3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233730, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -742,7 +745,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startEasternShield4() {
-		easternTaskE4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		easternTaskE4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -752,7 +755,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233724, 259.83197f, 333.34024f, 325.64847f, (byte) 90));
 			}
 		}, 1000);
-		easternTaskE4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		easternTaskE4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 252.24573f, 333.1747f, 325.59268f, (byte) 90));
@@ -768,7 +771,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	* Western Shield Generator *
 	****************************/
 	private void startWesternShield1() {
-		westernTaskW1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		westernTaskW1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -778,7 +781,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233724, 251.44252f, 175.98637f, 325.64847f, (byte) 30));
 			}
 		}, 1000);
-		westernTaskW1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		westernTaskW1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -790,7 +793,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startWesternShield2() {
-		westernTaskW2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		westernTaskW2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233730, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -800,7 +803,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233734, 251.44252f, 175.98637f, 325.64847f, (byte) 30));
 			}
 		}, 1000);
-		westernTaskW2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		westernTaskW2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -812,7 +815,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startWesternShield3() {
-		westernTaskW3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		westernTaskW3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -822,7 +825,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233729, 251.44252f, 175.98637f, 325.64847f, (byte) 30));
 			}
 		}, 1000);
-		westernTaskW3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		westernTaskW3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233730, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -834,7 +837,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startWesternShield4() {
-		westernTaskW4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		westernTaskW4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -844,7 +847,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233724, 251.44252f, 175.98637f, 325.64847f, (byte) 30));
 			}
 		}, 1000);
-		westernTaskW4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		westernTaskW4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 258.78595f, 176.05591f, 325.59268f, (byte) 30));
@@ -860,7 +863,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	* Southern Shield Generator *
 	****************************/
 	private void startSouthernShield1() {
-		southernTaskS1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		southernTaskS1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -870,7 +873,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233724, 336.38608f, 250.51807f, 292.46326f, (byte) 60));
 			}
 		}, 1000);
-		southernTaskS1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		southernTaskS1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -882,7 +885,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startSouthernShield2() {
-		southernTaskS2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		southernTaskS2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233730, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -892,7 +895,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233734, 336.38608f, 250.51807f, 292.46326f, (byte) 60));
 			}
 		}, 1000);
-		southernTaskS2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		southernTaskS2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -904,7 +907,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startSouthernShield3() {
-		southernTaskS3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		southernTaskS3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -914,7 +917,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233729, 336.38608f, 250.51807f, 292.46326f, (byte) 60));
 			}
 		}, 1000);
-		southernTaskS3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		southernTaskS3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233730, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -926,7 +929,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startSouthernShield4() {
-		southernTaskS4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		southernTaskS4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -936,7 +939,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233724, 336.38608f, 250.51807f, 292.46326f, (byte) 60));
 			}
 		}, 1000);
-		southernTaskS4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		southernTaskS4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 336.21823f, 258.05798f, 292.4295f, (byte) 60));
@@ -952,7 +955,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	* Northern Shield Generator *
 	****************************/
 	private void startNorthernShield1() {
-		northernTaskN1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		northernTaskN1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -962,7 +965,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233724, 176.37492f, 259.05646f, 292.55435f, (byte) 0));
 			}
 		}, 1000);
-		northernTaskN1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		northernTaskN1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -974,7 +977,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startNorthernShield2() {
-		northernTaskN2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		northernTaskN2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233730, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -984,7 +987,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233734, 176.37492f, 259.05646f, 292.55435f, (byte) 0));
 			}
 		}, 1000);
-		northernTaskN2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		northernTaskN2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -996,7 +999,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startNorthernShield3() {
-		northernTaskN3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		northernTaskN3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -1006,7 +1009,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233729, 176.37492f, 259.05646f, 292.55435f, (byte) 0));
 			}
 		}, 1000);
-		northernTaskN3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		northernTaskN3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233730, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -1018,7 +1021,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 		}, 30000);
 	}
 	private void startNorthernShield4() {
-		northernTaskN4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		northernTaskN4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233720, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -1028,7 +1031,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 				rushIlluminary((Npc)spawn(233724, 176.37492f, 259.05646f, 292.55435f, (byte) 0));
 			}
 		}, 1000);
-		northernTaskN4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		northernTaskN4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushIlluminary((Npc)spawn(233725, 176.56479f, 251.09068f, 292.42026f, (byte) 119));
@@ -1041,7 +1044,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
 	private void rushIlluminary(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -1135,7 +1138,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -1144,7 +1147,7 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
     }
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -1194,33 +1197,33 @@ public class IlluminaryObeliskInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask1() {
-        for (FastList.Node<Future<?>> n = illuminaryTask1.head(), end = illuminaryTask1.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : illuminaryTask1) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	private void stopInstanceTask2() {
-        for (FastList.Node<Future<?>> n = illuminaryTask2.head(), end = illuminaryTask2.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : illuminaryTask2) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	private void stopInstanceTask3() {
-        for (FastList.Node<Future<?>> n = illuminaryTask3.head(), end = illuminaryTask3.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : illuminaryTask3) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	private void stopInstanceTask4() {
-        for (FastList.Node<Future<?>> n = illuminaryTask4.head(), end = illuminaryTask4.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : illuminaryTask4) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	
 	protected void despawnNpc(Npc npc) {
         if (npc != null) {

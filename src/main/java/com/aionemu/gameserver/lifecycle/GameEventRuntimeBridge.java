@@ -2,6 +2,7 @@ package com.aionemu.gameserver.lifecycle;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.configs.main.RankingConfig;
+import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.abyss.AbyssRankUpdateService;
 import com.aionemu.gameserver.services.events.CrazyDaevaService;
@@ -21,6 +22,7 @@ public class GameEventRuntimeBridge {
     private ObjectProvider<CrazyDaevaService> crazyDaevaServiceProvider;
     private ObjectProvider<AbyssRankUpdateService> abyssRankUpdateServiceProvider;
     private ObjectProvider<PacketBroadcaster> packetBroadcasterProvider;
+    private ObjectProvider<EventScheduler> eventSchedulerProvider;
 
     @Autowired(required = false)
     void setEventServiceProvider(ObjectProvider<EventService> eventServiceProvider) {
@@ -45,6 +47,11 @@ public class GameEventRuntimeBridge {
     @Autowired(required = false)
     void setPacketBroadcasterProvider(ObjectProvider<PacketBroadcaster> packetBroadcasterProvider) {
         this.packetBroadcasterProvider = packetBroadcasterProvider;
+    }
+
+    @Autowired(required = false)
+    void setEventSchedulerProvider(ObjectProvider<EventScheduler> eventSchedulerProvider) {
+        this.eventSchedulerProvider = eventSchedulerProvider;
     }
 
     public void printEventsSection() {
@@ -100,6 +107,13 @@ public class GameEventRuntimeBridge {
             return GameEventRuntimeFallbacks.packetBroadcaster();
         }
         return packetBroadcasterProvider.getIfAvailable(GameEventRuntimeFallbacks::packetBroadcaster);
+    }
+
+    public EventScheduler eventScheduler() {
+        if (eventSchedulerProvider == null) {
+            return GameEventRuntimeFallbacks.eventScheduler();
+        }
+        return eventSchedulerProvider.getIfAvailable(GameEventRuntimeFallbacks::eventScheduler);
     }
 
     public void spawnTemporarySpawns() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.model;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.templates.item.WeaponType;
 import com.aionemu.gameserver.services.MotionLoggingService;
 
@@ -110,6 +112,6 @@ public class WeaponTypeWrapper implements Comparable<WeaponTypeWrapper> {
 	}
 
 	private MotionLoggingService getOuterType() {
-		return MotionLoggingService.getInstance();
+		return GameFeatureServices.motionLoggingService();
 	}
 }

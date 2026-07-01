@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.ItemId;
@@ -370,7 +372,7 @@ public class Add extends AdminCommand {
             }
             receiver = player;
         } catch (NumberFormatException e) {
-            receiver = World.getInstance().findPlayer(Util.convertName(params[0]));
+            receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 
             if (receiver == null) {
                 PacketSendUtility.sendMessage(player, "Could not find a player by that name.");
@@ -430,7 +432,7 @@ public class Add extends AdminCommand {
             }
         }
 
-        if (!AdminService.getInstance().canOperate(player, receiver, itemId, "command //add")) {
+        if (!GameRuntimeServices.adminService().canOperate(player, receiver, itemId, "command //add")) {
             return;
         }
 

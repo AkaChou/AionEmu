@@ -19,15 +19,16 @@ package com.aionemu.gameserver.dataholders;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.assemblednpc.AssembledNpcTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author xTz
@@ -38,8 +39,8 @@ public class AssembledNpcsData {
 
 	@XmlElement(name = "assembled_npc", type = AssembledNpcTemplate.class)
 	private List<AssembledNpcTemplate> templates;
-	private final Map<Integer, AssembledNpcTemplate> assembledNpcsTemplates = new FastMap<Integer, AssembledNpcTemplate>()
-			.shared();
+	private final Map<Integer, AssembledNpcTemplate> assembledNpcsTemplates = new LinkedHashMap<Integer, AssembledNpcTemplate>()
+			;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AssembledNpcTemplate template : templates) {

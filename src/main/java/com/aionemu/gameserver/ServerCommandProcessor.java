@@ -17,6 +17,7 @@
 
 package com.aionemu.gameserver;
 
+import lombok.extern.slf4j.Slf4j;
 import java.awt.Button;
 import java.awt.Color;
 import java.awt.Frame;
@@ -26,9 +27,6 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -46,9 +44,9 @@ import com.aionemu.gameserver.world.World;
  * @mod yayaya ServerCommandProcessor implements a background thread to process
  *      commands from the console - either OS shell or a java-based launcher
  */
+@Slf4j
 
 public class ServerCommandProcessor {
-	private static final Logger log = LoggerFactory.getLogger(ServerCommandProcessor.class);
 
 	Frame f = new Frame("Ya-admin panel 5.8");
 
@@ -152,7 +150,7 @@ public class ServerCommandProcessor {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Collection<Player> players = World.getInstance().getAllPlayers();
+			Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
 			if (players.isEmpty()) {
 				log.info("There is no players online!");
 				return;
@@ -174,7 +172,7 @@ public class ServerCommandProcessor {
 			Player receiver;
 			String playerName = playerNameFieled.getText();
 
-			receiver = World.getInstance().findPlayer(playerName);
+			receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerName);
 
 			if (itemID.getText() != null) {
 				if (i != 0) {
@@ -200,14 +198,14 @@ public class ServerCommandProcessor {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (playerNameFieled.getText() != null && "All".equalsIgnoreCase(playerNameFieled.getText())) {
-				for (final Player player : World.getInstance().getAllPlayers()) {
+				for (final Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 					if (!player.isGM()) {
 						player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
 						log.info("KICKcommad: Kicked player: " + player.getName());
 					}
 				}
 			} else {
-				Player player = World.getInstance().findPlayer(playerNameFieled.getText());
+				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
 				if (player == null) {
 					log.info("KICKcommad: The specified player is not online.");
 					return;
@@ -223,7 +221,7 @@ public class ServerCommandProcessor {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (playerNameFieled.getText() != null || messageAnnounce.getText() != "Announce message") {
-				Iterator<Player> iter = World.getInstance().getPlayersIterator();
+				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
 				while (iter.hasNext()) {
 					PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), messageAnnounce.getText());
@@ -238,7 +236,7 @@ public class ServerCommandProcessor {
 		public void actionPerformed(ActionEvent e) {
 			if (playerNameFieled.getText() != null) {
 				try {
-					Player playerToPrison = World.getInstance().findPlayer(playerNameFieled.getText());
+					Player playerToPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
 					int delay = 30;
 					String reason = "Ban from Admin";
 
@@ -260,7 +258,7 @@ public class ServerCommandProcessor {
 		public void actionPerformed(ActionEvent e) {
 			if (playerNameFieled.getText() != null) {
 				try {
-					Player playerFromPrison = World.getInstance().findPlayer(playerNameFieled.getText());
+					Player playerFromPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerNameFieled.getText());
 
 					if (playerFromPrison != null) {
 						PunishmentService.setIsInPrison(playerFromPrison, false, 0, "");

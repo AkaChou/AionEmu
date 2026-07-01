@@ -23,7 +23,7 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -107,59 +107,59 @@ public class FireTempleInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
             case 212846: //Kromede The Corrupt.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053994, 1)); //Kromede's Key Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053994, 1)); //Kromede's Key Bundle.
                     }
                 }
 				break;
 			case 214621: //Vile Judge Kromede.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053994, 1)); //Kromede's Key Bundle.
+                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053994, 1)); //Kromede's Key Bundle.
                     }
                 }
 				break;
 			case 833523: //Kromede's Ornate Treasure Chest.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 170030000, 1)); //[Souvenir] Kromede's Mirror.
+                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 170030000, 1)); //[Souvenir] Kromede's Mirror.
                     }
                 }
 				break;
 			case 833524: //Kromede's Brilliant Treasure Chest.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 170030000, 1)); //[Souvenir] Kromede's Mirror.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052826, 1)); //Judge's Fabled Weapon Chest
+                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 170030000, 1)); //[Souvenir] Kromede's Mirror.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052826, 1)); //Judge's Fabled Weapon Chest
                     }
                 }
 				break;
 			case 833525: //Kromede's Dazzling Treasure Chest.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 170030000, 1)); //[Souvenir] Kromede's Mirror.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052826, 1)); //Judge's Fabled Weapon Chest
+                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 170030000, 1)); //[Souvenir] Kromede's Mirror.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052826, 1)); //Judge's Fabled Weapon Chest
                     }
                 }
 				break;
 			case 212840: //Lava Gatneri.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188051411, 1)); //Gatneri's Fabled Weapon Chest.
+                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051411, 1)); //Gatneri's Fabled Weapon Chest.
                     }
                 }
 				break;
 			case 212842: //Black Smoke Asparn.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188051412, 1)); //Asparn's Fabled Weapon Chest.
+                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051412, 1)); //Asparn's Fabled Weapon Chest.
                     }
                 }
 				break;

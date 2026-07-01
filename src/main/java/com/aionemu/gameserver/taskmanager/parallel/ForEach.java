@@ -18,8 +18,8 @@ package com.aionemu.gameserver.taskmanager.parallel;
 
 import java.util.Collection;
 
-import com.aionemu.commons.utils.internal.chmv8.CountedCompleter;
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinTask;
+import java.util.concurrent.CountedCompleter;
+import java.util.concurrent.ForkJoinTask;
 import com.google.common.base.Predicate;
 
 public final class ForEach<E> extends CountedCompleter<E> {

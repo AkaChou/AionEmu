@@ -16,9 +16,10 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.LegionService;
 
 /**
  * @author Simple
@@ -46,7 +47,7 @@ public class CM_LEGION_UPLOAD_EMBLEM extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		if (data != null && data.length > 0) {
-			LegionService.getInstance().uploadEmblemData(getConnection().getActivePlayer(), size, data);
+			GameCoreGameplayServices.legionService().uploadEmblemData(getConnection().getActivePlayer(), size, data);
 		}
 	}
 }

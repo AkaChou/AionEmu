@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.network.loginserver;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 
@@ -29,12 +27,9 @@ import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
  * @author -Nemesiss-
  * @author Luno
  */
+@Slf4j
 public class LsPacketHandler {
 
-	/**
-	 * logger for this class
-	 */
-	private static final Logger log = LoggerFactory.getLogger(LsPacketHandler.class);
 
 	private static Map<State, Map<Integer, LsClientPacket>> packetPrototypes = new HashMap<State, Map<Integer, LsClientPacket>>();
 

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.wealhtheowKeep;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -91,7 +93,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -124,7 +126,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
@@ -165,7 +167,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 		if (p != null) {
 			deleteNpcs(p.getWorldMapInstance().getNpcs(855262)); //Explosive Sacrifice.
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(701481, 780.46515f, 288.62924f, 143.18782f, (byte) 45);
@@ -197,7 +199,7 @@ public class Wealhtheow_Keep_BossAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceWealhtheowKeepBoss() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_RuneElite);

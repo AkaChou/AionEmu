@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import java.util.EnumSet;
 
 import com.aionemu.gameserver.controllers.StaticObjectController;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorState;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author MrPoke
@@ -47,7 +48,7 @@ public class StaticDoor extends StaticObject {
 		super(objectId, controller, spawnTemplate, objectTemplate);
 		states = EnumSet.copyOf(getObjectTemplate().getInitialStates());
 		if (objectTemplate.getMeshFile() != null) {
-			doorName = GeoService.getInstance().getDoorName(spawnTemplate.getWorldId(), objectTemplate.getMeshFile(),
+			doorName = GameWorldServices.geoService().getDoorName(spawnTemplate.getWorldId(), objectTemplate.getMeshFile(),
 					objectTemplate.getX(), objectTemplate.getY(), objectTemplate.getZ());
 		}
 	}
@@ -83,7 +84,7 @@ public class StaticDoor extends StaticObject {
 			packetState = 0xA;
 		}
 		if (doorName != null) {
-			GeoService.getInstance().setDoorState(getWorldId(), getInstanceId(), doorName, open);
+			GameWorldServices.geoService().setDoorState(getWorldId(), getInstanceId(), doorName, open);
 		}
 		// int stateFlags = StaticDoorState.getFlags(states);
 		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getEntityId(), emotion, packetState));

@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.questEngine.handlers;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -48,7 +52,6 @@ import com.aionemu.gameserver.questEngine.task.QuestTasks;
 import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /**
@@ -62,7 +65,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 	/** Create a new QuestHandler object */
 	protected QuestHandler(int questId) {
 		this.questId = questId;
-		this.qe = QuestEngine.getInstance();
+		this.qe = GameEngineServices.questEngine();
 	}
 
 	/** Update the status of the quest in player's journal */
@@ -692,7 +695,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 		final int objectId = item.getObjectId();
 		if (qs.getQuestVarById(varNum) == step) {
 			PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), objectId, itemId, 3000, 0, 0), true);
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), objectId, itemId, 0, 1, 0), true);
@@ -954,7 +957,7 @@ public abstract class QuestHandler extends AbstractQuestHandler {
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(questId, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 		if (qs.getStatus() == QuestStatus.COMPLETE || qs.getStatus() == QuestStatus.REWARD) {
-			QuestEngine.getInstance().onLvlUp(env);
+			GameEngineServices.questEngine().onLvlUp(env);
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
 		}

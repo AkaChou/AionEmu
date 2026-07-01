@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.rvr.elyosWarshipInvasion;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -58,12 +62,12 @@ public class Luluran_ComanderAI2 extends AggressiveNpcAI2
 	
 	@Override
 	protected void handleDied() {
-		RvrService.getInstance().stopRvr(4);
+		GameLocationBootstrapServices.rvrService().stopRvr(4);
 		spawn(833766, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Dimensional Vortex.
 		super.handleDied();
 	}
 	
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 }

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -39,7 +41,7 @@ public class WeaponHAI2 extends AggressiveNpcAI2
 		super.handleAttack(creature);
 		if (isAggred.compareAndSet(false, true)) {
 			//Abnormal object detected. Elimination beginning.
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 1402787, 0);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402787, 0);
 			getPosition().getWorldMapInstance().getDoors().get(85).setOpen(true);
 		}
 	}

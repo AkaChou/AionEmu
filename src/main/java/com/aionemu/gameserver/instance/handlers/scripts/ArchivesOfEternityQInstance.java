@@ -16,8 +16,11 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.*;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -252,7 +255,7 @@ public class ArchivesOfEternityQInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

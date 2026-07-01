@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -31,8 +33,7 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.SkillLearnService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -70,7 +71,7 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -79,16 +80,16 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 			case 835733: //IDAbRe_Core_03_TreasureBox04.
 				switch (Rnd.get(1, 4)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058115, 1)); //?    .
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058115, 1)); //?    .
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058116, 1)); //?  ?  .
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058116, 1)); //?  ?  .
 				    break;
 					case 3:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058117, 1)); //?     ??.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058117, 1)); //?     ??.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058118, 1)); //?   .
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058118, 1)); //?   .
 					break;
 				}
 			break;
@@ -100,62 +101,62 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 			case 835789: //IDAb1_Core_03_Stone_06.
 				switch (Rnd.get(1, 5)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000312, 1)); //item_core_03_stone_01.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000312, 1)); //item_core_03_stone_01.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000313, 1)); //item_core_03_stone_02.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000313, 1)); //item_core_03_stone_02.
 				    break;
 					case 3:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000314, 1)); //item_core_03_stone_03.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000314, 1)); //item_core_03_stone_03.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000315, 1)); //item_core_03_stone_04.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000315, 1)); //item_core_03_stone_04.
 					break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000316, 1)); //item_core_03_stone_05.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000316, 1)); //item_core_03_stone_05.
 					break;
 				}
 			break;
 			/*
 			case 248382: //IDAbRe_Core_03_A1_Witch_An.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000531, 1)); //IDAbRe_Core_03_Move_Item_Skill.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000531, 1)); //IDAbRe_Core_03_Move_Item_Skill.
 			break;
 			*/
 			case 248533: //IDAbRe_Core_03_Key_Drakan_High_As_An.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000317, 1)); //item_core_03_key_01.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000317, 1)); //item_core_03_key_01.
 			break;
 			case 248013: // .
 				switch (Rnd.get(1, 6)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058117, 1)); //?     ??.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058117, 1)); //?     ??.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058118, 1)); //?   .
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058118, 1)); //?   .
 				    break;
 					case 3:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058130, 1)); //?  ?   ??.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058130, 1)); //?  ?   ??.
 					break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058131, 1)); //?  ?   ??.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058131, 1)); //?  ?   ??.
 					break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058132, 1)); //?  ?   ??.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058132, 1)); //?  ?   ??.
 					break;
 				} switch (Rnd.get(1, 4)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 5)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 5)); //Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 5)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 5)); //Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 5)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 5)); //Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 5)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 5)); //Cute Minion Contract.
 					break;
 				}
 			break;
@@ -175,7 +176,7 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 			break;
 			case 248389:
 			    despawnNpc(npc);
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						mirashSanctuaryWave();
@@ -247,7 +248,7 @@ public class MirashSanctuaryInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

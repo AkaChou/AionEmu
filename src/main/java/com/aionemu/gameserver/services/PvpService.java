@@ -16,11 +16,18 @@
  */
 package com.aionemu.gameserver.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -48,14 +55,12 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
 
-import javolution.util.FastMap;
-
 /**
  * @author (Encom)
  */
+@Slf4j(topic = "KILL_LOG")
 public class PvpService {
 
-	private static Logger log = LoggerFactory.getLogger("KILL_LOG");
 	private static volatile ObjectProvider<PvpService> instanceProvider;
 
 	public static final PvpService getInstance() {
@@ -66,10 +71,10 @@ public class PvpService {
 		return SingletonHolder.instance;
 	}
 
-	private FastMap<Integer, KillList> pvpKillLists;
+	private Map<Integer, KillList> pvpKillLists;
 
 	public PvpService() {
-		pvpKillLists = new FastMap<Integer, KillList>();
+		pvpKillLists = new HashMap<>();
 	}
 
 	public static void setInstanceProvider(ObjectProvider<PvpService> provider) {
@@ -127,7 +132,7 @@ public class PvpService {
 			// PvP Toll Reward
 			if (PvPConfig.ENABLE_TOLL_REWARD) {
 				if (Rnd.get(0, 100) > PvPConfig.TOLL_CHANCE) {
-					InGameShopEn.getInstance().addToll(winner, PvPConfig.TOLL_QUANTITY);
+					GameRuntimeServices.inGameShopEn().addToll(winner, PvPConfig.TOLL_QUANTITY);
 					PacketSendUtility.sendMessage(winner,
 							"You've received " + PvPConfig.TOLL_QUANTITY + " tolls from PvP!");
 				}
@@ -203,7 +208,7 @@ public class PvpService {
 				if ((PvPConfig.ENABLE_TOLL_REWARD)
 						&& (Rnd.get() * 100.0F < PvPRewardService.getTollRewardChance(winner, victim))) {
 					int qt = PvPRewardService.getTollQuantity(winner, victim);
-					InGameShopEn.getInstance().addToll(winner, qt);
+					GameRuntimeServices.inGameShopEn().addToll(winner, qt);
 					if (qt == 1)
 						PacketSendUtility.sendBrightYellowMessage(winner, "You obtained " + qt + " point toll.");
 					else {
@@ -254,7 +259,7 @@ public class PvpService {
 				playerDamage += aggro.getDamage();
 			}
 		}
-		ProtectorConquerorService.getInstance().updateRanks(winner, victim);
+		GameFeatureServices.protectorConquerorService().updateRanks(winner, victim);
 
 		// notify Quest engine for winner + his group
 		notifyKillQuests(winner, victim);
@@ -545,8 +550,8 @@ public class PvpService {
 				continue;
 			}
 			// notify Kill-Quests
-			QuestEngine.getInstance().onKillInWorld(new QuestEnv(victim, p, 0, 0), worldId);
-			QuestEngine.getInstance().onKillRanked(new QuestEnv(victim, p, 0, 0), victim.getAbyssRank().getRank());
+			GameEngineServices.questEngine().onKillInWorld(new QuestEnv(victim, p, 0, 0), worldId);
+			GameEngineServices.questEngine().onKillRanked(new QuestEnv(victim, p, 0, 0), victim.getAbyssRank().getRank());
 		}
 		rewarded.clear();
 	}

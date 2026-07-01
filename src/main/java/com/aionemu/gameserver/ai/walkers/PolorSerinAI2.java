@@ -22,7 +22,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.state.CreatureState;
 import com.aionemu.gameserver.utils.MathUtil;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 /****/
 /** Author (Encom)
@@ -36,7 +36,7 @@ public class PolorSerinAI2 extends WalkGeneralRunnerAI2
 	@Override
 	protected void handleMoveArrived() {
 		boolean adultsNear = false;
-		for (VisibleObject object : getOwner().getKnownList().getKnownObjects().values()) {
+		for (VisibleObject object : new java.util.ArrayList<>(getOwner().getKnownList().getKnownObjects().values())) {
 			if (object instanceof Npc) {
 				Npc npc = (Npc)object;
 				if (!ArrayUtils.contains(stopAdults, npc.getNpcId()))

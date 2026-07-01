@@ -16,13 +16,14 @@
  */
 package com.aionemu.gameserver.services.toypet;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -55,19 +56,18 @@ import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 
 /*
  * Reworked by G-Robson26
  * Rework & Test : MATTY
  */
+@Slf4j
 public class MinionService {
 
 	private static volatile ObjectProvider<MinionService> instanceProvider;
 	private static List<Integer> minions;
 	private MinionBuff minionbuff;
-	private Logger log = LoggerFactory.getLogger(MinionService.class);
 
 	public void init() {
 		minions = DataManager.MINION_DATA.getAll();
@@ -83,7 +83,7 @@ public class MinionService {
 		
 		final int lastUsedMinionId = player.getMinionList().getLastUsed();
 		if (lastUsedMinionId != 0 && player.getMinion() == null) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (player.isOnline() && player.getMinion() == null) {
@@ -119,7 +119,7 @@ public class MinionService {
 		};
 
 		player.getObserveController().attach(itemUseObserver);
-		player.getController().addTask(TaskId.ITEM_USE, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {
@@ -510,7 +510,7 @@ public class MinionService {
 		limit.setDelayTime(useDelay);
 		if (player.isItemUseDisabled(limit)) {
 			final int useItemId = itemId;
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, useItemId, slot, 0), true);

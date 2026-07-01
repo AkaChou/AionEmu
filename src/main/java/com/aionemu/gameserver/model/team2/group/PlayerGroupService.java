@@ -16,12 +16,14 @@
  */
 package com.aionemu.gameserver.model.team2.group;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.metadata.GlobalCallback;
 import com.aionemu.gameserver.configs.main.GroupConfig;
@@ -50,20 +52,19 @@ import com.aionemu.gameserver.model.team2.group.events.PlayerStartMentoringEvent
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+@Slf4j
 
 public class PlayerGroupService {
-	private static final Logger log = LoggerFactory.getLogger(PlayerGroupService.class);
 	private static final Map<Integer, PlayerGroup> groups = new ConcurrentHashMap<Integer, PlayerGroup>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
-	private static FastMap<Integer, PlayerGroup> groupMembers;
+	private static Map<Integer, PlayerGroup> groupMembers;
 
 	public static final void inviteToGroup(final Player inviter, final Player invited) {
 		if (canInvite(inviter, invited)) {
@@ -78,7 +79,7 @@ public class PlayerGroupService {
 
 	public static final boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
-			if (AutoGroupService.getInstance().isAutoInstance(inviter.getInstanceId())) {
+			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
 				// You cannot use invite, leave or kick commands related to your group or
 				// alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
@@ -86,7 +87,7 @@ public class PlayerGroupService {
 			}
 		}
 		if (invited.isInInstance()) {
-			if (AutoGroupService.getInstance().isAutoInstance(invited.getInstanceId())) {
+			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited.getInstanceId())) {
 				// You cannot use invite, leave or kick commands related to your group or
 				// alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
@@ -140,7 +141,7 @@ public class PlayerGroupService {
 	}
 
 	private static void initializeOfflineCheck() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new OfflinePlayerChecker(), 1000, 30 * 1000);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new OfflinePlayerChecker(), 1000, 30 * 1000);
 	}
 
 	@GlobalCallback(AddPlayerToGroupCallback.class)

@@ -7,6 +7,11 @@
  */
 package com.aionemu.gameserver.controllers.movement;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
@@ -34,17 +39,15 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.collections.LastUsedCache;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
-import com.aionemu.gameserver.world.geo.nav.NavService;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.aionemu.gameserver.movement.Global;
 import com.aionemu.gameserver.movement.processors.movement.motor.FollowMotor;
+@Slf4j
 
 public class NpcMoveController
         extends CreatureMoveController<Npc> {
-    private static final Logger log = LoggerFactory.getLogger(NpcMoveController.class);
     public static final float MOVE_CHECK_OFFSET = 0.1f;
     private static final float MOVE_OFFSET = 0.05f;
     private int returnAttempts;
@@ -95,7 +98,7 @@ public class NpcMoveController
             }
             destination = Destination.TARGET_OBJECT;
             updateLastMove();
-            MoveTaskManager.getInstance().addCreature(owner);
+            GameMovementLoopServices.moveTaskManager().addCreature(owner);
         }
     }
 
@@ -109,7 +112,7 @@ public class NpcMoveController
             pointY = y;
             pointZ = z;
             updateLastMove();
-            MoveTaskManager.getInstance().addCreature(owner);
+            GameMovementLoopServices.moveTaskManager().addCreature(owner);
         }
     }
 
@@ -126,7 +129,7 @@ public class NpcMoveController
             pointY = y;
             pointZ = z;
             updateLastMove();
-            MoveTaskManager.getInstance().addCreature(owner);
+            GameMovementLoopServices.moveTaskManager().addCreature(owner);
         }
     }
 
@@ -137,7 +140,7 @@ public class NpcMoveController
             }
             destination = Destination.POINT;
             updateLastMove();
-            MoveTaskManager.getInstance().addCreature(owner);
+            GameMovementLoopServices.moveTaskManager().addCreature(owner);
         }
     }
 
@@ -190,7 +193,7 @@ public class NpcMoveController
                         cachedPathValid = false;
                     }
                     if (!cachedPathValid || cachedPath == null) {
-                        cachedPath = NavService.getInstance().navigateToTarget(owner, (Creature) target);
+                        cachedPath = GameWorldServices.navService().navigateToTarget(owner, (Creature) target);
                         if (cachedPath != null) { //Add a bit of randomness to the last point to prevent entities from stacking directly ontop of eachother.
                             //TODO: Move to NavService and make sure this random point is on the navmesh!
                             if (cachedPath.length != 1) {
@@ -243,7 +246,7 @@ public class NpcMoveController
             }
             case HOME: {
                 if ((!cachedPathValid || cachedPath == null) && (returnAttempts<3)) {
-                    cachedPath = NavService.getInstance().navigateToLocation(owner, pointX, pointY, pointZ);
+                    cachedPath = GameWorldServices.navService().navigateToLocation(owner, pointX, pointY, pointZ);
                     returnAttempts++;
                     cachedPathValid = true;
                 }
@@ -262,7 +265,7 @@ public class NpcMoveController
         float targetZ = creature.getZ();
         if (GeoDataConfig.GEO_NPC_MOVE && creature.isInFlyingState() && !npc.isInFlyingState()) {
 //            if (npc.getGameStats().checkGeoNeedUpdate()) {
-            this.cachedTargetZ = GeoService.getInstance().getZ(creature);
+            this.cachedTargetZ = GameWorldServices.geoService().getZ(creature);
  //           }
             targetZ = this.cachedTargetZ;
         }
@@ -272,7 +275,7 @@ public class NpcMoveController
         float targetZ = z;
         if (GeoDataConfig.GEO_NPC_MOVE && !npc.isFlying()) {
 //            if (npc.getGameStats().checkGeoNeedUpdate()) {
-            cachedTargetZ = GeoService.getInstance().getZ(npc.getWorldId(), x, y, z, 1.1F, npc.getInstanceId());
+            cachedTargetZ = GameWorldServices.geoService().getZ(npc.getWorldId(), x, y, z, 1.1F, npc.getInstanceId());
             targetZ = cachedTargetZ;
 //            }
         }
@@ -344,7 +347,7 @@ public class NpcMoveController
         if (GeoDataConfig.GEO_NPC_MOVE && GeoDataConfig.GEO_ENABLE && owner.getAi2().getSubState() != AISubState.WALK_PATH && owner.getAi2().getState() != AIState.RETURNING
                 && owner.getGameStats().checkGeoNeedUpdate()) {
             if (owner.getSpawn().getX() != targetDestX || owner.getSpawn().getY() != targetDestY || owner.getSpawn().getZ() != targetDestZ) {
-                float geoZ = GeoService.getInstance().getZ(owner.getWorldId(), newX, newY, newZ, 0, owner.getInstanceId());
+                float geoZ = GameWorldServices.geoService().getZ(owner.getWorldId(), newX, newY, newZ, 0, owner.getInstanceId());
                 if (Math.abs(newZ - geoZ) > 1) {
                     directionChanged = true;
                 }
@@ -354,7 +357,7 @@ public class NpcMoveController
         if (((Npc)this.owner).getAi2().isLogging()) {
             AI2Logger.moveinfo((Creature)this.owner, "newX=" + newX + " newY=" + newY + " newZ=" + newZ + " mask=" + this.movementMask);
         }
-        World.getInstance().updatePosition(this.owner, newX, newY, newZ, this.heading, false);
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(this.owner, newX, newY, newZ, this.heading, false);
         byte newMask = this.getMoveMask(directionChanged);
         if (this.movementMask != newMask) {
             if (((Npc)this.owner).getAi2().isLogging()) {
@@ -430,13 +433,13 @@ public class NpcMoveController
             localPoint2D = WalkerGroup.getLinePoint(new Point2D(paramRouteStep2.getX(), paramRouteStep2.getY()), new Point2D(paramRouteStep1.getX(), paramRouteStep1.getY()), ((Npc)this.owner).getWalkerGroupShift());
             this.pointZ = paramRouteStep2.getZ();
             if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !(this.owner.isInFlyingState())) {
-                this.pointZ = GeoService.getInstance().getZ(((Creature)this.owner).getWorldId(), paramRouteStep2.getX(), paramRouteStep2.getY(), paramRouteStep2.getZ()-1, 100f, 1);
+                this.pointZ = GameWorldServices.geoService().getZ(((Creature)this.owner).getWorldId(), paramRouteStep2.getX(), paramRouteStep2.getY(), paramRouteStep2.getZ()-1, 100f, 1);
             }
             ((Npc)this.owner).getWalkerGroup().setStep((Npc)this.owner, paramRouteStep1.getRouteStep());
         } else {
             this.pointZ = paramRouteStep1.getZ();
             if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !(this.owner.isInFlyingState())) {
-                this.pointZ = GeoService.getInstance().getZ(((Creature)this.owner).getWorldId(), paramRouteStep1.getX(), paramRouteStep1.getY(), paramRouteStep1.getZ()-1, 100f, 1);
+                this.pointZ = GameWorldServices.geoService().getZ(((Creature)this.owner).getWorldId(), paramRouteStep1.getX(), paramRouteStep1.getY(), paramRouteStep1.getZ()-1, 100f, 1);
             }
         }
         this.currentPoint = paramRouteStep1.getRouteStep() - 1;

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.taskmanager.tasks;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -25,11 +26,9 @@ import com.aionemu.gameserver.model.IExpirable;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 
-import javolution.util.FastMap;
-
 public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	private static volatile ObjectProvider<ExpireTimerTask> instanceProvider;
-	private FastMap<IExpirable, Player> expirables = new FastMap<IExpirable, Player>();
+	private Map<IExpirable, Player> expirables = new HashMap<IExpirable, Player>();
 
 	public ExpireTimerTask() {
 		super(1000);
@@ -59,9 +58,10 @@ public class ExpireTimerTask extends AbstractPeriodicTaskManager {
 	public void removePlayer(Player player) {
 		writeLock();
 		try {
-			for (Map.Entry<IExpirable, Player> entry : expirables.entrySet()) {
+			for (Iterator<Map.Entry<IExpirable, Player>> i = expirables.entrySet().iterator(); i.hasNext();) {
+				Map.Entry<IExpirable, Player> entry = i.next();
 				if (entry.getValue() == player) {
-					expirables.remove(entry.getKey());
+					i.remove();
 				}
 			}
 		} finally {

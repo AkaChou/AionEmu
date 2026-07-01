@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.enragedGuardian;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -47,10 +49,10 @@ public class Enraged_Western_GuardianAI2 extends AggressiveNpcAI2
     }
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(Enraged_Western_GuardianAI2.this);
@@ -63,7 +65,7 @@ public class Enraged_Western_GuardianAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceAb1NamedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Siel's Western Guardian has appeared.
@@ -74,7 +76,7 @@ public class Enraged_Western_GuardianAI2 extends AggressiveNpcAI2
 	
 	@Override
 	protected void handleDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Enraged Western Guardian has been defeated.

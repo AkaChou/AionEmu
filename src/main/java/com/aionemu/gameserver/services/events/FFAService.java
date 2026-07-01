@@ -16,13 +16,17 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -51,22 +55,19 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
-
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class FFAService {
 	private static volatile ObjectProvider<FFAService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(FFAService.class);
-	private Map<Integer, WorldPosition> previousLocations = new FastMap<Integer, WorldPosition>();
+	private Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
 	private WorldMapInstance activeInstance;
 	private List<ArenaMap> maps = new ArrayList<ArenaMap>();
 	private ArenaMap activeMap = null;
@@ -276,7 +277,7 @@ public class FFAService {
 		pickArenaMap();
 		activeInstance = getWorldMap().getMainWorldMapInstance();
 		doors = activeInstance.getDoors();
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				incrementCounter++;
@@ -289,7 +290,7 @@ public class FFAService {
 				if ((incrementCounter % 900) == 0) {
 					final int players = activeInstance.getPlayersInside().size();
 					if (players > 0) {
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player pl) {
 								if (!isInArena(pl) && pl.getBattleground() == null) {
@@ -304,7 +305,7 @@ public class FFAService {
 				}
 				if ((incrementCounter % 3600) == 0) {
 					incrementCounter = 0;
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player pl) {
 							if (!isInArena(pl) && pl.getBattleground() == null) {
@@ -347,7 +348,7 @@ public class FFAService {
 	}
 
 	private WorldMap getWorldMap() {
-		return World.getInstance().getWorldMap(activeMap.getMapId());
+		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(activeMap.getMapId());
 	}
 
 	private void announcePlayerCount() {
@@ -387,7 +388,7 @@ public class FFAService {
 		if (lastAttacker instanceof Player) {
 			rewardKiller(player, (Player) lastAttacker);
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (isInArena(player) && player.isFFA()) {
@@ -431,7 +432,7 @@ public class FFAService {
 		if (player.getKillStreak() == 5) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_1;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -445,7 +446,7 @@ public class FFAService {
 		if (player.getKillStreak() == 10) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_2;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -459,7 +460,7 @@ public class FFAService {
 		if (player.getKillStreak() == 15) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_3;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -473,7 +474,7 @@ public class FFAService {
 		if (player.getKillStreak() == 20) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_4;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -487,7 +488,7 @@ public class FFAService {
 		if (player.getKillStreak() == 25) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_5;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -501,7 +502,7 @@ public class FFAService {
 		if (player.getKillStreak() == 30) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_6;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -515,7 +516,7 @@ public class FFAService {
 		if (player.getKillStreak() == 35) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_7;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -529,7 +530,7 @@ public class FFAService {
 		if (player.getKillStreak() == 40) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_8;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -543,7 +544,7 @@ public class FFAService {
 		if (player.getKillStreak() == 45) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_9;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -557,7 +558,7 @@ public class FFAService {
 		if (player.getKillStreak() >= 50 && player.getKillStreak() <= 999) {
 			for (WorldMapInstance instance : getWorldMap().getInstances()) {
 				ItemService.addItem(player, FFAConfig.FFA_SPREE_REWARD_ITEM, 1);
-				InGameShopEn.getInstance().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
+				GameRuntimeServices.inGameShopEn().addToll(player, FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY);
 				PacketSendUtility.sendMessage(player, "You've received " + FFAConfig.FFA_SPREE_REWARD_TOLL_QUANTITY + " tolls from FFA!");
 				final String msg = player.getName() + FFAConfig.FFA_SPREE_10;
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -598,7 +599,7 @@ public class FFAService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.FFA, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.FFA, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -630,7 +631,7 @@ public class FFAService {
 		player.getEffectController().setAbnormal(AbnormalState.SLEEP.getId());
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (player.getLifeStats().isAlreadyDead()) {

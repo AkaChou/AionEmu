@@ -19,16 +19,17 @@ package com.aionemu.gameserver.dataholders;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.chest.ChestTemplate;
 
-import gnu.trove.map.hash.THashMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Wakizashi
@@ -41,9 +42,9 @@ public class ChestData {
 	private List<ChestTemplate> chests;
 
 	/** A map containing all npc templates */
-	private TIntObjectHashMap<ChestTemplate> chestData = new TIntObjectHashMap<ChestTemplate>();
-	private TIntObjectHashMap<ArrayList<ChestTemplate>> instancesMap = new TIntObjectHashMap<ArrayList<ChestTemplate>>();
-	private THashMap<String, ChestTemplate> namedChests = new THashMap<String, ChestTemplate>();
+	private IntObjectHashMap<ChestTemplate> chestData = new IntObjectHashMap<ChestTemplate>();
+	private IntObjectHashMap<ArrayList<ChestTemplate>> instancesMap = new IntObjectHashMap<ArrayList<ChestTemplate>>();
+	private Map<String, ChestTemplate> namedChests = new LinkedHashMap<String, ChestTemplate>();
 
 	/**
 	 * - Inititialize all maps for subsequent use - Don't nullify initial chest list

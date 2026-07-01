@@ -20,7 +20,8 @@ import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Container for storing Legion members by Id and name.
@@ -29,10 +30,10 @@ import javolution.util.FastMap;
  */
 public class LegionMemberContainer {
 
-	private final FastMap<Integer, LegionMember> legionMemberById = new FastMap<Integer, LegionMember>().shared();
+	private final Map<Integer, LegionMember> legionMemberById = new LinkedHashMap<Integer, LegionMember>();
 
-	private final FastMap<Integer, LegionMemberEx> legionMemberExById = new FastMap<Integer, LegionMemberEx>().shared();
-	private final FastMap<String, LegionMemberEx> legionMemberExByName = new FastMap<String, LegionMemberEx>().shared();
+	private final Map<Integer, LegionMemberEx> legionMemberExById = new LinkedHashMap<Integer, LegionMemberEx>();
+	private final Map<String, LegionMemberEx> legionMemberExByName = new LinkedHashMap<String, LegionMemberEx>();
 
 	/**
 	 * Add LegionMember to this Container.

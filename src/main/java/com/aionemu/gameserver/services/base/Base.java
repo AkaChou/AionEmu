@@ -16,6 +16,11 @@
  */
 package com.aionemu.gameserver.services.base;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,12 +43,9 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnGroup2;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.basespawns.BaseSpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AbyssLandingService;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -121,7 +123,7 @@ public class Base<BL extends BaseLocation> {
 	}
 
 	private void delayedAssault() {
-		startAssault = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		startAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				chooseAttackersRace();
@@ -133,7 +135,7 @@ public class Base<BL extends BaseLocation> {
 	public boolean sendMsgKiller(int id) {
 		switch (id) {
 		case 90:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v13);
@@ -141,7 +143,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 91:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v04);
@@ -149,7 +151,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 92:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v12);
@@ -157,7 +159,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 93:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v03);
@@ -165,7 +167,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 94:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v06);
@@ -173,7 +175,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 95:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v05);
@@ -181,7 +183,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 96:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v01);
@@ -189,7 +191,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 97:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v09);
@@ -197,7 +199,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 98:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v11);
@@ -205,7 +207,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 99:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v10);
@@ -213,7 +215,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 100:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v07);
@@ -221,7 +223,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 101:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v02);
@@ -229,7 +231,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 102:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_killer_v08);
@@ -238,7 +240,7 @@ public class Base<BL extends BaseLocation> {
 			return true;
 		// Shugo Negotiator 5.3
 		case 105: // Oharung At The Sulfur Archipelago.
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -270,7 +272,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 106: // Joarin At Zephyr Island.
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -294,7 +296,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 107: // Temirun At Leibo Island.
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -318,7 +320,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 108: // Shairing At Carpus Isle.
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -334,7 +336,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 109: // Bomishung At Siel's Left Wing.
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -366,7 +368,7 @@ public class Base<BL extends BaseLocation> {
 			});
 			return true;
 		case 110: // Sasming At Siel's Right Wing.
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -403,7 +405,7 @@ public class Base<BL extends BaseLocation> {
 	}
 
 	private void delayedSpawn(final Race race) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (getRace().equals(race) && getBoss() == null) {
@@ -441,168 +443,168 @@ public class Base<BL extends BaseLocation> {
 					// Rattlefrost Outpost.
 					if (getBaseLocation().getId() == 53) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Sliversleet Outpost.
 					if (getBaseLocation().getId() == 54) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Coldforge Outpost.
 					if (getBaseLocation().getId() == 55) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Shimmerfrost Outpost.
 					if (getBaseLocation().getId() == 56) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Icehowl Outpost.
 					if (getBaseLocation().getId() == 57) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Chillhaunt Outpost.
 					if (getBaseLocation().getId() == 58) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Sootguzzle Outpost.
 					if (getBaseLocation().getId() == 59) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Flameruin Outpost.
 					if (getBaseLocation().getId() == 60) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Stokebellow Outpost.
 					if (getBaseLocation().getId() == 61) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Blazerack Outpost.
 					if (getBaseLocation().getId() == 62) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Smoldergeist Outpost.
 					if (getBaseLocation().getId() == 63) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
 					// Moltenspike Outpost.
 					if (getBaseLocation().getId() == 64) {
 						if (race == Race.ASMODIANS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									false);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									true);
 						} else if (race == Race.ELYOS) {
-							AbyssLandingService.getInstance().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(6000, LandingPointsEnum.BASE,
 									true);
-							AbyssLandingService.getInstance().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
+							GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(6000, LandingPointsEnum.BASE,
 									false);
 						}
 					}
@@ -616,7 +618,7 @@ public class Base<BL extends BaseLocation> {
 		if (getFlag() == null) {
 		} else if (!getFlag().getPosition().getMapRegion().isMapRegionActive()) {
 			if (Math.random() < 0.5) {
-				BaseService.getInstance().capture(getId(), race);
+				GameFeatureServices.baseService().capture(getId(), race);
 			} else {
 				delayedAssault();
 			}
@@ -638,7 +640,7 @@ public class Base<BL extends BaseLocation> {
 			}
 			if (getAttackers().isEmpty()) {
 			} else {
-				stopAssault = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnAttackers();
@@ -660,8 +662,8 @@ public class Base<BL extends BaseLocation> {
 
 	protected void despawn(int baseLocationId) {
 		setFlag(null);
-		Collection<BaseNpc> baseNpcs = World.getInstance().getLocalBaseNpcs(baseLocationId);
-		for (BaseNpc npc : baseNpcs) {
+		Collection<BaseNpc> baseNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalBaseNpcs(baseLocationId);
+		for (BaseNpc npc : new ArrayList<BaseNpc>(baseNpcs)) {
 			npc.getController().onDelete();
 		}
 		if (startAssault != null) {
@@ -674,7 +676,7 @@ public class Base<BL extends BaseLocation> {
 	}
 
 	protected void despawnAttackers() {
-		for (Npc attacker : getAttackers()) {
+		for (Npc attacker : new ArrayList<Npc>(getAttackers())) {
 			attacker.getController().onDelete();
 		}
 		getAttackers().clear();

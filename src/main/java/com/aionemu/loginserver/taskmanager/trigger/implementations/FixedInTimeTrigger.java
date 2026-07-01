@@ -18,19 +18,17 @@
 
 package com.aionemu.loginserver.taskmanager.trigger.implementations;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import java.util.Calendar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author nrg
  */
+@Slf4j
 public class FixedInTimeTrigger extends TaskFromDBTrigger {
 
-    private static Logger log = LoggerFactory.getLogger(FixedInTimeTrigger.class);
     private final int DAY_IN_MSEC = 24 * 60 * 60 * 1000;
     private int hour, minute, second;
 

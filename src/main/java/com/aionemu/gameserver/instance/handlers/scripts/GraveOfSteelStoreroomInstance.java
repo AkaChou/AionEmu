@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -26,10 +30,9 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -69,14 +72,14 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 		switch(npc.getNpcId()) {
 			case 215414: //Kysis Chamber Artifact.
 				sendMsg("You win effect <Shield Of Compassion>");
-				SkillEngine.getInstance().getSkill(npc, 276, 10, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 276, 10, player).useNoAnimationSkill();
 			break;
 		}
 	}
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
@@ -86,19 +89,19 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 			case 215176: //Treasurer Dragagh.
 				switch (Rnd.get(1, 3)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000061, 1)); //Kysis Armory Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000061, 1)); //Kysis Armory Key.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000062, 1)); //Kysis Supply Base Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000062, 1)); //Kysis Supply Base Key.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000063, 1)); //Kysis Operations Room Key.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000063, 1)); //Kysis Operations Room Key.
 					break;
 				}
 			break;
 			case 215178: //Weakened Kysis Duke.
 			case 215179: //Awakened Kysis Duke.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000065, 1)); //Kysis Gold Room Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000065, 1)); //Kysis Gold Room Key.
 			break;
         }
     }
@@ -139,7 +142,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 			case 215147: //Ranx Deathbow.
 			    //A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						deleteNpc(731580);
@@ -149,7 +152,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 			case 215159: //Ranx High Mage.
 			    //A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						deleteNpc(700545);
@@ -159,7 +162,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 			case 215172: //Ranx Medico.
 			    //A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						deleteNpc(700546);
@@ -169,7 +172,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 			case 215177: //Ebonlord Nukuam.
 			    //A heavy door has opened somewhere.
 				sendMsgByRace(1401839, Race.PC_ALL, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						deleteNpc(700547);
@@ -229,7 +232,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 			graveOfSteelStoreroomChest.add((Npc) spawn(254574, 578.9111f,  874.7958f, 199.76036f, (byte) 9));
 			graveOfSteelStoreroomChest.add((Npc) spawn(254574, 585.83545f, 855.7736f, 199.76036f, (byte) 3));
 			graveOfSteelStoreroomChest.add((Npc) spawn(254574, 586.7527f, 835.4556f, 199.76036f, (byte) 116));
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer2();
@@ -252,7 +255,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer3();
@@ -275,7 +278,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer4();
@@ -298,7 +301,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer5();
@@ -321,7 +324,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer6();
@@ -344,7 +347,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer7();
@@ -367,7 +370,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer8();
@@ -390,7 +393,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer9();
@@ -413,7 +416,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer10();
@@ -436,7 +439,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer11();
@@ -459,7 +462,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer12();
@@ -482,7 +485,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			graveOfSteelStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			graveOfSteelStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					sendMsg(1400244);
@@ -522,7 +525,7 @@ public class GraveOfSteelStoreroomInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

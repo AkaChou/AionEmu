@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -33,16 +37,16 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +61,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 
 	private int freneticNightmareKilled;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private FastMap<Integer, VisibleObject> objects = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
@@ -71,11 +75,11 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 233161: //Nightmare Lord Heiramune.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000163, 1)); //Nightmare Lord's Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000163, 1)); //Nightmare Lord's Key.
 		    break;
 		}
 	}
@@ -86,20 +90,20 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			case ELYOS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
 					break;
 					case 2:
-					    SkillEngine.getInstance().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
 					break;
 				}
 			break;
 			case ASMODIANS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
 					break;
 					case 2:
-					    SkillEngine.getInstance().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
 					break;
 				}
 			break;
@@ -114,7 +118,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	}
 	
 	private void startNightmareWave() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Violent Nightmare.
@@ -122,7 +126,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 1000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -130,7 +134,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 11000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Violent Nightmare.
@@ -138,7 +142,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 21000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -146,7 +150,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 31000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -154,7 +158,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 41000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Violent Nightmare.
@@ -162,7 +166,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 51000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -170,7 +174,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 61000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -178,7 +182,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 71000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Violent Nightmare.
@@ -186,7 +190,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 81000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -194,7 +198,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 91000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -202,7 +206,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 101000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -210,7 +214,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 111000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Violent Nightmare.
@@ -218,7 +222,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 121000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -226,7 +230,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 131000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -234,7 +238,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 141000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -242,7 +246,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 151000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -250,7 +254,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233144, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 161000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Violent Nightmare.
@@ -258,7 +262,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 				attackEvent((Npc)spawn(233149, 523.84314f, 494.02798f, 198.37112f, (byte) 30), 524.2756f, 540.6662f, 198.94113f, false);
 			}
 		}, 171000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Frenetic Nightmare.
@@ -465,7 +469,7 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -488,20 +492,20 @@ public class NightmareCircusInstance extends GeneralInstanceHandler {
 			case ELYOS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21469, player, player, 3600000 * 1); //Embrace The Dream.
 					break;
 					case 2:
-					    SkillEngine.getInstance().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21470, player, player, 3600000 * 1); //Embrace The Nightmare.
 					break;
 				}
 			break;
 			case ASMODIANS:
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21471, player, player, 3600000 * 1); //Embrace The Dream.
 					break;
 					case 2:
-					    SkillEngine.getInstance().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21472, player, player, 3600000 * 1); //Embrace The Nightmare.
 					break;
 				}
 			break;

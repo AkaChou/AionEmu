@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -26,9 +28,8 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -62,36 +63,36 @@ public class EsoterraceInstance extends GeneralInstanceHandler
     }
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 217206: //Warden Surama.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
 				    }
 				}
 			break;
 			case 701025: //Esoterrace Sundries Box.
 				switch (Rnd.get(1, 6)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190000050, 1)); //Whitebeard Manduri Egg.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190000050, 1)); //Whitebeard Manduri Egg.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020089, 1)); //Blue Merek.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020089, 1)); //Blue Merek.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020148, 1)); //Infernal Diabol.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020148, 1)); //Infernal Diabol.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020204, 1)); //Cheering Dandi's.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020204, 1)); //Cheering Dandi's.
 					break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190070004, 1)); //Su-ro Kim Summoning Lamp.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190070004, 1)); //Su-ro Kim Summoning Lamp.
 					break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190070012, 1)); //Pink Merek Egg.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190070012, 1)); //Pink Merek Egg.
 					break;
 				}
 			break;
@@ -269,7 +270,7 @@ public class EsoterraceInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

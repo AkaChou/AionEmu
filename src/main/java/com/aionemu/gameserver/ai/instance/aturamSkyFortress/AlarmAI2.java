@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -53,15 +57,15 @@ public class AlarmAI2 extends AggressiveNpcAI2
 			if (MathUtil.getDistance(getOwner(), player) <= 15) {
 				if (startedEvent.compareAndSet(false, true)) {
 					canThink = false;
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500379, getObjectId(), 0, 0);
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1401350, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500379, getObjectId(), 0, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401350, 0);
 					getSpawnTemplate().setWalkerId("3002400002");
 					WalkManager.startWalking(this);
 					getOwner().setState(1);
 					PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
 					getPosition().getWorldMapInstance().getDoors().get(128).setOpen(true);
 					getPosition().getWorldMapInstance().getDoors().get(138).setOpen(true);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isAlreadyDead()) {

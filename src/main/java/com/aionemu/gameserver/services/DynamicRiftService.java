@@ -16,15 +16,17 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
@@ -41,22 +43,22 @@ import com.aionemu.gameserver.services.dynamicriftservice.DynamicRift;
 import com.aionemu.gameserver.services.dynamicriftservice.Portal;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class DynamicRiftService {
 	private static volatile ObjectProvider<DynamicRiftService> instanceProvider;
 	private Map<Integer, DynamicRiftLocation> dynamicRift;
 	private static final int duration = CustomConfig.DYNAMIC_RIFT_DURATION;
-	private final Map<Integer, DynamicRift<?>> activeDynamicRift = new FastMap<Integer, DynamicRift<?>>().shared();
-	private static final Logger log = LoggerFactory.getLogger(DynamicRiftService.class);
+	private final Map<Integer, DynamicRift<?>> activeDynamicRift = new LinkedHashMap<Integer, DynamicRift<?>>();
 
 	public void initDynamicRiftLocations() {
 		if (CustomConfig.DYNAMIC_RIFT_ENABLED) {
@@ -65,12 +67,12 @@ public class DynamicRiftService {
 				spawn(loc, DynamicRiftStateType.CLOSED);
 			}
 			log.info("[DynamicRiftService] Loaded " + dynamicRift.size() + " locations.");
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startDynamicRift(1);
 					startDynamicRift(3);
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendPacket(player,
@@ -79,12 +81,12 @@ public class DynamicRiftService {
 					});
 				}
 			}, CustomConfig.DYNAMIC_RIFT_DRAGON_SCHEDULE);
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startDynamicRift(2);
 					startDynamicRift(4);
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendPacket(player,
@@ -94,12 +96,12 @@ public class DynamicRiftService {
 				}
 			}, CustomConfig.DYNAMIC_RIFT_INDRATOO_SCHEDULE);
 			// Shugo Merchant League
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startDynamicRift(5);
 					startDynamicRift(6);
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							// The Shugo Merchant League has arrived.
@@ -131,7 +133,7 @@ public class DynamicRiftService {
 			activeDynamicRift.put(id, portal);
 		}
 		portal.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopDynamicRift(id);
@@ -171,7 +173,7 @@ public class DynamicRiftService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

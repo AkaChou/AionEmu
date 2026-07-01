@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -38,7 +40,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_STAGE_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -222,7 +224,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(217847, 1307.2786f, 1734.3274f, 316f, (byte) 0, 2000);
 				//Stop Gomju from perpetrating a senseless massacre!
 				sendMsgByRace(1401086, Race.PC_ALL, 3000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpcs(getNpcs(217848));
@@ -335,7 +337,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				sp(205678, 346.64798f, 349.25586f, 96.090965f, (byte) 0, 0);
 			break;
 			case 217819:
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						Player player = null;
@@ -433,7 +435,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				final int fnpcId = npc.getNpcId();
 				despawnNpc(npc);
 				if (getNpcs(fnpcId).size() == 2) {
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							//You have eliminated all enemies in Round %0.
@@ -494,7 +496,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 	
 	private void startBonusStage2() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Round %0 begins!
@@ -502,7 +504,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				setEvent(StageType.START_BONUS_STAGE_2, 2000);
 			}
 		}, 2000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Poppy is running from the Dukaki Cooks. Eliminate them and help Poppy to reach the refuge.
@@ -510,7 +512,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 				startWalk((Npc) spawn(217802, 1780.5371f, 307.3513f, 469.25f, (byte) 0), "PoppyOnTheRun"); //Poppy.
 			}
 		}, 1000);
-		bonusTimer = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		bonusTimer = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				spawnCount++;
@@ -523,7 +525,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 	
 	private void startWalk(final Npc npc, final String walkId) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -613,7 +615,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			place = 7;
 		}
 		getPlayerReward(player.getObjectId()).setSpawnPosition(place);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 onReviveEvent(player);
@@ -827,7 +829,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	}
 	
 	private void sp(final int npcId, final float x, final float y, final float z, final byte h, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -839,7 +841,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	private void setEvent(StageType type, int time) {
 		this.stageType = type;
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sendEventPacket();
@@ -849,7 +851,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 	
 	@Override
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int itemId = 0;
 		Integer object = instance.getSoloPlayerObj();
@@ -858,71 +860,71 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 			* Give to a "Crucible Arbiter" in order to rejoin the battle and prove your worthiness.
 			*/
 			case 217758: //Worthiness Ticket Box (Fin Stage 1)
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000124, 1)); //Worthiness Ticket.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000124, 1)); //Worthiness Ticket.
 			break;
 			case 217833: //Bonus Box (Fin Stage 6 Bonus)
 				switch (Rnd.get(1, 6)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 168000135, 1)); //Godstone: Inggness's Calmness.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 168000135, 1)); //Godstone: Inggness's Calmness.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 168000136, 1)); //Godstone: Vanktrist's Tears.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 168000136, 1)); //Godstone: Vanktrist's Tears.
 				    break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 168000137, 1)); //Godstone: Tymora's Training.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 168000137, 1)); //Godstone: Tymora's Training.
 				    break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 168000138, 1)); //Godstone: Mazion's Order.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 168000138, 1)); //Godstone: Mazion's Order.
 				    break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 168000139, 1)); //Godstone: Kijan's Outcry.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 168000139, 1)); //Godstone: Kijan's Outcry.
 				    break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 168000140, 1)); //Godstone: Walzen's Vow.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 168000140, 1)); //Godstone: Walzen's Vow.
 				    break;
 				} switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
 					break;
 					case 5:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					break;
 				}
 			break;
 			case 218571: //Poppy Present (Fin Stage 2 Bonus)
 				switch (Rnd.get(1, 8)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170490013, 1)); //[Souvenir] Barbecued Poppy.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170490013, 1)); //[Souvenir] Barbecued Poppy.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190000075, 1)); //Runaway Poppy Egg.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190000075, 1)); //Runaway Poppy Egg.
 				    break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170490009, 1)); //[Souvenir] Returned Poppy.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170490009, 1)); //[Souvenir] Returned Poppy.
 				    break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170495012, 1)); //[Souvenir] Returned Poppy.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170495012, 1)); //[Souvenir] Returned Poppy.
 				    break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170495013, 1)); //[Souvenir] Returned Poppy.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170495013, 1)); //[Souvenir] Returned Poppy.
 				    break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006429, 1)); //Poppy Snack.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006429, 1)); //Poppy Snack.
 				    break;
 					case 7:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006430, 1)); //Tasty Poppy Snack.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006430, 1)); //Tasty Poppy Snack.
 				    break;
 					case 8:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006431, 1)); //Nutritious Poppy Snack.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006431, 1)); //Nutritious Poppy Snack.
 				    break;
 				}
 			break;
@@ -1012,7 +1014,7 @@ public class CrucibleChallengeInstance extends CrucibleInstance
 					}
 				}
 				dropItems.clear();
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, object, npcId, 186000130, count));
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, object, npcId, 186000130, count));
 			break;
 		}
 	}

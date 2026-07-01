@@ -36,6 +36,7 @@ import com.aionemu.commons.utils.PropertiesUtils;
 public class Config {
 
     protected static final Logger log = LoggerFactory.getLogger(Config.class);
+    private static volatile Properties bootOverrides = new Properties();
     /**
      * Chat Server address
      */
@@ -89,6 +90,14 @@ public class Config {
         return System.getProperty("aion.chat.config.dir", "./config");
     }
 
+    public static void setBootOverrides(Properties properties) {
+        Properties copy = new Properties();
+        if (properties != null) {
+            copy.putAll(properties);
+        }
+        bootOverrides = copy;
+    }
+
     /**
      * Load configs from files.
      */
@@ -105,6 +114,7 @@ public class Config {
 
             Properties[] props = PropertiesUtils.loadAllFromDirectory(configDir());
             PropertiesUtils.overrideProperties(props, myProps);
+            PropertiesUtils.overrideProperties(props, bootOverrides);
 
             log.info("Loading: commons.properties");
             ConfigurableProcessor.process(CommonsConfig.class, props);

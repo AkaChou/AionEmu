@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -30,15 +32,13 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 	private int hugeAetherFragment;
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
-	private final FastList<Future<?>> abyssalSplinterTask = FastList.newInstance();
+	private final List<Future<?>> abyssalSplinterTask = new ArrayList<Future<?>>();
 	
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
@@ -73,12 +73,12 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
     }
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 216945: //Enos Watcher.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000104, 1)); //Abyssal Fragment.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000104, 1)); //Abyssal Fragment.
 			break;
 		}
 	}
@@ -213,10 +213,10 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = abyssalSplinterTask.head(), end = abyssalSplinterTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : abyssalSplinterTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -229,7 +229,7 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        abyssalSplinterTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        abyssalSplinterTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -243,7 +243,7 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
     }
 	
 	protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        abyssalSplinterTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        abyssalSplinterTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -265,7 +265,7 @@ public class AbyssalSplinterInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

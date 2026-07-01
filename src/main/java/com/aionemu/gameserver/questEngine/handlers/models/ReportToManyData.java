@@ -16,16 +16,17 @@ package com.aionemu.gameserver.questEngine.handlers.models;
 
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.template.ReportToMany;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ReportToManyData")
@@ -51,7 +52,7 @@ public class ReportToManyData extends XMLQuest {
 	@Override
 	public void register(QuestEngine questEngine) {
 		int maxVar = 0;
-		FastMap<Integer, NpcInfos> NpcInfo = new FastMap<Integer, NpcInfos>();
+		Map<Integer, NpcInfos> NpcInfo = new LinkedHashMap<Integer, NpcInfos>();
 		for (NpcInfos mi : npcInfos) {
 			NpcInfo.put(mi.getNpcId(), mi);
 			if (mi.getVar() > maxVar) {

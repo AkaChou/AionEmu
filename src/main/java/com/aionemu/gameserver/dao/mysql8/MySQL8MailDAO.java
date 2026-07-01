@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
@@ -12,9 +13,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Mailbox;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.items.storage.StorageType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,9 +23,9 @@ import java.util.List;
  * @author kosyachok
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8MailDAO extends MailDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8MailDAO.class);
 
     private static final String SELECT_MAIL_QUERY = "SELECT * FROM mail WHERE mail_recipient_id = ? ORDER BY recieved_time DESC LIMIT 100";
     private static final String SELECT_INVENTORY_QUERY = "SELECT * FROM inventory WHERE `item_owner` = ? AND `item_location` = 127";

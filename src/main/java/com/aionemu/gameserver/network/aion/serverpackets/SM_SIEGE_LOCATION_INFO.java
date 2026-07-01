@@ -16,10 +16,13 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -28,24 +31,21 @@ import com.aionemu.gameserver.model.team.legion.LegionEmblem;
 import com.aionemu.gameserver.model.team.legion.LegionEmblemType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.SiegeService;
-
-import javolution.util.FastMap;
+@Slf4j
 
 public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 	private int infoType;
 	private Map<Integer, SiegeLocation> locations;
-	private static final Logger log = LoggerFactory.getLogger(SM_SIEGE_LOCATION_INFO.class);
 
 	public SM_SIEGE_LOCATION_INFO() {
 		this.infoType = 0;
-		locations = SiegeService.getInstance().getSiegeLocations();
+		locations = GameFeatureServices.siegeService().getSiegeLocations();
 	}
 
 	public SM_SIEGE_LOCATION_INFO(SiegeLocation loc) {
 		this.infoType = 1;
-		locations = new FastMap<Integer, SiegeLocation>();
+		locations = new HashMap<>();
 		locations.put(loc.getLocationId(), loc);
 	}
 
@@ -65,10 +65,10 @@ public class SM_SIEGE_LOCATION_INFO extends AionServerPacket {
 			int legionId = loc.getLegionId();
 			writeD(legionId);
 			if (legionId != 0) {
-				if (LegionService.getInstance().getLegion(legionId) == null) {
+				if (GameCoreGameplayServices.legionService().getLegion(legionId) == null) {
 					log.error("Can't find or load legion with id " + legionId);
 				} else {
-					emblem = LegionService.getInstance().getLegion(legionId).getLegionEmblem();
+					emblem = GameCoreGameplayServices.legionService().getLegion(legionId).getLegionEmblem();
 				}
 			}
 			if (emblem.getEmblemType() == LegionEmblemType.DEFAULT) {

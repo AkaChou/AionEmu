@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -33,9 +33,9 @@ import com.aionemu.gameserver.services.PrivateStoreService;
 import com.aionemu.gameserver.services.RepurchaseService;
 import com.aionemu.gameserver.services.TradeService;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
+@Slf4j
 
 public class CM_BUY_ITEM extends AionClientPacket {
-	private static final Logger log = LoggerFactory.getLogger(CM_BUY_ITEM.class);
 	private int sellerObjId;
 	private int tradeActionId;
 	private int amount;
@@ -168,7 +168,7 @@ public class CM_BUY_ITEM extends AionClientPacket {
 				}
 				break;
 			case 2: // [Repurchase]
-				RepurchaseService.getInstance().repurchaseFromShop(player, repurchaseList);
+				GameFeatureServices.repurchaseService().repurchaseFromShop(player, repurchaseList);
 				break;
 			case 13: // [Buy From Shop]
 				if (tlist != null && tlist.getTradeNpcType() == TradeNpcType.NORMAL) {

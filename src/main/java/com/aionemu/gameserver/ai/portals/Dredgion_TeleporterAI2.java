@@ -93,7 +93,7 @@ public class Dredgion_TeleporterAI2 extends ActionItemNpcAI2 {
 	
 	private static void goTo(final Player player, int worldId, float x, float y, float z) {
 		
-		WorldMap destinationMap = World.getInstance().getWorldMap(worldId);
+		WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
 		
 		if (destinationMap.isInstanceType()) {
 			

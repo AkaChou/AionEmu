@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.siege;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.Iterator;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -95,7 +97,7 @@ public class Influence {
 		float a_kaldor = 0f;
 		float b_kaldor = 0f;
 		float t_kaldor = 0f;
-		for (SiegeLocation sLoc : SiegeService.getInstance().getSiegeLocations().values()) {
+		for (SiegeLocation sLoc : GameFeatureServices.siegeService().getSiegeLocations().values()) {
 			switch (sLoc.getWorldId()) {
 			// ======[ABYSS]==========
 			case 400010000:
@@ -148,7 +150,7 @@ public class Influence {
 	@SuppressWarnings("unused")
 	private void broadcastInfluencePacket() {
 		SM_INFLUENCE_RATIO pkt = new SM_INFLUENCE_RATIO();
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			PacketSendUtility.sendPacket(player, pkt);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.panesterra;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -47,13 +48,13 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2
 			case 277400: //Mirage Dance Guardian General.
 			case 277405: //Chaos Wind Guardian General.
 				killedTheGuardianGeneral();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			        @Override
 			        public void run() {
 			            spawnTreasureChest(701481);
 			        }
 		        }, 10000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			        @Override
 			        public void run() {
 					    spawn(802219, 1024.12f, 1078.747f, 1530.2688f, (byte) 90);
@@ -63,13 +64,13 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2
 			case 277415: //Mirage Dance Guardian General.
 			case 277420: //Chaos Wind Guardian General.
 			    killedTheGuardianGeneral();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			        @Override
 			        public void run() {
 			            spawnTreasureChest(701481);
 			        }
 		        }, 10000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			        @Override
 			        public void run() {
 					    spawn(802221, 1024.12f, 1078.747f, 1530.2688f, (byte) 90);
@@ -79,13 +80,13 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2
 			case 277430: //Mirage Dance Guardian General.
 			case 277435: //Chaos Wind Guardian General.
 			    killedTheGuardianGeneral();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			        @Override
 			        public void run() {
 			            spawnTreasureChest(701481);
 			        }
 		        }, 10000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			        @Override
 			        public void run() {
 					    spawn(802223, 1024.12f, 1078.747f, 1530.2688f, (byte) 90);
@@ -95,13 +96,13 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2
 			case 277445: //Mirage Dance Guardian General.
 			case 277450: //Chaos Wind Guardian General.
 			    killedTheGuardianGeneral();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			        @Override
 			        public void run() {
 			            spawnTreasureChest(701481);
 			        }
 		        }, 10000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			        @Override
 			        public void run() {
 					    spawn(802225, 1024.12f, 1078.747f, 1530.2688f, (byte) 90);
@@ -130,7 +131,7 @@ public class GuardianGeneralAI2 extends AggressiveNpcAI2
 	}
 	
 	private void killedTheGuardianGeneral() {
-        World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Loading the Advance Corridor Shield... Please wait.

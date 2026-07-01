@@ -18,11 +18,9 @@
 
 package com.aionemu.loginserver.network.gameserver.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.IPRange;
 import com.aionemu.loginserver.GameServerTable;
@@ -40,9 +38,9 @@ import com.aionemu.loginserver.service.LoginThreadPoolServices;
  *
  * @author -Nemesiss-
  */
+@Slf4j
 public class CM_GS_AUTH extends GsClientPacket {
 
-    private final Logger log = LoggerFactory.getLogger(CM_GS_AUTH.class);
     /**
      * Password for authentication
      */

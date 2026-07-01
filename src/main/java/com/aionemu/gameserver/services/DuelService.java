@@ -16,10 +16,11 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.DuelResult;
@@ -37,19 +38,19 @@ import com.aionemu.gameserver.services.summons.SummonsService;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+@Slf4j
 
 public class DuelService {
-	private static Logger log = LoggerFactory.getLogger(DuelService.class);
 	private static volatile ObjectProvider<DuelService> instanceProvider;
 
-	private FastMap<Integer, Integer> duels;
-	private FastMap<Integer, Future<?>> timeOutTask;
+	private Map<Integer, Integer> duels;
+	private Map<Integer, Future<?>> timeOutTask;
 
 	public static final DuelService getInstance() {
 		ObjectProvider<DuelService> provider = instanceProvider;
@@ -64,8 +65,8 @@ public class DuelService {
 	}
 
 	public DuelService() {
-		this.duels = new FastMap<Integer, Integer>().shared();
-		timeOutTask = new FastMap<Integer, Future<?>>().shared();
+		this.duels = new LinkedHashMap<Integer, Integer>();
+		timeOutTask = new LinkedHashMap<Integer, Future<?>>();
 	}
 
 	public void onDuelRequest(Player requester, Player responder) {
@@ -140,7 +141,7 @@ public class DuelService {
 	}
 
 	private void startDuelMsg(final Player player1, final Player player2) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player object) {
 				if (MathUtil.isInRange(player1, object, 100)) {
@@ -153,7 +154,7 @@ public class DuelService {
 	}
 
 	private void loseDuelMsg(final Player player1, final Player player2) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player object) {
 				if (MathUtil.isInRange(player1, object, 100)) {
@@ -166,7 +167,7 @@ public class DuelService {
 	}
 
 	private void drawDuelMsg(final Player player1, final Player player2) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player object) {
 				if (MathUtil.isInRange(player1, object, 100)) {
@@ -183,7 +184,7 @@ public class DuelService {
 			return;
 		}
 		int opponnentId = duels.get(player.getObjectId());
-		Player opponent = World.getInstance().findPlayer(opponnentId);
+		Player opponent = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(opponnentId);
 		if (opponent != null) {
 			opponent.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 			opponent.getController().cancelCurrentSkill();
@@ -215,7 +216,7 @@ public class DuelService {
 		player.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 		player.getController().cancelCurrentSkill();
 		int opponnentId = duels.get(player.getObjectId());
-		Player opponent = World.getInstance().findPlayer(opponnentId);
+		Player opponent = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(opponnentId);
 		if (opponent != null) {
 			opponent.getEffectController().removeAbnormalEffectsByTargetSlot(SkillTargetSlot.DEBUFF);
 			opponent.getController().cancelCurrentSkill();
@@ -224,7 +225,7 @@ public class DuelService {
 	}
 
 	private void createTask(final Player requester, final Player responder) {
-		Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				if (isDueling(requester.getObjectId(), responder.getObjectId())) {
 					drawDuelMsg(requester, responder);

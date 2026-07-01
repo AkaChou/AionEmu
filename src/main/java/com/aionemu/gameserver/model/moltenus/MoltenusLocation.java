@@ -17,14 +17,14 @@
 package com.aionemu.gameserver.model.moltenus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.moltenus.MoltenusTemplate;
 import com.aionemu.gameserver.services.moltenusservice.MoltenusFight;
-
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
@@ -35,7 +35,7 @@ public class MoltenusLocation {
 	protected boolean isActive;
 	protected MoltenusTemplate template;
 	protected MoltenusFight<MoltenusLocation> activeMoltenus;
-	protected FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> players = new HashMap<>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public MoltenusLocation() {
@@ -71,7 +71,7 @@ public class MoltenusLocation {
 		return spawned;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 }

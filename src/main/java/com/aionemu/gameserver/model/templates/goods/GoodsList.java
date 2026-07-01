@@ -19,16 +19,14 @@ package com.aionemu.gameserver.model.templates.goods;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.limiteditems.LimitedItem;
-
-import javolution.util.FastList;
 
 /**
  * @author ATracer
@@ -59,8 +57,8 @@ public class GoodsList {
 	/**
 	 * return the limitedItems.
 	 */
-	public FastList<LimitedItem> getLimitedItems() {
-		FastList<LimitedItem> limitedItems = new FastList<LimitedItem>();
+	public List<LimitedItem> getLimitedItems() {
+		List<LimitedItem> limitedItems = new ArrayList<>();
 		if (items != null) {
 			for (Item item : items) {
 				if (item.getBuyLimit() != null && item.getSellLimit() != null) {

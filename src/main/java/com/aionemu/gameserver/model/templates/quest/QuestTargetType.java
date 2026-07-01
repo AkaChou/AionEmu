@@ -20,7 +20,7 @@ package com.aionemu.gameserver.model.templates.quest;
 /** Author Rinzler (Encom)
 /****/
 
-import javax.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnum;
 
 @XmlEnum
 public enum QuestTargetType {

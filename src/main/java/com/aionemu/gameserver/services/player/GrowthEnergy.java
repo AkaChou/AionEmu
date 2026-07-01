@@ -16,12 +16,12 @@
  */
 package com.aionemu.gameserver.services.player;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -34,16 +34,16 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * Created by wanke on 26/02/2017.
  */
+@Slf4j
 
 public class GrowthEnergy {
 	private static volatile ObjectProvider<GrowthEnergy> instanceProvider;
-	private Logger log = LoggerFactory.getLogger(GrowthEnergy.class);
 	private boolean dailyGenerated = true;
 
 	public void init() {
 		log.info("<Aura Of Growth Reset>");
 		String daily = "0 0 9 1/1 * ? *";
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				dailyGenerated = false;
 				updateGrowthEnergy();
@@ -52,7 +52,7 @@ public class GrowthEnergy {
 	}
 
 	private void updateGrowthEnergy() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(final Player player) {
 				player.getCommonData().setAuraOfGrowth(0);

@@ -15,17 +15,15 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.time.Instant;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.IPRange;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.configs.network.IPConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
-import com.aionemu.gameserver.network.NetworkController;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.services.ChatService;
@@ -36,10 +34,10 @@ import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
  * @modified by Novo, cura
  * @author GiGatR00n, NewLives
  */
+@Slf4j
 
 public class SM_VERSION_CHECK extends AionServerPacket {
 
-	private static final Logger log = LoggerFactory.getLogger(SM_VERSION_CHECK.class);
 	/**
 	 * Aion Client version
 	 */
@@ -65,7 +63,7 @@ public class SM_VERSION_CHECK extends AionServerPacket {
 		} else {
 			characterLimitCount = GSConfig.CHARACTER_LIMIT_COUNT;
 		}
-		characterLimitCount *= NetworkController.getInstance().getServerCount();
+		characterLimitCount *= GameServerNetworkServices.networkController().getServerCount();
 
 		if (GSConfig.CHARACTER_CREATION_MODE < 0 || GSConfig.CHARACTER_CREATION_MODE > 2) {
 			characterFactionsMode = 0;

@@ -30,22 +30,32 @@ import com.aionemu.gameserver.network.loginserver.clientpackets.CM_MACBAN_LIST;
 import com.aionemu.gameserver.network.loginserver.clientpackets.CM_PREMIUM_RESPONSE;
 import com.aionemu.gameserver.network.loginserver.clientpackets.CM_PTRANSFER_RESPONSE;
 import com.aionemu.gameserver.network.loginserver.clientpackets.CM_REQUEST_KICK_ACCOUNT;
+import org.springframework.beans.factory.ObjectProvider;
 
 /**
  * @author Luno
  */
 public class LsPacketHandlerFactory {
 
+	private static volatile ObjectProvider<LsPacketHandlerFactory> instanceProvider;
 	private LsPacketHandler handler = new LsPacketHandler();
 
 	public static final LsPacketHandlerFactory getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<LsPacketHandlerFactory> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<LsPacketHandlerFactory> provider) {
+		instanceProvider = provider;
 	}
 
 	/**
 	 * @param loginServer
 	 */
-	private LsPacketHandlerFactory() {
+	public LsPacketHandlerFactory() {
 		addPacket(new CM_ACCOUNT_RECONNECT_KEY(0x03), State.AUTHED);
 		addPacket(new CM_ACOUNT_AUTH_RESPONSE(0x01), State.AUTHED);
 		addPacket(new CM_GS_AUTH_RESPONSE(0x00), State.CONNECTED);

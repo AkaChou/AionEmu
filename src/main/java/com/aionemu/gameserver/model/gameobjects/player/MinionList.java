@@ -14,6 +14,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.util.Collection;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -22,7 +24,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /*
  * Rework & Test : MATTY
@@ -31,7 +34,7 @@ import javolution.util.FastMap;
 public class MinionList {
 	private final Player player;
 	private int lastUsedObjId;
-	private FastMap<Integer, MinionCommonData> minions = new FastMap<Integer, MinionCommonData>();
+	private Map<Integer, MinionCommonData> minions = new LinkedHashMap<Integer, MinionCommonData>();
 
 	public MinionList(Player player) {
 		this.player = player;
@@ -41,7 +44,7 @@ public class MinionList {
 	public void loadMinions() {
 		for (MinionCommonData minionCommonData : DAOManager.getDAO(PlayerMinionsDAO.class).getPlayerMinions(player)) {
 			if (minionCommonData.getExpireTime() > 0) {
-				ExpireTimerTask.getInstance().addTask(minionCommonData, player);
+				GameTaskManagerServices.expireTimerTask().addTask(minionCommonData, player);
 			}
 			minions.put(minionCommonData.getObjectId(), minionCommonData);
 		}

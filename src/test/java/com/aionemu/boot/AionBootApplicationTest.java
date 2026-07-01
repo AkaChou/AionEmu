@@ -5,8 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.AionBootApplication;
+import com.aionemu.boot.config.AionGameProperties;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.boot.config.LegacyGameProperties;
 import com.aionemu.boot.lifecycle.AionProcessRuntimeBridge;
 import com.aionemu.boot.lifecycle.AionServiceLauncher;
 import com.aionemu.boot.lifecycle.ChatServerLifecycleGateway;
@@ -344,8 +346,10 @@ class AionBootApplicationTest {
     void serviceLauncherCanBeCreatedAsSpringBean() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
             context.registerBean(AionServicesProperties.class);
+            context.registerBean(AionGameProperties.class);
             context.registerBean(NettyTransportLifecycle.class);
             context.registerBean(AionTransportBoundary.class);
+            context.registerBean(LegacyGameProperties.class);
             context.registerBean(LegacyConfigOverrides.class);
             context.registerBean(AionProcessRuntimeBridge.class);
             context.registerBean(GameCoreServicesRuntimeBridge.class);

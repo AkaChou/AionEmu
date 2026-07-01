@@ -16,6 +16,11 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,8 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -47,22 +50,22 @@ import com.aionemu.gameserver.services.events.bg.SoloSurvivorBg;
 import com.aionemu.gameserver.services.events.bg.TwoTeamBg;
 import com.aionemu.gameserver.services.events.bg.TwoTeamSmallBg;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class LadderService {
 	private static volatile ObjectProvider<LadderService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(LadderService.class);
 	private List<AionObject> eventQueueList = new ArrayList<AionObject>();
 	private List<AionObject> normalQueueList = new ArrayList<AionObject>();
-	private Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new FastMap<Integer, Battleground>());
-	private Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new FastMap<Integer, Event>());
+	private Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());
+	private Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Event>());
 	private Battleground eventBg = null;
 	private ScheduledFuture<?> eventTask = null;
 	private ScheduledFuture<?> normalTask = null;
@@ -73,7 +76,7 @@ public class LadderService {
 	private int rankUpdateInterval = 2;
 
 	public LadderService() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				UpdateRanks();
@@ -240,7 +243,7 @@ public class LadderService {
 					SoloSurvivorBg.class, DeathmatchBg.class, TwoTeamSmallBg.class };
 		}
 		try {
-			bg = (Battleground) bgs[Rnd.get(bgs.length)].newInstance();
+			bg = (Battleground) bgs[Rnd.get(bgs.length)].getDeclaredConstructor().newInstance();
 		} catch (Exception e) {
 			// log.error("getRandomBg() failed!", e);
 		}
@@ -256,21 +259,21 @@ public class LadderService {
 		normalQueueList.clear();
 		announceAll(
 				"[BG Open] Register with the button located on the right of your skill bar. You have <2 Minutes> to register!!!");
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player pl) {
-				if (pl.getBattleground() == null && !isInQueue(pl) && !FFAService.getInstance().isInArena(pl)) {
+				if (pl.getBattleground() == null && !isInQueue(pl) && !GameFeatureServices.ffaService().isInArena(pl)) {
 					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, true));
 				}
 			}
 		});
-		normalTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		normalTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				HandleNormalQueue(event);
 				normalReady = false;
 				normalTask = null;
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player pl) {
 						PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(301550000, false));
@@ -299,7 +302,7 @@ public class LadderService {
 			announceAll("WARNING!!! " + bg.getName()
 					+ "The event start in 30 seconds ! Register you by using the right button on your skill bars!!!");
 		}
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player pl) {
 				if (pl.getBattleground() == null && !isInQueue(pl)) {
@@ -307,10 +310,10 @@ public class LadderService {
 				}
 			}
 		});
-		eventTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		eventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player pl) {
 						PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, false));
@@ -450,7 +453,7 @@ public class LadderService {
 			}
 		} else {
 			for (Integer objectId : validParticipants) {
-				AionObject ao = World.getInstance().findVisibleObject(objectId);
+				AionObject ao = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
 				if (ao != null && ao instanceof Player) {
 					scheduleAnnouncement((Player) ao, "No opponents found!!! Please wait for the next registration.",
 							0);
@@ -507,8 +510,8 @@ public class LadderService {
 		while (iterations++ < 40) {
 			Battleground bg;
 			try {
-				bg = (Battleground) eventBgClass.newInstance();
-			} catch (Exception e) {
+				bg = (Battleground) eventBgClass.getDeclaredConstructor().newInstance();
+			} catch (ReflectiveOperationException e) {
 				continue;
 			}
 			bg.setTeamBased(eventTeamBased);
@@ -584,7 +587,7 @@ public class LadderService {
 			}
 		} else {
 			for (Integer objectId : validParticipants) {
-				AionObject ao = World.getInstance().findVisibleObject(objectId);
+				AionObject ao = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
 				if (ao != null && ao instanceof Player) {
 					scheduleAnnouncement((Player) ao, "\uE05C",
 							"There are no more place!!!, You will more luck next time!", 0);
@@ -611,7 +614,7 @@ public class LadderService {
 			eventQueueList.clear();
 			eventTask = null;
 			eventReady = false;
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player pl) {
 					PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(300350000, false));
@@ -622,10 +625,10 @@ public class LadderService {
 	}
 
 	private void announceAll(final String msg) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				if (player.getBattleground() == null && !FFAService.getInstance().isInArena(player)) {
+				if (player.getBattleground() == null && !GameFeatureServices.ffaService().isInArena(player)) {
 					PacketSendUtility.sendSys3Message(player, "\uE05C", msg);
 				}
 			}
@@ -1045,7 +1048,7 @@ public class LadderService {
 		List<Integer> technist = new ArrayList<Integer>();
 		List<Integer> muse = new ArrayList<Integer>();
 		for (Integer objectId : participants) {
-			Player pl = World.getInstance().findPlayer(objectId);
+			Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
 			if (pl == null) {
 				continue;
 			}
@@ -1131,7 +1134,7 @@ public class LadderService {
 
 	private void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					PacketSendUtility.sendSys3Message(player, sender, msg);

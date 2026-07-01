@@ -18,13 +18,11 @@
 
 package com.aionemu.loginserver;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.network.IPRange;
@@ -41,12 +39,9 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_REQUEST_KICK_
  *
  * @author -Nemesiss-
  */
+@Slf4j
 public class GameServerTable {
 
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(GameServerTable.class);
     /**
      * Map<Id,GameServer>
      */

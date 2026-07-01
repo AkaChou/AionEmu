@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.npcSupport;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -50,7 +52,7 @@ public class Mighty_HeroAI2 extends GeneralNpcAI2
     public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1011) {
+		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == 10000) {
 			int skillId = 0;
@@ -62,7 +64,7 @@ public class Mighty_HeroAI2 extends GeneralNpcAI2
 					skillId = 21797; //Mighty's Energetic Cheer I.
 				break;
 			}
-			SkillEngine.getInstance().getSkill(getOwner(), skillId, 1, player).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useNoAnimationSkill();
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
 		}

@@ -19,7 +19,8 @@ package com.aionemu.gameserver.dao;
 import com.aionemu.commons.database.dao.DAO;
 import com.aionemu.gameserver.model.templates.survey.SurveyItem;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author KID
@@ -33,5 +34,5 @@ public abstract class SurveyControllerDAO implements DAO {
 
 	public abstract boolean useItem(int id);
 
-	public abstract FastList<SurveyItem> getAllNew();
+	public abstract List<SurveyItem> getAllNew();
 }

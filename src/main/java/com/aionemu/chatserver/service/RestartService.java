@@ -24,16 +24,15 @@ import com.aionemu.commons.utils.AionRuntimeMode;
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author nrg
  */
+@Slf4j
 public class RestartService {
 
-    private static final Logger log = LoggerFactory.getLogger(RestartService.class);
     private Timer timer;
 
     public RestartService() {
@@ -48,6 +47,10 @@ public class RestartService {
     }
 
     private synchronized void setTimer(RestartFrequency frequency) {
+        if (frequency == RestartFrequency.NEVER) {
+            return;
+        }
+
         //get time to restart
         String[] time = getRestartTime();
         int hour = Integer.parseInt(time[0]);
@@ -62,8 +65,6 @@ public class RestartService {
 
         //switch frequency
         switch (frequency) {
-            case NEVER:
-                return;
             case DAILY:
                 if (isMissed) //execute next day if we missed the time today (what is mostly the case)
                 {

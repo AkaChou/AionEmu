@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -87,7 +91,7 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -120,7 +124,7 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
@@ -132,7 +136,7 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startSkillTask() {
-		skeletonTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		skeletonTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead())
@@ -165,7 +169,7 @@ public class BrigadeGeneralLaksyakaAI2 extends AggressiveNpcAI2
 			}
 		}
 		Player player = !players.isEmpty() ? players.get(Rnd.get(players.size())) : null;
-		SkillEngine.getInstance().applyEffectDirectly(20865, tiamatEye, player, 30000); //Body Snatch.
+		GameEngineServices.skillEngine().applyEffectDirectly(20865, tiamatEye, player, 30000); //Body Snatch.
 	}
 	
 	private List<Player> getLifedPlayers() {

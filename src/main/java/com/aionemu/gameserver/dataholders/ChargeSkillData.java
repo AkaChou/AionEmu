@@ -19,16 +19,17 @@ package com.aionemu.gameserver.dataholders;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.skillengine.model.ChargeSkillTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Dr.Nism [Ranastic]
@@ -40,10 +41,10 @@ public class ChargeSkillData {
 	@XmlElement(name = "charge_skill")
 	private List<ChargeSkillTemplate> chargeSkills;
 
-	private TIntObjectHashMap<ChargeSkillTemplate> ids = new TIntObjectHashMap<ChargeSkillTemplate>();
-	private final Map<String, ChargeSkillTemplate> setName = new FastMap<String, ChargeSkillTemplate>().shared();
-	private TIntObjectHashMap<ChargeSkillTemplate> firstTemplates = new TIntObjectHashMap<ChargeSkillTemplate>();
-	private TIntObjectHashMap<ChargeSkillTemplate> totalTemplates = new TIntObjectHashMap<ChargeSkillTemplate>();
+	private IntObjectHashMap<ChargeSkillTemplate> ids = new IntObjectHashMap<ChargeSkillTemplate>();
+	private final Map<String, ChargeSkillTemplate> setName = new LinkedHashMap<String, ChargeSkillTemplate>();
+	private IntObjectHashMap<ChargeSkillTemplate> firstTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
+	private IntObjectHashMap<ChargeSkillTemplate> totalTemplates = new IntObjectHashMap<ChargeSkillTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ChargeSkillTemplate chargeSkill : chargeSkills) {

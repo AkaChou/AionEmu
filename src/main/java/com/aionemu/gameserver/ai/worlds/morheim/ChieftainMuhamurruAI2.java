@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.worlds.morheim;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -53,13 +59,13 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startHideTask() {
-		hideTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		hideTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 19660, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19660, 60, getOwner()).useNoAnimationSkill();
 					sendMsg(1500398);
 					startEvent(2000, 1500399, 19661);
 					startEvent(6000, 1500399, 19661);
@@ -70,7 +76,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startEvent(int time, final int msg, final int skill) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead() && !isHome.get()) {
@@ -81,7 +87,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 							target = (Creature) npcTarget;
 						}
 					} if (target != null && isInRange(target, 5)) {
-						SkillEngine.getInstance().getSkill(getOwner(), skill, 60, target).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), skill, 60, target).useNoAnimationSkill();
 					}
 					getEffectController().removeEffect(19660);
 					sendMsg(msg);
@@ -91,7 +97,7 @@ public class ChieftainMuhamurruAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg(int msg) {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
 	
 	@Override

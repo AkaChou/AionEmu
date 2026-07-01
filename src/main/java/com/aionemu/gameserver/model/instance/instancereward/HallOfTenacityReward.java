@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.model.instance.instancereward;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -37,14 +35,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ranastic
  */
+@Slf4j
 public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerReward> {
 
-	private final Logger log = LoggerFactory.getLogger(HallOfTenacityReward.class);
 	protected WorldMapInstance instance;
 	private long instanceTime;
 	private final byte buffId;
@@ -130,8 +129,8 @@ public class HallOfTenacityReward extends InstanceReward<HallOfTenacityPlayerRew
 		return (HallOfTenacityPlayerReward) super.getPlayerReward(object);
 	}
 
-	public FastList<Player> getPlayersInside() {
-		FastList<Player> players = new FastList<Player>();
+	public List<Player> getPlayersInside() {
+		List<Player> players = new ArrayList<Player>();
 		for (Player playerInside : instance.getPlayersInside()) {
 			if (containPlayer(playerInside.getObjectId())) {
 				players.add(playerInside);

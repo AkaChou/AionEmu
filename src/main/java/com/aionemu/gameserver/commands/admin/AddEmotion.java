@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -53,7 +55,7 @@ public class AddEmotion extends AdminCommand {
 		}
 		catch (NumberFormatException ex) {
 			if(params[0].equalsIgnoreCase("html"))
-				HTMLService.showHTML(admin, HTMLCache.getInstance().getHTML("emote.xhtml"));
+				HTMLService.showHTML(admin, GameStaticDataServices.htmlCache().getHTML("emote.xhtml"));
 				return;
 		}
 

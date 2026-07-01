@@ -16,35 +16,38 @@
  */
 package com.aionemu.gameserver.services.instance;
 
-import java.util.Iterator;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
 
 /****/
 /**
  * Author Rinzler (Encom) /
  ****/
+@Slf4j
 
 public class IdgelDomeService {
 	private static volatile ObjectProvider<IdgelDomeService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(IdgelDomeService.class);
 
 	private boolean registerAvailable;
-	private final FastList<Integer> playersWithCooldown = FastList.newInstance();
+	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
 	public static final byte minLevel = 61, capLevel = 66;
 	public static final int maskId = 111;
 
@@ -52,14 +55,14 @@ public class IdgelDomeService {
 		if (AutoGroupConfig.IDGEL_ENABLED) {
 			log.info("Idgel Dome 4.7");
 			// Idgel Dome MON-WED-FRI "12PM-1PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startIdgelRegistration();
 				}
 			}, AutoGroupConfig.IDGEL_SCHEDULE_MIDDAY);
 			// Idgel Dome MON-WED-FRI "11PM-0PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startIdgelRegistration();
@@ -69,13 +72,13 @@ public class IdgelDomeService {
 	}
 
 	private void startUregisterIdgelTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				registerAvailable = false;
 				playersWithCooldown.clear();
-				AutoGroupService.getInstance().unRegisterInstance(maskId);
-				Iterator<Player> iter = World.getInstance().getPlayersIterator();
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 				while (iter.hasNext()) {
 					Player player = iter.next();
 					if (player.getLevel() > minLevel) {
@@ -93,7 +96,7 @@ public class IdgelDomeService {
 	private void startIdgelRegistration() {
 		this.registerAvailable = true;
 		startUregisterIdgelTask();
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {

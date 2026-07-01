@@ -1,13 +1,15 @@
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.GoodsListData;
@@ -42,9 +44,9 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  *  Fix: MATTY (ADev.Team)
  */
+@Slf4j
 
 public class TradeService {
-	private static final Logger log = LoggerFactory.getLogger(TradeService.class);
 	private static final TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
 	private static final GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 
@@ -75,7 +77,7 @@ public class TradeService {
 		long tradeListPrice = tradeList.getRequiredKinah();
 		LimitedItem item = null;
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			item = LimitedItemTradeService.getInstance().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
+			item = GameRuntimeServices.limitedItemTradeService().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
 			if (item != null) {
 				if (item.getBuyLimit() == 0 && item.getDefaultSellLimit() != 0) {
 					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
@@ -162,7 +164,7 @@ public class TradeService {
 		AbyssPointsService.addAp(player, -tradeList.getRequiredAp());
 		LimitedItem item = null;
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			item = LimitedItemTradeService.getInstance().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
+			item = GameRuntimeServices.limitedItemTradeService().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
 			if (item != null) {
 				if (item.getBuyLimit() == 0 && item.getDefaultSellLimit() != 0) {
 					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
@@ -244,7 +246,7 @@ public class TradeService {
 		}
 		LimitedItem item = null;
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {
-			item = LimitedItemTradeService.getInstance().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
+			item = GameRuntimeServices.limitedItemTradeService().getLimitedItem(tradeItem.getItemId(), npc.getNpcId());
 			if (item != null) {
 				if (item.getBuyLimit() == 0 && item.getDefaultSellLimit() != 0) {
 					item.getBuyCount().putIfAbsent(player.getObjectId(), 0);
@@ -354,7 +356,7 @@ public class TradeService {
 			repurchaseItem.setRepurchasePrice(realReward);
 			items.add(repurchaseItem);
 		}
-		RepurchaseService.getInstance().addRepurchaseItems(player, items);
+		GameFeatureServices.repurchaseService().addRepurchaseItems(player, items);
 		inventory.increaseKinah(kinahReward);
 		return true;
 	}

@@ -123,7 +123,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 	}
 	
 	private void announce1stAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodians's 1st Kysis Control Tower has appeared.
@@ -134,7 +134,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announce2ndAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodians's 2nd Kysis Control Tower has appeared.
@@ -145,7 +145,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announce3rdAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodians's 3rd Kysis Control Tower has appeared.
@@ -156,7 +156,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announce4thAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodians's 4th Kysis Control Tower has appeared.
@@ -168,7 +168,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 	}
 	
 	private void announceOccupied1st() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Elyos have occupied the 1st Kysis Control Tower.
@@ -179,7 +179,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announceOccupied2nd() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Elyos have occupied the 2nd Kysis Control Tower.
@@ -190,7 +190,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announceOccupied3rd() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Elyos have occupied the 3rd Kysis Control Tower.
@@ -201,7 +201,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announceOccupied4th() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Elyos have occupied the 4th Kysis Control Tower.
@@ -213,7 +213,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 	}
 	
 	private void announceTalked01() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodians are trying to destroy the 1st Kysis Control Tower.
@@ -224,7 +224,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announceTalked02() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodians are trying to destroy the 2nd Kysis Control Tower.
@@ -235,7 +235,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announceTalked03() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodians are trying to destroy the 3rd Kysis Control Tower.
@@ -246,7 +246,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announceTalked04() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Asmodians are trying to destroy the 4th Kysis Control Tower.
@@ -275,7 +275,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 	}
 	
 	private void announce1stBalaurAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Balaur's 1st Kysis Control Tower has appeared.
@@ -287,7 +287,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announce2ndBalaurAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Balaur's 2nd Kysis Control Tower has appeared.
@@ -298,7 +298,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announce3rdBalaurAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Balaur's 3rd Kysis Control Tower has appeared.
@@ -309,7 +309,7 @@ public class Kysis_Fortress_Control_TowerAI2 extends NpcAI2
 		});
 	}
 	private void announce4thBalaurAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Balaur's 4th Kysis Control Tower has appeared.

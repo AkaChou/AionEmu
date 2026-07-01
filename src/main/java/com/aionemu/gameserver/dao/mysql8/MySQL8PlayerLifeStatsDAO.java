@@ -1,21 +1,19 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerLifeStatsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.container.PlayerLifeStats;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 
 /**
  * MySQL 8 implementation of PlayerLifeStatsDAO
  * @author Mr. Poke, Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8PlayerLifeStatsDAO extends PlayerLifeStatsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerLifeStatsDAO.class);
 
     private static final String INSERT_QUERY = "INSERT INTO `player_life_stats` (`player_id`, `hp`, `mp`, `fp`) VALUES (?, ?, ?, ?) " + "ON DUPLICATE KEY UPDATE `hp` = VALUES(`hp`), `mp` = VALUES(`mp`), `fp` = VALUES(`fp`)";
     private static final String SELECT_QUERY = "SELECT `hp`, `mp`, `fp` FROM `player_life_stats` WHERE `player_id` = ?";

@@ -18,17 +18,18 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.rift.RiftLocation;
 import com.aionemu.gameserver.model.templates.rift.RiftTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Source
@@ -40,7 +41,7 @@ public class RiftData {
 	@XmlElement(name = "rift_location")
 	private List<RiftTemplate> riftTemplates;
 	@XmlTransient
-	private FastMap<Integer, RiftLocation> rift = new FastMap<Integer, RiftLocation>();
+	private Map<Integer, RiftLocation> rift = new LinkedHashMap<Integer, RiftLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (RiftTemplate template : riftTemplates) {
@@ -52,7 +53,7 @@ public class RiftData {
 		return rift.size();
 	}
 
-	public FastMap<Integer, RiftLocation> getRiftLocations() {
+	public Map<Integer, RiftLocation> getRiftLocations() {
 		return rift;
 	}
 }

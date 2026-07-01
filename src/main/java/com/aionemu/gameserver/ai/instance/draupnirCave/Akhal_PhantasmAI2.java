@@ -16,11 +16,14 @@
  */
 package com.aionemu.gameserver.ai.instance.draupnirCave;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.services.NpcShoutsService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /****/
 /** Author (Encom)
@@ -46,7 +49,7 @@ public class Akhal_PhantasmAI2 extends NpcAI2
 				sendMsg(1403085, getObjectId(), false, 10000);
 				//Hath our fated plans fallen prey to sabatoge? Impede the intruders, Bakarma. Our Lord depends upon it!
 				sendMsg(1403067, getObjectId(), false, 14000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						AI2Actions.deleteOwner(Akhal_PhantasmAI2.this);
@@ -57,6 +60,6 @@ public class Akhal_PhantasmAI2 extends NpcAI2
 	}
 	
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 }

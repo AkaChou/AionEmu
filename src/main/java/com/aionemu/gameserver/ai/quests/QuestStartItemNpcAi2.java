@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.quests;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -42,7 +44,7 @@ public class QuestStartItemNpcAi2 extends ActionItemNpcAI2 {
 
 	@Override
 	protected void handleUseItemFinish(Player player) {
-		List<Integer> relatedQuests = QuestEngine.getInstance().getQuestNpc(getOwner().getNpcId()).getOnQuestStart();
+		List<Integer> relatedQuests = GameEngineServices.questEngine().getQuestNpc(getOwner().getNpcId()).getOnQuestStart();
 		int dialogId = relatedQuests.isEmpty() ? -1 : 26;
 		SelectDialogResult dialogResult = AI2Actions.selectDialog(this, player, 0, dialogId);
 		if (!dialogResult.isSuccess()) {

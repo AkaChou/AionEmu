@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -29,12 +29,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author cura, MrPoke
  */
+@Slf4j
 public class CM_FIND_GROUP extends AionClientPacket {
 
-	/**
-	 * Logger
-	 */
-	private static final Logger log = LoggerFactory.getLogger(CM_FIND_GROUP.class);
 
 	private int action;
 	private int playerObjId;
@@ -110,25 +107,25 @@ public class CM_FIND_GROUP extends AionClientPacket {
 		switch (action) {
 		case 0x00:
 		case 0x04:
-			FindGroupService.getInstance().sendFindGroups(player, action);
+			GameRuntimeServices.findGroupService().sendFindGroups(player, action);
 			break;
 		case 0x01:
 		case 0x05:
-			FindGroupService.getInstance().removeFindGroup(player.getRace(), action - 1, playerObjId);
+			GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), action - 1, playerObjId);
 			break;
 		case 0x02:
 		case 0x06:
-			FindGroupService.getInstance().addFindGroupList(player, action, message, groupType);
+			GameRuntimeServices.findGroupService().addFindGroupList(player, action, message, groupType);
 			break;
 		case 0x03:
-			FindGroupService.getInstance().updateFindGroupList(player, message, playerObjId);
+			GameRuntimeServices.findGroupService().updateFindGroupList(player, message, playerObjId);
 			break;
 		case 0x08:
-			FindGroupService.getInstance().registerInstanceGroup(player, 0x0E, instanceId, message, minMembers,
+			GameRuntimeServices.findGroupService().registerInstanceGroup(player, 0x0E, instanceId, message, minMembers,
 					groupType);
 			break;
 		case 0x0A:
-			FindGroupService.getInstance().sendFindGroups(player, action);
+			GameRuntimeServices.findGroupService().sendFindGroups(player, action);
 			break;
 		default:
 			PacketSendUtility.sendPacket(player, new SM_FIND_GROUP(action, playerObjId, unk));

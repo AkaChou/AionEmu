@@ -14,6 +14,7 @@ public class ChatServerRuntimeBridge {
 
     private ObjectProvider<ChatServerRuntime> chatServerRuntimeProvider;
     private ObjectProvider<ChatProcessRuntimeBridge> processBridgeProvider;
+    private ChatProcessRuntimeBridge processBridge;
 
     @Autowired(required = false)
     void setChatServerRuntimeProvider(ObjectProvider<ChatServerRuntime> chatServerRuntimeProvider) {
@@ -26,12 +27,17 @@ public class ChatServerRuntimeBridge {
     }
 
     public void start(String[] args) {
+        prepareShutdown();
         ChatServerRuntime chatServerRuntime = chatServerRuntime();
         if (chatServerRuntime != null) {
             chatServerRuntime.start(args);
             return;
         }
         ChatServer.start(args);
+    }
+
+    public void prepareShutdown() {
+        processBridge().shutdownHook();
     }
 
     public void shutdown(boolean restart) {
@@ -45,10 +51,14 @@ public class ChatServerRuntimeBridge {
         return chatServerRuntimeProvider.getIfAvailable();
     }
 
-    private ChatProcessRuntimeBridge processBridge() {
-        if (processBridgeProvider == null) {
-            return new ChatProcessRuntimeBridge();
+    private synchronized ChatProcessRuntimeBridge processBridge() {
+        if (processBridge == null) {
+            if (processBridgeProvider == null) {
+                processBridge = new ChatProcessRuntimeBridge();
+            } else {
+                processBridge = processBridgeProvider.getIfAvailable(ChatProcessRuntimeBridge::new);
+            }
         }
-        return processBridgeProvider.getIfAvailable(ChatProcessRuntimeBridge::new);
+        return processBridge;
     }
 }

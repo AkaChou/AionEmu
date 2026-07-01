@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.steelRakeCabin;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -29,7 +35,6 @@ import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /****/
@@ -58,7 +63,7 @@ public class AnikikiAI2 extends AggressiveNpcAI2 {
 				    spawn(700553, 626f, 540f, 936f, (byte) 1);
 				    spawn(700553, 645f, 534f, 936f, (byte) 75);
 				    PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(0, 900));
-				    NpcShoutsService.getInstance().sendMsg(getOwner(), 1400262, 3000);
+				    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400262, 3000);
 				}
 			}
 		}
@@ -85,10 +90,10 @@ public class AnikikiAI2 extends AggressiveNpcAI2 {
 	protected void handleSpawned() {
 		super.handleSpawned();
 		if (getNpcId() != 219040) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					SkillEngine.getInstance().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18189, 20, getOwner()).useNoAnimationSkill();
 					getLifeStats().setCurrentHp(getLifeStats().getMaxHp());
 				}
 			}, 5000);

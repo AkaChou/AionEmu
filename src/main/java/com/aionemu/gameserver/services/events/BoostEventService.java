@@ -15,12 +15,11 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -34,11 +33,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class BoostEventService implements StatOwner {
 
 	private static BoostEventBonus bonus;
 
-	private static final Logger log = LoggerFactory.getLogger(BoostEventService.class);
 	private static volatile ObjectProvider<BoostEventService> instanceProvider;
 
 	public Map<Integer, BoostEvents> data = new HashMap<Integer, BoostEvents>(1);

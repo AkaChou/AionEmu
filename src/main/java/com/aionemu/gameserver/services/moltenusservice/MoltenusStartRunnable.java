@@ -16,11 +16,14 @@
  */
 package com.aionemu.gameserver.services.moltenusservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
 import com.aionemu.gameserver.services.MoltenusService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -36,18 +39,18 @@ public class MoltenusStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// Enraged Sulfur Guardian will appear in 10 minutes.
-		MoltenusService.getInstance().sulfurFortressMsg(id);
+		GameLocationBootstrapServices.moltenusService().sulfurFortressMsg(id);
 		// Enraged Western Guardian will appear in 10 minutes.
-		MoltenusService.getInstance().westernFortressMsg(id);
+		GameLocationBootstrapServices.moltenusService().westernFortressMsg(id);
 		// Enraged Eastern Guardian will appear in 10 minutes.
-		MoltenusService.getInstance().easternFortressMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameLocationBootstrapServices.moltenusService().easternFortressMsg(id);
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				Map<Integer, MoltenusLocation> locations = MoltenusService.getInstance().getMoltenusLocations();
+				Map<Integer, MoltenusLocation> locations = GameLocationBootstrapServices.moltenusService().getMoltenusLocations();
 				for (final MoltenusLocation loc : locations.values()) {
 					if (loc.getId() == id) {
-						MoltenusService.getInstance().startMoltenus(loc.getId());
+						GameLocationBootstrapServices.moltenusService().startMoltenus(loc.getId());
 					}
 				}
 			}

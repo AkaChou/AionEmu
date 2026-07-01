@@ -16,14 +16,15 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import javolution.util.FastMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author synchro2
  */
 public class CraftCooldownList {
 
-	private FastMap<Integer, Long> craftCooldowns;
+	private Map<Integer, Long> craftCooldowns;
 
 	CraftCooldownList(Player owner) {
 	}
@@ -50,17 +51,17 @@ public class CraftCooldownList {
 		return craftCooldowns.get(delayId);
 	}
 
-	public FastMap<Integer, Long> getCraftCoolDowns() {
+	public Map<Integer, Long> getCraftCoolDowns() {
 		return craftCooldowns;
 	}
 
-	public void setCraftCoolDowns(FastMap<Integer, Long> craftCoolDowns) {
+	public void setCraftCoolDowns(Map<Integer, Long> craftCoolDowns) {
 		this.craftCooldowns = craftCoolDowns;
 	}
 
 	public void addCraftCooldown(int delayId, int delay) {
 		if (craftCooldowns == null) {
-			craftCooldowns = new FastMap<Integer, Long>();
+			craftCooldowns = new HashMap<Integer, Long>();
 		}
 
 		long nextUseTime = System.currentTimeMillis() + (delay * 1000);

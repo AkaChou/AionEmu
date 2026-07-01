@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.infinityShard;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -53,7 +55,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 	
 	private void startIdeInvulnerable() {
 		final Npc IdeResonator = getPosition().getWorldMapInstance().getNpc(276519); //Ide Resonator.
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				IdeResonator.setTarget(getOwner());
@@ -84,7 +86,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void attackBoost() {
-		attackBoostTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		attackBoostTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.targetCreature(IdeResonatorAI2.this, getPosition().getWorldMapInstance().getNpc(231073)); //Hyperion.
@@ -97,7 +99,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 	protected void handleDied() {
 		switch (getNpcId()) {
 			case 276519: //Ide Resonator.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(276519, 108.55013f, 138.96940f, 132.60164f, (byte) 0);
@@ -105,7 +107,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 				}, 300000);
 			break;
 			case 231093: //Ide Resonator.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(231093, 126.54710f, 154.47961f, 131.47116f, (byte) 0);
@@ -113,7 +115,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 				}, 300000);
 			break;
 			case 231094: //Ide Resonator.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(231094, 146.72450f, 139.12267f, 132.68515f, (byte) 0);
@@ -121,7 +123,7 @@ public class IdeResonatorAI2 extends AggressiveNpcAI2
 				}, 300000);
 			break;
 			case 231095: //Ide Resonator.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(231095, 129.41306f, 121.34766f, 131.47110f, (byte) 0);

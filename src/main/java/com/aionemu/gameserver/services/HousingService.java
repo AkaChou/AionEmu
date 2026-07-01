@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,12 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.utils.internal.chmv8.PlatformDependent;
+import java.util.concurrent.ConcurrentHashMap;
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.dao.HousesDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -56,12 +55,10 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
-
-import javolution.util.FastList;
+@Slf4j
 
 public class HousingService {
 
-	private static final Logger log = LoggerFactory.getLogger(HousingService.class);
 	private static volatile ObjectProvider<HousingService> instanceProvider;
 	private static final Map<Integer, List<House>> housesByMapId = new HashMap<Integer, List<House>>();
 	private final Map<Integer, House> customHouses;
@@ -86,9 +83,9 @@ public class HousingService {
 
 	public HousingService() {
 		log.info("Loading housing data...");
-		customHouses = PlatformDependent.newConcurrentHashMap(
+		customHouses = new ConcurrentHashMap<>(
 				DAOManager.getDAO(HousesDAO.class).loadHouses(DataManager.HOUSE_DATA.getLands(), false));
-		studios = PlatformDependent.newConcurrentHashMap(
+		studios = new ConcurrentHashMap<>(
 				DAOManager.getDAO(HousesDAO.class).loadHouses(DataManager.HOUSE_DATA.getLands(), true));
 		log.info("Housing Service loaded.");
 	}
@@ -108,13 +105,13 @@ public class HousingService {
 				if (addr.getMapId() != worldId) {
 					return;
 				}
-				VisibleObject existing = World.getInstance().findVisibleObject(studio.getObjectId());
+				VisibleObject existing = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(studio.getObjectId());
 				WorldPosition position = null;
 				if (existing != null) {
 					position = existing.getPosition();
 				}
 				if (position == null) {
-					position = World.getInstance().createPosition(addr.getMapId(), addr.getX(), addr.getY(),
+					position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(addr.getMapId(), addr.getX(), addr.getY(),
 							addr.getZ(), (byte) 0, instanceId);
 					studio.setPosition(position);
 				}
@@ -122,7 +119,7 @@ public class HousingService {
 					SpawnEngine.bringIntoWorld(studio);
 				}
 				studio.spawn(instanceId);
-				Player enteredPlayer = World.getInstance().findPlayer(registeredId);
+				Player enteredPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(registeredId);
 				if (enteredPlayer != null) {
 					enteredPlayer.setHouseRegistry(studio.getRegistry());
 				}
@@ -195,7 +192,7 @@ public class HousingService {
 	}
 
 	public void resetAppearance(House house) {
-		FastList<HouseDecoration> customParts = house.getRegistry().getCustomParts();
+		List<HouseDecoration> customParts = house.getRegistry().getCustomParts();
 		for (HouseDecoration deco : customParts) {
 			deco.setPersistentState(PersistentState.DELETED);
 		}
@@ -303,8 +300,8 @@ public class HousingService {
 		controller.spawnObjects();
 	}
 
-	public FastList<House> getCustomHouses() {
-		FastList<House> houses = FastList.newInstance();
+	public List<House> getCustomHouses() {
+		List<House> houses = new ArrayList<House>();
 		for (List<House> mapHouses : housesByMapId.values()) {
 			houses.addAll(mapHouses);
 		}

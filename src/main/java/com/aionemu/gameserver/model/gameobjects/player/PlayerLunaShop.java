@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
@@ -27,8 +26,8 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
  * Created by wanke on 13/02/2017.
  */
 
+@Slf4j
 public class PlayerLunaShop {
-	Logger log = LoggerFactory.getLogger(PlayerLunaShop.class);
 	private PersistentState persistentState;
 
 	private boolean FreeUnderpath;

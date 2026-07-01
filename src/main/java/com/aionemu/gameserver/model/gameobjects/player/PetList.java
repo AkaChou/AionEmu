@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +26,8 @@ import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerPetsDAO;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author ATracer
@@ -34,7 +37,7 @@ public class PetList {
 	private final Player player;
 	private int lastUsedPetId;
 
-	private FastMap<Integer, PetCommonData> pets = new FastMap<Integer, PetCommonData>();
+	private Map<Integer, PetCommonData> pets = new LinkedHashMap<Integer, PetCommonData>();
 
 	PetList(Player player) {
 		this.player = player;
@@ -46,7 +49,7 @@ public class PetList {
 		PetCommonData lastUsedPet = null;
 		for (PetCommonData pet : playerPets) {
 			if (pet.getExpireTime() > 0) {
-				ExpireTimerTask.getInstance().addTask(pet, player);
+				GameTaskManagerServices.expireTimerTask().addTask(pet, player);
 			}
 			pets.put(pet.getPetId(), pet);
 			if (lastUsedPet == null || pet.getDespawnTime().after(lastUsedPet.getDespawnTime())) {

@@ -110,7 +110,7 @@ public class CM_CHARACTER_PASSKEY extends AionClientPacket {
 
 	private void checkBlock(int accountId, int wrongCount) {
 		if (wrongCount >= SecurityConfig.PASSKEY_WRONG_MAXCOUNT) {
-			LoginServer.getInstance().sendBanPacket((byte) 2, accountId, "", 60 * 8, 0);
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket((byte) 2, accountId, "", 60 * 8, 0);
 		}
 	}
 }

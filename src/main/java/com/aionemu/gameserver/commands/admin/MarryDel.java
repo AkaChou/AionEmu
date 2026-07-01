@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -39,8 +41,8 @@ public class MarryDel extends AdminCommand {
 			return;
 		}
 
-		Player partner1 = World.getInstance().findPlayer(Util.convertName(params[0]));
-		Player partner2 = World.getInstance().findPlayer(Util.convertName(params[1]));
+		Player partner1 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+		Player partner2 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 		
 		if (partner1 == null || partner2 == null) {
 			PacketSendUtility.sendMessage(admin, "The specified player is not online.");
@@ -55,7 +57,7 @@ public class MarryDel extends AdminCommand {
 			return;
 		}
 
-		WeddingService.getInstance().unDoWedding(partner1, partner2);
+		GameFeatureServices.weddingService().unDoWedding(partner1, partner2);
 		PacketSendUtility.sendMessage(admin, "Married canceled.");
 	}
 

@@ -1,8 +1,6 @@
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.EmotionType;
@@ -22,9 +20,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author Simple
  */
+@Slf4j(topic = "EXCHANGE_LOG")
 public class PrivateStoreService {
 
-	private static final Logger log = LoggerFactory.getLogger("EXCHANGE_LOG");
 
 	/**
 	 * This method will move the item to the new player and move kinah to item owner

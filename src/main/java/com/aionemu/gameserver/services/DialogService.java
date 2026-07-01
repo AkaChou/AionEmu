@@ -1,7 +1,13 @@
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameCraftServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -35,7 +41,6 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
-import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
 import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.item.ItemChargeService;
 import com.aionemu.gameserver.services.teleport.PortalService;
@@ -44,9 +49,9 @@ import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
+@Slf4j
 
 public class DialogService {
-    private static final Logger log = LoggerFactory.getLogger(DialogService.class);
 
     public static void onCloseDialog(Npc npc, Player player) {
         switch (npc.getObjectTemplate().getTitleId()) {
@@ -107,7 +112,7 @@ public class DialogService {
     public static void onDialogSelect(int dialogId, final Player player, Npc npc, int questId, int extendedRewardIndex) {
         QuestEnv env = new QuestEnv(npc, player, questId, dialogId);
         env.setExtendedRewardIndex(extendedRewardIndex);
-        if (QuestEngine.getInstance().onDialog(env)) {
+        if (GameEngineServices.questEngine().onDialog(env)) {
             return;
         }
         if (player.getAccessLevel() >= 0 && CustomConfig.ENABLE_SHOW_DIALOG_ID) {
@@ -443,12 +448,12 @@ public class DialogService {
             }
             case 6: {
                 // Disband Legion.
-                LegionService.getInstance().requestDisbandLegion(npc, player);
+                GameCoreGameplayServices.legionService().requestDisbandLegion(npc, player);
                 break;
             }
             case 7: {
                 // Recreate Legion.
-                LegionService.getInstance().recreateLegion(npc, player);
+                GameCoreGameplayServices.legionService().recreateLegion(npc, player);
                 break;
             }
             case 26: {
@@ -675,7 +680,7 @@ public class DialogService {
                     PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CRAFT_MSG_CAN_WORK_ONLY_DEVA);
                     return;
                 }
-                CraftSkillUpdateService.getInstance().learnSkill(player, npc);
+                GameCraftServices.craftSkillUpdateService().learnSkill(player, npc);
                 break;
             }
             case 47: {
@@ -699,7 +704,7 @@ public class DialogService {
                     PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GUILD_LEAVE_I_AM_NOT_BELONG_TO_GUILD);
                     return;
                 }
-                LegionService.getInstance().openLegionWarehouse(player, npc);
+                GameCoreGameplayServices.legionService().openLegionWarehouse(player, npc);
                 break;
             }
             case 56: {
@@ -820,13 +825,13 @@ public class DialogService {
             }
             case 79: {
                 // Give Up Craft Expert.
-                RelinquishCraftStatus.getInstance();
+                GameCraftServices.relinquishCraftStatus();
                 RelinquishCraftStatus.relinquishExpertStatus(player, npc);
                 break;
             }
             case 80: {
                 // Give Up Craft Master.
-                RelinquishCraftStatus.getInstance();
+                GameCraftServices.relinquishCraftStatus();
                 RelinquishCraftStatus.relinquishMasterStatus(player, npc);
                 break;
             }
@@ -865,7 +870,7 @@ public class DialogService {
             }
             case 96: {
                 // Housing Studio.
-                HousingService.getInstance().recreatePlayerStudio(player);
+                GameHousingServices.housingService().recreatePlayerStudio(player);
                 break;
             }
             case 100: {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -55,7 +57,7 @@ public class SensoryAreaAI2 extends AggressiveNpcAI2
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_02, 10000);
 							//Xasta falls from the sky, wounded!
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_SUCCEED_01, 120000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(217309, 445.6442f, 439.13187f, 168.64172f, (byte) 40);
@@ -71,7 +73,7 @@ public class SensoryAreaAI2 extends AggressiveNpcAI2
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_Spawn_02, 10000);
 							//Xasta falls from the sky, wounded!
 							PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_IDYun_Rasta_SUCCEED_01, 120000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							    @Override
 								public void run() {
 								    spawn(236296, 445.6442f, 439.13187f, 168.64172f, (byte) 40);

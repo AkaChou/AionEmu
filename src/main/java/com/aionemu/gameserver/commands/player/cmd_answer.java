@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.player;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.Wedding;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.WeddingService;
@@ -33,7 +35,7 @@ public class cmd_answer extends PlayerCommand {
 
 	@Override
 	public void execute(Player player, String... params) {
-		Wedding wedding = WeddingService.getInstance().getWedding(player);
+		Wedding wedding = GameFeatureServices.weddingService().getWedding(player);
 
 		if (params == null || params.length != 1) {
 			PacketSendUtility.sendMessage(player, "syntax .answer yes/no.");
@@ -51,12 +53,12 @@ public class cmd_answer extends PlayerCommand {
 
 		if (params[0].toLowerCase().equals("yes")) {
 			PacketSendUtility.sendMessage(player, "You accept.");
-			WeddingService.getInstance().acceptWedding(player);
+			GameFeatureServices.weddingService().acceptWedding(player);
 		}
 
 		if (params[0].toLowerCase().equals("no")) {
 			PacketSendUtility.sendMessage(player, "You decide.");
-			WeddingService.getInstance().cancelWedding(player);
+			GameFeatureServices.weddingService().cancelWedding(player);
 		}
 
 	}

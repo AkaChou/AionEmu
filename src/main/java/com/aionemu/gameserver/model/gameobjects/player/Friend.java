@@ -16,15 +16,13 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.player.FriendList.Status;
 import com.aionemu.gameserver.world.WorldPosition;
+@Slf4j
 
 public class Friend {
-	private static final Logger log = LoggerFactory.getLogger(Friend.class);
 	private PlayerCommonData pcd;
 	private String friendNote = "";
 

@@ -3,7 +3,6 @@ package com.aionemu.commons.network;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -17,8 +16,8 @@ class NettyServerTest {
 
     @Test
     void shutdownDoesNotStopSharedEventLoops() {
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup(1);
+        EventLoopGroup bossGroup = NettyEventLoopProvider.newBossGroup();
+        EventLoopGroup workerGroup = NettyEventLoopProvider.newWorkerGroup();
         NettyEventLoopProvider.useShared(bossGroup, workerGroup);
 
         try {
@@ -38,8 +37,8 @@ class NettyServerTest {
 
     @Test
     void clientShutdownDoesNotStopSharedEventLoops() throws Exception {
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup(1);
+        EventLoopGroup bossGroup = NettyEventLoopProvider.newBossGroup();
+        EventLoopGroup workerGroup = NettyEventLoopProvider.newWorkerGroup();
         NettyEventLoopProvider.useShared(bossGroup, workerGroup);
 
         ExecutorService acceptor = Executors.newSingleThreadExecutor();

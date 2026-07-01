@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.event;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -61,7 +63,7 @@ public class Code_Red_NurserAI2 extends GeneralNpcAI2 {
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
 		PlayerEffectController effectController = player.getEffectController();
-		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1011) {
+		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == 10000) {
 			int skillId = 0;
@@ -87,7 +89,7 @@ public class Code_Red_NurserAI2 extends GeneralNpcAI2 {
 					effectController.removeEffect(21309);
 				break;
 			}
-			SkillEngine.getInstance().getSkill(getOwner(), skillId, 1, player).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 1, player).useNoAnimationSkill();
 		} else if (dialogId == 1011 && questId != 0) {
 			PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), dialogId, questId));
 		}

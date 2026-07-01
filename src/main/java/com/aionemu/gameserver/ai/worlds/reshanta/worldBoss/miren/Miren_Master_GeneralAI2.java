@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.miren;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
@@ -25,7 +29,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -41,18 +44,18 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 	}
-	
+
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
 		//bossShield();
 		announceUnsealedMiren();
     }
-	
+
 	private void bossShield() {
-   		SkillEngine.getInstance().getSkill(getOwner(), 18296, 60, getOwner()).useNoAnimationSkill(); //Boss Shield.
- 	}
-	
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18296, 60, getOwner()).useNoAnimationSkill(); //Boss Shield.
+	}
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
@@ -61,7 +64,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 			case 279541:
 			case 269911:
 				treasureChest();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			        @Override
 			        public void run() {
 						spawnTreasureChest(701481);
@@ -71,7 +74,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 		}
 		super.handleDied();
 	}
-	
+
 	private void treasureChest() {
 		getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 			@Override
@@ -81,9 +84,9 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void announceUnsealedMiren() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Unsealed Miren.
@@ -93,7 +96,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 			}
 		});
 	}
-	
+
 	private void spawnTreasureChest(int npcId) {
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
@@ -102,7 +105,7 @@ public class Miren_Master_GeneralAI2 extends AggressiveNpcAI2
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
 		rndSpawnInRange(npcId, Rnd.get(1, 4));
 	}
-	
+
 	private Npc rndSpawnInRange(int npcId, float distance) {
 		float direction = Rnd.get(0, 199) / 100f;
 		float x1 = (float) (Math.cos(Math.PI * direction) * distance);

@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.padmarashkaCave;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -55,45 +61,45 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 95) {
 			if (isStartedEvent.compareAndSet(false, true)) {
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400527, getOwner().getObjectId(), 0, 1000);
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400528, getOwner().getObjectId(), 0, 9000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400527, getOwner().getObjectId(), 0, 1000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400528, getOwner().getObjectId(), 0, 9000);
 				startPadmarashkaEggs();
 			}
 		} if (hpPercentage <= 75) {
 			if (isStartedEvent.compareAndSet(false, true)) {
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400537, getOwner().getObjectId(), 0, 1000);
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400538, getOwner().getObjectId(), 0, 9000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400537, getOwner().getObjectId(), 0, 1000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400538, getOwner().getObjectId(), 0, 9000);
 				startHugePadmarashkaEggs();
 			}
 		} if (hpPercentage <= 55) {
 			if (isStartedEvent.compareAndSet(false, true)) {
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400539, getOwner().getObjectId(), 0, 1000);
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400540, getOwner().getObjectId(), 0, 9000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400539, getOwner().getObjectId(), 0, 1000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400540, getOwner().getObjectId(), 0, 9000);
 				spawnRockslam();
 			}
 		} if (hpPercentage <= 35) {
 			if (isStartedEvent.compareAndSet(false, true)) {
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400541, getOwner().getObjectId(), 0, 1000);
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400542, getOwner().getObjectId(), 0, 9000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400541, getOwner().getObjectId(), 0, 1000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400542, getOwner().getObjectId(), 0, 9000);
 				startPhaseTask();
 			}
 		} if (hpPercentage <= 15) {
 			if (isStartedEvent.compareAndSet(false, true)) {
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400541, getOwner().getObjectId(), 0, 1000);
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1400542, getOwner().getObjectId(), 0, 9000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400541, getOwner().getObjectId(), 0, 1000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400542, getOwner().getObjectId(), 0, 9000);
 				startPhaseTask();
 			}
 		}
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 19938, 1, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19938, 1, getOwner()).useNoAnimationSkill();
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -117,7 +123,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPadmarashkaEggs() {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1401214, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401214, 0);
 		spawn(282613, 560.94006f, 157.98532f, 66.83846f, (byte) 55);
         spawn(282613, 555.14465f, 160.22182f, 66.76151f, (byte) 114);
         spawn(282613, 556.0417f, 154.67441f, 67.04825f, (byte) 22);
@@ -128,7 +134,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startHugePadmarashkaEggs() {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1401214, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401214, 0);
 		spawn(282614, 560.94006f, 157.98532f, 66.83846f, (byte) 55);
         spawn(282614, 555.14465f, 160.22182f, 66.76151f, (byte) 114);
         spawn(282614, 556.0417f, 154.67441f, 67.04825f, (byte) 22);
@@ -139,7 +145,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void spawnRockslam() {
-        NpcShoutsService.getInstance().sendMsg(getOwner(), 1401215, 0);
+        GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401215, 0);
 		spawn(283137, 520.99585f, 270.23776f, 66.25f, (byte) 0);
         spawn(283137, 506.8137f, 238.60612f, 66.57414f, (byte) 0);
         spawn(283137, 495.94504f, 218.84671f, 67.58238f, (byte) 0);
@@ -165,7 +171,7 @@ public class PadmarashkaAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {

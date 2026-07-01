@@ -15,7 +15,11 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player.motion;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
@@ -26,17 +30,12 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MOTION;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /*
  * @Rework: MATTY
  */
+@Slf4j
 
 public class MotionList {
-    private static final Logger log = LoggerFactory.getLogger(MotionList.class); // Добавьте это
     private Player owner;
     private Map<Integer, Motion> activeMotions;
     private Map<Integer, Motion> motions;
@@ -61,7 +60,7 @@ public class MotionList {
 
     public void add(Motion motion, boolean persist) {
         if (motions == null) {
-            motions = new FastMap<Integer, Motion>();
+            motions = new HashMap<Integer, Motion>();
         }
         if (motions.containsKey(motion.getId()) && motion.getExpireTime() == 0) {
             remove(motion.getId());
@@ -69,7 +68,7 @@ public class MotionList {
         motions.put(motion.getId(), motion);
         if (motion.isActive()) {
             if (activeMotions == null) {
-                activeMotions = new FastMap<Integer, Motion>();
+                activeMotions = new HashMap<Integer, Motion>();
             }
             Motion old = activeMotions.put(Motion.motionType.get(motion.getId()), motion);
             if (old != null) {
@@ -79,7 +78,7 @@ public class MotionList {
         }
         if (persist) {
             if (motion.getExpireTime() != 0) {
-                ExpireTimerTask.getInstance().addTask(motion, owner);
+                GameTaskManagerServices.expireTimerTask().addTask(motion, owner);
             }
             DAOManager.getDAO(MotionDAO.class).storeMotion(owner.getObjectId(), motion);
         }
@@ -105,7 +104,7 @@ public class MotionList {
                 return;
             }
             if (activeMotions == null) {
-                activeMotions = new FastMap<Integer, Motion>();
+                activeMotions = new HashMap<Integer, Motion>();
             }
             Motion old = activeMotions.put(motionType, motion);
             if (old != null) {

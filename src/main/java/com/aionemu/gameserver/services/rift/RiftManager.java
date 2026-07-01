@@ -16,12 +16,13 @@
  */
 package com.aionemu.gameserver.services.rift;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.controllers.RVController;
@@ -43,10 +44,10 @@ import java.util.List;
 /**
  * Author Rinzler (Encom) /
  ****/
+@Slf4j
 
 public class RiftManager {
 
-	private static Logger log = LoggerFactory.getLogger(RiftManager.class);
 	private static volatile ObjectProvider<RiftManager> instanceProvider;
 	private static List<Npc> rifts = new CopyOnWriteArrayList<Npc>(); 
 	private static Map<String, SpawnTemplate> riftGroups = new HashMap<String, SpawnTemplate>();
@@ -82,7 +83,7 @@ public class RiftManager {
 		}
 
 		int spawned = 0;
-		int instanceCount = World.getInstance().getWorldMap(masterTemplate.getWorldId()).getInstanceCount();
+		int instanceCount = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(masterTemplate.getWorldId()).getInstanceCount();
 
 		if (slaveTemplate.hasPool()) {
 			slaveTemplate = slaveTemplate.changeTemplate(1);
@@ -110,12 +111,12 @@ public class RiftManager {
 
 	private Npc spawnInstance(int instance, SpawnTemplate template, RVController controller) {
 		NpcTemplate masterObjectTemplate = DataManager.NPC_DATA.getNpcTemplate(template.getNpcId());
-		Npc npc = new Npc(IDFactory.getInstance().nextId(), controller, template, masterObjectTemplate);
+		Npc npc = new Npc(GameWorldBootstrapServices.idFactory().nextId(), controller, template, masterObjectTemplate);
 
 		npc.setKnownlist(new NpcKnownList(npc));
 		npc.setEffectController(new EffectController(npc));
 
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		world.storeObject(npc);
 		world.setPosition(npc, template.getWorldId(), instance, template.getX(), template.getY(), template.getZ(), template.getHeading());
 		world.spawn(npc);

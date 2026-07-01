@@ -40,14 +40,14 @@ public class Kick extends AdminCommand {
 		}
 		
 		if(params[0] != null && "All".equalsIgnoreCase(params[0])){
-			for (final Player player : World.getInstance().getAllPlayers()) {
+			for (final Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 				if(!player.isGM()){
 					player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
 					PacketSendUtility.sendMessage(admin, "Kicked player : " + player.getName());
 				}
 			}
 		}else{
-			Player player = World.getInstance().findPlayer(Util.convertName(params[0]));
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 			if (player == null) {
 				PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 				return;

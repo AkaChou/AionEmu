@@ -16,9 +16,11 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
@@ -33,7 +35,6 @@ import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "StaggerEffect")
@@ -52,7 +53,7 @@ public class StaggerEffect extends EffectTemplate {
 			effected.getMoveController().abortMove();
 			PacketSendUtility.broadcastPacketAndReceive(effect.getEffected(), new SM_FORCED_MOVE(effect.getEffector(),
 					effect.getEffected().getObjectId(), effect.getTargetX(), effect.getTargetY(), effect.getTargetZ()));
-			World.getInstance().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, effect.getTargetX(), effect.getTargetY(), effect.getTargetZ(),
 					effected.getHeading());
 		}
 	}
@@ -80,7 +81,7 @@ public class StaggerEffect extends EffectTemplate {
 		float y1 = (float) (Math.sin(radian) * 3);
 		float z = effected.getZ();
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-		Vector3f closestCollision = GeoService.getInstance().getClosestCollision(effected, effected.getX() + x1,
+		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effected, effected.getX() + x1,
 				effected.getY() + y1, effected.getZ(), false, intentions);
 		x1 = closestCollision.x;
 		y1 = closestCollision.y;

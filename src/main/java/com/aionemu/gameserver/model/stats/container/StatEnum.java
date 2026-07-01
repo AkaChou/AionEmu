@@ -16,13 +16,16 @@
  */
 package com.aionemu.gameserver.model.stats.container;
 
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.items.ItemSlot;
 
+import lombok.Getter;
+
 @XmlType(name = "StatEnum")
 @XmlEnum
+@Getter
 public enum StatEnum {
 	MAXDP(22), // Maximum DP
 	MAXHP(18), // HP
@@ -121,14 +124,6 @@ public enum StatEnum {
 		this.sign = sign;
 	}
 
-	public int getSign() {
-		return sign;
-	}
-
-	public int getItemStoneMask() {
-		return itemStoneMask;
-	}
-
 	public static StatEnum findByItemStoneMask(int mask) {
 		for (StatEnum sEnum : values()) {
 			if (sEnum.getItemStoneMask() == mask) {
@@ -168,10 +163,6 @@ public enum StatEnum {
 		default:
 			return false;
 		}
-	}
-
-	public boolean isReplace() {
-		return replace;
 	}
 
 	public static StatEnum getModifier(int skillId) {

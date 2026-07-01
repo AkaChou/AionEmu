@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.utils.chathandlers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -25,12 +24,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author KID
  */
+@Slf4j
 public abstract class ChatCommand {
 
 	private String alias;
 	private Byte level;
 	static final String[] EMPTY_PARAMS = new String[] {};
-	static final Logger log = LoggerFactory.getLogger(ChatCommand.class);
 
 	public ChatCommand(String alias) {
 		this.alias = alias;

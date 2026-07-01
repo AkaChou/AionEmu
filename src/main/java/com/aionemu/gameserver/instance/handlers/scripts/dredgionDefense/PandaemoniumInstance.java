@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgionDefense;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -33,7 +37,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.AutoGroupService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
@@ -42,7 +46,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +66,10 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	private int surkanaShockCannon;
 	private boolean isInstanceDestroyed;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> pandaemoniumTask = FastList.newInstance();
+	private final List<Future<?>> pandaemoniumTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 0:
@@ -80,7 +83,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 220729: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 1626.0737f, 1400.7896f, 193.12747f, (byte) 60);
@@ -100,7 +103,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221015: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 1334.5089f, 1403.1086f, 208.00000f, (byte) 60);
@@ -114,7 +117,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221016: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 1346.6378f, 1282.8210f, 208.125f, (byte) 39);
@@ -126,7 +129,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221017: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 1162.6453f, 1416.4698f, 208.125f, (byte) 108);
@@ -138,7 +141,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221018: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 978.2123f, 1131.3398f, 201.39049f, (byte) 4);
@@ -190,7 +193,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 			//Commander Zedas.
 			case 220705:
 				despawnNpc(npc);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						instance.doOnAllPlayers(new Visitor<Player>() {
@@ -233,7 +236,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 					sendMovie(player, 950);
 					//The Dredgion was destroyed.
 					sendMsgByRace(1403958, Race.PC_ALL, 0);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							instance.doOnAllPlayers(new Visitor<Player>() {
@@ -327,7 +330,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				deleteNpc(220716); //Frigida Drakan Commander.
 				//The Capitol Building has been taken over by the Frigida Fregida Legion.
 				sendMsgByRace(1403786, Race.PC_ALL, 0);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(220935, 1275.4795f, 1169.7278f, 215.21492f, (byte) 29); //Balder.
@@ -352,7 +355,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				deleteNpc(220717); //Frigida Drakan Commander.
 				//The Temple of Gold has been taken over by the Frigida Fregida Legion.
 				sendMsgByRace(1403787, Race.PC_ALL, 0);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(220942, 1340.5422f, 1524.6824f, 209.80017f, (byte) 83); //Vidar.
@@ -377,7 +380,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				deleteNpc(220718); //Frigida Drakan Commander.
 				//The Great Temple in Pandaemonium has been taken over by the Frigida Fregida Legion.
 				sendMsgByRace(1403788, Race.PC_ALL, 0);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(220949, 1468.1849f, 1342.8291f, 177.16087f, (byte) 30); //Kvasir.
@@ -399,7 +402,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 220780: //Boardable Pandaemonium Defense Turret.
 				despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
+				GameEngineServices.skillEngine().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
 			break;
 			case 220783: //Turret Generator.
 				sp(221022, 2244.9700f, 1277.0400f, 187.97000f, (byte) 0, 239, 2000, 0, null);
@@ -531,7 +534,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -555,7 +558,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				sp(703406, 1466.8002f, 1375.8978f, 177.06723f, (byte) 90, 20000); //Frigida Drakan Commander [Flag].
             }
         }, 60000)); //1 Min.
-		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -612,7 +615,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				}
             }
         }, 180000)); //3 Min.
-		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -632,7 +635,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				spawn(703404, 1685.2803f, 1400.4742f, 195.3448f, (byte) 60); //Zallad [Flag].
             }
         }, 300000)); //5 Min.
-		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -659,7 +662,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				spawn(703402, 1363.3180f, 1439.0773f, 209.09084f, (byte) 50); //Hemerinerk [Flag].
             }
         }, 900000)); //15 Min.
-		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -696,7 +699,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				spawn(834517, 978.90906f, 1113.4866f, 201.09975f, (byte) 0, 2477); //Turret Core 4.
             }
         }, 1200000)); //20 Min.
-		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -749,7 +752,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 				sp(220705, 1275.5393f, 1357.4648f, 204.47417f, (byte) 30, 52000); //Commander Zedas.
             }
         }, 1800000)); //30 Min.
-		pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -870,10 +873,10 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = pandaemoniumTask.head(), end = pandaemoniumTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : pandaemoniumTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -886,7 +889,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -900,7 +903,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        pandaemoniumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        pandaemoniumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -983,7 +986,7 @@ public class PandaemoniumInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

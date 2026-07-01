@@ -28,12 +28,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class KiskService {
 	private static volatile ObjectProvider<KiskService> instanceProvider;
-	private final Map<Integer, Kisk> boundButOfflinePlayer = new FastMap<Integer, Kisk>().shared();
-	private final Map<Integer, Kisk> ownerPlayer = new FastMap<Integer, Kisk>().shared();
+	private final Map<Integer, Kisk> boundButOfflinePlayer = new LinkedHashMap<Integer, Kisk>();
+	private final Map<Integer, Kisk> ownerPlayer = new LinkedHashMap<Integer, Kisk>();
 
 	public void removeKisk(Kisk kisk) {
 		for (int memberId : kisk.getCurrentMemberIds()) {

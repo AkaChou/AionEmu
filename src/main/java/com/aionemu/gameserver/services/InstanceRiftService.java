@@ -16,15 +16,17 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.InstanceSchedule;
 import com.aionemu.gameserver.configs.schedule.InstanceSchedule.Instance;
@@ -43,23 +45,23 @@ import com.aionemu.gameserver.services.instanceriftservice.Rift;
 import com.aionemu.gameserver.services.instanceriftservice.RiftInstance;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class InstanceRiftService {
 	private static volatile ObjectProvider<InstanceRiftService> instanceProvider;
 	private InstanceSchedule instanceSchedule;
 	private Map<Integer, InstanceRiftLocation> instanceRift;
 	private static final int duration = CustomConfig.INSTANCE_RIFT_DURATION;
-	private final Map<Integer, RiftInstance<?>> activeInstanceRift = new FastMap<Integer, RiftInstance<?>>().shared();
-	private static final Logger log = LoggerFactory.getLogger(InstanceRiftService.class);
+	private final Map<Integer, RiftInstance<?>> activeInstanceRift = new LinkedHashMap<Integer, RiftInstance<?>>();
 
 	public void initInstanceLocations() {
 		if (CustomConfig.INSTANCE_RIFT_ENABLED) {
@@ -80,7 +82,7 @@ public class InstanceRiftService {
 			instanceSchedule = InstanceSchedule.load();
 			for (Instance instance : instanceSchedule.getInstancesList()) {
 				for (String instanceTime : instance.getInstanceTimes()) {
-					CronService.getInstance().schedule(new InstanceStartRunnable(instance.getId()), instanceTime);
+					GameCronServices.cronService().schedule(new InstanceStartRunnable(instance.getId()), instanceTime);
 				}
 			}
 		}
@@ -97,7 +99,7 @@ public class InstanceRiftService {
 		}
 		rift.start();
 		instanceRiftMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopInstanceRift(id);
@@ -136,7 +138,7 @@ public class InstanceRiftService {
 	public boolean instanceRiftMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE04C", "<Instance Rift> is now open !!!");
@@ -152,7 +154,7 @@ public class InstanceRiftService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

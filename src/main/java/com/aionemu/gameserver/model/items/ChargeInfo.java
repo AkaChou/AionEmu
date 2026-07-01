@@ -24,15 +24,19 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.Getter;
+import lombok.Setter;
 
 public class ChargeInfo extends ActionObserver {
 	public static final int LEVEL2 = 1000000;
 	public static final int LEVEL1 = 500000;
 
+	@Getter
 	private int chargePoints;
 	private final int attackBurn;
 	private final int defendBurn;
 	private final Item item;
+	@Setter
 	private Player player;
 
 	public ChargeInfo(int chargePoints, Item item) {
@@ -46,14 +50,6 @@ public class ChargeInfo extends ActionObserver {
 			attackBurn = 0;
 			defendBurn = 0;
 		}
-	}
-
-	public int getChargePoints() {
-		return this.chargePoints;
-	}
-
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 
 	public int updateChargePoints(int addPoints) {

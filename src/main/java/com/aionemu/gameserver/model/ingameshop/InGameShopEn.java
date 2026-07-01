@@ -14,16 +14,19 @@
  */
 package com.aionemu.gameserver.model.ingameshop;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -46,22 +49,22 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author KID
  */
+@Slf4j(topic = "INGAMESHOP_LOG")
 public class InGameShopEn {
 
 	private static volatile ObjectProvider<InGameShopEn> instanceProvider;
-	private final Logger log = LoggerFactory.getLogger("INGAMESHOP_LOG");
-	private FastMap<Byte, List<IGItem>> items;
+	private Map<Byte, List<IGItem>> items;
 	private InGameShopDAO dao;
 	private InGameShopProperty iGProperty;
 	private int lastRequestId = 0;
-	private FastList<IGRequest> activeRequests;
-	private static Map<Integer, Long> lastUsage = new FastMap<Integer, Long>();
+	private List<IGRequest> activeRequests;
+	private static Map<Integer, Long> lastUsage = new HashMap<>();
 
 	public static InGameShopEn getInstance() {
 		ObjectProvider<InGameShopEn> provider = instanceProvider;
@@ -82,8 +85,8 @@ public class InGameShopEn {
 		}
 		iGProperty = InGameShopProperty.load();
 		dao = DAOManager.getDAO(InGameShopDAO.class);
-		items = FastMap.newInstance();
-		activeRequests = FastList.newInstance();
+		items = new LinkedHashMap<>();
+		activeRequests = new ArrayList<>();
 		items = dao.loadInGameShopItems();
 		log.info("Loaded with " + items.size() + " items.");
 	}
@@ -121,17 +124,17 @@ public class InGameShopEn {
 		return items.get(category);
 	}
 
-	public FastList<Integer> getTopSales(int subCategory, byte category) {
+	public List<Integer> getTopSales(int subCategory, byte category) {
 		byte max = 6;
 		TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>(new DescFilter());
 		if (!items.containsKey(category)) {
-			return FastList.newInstance();
+			return new ArrayList<>();
 		}
 		for (IGItem item : items.get(category))
 			if (item.getSalesRanking() != 0 && (subCategory == 2 || item.getSubCategory() == subCategory)) {
 				map.put(item.getSalesRanking(), item.getObjectId());
 			}
-		FastList<Integer> top = FastList.newInstance();
+		List<Integer> top = new ArrayList<>();
 		byte cnt = 0;
 		for (Iterator<Integer> i = map.values().iterator(); i.hasNext();) {
 			int objId = i.next();
@@ -182,7 +185,7 @@ public class InGameShopEn {
 		lastRequestId++;
 		IGRequest request = new IGRequest(lastRequestId, player.getObjectId(), itemObjId);
 		request.accountId = player.getClientConnection().getAccount().getId();
-		if (LoginServer.getInstance().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice())))
+		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice())))
 			activeRequests.add(request);
 		if (AdvCustomConfig.GAMESHOP_LIMIT) {
 			if (item.getCategory() == AdvCustomConfig.GAMESHOP_CATEGORY) {
@@ -223,7 +226,7 @@ public class InGameShopEn {
 		lastRequestId++;
 		IGRequest request = new IGRequest(lastRequestId, player.getObjectId(), receiver, message, itemObjId);
 		request.accountId = player.getClientConnection().getAccount().getId();
-		if (LoginServer.getInstance().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice()))) {
+		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, item.getItemPrice()))) {
 			activeRequests.add(request);
 		}
 	}
@@ -233,7 +236,7 @@ public class InGameShopEn {
 			lastRequestId++;
 			IGRequest request = new IGRequest(lastRequestId, player.getObjectId(), 0);
 			request.accountId = player.getClientConnection().getAccount().getId();
-			if (LoginServer.getInstance().sendPacket(new SM_PREMIUM_CONTROL(request, cnt * -1))) {
+			if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PREMIUM_CONTROL(request, cnt * -1))) {
 				activeRequests.add(request);
 			}
 		} else {
@@ -255,7 +258,7 @@ public class InGameShopEn {
 			return;
 		}
 		
-		Player player = World.getInstance().findPlayer(foundRequest.playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(foundRequest.playerId);
 		if (player != null) {
 			if (result == 1) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_ERROR);
@@ -273,7 +276,7 @@ public class InGameShopEn {
 				}
 				
 				if (foundRequest.gift) {
-					SystemMailService.getInstance().sendMail(player.getName(), foundRequest.receiver, "In Game Shop", foundRequest.message, item.getItemId(), item.getItemCount(), 0L, 0L, LetterType.BLACKCLOUD);
+					GameFeatureServices.systemMailService().sendMail(player.getName(), foundRequest.receiver, "In Game Shop", foundRequest.message, item.getItemId(), item.getItemCount(), 0L, 0L, LetterType.BLACKCLOUD);
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_INGAMESHOP_GIFT_SUCCESS);
 					player.getClientConnection().getAccount().setToll(toll);
 					player.getClientConnection().getAccount().setLuna(luna);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -80,7 +82,7 @@ public class CM_WINDSTREAM extends AionClientPacket {
 				PacketSendUtility.broadcastPacket(player,
 						new SM_EMOTION(player, EmotionType.WINDSTREAM, teleportId, distance), true);
 				player.getLifeStats().triggerFpRestore();
-				QuestEngine.getInstance().onEnterWindStream(new QuestEnv(null, player, 0, 0), teleportId);
+				GameEngineServices.questEngine().onEnterWindStream(new QuestEnv(null, player, 0, 0), teleportId);
 			}
 			break;
 		case 2:

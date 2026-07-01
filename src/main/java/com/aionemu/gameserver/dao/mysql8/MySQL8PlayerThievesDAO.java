@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerThievesListDAO;
@@ -16,9 +14,9 @@ import com.aionemu.gameserver.services.events.thievesguildservice.ThievesStatusL
  * @author Dision
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8PlayerThievesDAO extends PlayerThievesListDAO {
 	
-	private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerThievesDAO.class);
 	
 	private static final String SELECT_QUERY = "SELECT * FROM player_thieves WHERE `player_id`=?";
 	private static final String INSERT_QUERY = "INSERT INTO player_thieves (`player_id`, rank, thieves_count, prison_count, " + "last_kinah, `revenge_name`, revenge_count, revenge_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

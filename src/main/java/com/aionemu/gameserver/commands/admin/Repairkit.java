@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -24,22 +25,19 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 /**
  * Created by Kill3r
  */
+@Slf4j(topic = "GM_MONITOR_LOG")
 public class Repairkit extends AdminCommand {
 
     public Repairkit(){
         super("repairkit");
     }
 
-    private Logger log = LoggerFactory.getLogger("GM_MONITOR_LOG");
 
     public void execute(Player admin, String...params){
         if(params.length == 0){
@@ -107,7 +105,7 @@ public class Repairkit extends AdminCommand {
 
     private void wipeInventoryExceptEquiped(final Player admin, final String playerToWipe){
         Connection con = null;
-        Player checkPOnline = World.getInstance().findPlayer(playerToWipe);
+        Player checkPOnline = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerToWipe);
         if(checkPOnline != null){
             PacketSendUtility.sendMessage(admin, "You cannot proceed if the player is Online!");
             return;
@@ -147,7 +145,7 @@ public class Repairkit extends AdminCommand {
 
     private void removeItemByID(final Player admin, final String playerToRemoveFrom, final int itemID){
         Connection con = null;
-        Player checkPlayerOnline = World.getInstance().findPlayer(playerToRemoveFrom);
+        Player checkPlayerOnline = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerToRemoveFrom);
         if(checkPlayerOnline != null){
             PacketSendUtility.sendMessage(admin, "You can only remove items from Offline Player using this Command, If you want to remove item from Online Players, use '//remove'!!");
             return;
@@ -189,7 +187,7 @@ public class Repairkit extends AdminCommand {
 
     private void returnPlayer(final Player admin, final String playerToReturn, final String race){
         Connection con = null;
-        Player checkPlayerOnline = World.getInstance().findPlayer(Util.convertName(playerToReturn));
+        Player checkPlayerOnline = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(playerToReturn));
         if(checkPlayerOnline != null){
             PacketSendUtility.sendMessage(admin, "You cannot return a player while he's Online!");
             return;

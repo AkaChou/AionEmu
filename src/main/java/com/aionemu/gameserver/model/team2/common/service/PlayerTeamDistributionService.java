@@ -15,6 +15,12 @@
  */
 package com.aionemu.gameserver.model.team2.common.service;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +28,7 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -33,9 +40,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
-import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
@@ -76,13 +81,13 @@ public class PlayerTeamDistributionService {
 			// Aura Of Growth.
 			if (owner.getLevel() >= 66) {
 				if (Rnd.get(1, 100) < RateConfig.AURA_OF_GROWTH) {
-					GrowthEnergy.getInstance().addGrowthEnergy(member);
+					GameFeatureServices.growthEnergy().addGrowthEnergy(member);
 					PacketSendUtility.sendPacket(member, new SM_STATS_INFO(member));
 				}
 			}
 			// Atreian Bestiary.
 			if (owner.getLevel() >= 66) {
-				AtreianBestiaryService.getInstance().onKill(member, owner.getNpcId());
+				GameFeatureServices.atreianBestiaryService().onKill(member, owner.getNpcId());
 			}
 			// Auto Drop Kinah.
 			if (CustomConfig.AUTO_KINAH_ENABLED) {
@@ -276,7 +281,7 @@ public class PlayerTeamDistributionService {
 				if (Rnd.get(0, 100) > CustomConfig.TOLL_PVE_CHANCE) {
 					for (String worldIds : CustomConfig.TOLL_PVE_WORLDID.split(",")) {
 						if (member.getWorldId() == Integer.parseInt(worldIds)) {
-							InGameShopEn.getInstance().addToll(member, CustomConfig.TOLL_PVE_QUANTITY);
+							GameRuntimeServices.inGameShopEn().addToll(member, CustomConfig.TOLL_PVE_QUANTITY);
 							PacketSendUtility.sendMessage(member, "You have received " + CustomConfig.TOLL_PVE_QUANTITY + " tolls from PvE!");
 						}
 					}
@@ -289,7 +294,7 @@ public class PlayerTeamDistributionService {
 			return;
 		}
 		if (winner.equals(team) && (!owner.getAi2().getName().equals("chest") || filteredStats.mentorCount == 0)) {
-			DropRegistrationService.getInstance().registerDrop(owner, mostDamagePlayer, filteredStats.highestLevel, filteredStats.players);
+			GameWorldServices.dropRegistrationService().registerDrop(owner, mostDamagePlayer, filteredStats.highestLevel, filteredStats.players);
 		}
 	}
 
@@ -309,7 +314,7 @@ public class PlayerTeamDistributionService {
 		public boolean apply(Player member) {
 			if (member.isOnline()) {
 				if (MathUtil.isIn3dRange(member, owner, GroupConfig.GROUP_MAX_DISTANCE)) {
-					QuestEngine.getInstance().onKill(new QuestEnv(owner, member, 0, 0));
+					GameEngineServices.questEngine().onKill(new QuestEnv(owner, member, 0, 0));
 					if (member.isMentor()) {
 						mentorCount++;
 						return true;

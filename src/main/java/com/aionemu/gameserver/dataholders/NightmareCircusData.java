@@ -18,17 +18,18 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.nightmarecircus.NightmareCircusLocation;
 import com.aionemu.gameserver.model.templates.nightmarecircus.NightmareCircusTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class NightmareCircusData {
 	private List<NightmareCircusTemplate> nightmareCircusTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, NightmareCircusLocation> nightmareCircus = new FastMap<Integer, NightmareCircusLocation>();
+	private Map<Integer, NightmareCircusLocation> nightmareCircus = new LinkedHashMap<Integer, NightmareCircusLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (NightmareCircusTemplate template : nightmareCircusTemplates) {
@@ -53,7 +54,7 @@ public class NightmareCircusData {
 		return nightmareCircus.size();
 	}
 
-	public FastMap<Integer, NightmareCircusLocation> getNightmareCircusLocations() {
+	public Map<Integer, NightmareCircusLocation> getNightmareCircusLocations() {
 		return nightmareCircus;
 	}
 }

@@ -581,7 +581,7 @@ public class GoTo extends AdminCommand
 	}
 	
 	private static void goTo(final Player player, int worldId, float x, float y, float z) {
-		WorldMap destinationMap = World.getInstance().getWorldMap(worldId);
+		WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
 		if (destinationMap.isInstanceType()) {
 			TeleportService2.teleportTo(player, worldId, getInstanceId(worldId, player), x, y, z, player.getHeading(), TeleportAnimation.NO_ANIMATION);
 		} else {

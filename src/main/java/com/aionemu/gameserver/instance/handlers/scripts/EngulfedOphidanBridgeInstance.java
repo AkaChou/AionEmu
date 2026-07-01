@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -39,9 +45,8 @@ import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -50,13 +55,11 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import javolution.util.FastList;
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +83,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     private float loosingGroupMultiplier = 1;
     private boolean isInstanceDestroyed = false;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> ophidanTask = FastList.newInstance();
+    private final List<Future<?>> ophidanTask = new ArrayList<Future<?>>();
 	
     protected EngulfedOphidanBridgePlayerReward getPlayerReward(Player player) {
         engulfedOphidanBridgeReward.regPlayerReward(player);
@@ -93,19 +96,19 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
         //http://aion.power.plaync.com/wiki/%EC%9A%94%EB%A5%B4%EB%AC%B8%EA%B0%84%EB%93%9C+%EC%A7%84%EA%B2%A9%EB%A1%9C+-+%EC%A7%84%ED%96%89+%EC%A0%95%EB%B3%B4
 		switch (npcId) {
 			case 701974: //Supply Box.
 			case 701975: //Emergency Supply Box.
 			case 701976: //Hidden Supply Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000279, 1)); //Advance Route Teleport Scroll.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000148, 1)); //Special Baily Juice.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000278, 1)); //Bombing Device Activation Key.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000150, 1)); //Emergency Stasis Potion.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000149, 1)); //Ambush Scroll.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000147, 1)); //Emergency Support Recovery Potion.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000279, 1)); //Advance Route Teleport Scroll.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000148, 1)); //Special Baily Juice.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000278, 1)); //Bombing Device Activation Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000150, 1)); //Emergency Stasis Potion.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000149, 1)); //Ambush Scroll.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000147, 1)); //Emergency Support Recovery Potion.
 			break;
         }
     }
@@ -123,7 +126,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         engulfedOphidanBridgeReward.setInstanceStartTime();
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!engulfedOphidanBridgeReward.isRewarded()) {
@@ -136,7 +139,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 				}
             }
         }, 90000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -149,7 +152,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 				sp(802023, 337.73990f, 491.16772f, 597.2395f, (byte) 0, 156);
             }
         }, 220000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -164,7 +167,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 				sp(801958, 759.2739f, 569.3167f, 577.37885f, (byte) 87, 0); //Asmodians Reinforcements Flag.
             }
         }, 400000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -180,7 +183,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
                 sp(701976, 582.56866f, 396.15695f, 603.4048f, (byte) 2, 10000); //Hidden Supply Box.
             }
         }, 600000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -229,7 +232,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
                 }
             }
         }, 900000));
-		ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!engulfedOphidanBridgeReward.isRewarded()) {
@@ -362,14 +365,14 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
 					for (Player player : instance.getPlayersInside()) {
 						onExitInstance(player);
 					}
-					AutoGroupService.getInstance().unRegisterInstance(instanceId);
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
 		}, 60000);
@@ -849,7 +852,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
                 if (player.getInventory().decreaseByItemId(164000277, 1)) { //Power Breaker.
 				    //You've used one Power Breaker.
 					sendMsgByRace(1402010,  Race.PC_ALL, 1000);
-					SkillEngine.getInstance().getSkill(player, 21065, 1, player).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(player, 21065, 1, player).useNoAnimationSkill();
 			    } else {
 					//You need a Power Breaker.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402006));
@@ -860,7 +863,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
                 if (player.getInventory().decreaseByItemId(164000277, 1)) { //Power Breaker.
 				    //You've used one Power Breaker.
 					sendMsgByRace(1402010,  Race.PC_ALL, 1000);
-					SkillEngine.getInstance().getSkill(player, 21066, 1, player).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(player, 21066, 1, player).useNoAnimationSkill();
 			    } else {
 					//You need a Power Breaker.
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1402006));
@@ -986,7 +989,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1000,7 +1003,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1013,7 +1016,7 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        ophidanTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ophidanTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -1038,10 +1041,10 @@ public class EngulfedOphidanBridgeInstance extends GeneralInstanceHandler
 	}
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = ophidanTask.head(), end = ophidanTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : ophidanTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

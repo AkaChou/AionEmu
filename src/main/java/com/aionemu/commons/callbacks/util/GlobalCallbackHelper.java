@@ -1,13 +1,11 @@
 package com.aionemu.commons.callbacks.util;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.callbacks.Callback;
 import com.aionemu.commons.callbacks.CallbackResult;
 import com.aionemu.commons.utils.ClassUtils;
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 全局回调帮助类，提供全局级别的回调管理功能
  * Global callback helper class that provides global-level callback management
@@ -18,13 +16,9 @@ import org.slf4j.LoggerFactory;
  * 支持添加、移除全局回调，以及在方法调用前后执行回调
  * Supports adding and removing global callbacks, and executing callbacks before and after method calls
  */
+@Slf4j
 public class GlobalCallbackHelper {
     
-    /**
-     * 日志记录器
-     * Logger instance
-     */
-    private static final Logger log = LoggerFactory.getLogger(GlobalCallbackHelper.class);
     
     /**
      * 存储全局回调的线程安全列表

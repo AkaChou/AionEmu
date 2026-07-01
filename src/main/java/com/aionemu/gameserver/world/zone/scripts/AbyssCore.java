@@ -26,7 +26,8 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
@@ -34,7 +35,7 @@ import java.nio.BufferUnderflowException;
 @ZoneNameAnnotation("CORE_400010000")
 public class AbyssCore implements ZoneHandler
 {
-	FastMap<Integer, CollisionDieActor> observed = new FastMap<Integer, CollisionDieActor>();
+	Map<Integer, CollisionDieActor> observed = new LinkedHashMap<Integer, CollisionDieActor>();
 	
 	private Node geometry;
 	

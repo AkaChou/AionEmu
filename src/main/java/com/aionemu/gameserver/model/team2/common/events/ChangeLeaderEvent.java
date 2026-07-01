@@ -16,19 +16,16 @@
  */
 package com.aionemu.gameserver.model.team2.common.events;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
-import com.aionemu.gameserver.model.team2.group.events.ChangeGroupLeaderEvent;
 
 /**
  * @author ATracer
  */
+@Slf4j(topic = "com.aionemu.gameserver.model.team2.group.events.ChangeGroupLeaderEvent")
 public abstract class ChangeLeaderEvent<T extends TemporaryPlayerTeam<?>> extends AbstractTeamPlayerEvent<T> {
-
-	private static final Logger log = LoggerFactory.getLogger(ChangeGroupLeaderEvent.class);
 
 	public ChangeLeaderEvent(T team, Player eventPlayer) {
 		super(team, eventPlayer);

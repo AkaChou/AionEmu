@@ -19,15 +19,16 @@ package com.aionemu.gameserver.dataholders;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.atreian_bestiary.AtreianBestiaryTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Ranastic
@@ -39,10 +40,10 @@ public class AtreianBestiaryData {
 	@XmlElement(name = "monster_book", type = AtreianBestiaryTemplate.class)
 	private List<AtreianBestiaryTemplate> templates;
 
-	private final Map<Integer, AtreianBestiaryTemplate> idsHolder = new FastMap<Integer, AtreianBestiaryTemplate>()
-			.shared();
-	private final Map<Integer, AtreianBestiaryTemplate> npcIdsHolder = new FastMap<Integer, AtreianBestiaryTemplate>()
-			.shared();
+	private final Map<Integer, AtreianBestiaryTemplate> idsHolder = new LinkedHashMap<Integer, AtreianBestiaryTemplate>()
+			;
+	private final Map<Integer, AtreianBestiaryTemplate> npcIdsHolder = new LinkedHashMap<Integer, AtreianBestiaryTemplate>()
+			;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (AtreianBestiaryTemplate template : templates) {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -29,7 +31,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -57,7 +59,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		//You must kill Afrane, Saraswati, Lakshmi, and Nimbarka to make Commander Bakarma appear.
 		sendMsgByRace(1400757, Race.PC_ALL, 10000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(237276, 495.48535f, 392.0867f, 616.5717f, (byte) 89); //Akhal's Phantasm.
@@ -75,27 +77,27 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
     }
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 702658: //Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
 		    break;
 			case 702659: //Noble Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
 		    break;
 			case 213780: //Commander Bakarma.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053265, 1)); //Bakarma's Fabled Weapon Box.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053265, 1)); //Bakarma's Fabled Weapon Box.
 					    break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053271, 1)); //Bakarma's Weapon Box.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053271, 1)); //Bakarma's Weapon Box.
 					    break;
 					}
 				}
@@ -103,9 +105,9 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 			case 237275: //Akhal.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188054175, 1)); //Master Bakarma's Weapon Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054175, 1)); //Master Bakarma's Weapon Box.
 					}
 				}
 			break;
@@ -151,7 +153,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 					    spawn(702659, 787.32513f, 431.49173f, 319.62155f, (byte) 33); //Noble Abbey Box.
 					break;
 				}
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawnAkhal();
@@ -183,13 +185,13 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 				sendMsgByRace(1403063, Race.PC_ALL, 0);
 				//The Balaur have been alerted to the presence of intruders.
 				sendMsgByRace(1403064, Race.PC_ALL, 4000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						startAbyssGateRaid1();
 				    }
 			    }, 5000);
-				abyssGateTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				abyssGateTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						//Balaur are swarming to defend the Abyss Gate Enhancer.
@@ -233,7 +235,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	}
 	
 	private void abyssGateRaid(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -271,7 +273,7 @@ public class DraupnirCaveInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

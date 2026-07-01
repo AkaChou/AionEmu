@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -62,13 +64,13 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 		}
         announceZorshivDie();
 		announceKilledZorshiv();
-		ZorshivDredgionService.getInstance().stopZorshivDredgion(1);
-		ZorshivDredgionService.getInstance().stopZorshivDredgion(2);
+		GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(1);
+		GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(2);
 		super.handleDied();
 	}
 	
 	private void announcePublicQuest() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//You joined the battle against the Invading Balaur.
@@ -77,7 +79,7 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceZorshivDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//You won the battle against the Invading Balaur.
@@ -86,7 +88,7 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceKilledZorshiv() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
@@ -99,7 +101,7 @@ public class ZorshivCommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void sendZorshivGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {

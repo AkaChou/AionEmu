@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.poeta;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
@@ -58,7 +60,7 @@ public class _1100Kalios_Call extends QuestHandler {
 			if (env.getDialogId() == 23) {
 				int[] ids = {1001, 1002, 1003, 1004, 1005};
 				for (int id: ids) {
-					QuestEngine.getInstance().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
+					GameEngineServices.questEngine().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
 				}
 			}
 			return sendQuestEndDialog(env);

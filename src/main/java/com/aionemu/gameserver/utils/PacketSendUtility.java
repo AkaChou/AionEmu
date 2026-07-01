@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.utils;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -95,7 +97,7 @@ public class PacketSendUtility {
 	 * Player Send Packet
 	 */
 	public static void playerSendPacketTime(final Player player, final AionServerPacket packet, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (player.getClientConnection() != null) {
@@ -109,7 +111,7 @@ public class PacketSendUtility {
 	 * Npc Send Packet
 	 */
 	public static void npcSendPacketTime(final Npc npc, final AionServerPacket packet, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				npc.getKnownList().doOnAllPlayers(new Visitor<Player>() {
@@ -125,10 +127,10 @@ public class PacketSendUtility {
 	}
 
 	public static void sendMessageTime(final Player player, final String message, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						if (player.isOnline()) {
@@ -193,7 +195,7 @@ public class PacketSendUtility {
 	}
 
 	public static void broadcastFilteredPacket(final AionServerPacket packet, final ObjectFilter<Player> filter) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
 			public void visit(Player object) {

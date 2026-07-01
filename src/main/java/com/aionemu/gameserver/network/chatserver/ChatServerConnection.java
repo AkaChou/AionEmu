@@ -16,20 +16,19 @@
  */
 package com.aionemu.gameserver.network.chatserver;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
+@Slf4j
 
 public class ChatServerConnection extends AConnection {
-	private static final Logger log = LoggerFactory.getLogger(ChatServerConnection.class);
 
 	public static enum State {
 		CONNECTED, AUTHED
@@ -46,7 +45,7 @@ public class ChatServerConnection extends AConnection {
 	}
 
 	private void init(CsPacketHandler csPacketHandler) {
-		this.chatServer = ChatServer.getInstance();
+		this.chatServer = com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer();
 		this.csPacketHandler = csPacketHandler;
 		state = State.CONNECTED;
 		log.info("Connected to ChatServer!");
@@ -61,7 +60,7 @@ public class ChatServerConnection extends AConnection {
 	public boolean processData(ByteBuffer data) {
 		CsClientPacket pck = csPacketHandler.handle(data, this);
 		if (pck != null && pck.read()) {
-			ThreadPoolManager.getInstance().executeLsPacket(pck);
+			GameThreadPoolServices.threadPoolManager().executeLsPacket(pck);
 		}
 		return true;
 	}

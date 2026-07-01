@@ -1,33 +1,37 @@
 package com.aionemu.gameserver.world.geo;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.GeoWorldLoader;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
+import com.aionemu.gameserver.geoEngine.scene.Geometry;
+import com.aionemu.gameserver.geoEngine.scene.Mesh;
+import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+@Slf4j
 
 public class RealGeoData implements GeoData {
-    private static final Logger log = LoggerFactory.getLogger(RealGeoData.class);
-    private final TIntObjectHashMap<GeoMap> geoMaps = new TIntObjectHashMap<>();
+    private final IntObjectHashMap<GeoMap> geoMaps = new IntObjectHashMap<>();
     private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     @Override
     public void loadGeoMaps() {
         final Map<String, Spatial> models = loadMeshes();
         loadWorldMaps(models);
+        prebuildCollisionDataAsync(models);
         models.clear();
         executorService.shutdown();
         try {
@@ -94,6 +98,26 @@ public class RealGeoData implements GeoData {
             return GeoWorldLoader.loadMeshs("data/geo/meshs.geo");
         } catch (IOException e) {
             throw new IllegalStateException("Problem loading meshes", e);
+        }
+    }
+
+    // ponytail: 碰撞树后台并行预构建（借鉴 aion-server GeoWorldLoader:46），不阻塞启动；Mesh.collideWith 有懒加载兜底，此步仅为消除运行时首次碰撞的构建卡顿
+    private void prebuildCollisionDataAsync(Map<String, Spatial> models) {
+        Set<Mesh> meshes = ConcurrentHashMap.newKeySet();
+        for (Spatial s : models.values()) {
+            collectMeshes(s, meshes);
+        }
+        ThreadPoolManager.getInstance().submitLongRunning(
+            () -> meshes.parallelStream().forEach(Mesh::createCollisionData));
+    }
+
+    private void collectMeshes(Spatial s, Set<Mesh> out) {
+        if (s instanceof Geometry g) {
+            out.add(g.getMesh());
+        } else if (s instanceof Node n) {
+            for (Spatial child : n.getChildren()) {
+                collectMeshes(child, out);
+            }
         }
     }
 

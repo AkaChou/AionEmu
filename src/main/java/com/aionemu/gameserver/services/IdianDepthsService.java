@@ -16,15 +16,17 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
@@ -40,22 +42,22 @@ import com.aionemu.gameserver.services.idiandepthsservice.Idian;
 import com.aionemu.gameserver.services.idiandepthsservice.IdianDepths;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class IdianDepthsService {
 	private static volatile ObjectProvider<IdianDepthsService> instanceProvider;
 	private Map<Integer, IdianDepthsLocation> idianDepths;
 	private static final int duration = CustomConfig.IDIAN_DEPTHS_DURATION;
-	private final Map<Integer, IdianDepths<?>> activeIdianDepths = new FastMap<Integer, IdianDepths<?>>().shared();
-	private static Logger log = LoggerFactory.getLogger(IdianDepthsService.class);
+	private final Map<Integer, IdianDepths<?>> activeIdianDepths = new LinkedHashMap<Integer, IdianDepths<?>>();
 
 	public void initIdianDepthsLocations() {
 		if (CustomConfig.IDIAN_DEPTHS_ENABLED) {
@@ -65,13 +67,13 @@ public class IdianDepthsService {
 			}
 			log.info("[IdianDepthsService] Loaded " + idianDepths.size() + " locations.");
 
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					for (IdianDepthsLocation loc : getIdianDepthsLocations().values()) {
 						startIdianDepths(loc.getId());
 					}
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys3Message(player, "\uE0AA", "<Idian Depths> open !!!");
@@ -101,7 +103,7 @@ public class IdianDepthsService {
 			activeIdianDepths.put(id, idian);
 		}
 		idian.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopIdianDepths(id);
@@ -141,7 +143,7 @@ public class IdianDepthsService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

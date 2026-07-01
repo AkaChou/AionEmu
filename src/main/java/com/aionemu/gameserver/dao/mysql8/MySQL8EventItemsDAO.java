@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.EventItemsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.event.MaxCountOfDay;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,9 +16,9 @@ import java.util.Map;
  * Created by wanke on 03/03/2017.
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8EventItemsDAO extends EventItemsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8EventItemsDAO.class);
 	
     private static final String INSERT_QUERY = "INSERT INTO `event_items` (`player_id`, `item_id`, `counts`) VALUES (?,?,?) " + "ON DUPLICATE KEY UPDATE `counts` = VALUES(`counts`)";
     private static final String DELETE_QUERY = "DELETE FROM `event_items` WHERE `player_id`=?";

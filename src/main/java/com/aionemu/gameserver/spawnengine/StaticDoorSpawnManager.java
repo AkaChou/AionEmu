@@ -16,8 +16,10 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.controllers.StaticObjectController;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -30,15 +32,14 @@ import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorTemplate;
 import com.aionemu.gameserver.model.templates.staticdoor.StaticDoorWorld;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 
 /**
  * @author MrPoke
  */
+@Slf4j
 public class StaticDoorSpawnManager {
 
-	private static Logger log = LoggerFactory.getLogger(StaticDoorSpawnManager.class);
 
 	/**
 	 * @param spawnGroup
@@ -57,12 +58,12 @@ public class StaticDoorSpawnManager {
 			SpawnTemplate spawn = new SpawnTemplate(new SpawnGroup2(worldId, 300001), data.getX(), data.getY(),
 					data.getZ(), (byte) 0, 0, null, 0, 0);
 			spawn.setEntityId(data.getDoorId());
-			int objectId = IDFactory.getInstance().nextId();
+			int objectId = GameWorldBootstrapServices.idFactory().nextId();
 			StaticDoor staticDoor = new StaticDoor(objectId, new StaticObjectController(), spawn, data, instanceIndex);
 			staticDoor.setKnownlist(new PlayerAwareKnownList(staticDoor));
 			bringIntoWorld(staticDoor, spawn, instanceIndex);
 			if (staticDoor.getDoorName() != null) {
-				GeoService.getInstance().setDoorState(worldId, instanceIndex, staticDoor.getDoorName(),
+				GameWorldServices.geoService().setDoorState(worldId, instanceIndex, staticDoor.getDoorName(),
 						staticDoor.isOpen());
 			}
 			counter++;
@@ -78,7 +79,7 @@ public class StaticDoorSpawnManager {
 	 * @param instanceIndex
 	 */
 	private static void bringIntoWorld(VisibleObject visibleObject, SpawnTemplate spawn, int instanceIndex) {
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		world.storeObject(visibleObject);
 		world.setPosition(visibleObject, spawn.getWorldId(), instanceIndex, spawn.getX(), spawn.getY(), spawn.getZ(),
 				spawn.getHeading());

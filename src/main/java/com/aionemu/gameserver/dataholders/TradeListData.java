@@ -18,15 +18,15 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlRootElement(name = "npc_trade_list")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,11 +41,11 @@ public class TradeListData {
 	private List<TradeListTemplate> ptlist;
 
 	/** A map containing all trade list templates */
-	private TIntObjectHashMap<TradeListTemplate> npctlistData = new TIntObjectHashMap<TradeListTemplate>();
+	private IntObjectHashMap<TradeListTemplate> npctlistData = new IntObjectHashMap<TradeListTemplate>();
 
-	private TIntObjectHashMap<TradeListTemplate> npcTradeInlistData = new TIntObjectHashMap<TradeListTemplate>();
+	private IntObjectHashMap<TradeListTemplate> npcTradeInlistData = new IntObjectHashMap<TradeListTemplate>();
 
-	private TIntObjectHashMap<TradeListTemplate> npcPurchaselistData = new TIntObjectHashMap<TradeListTemplate>();
+	private IntObjectHashMap<TradeListTemplate> npcPurchaselistData = new IntObjectHashMap<TradeListTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TradeListTemplate npc : tlist) {
@@ -86,7 +86,7 @@ public class TradeListData {
 	/**
 	 * @return id of NPC.
 	 */
-	public TIntObjectHashMap<TradeListTemplate> getTradeListTemplate() {
+	public IntObjectHashMap<TradeListTemplate> getTradeListTemplate() {
 		return npctlistData;
 	}
 }

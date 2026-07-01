@@ -29,7 +29,6 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -39,16 +38,13 @@ import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.loginserver.lifecycle.LoginStartupGateway;
 import com.aionemu.loginserver.lifecycle.LoginStartupSequenceLifecycle;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author -Nemesiss-
  */
+@Slf4j
 public class LoginServer {
-
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(LoginServer.class);
 
     private static void initalizeLoggger() {
         if (AionRuntimeMode.isBootEmbedded()) {

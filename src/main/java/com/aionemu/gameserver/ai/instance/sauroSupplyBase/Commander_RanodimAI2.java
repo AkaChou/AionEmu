@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -45,7 +49,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
 	}
 	
 	@Override
@@ -77,7 +81,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			SkillEngine.getInstance().getSkill(getOwner(), 20702, 60, getOwner()).useNoAnimationSkill(); //Area Blood Sucking.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20702, 60, getOwner()).useNoAnimationSkill(); //Area Blood Sucking.
 			scheduleDelayStage1(delay);
 		}
 	}
@@ -87,7 +91,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			SkillEngine.getInstance().getSkill(getOwner(), 20703, 60, getOwner()).useNoAnimationSkill(); //Blood Sucking.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20703, 60, getOwner()).useNoAnimationSkill(); //Blood Sucking.
 			scheduleDelayStage2(delay);
 		}
 	}
@@ -97,7 +101,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (isAlreadyDead() || !isStart) {
 			return;
 		} else {
-			SkillEngine.getInstance().getSkill(getOwner(), 20704, 60, getOwner()).useNoAnimationSkill(); //Area Press.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20704, 60, getOwner()).useNoAnimationSkill(); //Area Press.
 			scheduleDelayStage3(delay);
 		}
 	}
@@ -106,7 +110,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage1();
@@ -119,7 +123,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage2();
@@ -132,7 +136,7 @@ public class Commander_RanodimAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage3();

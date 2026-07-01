@@ -42,7 +42,7 @@ public class Remove extends AdminCommand {
 
 		int itemId = 0;
 		long itemCount = 1;
-		Player target = World.getInstance().findPlayer(Util.convertName(params[0]));
+		Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 		if (target == null) {
 			PacketSendUtility.sendMessage(admin, "Player isn't online.");
 			return;

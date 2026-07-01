@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.AIState;
@@ -54,7 +58,7 @@ public class TrappedTermaAI2 extends NpcAI2 {
 		super.handleDied();
 		Npc freeTerma = (Npc)spawn(205495, 455.94f, 537.06f, 132.6f,(byte) 0);
 		spawn(701009, 451.706f, 534.313f, 131.979f, (byte) 0);
-		NpcShoutsService.getInstance().sendMsg(freeTerma, 1500444, freeTerma.getObjectId(), 0, 3000);
+		GameFeatureServices.npcShoutsService().sendMsg(freeTerma, 1500444, freeTerma.getObjectId(), 0, 3000);
 	}
 
 	private void moveToDead() {
@@ -67,7 +71,7 @@ public class TrappedTermaAI2 extends NpcAI2 {
 	}
 	
 	private void dead() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AgentService;
@@ -23,7 +25,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class Agent extends AdminCommand
 {
@@ -54,30 +56,30 @@ public class Agent extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (AgentService.getInstance().isFightInProgress(agentId)) {
+			if (GameLocationBootstrapServices.agentService().isFightInProgress(agentId)) {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " started!");
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF4_Advance_GodElite);
 					}
 				});
-				AgentService.getInstance().startAgentFight(agentId);
+				GameLocationBootstrapServices.agentService().startAgentFight(agentId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!AgentService.getInstance().isFightInProgress(agentId)) {
+			if (!GameLocationBootstrapServices.agentService().isFightInProgress(agentId)) {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Agent Fight> " + agentId + " stopped!");
-				AgentService.getInstance().stopAgentFight(agentId);
+				GameLocationBootstrapServices.agentService().stopAgentFight(agentId);
 			}
 		}
 	}
 	
 	protected boolean isValidAgentLocationId(Player player, int agentId) {
-		if (!AgentService.getInstance().getAgentLocations().keySet().contains(agentId)) {
+		if (!GameLocationBootstrapServices.agentService().getAgentLocations().keySet().contains(agentId)) {
 			PacketSendUtility.sendMessage(player, "Id " + agentId + " is invalid");
 			return false;
 		}

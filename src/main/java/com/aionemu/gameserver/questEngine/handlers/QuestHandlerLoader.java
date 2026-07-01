@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.questEngine.handlers;
 
-import java.lang.reflect.Modifier;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.lang.reflect.Modifier;
 
 import com.aionemu.commons.scripting.classlistener.ClassListener;
 import com.aionemu.commons.utils.ClassUtils;
@@ -28,9 +28,9 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 /**
  * @author MrPoke
  */
+@Slf4j
 public class QuestHandlerLoader implements ClassListener {
 
-	private static final Logger logger = LoggerFactory.getLogger(QuestHandlerLoader.class);
 
 	public QuestHandlerLoader() {
 	}
@@ -39,8 +39,8 @@ public class QuestHandlerLoader implements ClassListener {
 	@Override
 	public void postLoad(Class<?>[] classes) {
 		for (Class<?> c : classes) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Load class " + c.getName());
+			if (log.isDebugEnabled()) {
+				log.debug("Load class " + c.getName());
 			}
 			if (!isValidClass(c)) {
 				continue;
@@ -49,7 +49,7 @@ public class QuestHandlerLoader implements ClassListener {
 				try {
 					Class<? extends QuestHandler> tmp = (Class<? extends QuestHandler>) c;
 					if (tmp != null) {
-						QuestEngine.getInstance().addQuestHandler(tmp.newInstance());
+						GameEngineServices.questEngine().addQuestHandler(tmp.getDeclaredConstructor().newInstance());
 					}
 				} catch (Exception e) {
 					throw new RuntimeException("Failed to load quest handler class: " + c.getName(), e);
@@ -60,13 +60,13 @@ public class QuestHandlerLoader implements ClassListener {
 
 	@Override
 	public void preUnload(Class<?>[] classes) {
-		if (logger.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			for (Class<?> c : classes) {
 				// debug messages
-				logger.debug("Unload class " + c.getName());
+				log.debug("Unload class " + c.getName());
 			}
 		}
-		QuestEngine.getInstance().clear();
+		GameEngineServices.questEngine().clear();
 	}
 
 	public boolean isValidClass(Class<?> clazz) {

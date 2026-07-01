@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.moltenusservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.moltenus.MoltenusLocation;
@@ -62,11 +64,11 @@ public abstract class MoltenusFight<ML extends MoltenusLocation> {
 	}
 
 	protected void spawn(MoltenusStateType type) {
-		MoltenusService.getInstance().spawn(getMoltenusLocation(), type);
+		GameLocationBootstrapServices.moltenusService().spawn(getMoltenusLocation(), type);
 	}
 
 	protected void despawn() {
-		MoltenusService.getInstance().despawn(getMoltenusLocation());
+		GameLocationBootstrapServices.moltenusService().despawn(getMoltenusLocation());
 	}
 
 	public boolean isFinished() {

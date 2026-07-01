@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -33,7 +37,7 @@ public class TalkEventHandler {
 		onSimpleTalk(npcAI, creature);
 		if (creature instanceof Player) {
 			Player player = (Player) creature;
-			if (QuestEngine.getInstance().onDialog(new QuestEnv(npcAI.getOwner(), player, 0, -1))) {
+			if (GameEngineServices.questEngine().onDialog(new QuestEnv(npcAI.getOwner(), player, 0, -1))) {
 				return;
 			}
 			switch (npcAI.getOwner().getObjectTemplate().getTitleId()) {
@@ -72,8 +76,8 @@ public class TalkEventHandler {
 			case 831234:
 			case 831236:
 			case 831237:
-				int playerTownId = TownService.getInstance().getTownResidence(player);
-				int currentTownId = TownService.getInstance().getTownIdByPosition(player);
+				int playerTownId = GameHousingServices.townService().getTownResidence(player);
+				int currentTownId = GameHousingServices.townService().getTownIdByPosition(player);
 				if (playerTownId != currentTownId) {
 					PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(npcAI.getOwner().getObjectId(), 44));
 					return;

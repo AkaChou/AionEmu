@@ -23,15 +23,11 @@
  */
 package com.aionemu.commons.utils.concurrent;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.configs.CommonsConfig;
-
-import javolution.text.TextBuilder;
 
 /**
  * @author NB4L1
@@ -40,9 +36,9 @@ import javolution.text.TextBuilder;
  * 任务执行包装器，提供运行时间统计和异常处理
  * Task execution wrapper with runtime statistics and exception handling
  */
+@Slf4j
 public class ExecuteWrapper implements Executor {
 
-    private static final Logger log = LoggerFactory.getLogger(ExecuteWrapper.class);
 
     /**
      * 执行可运行任务（默认无超时警告）
@@ -77,12 +73,12 @@ public class ExecuteWrapper implements Executor {
             
             long runtimeInMillisec = TimeUnit.NANOSECONDS.toMillis(runtimeInNanosec);
             if (runtimeInMillisec > maximumRuntimeInMillisecWithoutWarning) {
-                TextBuilder tb = TextBuilder.newInstance();
-                tb.append(clazz)
+                StringBuilder message = new StringBuilder();
+                message.append(clazz)
                   .append(" - 执行时间: ")
                   .append(runtimeInMillisec)
                   .append("毫秒");
-                log.warn(tb.toString());
+                log.warn(message.toString());
             }
         }
     }

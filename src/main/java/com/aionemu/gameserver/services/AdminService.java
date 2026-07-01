@@ -16,9 +16,12 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,16 +33,14 @@ import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastList;
-
 /**
  * @author KID
  */
+@Slf4j
 public class AdminService {
 	private static volatile ObjectProvider<AdminService> instanceProvider;
-	private final Logger log = LoggerFactory.getLogger(AdminService.class);
 	private static final Logger itemLog = LoggerFactory.getLogger("GMITEMRESTRICTION");
-	private FastList<Integer> list;
+	private List<Integer> list;
 
 	public static AdminService getInstance() {
 		ObjectProvider<AdminService> provider = instanceProvider;
@@ -58,7 +59,7 @@ public class AdminService {
 	}
 
 	public AdminService() {
-		list = FastList.newInstance();
+		list = new ArrayList<Integer>();
 		if (AdminConfig.ENABLE_TRADEITEM_RESTRICTION)
 			reload();
 	}

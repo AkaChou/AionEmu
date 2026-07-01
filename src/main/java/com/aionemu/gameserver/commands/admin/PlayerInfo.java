@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.model.account.PlayerAccountData;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.skill.PlayerSkillEntry;
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.model.team.legion.LegionMemberEx;
 import com.aionemu.gameserver.model.team2.group.PlayerGroup;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
@@ -48,7 +49,7 @@ public class PlayerInfo extends AdminCommand
 			PacketSendUtility.sendMessage(admin, "syntax //playerinfo <playername> <loc | item | group | skill | legion | ap | gp | chars | knownlist[info|add|remove] | visual[see|notsee]> ");
 			return;
 		}
-		Player target = World.getInstance().findPlayer(Util.convertName(params[0]));
+		Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 		if (target == null) {
 			PacketSendUtility.sendMessage(admin, "Selected player is not online!");
 			return;
@@ -128,7 +129,7 @@ public class PlayerInfo extends AdminCommand
 			if (legion == null) {
 				PacketSendUtility.sendMessage(admin, "-legion info: no legion");
 			} else {
-				ArrayList<LegionMemberEx> legionmemblist = LegionService.getInstance().loadLegionMemberExList(legion, null);
+				ArrayList<LegionMemberEx> legionmemblist = GameCoreGameplayServices.legionService().loadLegionMemberExList(legion, null);
 				Iterator<LegionMemberEx> it = legionmemblist.iterator();
 				strbld.append("-legion info:\n  name: " + legion.getLegionName() + ", level: " + legion.getLegionLevel() + "\n  members(online):\n");
 				while (it.hasNext()) {
@@ -159,18 +160,18 @@ public class PlayerInfo extends AdminCommand
 		} else if (params[1].equals("knownlist")) {
 			if (params[2].equals("info")) {
 				PacketSendUtility.sendMessage(admin, "KnownList of " + target.getName());
-				for (VisibleObject obj : target.getKnownList().getKnownObjects().values()) {
+				for (VisibleObject obj : new java.util.ArrayList<>(target.getKnownList().getKnownObjects().values())) {
 					PacketSendUtility.sendMessage(admin, obj.getName() + " objectId:" + obj.getObjectId());
 				}
 			} else if (params[2].equals("add")) {
 				int objId = Integer.parseInt(params[3]);
-				VisibleObject obj = World.getInstance().findVisibleObject(objId);
+				VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
 				if (obj != null && !target.getKnownList().getKnownObjects().containsKey(objId)) {
 					target.getKnownList().getKnownObjects().put(objId, obj);
 				}
 			} else if (params[2].equals("remove")) {
 				int objId = Integer.parseInt(params[3]);
-				VisibleObject obj = World.getInstance().findVisibleObject(objId);
+				VisibleObject obj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objId);
 				if (obj != null && target.getKnownList().getKnownObjects().containsKey(objId)) {
 					target.getKnownList().getKnownObjects().remove(objId);
 				}
@@ -178,16 +179,16 @@ public class PlayerInfo extends AdminCommand
 		} else if (params[1].equals("visual")) {
 			if (params[2].equals("info")) {
 				PacketSendUtility.sendMessage(admin, "VisualList of " + target.getName());
-				for (VisibleObject obj : target.getKnownList().getVisibleObjects().values()) {
+				for (VisibleObject obj : new java.util.ArrayList<>(target.getKnownList().getVisibleObjects().values())) {
 					PacketSendUtility.sendMessage(admin, obj.getName() + " objectId:" + obj.getObjectId());
 				}
 			} else if (params[2].equals("see")) {
 				int objId = Integer.parseInt(params[3]);
-				Player player = World.getInstance().findPlayer(objId);
+				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 				target.getController().see(player);
 			} else if (params[2].equals("notsee")) {
 				int objId = Integer.parseInt(params[3]);
-				Player player = World.getInstance().findPlayer(objId);
+				Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 				target.getController().notSee(player, true);
 			}
 		} else {

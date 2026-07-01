@@ -16,15 +16,18 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.BeritraSchedule;
 import com.aionemu.gameserver.configs.schedule.BeritraSchedule.Beritra;
@@ -44,35 +47,35 @@ import com.aionemu.gameserver.services.beritraservice.BeritraStartRunnable;
 import com.aionemu.gameserver.services.beritraservice.Invade;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class BeritraService {
 	private static volatile ObjectProvider<BeritraService> instanceProvider;
 	private BeritraSchedule beritraSchedule;
 	private Map<Integer, BeritraLocation> beritra;
-	private static Logger log = LoggerFactory.getLogger(BeritraService.class);
 	private static final int duration = CustomConfig.BERITRA_DURATION;
 	// Beritra Invasion 4.7
-	private FastMap<Integer, VisibleObject> adventPortal = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEffect = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventControl = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventDirecting = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
+	private Map<Integer, VisibleObject> adventControl = new HashMap<>();
+	private Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
 	// Ereshkigal Invasion 4.9
-	private FastMap<Integer, VisibleObject> adventEreshPortal = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEreshEffect = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEreshControl = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEreshDirecting = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> adventEreshPortal = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEreshEffect = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEreshControl = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEreshDirecting = new HashMap<>();
 
-	private final Map<Integer, BeritraInvasion<?>> activeInvasions = new FastMap<Integer, BeritraInvasion<?>>()
-			.shared();
+	private final Map<Integer, BeritraInvasion<?>> activeInvasions = new LinkedHashMap<Integer, BeritraInvasion<?>>()
+			;
 
 	public void initBeritraLocations() {
 		if (CustomConfig.BERITRA_ENABLED) {
@@ -92,7 +95,7 @@ public class BeritraService {
 			beritraSchedule = BeritraSchedule.load();
 			for (Beritra beritra : beritraSchedule.getBeritrasList()) {
 				for (String invasionTime : beritra.getInvasionTimes()) {
-					CronService.getInstance().schedule(new BeritraStartRunnable(beritra.getId()), invasionTime);
+					GameCronServices.cronService().schedule(new BeritraStartRunnable(beritra.getId()), invasionTime);
 				}
 			}
 		}
@@ -108,7 +111,7 @@ public class BeritraService {
 			activeInvasions.put(id, invade);
 		}
 		invade.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopBeritraInvasion(id);
@@ -152,7 +155,7 @@ public class BeritraService {
 	public boolean beritraInvasionMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
@@ -167,7 +170,7 @@ public class BeritraService {
 	public boolean invasionCorridorMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Beritra Legion's Invasion Corridor has appeared.
@@ -183,7 +186,7 @@ public class BeritraService {
 	public boolean devilUnitThroughMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Devil Unit has infiltrated through the Invasion Corridor.
@@ -199,7 +202,7 @@ public class BeritraService {
 	public boolean devilUnitReturnMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Devil Unit is preparing for its return.
@@ -218,7 +221,7 @@ public class BeritraService {
 	public boolean ereshkigalInvasionMsg(int id) {
 		switch (id) {
 		case 35:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_WORLDRAID_INVADE_VRITRA_SPECIAL);
@@ -233,7 +236,7 @@ public class BeritraService {
 	public boolean ereshkigalCorridorMsg(int id) {
 		switch (id) {
 		case 35:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Ereshkigal Legion's Invasion Corridor has been created.
@@ -249,7 +252,7 @@ public class BeritraService {
 	public boolean ereshkigalLegionThroughMsg(int id) {
 		switch (id) {
 		case 35:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Ereshkigal Legion's Magic weapon has infiltrated through the Invasion
@@ -266,7 +269,7 @@ public class BeritraService {
 	public boolean beritraLegionReturnMsg(int id) {
 		switch (id) {
 		case 35:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Beritra Legion Devil Unit is preparing for its return.
@@ -285,7 +288,7 @@ public class BeritraService {
 	public boolean dredgionDefenseMsg(int id) {
 		switch (id) {
 		case 57:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_Dreadgion_Start_L);
@@ -955,7 +958,7 @@ public class BeritraService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

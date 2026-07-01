@@ -12,6 +12,10 @@
  */
 package com.aionemu.gameserver.quest.handlers.clash_of_destiny;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -31,7 +35,6 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /****/
@@ -142,13 +145,13 @@ public class _24030Showdown_With_Destiny extends QuestHandler
                         } case STEP_TO_6: {
                             if (var == 5) {
                                 removeQuestItem(env, 182215392, 1);
-                                SkillEngine.getInstance().applyEffectDirectly(281, player, player, 0);
+                                GameEngineServices.skillEngine().applyEffectDirectly(281, player, player, 0);
                                 player.setState(CreatureState.FLIGHT_TELEPORT);
                                 player.unsetState(CreatureState.ACTIVE);
                                 player.setFlightTeleportId(1001);
                                 PacketSendUtility.sendPacket(player, new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, 1001, 0));
                                 final QuestEnv qe = env;
-                                ThreadPoolManager.getInstance().schedule(new Runnable() {
+                                GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                                     @Override
                                     public void run() {
                                         changeQuestStep(qe, 5, 6, false);

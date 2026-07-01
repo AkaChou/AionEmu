@@ -16,21 +16,20 @@
  */
 package com.aionemu.gameserver.utils.audit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.configs.main.PunishmentConfig;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.google.common.base.Preconditions;
 
 /**
  * @author MrPoke
  */
+@Slf4j(topic = "AUDIT_LOG")
 public class AuditLogger {
 
-	private static final Logger log = LoggerFactory.getLogger("AUDIT_LOG");
 
 	public static final void info(Player player, String message) {
 		Preconditions.checkNotNull(player, "Player should not be null or use different info method");
@@ -47,7 +46,7 @@ public class AuditLogger {
 		log.info(message);
 
 		if (SecurityConfig.GM_AUDIT_MESSAGE_BROADCAST) {
-			GMService.getInstance().broadcastMesage(message);
+			GameRuntimeServices.gmService().broadcastMesage(message);
 		}
 	}
 }

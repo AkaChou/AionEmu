@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.luna;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -34,20 +38,19 @@ import com.aionemu.gameserver.model.instance.instancereward.InstanceReward;
 import com.aionemu.gameserver.model.instance.instancereward.SecretMunitionsFactoryReward;
 import com.aionemu.gameserver.model.instance.playerreward.SecretMunitionsFactoryPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
 import java.util.concurrent.Future;
 
 /****/
@@ -73,8 +76,8 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 3600000; //...1Hr
 	private SecretMunitionsFactoryReward instanceReward;
-	private final FastList<Future<?>> factoryTask1 = FastList.newInstance();
-	private final FastList<Future<?>> factoryTask2 = FastList.newInstance();
+	private final List<Future<?>> factoryTask1 = new ArrayList<>();
+	private final List<Future<?>> factoryTask2 = new ArrayList<>();
 	
 	protected SecretMunitionsFactoryPlayerReward getPlayerReward(Integer object) {
 		return (SecretMunitionsFactoryPlayerReward) instanceReward.getPlayerReward(object);
@@ -95,31 +98,31 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 245185: //Mechaturerk’s Core.
 			    switch (Rnd.get(1, 7)) {
 				    case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150000, 2)); //Uncut Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150000, 2)); //Uncut Crystal.
 				    break;
 					case 2:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150001, 2)); //Chipped Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150001, 2)); //Chipped Crystal.
 				    break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150002, 2)); //Cloudy Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150002, 2)); //Cloudy Crystal.
 				    break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150003, 2)); //Clear Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150003, 2)); //Clear Crystal.
 				    break;
 					case 5:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150004, 2)); //Flawless Crystal.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150004, 2)); //Flawless Crystal.
 				    break;
 					case 6:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150005, 2)); //Luna’s Light.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150005, 2)); //Luna’s Light.
 				    break;
 					case 7:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 152150006, 2)); //Luna’s Blessing.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 152150006, 2)); //Luna’s Blessing.
 				    break;
 			    }
 			break;
@@ -156,7 +159,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				//The Machine Monster’s Footlocker has appeared inside the Munitions Factory.
 				sendMsgByRace(1403645, Race.PC_ALL, 5000);
 		        spawn(703380, 138.84042f, 256.166f, 191.8727f, (byte) 0); //Machine Monster’s Footlocker.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    spawn(243664, 163.01869f, 259.16562f, 192.11992f, (byte) 1); //Mechaturerk.
@@ -181,7 +184,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 					    spawn(834444, 149.65579f, 260.02966f, 191.8727f, (byte) 0); //Mechaturerk’s Special Treasure Box.
 					break;
 				}
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -262,7 +265,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	
 	private void startFactoryRaid1() {
 		//Mechaturerk Maintenance Soldier.
-		factoryTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(243853, 133.37782f, 229.28152f, 191.94075f, (byte) 15, 1000, "MunitionFactory1");
@@ -270,7 +273,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		//Mechaturerk Maintenance Soldier.
-		factoryTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(243853, 133.37782f, 229.28152f, 191.94075f, (byte) 15, 1000, "MunitionFactory1");
@@ -278,7 +281,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 		//Mechaturerk Maintenance Soldier.
-		factoryTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(243853, 133.37782f, 229.28152f, 191.94075f, (byte) 15, 1000, "MunitionFactory1");
@@ -289,7 +292,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	
 	private void startFactoryRaid2() {
 		//Melee Support Destruction Golem.
-		factoryTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(244135, 133.37782f, 229.28152f, 191.94075f, (byte) 15, 1000, "MunitionFactory1");
@@ -297,7 +300,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		//Ranged Support Destruction Golem.
-		factoryTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(244136, 133.37782f, 229.28152f, 191.94075f, (byte) 15, 1000, "MunitionFactory1");
@@ -305,7 +308,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 		//Melee + Ranged Support Destruction Golem.
-		factoryTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				sp(244135, 133.37782f, 229.28152f, 191.94075f, (byte) 15, 1000, "MunitionFactory1");
@@ -316,7 +319,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	
 	private void startFactoryRaid3() {
 		//Azure Living Bomb.
-		factoryTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//The Azure Living bomb has appeared!
@@ -328,7 +331,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 1000);
 		//Golden Living Bomb.
-		factoryTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//The Golden Living bomb has appeared!
@@ -340,7 +343,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 30000);
 		//Azure Living Bomb.
-		factoryTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//The Azure Living bomb has appeared!
@@ -352,7 +355,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 			}
 		}, 60000);
 		//Golden Living Bomb.
-		factoryTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//The Golden Living bomb has appeared!
@@ -395,14 +398,14 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	* Raid Instance.
 	*/
 	protected void startFactoryTask1() {
-		factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startFactoryRaid1();
 				//sendMsg("[START]: Wave <1/3>");
             }
         }, 120000)); //...2Min
-		factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startFactoryRaid2();
@@ -413,7 +416,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				spawn(703376, 138.75412f, 269.4629f, 191.8727f, (byte) 0); //Maintenance Soldier’s Footlocker.
             }
         }, 240000)); //...4Min
-		factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startFactoryRaid3();
@@ -421,7 +424,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 				//sendMsg("[START]: Wave <3/3>");
             }
         }, 360000)); //...6Min
-		factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -439,7 +442,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	* Instance Timer.
 	*/
 	protected void startFactoryTask2() {
-		factoryTask2.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		factoryTask2.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -478,12 +481,12 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 		startPrepareTimer();
 		//spawnLunaDetachment();
 		final int lunaDetachement = skillRace == Race.ASMODIANS ? 21348 : 21347;
-		SkillEngine.getInstance().applyEffectDirectly(lunaDetachement, player, player, 3000000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(lunaDetachement, player, player, 3000000 * 1);
 	}
 	
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -585,22 +588,22 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask1() {
-        for (FastList.Node<Future<?>> n = factoryTask1.head(), end = factoryTask1.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : factoryTask1) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	private void stopInstanceTask2() {
-        for (FastList.Node<Future<?>> n = factoryTask2.head(), end = factoryTask2.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
-        }
-    }
+		for (Future<?> task : factoryTask2) {
+			if (task != null) {
+				task.cancel(true);
+			}
+		}
+	}
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        factoryTask1.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        factoryTask1.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -665,7 +668,7 @@ public class SecretMunitionsFactoryInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

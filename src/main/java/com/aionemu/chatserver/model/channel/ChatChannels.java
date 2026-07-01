@@ -18,13 +18,10 @@
 
 package com.aionemu.chatserver.model.channel;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.slf4j.LoggerFactory;
-
-import org.slf4j.Logger;
 
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.model.Gender;
@@ -35,9 +32,9 @@ import com.aionemu.chatserver.service.GameServerService;
 /**
  * @author ATracer
  */
+@Slf4j
 public class ChatChannels {
 
-    private static final Logger log = LoggerFactory.getLogger(ChatChannels.class);
     private static final List<Channel> channels = new ArrayList<Channel>();
 
     static {

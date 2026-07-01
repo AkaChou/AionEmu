@@ -42,7 +42,7 @@ public class Recharger extends AdminCommand {
         int RechargerID = 730397;
         if(params[0].equals("off")){
             if(isOpened){
-                Collection<Npc> recharger = World.getInstance().getNpcs();
+                Collection<Npc> recharger = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs();
                 for(Npc n : recharger){
                     if(n.getNpcId() == RechargerID){
                         n.getController().delete();

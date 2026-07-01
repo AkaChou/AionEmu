@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -44,7 +44,8 @@ public final class RestrictionsManager {
 			}
 			Restrictions[] restrictions = RESTRICTIONS[mode.ordinal()];
 			if (!ArrayUtils.contains(restrictions, restriction)) {
-				restrictions = (Restrictions[]) ArrayUtils.add(restrictions, restriction);
+				restrictions = Arrays.copyOf(restrictions, restrictions.length + 1);
+				restrictions[restrictions.length - 1] = restriction;
 			}
 			Arrays.sort(restrictions, mode);
 			RESTRICTIONS[mode.ordinal()] = restrictions;

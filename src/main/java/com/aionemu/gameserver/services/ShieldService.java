@@ -17,10 +17,11 @@
 package com.aionemu.gameserver.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
@@ -36,19 +37,17 @@ import com.aionemu.gameserver.model.siege.SiegeShield;
 import com.aionemu.gameserver.model.templates.shield.ShieldTemplate;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import javolution.util.FastMap;
-
+@Slf4j
 public class ShieldService {
 	private static volatile ObjectProvider<ShieldService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(ShieldService.class);
 
 	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder {
 		protected static final ShieldService instance = new ShieldService();
 	}
 
-	private final FastMap<Integer, Shield> sphereShields = new FastMap<Integer, Shield>();
-	private final FastMap<Integer, List<SiegeShield>> registeredShields = new FastMap<Integer, List<SiegeShield>>(0);
+	private final Map<Integer, Shield> sphereShields = new HashMap<>();
+	private final Map<Integer, List<SiegeShield>> registeredShields = new HashMap<>();
 
 	public static final ShieldService getInstance() {
 		ObjectProvider<ShieldService> provider = instanceProvider;

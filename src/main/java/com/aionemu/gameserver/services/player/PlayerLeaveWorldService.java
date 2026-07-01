@@ -16,10 +16,24 @@
  */
 package com.aionemu.gameserver.services.player;
 
-import java.sql.Timestamp;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.sql.Timestamp;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
@@ -41,14 +55,12 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DELETE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ChatService;
 import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.services.KiskService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.PunishmentService;
 import com.aionemu.gameserver.services.RepurchaseService;
@@ -63,15 +75,13 @@ import com.aionemu.gameserver.services.toypet.PetService;
 import com.aionemu.gameserver.services.toypet.PetSpawnService;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
-import com.aionemu.gameserver.utils.audit.GMService;
+@Slf4j
 
 public class PlayerLeaveWorldService {
-	private static final Logger log = LoggerFactory.getLogger(PlayerLeaveWorldService.class);
 
 	public static final void startLeaveWorldDelay(final Player player, int delay) {
 		player.getController().stopMoving();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startLeaveWorld(player);
@@ -83,23 +93,23 @@ public class PlayerLeaveWorldService {
 		log.info("Player Logged Out: " + player.getName() + " Account: "
 				+ (player.getClientConnection() != null ? player.getClientConnection().getAccount().getName()
 						: "Disconnected"));
-		FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
-		FindGroupService.getInstance().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
+		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x00, player.getObjectId());
+		GameRuntimeServices.findGroupService().removeFindGroup(player.getRace(), 0x04, player.getObjectId());
 		player.onLoggedOut();
-		PetService.getInstance().onPlayerLogout(player);
-		BrokerService.getInstance().removePlayerCache(player);
-		ExchangeService.getInstance().cancelExchange(player);
-		RepurchaseService.getInstance().removeRepurchaseItems(player);
+		GameFeatureServices.petService().onPlayerLogout(player);
+		GameRuntimeServices.brokerService().removePlayerCache(player);
+		GameRuntimeServices.exchangeService().cancelExchange(player);
+		GameFeatureServices.repurchaseService().removeRepurchaseItems(player);
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-			AutoGroupService.getInstance().onPlayerLogOut(player);
+			GameCoreGameplayServices.autoGroupService().onPlayerLogOut(player);
 		}
-		ProtectorConquerorService.getInstance().onLogout(player);
+		GameFeatureServices.protectorConquerorService().onLogout(player);
 		InstanceService.onLogOut(player);
-		GMService.getInstance().onPlayerLogedOut(player);
-		KiskService.getInstance().onLogout(player);
+		GameRuntimeServices.gmService().onPlayerLogedOut(player);
+		GameFeatureServices.kiskService().onLogout(player);
 		player.getMoveController().abortMove();
 		if (player.isLooting()) {
-			DropService.getInstance().closeDropList(player, player.getLootingNpcOid());
+			GameCoreGameplayServices.dropService().closeDropList(player, player.getLootingNpcOid());
 		}
 		if (player.isInPrison()) {
 			long prisonTimer = System.currentTimeMillis() - player.getStartPrison();
@@ -114,10 +124,10 @@ public class PlayerLeaveWorldService {
 		DAOManager.getDAO(PlayerLifeStatsDAO.class).updatePlayerLifeStat(player);
 		DAOManager.getDAO(EventItemsDAO.class).storeItems(player);
 		// SHUGO SWEEP
-		ShugoSweepService.getInstance().onLogout(player);
+		GameEventBootstrapServices.shugoSweepService().onLogout(player);
 		PlayerGroupService.onPlayerLogout(player);
 		PlayerAllianceService.onPlayerLogout(player);
-		LegionService.getInstance().LegionWhUpdate(player);
+		GameCoreGameplayServices.legionService().LegionWhUpdate(player);
 		player.getEffectController().removeAllEffects(true);
 		player.getLifeStats().cancelAllTasks();
 		if (player.getLifeStats().isAlreadyDead()) {
@@ -126,8 +136,8 @@ public class PlayerLeaveWorldService {
 			} else {
 				PlayerReviveService.bindRevive(player);
 			}
-		} else if (DuelService.getInstance().isDueling(player.getObjectId())) {
-			DuelService.getInstance().loseDuel(player);
+		} else if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
+			GameGameplayServices.duelService().loseDuel(player);
 		}
 
 		if (player.getSummon() != null) {
@@ -139,7 +149,7 @@ public class PlayerLeaveWorldService {
 		}
 
 		if (player.getMinion() != null) {
-			MinionService.getInstance().despawnMinion(player, player.getMinion().getObjectId());
+			GameEventBootstrapServices.minionService().despawnMinion(player, player.getMinion().getObjectId());
 		}
 
 		if (player.getPostman() != null) {
@@ -149,9 +159,9 @@ public class PlayerLeaveWorldService {
 		PunishmentService.stopPrisonTask(player, true);
 		PunishmentService.stopGatherableTask(player, true);
 		if (player.isLegionMember()) {
-			LegionService.getInstance().onLogout(player);
+			GameCoreGameplayServices.legionService().onLogout(player);
 		}
-		QuestEngine.getInstance().onLogOut(new QuestEnv(null, player, 0, 0));
+		GameEngineServices.questEngine().onLogOut(new QuestEnv(null, player, 0, 0));
 		player.getController().delete();
 		// Reset Floor "Crucible Spire 5.6"
 		player.getCommonData().setFloor(0);
@@ -163,7 +173,7 @@ public class PlayerLeaveWorldService {
 			ChatService.onPlayerLogout(player);
 		}
 		PlayerService.storePlayer(player);
-		ExpireTimerTask.getInstance().removePlayer(player);
+		GameTaskManagerServices.expireTimerTask().removePlayer(player);
 		if (player.getCraftingTask() != null) {
 			player.getCraftingTask().stop(true);
 		}
@@ -176,7 +186,7 @@ public class PlayerLeaveWorldService {
 		PlayerAccountData pad = player.getPlayerAccount().getPlayerAccountData(player.getObjectId());
 		pad.setEquipment(player.getEquipment().getEquippedItems());
 		StigmaLinkedService.onLogOut(player);
-		EventWindowService.getInstance().onLogout(player);
+		GameEventBootstrapServices.eventWindowService().onLogout(player);
 	}
 
 	public static void tryLeaveWorld(Player player) {

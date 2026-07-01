@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.configs.main.InGameShopConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
@@ -74,10 +76,10 @@ public class CM_IN_GAME_SHOP_INFO extends AionClientPacket {
 						new SM_TOLL_INFO(player.getClientConnection().getAccount().getToll()));
 				break;
 			case 0x20:
-				InGameShopEn.getInstance().acceptRequest(player, categoryId);
+				GameRuntimeServices.inGameShopEn().acceptRequest(player, categoryId);
 				break;
 			case 0x40:
-				InGameShopEn.getInstance().sendRequest(player, senderName, senderMessage, categoryId);
+				GameRuntimeServices.inGameShopEn().sendRequest(player, senderName, senderMessage, categoryId);
 				break;
 			}
 		}

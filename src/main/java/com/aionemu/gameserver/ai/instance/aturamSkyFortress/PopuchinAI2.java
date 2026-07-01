@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -81,13 +85,13 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		bombTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		bombTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
 					cancelBombTaskTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 19412, 1, getOwner()).useNoAnimationSkill(); //Drop The Drana Bomb.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19412, 1, getOwner()).useNoAnimationSkill(); //Drop The Drana Bomb.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -115,7 +119,7 @@ public class PopuchinAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {

@@ -17,6 +17,8 @@
 
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 /**
  * @author Rolandas
  */
@@ -121,7 +123,7 @@ public class _80020EventSoloriusJoy extends QuestHandler {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 
-		if (EventService.getInstance().checkQuestIsActive(questId)) {
+		if (GameEventServices.eventService().checkQuestIsActive(questId)) {
 			return QuestService.checkLevelRequirement(questId, player.getCommonData().getLevel());
 		}
 		else if (qs != null) {

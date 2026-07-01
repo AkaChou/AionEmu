@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.iluma;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -26,7 +28,6 @@ import com.aionemu.gameserver.model.templates.windstreams.WindstreamTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -49,7 +50,7 @@ public class LF6_WindStreamAI2 extends NpcAI2
     }
 	
 	private void startWindStream(final Npc npc) {
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 Npc npc2 = (Npc) spawn(210100000, 857863, 1494.05f, 1411.85f, 335.94f, (byte) 0, 0, 1);
@@ -67,7 +68,7 @@ public class LF6_WindStreamAI2 extends NpcAI2
     }
 	
 	private void announceWindPathInvasion() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The wind road will disappear in 1 minute. You need to exit the wind road.

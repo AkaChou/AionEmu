@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.clash_of_destiny;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -204,7 +206,7 @@ public class _24031Enemy_At_The_Doorstep extends QuestHandler
                 return HandlerResult.UNKNOWN;
             }
             PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, id, 3000, 0, 0), true);
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 @Override
                 public void run() {
                     removeQuestItem(env, 182215394, 1);
@@ -220,7 +222,7 @@ public class _24031Enemy_At_The_Doorstep extends QuestHandler
                 return HandlerResult.UNKNOWN;
             }
             PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, id, 3000, 0, 0), true);
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 @Override
                 public void run() {
                     removeQuestItem(env, 182215395, 1);
@@ -236,7 +238,7 @@ public class _24031Enemy_At_The_Doorstep extends QuestHandler
                 return HandlerResult.UNKNOWN;
             }
             PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, id, 3000, 0, 0), true);
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 @Override
                 public void run() {
                     removeQuestItem(env, 182215396, 1);

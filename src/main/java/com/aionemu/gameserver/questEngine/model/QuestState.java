@@ -16,11 +16,9 @@
  */
 package com.aionemu.gameserver.questEngine.model;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Calendar;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -30,6 +28,7 @@ import com.aionemu.gameserver.model.templates.QuestTemplate;
  * @author MrPoke
  * @modified vlog, Rolandas
  */
+@Slf4j
 public class QuestState {
 
 	private final int questId;
@@ -41,7 +40,6 @@ public class QuestState {
 	private Integer reward;
 	private PersistentState persistentState;
 
-	private static final Logger log = LoggerFactory.getLogger(QuestState.class);
 
 	public QuestState(int questId, QuestStatus status, int questVars, int completeCount, Timestamp nextRepeatTime,
 			Integer reward, Timestamp completeTime) {

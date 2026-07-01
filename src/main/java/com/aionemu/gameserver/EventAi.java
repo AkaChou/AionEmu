@@ -16,10 +16,14 @@
  */
 package com.aionemu.gameserver;
 
-import java.util.Iterator;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import java.util.Iterator;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -37,18 +41,17 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * Created by Ataba
  */
+@Slf4j(topic = "GM_MONITOR_LOG")
 public class EventAi extends AdminCommand {
     public EventAi() {
         super("eventai");
     }
 
-    private static final Logger log = LoggerFactory.getLogger("GM_MONITOR_LOG");
 
     public void execute(final Player admin, String...params){
         if(params.length < 1){
@@ -65,12 +68,12 @@ public class EventAi extends AdminCommand {
         if(params[0].equals("rewardall_inzone")){
             int rewardAmount = Integer.parseInt(params[2]);
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
             if(params[1].equals("gp")){
 
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GeoService.getInstance().canSee(admin, player))){
+                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
                         AbyssPointsService.addGp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" GP from an Event!");
                         PacketSendUtility.sendMessage(admin, "Player : "+player.getName()+" has been rewarded!");
@@ -83,7 +86,7 @@ public class EventAi extends AdminCommand {
             }else if(params[1].equals("ap")){
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GeoService.getInstance().canSee(admin, player))){
+                    if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
                     	AbyssPointsService.addAp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" AP from an Event!");
                     }
@@ -102,7 +105,7 @@ public class EventAi extends AdminCommand {
             RequestResponseHandler requestHim = new RequestResponseHandler(admin) {
                 @Override
                 public void acceptRequest(Creature requester, Player responder) {
-                    World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+                    com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
                         @Override
                         public void visit(Player player) {
                             if (MathUtil.isInRange(admin, player, range)){
@@ -119,7 +122,7 @@ public class EventAi extends AdminCommand {
 										PacketSendUtility.sendMessage(player, "You Received " + GP + " Glory Point(s) from Event!");
 									}
                                     if(toll != 0){
-                                        InGameShopEn.getInstance().addToll(player, toll);
+                                        GameRuntimeServices.inGameShopEn().addToll(player, toll);
                                         PacketSendUtility.sendMessage(player, "You Received " + toll + " Toll Point(s) from Event!");
                                     }
                                     PacketSendUtility.sendWhiteMessage(admin, "Player: \uE020" + player.getName() + "\uE020 Has Been Successfully Rewarded!");
@@ -150,12 +153,12 @@ public class EventAi extends AdminCommand {
         }else if(params[0].equalsIgnoreCase("rewardall_all")){
             int rewardAmount = Integer.parseInt(params[2]);
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
             if(params[1].equals("gp")){
 
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(!(player.getName() == admin.getName() && GeoService.getInstance().canSee(admin, player))){
+                    if(!(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
                     	AbyssPointsService.addGp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" GP from an Event!");
                         PacketSendUtility.sendMessage(admin, "Player : "+player.getName()+" has been rewarded!");
@@ -168,7 +171,7 @@ public class EventAi extends AdminCommand {
             }else if(params[1].equals("ap")){
                 while(ita.hasNext()){
                     Player player = ita.next();
-                    if(!(player.getName() == admin.getName() && GeoService.getInstance().canSee(admin, player))){
+                    if(!(player.getName() == admin.getName() && GameWorldServices.geoService().canSee(admin, player))){
                     	AbyssPointsService.addAp(player, rewardAmount);
                         PacketSendUtility.sendMessage(player, "You've rewarded "+rewardAmount+" AP from an Event!");
                     }
@@ -184,7 +187,7 @@ public class EventAi extends AdminCommand {
                 return;
             }
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
             if(params[1].equals("gp")){
 
                 while(ita.hasNext()){
@@ -200,7 +203,7 @@ public class EventAi extends AdminCommand {
             }
 
         }else if(params[0].equals("movetomeall_inzone")){
-           Iterator<Player> ita = World.getInstance().getPlayersIterator();
+           Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
            while(ita.hasNext()){
                Player player = ita.next();
                if(player.getWorldId() == admin.getWorldId() && !(player.getName() == admin.getName())){
@@ -212,7 +215,7 @@ public class EventAi extends AdminCommand {
             PacketSendUtility.sendMessage(admin, "Every player in this Map as been gathered to Your location!");
 
         }else if(params[0].equals("resall_inzone")){
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
             while(ita.hasNext()){
                 Player player = ita.next();
                 if(player.getWorldId() == admin.getWorldId() && player.getLifeStats().isAlreadyDead()){
@@ -238,7 +241,7 @@ public class EventAi extends AdminCommand {
             String actual;
             actual = "[ " +type+" ] : " + Message + " ";
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
             while(ita.hasNext()){
                 Player player = ita.next();
@@ -264,7 +267,7 @@ public class EventAi extends AdminCommand {
             String actual;
             actual = "[ " +type+" ] : " + Message + " ";
 
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
             while(ita.hasNext()){
                 Player player = ita.next();
@@ -276,13 +279,13 @@ public class EventAi extends AdminCommand {
         }else if(params[0].equalsIgnoreCase("stop")){
             if(params[1].equalsIgnoreCase("all")){
 
-                Iterator<Player> ita = World.getInstance().getPlayersIterator();
+                Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
                 while(ita.hasNext()){
                     Player player = ita.next();
 
-                    if(player.getWorldId() == admin.getWorldId() && player.getAccessLevel() < 1 && GeoService.getInstance().canSee(admin,player)){
-                        SkillEngine.getInstance().applyEffectDirectly(8256, admin, player, (10 * 1000));
+                    if(player.getWorldId() == admin.getWorldId() && player.getAccessLevel() < 1 && GameWorldServices.geoService().canSee(admin,player)){
+                        GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, player, (10 * 1000));
                     }
                 }
                 log.info("[eventai-stop{all}] GM : " + admin.getName() + " paralyzed everyone in mapId '" + admin.getWorldId() + "'");
@@ -297,24 +300,24 @@ public class EventAi extends AdminCommand {
                 return;
             }
 
-            SkillEngine.getInstance().applyEffectDirectly(8256, admin, (Creature) target, (10 * 1000));
-            SkillEngine.getInstance().applyEffectDirectly(8256, admin, (Creature) targetsTarget, (10 * 1000));
+            GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, (Creature) target, (10 * 1000));
+            GameEngineServices.skillEngine().applyEffectDirectly(8256, admin, (Creature) targetsTarget, (10 * 1000));
             log.info("[eventai-stop{target}] GM : " + admin.getName() + " paralyzed both [" + target.getName() + "][" + targetsTarget.getName() +"] in mapId '" + admin.getWorldId() + "'");
             }
         }else if(params[0].equalsIgnoreCase("returnall_inzone")){
-            Iterator<Player> ita = World.getInstance().getPlayersIterator();
+            Iterator<Player> ita = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
             while(ita.hasNext()){
                 Player player = ita.next();
 
-                if(admin.getWorldId() == player.getWorldId() && player.getAccessLevel() < 1 && GeoService.getInstance().canSee(admin,player)){
+                if(admin.getWorldId() == player.getWorldId() && player.getAccessLevel() < 1 && GameWorldServices.geoService().canSee(admin,player)){
                     TeleportService2.moveToBindLocation(player, true);
                 }
 
             }
             log.info("[eventai-returnall_inzone] GM : " + admin.getName() + " returned everyone in mapId '" + admin.getWorldId() + "'");
         }else if(params[0].equalsIgnoreCase("port2jumping")){
-            Player player = World.getInstance().findPlayer(Util.convertName(params[1]));
+            Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 
             if (player == null) {
                 PacketSendUtility.sendMessage(player, "The specified player is not online.");

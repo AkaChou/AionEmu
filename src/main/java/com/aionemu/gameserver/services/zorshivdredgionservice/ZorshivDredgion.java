@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.zorshivdredgionservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
@@ -62,11 +64,11 @@ public abstract class ZorshivDredgion<ZL extends ZorshivDredgionLocation> {
 	}
 
 	protected void spawn(ZorshivDredgionStateType type) {
-		ZorshivDredgionService.getInstance().spawn(getZorshivDredgionLocation(), type);
+		GameLocationBootstrapServices.zorshivDredgionService().spawn(getZorshivDredgionLocation(), type);
 	}
 
 	protected void despawn() {
-		ZorshivDredgionService.getInstance().despawn(getZorshivDredgionLocation());
+		GameLocationBootstrapServices.zorshivDredgionService().despawn(getZorshivDredgionLocation());
 	}
 
 	public boolean isPeace() {

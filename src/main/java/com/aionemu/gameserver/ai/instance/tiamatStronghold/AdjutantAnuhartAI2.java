@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -51,7 +55,7 @@ public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startBladeStormTask() {
-		bladeStormTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		bladeStormTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -65,7 +69,7 @@ public class AdjutantAnuhartAI2 extends AggressiveNpcAI2
 	
 	private void startBladeStormEvent() {
 		shield();
-		SkillEngine.getInstance().getSkill(getOwner(), 20747, 1, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20747, 1, getOwner()).useNoAnimationSkill();
 		spawn(283099, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Blade Storm.
 	}
 	

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.trade;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.configs.main.PricesConfig;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
 import com.aionemu.gameserver.model.Race;
@@ -43,10 +45,10 @@ public class PricesService {
 		float influenceValue = 0;
 		switch (playerRace) {
 		case ASMODIANS:
-			influenceValue = Influence.getInstance().getGlobalAsmodiansInfluence();
+			influenceValue = GameRuntimeServices.influence().getGlobalAsmodiansInfluence();
 			break;
 		case ELYOS:
-			influenceValue = Influence.getInstance().getGlobalElyosInfluence();
+			influenceValue = GameRuntimeServices.influence().getGlobalElyosInfluence();
 			break;
 		default:
 			influenceValue = 0.5f;
@@ -86,10 +88,10 @@ public class PricesService {
 		float influenceValue = 0;
 		switch (playerRace) {
 		case ASMODIANS:
-			influenceValue = Influence.getInstance().getGlobalAsmodiansInfluence();
+			influenceValue = GameRuntimeServices.influence().getGlobalAsmodiansInfluence();
 			break;
 		case ELYOS:
-			influenceValue = Influence.getInstance().getGlobalElyosInfluence();
+			influenceValue = GameRuntimeServices.influence().getGlobalElyosInfluence();
 			break;
 		default:
 			influenceValue = 0.5f;

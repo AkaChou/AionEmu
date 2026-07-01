@@ -18,17 +18,18 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.vortex.VortexTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Source
@@ -40,7 +41,7 @@ public class VortexData {
 	@XmlElement(name = "vortex_location")
 	private List<VortexTemplate> vortexTemplates;
 	@XmlTransient
-	private FastMap<Integer, VortexLocation> vortex = new FastMap<Integer, VortexLocation>();
+	private Map<Integer, VortexLocation> vortex = new LinkedHashMap<Integer, VortexLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (VortexTemplate template : vortexTemplates) {
@@ -61,7 +62,7 @@ public class VortexData {
 		return null;
 	}
 
-	public FastMap<Integer, VortexLocation> getVortexLocations() {
+	public Map<Integer, VortexLocation> getVortexLocations() {
 		return vortex;
 	}
 }

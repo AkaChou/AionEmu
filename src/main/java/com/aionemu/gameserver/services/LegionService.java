@@ -16,6 +16,13 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -24,9 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -87,7 +92,8 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.container.LegionContainer;
 import com.aionemu.gameserver.world.container.LegionMemberContainer;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is designed to do all the work related with loading/storing
@@ -95,9 +101,9 @@ import javolution.util.FastList;
  *
  * @author Simple modified by cura, Source
  */
+@Slf4j
 public class LegionService {
 
-	private static final Logger log = LoggerFactory.getLogger(LegionService.class);
 	private static volatile ObjectProvider<LegionService> instanceProvider;
 	private final LegionContainer allCachedLegions = new LegionContainer();
 	private final LegionMemberContainer allCachedLegionMembers = new LegionMemberContainer();
@@ -129,7 +135,7 @@ public class LegionService {
 	}
 
 	public LegionService() {
-		this.world = World.getInstance();
+		this.world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 	}
 
 	/**
@@ -413,11 +419,11 @@ public class LegionService {
 	 * @return LegionMember (Brigade General)
 	 */
 	public int getLegionBGeneral(int legionId) {
-		Legion legion = LegionService.getInstance().getLegion(legionId);
+		Legion legion = getLegion(legionId);
 		int legionBG = 0;
 
 		for (int memberObjId : legion.getLegionMembers()) {
-			LegionMember legionMember = LegionService.getInstance().getLegionMember(memberObjId);
+			LegionMember legionMember = getLegionMember(memberObjId);
 			if (legionMember.getRank() == LegionRank.BRIGADE_GENERAL) {
 				legionBG = memberObjId;
 			}
@@ -473,7 +479,7 @@ public class LegionService {
 		for (Integer memberObjId : legion.getLegionMembers()) {
 			this.allCachedLegionMembers.remove(getLegionMemberEx(memberObjId));
 		}
-		SiegeService.getInstance().cleanLegionId(legion.getLegionId());
+		GameFeatureServices.siegeService().cleanLegionId(legion.getLegionId());
 		updateAfterDisbandLegion(legion);
 		deleteLegionFromDB(legion);
 	}
@@ -553,7 +559,7 @@ public class LegionService {
 			/**
 			 * Create new legion and put originator as first member
 			 */
-			Legion legion = new Legion(IDFactory.getInstance().nextId(), legionName);
+			Legion legion = new Legion(GameWorldBootstrapServices.idFactory().nextId(), legionName);
 			legion.addLegionMember(activePlayer.getObjectId());
 
 			activePlayer.getInventory().decreaseKinah(LegionConfig.LEGION_CREATE_REQUIRED_KINAH);
@@ -862,7 +868,7 @@ public class LegionService {
 		Legion legion = activePlayer.getLegion();
 		LegionMember legionMember;
 		Player targetPlayer;
-		if ((targetPlayer = World.getInstance().findPlayer(charName)) != null) {
+		if ((targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(charName)) != null) {
 			legionMember = targetPlayer.getLegionMember();
 			if (targetPlayer.getLegion() != legion) {
 				return;
@@ -1022,7 +1028,7 @@ public class LegionService {
 		Player player = null;
 		for (LegionMemberEx member : loadLegionMemberExList(legion, null)) {
 			if (member.isBrigadeGeneral()) {
-				player = World.getInstance().findPlayer(member.getObjectId());
+				player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(member.getObjectId());
 			}
 		}
 		return player;
@@ -1113,7 +1119,7 @@ public class LegionService {
 		if (legion == null) {
 			return;
 		}
-		FastList<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
+		List<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
 		allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 		try {
 			/**
@@ -1201,7 +1207,7 @@ public class LegionService {
 						legionEmblem);
 				LegionEmblem emblem = DAOManager.getDAO(LegionDAO.class)
 						.loadLegionEmblem(activePlayer.getLegion().getLegionId());
-				LegionService.getInstance().storeLegionEmblem(activePlayer, emblem);
+				storeLegionEmblem(activePlayer, emblem);
 			}
 		}
 	}
@@ -1830,7 +1836,7 @@ public class LegionService {
 				PacketSendUtility.sendPacket(activePlayer, SM_SYSTEM_MESSAGE.STR_GUILD_CHANGE_LEVEL_CANT_LEVEL_UP);
 				return false;
 			} else if (LegionConfig.ENABLE_GUILD_TASK_REQ && legion.getLegionLevel() >= 5) {
-				if (!ChallengeTaskService.getInstance().canRaiseLegionLevel(legion.getLegionId(),
+				if (!GameHousingServices.challengeTaskService().canRaiseLegionLevel(legion.getLegionId(),
 						legion.getLegionLevel())) {
 					PacketSendUtility.sendPacket(activePlayer,
 							SM_SYSTEM_MESSAGE.STR_GUILD_LEVEL_UP_CHALLENGE_TASK(legion.getLegionLevel()));
@@ -2112,17 +2118,17 @@ public class LegionService {
 		if (legion != null) {
 			String description = Integer.toString(itemId) + ":" + Long.toString(count);
 			if (sourceStorage.getStorageType() == StorageType.LEGION_WAREHOUSE) {
-				LegionService.getInstance().addHistory(legion, player.getName(), LegionHistoryType.ITEM_WITHDRAW, 2,
+				addHistory(legion, player.getName(), LegionHistoryType.ITEM_WITHDRAW, 2,
 						description);
 			} else if (destStorage.getStorageType() == StorageType.LEGION_WAREHOUSE) {
-				LegionService.getInstance().addHistory(legion, player.getName(), LegionHistoryType.ITEM_DEPOSIT, 2,
+				addHistory(legion, player.getName(), LegionHistoryType.ITEM_DEPOSIT, 2,
 						description);
 			}
 		}
 	}
 
 	public void handleLegionSearch(Player player, int type, String legionName) {
-		FastList<Legion> matchingLegions = new FastList<Legion>();
+		List<Legion> matchingLegions = new ArrayList<>();
 		switch (type) {
 		case 0:
 			matchingLegions = allCachedLegions.getAllLegions();
@@ -2263,7 +2269,7 @@ public class LegionService {
 		if (legion == null) {
 			return;
 		}
-		Player player = World.getInstance().findPlayer(playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player == null) {
 			playerOnline = false;
 			DAOManager.getDAO(PlayerDAO.class).updateLegionJoinRequestState(playerId, state);

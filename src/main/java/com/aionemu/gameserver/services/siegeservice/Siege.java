@@ -16,12 +16,14 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.EnhancedObject;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -37,9 +39,9 @@ import com.aionemu.gameserver.model.templates.npc.AbyssNpcType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_STATE;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.World;
+@Slf4j
 
 public abstract class Siege<SL extends SiegeLocation> {
-	private static final Logger log = LoggerFactory.getLogger(Siege.class);
 	private final SiegeBossDeathListener siegeBossDeathListener = new SiegeBossDeathListener(this);
 	private final SiegeBossDoAddDamageListener siegeBossDoAddDamageListener = new SiegeBossDoAddDamageListener(this);
 	private final AtomicBoolean finished = new AtomicBoolean();
@@ -70,19 +72,19 @@ public abstract class Siege<SL extends SiegeLocation> {
 		}
 		onSiegeStart();
 		if (SiegeConfig.BALAUR_AUTO_ASSAULT) {
-			BalaurAssaultService.getInstance().onSiegeStart(this);
+			GameCoreGameplayServices.balaurAssaultService().onSiegeStart(this);
 		}
 	}
 
 	public final void startSiege(int locationId) {
-		SiegeService.getInstance().startSiege(locationId);
+		GameFeatureServices.siegeService().startSiege(locationId);
 	}
 
 	public final void stopSiege() {
 		if (finished.compareAndSet(false, true)) {
 			onSiegeFinish();
 			if (SiegeConfig.BALAUR_AUTO_ASSAULT) {
-				BalaurAssaultService.getInstance().onSiegeFinish(this);
+				GameCoreGameplayServices.balaurAssaultService().onSiegeFinish(this);
 			}
 		} else {
 			log.error("Attempt to stop siege of SiegeLocation#" + siegeLocation.getLocationId() + " for 2 times");
@@ -174,7 +176,7 @@ public abstract class Siege<SL extends SiegeLocation> {
 
 	protected void initSiegeBoss() {
 		SiegeNpc boss = null;
-		Collection<SiegeNpc> npcs = World.getInstance().getLocalSiegeNpcs(getSiegeLocationId());
+		Collection<SiegeNpc> npcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalSiegeNpcs(getSiegeLocationId());
 		for (SiegeNpc npc : npcs) {
 			if (npc.getObjectTemplate().getAbyssNpcType().equals(AbyssNpcType.BOSS)) {
 				if (boss != null) {
@@ -191,22 +193,22 @@ public abstract class Siege<SL extends SiegeLocation> {
 	}
 
 	protected void spawnNpcs(int locationId, SiegeRace race, SiegeModType type) {
-		SiegeService.getInstance().spawnNpcs(locationId, race, type);
+		GameFeatureServices.siegeService().spawnNpcs(locationId, race, type);
 	}
 
 	protected void deSpawnNpcs(int locationId) {
-		SiegeService.getInstance().deSpawnNpcs(locationId);
+		GameFeatureServices.siegeService().deSpawnNpcs(locationId);
 	}
 
 	protected void broadcastState(SiegeLocation location) {
-		SiegeService.getInstance().broadcast(new SM_SIEGE_LOCATION_STATE(location), null);
+		GameFeatureServices.siegeService().broadcast(new SM_SIEGE_LOCATION_STATE(location), null);
 	}
 
 	protected void broadcastUpdate(SiegeLocation location) {
-		SiegeService.getInstance().broadcastUpdate(location);
+		GameFeatureServices.siegeService().broadcastUpdate(location);
 	}
 
 	protected void broadcastUpdate(SiegeLocation location, int nameId) {
-		SiegeService.getInstance().broadcastUpdate(location, new DescriptionId(nameId));
+		GameFeatureServices.siegeService().broadcastUpdate(location, new DescriptionId(nameId));
 	}
 }

@@ -16,14 +16,15 @@
  */
 package com.aionemu.gameserver.network.loginserver;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.NettyClient;
@@ -41,19 +42,15 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_RECON
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_BAN;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_LS_CONTROL;
 import com.aionemu.gameserver.services.AccountService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Utill class for connecting GameServer to LoginServer.
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class LoginServer {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(LoginServer.class);
 	private static volatile ObjectProvider<LoginServer> instanceProvider;
 
 	/**
@@ -126,7 +123,7 @@ public class LoginServer {
 		if (serverShutdown || !connectionTaskQueued.compareAndSet(false, true)) {
 			return;
 		}
-		connectionTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		connectionTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				connectionTaskQueued.set(false);
@@ -369,7 +366,7 @@ public class LoginServer {
 	private void closeClientWithCheck(AionConnection client, final int accountId) {
 		log.info("Closing client connection " + accountId);
 		client.close(/* closePacket, */false);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

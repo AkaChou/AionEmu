@@ -16,14 +16,12 @@
  */
 package com.aionemu.gameserver.network.loginserver.serverpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.InventoryDAO;
@@ -53,11 +51,9 @@ import com.aionemu.gameserver.network.loginserver.LsServerPacket;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.transfers.TransferablePlayer;
-
-import javolution.util.FastList;
+@Slf4j
 
 public class SM_PTRANSFER_CONTROL extends LsServerPacket {
-	private final Logger log = LoggerFactory.getLogger(SM_PTRANSFER_CONTROL.class);
 	public static final byte CHARACTER_INFORMATION = 1;
 	public static final byte ERROR = 2;
 	public static final byte OK = 3;
@@ -340,7 +336,7 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 			writeD(ps.getDeny());
 			writeD(ps.getDisplay());
 			QuestStateList qsl = player.getQuestStateList();
-			FastList<QuestState> quests = FastList.newInstance();
+			List<QuestState> quests = new ArrayList<QuestState>();
 			for (QuestState qs : qsl.getQuests().values()) {
 				if (qs == null) {
 					log.warn("there are null quest on player " + player.getName() + ". taskId #" + taskId
@@ -358,7 +354,6 @@ public class SM_PTRANSFER_CONTROL extends LsServerPacket {
 				// writeS() next repeat time
 				writeD(qs.getReward());
 			}
-			FastList.recycle(quests);
 		}
 			break;
 		}

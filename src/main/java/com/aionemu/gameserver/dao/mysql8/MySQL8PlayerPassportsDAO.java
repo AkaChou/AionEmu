@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,9 +9,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerPassportsDAO;
 
@@ -18,9 +16,9 @@ import com.aionemu.gameserver.dao.PlayerPassportsDAO;
  * @author Alcapwnd, Lyras, FrozenKiller
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8PlayerPassportsDAO extends PlayerPassportsDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerPassportsDAO.class);
 
 	private static final String INSERT_QUERY = "INSERT INTO `player_passports` (`account_id`, `passport_id`, `stamps`, `last_stamp`) VALUES (?,?,?,?)";
 	private static final String UPDATE_QUERY = "UPDATE player_passports SET stamps = ?, rewarded = ?, last_stamp = ? WHERE account_id = ? AND passport_id = ?";

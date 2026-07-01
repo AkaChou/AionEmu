@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -59,12 +65,12 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 			switch (getNpcId()) {
 				case 236228: //Heatvent Protector.
 					//If the Protectors are not defeated in 5 minutes, the Detachment's Rush Squad will sacrifice themselves to destroy the Fount.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402684, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402684, 0);
 					//In 1 minute, the Detachment's Rush Squad will resolve to sacrifice themselves and attempt to destroy the Fount.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402685, 240000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402685, 240000);
 					//In a moment, the Detachment's Rush Squad, armed with the resolve to sacrifice themselves, will attack the Fount.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402686, 270000);
-					heatventProtectorTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402686, 270000);
+					heatventProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							AI2Actions.deleteOwner(Heatvent_ProtectorAI2.this);
@@ -89,8 +95,8 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void shareSource() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 20770, 1, getOwner()).useNoAnimationSkill(); //Heatvent Protector.
-		SkillEngine.getInstance().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 20770, 1, getOwner()).useNoAnimationSkill(); //Heatvent Protector.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
 	}
 	
 	private void checkPercentage(int percentage) {
@@ -106,7 +112,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startTornadoTask() {
-		tornadoTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		tornadoTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -114,7 +120,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 					cancelFlamekiteGeistTask();
 					cancelHeatventProtectorTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -138,7 +144,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startFlamekiteGeistTask() {
-		flamekiteGeistTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		flamekiteGeistTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -173,7 +179,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
@@ -189,7 +195,7 @@ public class Heatvent_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {

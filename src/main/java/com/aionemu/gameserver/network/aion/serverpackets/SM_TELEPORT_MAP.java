@@ -16,8 +16,9 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -29,24 +30,22 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
-
 /**
  * @author alexa026 , orz
  */
+@Slf4j
 public class SM_TELEPORT_MAP extends AionServerPacket {
 
 	private int targetObjectId;
 	private Player player;
 	private TeleporterTemplate teleport;
 	public Npc npc;
-	private static final Logger log = LoggerFactory.getLogger(SM_TELEPORT_MAP.class);
-	private static final FastList<Integer> disableTeleportNpcs = new FastList<Integer>();
+	private static final List<Integer> disableTeleportNpcs = new ArrayList<Integer>();
 
 	public SM_TELEPORT_MAP(Player player, int targetObjectId, TeleporterTemplate teleport) {
 		this.player = player;
 		this.targetObjectId = targetObjectId;
-		this.npc = (Npc) World.getInstance().findVisibleObject(targetObjectId);
+		this.npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
 		this.teleport = teleport;
 	}
 

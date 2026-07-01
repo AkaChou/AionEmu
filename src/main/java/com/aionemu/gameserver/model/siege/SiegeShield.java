@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.siege;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.IActor;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
@@ -26,7 +28,8 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Shields have material ID 11 in geo.
@@ -35,7 +38,7 @@ import javolution.util.FastMap;
  */
 public class SiegeShield implements ZoneHandler {
 
-	FastMap<Integer, IActor> observed = new FastMap<Integer, IActor>();
+	Map<Integer, IActor> observed = new LinkedHashMap<Integer, IActor>();
 	private Spatial geometry;
 	private int siegeLocationId;
 	private boolean isEnabled = false;
@@ -55,9 +58,9 @@ public class SiegeShield implements ZoneHandler {
 		}
 		Player player = (Player) creature;
 		if (isEnabled || siegeLocationId == 0) {
-			FortressLocation loc = SiegeService.getInstance().getFortress(siegeLocationId);
+			FortressLocation loc = GameFeatureServices.siegeService().getFortress(siegeLocationId);
 			if (loc == null || loc.getRace() != SiegeRace.getByRace(player.getRace())) {
-				ActionObserver actor = ShieldService.getInstance().createShieldObserver(this, creature);
+				ActionObserver actor = GameFeatureServices.shieldService().createShieldObserver(this, creature);
 				if (actor instanceof IActor) {
 					creature.getObserveController().addObserver(actor);
 					observed.put(creature.getObjectId(), (IActor) actor);

@@ -1,20 +1,18 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerTransformDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 
 /**
  * MySQL 8 implementation of PlayerTransformDAO
  * @author Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8PlayerTransfoDAO extends PlayerTransformDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerTransfoDAO.class);
 
     private static final String INSERT_QUERY = "INSERT INTO `player_transform` (`player_id`, `panel_id`, `item_id`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `panel_id` = VALUES(`panel_id`), `item_id` = VALUES(`item_id`)";
     private static final String SELECT_QUERY = "SELECT `panel_id`, `item_id` FROM `player_transform` WHERE `player_id` = ?";

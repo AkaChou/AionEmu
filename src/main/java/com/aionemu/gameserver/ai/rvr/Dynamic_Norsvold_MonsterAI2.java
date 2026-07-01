@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.rvr;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -130,7 +132,7 @@ public class Dynamic_Norsvold_MonsterAI2 extends AggressiveNpcAI2
 				spawn(240973, 1133.7673f, 2570.3909f, 235.72313f, (byte) 0); //Guardian Scout.
 			break;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				despawnNpc(241054); //Portal.

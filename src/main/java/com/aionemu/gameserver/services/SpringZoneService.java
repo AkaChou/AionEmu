@@ -16,8 +16,14 @@
  */
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -29,17 +35,15 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
-
 /****/
 /**
  * Author Rinzler (Encom) /
  ****/
 
+@Slf4j
 public class SpringZoneService {
 	private static volatile ObjectProvider<SpringZoneService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(SpringZoneService.class);
-	private FastList<SpringObject> springObjects = new FastList<SpringObject>();
+	private List<SpringObject> springObjects = new ArrayList<SpringObject>();
 
 	public SpringZoneService() {
 		for (SpringTemplate t : DataManager.SPRING_OBJECTS_DATA.getSpringObject()) {
@@ -51,7 +55,7 @@ public class SpringZoneService {
 	}
 
 	private void startSpring() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			public void run() {
 				for (final SpringObject obj : springObjects)
 					obj.getKnownList().doOnAllPlayers(new Visitor<Player>() {
@@ -59,7 +63,7 @@ public class SpringZoneService {
 							if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
 									&& (!player.getEffectController().hasAbnormalEffect(17560))) { // Bless Of Guardian
 																									// Spring.
-								SkillEngine.getInstance().getSkill(player, 17560, 1, player).useNoAnimationSkill();
+								GameEngineServices.skillEngine().getSkill(player, 17560, 1, player).useNoAnimationSkill();
 							}
 						}
 					});

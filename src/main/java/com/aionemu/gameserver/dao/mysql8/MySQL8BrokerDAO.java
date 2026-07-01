@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.BrokerDAO;
@@ -9,9 +10,6 @@ import com.aionemu.gameserver.model.broker.BrokerRace;
 import com.aionemu.gameserver.model.gameobjects.BrokerItem;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +18,9 @@ import java.util.List;
  * MySQL 8 implementation of BrokerDAO
  * Fixed connection leaks
  */
+@Slf4j
 public class MySQL8BrokerDAO extends BrokerDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8BrokerDAO.class);
 
     private static final String SELECT_BROKER_QUERY = "SELECT * FROM broker";
     private static final String SELECT_INVENTORY_QUERY = "SELECT * FROM inventory WHERE `item_location` = 126";

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -135,7 +137,7 @@ public class PlayerReviveService {
 			TeleportService2.teleportToPrison(player);
 		} else {
 			boolean isInvadeActiveVortex = false;
-			for (VortexLocation loc : VortexService.getInstance().getVortexLocations().values()) {
+			for (VortexLocation loc : GameLocationBootstrapServices.vortexService().getVortexLocations().values()) {
 				isInvadeActiveVortex = loc.isInsideActiveVortex(player)
 						&& player.getRace().equals(loc.getInvadersRace());
 				if (isInvadeActiveVortex) {
@@ -185,7 +187,7 @@ public class PlayerReviveService {
 		if (player.getPosition().getWorldMapInstance().getInstanceHandler().onReviveEvent(player)) {
 			return;
 		}
-		WorldMap map = World.getInstance().getWorldMap(player.getWorldId());
+		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(player.getWorldId());
 		if (map == null) {
 			bindRevive(player);
 			return;

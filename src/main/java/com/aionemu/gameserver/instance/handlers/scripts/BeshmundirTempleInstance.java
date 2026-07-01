@@ -16,8 +16,11 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.*;
-import javolution.util.*;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.utils.Rnd;
@@ -33,7 +36,7 @@ import com.aionemu.gameserver.model.gameobjects.*;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -52,115 +55,115 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> beshmundirTask = FastList.newInstance();
+	private final List<Future<?>> beshmundirTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 216161: //Vehala The Cursed.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001162, 1)); //Vehalla's Ring.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001162, 1)); //Vehalla's Ring.
 		    break;
 			case 216163: //The Plaguebearer.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001039, 1)); //Plaguebearer's Earrings.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001039, 1)); //Plaguebearer's Earrings.
 		    break;
 			case 216168: //Flarestorm.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188051387, 1)); //Flarestorm's Fabled Headgear Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051387, 1)); //Flarestorm's Fabled Headgear Chest.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001032, 1)); //Flarestorm's Leather Belt.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001032, 1)); //Flarestorm's Leather Belt.
 				        break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001033, 1)); //Flarestorm's Sash.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001033, 1)); //Flarestorm's Sash.
 				        break;
 					} switch (Rnd.get(1, 4)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100001081, 1)); //Flarestorm's Sword.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100001081, 1)); //Flarestorm's Sword.
 				        break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100200954, 1)); //Flarestorm's Dagger.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100200954, 1)); //Flarestorm's Dagger.
 				        break;
 					    case 3:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 101800869, 1)); //Flarestorm's Pistol.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 101800869, 1)); //Flarestorm's Pistol.
 				        break;
 						case 4:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 102100758, 1)); //Flarestorm's Cipher-Blade.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 102100758, 1)); //Flarestorm's Cipher-Blade.
 				        break;
 					}
 				}
 			break;
 			case 216248: //Taros Lifebane.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000092, 1)); //Temple Of Eternity Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000092, 1)); //Temple Of Eternity Key.
 		    break;
 			case 216170: //Gatekeeper Darfall.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000093, 1)); //Meditation Chamber Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000093, 1)); //Meditation Chamber Key.
 		    break;
 			case 216171: //Gatekeeper Kutarrun.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000094, 1)); //Contemplation Chamber Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000094, 1)); //Contemplation Chamber Key.
 		    break;
 			case 216172: //Gatekeeper Samarrn.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000095, 1)); //Supplication Chamber Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000095, 1)); //Supplication Chamber Key.
 		    break;
 			case 216173: //Gatekeeper Rhapsharr.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000096, 1)); //Petition Chamber Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000096, 1)); //Petition Chamber Key.
 		    break;
 			case 216238: //Captain Lakhara.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 122001163, 1)); //Lakhara's Ring.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 122001163, 1)); //Lakhara's Ring.
 					}
 				}
 			break;
 			case 216239: //Ahbana The Wicked.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188051390, 1)); //Ahbana's Eternal Shoes Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051390, 1)); //Ahbana's Eternal Shoes Chest.
 					}
 				}
 			break;
 			case 216241: //The Plaguebearer.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001040, 1)); //Manadar's Earrings.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001040, 1)); //Manadar's Earrings.
 		    break;
 			case 216245: //Macunbello.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188051391, 1)); //Macunbello's Eternal Gloves Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051391, 1)); //Macunbello's Eternal Gloves Chest.
 					}
 				}
 			break;
 			case 216246: //The Great Virhana.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					} switch (Rnd.get(1, 4)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100001006, 1)); //Virhana's Sword.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100001006, 1)); //Virhana's Sword.
 				        break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 100200900, 1)); //Virhana's Dagger.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 100200900, 1)); //Virhana's Dagger.
 				        break;
 					    case 3:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 101800868, 1)); //Virhana's Pistol.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 101800868, 1)); //Virhana's Pistol.
 				        break;
 						case 4:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 102100757, 1)); //Virhana's Cipher-Blade.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 102100757, 1)); //Virhana's Cipher-Blade.
 				        break;
 					}
 				}
@@ -168,25 +171,25 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			case 216250: //Dorakiki The Bold.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188051392, 1)); //Dorakiki The Bold's Eternal Shoulder Armor Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051392, 1)); //Dorakiki The Bold's Eternal Shoulder Armor Chest.
 					}
 				}
 			break;
 			case 216263: //Isbariya The Resolute.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051388, 1)); //Isbariya's Fabled Jacket Chest.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051388, 1)); //Isbariya's Fabled Jacket Chest.
 				        break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051393, 1)); //Isbariya's Eternal Pants Chest.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051393, 1)); //Isbariya's Eternal Pants Chest.
 				        break;
 					}
 				}
@@ -194,49 +197,49 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 			case 216264: //Stormwing.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 186000099, 1)); //Vorpal Essence.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054283, 1)); //Blood Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 186000099, 1)); //Vorpal Essence.
 					} switch (Rnd.get(1, 3)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051389, 1)); //Stormwing's Fabled Weapon Chest.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051389, 1)); //Stormwing's Fabled Weapon Chest.
 				        break;
 						case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051394, 1)); //Stormwing's Eternal Jacket Chest.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051394, 1)); //Stormwing's Eternal Jacket Chest.
 				        break;
 					    case 3:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051395, 1)); //Stormwing's Eternal Weapon Chest.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051395, 1)); //Stormwing's Eternal Weapon Chest.
 				        break;
 					} switch (Rnd.get(1, 2)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170030043, 1)); //[Souvenir] Stormwing Wall-Mount Trophy.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170030043, 1)); //[Souvenir] Stormwing Wall-Mount Trophy.
 				        break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170490002, 1)); //[Souvenir] Stormwing Statue.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170490002, 1)); //[Souvenir] Stormwing Statue.
 				        break;
 					} switch (Rnd.get(1, 3)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190000079, 1)); //Golden Stormwing Egg.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190000079, 1)); //Golden Stormwing Egg.
 				        break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020133, 1)); //[Event] Stormwing Egg.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020133, 1)); //[Event] Stormwing Egg.
 				        break;
 					    case 3:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020138, 1)); //Stormwing Egg.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020138, 1)); //Stormwing Egg.
 				        break;
 					} switch (Rnd.get(1, 4)) {
 				        case 1:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100013, 1)); //[Souvenir] Stormwing's Scroll Piece.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100013, 1)); //[Souvenir] Stormwing's Scroll Piece.
 				        break;
 					    case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100034, 1)); //[Souvenir] Stormwing's Head.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100034, 1)); //[Souvenir] Stormwing's Head.
 				        break;
 					    case 3:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100035, 1)); //[Souvenir] Stormwing's Skeleton.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100035, 1)); //[Souvenir] Stormwing's Skeleton.
 				        break;
 						case 4:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188100036, 1)); //[Souvenir] Stormwing's Wing.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188100036, 1)); //[Souvenir] Stormwing's Wing.
 				        break;
 					}
 				}
@@ -251,7 +254,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 		Npc npc = instance.getNpc(216245); //Macunbello.
 		if (npc != null) {
 			npc.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-			SkillEngine.getInstance().getSkill(npc, 19046, 60, npc).useNoAnimationSkill(); //Soul Starved I.
+			GameEngineServices.skillEngine().getSkill(npc, 19046, 60, npc).useNoAnimationSkill(); //Soul Starved I.
 		}
     }
 	
@@ -335,12 +338,12 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 					    //Macunbello's power is weakening.
 					    sendMsgByRace(1400466, Race.PC_ALL, 2000);
 						macunbello.getEffectController().removeEffect(19046); //Soul Starved I.
-						SkillEngine.getInstance().applyEffectDirectly(19047, macunbello, macunbello, 0); //Soul Starved II.
+						GameEngineServices.skillEngine().applyEffectDirectly(19047, macunbello, macunbello, 0); //Soul Starved II.
 				    } else if (macunbelloSoul == 14) {
 					    //Macunbello's power has weakened.
 					    sendMsgByRace(1400467, Race.PC_ALL, 2000);
 						macunbello.getEffectController().removeEffect(19047); //Soul Starved II.
-						SkillEngine.getInstance().applyEffectDirectly(19048, macunbello, macunbello, 0); //Soul Starved III.
+						GameEngineServices.skillEngine().applyEffectDirectly(19048, macunbello, macunbello, 0); //Soul Starved III.
 				    } else if (macunbelloSoul == 21) {
 					    //Macunbello has been crippled.
 					    sendMsgByRace(1400468, Race.PC_ALL, 2000);
@@ -406,10 +409,10 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
     }
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = beshmundirTask.head(), end = beshmundirTask.tail(); (n = n.getNext()) != end;) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : beshmundirTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -422,7 +425,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        beshmundirTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -436,7 +439,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        beshmundirTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        beshmundirTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -458,7 +461,7 @@ public class BeshmundirTempleInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

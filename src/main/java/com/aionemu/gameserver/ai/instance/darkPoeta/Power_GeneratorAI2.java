@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.darkPoeta;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -76,13 +80,13 @@ public class Power_GeneratorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 18126, 46, getOwner()).useNoAnimationSkill(); //Electrocution.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18126, 46, getOwner()).useNoAnimationSkill(); //Electrocution.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -110,7 +114,7 @@ public class Power_GeneratorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {

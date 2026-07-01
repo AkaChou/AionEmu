@@ -18,15 +18,15 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.WarehouseExpandTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * This is for the Warehouse Expanders.
@@ -39,7 +39,7 @@ public class WarehouseExpandData {
 
 	@XmlElement(name = "warehouse_npc")
 	private List<WarehouseExpandTemplate> clist;
-	private TIntObjectHashMap<WarehouseExpandTemplate> npctlistData = new TIntObjectHashMap<WarehouseExpandTemplate>();
+	private IntObjectHashMap<WarehouseExpandTemplate> npctlistData = new IntObjectHashMap<WarehouseExpandTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (WarehouseExpandTemplate npc : clist) {

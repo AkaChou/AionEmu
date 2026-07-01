@@ -25,6 +25,7 @@ import com.aionemu.gameserver.skillengine.model.ActivationAttribute;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import org.springframework.beans.factory.ObjectProvider;
 
 /**
  * @author ATracer
@@ -32,6 +33,7 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 public class SkillEngine {
 
 	public static final SkillEngine skillEngine = new SkillEngine();
+	private static volatile ObjectProvider<SkillEngine> instanceProvider;
 
 	/**
 	 * should not be instantiated directly
@@ -113,7 +115,15 @@ public class SkillEngine {
 	}
 
 	public static SkillEngine getInstance() {
+		ObjectProvider<SkillEngine> provider = instanceProvider;
+		if (provider != null) {
+			return provider.getIfAvailable(() -> skillEngine);
+		}
 		return skillEngine;
+	}
+
+	public static void setInstanceProvider(ObjectProvider<SkillEngine> provider) {
+		instanceProvider = provider;
 	}
 
 	public void applyEffectDirectly(int skillId, Creature effector, Creature effected, int duration) {

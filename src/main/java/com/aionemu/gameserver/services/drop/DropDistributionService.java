@@ -16,13 +16,15 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.actions.PlayerMode;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.DropNpc;
@@ -35,10 +37,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author xTz
  */
+@Slf4j
 public class DropDistributionService {
 
 	private static volatile ObjectProvider<DropDistributionService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(DropDistributionService.class);
 
 	public static DropDistributionService getInstance() {
 		ObjectProvider<DropDistributionService> provider = instanceProvider;
@@ -56,7 +58,7 @@ public class DropDistributionService {
 	 * @param Called from CM_GROUP_LOOT to handle rolls
 	 */
 	public void handleRoll(Player player, int roll, int itemId, int npcId, int index) {
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
 		if (player == null || dropNpc == null) {
 			log.info("player == null || dropNpc == null ");
 			return;
@@ -100,7 +102,7 @@ public class DropDistributionService {
 	 * @param Called from CM_GROUP_LOOT to handle bids
 	 */
 	public void handleBid(Player player, long bid, int itemId, int npcId, int index) {
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
+		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
 		if (player == null || dropNpc == null) {
 			return;
 		}
@@ -142,8 +144,8 @@ public class DropDistributionService {
 	 *               accordingly
 	 */
 	private void distributeLoot(Player player, long luckyPlayer, int itemId, int npcId) {
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npcId);
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npcId);
+		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npcId);
 		DropItem requestedItem = null;
 
 		if (dropItems == null) {
@@ -197,14 +199,14 @@ public class DropDistributionService {
 		if (requestedItem.getWinningPlayer() == null) {
 			requestedItem.isFreeForAll(true);
 			if (lgr != null && !lgr.getItemsToBeDistributed().isEmpty()) {
-				DropService.getInstance().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
+				GameCoreGameplayServices.dropService().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
 			}
 			return;
 		}
 		requestedItem.isDistributeItem(true);
-		DropService.getInstance().requestDropItem(player, npcId, dropNpc.getCurrentIndex());
+		GameCoreGameplayServices.dropService().requestDropItem(player, npcId, dropNpc.getCurrentIndex());
 		if (lgr != null && !lgr.getItemsToBeDistributed().isEmpty()) {
-			DropService.getInstance().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
+			GameCoreGameplayServices.dropService().canDistribute(player, lgr.getItemsToBeDistributed().getFirst());
 		}
 	}
 

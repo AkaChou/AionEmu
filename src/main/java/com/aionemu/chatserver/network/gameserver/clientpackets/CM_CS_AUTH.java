@@ -18,10 +18,8 @@
 
 package com.aionemu.chatserver.network.gameserver.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.chatserver.network.gameserver.GsAuthResponse;
 import com.aionemu.chatserver.network.gameserver.GsClientPacket;
@@ -33,9 +31,9 @@ import com.aionemu.chatserver.service.ChatCoreServices;
 /**
  * @author ATracer
  */
+@Slf4j
 public class CM_CS_AUTH extends GsClientPacket {
 
-    private Logger log = LoggerFactory.getLogger(CM_CS_AUTH.class);
     /**
      * Password for authentication
      */

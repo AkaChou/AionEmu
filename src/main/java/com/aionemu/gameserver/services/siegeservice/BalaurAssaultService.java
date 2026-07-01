@@ -16,11 +16,18 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -43,14 +50,14 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+@Slf4j(topic = "SIEGE_LOG")
 
 public class BalaurAssaultService {
 	private static final BalaurAssaultService instance = new BalaurAssaultService();
 	private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
-	private Logger log = LoggerFactory.getLogger("SIEGE_LOG");
-	private final Map<Integer, FortressAssault> fortressAssaults = new FastMap<Integer, FortressAssault>().shared();
+	private final Map<Integer, FortressAssault> fortressAssaults = new LinkedHashMap<Integer, FortressAssault>();
 
 	public static BalaurAssaultService getInstance() {
 		ObjectProvider<BalaurAssaultService> provider = instanceProvider;
@@ -72,7 +79,7 @@ public class BalaurAssaultService {
 			}
 			switch (rvrId) {
 			case 1011:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -81,7 +88,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 1131:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -90,7 +97,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 1132:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -99,7 +106,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 1141:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -108,7 +115,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 1221:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -117,7 +124,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 1231:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -126,7 +133,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 1241:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -135,7 +142,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 7011:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -144,7 +151,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 10111:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -153,7 +160,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 10211:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -162,7 +169,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 10311:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -171,7 +178,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			case 10411:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys4Message(player, "\uE005",
@@ -180,7 +187,7 @@ public class BalaurAssaultService {
 				});
 				break;
 			}
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Balaur have destroyed the Castle Gate.
@@ -217,7 +224,7 @@ public class BalaurAssaultService {
 						+ "] has been captured by Balaur Assault!");
 				switch (locId) {
 				case 1011:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -226,7 +233,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 1131:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -235,7 +242,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 1132:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -244,7 +251,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 1141:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -253,7 +260,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 1221:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -262,7 +269,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 1231:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -271,7 +278,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 1241:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -280,7 +287,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 7011:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -289,7 +296,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 10111:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -298,7 +305,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 10211:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -307,7 +314,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 10311:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -316,7 +323,7 @@ public class BalaurAssaultService {
 					});
 					break;
 				case 10411:
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendSys5Message(player, "\uE005",
@@ -328,7 +335,7 @@ public class BalaurAssaultService {
 			} else {
 				log.info("[RVR/SIEGE] > [FORTRESS:" + siege.getSiegeLocationId()
 						+ "] Balaur Assault finished without capture!");
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys6Message(player, "\uE005",
@@ -370,7 +377,7 @@ public class BalaurAssaultService {
 			PacketSendUtility.sendMessage(player, "Assault on " + location + " was already started");
 			return;
 		}
-		newAssault(SiegeService.getInstance().getSiege(location), delay);
+		newAssault(GameFeatureServices.siegeService().getSiege(location), delay);
 	}
 
 	private void newAssault(Siege<?> siege, int delay) {
@@ -392,7 +399,7 @@ public class BalaurAssaultService {
 		int ownedForts = 0;
 		float influence;
 		if (isBalaurea) {
-			for (FortressLocation fl : SiegeService.getInstance().getFortresses().values()) {
+			for (FortressLocation fl : GameFeatureServices.siegeService().getFortresses().values()) {
 				if (fl.getWorldId() != 400010000 && !fortressAssaults.containsKey(fl.getLocationId())
 						&& fl.getRace().equals(locationRace)) {
 					ownedForts++;
@@ -400,21 +407,21 @@ public class BalaurAssaultService {
 			}
 			influence = ownedForts >= 2 ? 0.25f : 0.1f;
 		} else {
-			influence = locationRace.equals(SiegeRace.ASMODIANS) ? Influence.getInstance().getGlobalAsmodiansInfluence()
-					: Influence.getInstance().getGlobalElyosInfluence();
+			influence = locationRace.equals(SiegeRace.ASMODIANS) ? GameRuntimeServices.influence().getGlobalAsmodiansInfluence()
+					: GameRuntimeServices.influence().getGlobalElyosInfluence();
 		}
 		return Rnd.get() < influence * SiegeConfig.BALAUR_ASSAULT_RATE;
 	}
 
 	public void spawnDredgion(int spawnId) {
 		AssembledNpcTemplate template = DataManager.ASSEMBLED_NPC_DATA.getAssembledNpcTemplate(spawnId);
-		FastList<AssembledNpcPart> assembledParts = new FastList<AssembledNpcPart>();
+		List<AssembledNpcPart> assembledParts = new ArrayList<AssembledNpcPart>();
 		for (AssembledNpcTemplate.AssembledNpcPartTemplate npcPart : template.getAssembledNpcPartTemplates()) {
-			assembledParts.add(new AssembledNpcPart(IDFactory.getInstance().nextId(), npcPart));
+			assembledParts.add(new AssembledNpcPart(GameWorldBootstrapServices.idFactory().nextId(), npcPart));
 		}
 		AssembledNpc npc = new AssembledNpc(template.getRouteId(), template.getMapId(), template.getLiveTime(),
 				assembledParts);
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		Player findedPlayer;
 		while (iter.hasNext()) {
 			findedPlayer = iter.next();

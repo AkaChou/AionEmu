@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -61,7 +67,7 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 80 && !isSummoned) {
 			isSummoned = true;
-			SkillEngine.getInstance().getSkill(getOwner(), 19428, 1, getOwner()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 19428, 1, getOwner()).useNoAnimationSkill();
 			doSchedule();
 		}
 	}
@@ -95,14 +101,14 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 	
 	private void doSchedule() {
 		if (!isAlreadyDead()) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
 						//Ashunatal has retreated to another room. Hunt her down!
-						NpcShoutsService.getInstance().sendMsg(getOwner(), 1401391, 0);
-						SkillEngine.getInstance().getSkill(getOwner(), 19417, 49, getOwner()).useNoAnimationSkill();
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401391, 0);
+						GameEngineServices.skillEngine().getSkill(getOwner(), 19417, 49, getOwner()).useNoAnimationSkill();
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								if (!isAlreadyDead()) {
@@ -114,7 +120,7 @@ public class AshunatalShadowslipAI2 extends AggressiveNpcAI2
 									think();
 									getOwner().setState(1);
 									PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-									ThreadPoolManager.getInstance().schedule(new Runnable() {
+									GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 										@Override
 										public void run() {
 											if (!isAlreadyDead()) {

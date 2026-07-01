@@ -15,14 +15,17 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -34,22 +37,19 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_ACQUIRE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_OWNER_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HousingBidService;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.mail.MailFormatter;
 import com.aionemu.gameserver.taskmanager.AbstractCronTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
-
-import javolution.util.FastList;
+@Slf4j
 
 public class MaintenanceTask extends AbstractCronTask {
 
 	private static volatile ObjectProvider<MaintenanceTask> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(MaintenanceTask.class);
-	private static final FastList<House> maintainedHouses;
+	private static final List<House> maintainedHouses;
 
 	static {
-		maintainedHouses = FastList.newInstance();
+		maintainedHouses = new ArrayList<House>();
 	}
 
 	public static final MaintenanceTask getInstance() {
@@ -119,7 +119,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			return;
 		}
 		Date now = new Date();
-		FastList<House> houses = HousingService.getInstance().getCustomHouses();
+		List<House> houses = GameHousingServices.housingService().getCustomHouses();
 		for (House house : houses) {
 			if (house.getStatus() == HouseStatus.INACTIVE) {
 				continue;
@@ -162,7 +162,7 @@ public class MaintenanceTask extends AbstractCronTask {
 			long impoundTime = 0;
 			int warnCount = 0;
 			PlayerCommonData pcd = null;
-			Player player = World.getInstance().findPlayer(house.getOwnerId());
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(house.getOwnerId());
 			if (player == null) {
 				pcd = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(house.getOwnerId());
 			} else {
@@ -207,7 +207,7 @@ public class MaintenanceTask extends AbstractCronTask {
 
 	private void putHouseToAuction(House house, PlayerCommonData playerCommonData) {
 		house.revokeOwner();
-		HousingBidService.getInstance().addHouseToAuction(house);
+		GameHousingServices.housingBidService().addHouseToAuction(house);
 		house.save();
 		if (playerCommonData == null) {
 			return;

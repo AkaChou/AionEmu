@@ -6,11 +6,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -23,6 +25,7 @@ class GameEnginesRuntimeBridgeTest {
     @Test
     void usesSpringProvidersBeforeLegacySingletonFallbacks() {
         QuestEngine questEngine = instance(QuestEngine.class);
+        SkillEngine skillEngine = instance(SkillEngine.class);
         InstanceEngine instanceEngine = instance(InstanceEngine.class);
         AI2Engine ai2Engine = instance(AI2Engine.class);
         ChatProcessor chatProcessor = instance(ChatProcessor.class);
@@ -30,12 +33,14 @@ class GameEnginesRuntimeBridgeTest {
         GameEnginesRuntimeBridge runtimeBridge = new GameEnginesRuntimeBridge();
 
         runtimeBridge.setQuestEngineProvider(provider(QuestEngine.class, questEngine));
+        runtimeBridge.setSkillEngineProvider(provider(SkillEngine.class, skillEngine));
         runtimeBridge.setInstanceEngineProvider(provider(InstanceEngine.class, instanceEngine));
         runtimeBridge.setAi2EngineProvider(provider(AI2Engine.class, ai2Engine));
         runtimeBridge.setChatProcessorProvider(provider(ChatProcessor.class, chatProcessor));
         runtimeBridge.setThreadPoolManagerProvider(provider(ThreadPoolManager.class, threadPoolManager));
 
         assertSame(questEngine, runtimeBridge.questEngine());
+        assertSame(skillEngine, runtimeBridge.skillEngine());
         assertSame(instanceEngine, runtimeBridge.instanceEngine());
         assertSame(ai2Engine, runtimeBridge.ai2Engine());
         assertSame(chatProcessor, runtimeBridge.chatProcessor());
@@ -47,10 +52,127 @@ class GameEnginesRuntimeBridgeTest {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameEnginesRuntimeBridge.java"));
 
         assertFalse(source.contains("QuestEngine.getInstance()"));
+        assertFalse(source.contains("SkillEngine.getInstance()"));
         assertFalse(source.contains("InstanceEngine.getInstance()"));
         assertFalse(source.contains("AI2Engine.getInstance()"));
         assertFalse(source.contains("ChatProcessor.getInstance()"));
         assertFalse(source.contains("ThreadPoolManager.getInstance()"));
+    }
+
+    @Test
+    void gameEngineServicesQuestEngineAccessorUsesSpringProviderBeforeLegacyFallback() {
+        QuestEngine questEngine = instance(QuestEngine.class);
+        GameEngineServices gameEngineServices = new GameEngineServices(
+            provider(QuestEngine.class, questEngine),
+            provider(SkillEngine.class, instance(SkillEngine.class)),
+            provider(InstanceEngine.class, instance(InstanceEngine.class)),
+            provider(AI2Engine.class, instance(AI2Engine.class)),
+            provider(ChatProcessor.class, instance(ChatProcessor.class))
+        );
+
+        try {
+            assertSame(questEngine, GameEngineServices.questEngine());
+        } finally {
+            gameEngineServices.destroy();
+        }
+    }
+
+    @Test
+    void gameEngineServicesSkillEngineAccessorUsesSpringProviderBeforeLegacyFallback() {
+        SkillEngine skillEngine = instance(SkillEngine.class);
+        GameEngineServices gameEngineServices = new GameEngineServices(
+            provider(QuestEngine.class, instance(QuestEngine.class)),
+            provider(SkillEngine.class, skillEngine),
+            provider(InstanceEngine.class, instance(InstanceEngine.class)),
+            provider(AI2Engine.class, instance(AI2Engine.class)),
+            provider(ChatProcessor.class, instance(ChatProcessor.class))
+        );
+
+        try {
+            assertSame(skillEngine, GameEngineServices.skillEngine());
+        } finally {
+            gameEngineServices.destroy();
+        }
+    }
+
+    @Test
+    void gameEngineServicesRuntimeAccessorsUseSpringProviderBeforeLegacyFallback() {
+        InstanceEngine instanceEngine = instance(InstanceEngine.class);
+        AI2Engine ai2Engine = instance(AI2Engine.class);
+        ChatProcessor chatProcessor = instance(ChatProcessor.class);
+        GameEngineServices gameEngineServices = new GameEngineServices(
+            provider(QuestEngine.class, instance(QuestEngine.class)),
+            provider(SkillEngine.class, instance(SkillEngine.class)),
+            provider(InstanceEngine.class, instanceEngine),
+            provider(AI2Engine.class, ai2Engine),
+            provider(ChatProcessor.class, chatProcessor)
+        );
+
+        try {
+            assertSame(instanceEngine, GameEngineServices.instanceEngine());
+            assertSame(ai2Engine, GameEngineServices.ai2Engine());
+            assertSame(chatProcessor, GameEngineServices.chatProcessor());
+        } finally {
+            gameEngineServices.destroy();
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesEngineQuestBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEngineServiceFallbacks.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("QuestEngine.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesEngineSkillBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("skillengine/SkillEngine.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEngineServiceFallbacks.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("SkillEngine.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesEngineRuntimeBridgeInsteadOfDirectSingletons() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("instance/InstanceEngine.java")))
+                .filter(path -> !path.endsWith(Path.of("ai2/AI2Engine.java")))
+                .filter(path -> !path.endsWith(Path.of("utils/chathandlers/ChatProcessor.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEngineServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameEngineServiceFallbacks.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("InstanceEngine.getInstance()"), source.toString());
+            assertFalse(content.contains("AI2Engine.getInstance()"), source.toString());
+            assertFalse(content.contains("ChatProcessor.getInstance()"), source.toString());
+        }
     }
 
     private <T> T instance(Class<T> type) {

@@ -14,15 +14,17 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
@@ -39,22 +41,22 @@ import com.aionemu.gameserver.services.iuservice.CircusBound;
 import com.aionemu.gameserver.services.iuservice.Iu;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class IuService {
 	private static volatile ObjectProvider<IuService> instanceProvider;
 	private Map<Integer, IuLocation> iu;
 	private static final int duration = CustomConfig.IU_DURATION;
-	private final Map<Integer, Iu<?>> activeConcert = new FastMap<Integer, Iu<?>>().shared();
-	private static Logger log = LoggerFactory.getLogger(IuService.class);
+	private final Map<Integer, Iu<?>> activeConcert = new LinkedHashMap<Integer, Iu<?>>();
 
 	public void initConcertLocations() {
 		if (CustomConfig.IU_ENABLED) {
@@ -63,13 +65,13 @@ public class IuService {
 				spawn(loc, IuStateType.CLOSED);
 			}
 			log.info("[IuService] Loaded " + iu.size() + " locations.");
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					for (IuLocation loc : getIuLocations().values()) {
 						startConcert(loc.getId());
 					}
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_EVENT_DIRECT_PORTAL_OPEN);
@@ -102,7 +104,7 @@ public class IuService {
 		}
 		circusBound.start();
 		lPCHCountdownMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopConcert(id);
@@ -144,7 +146,7 @@ public class IuService {
 	public boolean lPCHCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The entrance to the Live Party Concert Hall appeared.
@@ -179,7 +181,7 @@ public class IuService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

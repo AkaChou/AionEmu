@@ -21,8 +21,6 @@ package com.aionemu.loginserver;
 import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.ExitCode;
@@ -32,16 +30,13 @@ import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.dao.SvStatsDAO;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author -Nemesiss-, nrg
  */
+@Slf4j
 public class Shutdown extends Thread {
-
-    /**
-     * Logger for this class
-     */
-    private static final Logger log = LoggerFactory.getLogger(Shutdown.class);
     /**
      * Instance of Shutdown.
      */

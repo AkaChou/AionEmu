@@ -1,14 +1,12 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.GameServerInfo;
@@ -19,9 +17,9 @@ import com.aionemu.loginserver.dao.GameServersDAO;
  * 
  * @author Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8GameServersDAO extends GameServersDAO {
     
-    private static final Logger log = LoggerFactory.getLogger(MySQL8GameServersDAO.class);
 
     @Override
     public Map<Byte, GameServerInfo> getAllGameServers() {

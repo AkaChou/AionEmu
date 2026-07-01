@@ -1,5 +1,6 @@
 package com.aionemu.commons.services;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.services.cron.CronServiceException;
 import com.aionemu.commons.services.cron.RunnableRunner;
 import com.aionemu.commons.utils.GenericValidator;
@@ -44,9 +45,8 @@ import org.slf4j.LoggerFactory;
  * 3. 提供任务的添加、删除、查询等管理功能
  *    Provides task management functions including add, delete and query
  */
+@Slf4j
 public final class CronService {
-    /** 日志记录器 Logger instance */
-    private static final Logger log = LoggerFactory.getLogger(CronService.class);
     
     /** 单例实例 Singleton instances */
     private static final Map<String, CronService> instances = new ConcurrentHashMap<String, CronService>();
@@ -68,9 +68,26 @@ public final class CronService {
         return instances.get(ServiceContext.current());
     }
 
+    public static CronService requireCurrent() {
+      CronService cronService = instances.get(ServiceContext.current());
+      if (cronService == null) {
+         throw new CronServiceException("CronService is not initialized");
+      }
+      return cronService;
+   }
+
     public static boolean isInitialized() {
         return instances.containsKey(ServiceContext.current());
     }
+
+    public static boolean shutdownCurrentIfInitialized() {
+      CronService cronService = instances.get(ServiceContext.current());
+      if (cronService == null) {
+         return false;
+      }
+      cronService.shutdown();
+      return true;
+   }
 
     /**
      * 初始化CronService单例
@@ -79,7 +96,7 @@ public final class CronService {
      * @param runableRunner 任务执行器类 Task executor class
      * @throws CronServiceException 如果服务已初始化 if service is already initialized
      */
-    public static synchronized void initSingleton(Class<? extends RunnableRunner> runableRunner) {
+    public static synchronized CronService initSingleton(Class<? extends RunnableRunner> runableRunner) {
       String context = ServiceContext.current();
       if (instances.containsKey(context)) {
          throw new CronServiceException("CronService is already initialized");
@@ -88,6 +105,7 @@ public final class CronService {
          cs.context = context;
          cs.init(runableRunner);
          instances.put(context, cs);
+         return cs;
       }
    }
 

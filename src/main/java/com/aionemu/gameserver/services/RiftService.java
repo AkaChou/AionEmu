@@ -16,14 +16,21 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.RiftSchedule;
 import com.aionemu.gameserver.configs.schedule.RiftSchedule.Rift;
@@ -35,9 +42,6 @@ import com.aionemu.gameserver.model.rift.RiftLocation;
 import com.aionemu.gameserver.services.rift.RiftInformer;
 import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.rift.RiftOpenRunnable;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
-
-import javolution.util.FastMap;
 
 /****/
 /**
@@ -50,7 +54,7 @@ public class RiftService {
 	private Map<Integer, RiftLocation> locations;
 	private final Lock closing = new ReentrantLock();
 	private static final int duration = CustomConfig.RIFT_DURATION;
-	private FastMap<Integer, RiftLocation> activeRifts = new FastMap<Integer, RiftLocation>();
+	private Map<Integer, RiftLocation> activeRifts = new HashMap<>();
 
 	public void initRiftLocations() {
 		if (CustomConfig.RIFT_ENABLED) {
@@ -65,7 +69,7 @@ public class RiftService {
 			riftSchedule = RiftSchedule.load();
 			for (Rift rift : riftSchedule.getRiftsList()) {
 				for (String openTimes : rift.getOpenTime()) {
-					CronService.getInstance().schedule(new RiftOpenRunnable(rift.getWorldId()), openTimes);
+					GameCronServices.cronService().schedule(new RiftOpenRunnable(rift.getWorldId()), openTimes);
 				}
 			}
 		}
@@ -73,9 +77,9 @@ public class RiftService {
 
 	public boolean isValidId(int id) {
 		if (isRift(id)) {
-			return RiftService.getInstance().getRiftLocations().keySet().contains(id);
+			return getRiftLocations().keySet().contains(id);
 		} else {
-			for (RiftLocation loc : RiftService.getInstance().getRiftLocations().values()) {
+			for (RiftLocation loc : getRiftLocations().values()) {
 				if (loc.getWorldId() == id) {
 					return true;
 				}
@@ -136,9 +140,14 @@ public class RiftService {
 
 	public void openRifts(RiftLocation location) {
 		location.setOpened(true);
-		RiftManager.getInstance().spawnRift(location);
-		activeRifts.putEntry(location.getId(), location);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameGameplayServices.riftManager().spawnRift(location);
+		closing.lock();
+		try {
+			activeRifts.put(location.getId(), location);
+		} finally {
+			closing.unlock();
+		}
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				closeRifts();
@@ -148,7 +157,7 @@ public class RiftService {
 
 	public void closeRift(RiftLocation location) {
 		location.setOpened(false);
-		for (VisibleObject npc : location.getSpawned()) {
+		for (VisibleObject npc : new ArrayList<VisibleObject>(location.getSpawned())) {
 			((Npc) npc).getController().cancelTask(TaskId.RESPAWN);
 			npc.getController().onDelete();
 		}
@@ -156,14 +165,16 @@ public class RiftService {
 	}
 
 	public void closeRifts() {
+		List<RiftLocation> rifts;
 		closing.lock();
 		try {
-			for (RiftLocation rift : activeRifts.values()) {
-				closeRift(rift);
-			}
+			rifts = new ArrayList<>(activeRifts.values());
 			activeRifts.clear();
 		} finally {
 			closing.unlock();
+		}
+		for (RiftLocation rift : rifts) {
+			closeRift(rift);
 		}
 	}
 

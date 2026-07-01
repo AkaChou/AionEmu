@@ -15,11 +15,15 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.List;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2;
@@ -51,13 +55,13 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class is for controlling Creatures [npc's, players etc]
@@ -65,10 +69,10 @@ import javolution.util.FastMap;
  * @author -Nemesiss-, ATracer(2009-09-29), Sarynth
  * @modified by Wakizashi
  */
+@Slf4j
 public abstract class CreatureController<T extends Creature> extends VisibleObjectController<Creature> {
 
-	private static final Logger log = LoggerFactory.getLogger(CreatureController.class);
-	private FastMap<Integer, Future<?>> tasks = new FastMap<Integer, Future<?>>().shared();
+	private Map<Integer, Future<?>> tasks = new LinkedHashMap<Integer, Future<?>>();
 	private float healingSkillBoost = 1.0f;
 	private int SimpleAttackType;
 
@@ -113,7 +117,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * Notify everyone in knownlist about move event
 	 */
 	protected void notifyAIOnMove() {
-		MovementNotifyTask.getInstance().add(getOwner());
+		GameMovementLoopServices.movementNotifyTask().add(getOwner());
 	}
 
 	/**
@@ -129,7 +133,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * @param mode
 	 */
 	public final void updateZone() {
-		ZoneUpdateService.getInstance().add(getOwner());
+		GameMovementLoopServices.zoneUpdateService().add(getOwner());
 	}
 
 	/**
@@ -351,7 +355,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		if (time == 0) {
 			target.getController().onAttack(getOwner(), damage, true);
 		} else {
-			ThreadPoolManager.getInstance().schedule(new DelayedOnAttack(target, creature, damage), time);
+			GameThreadPoolServices.threadPoolManager().schedule(new DelayedOnAttack(target, creature, damage), time);
 		}
 	}
 
@@ -360,7 +364,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 */
 	public void stopMoving() {
 		Creature owner = getOwner();
-		World.getInstance().updatePosition(owner, owner.getX(), owner.getY(), owner.getZ(), owner.getHeading());
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, owner.getX(), owner.getY(), owner.getZ(), owner.getHeading());
 		PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner));
 	}
 
@@ -463,7 +467,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	public boolean useSkill(int skillId, int skillLevel) {
 		try {
 			Creature creature = getOwner();
-			Skill skill = SkillEngine.getInstance().getSkill(creature, skillId, skillLevel, creature.getTarget());
+			Skill skill = GameEngineServices.skillEngine().getSkill(creature, skillId, skillLevel, creature.getTarget());
 			if (skill != null) {
 				return skill.useSkill();
 			}
@@ -479,7 +483,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * @param value
 	 */
 	public void broadcastHate(int value) {
-		for (VisibleObject visibleObject : getOwner().getKnownList().getKnownObjects().values()) {
+		for (VisibleObject visibleObject : new java.util.ArrayList<>(getOwner().getKnownList().getKnownObjects().values())) {
 			if (visibleObject instanceof Creature) {
 				((Creature) visibleObject).getAggroList().notifyHate(getOwner(), value);
 			}

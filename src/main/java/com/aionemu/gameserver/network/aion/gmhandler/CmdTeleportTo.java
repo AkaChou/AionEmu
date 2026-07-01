@@ -447,7 +447,7 @@ public class CmdTeleportTo extends AbstractGMHandler {
 	}
 
 	private static void goTo(final Player admin, int worldId, float x, float y, float z) {
-		WorldMap destinationMap = World.getInstance().getWorldMap(worldId);
+		WorldMap destinationMap = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId);
 		if (destinationMap.isInstanceType()) {
 			TeleportService2.teleportTo(admin, worldId, getInstanceId(worldId, admin), x, y, z);
 		} else {

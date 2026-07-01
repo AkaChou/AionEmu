@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -24,9 +26,8 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
@@ -54,38 +55,38 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 	private List<Npc> DementedAshulagen = new ArrayList<Npc>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 233898: //Volatile Belsagos.
 			case 234990: //Wounded Belsagos.
 			case 234991: //Furious Belsagos.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000236, 3)); //Blood Mark.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053295, 1)); //Empyrean Plume Chest.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000236, 3)); //Blood Mark.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053295, 1)); //Empyrean Plume Chest.
 				switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
 					break;
 					case 2:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
 					break;
 					case 5:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					break;
 				}
             break;
 			case 234194: //Linkgate Foundry Supply Chest.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053238, 1)); //Scroll Bundle (Linkgate Foundry).
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053238, 1)); //Scroll Bundle (Linkgate Foundry).
 			break;
 			case 234195: //Linkgate Foundry Supply Chest.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053239, 1)); //Scroll Bundle (Linkgate Foundry).
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053239, 1)); //Scroll Bundle (Linkgate Foundry).
 			break;
 		}
 	}
@@ -239,7 +240,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
 		this.sendMessage(1402458, 19 * 60 * 1000);
 		//All monsters except Belsagos have disappeared from the Linkgate Foundry.
 		this.sendMessage(1402461, 20 * 60 * 1000);
-		linkgateTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		linkgateTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//***Dimensional Research Security***//
@@ -372,7 +373,7 @@ public class LinkgateFoundryInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 public void run() {
                     sendMsg(msgId);
                 }

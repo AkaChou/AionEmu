@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services.anohaservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.anoha.AnohaLocation;
@@ -23,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AnohaService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -41,46 +44,46 @@ public class AnohaStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// Berserk Anoha Sword Effect.
-		AnohaService.getInstance().adventSwordEffectSP(id);
+		GameLocationBootstrapServices.anohaService().adventSwordEffectSP(id);
 		// Berserk Anoha will return to Kaldor in 30 minutes.
-		AnohaService.getInstance().berserkAnohaMsg1(id);
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		GameLocationBootstrapServices.anohaService().berserkAnohaMsg1(id);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
-				AnohaService.getInstance().sendRequest(player);
+				GameLocationBootstrapServices.anohaService().sendRequest(player);
 			}
 		});
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Enraged Wealhtheow Guardian will appear in 5 minutes.
-				AnohaService.getInstance().wealhtheowGuardianMsg1(id);
+				GameLocationBootstrapServices.anohaService().wealhtheowGuardianMsg1(id);
 			}
 		}, 1500000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Enraged Wealhtheow Guardian will appear in 3 minutes.
-				AnohaService.getInstance().wealhtheowGuardianMsg2(id);
+				GameLocationBootstrapServices.anohaService().wealhtheowGuardianMsg2(id);
 			}
 		}, 1620000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Enraged Wealhtheow Guardian will appear in 1 minute.
-				AnohaService.getInstance().wealhtheowGuardianMsg3(id);
+				GameLocationBootstrapServices.anohaService().wealhtheowGuardianMsg3(id);
 			}
 		}, 1740000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				Map<Integer, AnohaLocation> locations = AnohaService.getInstance().getAnohaLocations();
+				Map<Integer, AnohaLocation> locations = GameLocationBootstrapServices.anohaService().getAnohaLocations();
 				for (final AnohaLocation loc : locations.values()) {
 					if (loc.getId() == id) {
-						AnohaService.getInstance().startAnoha(loc.getId());
+						GameLocationBootstrapServices.anohaService().startAnoha(loc.getId());
 					}
 				}
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// Summon Berserk Anoha.

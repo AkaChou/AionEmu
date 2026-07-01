@@ -36,7 +36,7 @@ public class ChatService {
 	 * @param player
 	 */
 	public static void onPlayerLogout(Player player) {
-		ChatServer.getInstance().sendPlayerLogout(player);
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer().sendPlayerLogout(player);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class ChatService {
 	 * @param nick
 	 */
 	public static void playerAuthed(int playerId, byte[] token) {
-		Player player = World.getInstance().findPlayer(playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player != null) {
 			PacketSendUtility.sendPacket(player, new SM_CHAT_INIT(token));
 		}

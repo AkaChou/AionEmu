@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.quest.handlers.ishalgen;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -32,7 +36,6 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /**
@@ -153,7 +156,7 @@ public class _2002Wheres_Rae extends QuestHandler {
                 break;
                 case 700045:
                     if (var == 11 && env.getDialog() == QuestDialog.USE_OBJECT) {
-                        SkillEngine.getInstance().applyEffectDirectly(8343, player, player, 0);
+                        GameEngineServices.skillEngine().applyEffectDirectly(8343, player, player, 0);
                         return true;
                     }
                 case 203538:
@@ -190,7 +193,7 @@ public class _2002Wheres_Rae extends QuestHandler {
                                 player.unsetState(CreatureState.ACTIVE);
                                 player.setFlightTeleportId(3001);
                                 PacketSendUtility.sendPacket(player, new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, 3001, 0));
-                                ThreadPoolManager.getInstance().schedule(new Runnable() {
+                                GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                                     @Override
                                     public void run() {
                                         TeleportService2.teleportTo(player, 220010000, 940.15f, 2295.64f, 265.7f, (byte) 43);

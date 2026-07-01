@@ -16,12 +16,11 @@
  */
 package com.aionemu.gameserver.utils.idfactory;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -42,9 +41,9 @@ import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
  *
  * @author SoulKeeper
  */
+@Slf4j
 public class IDFactory {
 
-	private static final Logger log = LoggerFactory.getLogger(IDFactory.class);
 	private static volatile ObjectProvider<IDFactory> instanceProvider;
 	/**
 	 * Bitset that is used for all id's.<br>

@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.utils.chathandlers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -27,9 +26,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author synchro2
  */
+@Slf4j(topic = "ADMINAUDIT_LOG")
 public abstract class AdminCommand extends ChatCommand {
-
-	static final Logger log = LoggerFactory.getLogger("ADMINAUDIT_LOG");
 
 	public AdminCommand(String alias) {
 		super(alias);

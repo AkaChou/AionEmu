@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgion;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -41,18 +47,15 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +81,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	private float loosingGroupMultiplier = 1;
 	private boolean isInstanceDestroyed = false;
 	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-	private final FastList<Future<?>> chantraTask = FastList.newInstance();
+	private final List<Future<?>> chantraTask = new ArrayList<Future<?>>();
 	
 	protected DredgionPlayerReward getPlayerReward(Player player) {
 		Integer object = player.getObjectId();
@@ -101,16 +104,16 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 216886: //Captain Zanata.
 				for (Player player: instance.getPlayersInside()) {
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
@@ -129,28 +132,28 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 216888: //Quartermaster Bhati.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
 			case 216889: //Rajaya The Inquisitor.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 						switch (Rnd.get(1, 4)) {
 							case 1:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001097, 1)); //Rajaya's Belt.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001097, 1)); //Rajaya's Belt.
 							break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001117, 1)); //Rajaya's Earrings.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001117, 1)); //Rajaya's Earrings.
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123000941, 1)); //Rajaya's Corundum Necklace.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123000941, 1)); //Rajaya's Corundum Necklace.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001032, 1)); //Rajaya's Turquoise Necklace.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001032, 1)); //Rajaya's Turquoise Necklace.
 							break;
 						}
 					}
@@ -159,20 +162,20 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			case 216890: //Windfinder Kumar.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 						switch (Rnd.get(1, 4)) {
 							case 1:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001096, 1)); //Kumar's Belt.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001096, 1)); //Kumar's Belt.
 							break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001118, 1)); //Kumar's Earrings.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001118, 1)); //Kumar's Earrings.
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001266, 1)); //Kumar's Corundum Ring.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001266, 1)); //Kumar's Corundum Ring.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001267, 1)); //Kumar's Turquoise Ring.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001267, 1)); //Kumar's Turquoise Ring.
 							break;
 						}
 					}
@@ -184,11 +187,11 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			*/
 			case 217037: //Gatekeeper Sarta.
 				for (Player player: instance.getPlayersInside()) {
-				    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000105, 1)); //Captain's Cabin Passage Key.
-				    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
+				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000105, 1)); //Captain's Cabin Passage Key.
+				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
@@ -212,7 +215,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
-		chantraTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				openFirstDoors();
@@ -245,7 +248,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		* These teleportation devices allow players to teleport to different areas of the Dredgion with ease.
 		* Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun.
 		*/
-		chantraTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//A teleport device has been activated in the Emergency Exit.
@@ -260,7 +263,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 		* Time Elapsed: 15 Minutes
 		* Valor: 1,000 Points
 		*/
-		chantraTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Officer Kamanya has appeared in Gravity Control.
@@ -268,7 +271,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 				spawn(216941, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Officer Kamanya.
 			}
 		}, 900000));
-		chantraTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!dredgionReward.isRewarded()) {
@@ -459,7 +462,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			break;
 			case 216886: //Captain Zanata.
 				point = 1000;
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						if (!dredgionReward.isRewarded()) {
@@ -520,12 +523,12 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 			}
 			AbyssPointsService.addAp(player, (int) abyssPoint);
 			QuestEnv env = new QuestEnv(null, player, 0, 0);
-			QuestEngine.getInstance().onDredgionReward(env);
+			GameEngineServices.questEngine().onDredgionReward(env);
 		}
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -535,7 +538,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 						}
 						onExitInstance(player);
 					}
-					AutoGroupService.getInstance().unRegisterInstance(instanceId);
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
 		}, 120000);
@@ -676,7 +679,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        chantraTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -690,7 +693,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        chantraTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -703,7 +706,7 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        chantraTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        chantraTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -728,10 +731,10 @@ public class ChantraDredgionInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = chantraTask.head(), end = chantraTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : chantraTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.*;
 import com.aionemu.gameserver.ai2.event.AIEventLog;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -27,13 +29,14 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 
 /**
  * @author ATracer
  */
+@Slf4j
 public class Ai2Command extends AdminCommand {
 
 	public Ai2Command() {
@@ -69,7 +72,7 @@ public class Ai2Command extends AdminCommand {
 		}
 
 		if (param0.equals("say")) {
-			LoggerFactory.getLogger(Ai2Command.class).info("[AI2] marker: " + params[1]);
+			log.info("[AI2] marker: " + params[1]);
 		}
 
 		/**
@@ -109,7 +112,7 @@ public class Ai2Command extends AdminCommand {
 		String param1 = params[1];
 		if (param0.equals("set")) {
 			String aiName = param1;
-			AI2Engine.getInstance().setupAI(aiName, npc);
+			GameEngineServices.ai2Engine().setupAI(aiName, npc);
 		}
 		else if (param0.equals("event")) {
 			AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
@@ -119,7 +122,7 @@ public class Ai2Command extends AdminCommand {
 		}
 		else if (param0.equals("event2")) {
 			AIEventType eventType = AIEventType.valueOf(param1.toUpperCase());
-			Creature creature = (Creature) World.getInstance().findVisibleObject(Integer.valueOf(params[2]));
+			Creature creature = (Creature) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(Integer.valueOf(params[2]));
 			if (eventType != null) {
 				npc.getAi2().onCreatureEvent(eventType, creature);
 			}

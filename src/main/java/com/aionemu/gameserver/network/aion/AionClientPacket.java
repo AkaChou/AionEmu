@@ -14,11 +14,9 @@
  */
 package com.aionemu.gameserver.network.aion;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.EnumSet;
 import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.packet.BaseClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -28,12 +26,9 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public abstract class AionClientPacket extends BaseClientPacket<AionConnection> implements Cloneable {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(AionClientPacket.class);
 
 	private final Set<State> validStates;
 

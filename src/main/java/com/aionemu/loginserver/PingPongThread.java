@@ -18,10 +18,8 @@
 
 package com.aionemu.loginserver;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.network.gameserver.GsConnection;
@@ -33,9 +31,9 @@ import com.aionemu.commons.database.dao.DAOManager;
 /**
  * @author KID
  */
+@Slf4j
 public class PingPongThread implements Runnable {
 
-    private final Logger log = LoggerFactory.getLogger(PingPongThread.class);
     private GsConnection connection;
     public volatile boolean uptime = true;
     private SM_PING ping;
@@ -98,7 +96,7 @@ public class PingPongThread implements Runnable {
             if (killProcess && serverPID != -1) {
                 if (System.getProperty("os.name").toLowerCase().indexOf("windows") != -1) {
                     try {
-                        Runtime.getRuntime().exec("taskkill /pid " + serverPID + " /f");
+                        new ProcessBuilder("taskkill", "/pid", String.valueOf(serverPID), "/f").start();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 
@@ -29,15 +33,16 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 
 /****/
@@ -51,39 +56,39 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	private int abyssGateEnhancerKilled;
 	private boolean isStartTimer = false;
 	protected boolean isInstanceDestroyed = false;
-	private final FastList<Future<?>> drakenseerLairTask = FastList.newInstance();
+	private final List<Future<?>> drakenseerLairTask = new ArrayList<Future<?>>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
 			case 220450: //Akhal The Oracle.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166030005, 5)); //Tempering Solution.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166040001, 1)); //Essence Core Solution.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166030005, 5)); //Tempering Solution.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166040001, 1)); //Essence Core Solution.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
                         switch (Rnd.get(1, 4)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057624, 1)); //Oracle's Illusion Godstone Bundle.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057624, 1)); //Oracle's Illusion Godstone Bundle.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057625, 1)); //Oracle Greater Enchant Supplement Bundle.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057625, 1)); //Oracle Greater Enchant Supplement Bundle.
 				            break;
 							case 3:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057626, 1)); //Oracle Ancient Relic Bundle.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057626, 1)); //Oracle Ancient Relic Bundle.
 				            break;
 							case 4:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057627, 1)); //Arkhal's Accessory Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057627, 1)); //Arkhal's Accessory Box.
 				            break;
 						} switch (Rnd.get(1, 2)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188054910, 1)); //Akhal's Weapon Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054910, 1)); //Akhal's Weapon Box.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188054911, 1)); //Akhal's Armor Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054911, 1)); //Akhal's Armor Box.
 				            break;
 						}
 					}
@@ -100,7 +105,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 		sendMsgByRace(1403376, Race.PC_ALL, 5000);
 		Npc npc = instance.getNpc(220450); //Akhal The Oracle.
 		if (npc != null) {
-			SkillEngine.getInstance().getSkill(npc, 21791, 60, npc).useNoAnimationSkill(); //Turning Tide.
+			GameEngineServices.skillEngine().getSkill(npc, 21791, 60, npc).useNoAnimationSkill(); //Turning Tide.
 		}
 	}
 	
@@ -139,7 +144,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 		this.sendMessage(1403375, 1 * 60 * 1000);
 		//You have one minute left to destroy the remaining Shielding Conduits.
 		this.sendMessage(1403382, 9 * 60 * 1000);
-		drakenseerLairTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		drakenseerLairTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -196,10 +201,10 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopDrakenseerLairTask() {
-        for (FastList.Node<Future<?>> n = drakenseerLairTask.head(), end = drakenseerLairTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : drakenseerLairTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -213,7 +218,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -232,7 +237,7 @@ public class DrakenseerLairInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 public void run() {
                     sendMsg(msgId);
                 }

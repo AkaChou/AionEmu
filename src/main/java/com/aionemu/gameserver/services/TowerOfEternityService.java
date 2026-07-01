@@ -16,15 +16,17 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -44,23 +46,23 @@ import com.aionemu.gameserver.services.towerofeternityservice.Tower;
 import com.aionemu.gameserver.services.towerofeternityservice.TowerOfEternity;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Wnkrz on 22/08/2017.
  */
+@Slf4j
 
 public class TowerOfEternityService {
 	private static volatile ObjectProvider<TowerOfEternityService> instanceProvider;
 	private Map<Integer, TowerOfEternityLocation> towerOfEternity;
 	private static final int duration = CustomConfig.TOWER_OF_ETERNITY_DURATION;
-	private final Map<Integer, TowerOfEternity<?>> activeTowerOfEternity = new FastMap<Integer, TowerOfEternity<?>>()
-			.shared();
-	private static Logger log = LoggerFactory.getLogger(TowerOfEternityService.class);
+	private final Map<Integer, TowerOfEternity<?>> activeTowerOfEternity = new LinkedHashMap<Integer, TowerOfEternity<?>>()
+			;
 
 	public void initTowerOfEternityLocation() {
 		if (CustomConfig.TOWER_OF_ETERNITY_ENABLED) {
@@ -70,7 +72,7 @@ public class TowerOfEternityService {
 			}
 			log.info("[TowerOfEternityService] Loaded " + towerOfEternity.size() + " locations.");
 
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startTowerOfEternity(Rnd.get(1, 5));
@@ -108,7 +110,7 @@ public class TowerOfEternityService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {
@@ -130,7 +132,7 @@ public class TowerOfEternityService {
 			activeTowerOfEternity.put(id, tower);
 		}
 		tower.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopTowerOfEternity(id);
@@ -165,10 +167,10 @@ public class TowerOfEternityService {
 				|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ELYOS))
 				|| ((player.getWorldId() == 210100000) && (player.getRace() == Race.ASMODIANS))
 				|| ((player.getWorldId() == 220110000) && (player.getRace() == Race.ASMODIANS))) {
-			World.getInstance().getWorldMap(player.getWorldId()).getMainWorldMapInstance()
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(player.getWorldId()).getMainWorldMapInstance()
 					.doOnAllPlayers(new Visitor<Player>() {
 						public void visit(Player player) {
-							for (VisibleObject npc : World.getInstance().getNpcs()) {
+							for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 								if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
 									if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
 										PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
@@ -196,10 +198,10 @@ public class TowerOfEternityService {
 	}
 
 	private void broadcastUpdate(final TowerOfEternityLocation tower) {
-		World.getInstance().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(new Visitor<Player>() {
 					public void visit(Player player) {
-						for (VisibleObject npc : World.getInstance().getNpcs()) {
+						for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
 								if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
 									PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, (Npc) npc));
@@ -226,10 +228,10 @@ public class TowerOfEternityService {
 	}
 
 	private void broadcastDespawn(final TowerOfEternityLocation tower) {
-		World.getInstance().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(tower.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(new Visitor<Player>() {
 					public void visit(Player player) {
-						for (VisibleObject npc : World.getInstance().getNpcs()) {
+						for (VisibleObject npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 							if ((npc.getObjectTemplate().getTemplateId() == 833765) && (npc.isSpawned())) {
 								if ((player.getWorldId() == 210100000) && (player.getRace() == Race.ELYOS)) {
 									PacketSendUtility.sendPacket(player, new SM_FLAG_UPDATE((Npc) npc));

@@ -18,18 +18,16 @@
 
 package com.aionemu.loginserver.taskmanager.trigger.implementations;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.loginserver.service.LoginThreadPoolServices;
 import com.aionemu.loginserver.taskmanager.trigger.TaskFromDBTrigger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author nrg
  */
+@Slf4j
 public class AfterRestartTrigger extends TaskFromDBTrigger {
 
-    private static Logger log = LoggerFactory.getLogger(AfterRestartTrigger.class);
     //Indicated wether this task should block or not block the starting progress
     private boolean isBlocking = false;
 

@@ -22,18 +22,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
 
-import gnu.trove.map.hash.THashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -75,10 +76,10 @@ public class EventData {
 	protected List<EventTemplate> events;
 
 	@XmlTransient
-	private THashMap<String, EventTemplate> activeEvents = new THashMap<String, EventTemplate>();
+	private Map<String, EventTemplate> activeEvents = new LinkedHashMap<String, EventTemplate>();
 
 	@XmlTransient
-	private THashMap<String, EventTemplate> allEvents = new THashMap<String, EventTemplate>();
+	private Map<String, EventTemplate> allEvents = new LinkedHashMap<String, EventTemplate>();
 
 	@XmlTransient
 	private int counter = 0;

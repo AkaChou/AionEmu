@@ -14,11 +14,12 @@
  */
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -44,11 +45,11 @@ import com.aionemu.gameserver.services.player.CreativityPanel.stats.Precision;
 import com.aionemu.gameserver.services.player.CreativityPanel.stats.Will;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+@Slf4j
 public class CreativityEssenceService {
 
 	private static volatile ObjectProvider<CreativityEssenceService> instanceProvider;
 
-	Logger log = LoggerFactory.getLogger(CreativityEssenceService.class);
 	PlayerCreativityPointsDAO cpDAO = DAOManager.getDAO(PlayerCreativityPointsDAO.class);
 	private int point;
 	public static int currentCp;
@@ -264,27 +265,27 @@ public class CreativityEssenceService {
 			switch (id) {
 			case 1:
 				player.setCPSlot1(point);
-				Power.getInstance().onChange(player, point);
+				GameCreativityServices.power().onChange(player, point);
 				break;
 			case 2:
 				player.setCPSlot2(point);
-				Health.getInstance().onChange(player, point);
+				GameCreativityServices.health().onChange(player, point);
 				break;
 			case 3:
 				player.setCPSlot3(point);
-				Agility.getInstance().onChange(player, point);
+				GameCreativityServices.agility().onChange(player, point);
 				break;
 			case 4:
 				player.setCPSlot4(point);
-				Precision.getInstance().onChange(player, point);
+				GameCreativityServices.precision().onChange(player, point);
 				break;
 			case 5:
 				player.setCPSlot5(point);
-				Knowledge.getInstance().onChange(player, point);
+				GameCreativityServices.knowledge().onChange(player, point);
 				break;
 			case 6:
 				player.setCPSlot6(point);
-				Will.getInstance().onChange(player, point);
+				GameCreativityServices.will().onChange(player, point);
 				break;
 			}
 			PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS_APPLY(type, size, id, point));
@@ -307,12 +308,12 @@ public class CreativityEssenceService {
 		player.setCPSlot4(0);
 		player.setCPSlot5(0);
 		player.setCPSlot6(0);
-		Power.getInstance().onChange(player, 0);
-		Health.getInstance().onChange(player, 0);
-		Agility.getInstance().onChange(player, 0);
-		Precision.getInstance().onChange(player, 0);
-		Knowledge.getInstance().onChange(player, 0);
-		Will.getInstance().onChange(player, 0);
+		GameCreativityServices.power().onChange(player, 0);
+		GameCreativityServices.health().onChange(player, 0);
+		GameCreativityServices.agility().onChange(player, 0);
+		GameCreativityServices.precision().onChange(player, 0);
+		GameCreativityServices.knowledge().onChange(player, 0);
+		GameCreativityServices.will().onChange(player, 0);
 		List<Integer> a = new ArrayList<Integer>();
 		a.add(8);
 		a.add(10);

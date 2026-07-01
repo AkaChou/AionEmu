@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.admaStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -39,7 +41,7 @@ public class Shape_Change_ZombieAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.deleteOwner(Shape_Change_ZombieAI2.this);

@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -79,7 +85,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -87,7 +93,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 				} else {
 					sendMsg(1500702);
 					spawn(283081, 1216.7513f, 1069.1871f, 491.32993f, (byte) 59); //Shabokhan EarthQuake.
-					SkillEngine.getInstance().getSkill(getOwner(), 20717, 10, getOwner()).useNoAnimationSkill(); //Tremor.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20717, 10, getOwner()).useNoAnimationSkill(); //Tremor.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -115,7 +121,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
@@ -174,7 +180,7 @@ public class InvincibleShabokanAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg(int msg) {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
 	
 	@Override

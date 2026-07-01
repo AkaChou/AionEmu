@@ -16,10 +16,11 @@
  */
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.concurrent.Future;
 
@@ -39,7 +40,7 @@ public class Corrupted_DanuarAI2 extends AggressiveNpcAI2
     }
 	
     private void startpower() {
-        skillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+        skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
 		        AI2Actions.targetSelf(Corrupted_DanuarAI2.this);

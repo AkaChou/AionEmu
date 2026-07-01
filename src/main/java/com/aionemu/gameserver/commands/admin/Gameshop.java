@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.InGameShopDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -31,7 +35,7 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author xTz
@@ -121,7 +125,7 @@ public class Gameshop extends AdminCommand {
 			if (titleDescription.equals("empty")) {
 				titleDescription = StringUtils.EMPTY;
 			}
-			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(IDFactory.getInstance().nextId(), itemId, count, price,
+			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(GameWorldBootstrapServices.idFactory().nextId(), itemId, count, price,
 				category, subCategory, list - 1, 1, itemType, gift, titleDescription, description);
 			PacketSendUtility.sendMessage(admin, "You add [item:" + itemId + "]");
 		}
@@ -163,7 +167,7 @@ public class Gameshop extends AdminCommand {
 			if (titleDescription.equals("empty")) {
 				titleDescription = StringUtils.EMPTY;
 			}
-			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(IDFactory.getInstance().nextId(), itemId, count, price,
+			DAOManager.getDAO(InGameShopDAO.class).saveIngameShopItem(GameWorldBootstrapServices.idFactory().nextId(), itemId, count, price,
 				(byte) -1, (byte) -1, -1, 0, itemType, gift, titleDescription, description);
 			PacketSendUtility.sendMessage(admin, "You remove from Ranking Sales [item:" + itemId + "]");
 		}
@@ -179,13 +183,13 @@ public class Gameshop extends AdminCommand {
 
 				String name = Util.convertName(params[1]);
 
-				player = World.getInstance().findPlayer(name);
+				player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
 				if (player == null) {
 					PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 					return;
 				}
 
-				if (LoginServer.getInstance().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
+				if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
 					player.getClientConnection().getAccount().setToll(toll);
 					PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
 					PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");
@@ -217,7 +221,7 @@ public class Gameshop extends AdminCommand {
 					player = (Player) target;
 				}
 
-				if (LoginServer.getInstance().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
+				if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, 0, player.getAcountName()))) {
 					player.getClientConnection().getAccount().setToll(toll);
 					PacketSendUtility.sendPacket(player, new SM_TOLL_INFO(toll));
 					PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");
@@ -243,14 +247,14 @@ public class Gameshop extends AdminCommand {
 
 				String name = Util.convertName(params[1]);
 
-				player = World.getInstance().findPlayer(name);
+				player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
 				if (player == null) {
 					PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 					return;
 				}
 
 				PacketSendUtility.sendMessage(admin, "You added " + toll + " tolls to Player: " + name);
-				InGameShopEn.getInstance().addToll(player, toll);
+				GameRuntimeServices.inGameShopEn().addToll(player, toll);
 			}
 			if (params.length == 2) {
 				try {
@@ -272,7 +276,7 @@ public class Gameshop extends AdminCommand {
 				}
 
 				PacketSendUtility.sendMessage(admin, "You added " + toll + " tolls to Player: " + player.getName());
-				InGameShopEn.getInstance().addToll(player, toll);
+				GameRuntimeServices.inGameShopEn().addToll(player, toll);
 			}
 		}
 		else {

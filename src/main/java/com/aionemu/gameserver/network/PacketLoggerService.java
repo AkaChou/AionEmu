@@ -16,17 +16,18 @@
  */
 package com.aionemu.gameserver.network;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 
 /**
  * @author Ghostfur (Aion-Unique)
  */
+@Slf4j
 public class PacketLoggerService {
 
-	private static final Logger log = LoggerFactory.getLogger(PacketLoggerService.class);
+	private static volatile ObjectProvider<PacketLoggerService> instanceProvider;
 
 	public void logPacketCM(String name) {
 		if (DeveloperConfig.SHOW_PACKETS) {
@@ -47,6 +48,14 @@ public class PacketLoggerService {
 	}
 
 	public static final PacketLoggerService getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<PacketLoggerService> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<PacketLoggerService> instanceProvider) {
+		PacketLoggerService.instanceProvider = instanceProvider;
 	}
 }

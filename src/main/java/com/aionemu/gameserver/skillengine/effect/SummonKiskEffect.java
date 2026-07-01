@@ -16,11 +16,15 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -31,7 +35,6 @@ import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SummonKiskEffect")
@@ -49,7 +52,7 @@ public class SummonKiskEffect extends SummonEffect {
 		SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcId, x, y, z, heading);
 		final Kisk kisk = VisibleObjectSpawner.spawnKisk(spawn, instanceId, player);
 		Integer objOwnerId = player.getObjectId();
-		Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				kisk.getController().onDelete();
@@ -57,11 +60,11 @@ public class SummonKiskEffect extends SummonEffect {
 		}, time * 1000);
 		kisk.getController().addTask(TaskId.DESPAWN, task);
 		player.getController().cancelTask(TaskId.ITEM_USE);
-		KiskService.getInstance().regKisk(kisk, objOwnerId);
+		GameFeatureServices.kiskService().regKisk(kisk, objOwnerId);
 		if (kisk.getMaxMembers() > 1) {
 			kisk.getController().onDialogRequest(player);
 		} else {
-			KiskService.getInstance().onBind(kisk, player);
+			GameFeatureServices.kiskService().onBind(kisk, player);
 		}
 	}
 }

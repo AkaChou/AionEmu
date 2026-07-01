@@ -43,6 +43,6 @@ public class CM_LS_PING extends LsClientPacket {
 		} catch (Exception ex) {
 		}
 
-		LoginServer.getInstance().sendPacket(new SM_LS_PONG(pid));
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_LS_PONG(pid));
 	}
 }

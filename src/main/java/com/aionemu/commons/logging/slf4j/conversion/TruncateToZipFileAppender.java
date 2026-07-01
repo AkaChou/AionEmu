@@ -1,5 +1,6 @@
 package com.aionemu.commons.logging.slf4j.conversion;
 
+import lombok.extern.slf4j.Slf4j;
 import ch.qos.logback.core.FileAppender;
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,9 +11,6 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 日志文件压缩备份工具类
  * Log file compression and backup utility class
@@ -20,8 +18,8 @@ import org.slf4j.LoggerFactory;
  * 该类继承自FileAppender，用于在日志文件滚动时将其压缩为zip格式并备份
  * This class extends FileAppender to compress and backup log files in zip format during log rotation
  */
+@Slf4j
 public class TruncateToZipFileAppender extends FileAppender<Object> {
-    private static final Logger log = LoggerFactory.getLogger(TruncateToZipFileAppender.class);
     
     /**
      * 备份目录路径

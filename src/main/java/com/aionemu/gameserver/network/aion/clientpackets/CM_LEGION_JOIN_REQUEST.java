@@ -16,10 +16,11 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.LegionService;
 
 public class CM_LEGION_JOIN_REQUEST extends AionClientPacket {
 	private String legionName;
@@ -45,6 +46,6 @@ public class CM_LEGION_JOIN_REQUEST extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		LegionService.getInstance().handleLegionJoinRequest(player, legionId, joinType, joinRequestMsg);
+		GameCoreGameplayServices.legionService().handleLegionJoinRequest(player, legionId, joinType, joinRequestMsg);
 	}
 }

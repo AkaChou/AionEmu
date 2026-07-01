@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.CountDownLatch;
 
 import com.aionemu.gameserver.instance.InstanceEngine;
@@ -24,7 +30,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.instance.HallOfTenacityService;
 import com.aionemu.gameserver.services.instance.KamarBattlefieldService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 public class InstanceEngineManager extends AdminCommand {
@@ -42,7 +47,7 @@ public class InstanceEngineManager extends AdminCommand {
 	
 	@Override
 	public void execute(final Player player, String... params) {
-		final GameEngine[] parallelEngines = { InstanceEngine.getInstance() };
+		final GameEngine[] parallelEngines = { GameEngineServices.instanceEngine() };
 		final CountDownLatch progressLatch = new CountDownLatch(parallelEngines.length);
 		if (params.length == 0) {
 			showHelp(player);
@@ -50,28 +55,28 @@ public class InstanceEngineManager extends AdminCommand {
 		}
 		if (COMMAND_STOP.equalsIgnoreCase(params[0]) || COMMAND_START.equalsIgnoreCase(params[0]) || COMMAND_RESTART.equalsIgnoreCase(params[0]) || COMMAND_STARTHOT.equalsIgnoreCase(params[0]) || COMMAND_STARTKAR.equalsIgnoreCase(params[0])) {
 			if (COMMAND_START.equalsIgnoreCase(params[0])) {
-				InstanceEngine.getInstance().load(progressLatch);
+				GameEngineServices.instanceEngine().load(progressLatch);
 				PacketSendUtility.sendMessage(player, "InstanceEngine loaded successfully!");
 			}
 			if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-				InstanceEngine.getInstance().shutdown();
+				GameEngineServices.instanceEngine().shutdown();
 				PacketSendUtility.sendMessage(player, "InstanceEngine shutdown successfully!");
 			}
 			if (COMMAND_RESTART.equalsIgnoreCase(params[0])) {
-				InstanceEngine.getInstance().shutdown();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameEngineServices.instanceEngine().shutdown();
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
-						InstanceEngine.getInstance().load(progressLatch);
+						GameEngineServices.instanceEngine().load(progressLatch);
 						PacketSendUtility.sendMessage(player, "InstanceEngine reloaded successfully!");
 					}
 				}, 5000);
 			}
 			if (COMMAND_STARTHOT.equalsIgnoreCase(params[0])) {
-				HallOfTenacityService.getInstance().startHallOfTenacityRegistration();
+				GameBattlefieldServices.hallOfTenacityService().startHallOfTenacityRegistration();
 			}
 			if (COMMAND_STARTKAR.equalsIgnoreCase(params[0])) {
-				KamarBattlefieldService.getInstance().startKamarRegistration();
+				GameBattlefieldServices.kamarBattlefieldService().startKamarRegistration();
 			}
 		}
 	}

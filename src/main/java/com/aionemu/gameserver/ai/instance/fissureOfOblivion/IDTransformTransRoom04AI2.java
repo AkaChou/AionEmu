@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.fissureOfOblivion;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -83,7 +85,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244490, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
@@ -103,7 +105,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244531, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
@@ -123,7 +125,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244572, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
@@ -143,7 +145,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244613, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
@@ -163,7 +165,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244654, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
@@ -183,7 +185,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244695, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
@@ -203,7 +205,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244736, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
@@ -223,7 +225,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244777, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
@@ -243,7 +245,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244818, 301.1525f, 512.97736f, 350.8281f, (byte) 0);
@@ -263,7 +265,7 @@ public class IDTransformTransRoom04AI2 extends NpcAI2
 		despawnNpc(245888);
 		spawn(245405, 301.12494f, 513.34650f, 352.99631f, (byte) 0, 33);
 		AI2Actions.deleteOwner(IDTransformTransRoom04AI2.this);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(244859, 301.1525f, 512.97736f, 350.8281f, (byte) 0);

@@ -36,17 +36,11 @@ import ch.qos.logback.core.joran.spi.JoranException;
 
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
 import com.aionemu.commons.utils.AionRuntimeMode;
-import org.slf4j.Logger;
-
 /**
  * @author ATracer, KID, nrg
  */
 public class ChatServer {
 
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
 
     static void initializeLogger() {
         if (AionRuntimeMode.isBootEmbedded()) {
@@ -101,23 +95,6 @@ public class ChatServer {
     }
 
     static void start(String[] args, ChatServerDependencies dependencies) {
-        ChatServerStartupBridge startupBridge = dependencies.startupBridge();
-        long start = startupBridge.currentTimeMillis();
-
-        startupBridge.initializeLogger();
-
-        startupBridge.loadConfig();
-        startupBridge.printInfos();
-        dependencies.idFactory();
-        dependencies.gameServerService();
-        dependencies.broadcastService();
-        dependencies.chatService();
-        dependencies.nettyServer();
-        dependencies.restartService();
-
-        if (!startupBridge.isBootEmbedded()) {
-            startupBridge.registerShutdownHook();
-        }
-        log.info("AL Chat Server started in " + (startupBridge.currentTimeMillis() - start) / 1000 + " seconds.");
+        ChatServerStartupSequence.start(dependencies);
     }
 }

@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.siege;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
 import com.aionemu.gameserver.ai2.AIName;
@@ -42,9 +46,8 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.skillengine.properties.TargetSpeciesAttribute;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +58,7 @@ import java.util.concurrent.ScheduledFuture;
 /****/
 
 @AIName("artifact")
+@Slf4j
 public class ArtifactAI2 extends NpcAI2
 {
 	private Map<Integer, ItemUseObserver> observers = new HashMap<Integer, ItemUseObserver>();
@@ -66,7 +70,7 @@ public class ArtifactAI2 extends NpcAI2
 	
 	@Override
 	protected void handleDialogStart(final Player player) {
-		final ArtifactLocation loc = SiegeService.getInstance().getArtifact(getSpawnTemplate().getSiegeId());
+		final ArtifactLocation loc = GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId());
 		AI2Actions.addRequest(this, player, 160028, new AI2Request() {
 			@Override
 			public void acceptRequest(Creature requester, Player responder) {
@@ -80,7 +84,7 @@ public class ArtifactAI2 extends NpcAI2
 							return;
 						}
 					}
-				}, new DescriptionId(2 * 716570 + 1), SiegeService.getInstance().getArtifact(getSpawnTemplate().getSiegeId()).getTemplate().getActivation().getCount());
+				}, new DescriptionId(2 * 716570 + 1), GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId()).getTemplate().getActivation().getCount());
 			}
 		}, loc);
 	}
@@ -90,14 +94,14 @@ public class ArtifactAI2 extends NpcAI2
 	}
 	
 	public void onActivate(final Player player) {
-		final ArtifactLocation loc = SiegeService.getInstance().getArtifact(getSpawnTemplate().getSiegeId());
+		final ArtifactLocation loc = GameFeatureServices.siegeService().getArtifact(getSpawnTemplate().getSiegeId());
 		ArtifactActivation activation = loc.getTemplate().getActivation();
 		int skillId = activation.getSkillId();
 		final int itemId = activation.getItemId();
 		final int count = activation.getCount();
 		final SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 		if (skillTemplate == null) {
-			LoggerFactory.getLogger(ArtifactAI2.class).error("No skill template for artifact effect id : " + skillId);
+			log.error("No skill template for artifact effect id : " + skillId);
 			return;
 		} if (loc.getCoolDown() > 0 || !loc.getStatus().equals(ArtifactStatus.IDLE)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ARTIFACT_OUT_OF_ORDER);
@@ -109,7 +113,7 @@ public class ArtifactAI2 extends NpcAI2
 			}
 		if (player.getInventory().getItemCountByItemId(itemId) < count)
 			return;
-		LoggerFactory.getLogger(ArtifactAI2.class).debug("Artifact {} actived by {}.", getSpawnTemplate().getSiegeId(), player.getName());
+		log.debug("Artifact {} actived by {}.", getSpawnTemplate().getSiegeId(), player.getName());
 		if (!loc.getStatus().equals(ArtifactStatus.IDLE))
 			return;
 		final SM_SYSTEM_MESSAGE startMessage = SM_SYSTEM_MESSAGE.STR_ARTIFACT_CASTING(player.getRace().getRaceDescriptionId(), player.getName(), new DescriptionId(skillTemplate.getNameId()));
@@ -144,7 +148,7 @@ public class ArtifactAI2 extends NpcAI2
 		};
 		observers.put(player.getObjectId(), observer);
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ACTION_ITEM_NPC, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.ACTION_ITEM_NPC, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				ItemUseObserver observer = observers.remove(player.getObjectId());
@@ -166,10 +170,10 @@ public class ArtifactAI2 extends NpcAI2
 				});
 				loc.setLastActivation(System.currentTimeMillis());
 				if (loc.getTemplate().getRepeatCount() == 1)
-					ThreadPoolManager.getInstance().schedule(new ArtifactUseSkill(loc, player, skillTemplate), 13000);
+					GameThreadPoolServices.threadPoolManager().schedule(new ArtifactUseSkill(loc, player, skillTemplate), 13000);
 				else {
-					final ScheduledFuture<?> s = ThreadPoolManager.getInstance().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					final ScheduledFuture<?> s = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ArtifactUseSkill(loc, player, skillTemplate), 13000, loc.getTemplate().getRepeatInterval() * 1000);
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							s.cancel(true);

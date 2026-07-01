@@ -20,12 +20,14 @@ package com.aionemu.chatserver.model.channel;
 
 import com.aionemu.chatserver.model.ChannelType;
 import com.aionemu.chatserver.model.Race;
+import lombok.Getter;
 
 /**
  * @author ATracer
  */
 public class RegionChannel extends RaceChannel {
 
+    @Getter
     protected int mapId;
 
     /**
@@ -38,10 +40,4 @@ public class RegionChannel extends RaceChannel {
         this.mapId = mapId;
     }
 
-    /**
-     * @return the mapId
-     */
-    public int getMapId() {
-        return mapId;
-    }
 }

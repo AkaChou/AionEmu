@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -36,16 +40,14 @@ import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +69,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> aturamSkyFortressTask = FastList.newInstance();
+	private final List<Future<?>> aturamSkyFortressTask = new ArrayList<Future<?>>();
 	
 	@Override
 	public void onInstanceCreate(WorldMapInstance instance) {
@@ -81,7 +83,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 		Npc npc = instance.getNpc(217371); //Weapon Hugen.
 		if (npc != null) {
 			npc.getEffectController().unsetAbnormal(AbnormalState.SLEEP.getId());
-			SkillEngine.getInstance().getSkill(npc, 21571, 60, npc).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(npc, 21571, 60, npc).useNoAnimationSkill();
 		}
 	}
 	
@@ -96,107 +98,107 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
     }
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 219185: //Aldreen [Kaichin Engineering League]
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 110900259, 1)); //Shulack Work Clothes.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110900259, 1)); //Shulack Work Clothes.
 			break;
 			case 217371: //Weapon Hugen.
 				switch (Rnd.get(1, 3)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051566, 1)); //Hugen's Pants Box.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051566, 1)); //Hugen's Pants Box.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051567, 1)); //Hugen's Pauldrons Box.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051567, 1)); //Hugen's Pauldrons Box.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051573, 1)); //Hugen's Belt Box.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051573, 1)); //Hugen's Belt Box.
 					break;
 				} switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
 					break;
 					case 5:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					break;
 				}
 			break;
 			case 217373: //Popuchin.
 				switch (Rnd.get(1, 3)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051569, 1)); //Popuchin's Shoe Box.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051569, 1)); //Popuchin's Shoe Box.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051570, 1)); //Popuchin's Hairpin Box.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051570, 1)); //Popuchin's Hairpin Box.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051572, 1)); //Popuchin's Ring Box.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051572, 1)); //Popuchin's Ring Box.
 					break;
 				} switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
 					break;
 					case 5:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					break;
 				}
 			break;
 			case 217376: //Ashunatal Shadowslip.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053789, 1)); //Major Stigma Support Bundle.
 				switch (Rnd.get(1, 3)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051565, 1)); //Ashunatal's Jacket Box.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051565, 1)); //Ashunatal's Jacket Box.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051568, 1)); //Ashunatal's Glove Box.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051568, 1)); //Ashunatal's Glove Box.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188051571, 1)); //Ashunatal's Earrings Box.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188051571, 1)); //Ashunatal's Earrings Box.
 					break;
 				} switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
 					break;
 					case 5:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					break;
 				}
 			break;
 			case 701033: //Balaur Armament Box.
 				switch (Rnd.get(1, 2)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000110, 5)); //Fine Life Serum.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000110, 5)); //Fine Life Serum.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000111, 5)); //Fine Mana Serum.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000111, 5)); //Fine Mana Serum.
 					break;
 				}
 			break;
@@ -384,7 +386,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	}
 	
 	private void rushWalk(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -466,18 +468,18 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 			case 731533: //Magma Tachysphere.
 			    despawnNpc(npc);
 				sp(731533, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 0, 20000, 0, null); //Board Swift Runner.
-				SkillEngine.getInstance().getSkill(npc, 21807, 60, player).useNoAnimationSkill(); //Board Swift Runner.
+				GameEngineServices.skillEngine().getSkill(npc, 21807, 60, player).useNoAnimationSkill(); //Board Swift Runner.
 			break;
 			case 731534: //Magma Tachysphere.
 			    despawnNpc(npc);
 				sp(731534, npc.getX(), npc.getY(), npc.getZ(), (byte) 0, 0, 20000, 0, null); //Board Swift Runner.
-				SkillEngine.getInstance().getSkill(npc, 21808, 60, player).useNoAnimationSkill(); //Board Swift Runner.
+				GameEngineServices.skillEngine().getSkill(npc, 21808, 60, player).useNoAnimationSkill(); //Board Swift Runner.
 			break;
 			case 730397: //Recharger.
 			    despawnNpc(npc);
 				//You feel more physically fit as the energy covers you.
 				sendMsgByRace(1400926, Race.PC_ALL, 0);
-				SkillEngine.getInstance().getSkill(npc, 19520, 51, player).useNoAnimationSkill(); //Overclock.
+				GameEngineServices.skillEngine().getSkill(npc, 19520, 51, player).useNoAnimationSkill(); //Overclock.
 			break;
 			case 730398: //Flagon.
 				despawnNpc(npc);
@@ -508,10 +510,10 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = aturamSkyFortressTask.head(), end = aturamSkyFortressTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : aturamSkyFortressTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -524,7 +526,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        aturamSkyFortressTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -538,7 +540,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        aturamSkyFortressTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        aturamSkyFortressTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -560,7 +562,7 @@ public class AturamSkyFortressInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

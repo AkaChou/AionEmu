@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -40,6 +41,28 @@ class GameHousingRuntimeBridgeTest {
         assertFalse(source.contains("MaintenanceTask.getInstance()"));
         assertFalse(source.contains("TownService.getInstance()"));
         assertFalse(source.contains("ChallengeTaskService.getInstance()"));
+    }
+
+    @Test
+    void gameServerCodeUsesHousingBridgeInsteadOfDirectSingletons() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            List<Path> sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("services/HousingBidService.java")))
+                .filter(path -> !path.endsWith(Path.of("model/house/MaintenanceTask.java")))
+                .filter(path -> !path.endsWith(Path.of("services/TownService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameHousingServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameHousingFallbacks.java")))
+                .toList();
+
+            for (Path sourcePath : sources) {
+                String source = Files.readString(sourcePath);
+
+                assertFalse(source.contains("HousingBidService.getInstance()"), sourcePath.toString());
+                assertFalse(source.contains("MaintenanceTask.getInstance()"), sourcePath.toString());
+                assertFalse(source.contains("TownService.getInstance()"), sourcePath.toString());
+            }
+        }
     }
 
     private static <T> ObjectProvider<T> throwingProvider(ProviderUsedException exception) {

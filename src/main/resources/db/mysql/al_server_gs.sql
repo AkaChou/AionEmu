@@ -2859,6 +2859,37 @@ LOCK TABLES `veteran_rewards` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `web_reward`
+--
+
+DROP TABLE IF EXISTS `web_reward`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `web_reward` (
+  `unique` int(11) NOT NULL AUTO_INCREMENT,
+  `item_owner` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `item_count` bigint(20) NOT NULL DEFAULT '0',
+  `added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `received` timestamp NULL DEFAULT NULL,
+  `rewarded` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`unique`),
+  KEY `item_owner` (`item_owner`),
+  KEY `rewarded` (`rewarded`),
+  CONSTRAINT `web_reward_ibfk_1` FOREIGN KEY (`item_owner`) REFERENCES `players` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `web_reward`
+--
+
+LOCK TABLES `web_reward` WRITE;
+/*!40000 ALTER TABLE `web_reward` DISABLE KEYS */;
+/*!40000 ALTER TABLE `web_reward` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `weddings`
 --
 

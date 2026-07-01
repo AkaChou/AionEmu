@@ -16,13 +16,14 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
 import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.utils.AEVersions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
 import java.util.List;
@@ -86,11 +87,8 @@ public class Sys extends AdminCommand {
 			System.gc();
 			PacketSendUtility.sendMessage(player, "RAM Used (After): "
 				+ ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576));
-			System.runFinalization();
-			PacketSendUtility.sendMessage(player, "RAM Used (Final): "
-				+ ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1048576));
 			PacketSendUtility.sendMessage(player,
-				"Garbage Collection and Finalization finished in: " + (System.currentTimeMillis() - time) + " milliseconds...");
+				"Garbage Collection finished in: " + (System.currentTimeMillis() - time) + " milliseconds...");
 		}
 		else if (params[0].equals("shutdown")) {
 			try {
@@ -121,7 +119,7 @@ public class Sys extends AdminCommand {
 			}
 		}
 		else if (params[0].equals("threadpool")) {
-			List<String> stats = ThreadPoolManager.getInstance().getStats();
+			List<String> stats = GameThreadPoolServices.threadPoolManager().getStats();
 			for (String stat : stats) {
 				PacketSendUtility.sendMessage(player, stat.replaceAll("\t", ""));
 			}

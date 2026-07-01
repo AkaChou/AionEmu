@@ -1,14 +1,12 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.dao.PremiumDAO;
@@ -18,9 +16,9 @@ import com.aionemu.loginserver.dao.PremiumDAO;
  * 
  * @author Updated for MySQL 8
  */
+@Slf4j(topic = "PREMIUM_CTRL")
 public class MySQL8PremiumDAO extends PremiumDAO {
     
-    private final Logger log = LoggerFactory.getLogger("PREMIUM_CTRL");
 
     @Override
     public long getPoints(int accountId) {

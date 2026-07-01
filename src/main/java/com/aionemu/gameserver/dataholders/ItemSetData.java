@@ -18,16 +18,16 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.itemset.ItemPart;
 import com.aionemu.gameserver.model.templates.itemset.ItemSetTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author ATracer
@@ -39,15 +39,15 @@ public class ItemSetData {
 	@XmlElement(name = "itemset")
 	protected List<ItemSetTemplate> itemsetList;
 
-	private TIntObjectHashMap<ItemSetTemplate> sets;
+	private IntObjectHashMap<ItemSetTemplate> sets;
 
 	// key: item id, value: associated item set template
 	// This should provide faster search of the item template set by item id
-	private TIntObjectHashMap<ItemSetTemplate> setItems;
+	private IntObjectHashMap<ItemSetTemplate> setItems;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		sets = new TIntObjectHashMap<ItemSetTemplate>();
-		setItems = new TIntObjectHashMap<ItemSetTemplate>();
+		sets = new IntObjectHashMap<ItemSetTemplate>();
+		setItems = new IntObjectHashMap<ItemSetTemplate>();
 
 		for (ItemSetTemplate set : itemsetList) {
 			sets.put(set.getId(), set);

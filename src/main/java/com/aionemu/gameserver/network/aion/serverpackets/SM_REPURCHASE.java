@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -38,7 +40,7 @@ public class SM_REPURCHASE extends AionServerPacket {
 	public SM_REPURCHASE(Player player, int npcId) {
 		this.player = player;
 		this.targetObjectId = npcId;
-		items = RepurchaseService.getInstance().getRepurchaseItems(player.getObjectId());
+		items = GameFeatureServices.repurchaseService().getRepurchaseItems(player.getObjectId());
 	}
 
 	@Override

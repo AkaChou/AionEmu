@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.siege.Influence;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
@@ -24,8 +28,8 @@ import com.aionemu.gameserver.services.SiegeService;
 public class SM_INFLUENCE_RATIO extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
-		Influence inf = Influence.getInstance();
-		writeD(SiegeService.getInstance().getSecondsBeforeHourEnd());
+		Influence inf = GameRuntimeServices.influence();
+		writeD(GameFeatureServices.siegeService().getSecondsBeforeHourEnd());
 		writeF(inf.getGlobalElyosInfluence());
 		writeF(inf.getGlobalAsmodiansInfluence());
 		writeF(inf.getGlobalBalaursInfluence());

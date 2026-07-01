@@ -70,7 +70,7 @@ public class AbyssService {
 	}
 
 	public static final void rankedKillAnnounce(final Player victim) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player p) {
 				if (p != victim && victim.getWorldId() == p.getWorldId()) {
@@ -82,7 +82,7 @@ public class AbyssService {
 	}
 
 	public static final void rankerSkillAnnounce(final Player player, final int nameId) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player p) {
 				if (p != player && player.getWorldType() == p.getWorldType() && !p.isInInstance()) {

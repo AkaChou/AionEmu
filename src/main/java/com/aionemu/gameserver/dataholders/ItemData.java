@@ -22,13 +22,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -37,7 +37,7 @@ import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.restriction.ItemCleanupTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Luno
@@ -50,10 +50,10 @@ public class ItemData extends ReloadableData {
 	private List<ItemTemplate> its;
 
 	@XmlTransient
-	private TIntObjectHashMap<ItemTemplate> items;
+	private IntObjectHashMap<ItemTemplate> items;
 
 	@XmlTransient
-	private TIntObjectHashMap<ItemTemplate> petEggs = new TIntObjectHashMap<ItemTemplate>();
+	private IntObjectHashMap<ItemTemplate> petEggs = new IntObjectHashMap<ItemTemplate>();
 
 	@XmlTransient
 	Map<Integer, List<ItemTemplate>> manastones = new HashMap<Integer, List<ItemTemplate>>();
@@ -62,7 +62,7 @@ public class ItemData extends ReloadableData {
 	Map<Integer, ItemTemplate> allItems;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		items = new TIntObjectHashMap<ItemTemplate>();
+		items = new IntObjectHashMap<ItemTemplate>();
 		allItems = new HashMap<Integer, ItemTemplate>();
 		for (ItemTemplate it : its) {
 			items.put(it.getTemplateId(), it);
@@ -162,7 +162,7 @@ public class ItemData extends ReloadableData {
 	}
 
 	public String getItemDescr(String descr) {
-		for (ItemTemplate it : items.valueCollection()) {
+		for (ItemTemplate it : items.values()) {
 			if (descr.equalsIgnoreCase(it.getDescr())) {
 				return it.getDescr();
 			}
@@ -171,7 +171,7 @@ public class ItemData extends ReloadableData {
 	}
 
 	public int giveItemIdOf(String descr) {
-		for (ItemTemplate it : items.valueCollection()) {
+		for (ItemTemplate it : items.values()) {
 			if (descr.equalsIgnoreCase(it.getDescr())) {
 				return it.getTemplateId();
 			}
@@ -179,7 +179,7 @@ public class ItemData extends ReloadableData {
 		return 0;
 	}
 
-	public TIntObjectHashMap<ItemTemplate> getItemData() {
+	public IntObjectHashMap<ItemTemplate> getItemData() {
 		return items;
 	}
 }

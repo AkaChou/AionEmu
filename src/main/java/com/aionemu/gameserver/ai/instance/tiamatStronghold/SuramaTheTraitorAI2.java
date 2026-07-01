@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -43,39 +49,39 @@ public class SuramaTheTraitorAI2 extends GeneralNpcAI2
 		super.handleSpawned();
 		moveToRaksha();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 390845, getOwner().getObjectId(), 0, 2000);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390845, getOwner().getObjectId(), 0, 2000);
 	}
-	
+
 	private void moveToRaksha() {
 		setStateIfNot(AIState.WALKING);
 		getOwner().setState(1);
 		getMoveController().moveToPoint(651, 1319, 487);
 		PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getOwner().getObjectId()));
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 		    @Override
 		    public void run() {
-		  	    startDialog();
+			    startDialog();
 		    }
 	    }, 10000);
 	}
-	
+
 	private void startDialog() {
 		final Npc laksyaka = getPosition().getWorldMapInstance().getNpc(219356); //Brigade General Laksyaka.
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 390841, getOwner().getObjectId(), 0, 0);
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 390842, getOwner().getObjectId(), 0, 3000);
-		NpcShoutsService.getInstance().sendMsg(laksyaka, 390843, laksyaka.getObjectId(), 0, 6000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390841, getOwner().getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 390842, getOwner().getObjectId(), 0, 3000);
+		GameFeatureServices.npcShoutsService().sendMsg(laksyaka, 390843, laksyaka.getObjectId(), 0, 6000);
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 		    @Override
 		    public void run() {
-		  	    WorldMapInstance instance = getPosition().getWorldMapInstance();
-		  	    laksyaka.setTarget(getOwner());
-		  	    SkillEngine.getInstance().getSkill(laksyaka, 20952, 60, getOwner()).useNoAnimationSkill();
-		  	    laksyaka.setNpcType(NpcType.ATTACKABLE);
-		  	    for (Player player: instance.getPlayersInside()) {
+			    WorldMapInstance instance = getPosition().getWorldMapInstance();
+			    laksyaka.setTarget(getOwner());
+			    GameEngineServices.skillEngine().getSkill(laksyaka, 20952, 60, getOwner()).useNoAnimationSkill();
+			    laksyaka.setNpcType(NpcType.ATTACKABLE);
+			    for (Player player: instance.getPlayersInside()) {
 					if (MathUtil.isIn3dRange(player, laksyaka, 100)) {
 						player.clearKnownlist();
 						player.updateKnownlist();

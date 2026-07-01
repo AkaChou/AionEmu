@@ -14,6 +14,17 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -23,14 +34,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.QuestsData;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
@@ -81,23 +90,20 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.craft.CraftSkillUpdateService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.reward.BonusService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+@Slf4j
 
 public final class QuestService {
 
 	static QuestsData questsData = DataManager.QUEST_DATA;
-	private static final Logger log = LoggerFactory.getLogger(QuestService.class);
 	private static Multimap<Integer, QuestDrop> questDrop = ArrayListMultimap.create();
 
 	public static boolean finishQuest(QuestEnv env) {
@@ -132,7 +138,7 @@ public final class QuestService {
 			giveReward(env, rewards);
 			giveReward(env, extendedRewards);
 			if (template.getCategory() == QuestCategory.CHALLENGE_TASK) {
-				ChallengeTaskService.getInstance().onChallengeQuestFinish(player, id);
+				GameHousingServices.challengeTaskService().onChallengeQuestFinish(player, id);
 			}
 			return setFinishingState(env, template, reward);
 		}
@@ -296,9 +302,9 @@ public final class QuestService {
 		if (!template.getBonus().isEmpty()) {
 			QuestBonuses bonus = template.getBonus().get(0);
 			// Handler can add additional bonuses on repeat (for event quests no data)
-			HandlerResult result = QuestEngine.getInstance().onBonusApplyEvent(env, bonus.getType(), questItems);
+			HandlerResult result = GameEngineServices.questEngine().onBonusApplyEvent(env, bonus.getType(), questItems);
 			if (result != HandlerResult.FAILED) {
-				QuestItems additional = BonusService.getInstance().getQuestBonus(player, template);
+				QuestItems additional = GameFeatureServices.bonusService().getQuestBonus(player, template);
 				if (additional != null) {
 					questItems.add(additional);
 				}
@@ -326,12 +332,12 @@ public final class QuestService {
 		}
 		// Abyss Landing 4.9.1
 		if (rewards.getAbyssOp() != null) {
-			AbyssLandingService.getInstance().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
+			GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player, null, null, rewards.getAbyssOp(), LandingPointsEnum.QUEST);
 			if (player.getRace() == Race.ASMODIANS) {
-				AbyssLandingService.getInstance().updateHarbingerLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
+				GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
 			}
 			if (player.getRace() == Race.ELYOS) {
-				AbyssLandingService.getInstance().updateRedemptionLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
+				GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(rewards.getAbyssOp(), LandingPointsEnum.QUEST, true);
 			}
 		}
 		// Now player can win "Dp" if finish quest.
@@ -388,7 +394,7 @@ public final class QuestService {
 		PacketSendUtility.sendPacket(player, new SM_QUEST_ACTION(id, qs.getStatus(), qs.getQuestVars().getQuestVars()));
 		player.getController().updateZone();
 		player.getController().updateNearbyQuests();
-		QuestEngine.getInstance().onLvlUp(env);
+		GameEngineServices.questEngine().onLvlUp(env);
 		if (template.getNpcFactionId() != 0) {
 			player.getNpcFactions().completeQuest(template);
 		}
@@ -813,7 +819,7 @@ public final class QuestService {
 	}
 
 	private static void despawnQuestNpc(final Npc npc, int timeInMin) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
@@ -828,7 +834,7 @@ public final class QuestService {
 		if (drops.isEmpty()) {
 			return index;
 		}
-		DropNpc dropNpc = DropRegistrationService.getInstance().getDropRegistrationMap().get(npc.getObjectId());
+		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npc.getObjectId());
 		for (QuestDrop drop : drops) {
 			if (Rnd.get() * 100 > drop.getChance()) {
 				continue;
@@ -1038,10 +1044,10 @@ public final class QuestService {
 
 	public static boolean questTimerStart(QuestEnv env, int timeInSeconds) {
 		final Player player = env.getPlayer();
-		Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				QuestEngine.getInstance().onQuestTimerEnd(new QuestEnv(null, player, 0, 0));
+				GameEngineServices.questEngine().onQuestTimerEnd(new QuestEnv(null, player, 0, 0));
 			}
 		}, timeInSeconds * 1000);
 		player.getController().addTask(TaskId.QUEST_TIMER, task);
@@ -1051,10 +1057,10 @@ public final class QuestService {
 
 	public static boolean invisibleTimerStart(QuestEnv env, int timeInSeconds) {
 		final Player player = env.getPlayer();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				QuestEngine.getInstance().onInvisibleTimerEnd(new QuestEnv(null, player, 0, 0));
+				GameEngineServices.questEngine().onInvisibleTimerEnd(new QuestEnv(null, player, 0, 0));
 			}
 		}, timeInSeconds * 1000);
 		return true;

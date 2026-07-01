@@ -1,7 +1,9 @@
+
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -15,10 +17,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
+@Slf4j
 public class WebshopService {
-	private static final Logger log = LoggerFactory.getLogger(WebshopService.class);
 	private static volatile ObjectProvider<WebshopService> instanceProvider;
 
 	public WebshopService() {
@@ -38,13 +41,13 @@ public class WebshopService {
 	}
 
 	private void load() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player pl) {
-						FastList<RewardEntryItem> liste = DAOManager.getDAO(RewardServiceDAO.class)
+						List<RewardEntryItem> liste = DAOManager.getDAO(RewardServiceDAO.class)
 								.getAvailable(pl.getObjectId());
 						if (liste.isEmpty()) {
 							return;

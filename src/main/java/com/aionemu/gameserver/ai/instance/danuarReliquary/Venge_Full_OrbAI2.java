@@ -16,10 +16,11 @@
  */
 package com.aionemu.gameserver.ai.instance.danuarReliquary;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.concurrent.Future;
 
@@ -45,13 +46,13 @@ public class Venge_Full_OrbAI2 extends AggressiveNpcAI2
 		} if (skill == 0) {
 			return;
 		}
-		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.useSkill(Venge_Full_OrbAI2.this, skill);
 			}
 		},0, 2000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.deleteOwner(Venge_Full_OrbAI2.this);

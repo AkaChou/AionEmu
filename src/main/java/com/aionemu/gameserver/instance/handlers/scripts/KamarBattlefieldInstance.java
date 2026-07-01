@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -39,7 +45,6 @@ import com.aionemu.gameserver.model.instance.playerreward.KamarBattlefieldPlayer
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
@@ -49,11 +54,9 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +78,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     private boolean isInstanceDestroyed = false;
 	protected KamarBattlefieldReward kamarBattlefieldReward;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> kamarTask = FastList.newInstance();
+    private final List<Future<?>> kamarTask = new ArrayList<Future<?>>();
     
     protected KamarBattlefieldPlayerReward getPlayerReward(Player player) {
         kamarBattlefieldReward.regPlayerReward(player);
@@ -89,7 +92,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         kamarBattlefieldReward.setInstanceStartTime();
-		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!kamarBattlefieldReward.isRewarded()) {
@@ -102,7 +105,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				}
             }
         }, 90000));
-		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -117,7 +120,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				sp(801961, 1262.3992f, 1609.1414f, 585.90643f, (byte) 53, 0);
             }
         }, 110000));
-		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -129,7 +132,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				sp(701908, 1353.0874f, 1413.4635f, 598.66101f, (byte) 0, 68); //Reian Supply Items.
             }
         }, 220000));
-        kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
             	sendPacket(false);
@@ -151,7 +154,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				sp(802019, 1527.2150f, 1561.5153f, 611.90063f, (byte) 0, 224);
             }
         }, 300000));
-		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
             	sendPacket(false);
@@ -190,7 +193,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 				sp(701910, 1396.8196f, 1437.6923f, 599.3814f, (byte) 42, 0);
             }
         }, 600000));
-		kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
             	sendPacket(false);
@@ -294,7 +297,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
                 }
             }
         }, 900000));
-        kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!kamarBattlefieldReward.isRewarded()) {
@@ -450,19 +453,19 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
             AbyssPointsService.addGp(player, (int) gloryPoint);
             player.getCommonData().addExp(expPoint, RewardType.HUNTING);
             QuestEnv env = new QuestEnv(null, player, 0, 0);
-            QuestEngine.getInstance().onKamarReward(env);
+            GameEngineServices.questEngine().onKamarReward(env);
         }
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
 					for (Player player : instance.getPlayersInside()) {
 						onExitInstance(player);
 					}
-					AutoGroupService.getInstance().unRegisterInstance(instanceId);
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
 		}, 60000);
@@ -648,7 +651,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
                 //Commander Varga has died.
                 sendMsgByRace(1401846, Race.PC_ALL, 0);
 				RaceKilledVarga = mostPlayerDamage.getRace();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						if (!kamarBattlefieldReward.isRewarded()) {
@@ -749,17 +752,17 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
 			case 701909: //Kamar Tank Elyos.
 			case 701912: //Kamar Tank Elyos.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21403, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21403, 1, player).useNoAnimationSkill();
 			break;
 			case 701910: //Kamar Tank Asmodians.
 			case 701911: //Kamar Tank Asmodians.
 			    despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21404, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21404, 1, player).useNoAnimationSkill();
 			break;
 			case 701806: //Kamar Cannon.
             case 701902: //Kamar Cannon.
                 despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21409, 1, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21409, 1, player).useNoAnimationSkill();
             break;
         }
         updateScore(player, npc, point, false);
@@ -825,7 +828,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -839,7 +842,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -852,7 +855,7 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        kamarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        kamarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -868,10 +871,10 @@ public class KamarBattlefieldInstance extends GeneralInstanceHandler
     }
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = kamarTask.head(), end = kamarTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : kamarTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

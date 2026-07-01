@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -52,7 +58,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isStart.compareAndSet(false, true)) {
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 342051, getObjectId(), 0, 1000);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 342051, getObjectId(), 0, 1000);
 			getPosition().getWorldMapInstance().getDoors().get(535).setOpen(false);
 			startBasicSkillTask();
 		}
@@ -73,13 +79,13 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleDied() {
 		super.handleDied();
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 342055, getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 342055, getObjectId(), 0, 0);
 		cancelSkillTask();
 	}
 	
 	@Override
 	protected void handleBackHome() {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 342056, getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 342056, getObjectId(), 0, 0);
 		super.handleBackHome();
 		isStart.set(false);
 		cancelSkillTask();
@@ -89,10 +95,10 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 75 && stage < 1) {
 			stage = 1;
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 1400460);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400460);
 			launchSpecial();
 		} if (hpPercentage <= 50 && stage < 2) {
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 1400459);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400459);
 			stage = 2;
 		} if (hpPercentage <= 25 && stage < 3) {
 			stage = 3;
@@ -100,13 +106,13 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startBasicSkillTask() {
-		basicSkillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		basicSkillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead())
 					cancelSkillTask();
 				else
-					SkillEngine.getInstance().getSkill(getOwner(), 18912 + Rnd.get(2), 55, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18912 + Rnd.get(2), 55, getOwner()).useNoAnimationSkill();
 			}
 		},0 , 24000);
 	}
@@ -123,7 +129,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 		int delay = 10000;
 		switch (stage) {
 			case 1:
-				SkillEngine.getInstance().getSkill(getOwner(), 18959, 50, getTargetPlayer()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18959, 50, getTargetPlayer()).useNoAnimationSkill();
 				spawnSouls();
 				delay = 25000;
 			break;
@@ -169,7 +175,7 @@ public class IsbariyaTheResoluteAI2 extends AggressiveNpcAI2
 	}
 	
 	private void scheduleSpecial(int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				launchSpecial();

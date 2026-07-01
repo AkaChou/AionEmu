@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.poeta;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.questEngine.model.*;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /****/
@@ -154,7 +155,7 @@ public class _1002Request_Of_The_Elim extends QuestHandler
 								player.unsetState(CreatureState.ACTIVE);
 								player.setFlightTeleportId(1001);
 								PacketSendUtility.sendPacket(player, new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, 1001, 0));
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										changeQuestStep(env, 20, 14, false);

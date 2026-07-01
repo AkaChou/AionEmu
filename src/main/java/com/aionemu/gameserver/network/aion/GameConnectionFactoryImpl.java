@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
@@ -34,11 +32,11 @@ import com.aionemu.gameserver.network.sequrity.FloodManager.Result;
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class GameConnectionFactoryImpl implements NettyConnectionFactory {
 
 	private static final String GAME_CONTEXT = "game";
 
-	private final Logger log = LoggerFactory.getLogger(GameConnectionFactoryImpl.class);
 	private FloodManager floodAcceptor;
 
 	public GameConnectionFactoryImpl() {

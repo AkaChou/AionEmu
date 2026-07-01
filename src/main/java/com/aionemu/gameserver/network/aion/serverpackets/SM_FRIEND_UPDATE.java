@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Friend;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
@@ -28,11 +26,11 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * 
  * @author Ben
  */
+@Slf4j
 public class SM_FRIEND_UPDATE extends AionServerPacket {
 
 	private int friendObjId;
 
-	private static Logger log = LoggerFactory.getLogger(SM_FRIEND_UPDATE.class);
 
 	public SM_FRIEND_UPDATE(int friendObjId) {
 		this.friendObjId = friendObjId;

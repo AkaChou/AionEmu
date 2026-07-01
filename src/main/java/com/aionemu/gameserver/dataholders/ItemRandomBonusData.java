@@ -18,13 +18,13 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.items.RandomBonusResult;
@@ -32,7 +32,7 @@ import com.aionemu.gameserver.model.templates.item.bonuses.RandomBonus;
 import com.aionemu.gameserver.model.templates.item.bonuses.StatBonusType;
 import com.aionemu.gameserver.model.templates.stats.ModifiersTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /****/
 /**
@@ -47,10 +47,10 @@ public class ItemRandomBonusData {
 	protected List<RandomBonus> randomBonuses;
 
 	@XmlTransient
-	private TIntObjectHashMap<RandomBonus> inventoryRandomBonusData = new TIntObjectHashMap<RandomBonus>();
+	private IntObjectHashMap<RandomBonus> inventoryRandomBonusData = new IntObjectHashMap<RandomBonus>();
 
 	@XmlTransient
-	private TIntObjectHashMap<RandomBonus> polishRandomBonusData = new TIntObjectHashMap<RandomBonus>();
+	private IntObjectHashMap<RandomBonus> polishRandomBonusData = new IntObjectHashMap<RandomBonus>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (RandomBonus bonus : randomBonuses) {
@@ -60,7 +60,7 @@ public class ItemRandomBonusData {
 		randomBonuses = null;
 	}
 
-	private TIntObjectHashMap<RandomBonus> getBonusMap(StatBonusType bonusType) {
+	private IntObjectHashMap<RandomBonus> getBonusMap(StatBonusType bonusType) {
 		if (bonusType == StatBonusType.INVENTORY) {
 			return inventoryRandomBonusData;
 		}

@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgion;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -41,18 +47,15 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +81,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	private float loosingGroupMultiplier = 1;
 	private boolean isInstanceDestroyed = false;
 	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-	private final FastList<Future<?>> asyunatarTask = FastList.newInstance();
+	private final List<Future<?>> asyunatarTask = new ArrayList<Future<?>>();
 	
 	protected DredgionPlayerReward getPlayerReward(Player player) {
 		Integer object = player.getObjectId();
@@ -101,16 +104,16 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 243816: //Frigate Commander Ashunatal.
 				for (Player player: instance.getPlayersInside()) {
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
@@ -130,8 +133,8 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			case 243852: //Auditor Agwe.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
@@ -139,17 +142,17 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			case 243823: //Lieutenant Renuka.
 				for (Player player: instance.getPlayersInside()) {
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
 			case 243821: //Gatekeeper Menes.
 				for (Player player: instance.getPlayersInside()) {
-					dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
+					dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
@@ -174,7 +177,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
-		asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				openFirstDoors();
@@ -207,7 +210,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		* These teleportation devices allow players to teleport to different areas of the Dredgion with ease.
 		* Side Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun.
 		*/
-		asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//The teleportation device at the Emergency Exit is now operational.
@@ -222,13 +225,13 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 		* Time Elapsed: 15 Minutes
 		* Valor: 1,000 Points
 		*/
-		asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(243822, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Large Bagitara.
 			}
 		}, 900000));
-		asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!dredgionReward.isRewarded()) {
@@ -421,7 +424,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			case 243816: //Frigate Commander Ashunatal.
 				point = 1000;
 				AbyssPointsService.addGp(mostPlayerDamage, 540);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						if (!dredgionReward.isRewarded()) {
@@ -482,12 +485,12 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 			}
 			AbyssPointsService.addAp(player, (int) abyssPoint);
 			QuestEnv env = new QuestEnv(null, player, 0, 0);
-			QuestEngine.getInstance().onDredgionReward(env);
+			GameEngineServices.questEngine().onDredgionReward(env);
 		}
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -497,7 +500,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 						}
 						onExitInstance(player);
 					}
-					AutoGroupService.getInstance().unRegisterInstance(instanceId);
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
 		}, 120000);
@@ -638,7 +641,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -652,7 +655,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -665,7 +668,7 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        asyunatarTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        asyunatarTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -690,10 +693,10 @@ public class AshunatalDredgionInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = asyunatarTask.head(), end = asyunatarTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : asyunatarTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

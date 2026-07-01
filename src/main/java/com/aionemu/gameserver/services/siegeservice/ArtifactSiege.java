@@ -16,8 +16,12 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.SiegeDAO;
@@ -33,17 +37,15 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AbyssLandingService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.RvrService;
 import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+@Slf4j
 
 public class ArtifactSiege extends Siege<ArtifactLocation> {
-	private static final Logger log = LoggerFactory.getLogger(ArtifactSiege.class.getName());
 
 	public ArtifactSiege(ArtifactLocation siegeLocation) {
 		super(siegeLocation);
@@ -73,7 +75,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				player.getController().updateZone();
 				player.getController().updateNearbyQuests();
 				if (isBossKilled() && (SiegeRace.getByRace(player.getRace()) == getSiegeLocation().getRace())) {
-					QuestEngine.getInstance().onKill(new QuestEnv(getBoss(), player, 0, 0));
+					GameEngineServices.questEngine().onKill(new QuestEnv(getBoss(), player, 0, 0));
 				}
 			}
 		});
@@ -88,7 +90,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 		if (getSiegeLocation().getRace() == SiegeRace.BALAUR) {
 			final AionServerPacket lRacePacket = new SM_SYSTEM_MESSAGE(1320004,
 					getSiegeLocation().getNameAsDescriptionId(), getSiegeLocation().getRace().getDescriptionId());
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player object) {
 					PacketSendUtility.sendPacket(object, lRacePacket);
@@ -97,7 +99,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 		} else {
 			String wPlayerName = "";
 			final Race wRace = wRaceCounter.getSiegeRace() == SiegeRace.ELYOS ? Race.ELYOS : Race.ASMODIANS;
-			Legion wLegion = wLegionId != null ? LegionService.getInstance().getLegion(wLegionId) : null;
+			Legion wLegion = wLegionId != null ? GameCoreGameplayServices.legionService().getLegion(wLegionId) : null;
 			if (!wRaceCounter.getPlayerDamageCounter().isEmpty()) {
 				Integer wPlayerId = wRaceCounter.getPlayerDamageCounter().keySet().iterator().next();
 				wPlayerName = PlayerService.getPlayerName(wPlayerId);
@@ -107,7 +109,7 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 					winnerName, getSiegeLocation().getNameAsDescriptionId());
 			final AionServerPacket lRacePacket = new SM_SYSTEM_MESSAGE(1320004,
 					getSiegeLocation().getNameAsDescriptionId(), wRace.getRaceDescriptionId());
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendPacket(player, player.getRace().equals(wRace) ? wRacePacket : lRacePacket);
@@ -121,37 +123,37 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				return;
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-				AbyssLandingService.getInstance().updateRedemptionLanding(8000, LandingPointsEnum.ARTIFACT, false);
-				AbyssLandingService.getInstance().updateHarbingerLanding(8000, LandingPointsEnum.ARTIFACT, true);
+				GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(8000, LandingPointsEnum.ARTIFACT, false);
+				GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(8000, LandingPointsEnum.ARTIFACT, true);
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-				AbyssLandingService.getInstance().updateRedemptionLanding(8000, LandingPointsEnum.ARTIFACT, true);
-				AbyssLandingService.getInstance().updateHarbingerLanding(8000, LandingPointsEnum.ARTIFACT, false);
+				GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(8000, LandingPointsEnum.ARTIFACT, true);
+				GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(8000, LandingPointsEnum.ARTIFACT, false);
 			}
 		}
 		// Outpost 5.8
 		if (getSiegeLocation().getLocationId() >= 8011 && getSiegeLocation().getLocationId() <= 8017
 				|| getSiegeLocation().getLocationId() >= 9011 && getSiegeLocation().getLocationId() <= 9017) {
 			if (getSiegeLocation().getRace() == SiegeRace.BALAUR) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.NPC);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.NPC);
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.ASMODIANS);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.ASMODIANS);
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.ELYOS);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.ELYOS);
 			}
 		}
 
 		if (getSiegeLocation().getLocationId() >= 4012 && getSiegeLocation().getLocationId() <= 4052) {
 			if (getSiegeLocation().getRace() == SiegeRace.BALAUR) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.NPC);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.NPC);
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.ASMODIANS);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.ASMODIANS);
 			}
 			if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-				OutpostService.getInstance().capture(getSiegeLocation().getOutpostId(), Race.ELYOS);
+				GameLocationBootstrapServices.outpostService().capture(getSiegeLocation().getOutpostId(), Race.ELYOS);
 			}
 		}
 
@@ -161,8 +163,8 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 				switch (getSiegeLocation().getLocationId()) {
 				case 8021:
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						RvrService.getInstance().startRvr(7);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameLocationBootstrapServices.rvrService().startRvr(7);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// 마족이 아스테라의 모든 기지를 점령하자 아스테라 수비대 지원 병력이 추가로 파견되었습니다.
@@ -171,8 +173,8 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 							}
 						});
 					} else if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						RvrService.getInstance().stopRvr(7);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameLocationBootstrapServices.rvrService().stopRvr(7);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// 마족이 점령하고 있던 아스테라의 기지를 탈환하자 아스테라 수비대 지원 병력이 복귀했습니다.
@@ -184,8 +186,8 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 					break;
 				case 9021:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						RvrService.getInstance().startRvr(8);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameLocationBootstrapServices.rvrService().startRvr(8);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// 천족이 노스폴드의 모든 기지를 점령하자 노스폴드 수비대 지원 병력이 추가로 파견되었습니다.
@@ -194,8 +196,8 @@ public class ArtifactSiege extends Siege<ArtifactLocation> {
 							}
 						});
 					} else if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						RvrService.getInstance().stopRvr(8);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameLocationBootstrapServices.rvrService().stopRvr(8);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// 천족이 점령하고 있던 노스폴드의 기지를 탈환하자 노스폴드 수비대 지원 병력이 복귀했습니다.

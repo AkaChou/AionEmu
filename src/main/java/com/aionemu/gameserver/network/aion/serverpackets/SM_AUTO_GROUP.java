@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.autogroup.AutoGroupType;
 import com.aionemu.gameserver.network.aion.AionConnection;

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -38,7 +40,7 @@ public class VershakaStatueAI2 extends NpcAI2
 	@Override
 	public boolean onDialogSelect(Player player, int dialogId, int questId, int extendedRewardIndex) {
 		if (dialogId == 10000) {
-			SkillEngine.getInstance().applyEffectDirectly(300, player, player, 60000 * 1); //Transformation: Drakan.
+			GameEngineServices.skillEngine().applyEffectDirectly(300, player, player, 60000 * 1); //Transformation: Drakan.
 		}
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
 		return true;

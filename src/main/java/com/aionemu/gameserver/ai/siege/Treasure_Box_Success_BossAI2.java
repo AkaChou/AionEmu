@@ -1,5 +1,9 @@
 package com.aionemu.gameserver.ai.siege;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
@@ -8,20 +12,15 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @AIName("treasure_box_success_boss")
+@Slf4j
 public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 
-    private static final Logger log = LoggerFactory.getLogger(Treasure_Box_Success_BossAI2.class);
 
     private static final int TREASURE_CHEST_ID = 701481; // ID chest
     private static final int NUMBER_OF_CHESTS = 6; // Number of chests
@@ -44,7 +43,7 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
     protected void handleDied() {
         if (SPAWN_CHEST_IDS.contains(getNpcId())) {
             treasureChest();
-            ThreadPoolManager.getInstance().schedule(this::spawnTreasureChestTask, 10000);
+            GameThreadPoolServices.threadPoolManager().schedule(this::spawnTreasureChestTask, 10000);
         }
         super.handleDied();
     }
@@ -92,9 +91,9 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 	public void onDropRegistered(Npc npc) {
 		int npcId = TREASURE_CHEST_ID;
 
-		DropRegistrationService.getInstance().getCurrentDropMap().remove(npc.getObjectId());
+		GameWorldServices.dropRegistrationService().getCurrentDropMap().remove(npc.getObjectId());
 		Set<DropItem> dropItems = new HashSet<>();
-		DropRegistrationService.getInstance().getCurrentDropMap().put(npc.getObjectId(), dropItems);
+		GameWorldServices.dropRegistrationService().getCurrentDropMap().put(npc.getObjectId(), dropItems);
 
 		switch (npcId) {
 			case TREASURE_CHEST_ID:
@@ -127,7 +126,7 @@ public class Treasure_Box_Success_BossAI2 extends AggressiveNpcAI2 {
 
 				for (DropChance drop : DropList) {
 					if (Rnd.chance(drop.chance)) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, drop.itemId, drop.count));
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, drop.itemId, drop.count));
 					}
 				}
 				break;

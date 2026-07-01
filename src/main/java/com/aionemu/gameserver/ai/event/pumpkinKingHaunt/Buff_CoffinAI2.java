@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.event.pumpkinKingHaunt;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -43,7 +45,7 @@ public class Buff_CoffinAI2 extends GeneralNpcAI2
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
 			    case 835989: //Buff Coffin.
-					SkillEngine.getInstance().applyEffectDirectly(11385, player, player, 3600000 * 1);
+					GameEngineServices.skillEngine().applyEffectDirectly(11385, player, player, 3600000 * 1);
 				break;
 			}
 		}

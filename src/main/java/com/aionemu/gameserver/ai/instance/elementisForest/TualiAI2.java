@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -47,15 +53,15 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		if (isStart.compareAndSet(false, true)) {
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 1500454, getObjectId(), true, 0, 0);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500454, getObjectId(), true, 0, 0);
 			scheduleSkills();
 
-			task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						SkillEngine.getInstance().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), 19348, 60, getOwner()).useNoAnimationSkill();
 						int size = getPosition().getWorldMapInstance().getNpcs(282308).size();
 						for (int i = 0; i < 6; i++) {
 							if (size >= 12) {
@@ -64,7 +70,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 							size++;
 							rndSpawn(282307);
 						}
-						NpcShoutsService.getInstance().sendMsg(getOwner(), 1401378, 6000);
+						GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401378, 6000);
 					}
 				}
 
@@ -92,9 +98,9 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void buff() {
-		SkillEngine.getInstance().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500456, getObjectId(), true, 0, 0);
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1401041, 3500);
+		GameEngineServices.skillEngine().getSkill(getOwner(), 19511, 60, getOwner()).useNoAnimationSkill();
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500456, getObjectId(), true, 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401041, 3500);
 	}
 
 	private void rndSpawn(int npcId) {
@@ -110,7 +116,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 	public void handleDied() {
 		cancelTask();
 		super.handleDied();
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500457, getObjectId(), true, 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500457, getObjectId(), true, 0, 0);
 	}
 
 	private void cancelTask() {
@@ -155,7 +161,7 @@ public class TualiAI2 extends AggressiveNpcAI2 {
 		if (isAlreadyDead() || !isStart.get()) {
 			return;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

@@ -3,6 +3,7 @@ package com.aionemu.chatserver.network.netty;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.common.netty.PacketWriter;
@@ -18,8 +19,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.InetSocketAddress;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.junit.jupiter.api.Test;
 
 class Netty4ChatClientServerAdapterTest {
@@ -45,7 +46,7 @@ class Netty4ChatClientServerAdapterTest {
         AtomicReference<ByteBuf> written = new AtomicReference<>();
         ClientChannelHandler handler = new ClientChannelHandler(new ClientPacketHandler());
 
-        handler.nettyChannelActive(nettyChannelCapturingWrites(written));
+        handler.nettyChannelActive(nettyChannelCapturingWrites(written, new AtomicBoolean()));
         handler.sendPacket(new TestServerPacket());
 
         ByteBuf output = written.get();
@@ -63,21 +64,14 @@ class Netty4ChatClientServerAdapterTest {
     }
 
     @Test
-    void outboundPacketWriterIsWrittenAsLegacyChannelBuffer() {
-        AtomicReference<ChannelBuffer> written = new AtomicReference<>();
-        LegacyClientChannelHandler handler = new LegacyClientChannelHandler();
+    void closeClosesActiveNettyChannel() {
+        AtomicBoolean closed = new AtomicBoolean();
+        ClientChannelHandler handler = new ClientChannelHandler(new ClientPacketHandler());
 
-        handler.setLegacyChannel(legacyChannelCapturingWrites(written));
-        handler.sendPacket(new TestServerPacket());
+        handler.nettyChannelActive(nettyChannelCapturingWrites(new AtomicReference<>(), closed));
+        handler.close();
 
-        ChannelBuffer output = written.get();
-        assertNotNull(output);
-        byte[] actual = new byte[output.readableBytes()];
-        output.getBytes(0, actual);
-        assertArrayEquals(
-            new byte[] {0x09, 0x00, 0x11, 0x33, 0x22, 0x77, 0x66, 0x55, 0x44},
-            actual
-        );
+        assertTrue(closed.get());
     }
 
     private static ChannelHandler newNetty4ClientChannelHandler(ClientChannelHandler delegate) throws Exception {
@@ -87,7 +81,7 @@ class Netty4ChatClientServerAdapterTest {
         return (ChannelHandler) constructor.newInstance(delegate);
     }
 
-    private static Channel nettyChannelCapturingWrites(AtomicReference<ByteBuf> written) {
+    private static Channel nettyChannelCapturingWrites(AtomicReference<ByteBuf> written, AtomicBoolean closed) {
         InvocationHandler handler = (proxy, method, args) -> {
             if (method.getDeclaringClass() == Object.class) {
                 return switch (method.getName()) {
@@ -103,30 +97,14 @@ class Netty4ChatClientServerAdapterTest {
                     written.set((ByteBuf) args[0]);
                     yield null;
                 }
+                case "close" -> {
+                    closed.set(true);
+                    yield null;
+                }
                 default -> defaultValue(method.getReturnType());
             };
         };
         return (Channel) Proxy.newProxyInstance(Channel.class.getClassLoader(), new Class<?>[] {Channel.class}, handler);
-    }
-
-    private static org.jboss.netty.channel.Channel legacyChannelCapturingWrites(AtomicReference<ChannelBuffer> written) {
-        InvocationHandler handler = (proxy, method, args) -> {
-            if (method.getDeclaringClass() == Object.class) {
-                return switch (method.getName()) {
-                    case "equals" -> proxy == args[0];
-                    case "hashCode" -> System.identityHashCode(proxy);
-                    case "toString" -> "capturing-legacy-channel";
-                    default -> null;
-                };
-            }
-            if ("write".equals(method.getName())) {
-                written.set((ChannelBuffer) args[0]);
-                return null;
-            }
-            return defaultValue(method.getReturnType());
-        };
-        Class<?> channelType = org.jboss.netty.channel.Channel.class;
-        return (org.jboss.netty.channel.Channel) Proxy.newProxyInstance(channelType.getClassLoader(), new Class<?>[] {channelType}, handler);
     }
 
     private static Object defaultValue(Class<?> returnType) {
@@ -158,17 +136,6 @@ class Netty4ChatClientServerAdapterTest {
             return '\0';
         }
         return null;
-    }
-
-    private static final class LegacyClientChannelHandler extends ClientChannelHandler {
-
-        private LegacyClientChannelHandler() {
-            super(new ClientPacketHandler());
-        }
-
-        private void setLegacyChannel(org.jboss.netty.channel.Channel channel) {
-            this.channel = channel;
-        }
     }
 
     private static final class CapturingClientChannelHandler extends ClientChannelHandler {

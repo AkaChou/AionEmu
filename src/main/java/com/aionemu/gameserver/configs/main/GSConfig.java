@@ -37,6 +37,8 @@ public class GSConfig {
 	public static boolean SERVER_MOTD_DISPLAYREV;
 	@Property(key = "gameserver.startup.progress.enable", defaultValue = "true")
 	public static boolean STARTUP_PROGRESS_ENABLE = true;
+	@Property(key = "gameserver.static_data.progress.entry_counts.enable", defaultValue = "false")
+	public static boolean STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
 	public static boolean STATIC_DATA_SUMMARY_LOG;
 	@Property(key = "gameserver.character.creation.mode", defaultValue = "0")
 	public static int CHARACTER_CREATION_MODE;

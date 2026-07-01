@@ -1,14 +1,12 @@
 package com.aionemu.commons.scripting.classlistener;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.scripting.metadata.OnClassLoad;
 import com.aionemu.commons.scripting.metadata.OnClassUnload;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 类加载/卸载注解处理监听器
  * Class load/unload annotation processing listener
@@ -21,13 +19,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author ATracer
  */
+@Slf4j
 public class OnClassLoadUnloadListener implements ClassListener {
 
-    /**
-     * 日志记录器实例
-     * Logger instance
-     */
-    private static final Logger log = LoggerFactory.getLogger(OnClassLoadUnloadListener.class);
 
     /**
      * 处理类加载后的注解方法调用
@@ -65,7 +59,7 @@ public class OnClassLoadUnloadListener implements ClassListener {
     protected final void doMethodInvoke(Method[] methods, Class<? extends Annotation> annotationClass) {
         for (Method m : methods) {
             if (Modifier.isStatic(m.getModifiers())) {
-                boolean accessible = m.isAccessible();
+                boolean accessible = m.canAccess(null);
                 m.setAccessible(true);
                 
                 if (m.getAnnotation(annotationClass) != null) {

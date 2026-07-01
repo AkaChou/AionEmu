@@ -17,9 +17,7 @@
 
 package com.aionemu.loginserver.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.GameServerInfo;
 import com.aionemu.loginserver.GameServerTable;
@@ -29,9 +27,9 @@ import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PREMIUM_RESPO
 /**
  * @author KID
  */
+@Slf4j(topic = "PREMIUM_CTRL")
 public class PremiumController {
 
-    private Logger log = LoggerFactory.getLogger("PREMIUM_CTRL");
 
     @Deprecated(since = "boot-migration")
     public static PremiumController getController() {

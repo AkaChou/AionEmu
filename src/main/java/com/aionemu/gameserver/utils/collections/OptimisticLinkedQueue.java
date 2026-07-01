@@ -22,14 +22,12 @@ import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
-import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Optimistic approach to lock-free FIFO queue; E. Ladan-Mozes and N. Shavit
  * algorithm, less CAS failures when enqueueing, if compared with Michael and
  * Scott Nonblocking Queue, in ConcurrentLinkedQueue
  */
-@ThreadSafe
 public class OptimisticLinkedQueue<E> extends AbstractQueue<E> implements Queue<E>, java.io.Serializable {
 
 	private static final long serialVersionUID = -3445502502831420722L;

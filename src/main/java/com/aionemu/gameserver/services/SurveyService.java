@@ -16,10 +16,15 @@
  */
 package com.aionemu.gameserver.services;
 
-import java.util.List;
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -35,20 +40,17 @@ import com.aionemu.gameserver.model.templates.survey.SurveyItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author KID
  */
+@Slf4j
 public class SurveyService {
 
-	private static final Logger log = LoggerFactory.getLogger(SurveyService.class);
 	private static volatile ObjectProvider<SurveyService> instanceProvider;
-	private FastMap<Integer, SurveyItem> activeItems;
+	private Map<Integer, SurveyItem> activeItems;
 	private final String htmlTemplate;
 
 	public boolean isActive(Player player, int survId) {
@@ -60,9 +62,9 @@ public class SurveyService {
 	}
 
 	public SurveyService() {
-		activeItems = FastMap.newInstance();
-		this.htmlTemplate = HTMLCache.getInstance().getHTML("surveyTemplate.xhtml");
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new TaskUpdate(), 2000,
+		activeItems = new HashMap<Integer, SurveyItem>();
+		this.htmlTemplate = GameStaticDataServices.htmlCache().getHTML("surveyTemplate.xhtml");
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
 				SecurityConfig.SURVEY_DELAY * 60000);
 	}
 
@@ -112,7 +114,7 @@ public class SurveyService {
 		if (newList.size() == 0) {
 			return;
 		}
-		List<Integer> players = FastList.newInstance();
+		List<Integer> players = new ArrayList<Integer>();
 		int cnt = 0;
 		for (SurveyItem item : newList) {
 			activeItems.put(item.uniqueId, item);
@@ -123,7 +125,7 @@ public class SurveyService {
 		}
 		log.info("[SurveyController] found new " + cnt + " items for " + players.size() + " players.");
 		for (int ownerId : players) {
-			Player player = World.getInstance().findPlayer(ownerId);
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(ownerId);
 			if (player != null) {
 				showAvailable(player);
 			}

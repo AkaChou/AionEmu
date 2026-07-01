@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.MembershipConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -44,9 +42,9 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 /**
  * @author Wnkrz (Encom)
  */
+@Slf4j
 
 public class StigmaService {
-	private static final Logger log = LoggerFactory.getLogger(StigmaService.class);
 
 	private static int getPriceByQuality(Item item) {
 		int price = 0;

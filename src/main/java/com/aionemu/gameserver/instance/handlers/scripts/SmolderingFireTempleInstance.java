@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -32,17 +36,17 @@ import com.aionemu.gameserver.model.instance.instancereward.SmolderingReward;
 import com.aionemu.gameserver.model.instance.playerreward.SmolderingPlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 
 /****/
@@ -64,7 +68,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	private int prepareTimerSeconds = 60000; //...1Min
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 600000; //...10Min
-	private final FastList<Future<?>> smolderingTask = FastList.newInstance();
+	private final List<Future<?>> smolderingTask = new ArrayList<Future<?>>();
 	
 	protected SmolderingPlayerReward getPlayerReward(Integer object) {
 		return (SmolderingPlayerReward) instanceReward.getPlayerReward(object);
@@ -85,19 +89,19 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 244435: //Potion Chest.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002085, 2)); //Hero GM’s Secret Remedy Of Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002086, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002087, 2)); //Hero GM’s Secret Remedy Of DP Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002088, 2)); //Hero GM’s Quality Secret Remedy Of DP Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002089, 2)); //Hero GM’s Secret Remedy Of Recovery.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002090, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002085, 2)); //Hero GM’s Secret Remedy Of Recovery.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002086, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002087, 2)); //Hero GM’s Secret Remedy Of DP Recovery.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002088, 2)); //Hero GM’s Quality Secret Remedy Of DP Recovery.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002089, 2)); //Hero GM’s Secret Remedy Of Recovery.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002090, 2)); //Hero GM’s Quality Secret Remedy Of Recovery.
 					}
 				}
 			break;
@@ -107,16 +111,16 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 			case 834061: //Smoldering Fire Temple Quality Treasure Chest.
 				switch (Rnd.get(1, 4)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054631, 1)); //Middle Grade Reward Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054631, 1)); //Middle Grade Reward Bundle.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054632, 1)); //Low Grade Reward Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054632, 1)); //Low Grade Reward Bundle.
 				    break;
 					case 3:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054629, 1)); //Highest Grade Reward Bundle.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054629, 1)); //Highest Grade Reward Bundle.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054630, 1)); //High Grade Reward Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054630, 1)); //High Grade Reward Bundle.
 					break;
 				}
 			break;
@@ -202,7 +206,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 				points = 500000;
 				despawnNpc(npc);
 				spawn(834068, 416.1324f, 97.165924f, 117.19401f, (byte) 50); //Old Fire Temple Fortune Server.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -229,33 +233,33 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 				if (player.getCommonData().getRace() == Race.ELYOS) {
 				    effectController.removeEffect(21376);
 				    effectController.removeEffect(21377);
-				    SkillEngine.getInstance().getSkill(npc, 21375, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21375, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 					effectController.removeEffect(21379);
 				    effectController.removeEffect(21380);
-				    SkillEngine.getInstance().getSkill(npc, 21378, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21378, 1, player).useNoAnimationSkill();
 				}
 			break;
 			case 834056: //GM Shine.
 			    if (player.getCommonData().getRace() == Race.ELYOS) {
 				    effectController.removeEffect(21375);
 				    effectController.removeEffect(21377);
-				    SkillEngine.getInstance().getSkill(npc, 21376, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21376, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 				    effectController.removeEffect(21378);
 				    effectController.removeEffect(21380);
-				    SkillEngine.getInstance().getSkill(npc, 21379, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21379, 1, player).useNoAnimationSkill();
 				}
 			break;
 			case 834057: //GM Iris.
 			    if (player.getCommonData().getRace() == Race.ELYOS) {
 				    effectController.removeEffect(21375);
 				    effectController.removeEffect(21376);
-				    SkillEngine.getInstance().getSkill(npc, 21377, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21377, 1, player).useNoAnimationSkill();
 				} else if (player.getCommonData().getRace() == Race.ASMODIANS) {
 				    effectController.removeEffect(21378);
 				    effectController.removeEffect(21379);
-				    SkillEngine.getInstance().getSkill(npc, 21380, 1, player).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 21380, 1, player).useNoAnimationSkill();
 				}
 			break;
 		}
@@ -320,7 +324,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		smolderingTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		smolderingTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -362,7 +366,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -442,10 +446,10 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = smolderingTask.head(), end = smolderingTask.tail(); (n = n.getNext()) != end;) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : smolderingTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -478,7 +482,7 @@ public class SmolderingFireTempleInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

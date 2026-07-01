@@ -14,12 +14,11 @@
  */
 package com.aionemu.gameserver.world.geo.nav;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
@@ -30,6 +29,7 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.NavGeometry;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 /**
@@ -38,25 +38,25 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
  * 
  * @author Yon (Aion Reconstruction Project)
  */
+@Slf4j
 public final class NavService {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(NavService.class);
 	private static volatile ObjectProvider<NavService> instanceProvider;
-	private final NavData navData = NavData.getInstance();
+	private final NavData navData = GameWorldServices.navData();
 	private final ConcurrentHashMap<GroundCacheKey, GroundCacheEntry> groundCache = new ConcurrentHashMap<>();
 	
 	public NavService() {};
 	
 	public void initializeNav() {
 		if (GeoDataConfig.GEO_NAV_ENABLE) {
-			LOG.info("Navigational Data is Enabled.");
+			log.info("Navigational Data is Enabled.");
 			if (!navData.isLoaded()) {
 				navData.loadNavMaps();
 			} else {
-				LOG.warn("Attempted Double Loading of Navigational Data.");
+				log.warn("Attempted Double Loading of Navigational Data.");
 			}
 		} else {
-			LOG.info("Navigational Data is Disabled.");
+			log.info("Navigational Data is Disabled.");
 		}
 	}
 	
@@ -432,7 +432,7 @@ public final class NavService {
 		try {
 			return (NavGeometry) ret;
 		} catch (ClassCastException e) {
-			LOG.error(e.toString());
+			log.error(e.toString());
 		}
 		return null;
 	}
@@ -461,7 +461,7 @@ public final class NavService {
 		try {
 			return (NavGeometry) ret;
 		} catch (ClassCastException e) {
-			LOG.error(e.toString());
+			log.error(e.toString());
 		}
 		return null;
 	}

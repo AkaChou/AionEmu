@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.svsservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.svs.SvsLocation;
@@ -62,11 +64,11 @@ public abstract class Panesterra<PL extends SvsLocation> {
 	}
 
 	protected void spawn(SvsStateType type) {
-		SvsService.getInstance().spawn(getSvsLocation(), type);
+		GameLocationBootstrapServices.svsService().spawn(getSvsLocation(), type);
 	}
 
 	protected void despawn() {
-		SvsService.getInstance().despawn(getSvsLocation());
+		GameLocationBootstrapServices.svsService().despawn(getSvsLocation());
 	}
 
 	public boolean isFinished() {

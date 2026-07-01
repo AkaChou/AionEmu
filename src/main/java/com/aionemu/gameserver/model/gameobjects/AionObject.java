@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
-import javax.annotation.Nullable;
 
 import com.google.common.base.Function;
 
@@ -32,7 +31,7 @@ public abstract class AionObject {
 
 	public static Function<AionObject, Integer> OBJECT_TO_ID_TRANSFORMER = new Function<AionObject, Integer>() {
 		@Override
-		public Integer apply(@Nullable AionObject input) {
+		public Integer apply(AionObject input) {
 			return input != null ? input.getObjectId() : null;
 		}
 	};

@@ -20,8 +20,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is a simple map implementation for cache usage.<br>
@@ -32,9 +31,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Luno
  */
+@Slf4j
 class SoftCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V> {
-
-	private static final Logger log = LoggerFactory.getLogger(SoftCacheMap.class);
 
 	/**
 	 * This class is a {@link SoftReference} with additional responsibility of

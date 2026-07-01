@@ -16,9 +16,10 @@
  */
 package com.aionemu.gameserver.world.zone;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -32,7 +33,7 @@ public class ZoneLevelService {
 	 * Check water level (start drowning) and map death level (die)
 	 */
 	public static void checkZoneLevels(Player player) {
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		float z = player.getZ();
 
 		if (player.getLifeStats().isAlreadyDead()) {
@@ -83,7 +84,7 @@ public class ZoneLevelService {
 	 */
 	private static void scheduleDrowningTask(final Player player) {
 		player.getController().addTask(TaskId.DROWN,
-				ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 					@Override
 					public void run() {

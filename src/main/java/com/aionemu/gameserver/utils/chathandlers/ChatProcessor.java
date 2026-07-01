@@ -16,12 +16,12 @@
  */
 package com.aionemu.gameserver.utils.chathandlers;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
@@ -35,19 +35,17 @@ import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.GameEngine;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
-import javolution.util.FastMap;
-
 /**
  * @author KID
  * @Modified Rolandas
  */
+@Slf4j(topic = "ADMINAUDIT_LOG")
 public class ChatProcessor implements GameEngine {
 
 	private static volatile ObjectProvider<ChatProcessor> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger("ADMINAUDIT_LOG");
 	private static ChatProcessor instance = new ChatProcessor();
-	private Map<String, ChatCommand> commands = new FastMap<String, ChatCommand>();
-	private Map<String, Byte> accessLevel = new FastMap<String, Byte>();
+	private Map<String, ChatCommand> commands = new HashMap<String, ChatCommand>();
+	private Map<String, Byte> accessLevel = new HashMap<String, Byte>();
 
 	public static ChatProcessor getInstance() {
 		ObjectProvider<ChatProcessor> provider = instanceProvider;
@@ -108,7 +106,7 @@ public class ChatProcessor implements GameEngine {
 	}
 
 	public void reload() {
-		Map<String, ChatCommand> backupCommands = new FastMap<String, ChatCommand>(commands);
+		Map<String, ChatCommand> backupCommands = new HashMap<String, ChatCommand>(commands);
 		commands.clear();
 
 		try {

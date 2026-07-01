@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.dredgionDefense;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -25,7 +27,6 @@ import com.aionemu.gameserver.model.templates.windstreams.Location2D;
 import com.aionemu.gameserver.model.templates.windstreams.WindstreamTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class WindStream_05_DaAI2 extends NpcAI2
     }
 	
 	private void startWindStream(final Npc npc) {
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 Npc npc2 = (Npc) spawn(302300000, 220970, 1245.9900f, 1319.3500f, 204.75000f, (byte) 0, 0, 1);

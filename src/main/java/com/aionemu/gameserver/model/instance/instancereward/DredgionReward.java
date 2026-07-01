@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.model.instance.instancereward;
 
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.Race;
@@ -25,7 +25,8 @@ import com.aionemu.gameserver.model.geometry.Point3D;
 import com.aionemu.gameserver.model.instance.playerreward.DredgionPlayerReward;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 /****/
 /**
@@ -40,7 +41,7 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 	private MutableInt asmodiansPoints = new MutableInt(0);
 	private MutableInt elyosPoins = new MutableInt(0);
 	private Race race;
-	private FastList<DredgionRooms> dredgionRooms = new FastList<DredgionRooms>();
+	private List<DredgionRooms> dredgionRooms = new ArrayList<DredgionRooms>();
 	private Point3D asmodiansStartPosition;
 	private Point3D elyosStartPosition;
 
@@ -98,7 +99,7 @@ public class DredgionReward extends InstanceReward<DredgionPlayerReward> {
 		}
 	}
 
-	public FastList<DredgionRooms> getDredgionRooms() {
+	public List<DredgionRooms> getDredgionRooms() {
 		return dredgionRooms;
 	}
 

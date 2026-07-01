@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.services.item;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -27,9 +27,9 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 /**
  * @author ATracer
  */
+@Slf4j
 public class ItemFactory {
 
-	private static final Logger log = LoggerFactory.getLogger(ItemFactory.class);
 
 	public static final Item newItem(int itemId) {
 		ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(itemId);
@@ -37,7 +37,7 @@ public class ItemFactory {
 			log.error("Item was not populated correctly. Item template is missing for item id: " + itemId);
 			return null;
 		}
-		return new Item(IDFactory.getInstance().nextId(), itemTemplate);
+		return new Item(GameWorldBootstrapServices.idFactory().nextId(), itemTemplate);
 	}
 
 	public static Item newItem(int itemId, long count) {

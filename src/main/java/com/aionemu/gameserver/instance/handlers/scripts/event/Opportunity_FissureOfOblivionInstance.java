@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.event;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -35,13 +39,12 @@ import com.aionemu.gameserver.model.instance.instancereward.FissureOfOblivionRew
 import com.aionemu.gameserver.model.instance.playerreward.FissureOfOblivionPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -66,7 +69,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     
     private int prepareTimerSeconds = 60000;
     private int instanceTimerSeconds = 1800000;
-    private final FastList<Future<?>> oblivionTask = FastList.newInstance();
+    private final List<Future<?>> oblivionTask = new ArrayList<Future<?>>();
 
     private boolean spawned = false;
 
@@ -533,7 +536,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     
     @Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
         int npcId = npc.getNpcId();
         
         boolean isBonusMonster = false;
@@ -548,11 +551,11 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
         
         if (isBonusMonster) {
             switch (Rnd.get(1, 5)) {
-                case 1: dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188055607, 1)); break;
-                case 2: dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188055608, 1)); break;
-                case 3: dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188055609, 1)); break;
-                case 4: dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188055610, 1)); break;
-                case 5: dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188055611, 1)); break;
+                case 1: dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188055607, 1)); break;
+                case 2: dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188055608, 1)); break;
+                case 3: dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188055609, 1)); break;
+                case 4: dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188055610, 1)); break;
+                case 5: dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188055611, 1)); break;
             }
         }
     }
@@ -582,7 +585,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 			 killCounters[idx]++;
 
 			 if (killCounters[idx] == 4) {
-					 ThreadPoolManager.getInstance().schedule(new Runnable() {
+					 GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							 @Override
 							 public void run() {
 									 int warpType = Rnd.get(1, 3);
@@ -602,7 +605,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 							 }
 					 }, 5000);
 			 } else if (killCounters[idx] == 8) {
-					 ThreadPoolManager.getInstance().schedule(new Runnable() {
+					 GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							 @Override
 							 public void run() {
 									 killNpc(getNpcs(245403));
@@ -611,7 +614,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 							 }
 					 }, 5000);
 			 } else if (killCounters[idx] == 12) {
-					 ThreadPoolManager.getInstance().schedule(new Runnable() {
+					 GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							 @Override
 							 public void run() {
 									 killNpc(getNpcs(245404));
@@ -719,7 +722,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
 			 points = 1500;
 			 despawnNpc(npc);
 			 deleteNpc(245405);
-			 ThreadPoolManager.getInstance().schedule(new Runnable() {
+			 GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					 @Override
 					 public void run() {
 							 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -766,7 +769,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     protected void startInstanceTask() {
-        oblivionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -805,12 +808,12 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
            spawnByPlayerLevel(player);
            spawned = true;
         }
-        SkillEngine.getInstance().applyEffectDirectly(4831, player, player, 1800000 * 1);
+        GameEngineServices.skillEngine().applyEffectDirectly(4831, player, player, 1800000 * 1);
     }
     
     private void startPrepareTimer() {
         if (timerPrepare == null) {
-            timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+            timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 @Override
                 public void run() {
                     startMainInstanceTimer();
@@ -988,10 +991,10 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = oblivionTask.head(), end = oblivionTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : oblivionTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
     
@@ -1054,7 +1057,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        oblivionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1068,7 +1071,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        oblivionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        oblivionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1090,7 +1093,7 @@ public class Opportunity_FissureOfOblivionInstance extends GeneralInstanceHandle
     }
     
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

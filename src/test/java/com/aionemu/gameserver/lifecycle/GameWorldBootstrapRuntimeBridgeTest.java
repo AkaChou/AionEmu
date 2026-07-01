@@ -11,6 +11,7 @@ import com.aionemu.gameserver.world.zone.ZoneService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -52,6 +53,67 @@ class GameWorldBootstrapRuntimeBridgeTest {
             assertSame(idFactory, IDFactory.getInstance());
         } finally {
             IDFactory.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void worldBootstrapServicesIdFactoryAccessorUsesSpringProviderBeforeLegacyFallback() {
+        IDFactory idFactory = instance(IDFactory.class);
+        ZoneService zoneService = instance(ZoneService.class);
+        HotspotTeleportService hotspotTeleportService = instance(HotspotTeleportService.class);
+        World world = instance(World.class);
+        GameWorldBootstrapServices worldBootstrapServices = new GameWorldBootstrapServices(
+            provider(IDFactory.class, idFactory),
+            provider(ZoneService.class, zoneService),
+            provider(HotspotTeleportService.class, hotspotTeleportService),
+            provider(RoadService.class, instance(RoadService.class)),
+            provider(World.class, world)
+        );
+
+        try {
+            assertSame(idFactory, GameWorldBootstrapServices.idFactory());
+            assertSame(zoneService, GameWorldBootstrapServices.zoneService());
+            assertSame(hotspotTeleportService, GameWorldBootstrapServices.hotspotTeleportService());
+            assertSame(world, GameWorldBootstrapServices.world());
+        } finally {
+            worldBootstrapServices.destroy();
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesWorldBootstrapIdFactoryBridgeInsteadOfDirectSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("world/zone/ZoneService.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldBootstrapFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldBootstrapServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("IDFactory.getInstance()"), source.toString());
+            assertFalse(content.contains("ZoneService.getInstance()"), source.toString());
+            assertFalse(content.contains("HotspotTeleportService.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesWorldBootstrapBridgeInsteadOfDirectWorldSingleton() throws IOException {
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            for (Path source : stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("world/World.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldBootstrapFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameWorldBootstrapServices.java")))
+                .toList()) {
+                String content = Files.readString(source);
+
+                assertFalse(content.contains("World.getInstance()"), source.toString());
+            }
         }
     }
 

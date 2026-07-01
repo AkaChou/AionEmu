@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.worlds.tiamaranta_eye;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -41,16 +47,16 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 	private boolean canThink = true;
 	private Future<?> sunayakaRageTask;
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
-	
+
 	private void simmeringRage() {
-   		SkillEngine.getInstance().getSkill(getOwner(), 20651, 1, getOwner()).useNoAnimationSkill(); //Simmering Rage.
-   		getOwner().getEffectController().removeEffect(8763);
- 	}
-	
- 	private void rageOfTheDragonLords() {
-   		SkillEngine.getInstance().getSkill(getOwner(), 8763, 1, getOwner()).useNoAnimationSkill(); //Rage Of The Dragon Lords
- 	}
-	
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20651, 1, getOwner()).useNoAnimationSkill(); //Simmering Rage.
+		getOwner().getEffectController().removeEffect(8763);
+	}
+
+	private void rageOfTheDragonLords() {
+		GameEngineServices.skillEngine().getSkill(getOwner(), 8763, 1, getOwner()).useNoAnimationSkill(); //Rage Of The Dragon Lords
+	}
+
 	@Override
 	protected void handleAttack(Creature creature) {
 		super.handleAttack(creature);
@@ -62,7 +68,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 				case 249144: //Governor Sunayaka.
 				case 249145: //Berserker Sunayaka.
 					//Berserker Sunayaka goes berserk 15 minutes after the battle starts.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1401459, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401459, 0);
 					getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
@@ -71,11 +77,11 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 							}
 						}
 					});
-					sunayakaRageTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					sunayakaRageTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							//Berserker Sunayaka has gone berserk.
-							NpcShoutsService.getInstance().sendMsg(getOwner(), 1401460, 0);
+							GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401460, 0);
 							getPosition().getWorldMapInstance().doOnAllPlayers(new Visitor<Player>() {
 								@Override
 								public void visit(Player player) {
@@ -91,24 +97,24 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean canThink() {
 		return canThink;
 	}
-	
+
 	private void cancelSunayakaRageTask() {
 		if (sunayakaRageTask != null && !sunayakaRageTask.isDone()) {
 			sunayakaRageTask.cancel(true);
 		}
 	}
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-  		rageOfTheDragonLords();
+		rageOfTheDragonLords();
 	}
-	
+
 	@Override
 	protected void handleDespawned() {
 		cancelSunayakaRageTask();
@@ -122,7 +128,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 		});
 		super.handleDespawned();
 	}
-	
+
 	@Override
 	protected void handleBackHome() {
 		canThink = true;
@@ -138,7 +144,7 @@ public class SunayakaAI2 extends AggressiveNpcAI2
 		});
 		super.handleBackHome();
 	}
-	
+
 	@Override
 	protected void handleDied() {
 		cancelSunayakaRageTask();

@@ -16,9 +16,6 @@
  */
 package com.aionemu.gameserver.services.player;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
@@ -28,13 +25,14 @@ import com.aionemu.gameserver.dao.PlayerStigmasEquippedDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.world.World;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Source
  */
+@Slf4j
 class GeneralUpdateTask implements Runnable {
 
-	private static final Logger log = LoggerFactory.getLogger(GeneralUpdateTask.class);
 	private final int playerId;
 
 	GeneralUpdateTask(int playerId) {
@@ -42,7 +40,7 @@ class GeneralUpdateTask implements Runnable {
 	}
 
 	public void run() {
-		Player player = World.getInstance().findPlayer(playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player != null)
 			try {
 				DAOManager.getDAO(AbyssRankDAO.class).storeAbyssRank(player);

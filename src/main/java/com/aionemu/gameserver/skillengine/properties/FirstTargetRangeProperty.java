@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.properties;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.skillengine.properties.Properties.CastState;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author ATracer
@@ -71,7 +72,7 @@ public class FirstTargetRangeProperty {
 		// TODO check for all targets too
 		// Summon Group Member exception
 		if (skill.getSkillTemplate().getSkillId() != 3777) { // 4.8
-			if (!GeoService.getInstance().canSee(effector, firstTarget)) {
+			if (!GameWorldServices.geoService().canSee(effector, firstTarget)) {
 				if (effector instanceof Player) {
 					PacketSendUtility.sendPacket((Player) effector, SM_SYSTEM_MESSAGE.STR_SKILL_OBSTACLE);
 				}

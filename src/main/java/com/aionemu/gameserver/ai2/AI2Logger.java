@@ -16,18 +16,16 @@
  */
 package com.aionemu.gameserver.ai2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 
 /**
  * @author ATracer
  */
+@Slf4j
 public class AI2Logger {
 
-	private static final Logger log = LoggerFactory.getLogger(AI2Logger.class);
 
 	public static final void info(AbstractAI ai, String message) {
 		if (ai.isLogging()) {

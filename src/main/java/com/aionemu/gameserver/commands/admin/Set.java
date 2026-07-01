@@ -18,6 +18,7 @@ package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.configs.administration.CommandsConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,7 +28,6 @@ import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_TOLL_INFO;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.services.player.LunaShopService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 
@@ -170,7 +170,7 @@ public class Set extends AdminCommand
 			} catch (NumberFormatException e) {
 				PacketSendUtility.sendMessage(admin, "You should enter valid second params!");
 				return;
-			} if (LoginServer.getInstance().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, target.getClientConnection().getAccount().getLuna(), target.getAcountName()))) {
+			} if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(toll, target.getClientConnection().getAccount().getLuna(), target.getAcountName()))) {
 				target.getClientConnection().getAccount().setToll(toll);
 				PacketSendUtility.sendMessage(admin, "Tolls setted to " + toll + ".");
 			} else {
@@ -193,7 +193,7 @@ public class Set extends AdminCommand
 				PacketSendUtility.sendMessage(admin, "You should enter valid second params!");
 				return;
 			}
-			LunaShopService.getInstance().lunaPointController(target, (int) (target.getLunaAccount() + luna));
+			GameEventBootstrapServices.lunaShopService().lunaPointController(target, (int) (target.getLunaAccount() + luna));
 			if (target == admin) {
 				PacketSendUtility.sendMessage(admin, "Add your <Luna Points> + " + luna + ".");
 			} else {
@@ -212,7 +212,7 @@ public class Set extends AdminCommand
 				PacketSendUtility.sendMessage(admin, "You should enter valid second params!");
 				return;
 			}
-			LunaShopService.getInstance().muniKeysController(target, target.getMuniKeys() + key);
+			GameEventBootstrapServices.lunaShopService().muniKeysController(target, target.getMuniKeys() + key);
 			if (target == admin) {
 				PacketSendUtility.sendMessage(admin, "Add your <Munirunerk's Keys> + " + key + ".");
 			} else {

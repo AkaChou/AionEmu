@@ -94,7 +94,7 @@ public class CM_ACOUNT_AUTH_RESPONSE extends LsClientPacket {
 	 */
 	@Override
 	public void runImpl() {
-		LoginServer.getInstance().accountAuthenticationResponse(accountId, accountName, result, accountTime,
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().accountAuthenticationResponse(accountId, accountName, result, accountTime,
 				accessLevel, membership, toll, luna);
 	}
 }

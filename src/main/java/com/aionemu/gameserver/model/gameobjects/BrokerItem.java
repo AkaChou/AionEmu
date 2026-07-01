@@ -20,7 +20,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Comparator;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.configs.main.BrokerConfig;
 import com.aionemu.gameserver.model.broker.BrokerRace;

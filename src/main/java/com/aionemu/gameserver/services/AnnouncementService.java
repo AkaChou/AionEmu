@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -23,8 +25,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -34,22 +34,20 @@ import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastSet;
+import java.util.HashSet;
+import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Automatic Announcement System
  * 
  * @author Divinity
  */
+@Slf4j
 public class AnnouncementService {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(AnnouncementService.class);
 	private static volatile ObjectProvider<AnnouncementService> instanceProvider;
 
 	private Collection<Announcement> announcements;
@@ -92,14 +90,14 @@ public class AnnouncementService {
 	 * Load the announcements system
 	 */
 	private void load() {
-		announcements = new FastSet<Announcement>(getDAO().getAnnouncements()).shared();
+		announcements = new HashSet<Announcement>(getDAO().getAnnouncements());
 
 		for (final Announcement announce : announcements) {
-			delays.add(ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			delays.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 				@Override
 				public void run() {
-					final Iterator<Player> iter = World.getInstance().getPlayersIterator();
+					final Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 					while (iter.hasNext()) {
 						Player player = iter.next();
 

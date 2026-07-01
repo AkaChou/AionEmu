@@ -22,25 +22,19 @@ import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.NetworkUtils;
 import com.aionemu.loginserver.dao.BannedIpDAO;
 import com.aionemu.loginserver.model.BannedIP;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class that controlls all ip banning activity
  *
  * @author SoulKeeper
  */
+@Slf4j
 public class BannedIpController {
-
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(BannedIpController.class);
     /**
      * List of banned ip adresses
      */

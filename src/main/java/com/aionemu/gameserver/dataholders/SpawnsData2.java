@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,22 +25,19 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
@@ -81,42 +79,43 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMap;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @XmlRootElement(name = "spawns")
 @XmlType(namespace = "", name = "SpawnsData2")
 @XmlAccessorType(XmlAccessType.NONE)
+@Slf4j
 public class SpawnsData2 {
-	private static final Logger log = LoggerFactory.getLogger(SpawnsData2.class);
 
 	@XmlElement(name = "spawn_map", type = SpawnMap.class)
 	protected List<SpawnMap> templates;
 
-	private TIntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new TIntObjectHashMap<FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new TIntObjectHashMap<List<SpawnGroup2>>();
-	private TIntObjectHashMap<Spawn> customs = new TIntObjectHashMap<Spawn>();
+	private IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>> allSpawnMaps = new IntObjectHashMap<Map<Integer, SimpleEntry<SpawnGroup2, Spawn>>>();
+	private IntObjectHashMap<List<SpawnGroup2>> siegeSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> baseSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> vortexSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> riftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> beritraSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> agentSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> anohaSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> rvrSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> svsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> iuSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> dynamicRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> instanceRiftSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> idianDepthsSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> nightmareCircusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> legionDominionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> zorshivDredgionSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> moltenusSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> conquestSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> landingSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> landingSpecialSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> towerOfEternitySpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
+	private IntObjectHashMap<Spawn> customs = new IntObjectHashMap<Spawn>();
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void afterUnmarshal(Unmarshaller u, Object parent) {
@@ -124,7 +123,7 @@ public class SpawnsData2 {
 			for (SpawnMap spawnMap : templates) {
 				int mapId = spawnMap.getMapId();
 				if (!allSpawnMaps.containsKey(mapId)) {
-					allSpawnMaps.put(mapId, new FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
+					allSpawnMaps.put(mapId, new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
 				}
 				for (Spawn spawn : spawnMap.getSpawns()) {
 					if (spawn.isCustom()) {
@@ -139,7 +138,7 @@ public class SpawnsData2 {
 							new SimpleEntry(new SpawnGroup2(mapId, spawn), spawn));
 				}
 				if (!allSpawnMaps.containsKey(mapId)) {
-					allSpawnMaps.put(mapId, new FastMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
+					allSpawnMaps.put(mapId, new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
 				}
 				for (SiegeSpawn SiegeSpawn : spawnMap.getSiegeSpawns()) {
 					int siegeId = SiegeSpawn.getSiegeId();
@@ -847,7 +846,7 @@ public class SpawnsData2 {
 		for (SpawnSpotTemplate s : oldGroup.getSpawnSpotTemplates()) {
 			if (s.getX() == spot.getX() && s.getY() == spot.getY() && s.getZ() == spot.getZ()
 					&& s.getHeading() == spot.getHeading()) {
-				if (delete || !StringUtils.equals(s.getWalkerId(), spot.getWalkerId())) {
+				if (delete || !Objects.equals(s.getWalkerId(), spot.getWalkerId())) {
 					oldSpot = s;
 					break;
 				} else {
@@ -911,7 +910,7 @@ public class SpawnsData2 {
 
 	String getRelativePath(VisibleObject visibleObject) {
 		String path;
-		WorldMap map = World.getInstance().getWorldMap(visibleObject.getWorldId());
+		WorldMap map = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(visibleObject.getWorldId());
 		if (visibleObject.getSpawn().getHandlerType() == SpawnHandlerType.RIFT) {
 			path = "Rifts";
 		}

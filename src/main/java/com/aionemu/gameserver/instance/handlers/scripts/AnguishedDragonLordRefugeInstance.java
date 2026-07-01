@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
@@ -31,7 +37,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.NpcShoutsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
@@ -39,7 +45,8 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +67,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	public void onInstanceCreate(WorldMapInstance instance) {
 		super.onInstanceCreate(instance);
 		spawn(833483, 496.42648f, 516.493f, 240.26653f, (byte) 0); //Kahrun (Reian Leader).
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawnIDTiamatDrakanNamed65Al();
@@ -69,36 +76,36 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 702658: //Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
 		    break;
 			case 702659: //Noble Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
 		    break;
 			case 702729: //Tiamat's Huge Treasure Crate.
 				for (Player player: instance.getPlayersInside()) {
-				    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
 					if (player.isOnline()) {
 					    switch (Rnd.get(1, 2)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053640, 1)); //Balaur Lord's Mythic Weapon Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053640, 1)); //Balaur Lord's Mythic Weapon Box.
 				            break;
 					        case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053707, 1)); //Glimmering Treasure Chest Of Balaur Lord Tiamat.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053707, 1)); //Glimmering Treasure Chest Of Balaur Lord Tiamat.
 				            break;
 						}
 					}
 				}
 			break;
 			case 802182: //Dragon Lord's Refuge Opportunity Bundle.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
 			break;
 		}
 	}
@@ -145,14 +152,14 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 							sendMsgByRace(1401538, Race.ELYOS, 15000);
 							//Eliminate the Balaur Spiritualist to grant a beneficial effect to the Empyrean Lord.
 							sendMsgByRace(1401550, Race.ELYOS, 25000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						        @Override
 						        public void run() {
 									startGodKaisinelEvent();
 									spawn(283175, 551.78796f, 514.75494f, 417.40436f, (byte) 60); //Kaisinel Teleport.
 								}
 						    }, 15000);
-						    ThreadPoolManager.getInstance().schedule(new Runnable() {
+						    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					            @Override
 					            public void run() {
 						            startRushWalkEvent1();
@@ -172,14 +179,14 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 							sendMsgByRace(1401539, Race.ASMODIANS, 15000);
 							//Eliminate the Balaur Spiritualist to grant a beneficial effect to the Empyrean Lord.
 							sendMsgByRace(1401550, Race.ASMODIANS, 25000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						        @Override
 						        public void run() {
 									startGodMarchutanEvent();
 									spawn(283176, 551.78796f, 514.75494f, 417.40436f, (byte) 60); //Marchutan Teleport.
 								}
 						    }, 15000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					            @Override
 					            public void run() {
 						            startRushWalkEvent1();
@@ -195,10 +202,10 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 				    public void visit(Player player) {
 					    //Dragon Lord Tiamat used its Death Roar to defeat the Empyrean Lord.
 						sendMsgByRace(1401542, Race.PC_ALL, 0);
-						SkillEngine.getInstance().applyEffectDirectly(20920, player, player, 30000); //Dragon Lord's Roar.
+						GameEngineServices.skillEngine().applyEffectDirectly(20920, player, player, 30000); //Dragon Lord's Roar.
 				    }
 			    });
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -223,7 +230,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 			    //Fissure Incarnate has collapsed.
 				sendMsgByRace(1401533, Race.PC_ALL, 0);
 			    despawnNpc(getNpc(730673)); //Internal Passage In 1.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    startRushWalkEvent2();
@@ -245,7 +252,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 			    //Gravity Incarnate has collapsed.
 				sendMsgByRace(1401535, Race.PC_ALL, 0);
 			    despawnNpc(getNpc(730674)); //Internal Passage In 2.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    startRushWalkEvent3();
@@ -267,7 +274,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 				//Wrath Incarnate has collapsed.
 				sendMsgByRace(1401534, Race.PC_ALL, 0);
 			    despawnNpc(getNpc(730675)); //Internal Passage In 3.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    startRushWalkEvent4();
@@ -300,7 +307,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					        kaisinelLight();
 							//All of Tiamat's Incarnations have collapsed.
 							sendMsgByRace(1401537, Race.ELYOS, 2000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						        @Override
 						        public void run() {
 									spawnGodKaisinelGroggy();
@@ -308,9 +315,9 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 									sendMsgByRace(1401540, Race.ELYOS, 5000);
 									Npc godKaisinel1 = getNpc(219489);
 									//I am weakening. You Daevas must take your turn.
-									NpcShoutsService.getInstance().sendMsg(godKaisinel1, 1500686, godKaisinel1.getObjectId(), 0, 20000);
+									GameFeatureServices.npcShoutsService().sendMsg(godKaisinel1, 1500686, godKaisinel1.getObjectId(), 0, 20000);
 									//We're not too late!
-									NpcShoutsService.getInstance().sendMsg(godKaisinel1, 1500687, godKaisinel1.getObjectId(), 0, 30000);
+									GameFeatureServices.npcShoutsService().sendMsg(godKaisinel1, 1500687, godKaisinel1.getObjectId(), 0, 30000);
 								}
 						    }, 15000);
 						break;
@@ -318,7 +325,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					        marchutanGrace();
 							//All of Tiamat's Incarnations have collapsed.
 							sendMsgByRace(1401537, Race.ASMODIANS, 2000);
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						        @Override
 						        public void run() {
 									spawnGodMarchutanGroggy();
@@ -326,9 +333,9 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 									sendMsgByRace(1401541, Race.ASMODIANS, 5000);
 									Npc godMarchutan1 = getNpc(219492);
 									//I must rest a moment. Hold off the Dragon while I do!
-									NpcShoutsService.getInstance().sendMsg(godMarchutan1, 1500690, godMarchutan1.getObjectId(), 0, 20000);
+									GameFeatureServices.npcShoutsService().sendMsg(godMarchutan1, 1500690, godMarchutan1.getObjectId(), 0, 20000);
 									//You, you must be...
-									NpcShoutsService.getInstance().sendMsg(godMarchutan1, 1500691, godMarchutan1.getObjectId(), 0, 30000);
+									GameFeatureServices.npcShoutsService().sendMsg(godMarchutan1, 1500691, godMarchutan1.getObjectId(), 0, 30000);
 								}
 						    }, 15000);
 				        break;
@@ -344,50 +351,50 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 				            spawn(833486, 504.4801f, 515.12964f, 417.40436f, (byte) 60); //Kaisinel.
 							Npc godKaisinel2 = getNpc(833486);
 							//It is finally over.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500695, godKaisinel2.getObjectId(), 0, 5000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500695, godKaisinel2.getObjectId(), 0, 5000);
 							//Even a Dragon Lord can be driven to madness.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500696, godKaisinel2.getObjectId(), 0, 15000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500696, godKaisinel2.getObjectId(), 0, 15000);
 							//No need to thank me. Now, give me the relics, and I will be gone.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500625, godKaisinel2.getObjectId(), 0, 25000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500625, godKaisinel2.getObjectId(), 0, 25000);
 							//Yes ? And such a fine job you've done.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500626, godKaisinel2.getObjectId(), 0, 35000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500626, godKaisinel2.getObjectId(), 0, 35000);
 							//How dare you raise your voice in this place ? Be silent.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500627, godKaisinel2.getObjectId(), 0, 45000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500627, godKaisinel2.getObjectId(), 0, 45000);
 							//Israphel? Here?
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500628, godKaisinel2.getObjectId(), 0, 55000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500628, godKaisinel2.getObjectId(), 0, 55000);
 							//No!
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500629, godKaisinel2.getObjectId(), 0, 65000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500629, godKaisinel2.getObjectId(), 0, 65000);
 							//What do you think you're going to do with those ?
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500630, godKaisinel2.getObjectId(), 0, 75000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500630, godKaisinel2.getObjectId(), 0, 75000);
 							//The traitor was right about one thing. We must put our argument aside and go after him.
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500631, godKaisinel2.getObjectId(), 0, 85000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500631, godKaisinel2.getObjectId(), 0, 85000);
 							//Ah, Kahrun. Getting a little ambitious, don't you think ?
-							NpcShoutsService.getInstance().sendMsg(godKaisinel2, 1500632, godKaisinel2.getObjectId(), 0, 95000);
+							GameFeatureServices.npcShoutsService().sendMsg(godKaisinel2, 1500632, godKaisinel2.getObjectId(), 0, 95000);
 				        break;
 			            case ASMODIANS:
 				            sendMovie(player, 885);
 				            spawn(833487, 504.4801f, 515.12964f, 417.40436f, (byte) 60); //Marchutan.
 							Npc godMarchutan2 = getNpc(833487);
 							//Finally, Tiamat is dead.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500698, godMarchutan2.getObjectId(), 0, 5000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500698, godMarchutan2.getObjectId(), 0, 5000);
 							//I saw its despair, before the end.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500699, godMarchutan2.getObjectId(), 0, 15000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500699, godMarchutan2.getObjectId(), 0, 15000);
 							//You can thank me by giving me those relics, for safekeeping.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500633, godMarchutan2.getObjectId(), 0, 25000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500633, godMarchutan2.getObjectId(), 0, 25000);
 							//That time is over, Kahrun.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500634, godMarchutan2.getObjectId(), 0, 35000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500634, godMarchutan2.getObjectId(), 0, 35000);
 							//You didn't have the power to fight Tiamat, so what makes you think you can stop me ?
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500635, godMarchutan2.getObjectId(), 0, 45000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500635, godMarchutan2.getObjectId(), 0, 45000);
 							//You ? What do you want ?
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500636, godMarchutan2.getObjectId(), 0, 55000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500636, godMarchutan2.getObjectId(), 0, 55000);
 							//Stop!
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500637, godMarchutan2.getObjectId(), 0, 65000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500637, godMarchutan2.getObjectId(), 0, 65000);
 							//How far do you think you'll get with those ?
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500638, godMarchutan2.getObjectId(), 0, 75000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500638, godMarchutan2.getObjectId(), 0, 75000);
 							//We must unite to stop him--but don't think that this argument is over!
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500639, godMarchutan2.getObjectId(), 0, 85000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500639, godMarchutan2.getObjectId(), 0, 85000);
 							//Well well. What's this ? Bickering ? And so soon after your glorious victory.
-							NpcShoutsService.getInstance().sendMsg(godMarchutan2, 1500640, godMarchutan2.getObjectId(), 0, 95000);
+							GameFeatureServices.npcShoutsService().sendMsg(godMarchutan2, 1500640, godMarchutan2.getObjectId(), 0, 95000);
 				        break;
 					}
 			    }
@@ -421,7 +428,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
 				    }
 			    });
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -451,7 +458,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 					    PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.IDTIAMAT_TIAMAT_COUNTDOWN_OVER);
 				    }
 			    });
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -536,7 +543,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	
 	//PHASE GOD KASINEL.
 	private void startGodKaisinelEvent() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				eventGodAttack((Npc)spawn(219488, 551.78796f, 514.75494f, 417.40436f, (byte) 60), 480.363f, 514.3989f, 417.40436f, false); //God Kaisinel.
@@ -549,7 +556,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	
 	//PHASE GOD MARCHUTAN.
 	private void startGodMarchutanEvent() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 		        eventGodAttack((Npc)spawn(219491, 551.78796f, 514.75494f, 417.40436f, (byte) 60), 480.363f, 514.3989f, 417.40436f, false); //God Marchutan.
@@ -590,7 +597,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	
 	//PHASE RUSH.
 	private void rushWalk(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -678,7 +685,7 @@ public class AnguishedDragonLordRefugeInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

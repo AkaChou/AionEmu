@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -35,7 +37,7 @@ public class CM_STONESPEAR_SIEGE extends AionClientPacket {
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
 		if (player.getLegion() != null && player.getLegion().getTerritory().getId() > 0) {
-			TerritoryService.getInstance().sendStoneSpearPacket(getConnection().getActivePlayer());
+			GameRuntimeServices.territoryService().sendStoneSpearPacket(getConnection().getActivePlayer());
 		}
 	}
 }

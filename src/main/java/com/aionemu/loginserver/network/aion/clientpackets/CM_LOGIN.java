@@ -18,14 +18,12 @@
 
 package com.aionemu.loginserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 import java.security.GeneralSecurityException;
 import java.sql.Timestamp;
 
 import javax.crypto.Cipher;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.loginserver.configs.Config;
 import com.aionemu.loginserver.controller.AccountController;
@@ -41,12 +39,9 @@ import com.aionemu.loginserver.service.LoginProtectionServices;
 /**
  * @author -Nemesiss-, KID, Lyahim
  */
+@Slf4j
 public class CM_LOGIN extends AionClientPacket {
 
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(CM_LOGIN.class);
     /**
      * byte array contains encrypted login and password.
      */

@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.actions.PlayerMode;
@@ -31,6 +31,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.services.QuestService;
+@Slf4j
 
 public class CM_DIALOG_SELECT extends AionClientPacket {
 	private int targetObjectId;
@@ -41,8 +42,6 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 	private int questId;
 	private int unk;
 
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(CM_DIALOG_SELECT.class);
 
 	public CM_DIALOG_SELECT(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -77,7 +76,7 @@ public class CM_DIALOG_SELECT extends AionClientPacket {
 				QuestService.startQuest(env);
 				return;
 			}
-			if (QuestEngine.getInstance().onDialog(new QuestEnv(null, player, questId, dialogId))) {
+			if (GameEngineServices.questEngine().onDialog(new QuestEnv(null, player, questId, dialogId))) {
 				return;
 			}
 			ClassChangeService.changeClassToSelection(player, dialogId);

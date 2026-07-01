@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
@@ -96,7 +98,6 @@ import com.aionemu.gameserver.model.stats.calc.functions.PlayerStatFunctions;
 import com.aionemu.gameserver.model.stats.listeners.TitleChangeListener;
 import com.aionemu.gameserver.model.team.legion.LegionMember;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.PunishmentService.PunishmentType;
 import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.services.item.ItemFactory;
@@ -165,7 +166,7 @@ public class PlayerService {
 		PlayerCommonData pcd = playerAccountData.getPlayerCommonData();
 		PlayerAppearance appearance = playerAccountData.getAppereance();
 		player = new Player(new PlayerController(), pcd, appearance, account);
-		LegionMember legionMember = LegionService.getInstance().getLegionMember(player.getObjectId());
+		LegionMember legionMember = GameCoreGameplayServices.legionService().getLegionMember(player.getObjectId());
 		if (legionMember != null) {
 			player.setLegionMember(legionMember);
 		}
@@ -266,7 +267,7 @@ public class PlayerService {
 			Account account) {
 		PlayerInitialData playerInitialData = DataManager.PLAYER_INITIAL_DATA;
 		LocationData ld = playerInitialData.getSpawnLocation(playerCommonData.getRace());
-		WorldPosition position = World.getInstance().createPosition(ld.getMapId(), ld.getX(), ld.getY(), ld.getZ(),
+		WorldPosition position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(ld.getMapId(), ld.getX(), ld.getY(), ld.getZ(),
 				ld.getHeading(), 0);
 		playerCommonData.setPosition(position);
 		Player newPlayer = new Player(new PlayerController(), playerCommonData, playerAppearance, account);
@@ -390,7 +391,7 @@ public class PlayerService {
 		}
 		final Map<Integer, String> result = Maps.newHashMap();
 		final Set<Integer> playerObjIdsCopy = Sets.newHashSet(playerObjIds);
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player object) {
 				if (playerObjIdsCopy.contains(object.getObjectId())) {

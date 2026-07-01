@@ -16,16 +16,18 @@
  */
 package com.aionemu.gameserver.services.veteranreward;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Collection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.VeteranRewardConfig;
 import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
@@ -51,7 +53,9 @@ import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastSet;
+import java.util.HashSet;
+import java.util.Set;
+@Slf4j(topic = "VETERANREWARD_LOG")
 
 public class VeteranRewardsService {
 	private static volatile ObjectProvider<VeteranRewardsService> instanceProvider;
@@ -74,7 +78,6 @@ public class VeteranRewardsService {
 		}
 	}
 
-	private static final Logger log = LoggerFactory.getLogger("VETERANREWARD_LOG");
 
 	private Collection<VeteranRewards> veteran_rewards;
 
@@ -87,7 +90,7 @@ public class VeteranRewardsService {
 	private void Init_VeteranRewardStatusLoop() {
 		log.info("Veteran Reward System activated");
 
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			@Override
 			public void run() {
 				Init_VeteranRewards();
@@ -102,7 +105,7 @@ public class VeteranRewardsService {
 			veteran_rewards.clear();
 		}
 
-		veteran_rewards = new FastSet<VeteranRewards>(getDAO().getVeteranReward()).shared();
+		veteran_rewards = new HashSet<VeteranRewards>(getDAO().getVeteranReward());
 
 		if (veteran_rewards.size() > 0) {
 			if (VeteranRewardConfig.VETERANREWARDS_ENABLED_INFO_LOG) {
@@ -185,7 +188,7 @@ public class VeteranRewardsService {
 		if (recipientType == RecipientType.PLAYER) {
 			SendVeteranRewardMail(Sender, recipient, Title, Message, item, count, kinah, mailtype);
 		} else {
-			for (Player player : World.getInstance().getAllPlayers()) {
+			for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 				if (recipientType.isAllowed(player.getCommonData().getRace())) {
 					SendVeteranRewardMail(Sender, player.getName(), Title, Message, item, count, kinah, mailtype);
 				}
@@ -254,7 +257,7 @@ public class VeteranRewardsService {
 			return;
 		}
 
-		Player onlineRecipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+		Player onlineRecipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 
 		if (recipientCommonData.isOnline()) {
 			if (!onlineRecipient.getMailbox().haveFreeSlots()) {
@@ -312,7 +315,7 @@ public class VeteranRewardsService {
 		String finalSender = sender;
 
 		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
 				type);
 

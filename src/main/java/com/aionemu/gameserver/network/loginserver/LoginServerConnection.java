@@ -16,30 +16,27 @@
  */
 package com.aionemu.gameserver.network.loginserver;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
 import com.aionemu.gameserver.network.factories.LsPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * Object representing connection between LoginServer and GameServer.
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class LoginServerConnection extends AConnection {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(LoginServerConnection.class);
 
 	/**
 	 * Possible states of GsConnection
@@ -79,7 +76,7 @@ public class LoginServerConnection extends AConnection {
 	}
 
 	private void init() {
-		LsPacketHandlerFactory lsPacketHandlerFactory = LsPacketHandlerFactory.getInstance();
+		LsPacketHandlerFactory lsPacketHandlerFactory = GameServerNetworkServices.lsPacketHandlerFactory();
 		this.lsPacketHandler = lsPacketHandlerFactory.getPacketHandler();
 		state = State.CONNECTED;
 		log.info("Connected to LoginServer!");
@@ -110,7 +107,7 @@ public class LoginServerConnection extends AConnection {
 		 * Execute packet only if packet exist (!= null) and read was ok.
 		 */
 		if (pck != null && pck.read()) {
-			ThreadPoolManager.getInstance().executeLsPacket(pck);
+			GameThreadPoolServices.threadPoolManager().executeLsPacket(pck);
 		}
 		return true;
 	}
@@ -151,7 +148,7 @@ public class LoginServerConnection extends AConnection {
 	 */
 	@Override
 	protected final void onDisconnect() {
-		LoginServer.getInstance().loginServerDown();
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().loginServerDown();
 	}
 
 	/**

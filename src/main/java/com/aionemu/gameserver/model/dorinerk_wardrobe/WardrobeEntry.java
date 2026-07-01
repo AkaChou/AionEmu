@@ -16,12 +16,16 @@
  */
 package com.aionemu.gameserver.model.dorinerk_wardrobe;
 
+import lombok.Getter;
+
 /**
  * @author Ranastic
  */
 public class WardrobeEntry {
 
+	@Getter
 	private int itemId;
+	@Getter
 	private int slot;
 	private int reskin_count;
 
@@ -35,11 +39,4 @@ public class WardrobeEntry {
 		return reskin_count;
 	}
 
-	public int getItemId() {
-		return itemId;
-	}
-
-	public int getSlot() {
-		return slot;
-	}
 }

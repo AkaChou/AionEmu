@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.kisk;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AI2Request;
 import com.aionemu.gameserver.ai2.AIName;
@@ -32,7 +36,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /****/
 /** Author (Encom)
@@ -51,7 +54,7 @@ public class HiddenKiskAI2 extends NpcAI2
 	@Override
     public void handleSpawned() {
         if (!isAlreadyDead()) {
-		    ThreadPoolManager.getInstance().schedule(new Runnable() {
+		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					getOwner().getEffectController().setAbnormal(AbnormalState.HIDE.getId());
@@ -83,7 +86,7 @@ public class HiddenKiskAI2 extends NpcAI2
 	
 	@Override
 	protected void handleDespawned() {
-		KiskService.getInstance().removeKisk(getOwner());
+		GameFeatureServices.kiskService().removeKisk(getOwner());
 		if (!isAlreadyDead()) {
 			getOwner().broadcastPacket(SM_SYSTEM_MESSAGE.STR_BINDSTONE_IS_REMOVED);
 		}
@@ -105,7 +108,7 @@ public class HiddenKiskAI2 extends NpcAI2
                             PacketSendUtility.sendPacket(responder, SM_SYSTEM_MESSAGE.STR_CANNOT_REGISTER_BINDSTONE_HAVE_NO_AUTHORITY);
                             return;
                         }
-                        KiskService.getInstance().onBind(getOwner(), responder);
+                        GameFeatureServices.kiskService().onBind(getOwner(), responder);
                     }
                 }
                 @Override

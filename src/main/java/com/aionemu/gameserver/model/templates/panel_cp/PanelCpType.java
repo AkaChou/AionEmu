@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.model.templates.panel_cp;
 
-import javax.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnum;
 
 /**
  * @author Rinzler (Encom)

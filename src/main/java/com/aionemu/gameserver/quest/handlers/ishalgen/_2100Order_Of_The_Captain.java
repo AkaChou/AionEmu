@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.ishalgen;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
@@ -59,7 +61,7 @@ public class _2100Order_Of_The_Captain extends QuestHandler {
 			if (env.getDialogId() == 23) {
 				int[] misions = {2001, 2002, 2003, 2004, 2005, 2006, 2007};
 				for (int id: misions) {
-					QuestEngine.getInstance().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
+					GameEngineServices.questEngine().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
 				}
 			}
 			return sendQuestEndDialog(env);

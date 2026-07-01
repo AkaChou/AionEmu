@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.dredgionDefense;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.Future;
@@ -78,7 +79,7 @@ public class Defence_Tower_Of_Sanctum_1AI2 extends ActionItemNpcAI2
 	}
 	
 	private void dreadgionDrakanATK() {
-		dreadgionDrakanATKTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		dreadgionDrakanATKTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.targetCreature(Defence_Tower_Of_Sanctum_1AI2.this, getPosition().getWorldMapInstance().getNpc(220966));
@@ -88,7 +89,7 @@ public class Defence_Tower_Of_Sanctum_1AI2 extends ActionItemNpcAI2
 	}
 	
 	private void startDreadgionOverheatTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				cancelATKTask();

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.handlers.template;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,20 +35,21 @@ import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.RiftService;
 import com.aionemu.gameserver.services.VortexService;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MonsterHunt extends QuestHandler {
 	private final int questId;
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
 	private final Set<Integer> endNpcs = new HashSet<Integer>();
-	private final FastMap<Monster, Set<Integer>> monsters;
+	private final Map<Monster, Set<Integer>> monsters;
 	private final int startDialog;
 	private final int endDialog;
 	private final Set<Integer> aggroNpcs = new HashSet<Integer>();
 	private final int invasionWorldId;
     private final boolean reward;
 
-	public MonsterHunt(int questId, List<Integer> startNpcIds, List<Integer> endNpcIds, FastMap<Monster, Set<Integer>> monsters, int startDialog, int endDialog, List<Integer> aggroNpcs, int invasionWorld, boolean reward) {
+	public MonsterHunt(int questId, List<Integer> startNpcIds, List<Integer> endNpcIds, Map<Monster, Set<Integer>> monsters, int startDialog, int endDialog, List<Integer> aggroNpcs, int invasionWorld, boolean reward) {
 		super(questId);
 		this.questId = questId;
 		this.startNpcs.addAll(startNpcIds);
@@ -221,7 +224,7 @@ public class MonsterHunt extends QuestHandler {
 	public boolean onEnterWorldEvent(QuestEnv env) {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		VortexLocation vortexLoc = VortexService.getInstance().getLocationByWorld(invasionWorldId);
+		VortexLocation vortexLoc = GameLocationBootstrapServices.vortexService().getLocationByWorld(invasionWorldId);
 		if (player.getWorldId() == invasionWorldId) {
 			if ((qs == null || qs.getStatus() == QuestStatus.NONE || qs.canRepeat())) {
 				if ((vortexLoc != null && vortexLoc.isActive()) || (searchOpenRift())) {
@@ -233,7 +236,7 @@ public class MonsterHunt extends QuestHandler {
 	}
 
 	private boolean searchOpenRift() {
-		for (RiftLocation loc : RiftService.getInstance().getRiftLocations().values()) {
+		for (RiftLocation loc : GameLocationBootstrapServices.riftService().getRiftLocations().values()) {
 			if (loc.getWorldId() == invasionWorldId && loc.isOpened()) {
 				return true;
 			}

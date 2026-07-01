@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -68,7 +74,7 @@ public class InfernalKuharaTheVolatileAI2 extends AggressiveNpcAI2
 		if (isHome.compareAndSet(true, false)) {
 			getPosition().getWorldMapInstance().getDoors().get(43).setOpen(true);
 			getPosition().getWorldMapInstance().getDoors().get(150).setOpen(false);
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 1500393, getObjectId(), 0, 0);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500393, getObjectId(), 0, 0);
 			startActivEvent();
 			startBarrelEvent();
 			announceOilBarrel();
@@ -94,7 +100,7 @@ public class InfernalKuharaTheVolatileAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startBarrelEvent() {
-		barrelEventTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		barrelEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -154,19 +160,19 @@ public class InfernalKuharaTheVolatileAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startBombEvent() {
-		bombEventTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
 					phase = Phase.BOMBS;
 					cancelActiveEventTask();
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500394, getObjectId(), 0, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500394, getObjectId(), 0, 0);
 					canThink = false;
 					EmoteManager.emoteStopAttacking(getOwner());
 					setStateIfNot(AIState.WALKING);
-					SkillEngine.getInstance().getSkill(getOwner(), 19703, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19703, 60, getOwner()).useNoAnimationSkill();
 					spawnBombEvent();
-					bombEventTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					bombEventTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.BOMBS)) {
@@ -185,7 +191,7 @@ public class InfernalKuharaTheVolatileAI2 extends AggressiveNpcAI2
 									getOwner().getGameStats().renewLastSkillTime();
 									setStateIfNot(AIState.FIGHT);
 									handleMoveValidate();
-									SkillEngine.getInstance().getSkill(getOwner(), 19375, 60, getOwner()).useNoAnimationSkill();
+									GameEngineServices.skillEngine().getSkill(getOwner(), 19375, 60, getOwner()).useNoAnimationSkill();
 								}
 								deleteNpcs(getPosition().getWorldMapInstance().getNpcs(282396)); //Kuhara Bomb.
 							}
@@ -230,23 +236,23 @@ public class InfernalKuharaTheVolatileAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startActivEvent() {
-		activeEventTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		activeEventTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
 					cancelActiveEventTask();
 				} else {
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500395, getObjectId(), 0, 0);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500395, getObjectId(), 0, 0);
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-								SkillEngine.getInstance().getSkill(getOwner(), 19704, 60, getOwner()).useNoAnimationSkill();
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameEngineServices.skillEngine().getSkill(getOwner(), 19704, 60, getOwner()).useNoAnimationSkill();
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
-											SkillEngine.getInstance().getSkill(getOwner(), 19705, 60, getOwner()).useNoAnimationSkill();
+											GameEngineServices.skillEngine().getSkill(getOwner(), 19705, 60, getOwner()).useNoAnimationSkill();
 										}
 									}
 								}, 3500);

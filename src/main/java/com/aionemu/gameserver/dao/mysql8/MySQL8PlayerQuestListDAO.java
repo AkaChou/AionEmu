@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.dao.PlayerQuestListDAO;
@@ -10,10 +11,6 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nullable;
 import java.sql.*;
 import java.util.Collection;
 
@@ -24,9 +21,9 @@ import java.util.Collection;
  * @modified vlog, Rolandas
  * @updated for MySQL 8 with optimizations
  */
+@Slf4j
 public class MySQL8PlayerQuestListDAO extends PlayerQuestListDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerQuestListDAO.class);
 	
 	private static final String SELECT_QUERY = "SELECT `quest_id`, `status`, `quest_vars`, `complete_count`, `next_repeat_time`, `reward`, `complete_time` FROM `player_quests` WHERE `player_id` = ?";
 	private static final String UPDATE_QUERY = "UPDATE `player_quests` SET `status` = ?, `quest_vars` = ?, `complete_count` = ?, `next_repeat_time` = ?, `reward` = ?, `complete_time` = ? WHERE `player_id` = ? AND `quest_id` = ?";
@@ -37,21 +34,21 @@ public class MySQL8PlayerQuestListDAO extends PlayerQuestListDAO {
 
 	private static final Predicate<QuestState> questsToAddPredicate = new Predicate<QuestState>() {
 		@Override
-		public boolean apply(@Nullable QuestState input) {
+		public boolean apply(QuestState input) {
 			return input != null && PersistentState.NEW == input.getPersistentState();
 		}
 	};
 
 	private static final Predicate<QuestState> questsToUpdatePredicate = new Predicate<QuestState>() {
 		@Override
-		public boolean apply(@Nullable QuestState input) {
+		public boolean apply(QuestState input) {
 			return input != null && PersistentState.UPDATE_REQUIRED == input.getPersistentState();
 		}
 	};
 
 	private static final Predicate<QuestState> questsToDeletePredicate = new Predicate<QuestState>() {
 		@Override
-		public boolean apply(@Nullable QuestState input) {
+		public boolean apply(QuestState input) {
 			return input != null && PersistentState.DELETED == input.getPersistentState();
 		}
 	};

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
@@ -57,17 +59,17 @@ public class CM_PETITION extends AionClientPacket {
 		Player player = getConnection().getActivePlayer();
 		int playerObjId = player.getObjectId();
 		if (action == 2) {
-			if (PetitionService.getInstance().hasRegisteredPetition(playerObjId)) {
-				int petitionId = PetitionService.getInstance().getPetition(playerObjId).getPetitionId();
-				PetitionService.getInstance().deletePetition(playerObjId);
+			if (GameRuntimeServices.petitionService().hasRegisteredPetition(playerObjId)) {
+				int petitionId = GameRuntimeServices.petitionService().getPetition(playerObjId).getPetitionId();
+				GameRuntimeServices.petitionService().deletePetition(playerObjId);
 				sendPacket(new SM_SYSTEM_MESSAGE(1300552, petitionId));
 				sendPacket(new SM_SYSTEM_MESSAGE(1300553, 49));
 				return;
 			}
 		}
 
-		if (!PetitionService.getInstance().hasRegisteredPetition(playerObjId)) {
-			Petition petition = PetitionService.getInstance().registerPetition(player, action, title, text,
+		if (!GameRuntimeServices.petitionService().hasRegisteredPetition(playerObjId)) {
+			Petition petition = GameRuntimeServices.petitionService().registerPetition(player, action, title, text,
 					additionalData);
 			sendPacket(new SM_PETITION(petition));
 		}

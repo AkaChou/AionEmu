@@ -16,17 +16,15 @@
  */
 package com.aionemu.gameserver.model.stats.calc.functions;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.items.ItemSlot;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 import com.aionemu.gameserver.model.templates.item.ArmorType;
+@Slf4j
 
 public class StatEnchantFunction extends StatAddFunction {
-	private static final Logger log = LoggerFactory.getLogger(StatEnchantFunction.class);
 
 	private Item item;
 	private int point;
@@ -240,7 +238,7 @@ public class StatEnchantFunction extends StatAddFunction {
 			return 0;
 		}
 		long slot = item.getEquipmentSlot();
-		int equipmentSlot = new Long(slot).intValue();
+		int equipmentSlot = (int) slot;
 		switch (item.getItemTemplate().getArmorType()) {
 		/**
 		 * 4.9 Enchant Stats

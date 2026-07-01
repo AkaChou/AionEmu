@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.player;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -43,7 +45,7 @@ public class cmd_mcheck extends PlayerCommand {
 		for (QuestState qs : qsl) {
 			if (qs.getStatus() == QuestStatus.LOCKED) {
 				int questId = qs.getQuestId();
-				QuestEngine.getInstance().onLvlUp(new QuestEnv(null, player, questId, 0));
+				GameEngineServices.questEngine().onLvlUp(new QuestEnv(null, player, questId, 0));
 			}
 		}
 		PacketSendUtility.sendMessage(player, "Missions checked successfully");

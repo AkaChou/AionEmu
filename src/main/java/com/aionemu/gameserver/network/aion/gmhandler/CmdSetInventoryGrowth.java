@@ -41,7 +41,7 @@ public final class CmdSetInventoryGrowth extends AbstractGMHandler {
 
         if (playerToExpand == null && commandArgs.length > 0 && !commandArgs[0].isEmpty()) {
             String targetPlayerName = commandArgs[0];
-            Collection<Player> allPlayers = World.getInstance().getAllPlayers();
+            Collection<Player> allPlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
             for (Player p : allPlayers) {
                 if (p.getName().equalsIgnoreCase(targetPlayerName)) {
                     playerToExpand = p;

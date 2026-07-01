@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -93,7 +94,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					leftWingTreasureBox.add((Npc) spawn(700465, 197.46051f, 471.78418f, 365.32578f, (byte) 82));
 					leftWingTreasureBox.add((Npc) spawn(700465, 223.41487f, 409.03143f, 365.01053f, (byte) 26));
 					leftWingTreasureBox.add((Npc) spawn(700465, 213.39343f, 425.5012f, 366.57892f, (byte) 8));
-					chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							StartTimer2();
@@ -118,7 +119,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer3();
@@ -141,7 +142,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer4();
@@ -164,7 +165,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer5();
@@ -187,7 +188,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer6();
@@ -210,7 +211,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer7();
@@ -233,7 +234,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer8();
@@ -256,7 +257,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer9();
@@ -279,7 +280,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer10();
@@ -302,7 +303,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer11();
@@ -325,7 +326,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer12();
@@ -348,7 +349,7 @@ public class LeftWingChamberInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestLeftWingTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestLeftWingTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					sendMsg(1400244);

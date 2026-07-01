@@ -18,6 +18,8 @@
 
 package com.aionemu.chatserver.model;
 
+import lombok.Getter;
+
 /**
  * @author ATracer
  */
@@ -41,6 +43,7 @@ public enum PlayerClass {
     ARTIST(15),
     BARD(16),
     ALL(17);
+    @Getter
     private byte classId;
 
     /**
@@ -50,10 +53,4 @@ public enum PlayerClass {
         this.classId = (byte) classId;
     }
 
-    /**
-     * @return classId
-     */
-    public byte getClassId() {
-        return classId;
-    }
 }

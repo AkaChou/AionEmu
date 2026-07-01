@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services.toypet;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collection;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -50,12 +51,11 @@ import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
+@Slf4j
 public class PetService {
 
 	private static volatile ObjectProvider<PetService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(PetService.class);
 
 	private PetBuff PetBuff;
 	private boolean autoSeel = false;
@@ -106,7 +106,7 @@ public class PetService {
 	}
 
 	private void schedule(final Pet pet, final Player player, final Item item, final int count, final int action) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!pet.getCommonData().getCancelFeed()) {
@@ -209,7 +209,7 @@ public class PetService {
 					final int useAction = action;
 					final int useItemId = itemId;
 					final int useSlot = slot;
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							PacketSendUtility.sendPacket(player, new SM_PET(useAction, useItemId, useSlot));

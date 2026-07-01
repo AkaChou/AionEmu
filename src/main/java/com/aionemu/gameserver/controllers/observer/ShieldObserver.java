@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers.observer;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.shield.Shield;
@@ -48,7 +50,7 @@ public class ShieldObserver extends ActionObserver {
 		boolean isGM = false;
 		boolean passedThrough = false;
 		boolean isFriendlyShield = false;
-		if (SiegeService.getInstance().getFortress(shield.getId()).isUnderShield()) {
+		if (GameFeatureServices.siegeService().getFortress(shield.getId()).isUnderShield()) {
 			if (!(creature.getZ() < shield.getZ() && oldPosition.getZ() < shield.getZ())) {
 				if (MathUtil.isInSphere(shield, (float) oldPosition.getX(), (float) oldPosition.getY(),
 						(float) oldPosition.getZ(), shield.getTemplate().getRadius()) != MathUtil.isIn3dRange(shield,
@@ -61,7 +63,7 @@ public class ShieldObserver extends ActionObserver {
 			if (creature instanceof Player) {
 				PacketSendUtility.sendMessage(((Player) creature), "You passed through shield.");
 				isGM = ((Player) creature).isGM();
-				if (!SiegeService.getInstance().getFortresses().get(shield.getId()).isEnemy(creature)) {
+				if (!GameFeatureServices.siegeService().getFortresses().get(shield.getId()).isEnemy(creature)) {
 					isFriendlyShield = true;
 				}
 			}

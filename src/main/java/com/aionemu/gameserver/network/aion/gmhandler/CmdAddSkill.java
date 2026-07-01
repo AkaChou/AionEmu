@@ -42,12 +42,12 @@ public class CmdAddSkill extends AbstractGMHandler {
 		}
 
 		if (admin.getTarget() != null && admin.getTarget() instanceof Player) {
-			t = World.getInstance().findPlayer(Util.convertName(admin.getTarget().getName()));
+			t = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(admin.getTarget().getName()));
 		}
 		if (params == null) {
 			return;
 		}
-		for (SkillTemplate template : DataManager.SKILL_DATA.getSkillData().valueCollection()) {
+		for (SkillTemplate template : DataManager.SKILL_DATA.getSkillData().values()) {
 			if (template.getNamedesc() != null && template.getNamedesc().equalsIgnoreCase(params)) {
 				PacketSendUtility.sendMessage(admin, "You added Skill " + template.getName() + "to " + t.getName());
 				PacketSendUtility.sendMessage(t, "Admin has add Skill " + template.getName() + "to you.");

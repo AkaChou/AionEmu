@@ -16,13 +16,14 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author Sweetkr
@@ -41,11 +42,11 @@ public class SM_TARGET_IMMOBILIZE extends AionServerPacket {
 	protected void writeImpl(AionConnection con) {
 		if (!(creature instanceof Player)) {
 			if (GeoDataConfig.GEO_ENABLE && creature.getGameStats().checkGeoNeedUpdate()) {
-				float z = GeoService.getInstance().getZ(creature.getWorldId(), creature.getX(), creature.getY(), creature.getZ(), 0.0F, creature.getInstanceId());
+				float z = GameWorldServices.geoService().getZ(creature.getWorldId(), creature.getX(), creature.getY(), creature.getZ(), 0.0F, creature.getInstanceId());
 				creature.setXYZH(null, null, z, null);
 			}
 		}
-		PacketLoggerService.getInstance().logPacketSM(this.getPacketName());
+		GameServerNetworkServices.packetLoggerService().logPacketSM(this.getPacketName());
 		writeD(creature.getObjectId());
 		writeF(creature.getX());
 		writeF(creature.getY());

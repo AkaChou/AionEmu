@@ -21,16 +21,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @XmlRootElement(name = "skill_data")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -41,9 +42,9 @@ public class SkillData {
 
 	private HashMap<Integer, ArrayList<Integer>> cooldownGroups;
 
-	private TIntObjectHashMap<SkillTemplate> skillData = new TIntObjectHashMap<SkillTemplate>();
+	private IntObjectHashMap<SkillTemplate> skillData = new IntObjectHashMap<SkillTemplate>();
 
-	private final Map<String, SkillTemplate> skillGroup = new FastMap<String, SkillTemplate>().shared();
+	private final Map<String, SkillTemplate> skillGroup = new LinkedHashMap<String, SkillTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		skillData.clear();
@@ -96,7 +97,7 @@ public class SkillData {
 		return cooldownGroups.get(delayId);
 	}
 
-	public TIntObjectHashMap<SkillTemplate> getSkillData() {
+	public IntObjectHashMap<SkillTemplate> getSkillData() {
 		return skillData;
 	}
 }

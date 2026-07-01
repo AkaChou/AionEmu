@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgion;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -41,18 +47,15 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +81,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	private float loosingGroupMultiplier = 1;
 	private boolean isInstanceDestroyed = false;
 	protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-	private final FastList<Future<?>> terathTask = FastList.newInstance();
+	private final List<Future<?>> terathTask = new ArrayList<Future<?>>();
 	
 	protected DredgionPlayerReward getPlayerReward(Player player) {
 		Integer object = player.getObjectId();
@@ -101,16 +104,16 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 219264: //Captain Anusa.
 				for (Player player: instance.getPlayersInside()) {
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053789, 1)); //Major Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
@@ -130,18 +133,18 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			case 219286: //Auditor Zhantri.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
 			case 219266: //Archivist Davorkar.
 			case 219271: //Master At Arms Vandukar.
 				for (Player player: instance.getPlayersInside()) {
-				    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001270, 1)); //Ksanat's Belt.
+				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001270, 1)); //Ksanat's Belt.
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
@@ -151,11 +154,11 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			*/
 			case 219269: //Gatekeeper Payad.
 				for (Player player: instance.getPlayersInside()) {
-				    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000117, 1)); //Captain's Cabin Passage Key.
-					dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
+				    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000117, 1)); //Captain's Cabin Passage Key.
+					dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000189, 1)); //Secret Cache Key.
 					if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 					}
 				}
 			break;
@@ -179,7 +182,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
-		terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				openFirstDoors();
@@ -212,7 +215,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		* These teleportation devices allow players to teleport to different areas of the Dredgion with ease.
 		* Central Teleporter: This teleporter activates 10 minutes after the Instanced Dungeon has begun.
 		*/
-		terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//A teleport device has been activated in the Emergency Exit.
@@ -227,7 +230,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 		* Time Elapsed: 15 Minutes
 		* Valor: 1,000 Points
 		*/
-		terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Enforcer Udara has appeared in the Gravity Control Room.
@@ -235,7 +238,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 				spawn(219270, 485.4811f, 313.925f, 403.71857f, (byte) 36); //Enforcer Udara.
 			}
 		}, 900000));
-		terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!dredgionReward.isRewarded()) {
@@ -419,7 +422,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			break;
 			case 219264: //Captain Anusa.
 				point = 1000;
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						if (!dredgionReward.isRewarded()) {
@@ -480,12 +483,12 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 			}
 			AbyssPointsService.addAp(player, (int) abyssPoint);
 			QuestEnv env = new QuestEnv(null, player, 0, 0);
-			QuestEngine.getInstance().onDredgionReward(env);
+			GameEngineServices.questEngine().onDredgionReward(env);
 		}
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -495,7 +498,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 						}
 						onExitInstance(player);
 					}
-					AutoGroupService.getInstance().unRegisterInstance(instanceId);
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
 		}, 120000);
@@ -636,7 +639,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -650,7 +653,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -663,7 +666,7 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        terathTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        terathTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -688,10 +691,10 @@ public class TerathDredgionInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = terathTask.head(), end = terathTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : terathTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

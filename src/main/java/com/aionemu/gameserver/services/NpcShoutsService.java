@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -37,7 +38,6 @@ import com.aionemu.gameserver.model.templates.npcshout.NpcShout;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -47,15 +47,15 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  * 
  * @author Rolandas
  */
+@Slf4j
 public class NpcShoutsService {
 
-	private static final Logger log = LoggerFactory.getLogger(NpcShoutsService.class);
 	private static volatile ObjectProvider<NpcShoutsService> instanceProvider;
 
 	NpcShoutData shoutsCache = DataManager.NPC_SHOUT_DATA;
 
 	public NpcShoutsService() {
-		for (Npc npc : World.getInstance().getNpcs()) {
+		for (Npc npc : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs()) {
 			final int npcId = npc.getNpcId();
 			final int worldId = npc.getSpawn().getWorldId();
 			final int objectId = npc.getObjectId();
@@ -74,10 +74,10 @@ public class NpcShoutsService {
 				}
 			}
 
-			ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
-					AionObject npcObj = World.getInstance().findVisibleObject(objectId);
+					AionObject npcObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(objectId);
 					if (npcObj != null && npcObj instanceof Npc) {
 						Npc npc2 = (Npc) npcObj;
 						// check if AI overrides
@@ -189,7 +189,7 @@ public class NpcShoutsService {
 
 	public void sendMsg(final Npc npc, final WorldMapInstance instance, final int msg, final int Obj,
 			final boolean isShout, final int color, int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (npc != null && npc.isSpawned()) {

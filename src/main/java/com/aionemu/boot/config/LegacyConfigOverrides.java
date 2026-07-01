@@ -1,43 +1,29 @@
 package com.aionemu.boot.config;
 
 import com.aionemu.gameserver.configs.Config;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.core.env.EnumerablePropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.Properties;
 
 @Component
 public class LegacyConfigOverrides {
 
-    static final String GAME_PROPERTY_PREFIX = "aion.legacy.game.property.";
-    private static final Map<String, String> GAME_PROPERTY_ALIASES = Map.of(
-        "aion.game.startup.progress.enabled", "gameserver.startup.progress.enable"
-    );
+    private static final String LOGIN_ADDRESS_KEY = "gameserver.network.login.address";
+    private static final String IPCONFIG_DEFAULT_KEY = "gameserver.network.ipconfig.default";
 
-    private final Environment environment;
+    private final LegacyGameProperties legacyGameProperties;
+    private final AionGameProperties gameProperties;
 
-    public LegacyConfigOverrides(Environment environment) {
-        this.environment = environment;
+    public LegacyConfigOverrides(LegacyGameProperties legacyGameProperties, AionGameProperties gameProperties) {
+        this.legacyGameProperties = legacyGameProperties;
+        this.gameProperties = gameProperties;
     }
 
     public Properties gameProperties() {
         Properties properties = new Properties();
-        if (!(environment instanceof ConfigurableEnvironment configurableEnvironment)) {
-            return properties;
-        }
-
-        for (PropertySource<?> propertySource : configurableEnvironment.getPropertySources()) {
-            if (!(propertySource instanceof EnumerablePropertySource<?> enumerablePropertySource)) {
-                continue;
-            }
-            for (String propertyName : enumerablePropertySource.getPropertyNames()) {
-                addGameProperty(properties, propertyName);
-            }
-        }
+        legacyGameProperties.getProperty().forEach(properties::setProperty);
+        addNetworkAliases(properties);
+        addGamePropertyAlias(properties);
         return properties;
     }
 
@@ -45,29 +31,39 @@ public class LegacyConfigOverrides {
         Config.setBootOverrides(gameProperties());
     }
 
-    private void addGameProperty(Properties properties, String propertyName) {
-        addGamePropertyAlias(properties, propertyName);
-        if (!propertyName.startsWith(GAME_PROPERTY_PREFIX) || propertyName.length() == GAME_PROPERTY_PREFIX.length()) {
-            return;
-        }
-        String legacyKey = propertyName.substring(GAME_PROPERTY_PREFIX.length());
+    private void addGamePropertyAlias(Properties properties) {
+        String legacyKey = "gameserver.startup.progress.enable";
         if (properties.containsKey(legacyKey)) {
             return;
         }
-        String value = environment.getProperty(propertyName);
-        if (value != null) {
-            properties.setProperty(legacyKey, value);
+        Boolean startupProgressEnabled = gameProperties.getStartup().getProgress().getEnabled();
+        if (startupProgressEnabled != null) {
+            properties.setProperty(legacyKey, startupProgressEnabled.toString());
         }
     }
 
-    private void addGamePropertyAlias(Properties properties, String propertyName) {
-        String legacyKey = GAME_PROPERTY_ALIASES.get(propertyName);
-        if (legacyKey == null || properties.containsKey(legacyKey)) {
+    private void addNetworkAliases(Properties properties) {
+        String externalIp = gameProperties.getNetwork().getExternalIp();
+        if (externalIp == null || externalIp.isBlank()) {
             return;
         }
-        String value = environment.getProperty(propertyName);
-        if (value != null) {
-            properties.setProperty(legacyKey, value);
+
+        externalIp = externalIp.trim();
+        properties.setProperty(IPCONFIG_DEFAULT_KEY, externalIp);
+        properties.setProperty(LOGIN_ADDRESS_KEY, replaceLoginAddressHost(
+            properties.getProperty(LOGIN_ADDRESS_KEY),
+            externalIp
+        ));
+    }
+
+    private String replaceLoginAddressHost(String loginAddress, String host) {
+        if (loginAddress == null || loginAddress.isBlank()) {
+            return host + ":9014";
         }
+        int portSeparator = loginAddress.lastIndexOf(':');
+        if (portSeparator < 0 || portSeparator == loginAddress.length() - 1) {
+            return host;
+        }
+        return host + loginAddress.substring(portSeparator);
     }
 }

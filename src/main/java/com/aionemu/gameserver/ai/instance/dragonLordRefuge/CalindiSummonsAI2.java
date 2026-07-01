@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -37,7 +39,7 @@ public class CalindiSummonsAI2 extends AggressiveNpcAI2
 		super.handleSpawned();
 		final int skill = getOwner().getNpcId() == 283132 ? 20914 : 20916;
 		int delay = getNpcId() == 283132 ? 500 : 2000;
-		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.useSkill(CalindiSummonsAI2.this, skill);
@@ -47,7 +49,7 @@ public class CalindiSummonsAI2 extends AggressiveNpcAI2
 	}
 	
 	private void despawn() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				getOwner().getController().onDelete();

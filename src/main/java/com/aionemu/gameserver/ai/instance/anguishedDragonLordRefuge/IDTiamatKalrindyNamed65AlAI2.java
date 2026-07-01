@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.anguishedDragonLordRefuge;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -66,7 +72,7 @@ public class IDTiamatKalrindyNamed65AlAI2 extends AggressiveNpcAI2
     }
 	
     private void startSkillTask() {
-	    trapTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+	    trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 		    @Override
 		    public void run() {
 			    if (isAlreadyDead())
@@ -87,8 +93,8 @@ public class IDTiamatKalrindyNamed65AlAI2 extends AggressiveNpcAI2
     private void startHallucinatoryVictoryEvent() {
 	    if (getPosition().getWorldMapInstance().getNpc(730696) == null) {
 		    AI2Actions.useSkill(this, 20911);
-		    SkillEngine.getInstance().applyEffectDirectly(20590, getOwner(), getOwner(), 0);
-		    SkillEngine.getInstance().applyEffectDirectly(20591, getOwner(), getOwner(), 0);
+		    GameEngineServices.skillEngine().applyEffectDirectly(20590, getOwner(), getOwner(), 0);
+		    GameEngineServices.skillEngine().applyEffectDirectly(20591, getOwner(), getOwner(), 0);
 		    spawn(730696, 482.21f, 458.06f, 427.42f, (byte) 98);
 		    spawn(730696, 482.21f, 571.16f, 427.42f, (byte) 22);
 		    rndSpawn(283132, 5);
@@ -97,8 +103,8 @@ public class IDTiamatKalrindyNamed65AlAI2 extends AggressiveNpcAI2
 	
     private void blazeEngraving() {
 	    if (Rnd.get(0, 100) < 2 && getPosition().getWorldMapInstance().getNpc(283130) == null) {
-		    NpcShoutsService.getInstance().sendMsg(getOwner(), 1500718, getObjectId(), 0, 0);
-			SkillEngine.getInstance().getSkill(getOwner(), 20913, 60, getOwner().getTarget()).useNoAnimationSkill();
+		    GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500718, getObjectId(), 0, 0);
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20913, 60, getOwner().getTarget()).useNoAnimationSkill();
 		    Player target = getRandomTarget();
 		    if (target == null) {
 		        return;
@@ -186,6 +192,6 @@ public class IDTiamatKalrindyNamed65AlAI2 extends AggressiveNpcAI2
     }
 	
 	private void sendMsg(int msg) {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
 }

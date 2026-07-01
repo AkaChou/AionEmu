@@ -16,12 +16,16 @@
  */
 package com.aionemu.gameserver.model.team2.alliance;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.metadata.GlobalCallback;
 import com.aionemu.gameserver.configs.main.GroupConfig;
@@ -52,16 +56,14 @@ import com.aionemu.gameserver.model.team2.common.legacy.PlayerAllianceEvent;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.TimeUtil;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
+@Slf4j
 
 public class PlayerAllianceService {
-	private static final Logger log = LoggerFactory.getLogger(PlayerAllianceService.class);
 	private static final Map<Integer, PlayerAlliance> alliances = new ConcurrentHashMap<Integer, PlayerAlliance>();
 	private static final AtomicBoolean offlineCheckStarted = new AtomicBoolean();
 
@@ -83,7 +85,7 @@ public class PlayerAllianceService {
 
 	public static final boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
-			if (AutoGroupService.getInstance().isAutoInstance(inviter.getInstanceId())) {
+			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
 				// You cannot use invite, leave or kick commands related to your group or
 				// alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
@@ -91,7 +93,7 @@ public class PlayerAllianceService {
 			}
 		}
 		if (invited.isInInstance()) {
-			if (AutoGroupService.getInstance().isAutoInstance(invited.getInstanceId())) {
+			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited.getInstanceId())) {
 				// You cannot use invite, leave or kick commands related to your group or
 				// alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
@@ -107,13 +109,13 @@ public class PlayerAllianceService {
 						// is in an Instanced Zone.
 						PacketSendUtility.sendPacket(inviter, new SM_SYSTEM_MESSAGE(1400128));
 						return false;
-					} else if (!VortexService.getInstance().isInsideVortexZone(tm)) {
+					} else if (!GameLocationBootstrapServices.vortexService().isInsideVortexZone(tm)) {
 						PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE
 								.STR_PARTY_ALLIANCE_CANT_INVITE_WHEN_HE_IS_ASKED_QUESTION(tm.getName()));
 						return false;
 					}
 				}
-			} else if (!VortexService.getInstance().isInsideVortexZone(invited)) {
+			} else if (!GameLocationBootstrapServices.vortexService().isInsideVortexZone(invited)) {
 				// You cannot invite someone in a different area.
 				PacketSendUtility.sendPacket(inviter, new SM_SYSTEM_MESSAGE(1401527));
 				return false;
@@ -135,7 +137,7 @@ public class PlayerAllianceService {
 	}
 
 	private static void initializeOfflineCheck() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new OfflinePlayerAllianceChecker(), 1000, 30 * 1000);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new OfflinePlayerAllianceChecker(), 1000, 30 * 1000);
 	}
 
 	@GlobalCallback(AddPlayerToAllianceCallback.class)
@@ -181,7 +183,7 @@ public class PlayerAllianceService {
 		PlayerAlliance alliance = player.getPlayerAlliance2();
 		if (alliance != null) {
 			if (alliance.getTeamType().isDefence()) {
-				VortexService.getInstance().removeDefenderPlayer(player);
+				GameLocationBootstrapServices.vortexService().removeDefenderPlayer(player);
 			}
 			alliance.onEvent(new PlayerAllianceLeavedEvent(alliance, player));
 		}
@@ -193,7 +195,7 @@ public class PlayerAllianceService {
 		PlayerAlliance alliance = banGiver.getPlayerAlliance2();
 		if (alliance != null) {
 			if (alliance.getTeamType().isDefence()) {
-				VortexService.getInstance().removeDefenderPlayer(bannedPlayer);
+				GameLocationBootstrapServices.vortexService().removeDefenderPlayer(bannedPlayer);
 			}
 			PlayerAllianceMember bannedMember = alliance.getMember(bannedPlayer.getObjectId());
 			if (bannedMember != null) {
@@ -295,7 +297,7 @@ public class PlayerAllianceService {
 			int kickDelay = currentAlliance.getTeamType().isAutoTeam() ? 60 : GroupConfig.ALLIANCE_REMOVE_TIME;
 			if (!member.isOnline() && TimeUtil.isExpired(member.getLastOnlineTime() + kickDelay * 1000)) {
 				if (currentAlliance.getTeamType().isOffence()) {
-					VortexService.getInstance().removeInvaderPlayer(member.getObject());
+					GameLocationBootstrapServices.vortexService().removeInvaderPlayer(member.getObject());
 				}
 				currentAlliance.onEvent(
 						new PlayerAllianceLeavedEvent(currentAlliance, member.getObject(), LeaveReson.LEAVE_TIMEOUT));

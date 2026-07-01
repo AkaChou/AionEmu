@@ -48,7 +48,7 @@ public class Notice extends AdminCommand {
 			PacketSendUtility.sendMessage(player, "Parameters should be text or number !");
 			return;
 		}
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 
 		while (iter.hasNext()) {
 			PacketSendUtility.sendBrightYellowMessageOnCenter(iter.next(), "Information: " + message);

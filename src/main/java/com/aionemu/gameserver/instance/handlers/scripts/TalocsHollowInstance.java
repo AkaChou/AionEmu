@@ -16,9 +16,15 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.*;
-import javolution.util.*;
 import java.util.concurrent.Future;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -42,7 +48,7 @@ import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.summons.SummonsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -59,8 +65,8 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> talocTask = FastList.newInstance();
-	private FastMap<Integer, VisibleObject> objects = new FastMap<Integer, VisibleObject>();
+	private final List<Future<?>> talocTask = new ArrayList<Future<?>>();
+	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
     
 	@Override
     public void onInstanceCreate(WorldMapInstance instance) {
@@ -96,40 +102,40 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 		sendMsgByRace(1400752, Race.PC_ALL, 10000);
 		//An object of great power waits in your cube. Launch a powerful aerial attack with Taloc's Tears.
 		sendMsgByRace(1400753, Race.PC_ALL, 15000);
-		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/talocHollow.xhtml"));
+		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/talocHollow.xhtml"));
     }
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 215456: //Shishir.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000088, 1)); //Shishir's Corrosive Fluid.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000137, 1)); //Shishir's Powerstone.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000088, 1)); //Shishir's Corrosive Fluid.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000137, 1)); //Shishir's Powerstone.
 		    break;
 			case 215478: //Neith.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000108, 1)); //Dorkin's Pocket Knife.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000139, 1)); //Neith's Sleepstone.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000108, 1)); //Dorkin's Pocket Knife.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000139, 1)); //Neith's Sleepstone.
 		    break;
 			case 215482: //Gellmar.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000138, 1)); //Gellmar's Wardstone.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000138, 1)); //Gellmar's Wardstone.
 		    break;
 			case 215488: //Celestius.
 			    switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
 					break;
 					case 5:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					break;
 				}
 			break;
@@ -293,10 +299,10 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = talocTask.head(), end = talocTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : talocTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -309,7 +315,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        talocTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -323,7 +329,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        talocTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        talocTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -345,7 +351,7 @@ public class TalocsHollowInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

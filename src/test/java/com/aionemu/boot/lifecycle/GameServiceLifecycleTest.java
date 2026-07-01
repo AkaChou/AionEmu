@@ -2,8 +2,10 @@ package com.aionemu.boot.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.aionemu.boot.config.AionGameProperties;
 import com.aionemu.boot.config.AionServicesProperties;
 import com.aionemu.boot.config.LegacyConfigOverrides;
+import com.aionemu.boot.config.LegacyGameProperties;
 import com.aionemu.gameserver.GameServer;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelLifecycle;
 import com.aionemu.gameserver.lifecycle.GameAdminPanelGateway;
@@ -82,7 +84,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.DefaultApplicationArguments;
-import org.springframework.core.env.StandardEnvironment;
 
 class GameServiceLifecycleTest {
 
@@ -154,7 +155,7 @@ class GameServiceLifecycleTest {
         private final List<String> events;
 
         private RecordingLegacyConfigOverrides(List<String> events) {
-            super(new StandardEnvironment());
+            super(new LegacyGameProperties(), new AionGameProperties());
             this.events = events;
         }
 

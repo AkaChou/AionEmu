@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public final class LoginPremiumServices implements DisposableBean {
 
     private static volatile ObjectProvider<PremiumController> premiumControllerProvider;
+    private static volatile PremiumController resolvedPremiumController;
 
     public LoginPremiumServices(ObjectProvider<PremiumController> premiumControllerProvider) {
         LoginPremiumServices.premiumControllerProvider = premiumControllerProvider;
@@ -17,9 +18,13 @@ public final class LoginPremiumServices implements DisposableBean {
     public static PremiumController premiumController() {
         ObjectProvider<PremiumController> provider = premiumControllerProvider;
         if (provider == null) {
-            return fallbackPremiumController();
+            PremiumController resolved = resolvedPremiumController;
+            if (resolved != null) {
+                return resolved;
+            }
+            return remember(fallbackPremiumController());
         }
-        return provider.getIfAvailable(LoginPremiumServices::fallbackPremiumController);
+        return remember(provider.getIfAvailable(LoginPremiumServices::fallbackPremiumController));
     }
 
     @Override
@@ -29,6 +34,16 @@ public final class LoginPremiumServices implements DisposableBean {
 
     private static PremiumController fallbackPremiumController() {
         return Fallbacks.PREMIUM_CONTROLLER;
+    }
+
+    private static PremiumController remember(PremiumController premiumController) {
+        resolvedPremiumController = premiumController;
+        return premiumController;
+    }
+
+    static void resetForTests() {
+        premiumControllerProvider = null;
+        resolvedPremiumController = null;
     }
 
     private static final class Fallbacks {

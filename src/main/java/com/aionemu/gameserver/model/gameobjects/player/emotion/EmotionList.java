@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player.emotion;
 
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -53,7 +55,7 @@ public class EmotionList {
 
 		if (isNew) {
 			if (emotion.getExpireTime() != 0) {
-				ExpireTimerTask.getInstance().addTask(emotion, owner);
+				GameTaskManagerServices.expireTimerTask().addTask(emotion, owner);
 			}
 			DAOManager.getDAO(PlayerEmotionListDAO.class).insertEmotion(owner, emotion);
 			PacketSendUtility.sendPacket(owner, new SM_EMOTION_LIST((byte) 1, Collections.singletonList(emotion)));

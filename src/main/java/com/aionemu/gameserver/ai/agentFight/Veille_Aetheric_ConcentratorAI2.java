@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.agentFight;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -23,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -37,13 +40,13 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 	@Override
     protected void handleSpawned() {
         super.handleSpawned();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 20124, 1, getOwner()).useNoAnimationSkill(); //Aether Concentrator Standby.
-				SkillEngine.getInstance().getSkill(getOwner(), 22776, 1, getOwner()).useNoAnimationSkill();
-				SkillEngine.getInstance().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill();
-				SkillEngine.getInstance().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20124, 1, getOwner()).useNoAnimationSkill(); //Aether Concentrator Standby.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 22776, 1, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill();
 			}
 		}, 1000);
     }
@@ -89,7 +92,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 	}
 	
 	private void announceVeilleI() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The first Sphere of Mirage has been activated.
@@ -98,7 +101,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 		});
 	}
 	private void announceVeilleII() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The second Sphere of Mirage has been activated. Kaisinel's Agent Veille prepares to cast the Empyrean Lord's blessing.
@@ -107,7 +110,7 @@ public class Veille_Aetheric_ConcentratorAI2 extends ActionItemNpcAI2
 		});
 	}
 	private void announceVeilleIII() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//You may use the Sphere of Mirage again.

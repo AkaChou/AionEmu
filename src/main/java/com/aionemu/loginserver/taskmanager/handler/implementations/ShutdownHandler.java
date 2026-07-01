@@ -18,19 +18,17 @@
 
 package com.aionemu.loginserver.taskmanager.handler.implementations;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.loginserver.service.LoginShutdownRequest;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author Divinity, nrg
  */
+@Slf4j
 public class ShutdownHandler extends TaskFromDBHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ShutdownHandler.class);
 
     @Override
     public boolean isValid() {

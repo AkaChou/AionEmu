@@ -1,14 +1,12 @@
 package com.aionemu.loginserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.loginserver.dao.PlayerTransferDAO;
@@ -19,13 +17,13 @@ import com.aionemu.loginserver.service.ptransfer.PlayerTransferTask;
  * 
  * @author Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8PlayerTransferDAO extends PlayerTransferDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerTransferDAO.class);
 
     @Override
-    public FastList<PlayerTransferTask> getNew() {
-        FastList<PlayerTransferTask> list = FastList.newInstance();
+    public List<PlayerTransferTask> getNew() {
+        List<PlayerTransferTask> list = new ArrayList<>();
         String query = "SELECT * FROM player_transfers WHERE `status` = ?";
         
         try (Connection con = DatabaseFactory.getConnection();

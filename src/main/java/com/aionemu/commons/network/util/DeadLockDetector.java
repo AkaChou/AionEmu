@@ -22,15 +22,13 @@
  */
 package com.aionemu.commons.network.util;
 
+import lombok.extern.slf4j.Slf4j;
 import java.lang.management.LockInfo;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.function.IntConsumer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.AionProcessExit;
 import com.aionemu.commons.utils.ExitCode;
@@ -51,9 +49,9 @@ import com.aionemu.commons.utils.ExitCode;
  *
  * @author -Nemesiss-, ATracer
  */
+@Slf4j
 public class DeadLockDetector extends Thread {
     
-    private static final Logger log = LoggerFactory.getLogger(DeadLockDetector.class);
     
     /**
      * 死锁处理策略:不做任何处理

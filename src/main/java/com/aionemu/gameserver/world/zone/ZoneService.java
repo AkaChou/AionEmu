@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.world.zone;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.scripting.classlistener.AggregatedClassListener;
@@ -60,19 +61,20 @@ import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandlerClassListener;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author ATracer modified by antness
  */
+@Slf4j
 public final class ZoneService implements GameEngine {
 
 	private static volatile ObjectProvider<ZoneService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(ZoneService.class);
-	private TIntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
+	private IntObjectHashMap<List<ZoneInfo>> zoneByMapIdMap;
 	private final Map<ZoneName, Class<? extends ZoneHandler>> handlers = new HashMap<ZoneName, Class<? extends ZoneHandler>>();
-	private final FastMap<ZoneName, ZoneHandler> collidableHandlers = new FastMap<ZoneName, ZoneHandler>();
+	private final Map<ZoneName, ZoneHandler> collidableHandlers = new LinkedHashMap<ZoneName, ZoneHandler>();
 	public static final ZoneHandler DUMMY_ZONE_HANDLER = new GeneralZoneHandler();
 
 	public ZoneService() {
@@ -105,10 +107,8 @@ public final class ZoneService implements GameEngine {
 		Class<? extends ZoneHandler> zoneClass = handlers.get(zoneName);
 		if (zoneClass != null) {
 			try {
-				zoneHandler = zoneClass.newInstance();
-			} catch (IllegalAccessException ex) {
-				log.warn("Can't instantiate zone handler " + zoneName, ex);
-			} catch (Exception ex) {
+				zoneHandler = zoneClass.getDeclaredConstructor().newInstance();
+			} catch (ReflectiveOperationException ex) {
 				log.warn("Can't instantiate zone handler " + zoneName, ex);
 			}
 		}
@@ -191,7 +191,7 @@ public final class ZoneService implements GameEngine {
 		if (areas == null) {
 			return zones;
 		}
-		ShieldService.getInstance().load(mapId);
+		GameFeatureServices.shieldService().load(mapId);
 
 		for (ZoneInfo area : areas) {
 			ZoneInstance instance = null;
@@ -206,7 +206,7 @@ public final class ZoneService implements GameEngine {
 				if (siege != null) {
 					siege.addZone((SiegeZoneInstance) instance);
 					if (GeoDataConfig.GEO_SHIELDS_ENABLE) {
-						ShieldService.getInstance().attachShield(siege);
+						GameFeatureServices.shieldService().attachShield(siege);
 					}
 				}
 				break;
@@ -290,7 +290,7 @@ public final class ZoneService implements GameEngine {
 			if (materialId == 11) {
 				if (GeoDataConfig.GEO_SHIELDS_ENABLE) {
 					handler = new SiegeShield(geometry);
-					ShieldService.getInstance().registerShield(worldId, (SiegeShield) handler);
+					GameFeatureServices.shieldService().registerShield(worldId, (SiegeShield) handler);
 				} else {
 					return;
 				}

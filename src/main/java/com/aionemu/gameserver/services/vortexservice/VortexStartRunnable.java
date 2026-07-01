@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.vortexservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.vortex.VortexLocation;
@@ -34,10 +36,10 @@ public class VortexStartRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		Map<Integer, VortexLocation> locations = VortexService.getInstance().getVortexLocations();
+		Map<Integer, VortexLocation> locations = GameLocationBootstrapServices.vortexService().getVortexLocations();
 		for (final VortexLocation loc : locations.values()) {
 			if (loc.getId() == id) {
-				VortexService.getInstance().startInvasion(loc.getId());
+				GameLocationBootstrapServices.vortexService().startInvasion(loc.getId());
 			}
 		}
 	}

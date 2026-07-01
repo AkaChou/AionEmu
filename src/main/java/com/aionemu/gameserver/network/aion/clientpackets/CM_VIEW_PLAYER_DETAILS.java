@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.DeniedStatus;
@@ -31,9 +29,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_VIEW_PLAYER_DETAILS;
 /**
  * @author Avol
  */
+@Slf4j
 public class CM_VIEW_PLAYER_DETAILS extends AionClientPacket {
 
-	private static final Logger log = LoggerFactory.getLogger(CM_VIEW_PLAYER_DETAILS.class);
 
 	private int targetObjectId;
 

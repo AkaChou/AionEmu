@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -57,7 +59,7 @@ public class CM_REGISTER_HOUSE extends AionClientPacket {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_AUCTION_FAIL_ALREADY_REGISTED);
 			return;
 		}
-		if (!HousingBidService.getInstance().isRegisteringAllowed()) {
+		if (!GameHousingServices.housingBidService().isRegisteringAllowed()) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_CANT_AUCTION_TIMEOUT);
 			return;
 		}
@@ -71,7 +73,7 @@ public class CM_REGISTER_HOUSE extends AionClientPacket {
 			return;
 		}
 		player.getInventory().decreaseKinah(fee);
-		HousingBidService.getInstance().addHouseToAuction(house, bidKinah);
+		GameHousingServices.housingBidService().addHouseToAuction(house, bidKinah);
 		PacketSendUtility.sendPacket(player,
 				SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_AUCTION_MY_HOUSE(house.getAddress().getId()));
 		((HouseController) house.getController()).updateAppearance();

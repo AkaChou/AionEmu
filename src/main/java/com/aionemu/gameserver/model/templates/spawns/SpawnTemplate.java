@@ -16,13 +16,14 @@
  */
 package com.aionemu.gameserver.model.templates.spawns;
 
-import org.apache.commons.lang.StringUtils;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.templates.event.EventTemplate;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
-
-import javolution.util.FastList;
 
 public class SpawnTemplate {
 	private float x;
@@ -61,7 +62,7 @@ public class SpawnTemplate {
 	private String masterName = StringUtils.EMPTY;
 	private TemporarySpawn temporarySpawn;
 	private VisibleObject visibleObject;
-	private FastList<VisibleObject> visibleObjects;
+	private List<VisibleObject> visibleObjects;
 
 	public SpawnTemplate(SpawnGroup2 spawnGroup, SpawnSpotTemplate spot) {
 		this.spawnGroup = spawnGroup;
@@ -371,13 +372,13 @@ public class SpawnTemplate {
 		this.visibleObject = visibleObject;
 	}
 
-	public FastList<VisibleObject> getVisibleObjects() {
+	public List<VisibleObject> getVisibleObjects() {
 		return this.visibleObjects;
 	}
 
 	public void addVisibleObject(VisibleObject visibleObject) {
 		if (this.visibleObjects == null) {
-			this.visibleObjects = new FastList();
+			this.visibleObjects = new ArrayList<>();
 		}
 		this.visibleObjects.add(visibleObject);
 	}

@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.worlds.verteron;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -34,30 +38,30 @@ public class Poisonous_BubblegutAI2 extends AggressiveNpcAI2
 {
 	@Override
 	protected void handleSpawned() {
-  		protectionFluid();
+		protectionFluid();
 		super.handleSpawned();
 	}
-	
+
 	private void protectionFluid() {
-   		SkillEngine.getInstance().getSkill(getOwner(), 16447, 1, getOwner()).useNoAnimationSkill(); //Spout Sticky Protection Fluid.
- 	}
-	
+		GameEngineServices.skillEngine().getSkill(getOwner(), 16447, 1, getOwner()).useNoAnimationSkill(); //Spout Sticky Protection Fluid.
+	}
+
 	@Override
 	protected void handleDied() {
 		switch (getNpcId()) {
 		    case 210318: //Poisonous Bubblegut.
 			    spawn(203195, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Kato.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 				        despawnNpc(203195); //Kato.
 				    }
 			    }, 60000);
-			break;	
+			break;
 		}
 		super.handleDied();
 	}
-	
+
 	private void despawnNpc(int npcId) {
 		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
 			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);

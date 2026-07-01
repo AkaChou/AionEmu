@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.theobomosTestChamber;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -54,7 +58,7 @@ public class Desecrated_IfritAI2 extends AggressiveNpcAI2
 	}
 	
 	private void elementalLordship() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 22744, 1, getOwner()).useNoAnimationSkill(); //Elemental Lordship.
 	}
 	
 	@Override
@@ -100,7 +104,7 @@ public class Desecrated_IfritAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -108,7 +112,7 @@ public class Desecrated_IfritAI2 extends AggressiveNpcAI2
 				} else {
 					//A massive blast of elemental power will soon explode with destructive force.
 					PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_Teo_T_Boss_Skill_03, 0);
-					SkillEngine.getInstance().getSkill(getOwner(), 22743, 10, getOwner()).useNoAnimationSkill(); //Elemental Explosion.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 22743, 10, getOwner()).useNoAnimationSkill(); //Elemental Explosion.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -136,7 +140,7 @@ public class Desecrated_IfritAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {

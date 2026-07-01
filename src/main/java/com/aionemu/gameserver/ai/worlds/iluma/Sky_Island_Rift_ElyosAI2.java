@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.iluma;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -52,7 +54,7 @@ public class Sky_Island_Rift_ElyosAI2 extends NpcAI2 {
 	}
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.deleteOwner(Sky_Island_Rift_ElyosAI2.this);

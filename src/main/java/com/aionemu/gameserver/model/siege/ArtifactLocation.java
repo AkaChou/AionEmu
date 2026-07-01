@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.siege;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.templates.siegelocation.ArtifactActivation;
@@ -77,11 +79,11 @@ public class ArtifactLocation extends SiegeLocation {
 	}
 
 	public boolean isStandAlone() {
-		return !SiegeService.getInstance().getFortresses().containsKey(getLocationId());
+		return !GameFeatureServices.siegeService().getFortresses().containsKey(getLocationId());
 	}
 
 	public FortressLocation getOwningFortress() {
-		return SiegeService.getInstance().getFortress(getLocationId());
+		return GameFeatureServices.siegeService().getFortress(getLocationId());
 	}
 
 	/**

@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.model.templates.item;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -29,6 +29,7 @@ import com.aionemu.gameserver.model.Race;
  * Created by wanke on 17/02/2017.
  */
 @XmlType(name = "ResultedItemSet")
+@Slf4j(topic = "com.aionemu.gameserver.model.templates.item.ResultedItem")
 public class ResultedItemSet {
 	@XmlAttribute(name = "id")
 	public int itemId;
@@ -77,8 +78,7 @@ public class ResultedItemSet {
 			return 1;
 		} else if (rndMin > 0 || rndMax > 0) {
 			if (rndMax < rndMin) {
-				LoggerFactory.getLogger(ResultedItem.class).warn("Wronte rnd result item definition {} {}", rndMin,
-						rndMax);
+				log.warn("Wronte rnd result item definition {} {}", rndMin, rndMax);
 				return 1;
 			} else {
 				return Rnd.get(rndMin, rndMax);

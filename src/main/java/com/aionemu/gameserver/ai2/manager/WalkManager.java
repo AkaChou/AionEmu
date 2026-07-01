@@ -14,6 +14,10 @@
  */
 package com.aionemu.gameserver.ai2.manager;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.List;
@@ -39,8 +43,6 @@ import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author ATracer
@@ -240,7 +242,7 @@ public class WalkManager {
 			npcAI.getOwner().getMoveController().abortMove();
 			npcAI.getOwner().getMoveController().chooseNextStep();
 			
-			ScheduledFuture<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					pendingWalkTasks.remove(npcAI.getOwner().getObjectId());
@@ -265,7 +267,7 @@ public class WalkManager {
 		final int walkRange = Math.max(randomWalkNr, WALK_RANDOM_RANGE);
 		final float distToSpawn = (float) owner.getDistanceToSpawnLocation();
 		
-		ScheduledFuture<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		ScheduledFuture<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				pendingWalkTasks.remove(npcObjectId);
@@ -299,7 +301,7 @@ public class WalkManager {
 						
 						if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE && !owner.isFlying()) {
 							try {
-								targetZ = GeoService.getInstance().getZ(owner.getWorldId(), targetX, targetY, owner.getZ(), 0.5F, owner.getInstanceId());
+								targetZ = GameWorldServices.geoService().getZ(owner.getWorldId(), targetX, targetY, owner.getZ(), 0.5F, owner.getInstanceId());
 							} catch (Exception e) {
 								targetZ = owner.getSpawn().getZ();
 							}
@@ -308,7 +310,7 @@ public class WalkManager {
 						if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE) {
 							BoundRadius radius = owner.getObjectTemplate().getBoundRadius();
 							byte flags = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId() | CollisionIntention.WALK.getId());
-							Vector3f loc = GeoService.getInstance().getClosestCollision(owner, targetX, targetY, targetZ, true, flags);
+							Vector3f loc = GameWorldServices.geoService().getClosestCollision(owner, targetX, targetY, targetZ, true, flags);
 							
 							if (loc != null && (Math.abs(loc.x - targetX) > 0.5f || Math.abs(loc.y - targetY) > 0.5f)) {
 								owner.getMoveController().moveToPoint(loc.x, loc.y, loc.z);
@@ -371,14 +373,14 @@ public class WalkManager {
 	private static boolean isTargetPointValid(Npc owner, float x, float y, float z) {
 		if (GeoDataConfig.GEO_ENABLE && GeoDataConfig.GEO_NPC_MOVE) {
 			try {
-				float actualZ = GeoService.getInstance().getZ(owner.getWorldId(), x, y, z, 0.5F, owner.getInstanceId());
+				float actualZ = GameWorldServices.geoService().getZ(owner.getWorldId(), x, y, z, 0.5F, owner.getInstanceId());
 				
 				if (!isTerrainReachableByAngle(owner, x, y, owner.getZ(), actualZ)) {
 					return false;
 				}
 				
 				byte flags = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.WALK.getId());
-				Vector3f loc = GeoService.getInstance().getClosestCollision(owner, x, y, actualZ, true, flags);
+				Vector3f loc = GameWorldServices.geoService().getClosestCollision(owner, x, y, actualZ, true, flags);
 					
 				if (loc != null && (Math.abs(loc.x - x) > 1.0f || Math.abs(loc.y - y) > 1.0f)) {
 					return false;
@@ -399,7 +401,7 @@ public class WalkManager {
 			return;
 		}
 		
-		zCheckTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		zCheckTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				performZCheck();
@@ -460,7 +462,7 @@ public class WalkManager {
 
 	private static float getValidGeoZ(Npc npc, float x, float y, float currentZ) {
 		try {
-			return GeoService.getInstance().getZ(npc.getWorldId(), x, y, currentZ, 0.5F, npc.getInstanceId());
+			return GameWorldServices.geoService().getZ(npc.getWorldId(), x, y, currentZ, 0.5F, npc.getInstanceId());
 		} catch (Exception e) {
 			return Float.NaN;
 		}

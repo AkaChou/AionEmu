@@ -18,12 +18,10 @@
 
 package com.aionemu.loginserver.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
 import com.aionemu.commons.utils.concurrent.RunnableWrapper;
 import com.aionemu.commons.utils.concurrent.ScheduledFutureWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -31,9 +29,9 @@ import java.util.concurrent.*;
 /**
  * @author -Nemesiss-, NB4L1, MrPoke, lord_rex
  */
+@Slf4j
 public final class ThreadPoolManager {
 
-    private static final Logger log = LoggerFactory.getLogger(ThreadPoolManager.class);
     public static final long MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING = 5000;
     private static final long MAX_DELAY = TimeUnit.NANOSECONDS.toMillis(Long.MAX_VALUE - System.nanoTime()) / 2;
     private final ScheduledThreadPoolExecutor scheduledPool;

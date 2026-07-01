@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -30,8 +34,8 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
-import javolution.util.FastList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,7 +45,7 @@ public class LegionCommand extends AdminCommand {
 	private LegionService service;
 	public LegionCommand() {
 		super("legion");
-		service = LegionService.getInstance();
+		service = GameCoreGameplayServices.legionService();
 	}
 	
 	@Override
@@ -130,7 +134,9 @@ public class LegionCommand extends AdminCommand {
 			if(legion == null)
 				return;
 			
-			FastList<String> message = FastList.newInstance(), online = FastList.newInstance(), offline = FastList.newInstance();
+			List<String> message = new ArrayList<String>();
+			List<String> online = new ArrayList<String>();
+			List<String> offline = new ArrayList<String>();
 			message.add("name: "+legion.getLegionName());
 			message.add("contrib points: "+legion.getContributionPoints());
 			message.add("level: "+legion.getLegionLevel());
@@ -140,7 +146,7 @@ public class LegionCommand extends AdminCommand {
 			
 			PlayerDAO dao = null;
 			for(int memberId : members) {
-				Player pl = World.getInstance().findPlayer(memberId);
+				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
 				if(pl != null)
 					online.add(pl.getName()+" (lv"+pl.getLevel()+") classId "+pl.getPlayerClass().getClassId());
 				else {
@@ -154,21 +160,17 @@ public class LegionCommand extends AdminCommand {
 			
 			message.add("--ONLINE-------- "+online.size());
 			message.addAll(online);
-			FastList.recycle(online);
 			message.add("--OFFLINE-------- "+offline.size());
 			message.addAll(offline);
-			FastList.recycle(offline);
 			
 			for(String msg : message)
 				PacketSendUtility.sendMessage(player, msg);
-					
-			FastList.recycle(message);
 		}
 		else if(params[0].equalsIgnoreCase("kick")) {
 			if(!verifyLenght(player, 2, params)) //legion kick PLAYER
 				return;
 			
-			Player target = World.getInstance().findPlayer(Util.convertName(params[1]));
+			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[1]+" not exists.");
 				return;
@@ -190,7 +192,7 @@ public class LegionCommand extends AdminCommand {
 			if(legion == null)
 				return;
 			
-			Player target = World.getInstance().findPlayer(Util.convertName(params[2]));
+			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[2]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[2]+" not exists.");
 				return;
@@ -215,7 +217,7 @@ public class LegionCommand extends AdminCommand {
 			if(legion == null)
 				return;
 			
-			Player target = World.getInstance().findPlayer(Util.convertName(params[2]));
+			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[2]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[2]+" not exists.");
 				return;
@@ -229,7 +231,7 @@ public class LegionCommand extends AdminCommand {
 			List<Integer> members = legion.getLegionMembers();
 			Player bgplayer = null;
 			for(int memberId : members) {
-				Player pl = World.getInstance().findPlayer(memberId);
+				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberId);
 				if(pl != null) {
 					if(pl.getLegionMember().getRank() == LegionRank.BRIGADE_GENERAL) {
 						bgplayer = pl;
@@ -256,7 +258,7 @@ public class LegionCommand extends AdminCommand {
 			if(!verifyLenght(player, 3, params)) //legion setrank PLAYER RANK
 				return;
 			
-			Player target = World.getInstance().findPlayer(Util.convertName(params[1]));
+			Player target = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
 			if(target == null) {
 				PacketSendUtility.sendMessage(player, "player "+params[1]+" not exists.");
 				return;
@@ -291,19 +293,19 @@ public class LegionCommand extends AdminCommand {
 				PacketSendUtility.sendMessage(player, "You are not in a Legion !");
 				return;
 			} if (params[1].equalsIgnoreCase("list")) {
-				for (LegionTerritory territory : TerritoryService.getInstance().getTerritories()) {
+				for (LegionTerritory territory : GameRuntimeServices.territoryService().getTerritories()) {
 					PacketSendUtility.sendMessage(player, "Id: "+territory.getId()+" owned by Legion: "+territory.getLegionName());
 				}
 			} else if (params[1].equalsIgnoreCase("cancel")) {
 				if (player.getLegion().getTerritory().getId() > 0)
-					TerritoryService.getInstance().onLooseTerritory(player.getLegion());
+					GameRuntimeServices.territoryService().onLooseTerritory(player.getLegion());
 				else PacketSendUtility.sendMessage(player, "Your Legion didn't owns an territory..");
 			} else if (params[1].equalsIgnoreCase("capture")) {
 				if (params[2] == null || params[2].isEmpty()) {
 					onFail(player,"Missing territoryId parameter !");
 					return;
 				}
-				TerritoryService.getInstance().onConquerTerritory(player.getLegion(), Integer.parseInt(params[2]));
+				GameRuntimeServices.territoryService().onConquerTerritory(player.getLegion(), Integer.parseInt(params[2]));
 			}
 		}
 	}

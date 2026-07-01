@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -64,7 +68,7 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 		if (isHome.compareAndSet(true, false)) {
 			getPosition().getWorldMapInstance().getDoors().get(467).setOpen(false);
 			//Whoever ye may be, thou shalt not escape this curse.
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 1500063, getObjectId(), 0, 0);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500063, getObjectId(), 0, 0);
 			startMacumbelloRightHandEvent();
 		}
 	}
@@ -82,21 +86,21 @@ public class MacunbelloAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startMacumbelloRightHandEvent() {
-		rightHandTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		rightHandTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.ACTIVE)) {
 					phase = Phase.RIGHT_HAND;
 					cancelActiveEventTask();
 					//Come forth, my faithful servants!
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500060, getObjectId(), 0, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500060, getObjectId(), 0, 0);
 					//Hurry and devour these foolish Daevas!
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500061, getObjectId(), 0, 3000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500061, getObjectId(), 0, 3000);
 					canThink = false;
 					EmoteManager.emoteStopAttacking(getOwner());
 					setStateIfNot(AIState.WALKING);
 					spawnMacumbelloRightHandEvent();
-					rightHandTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					rightHandTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isAlreadyDead() && !isHome.get() && phase.equals(Phase.RIGHT_HAND)) {

@@ -22,15 +22,20 @@ import java.nio.charset.Charset;
 
 import com.aionemu.chatserver.model.ChannelType;
 import com.aionemu.chatserver.service.ChatCoreServices;
+import lombok.Getter;
 
 /**
  * @author ATracer
  */
 public abstract class Channel {
 
+    @Getter
     private final ChannelType channelType;
+    @Getter
     private final byte[] identifierBytes;
+    @Getter
     private final String identifier;
+    @Getter
     private final int channelId;
 
     public Channel(ChannelType channelType, String identifier) {
@@ -44,19 +49,4 @@ public abstract class Channel {
         return identifier;
     }
 
-    public ChannelType getChannelType() {
-        return channelType;
-    }
-
-    public byte[] getIdentifierBytes() {
-        return identifierBytes;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public int getChannelId() {
-        return channelId;
-    }
 }

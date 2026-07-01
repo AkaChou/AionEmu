@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.SeasonRankingDAO;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -8,9 +9,6 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.ranking.*;
 import com.aionemu.gameserver.model.ranking.SeasonRankingResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,9 +19,9 @@ import java.util.ArrayList;
  * Created by Wnkrz on 24/07/2017.
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8SeasonRankingDAO extends SeasonRankingDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8SeasonRankingDAO.class);
 
     public static final String SELECT_PLAYERS_RANKING = "SELECT competition_ranking.rank, competition_ranking.last_rank, " + "competition_ranking.points, competition_ranking.player_id, players.name, " + "players.id, players.player_class, players.race FROM competition_ranking " + "INNER JOIN players ON competition_ranking.player_id = players.id " + "WHERE competition_ranking.table_id = ? AND competition_ranking.points > 0 " + "ORDER BY competition_ranking.points DESC LIMIT 300";
 

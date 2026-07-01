@@ -17,7 +17,7 @@
 package com.aionemu.gameserver.network.aion.gmhandler;
 
 import com.aionemu.gameserver.configs.administration.PanelConfig;
-import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.QuestStateList;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
@@ -51,8 +51,8 @@ public class CmdEndQuest extends AbstractGMHandler {
 			return;
 		}
 
-		DataManager.getInstance();
-		QuestTemplate qt = DataManager.QUEST_DATA.getQuestById(questID);
+		@SuppressWarnings("static-access")
+		QuestTemplate qt = GameStaticDataServices.dataManager().QUEST_DATA.getQuestById(questID);
 		if (qt == null) {
 			PacketSendUtility.sendMessage(admin, "Quest with ID: " + questID + " was not found");
 			return;

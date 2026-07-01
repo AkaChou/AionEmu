@@ -66,7 +66,7 @@ public class UnBan extends AdminCommand {
 		}
 
 		// Sends time -1 to unban
-		LoginServer.getInstance().sendBanPacket(type, accountId, "", -1, admin.getObjectId());
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendBanPacket(type, accountId, "", -1, admin.getObjectId());
 	}
 
 	@Override

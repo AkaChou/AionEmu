@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.items;
 
+import lombok.Getter;
+
 /**
  * @author ATracer
  */
@@ -28,6 +30,7 @@ public class ItemCooldown {
 	/**
 	 * Use delay in ms
 	 */
+	@Getter
 	private int useDelay;
 
 	/**
@@ -46,10 +49,4 @@ public class ItemCooldown {
 		return time;
 	}
 
-	/**
-	 * @return the useDelay
-	 */
-	public int getUseDelay() {
-		return useDelay;
-	}
 }

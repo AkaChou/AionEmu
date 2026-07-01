@@ -16,11 +16,14 @@
  */
 package com.aionemu.gameserver.services.svsservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.svs.SvsLocation;
 import com.aionemu.gameserver.services.SvsService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -36,18 +39,18 @@ public class SvsStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// Advance Corridor [Transidium Annex].
-		SvsService.getInstance().transidiumAnnexMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameLocationBootstrapServices.svsService().transidiumAnnexMsg(id);
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Advance Corridor [Transidium Annex].
-				SvsService.getInstance().advanceCorridorSP(id);
+				GameLocationBootstrapServices.svsService().advanceCorridorSP(id);
 			}
 		}, 480000);
-		Map<Integer, SvsLocation> locations = SvsService.getInstance().getSvsLocations();
+		Map<Integer, SvsLocation> locations = GameLocationBootstrapServices.svsService().getSvsLocations();
 		for (final SvsLocation loc : locations.values()) {
 			if (loc.getId() == id) {
-				SvsService.getInstance().startSvs(loc.getId());
+				GameLocationBootstrapServices.svsService().startSvs(loc.getId());
 			}
 		}
 	}

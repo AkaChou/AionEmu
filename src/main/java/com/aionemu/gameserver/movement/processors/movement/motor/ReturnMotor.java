@@ -35,7 +35,7 @@ public class ReturnMotor extends AMovementMotor {
 
 			@Override
 			public void run() {
-				World.getInstance().updatePosition(ReturnMotor.this._owner, ReturnMotor.this._targetPosition.x,
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(ReturnMotor.this._owner, ReturnMotor.this._targetPosition.x,
 						ReturnMotor.this._targetPosition.y, ReturnMotor.this._targetPosition.z,
 						ReturnMotor.this._targetHeading, false);
 				ReturnMotor.this._owner.getAi2().onGeneralEvent(AIEventType.MOVE_ARRIVED);

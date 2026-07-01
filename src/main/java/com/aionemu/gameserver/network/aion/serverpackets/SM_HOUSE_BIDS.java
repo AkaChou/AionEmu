@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -43,7 +45,7 @@ public class SM_HOUSE_BIDS extends AionServerPacket {
 	@Override
 	protected void writeImpl(AionConnection con) {
 		Player player = con.getActivePlayer();
-		int secondsTillAuction = HousingBidService.getInstance().getSecondsTillAuction();
+		int secondsTillAuction = GameHousingServices.housingBidService().getSecondsTillAuction();
 		writeC(isFirst ? 1 : 0);
 		writeC(isLast ? 1 : 0);
 		if (playerBid == null) {
@@ -63,7 +65,7 @@ public class SM_HOUSE_BIDS extends AionServerPacket {
 		}
 		HouseBidEntry sellData = null;
 		if (sellHouse != null) {
-			sellData = HousingBidService.getInstance().getHouseBid(sellHouse.getObjectId());
+			sellData = GameHousingServices.housingBidService().getHouseBid(sellHouse.getObjectId());
 			writeD(sellData.getEntryIndex());
 			writeQ(sellData.getBidPrice());
 		} else {

@@ -16,8 +16,12 @@
  */
 package com.aionemu.gameserver.services.reward;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -28,11 +32,12 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
+@Slf4j
 
 public class RewardService {
 	private RewardServiceDAO dao;
-	private static final Logger log = LoggerFactory.getLogger(RewardService.class);
 	private static volatile ObjectProvider<RewardService> instanceProvider;
 
 	public static RewardService getInstance() {
@@ -56,11 +61,11 @@ public class RewardService {
 	}
 
 	public void verify(Player player) {
-		FastList<RewardEntryItem> list = dao.getAvailable(player.getObjectId());
+		List<RewardEntryItem> list = dao.getAvailable(player.getObjectId());
 		if (list.size() == 0 || player.getMailbox() == null) {
 			return;
 		}
-		FastList<Integer> rewarded = FastList.newInstance();
+		List<Integer> rewarded = new ArrayList<Integer>();
 		for (RewardEntryItem item : list) {
 			if (DataManager.ITEM_DATA.getItemTemplate(item.id) == null) {
 				log.warn("[RewardController][" + item.unique + "] null template for item " + item.id + " on player "
@@ -68,7 +73,7 @@ public class RewardService {
 				continue;
 			}
 			try {
-				if (!SystemMailService.getInstance().sendMail("$$CASH_ITEM_MAIL", player.getName(),
+				if (!GameFeatureServices.systemMailService().sendMail("$$CASH_ITEM_MAIL", player.getName(),
 						item.id + ", " + item.count, "0, " + (System.currentTimeMillis() / 1000) + ",", item.id,
 						(int) item.count, 0, 0, LetterType.BLACKCLOUD)) {
 					continue;
@@ -84,8 +89,7 @@ public class RewardService {
 		}
 		if (rewarded.size() > 0) {
 			dao.uncheckAvailable(rewarded);
-			FastList.recycle(rewarded);
-			FastList.recycle(list);
+			list.clear();
 		}
 	}
 }

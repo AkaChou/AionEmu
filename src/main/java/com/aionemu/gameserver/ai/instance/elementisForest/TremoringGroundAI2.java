@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -43,11 +47,11 @@ public class TremoringGroundAI2 extends GeneralNpcAI2 {
 			final Player player = (Player) creature;
 			if (MathUtil.getDistance(getOwner(), player) <= 16) {
 				if (isUsed.compareAndSet(false, true)) {
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 						@Override
 						public void run() {
-							SkillEngine.getInstance().getSkill(getOwner(), 19442, 51, player).useNoAnimationSkill();
+							GameEngineServices.skillEngine().getSkill(getOwner(), 19442, 51, player).useNoAnimationSkill();
 							AI2Actions.deleteOwner(TremoringGroundAI2.this);
 						}
 

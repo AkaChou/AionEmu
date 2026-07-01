@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -39,7 +43,7 @@ public class DancingFlameAI2 extends GeneralNpcAI2
 	private Future<?> task;
 	
 	private void startTask() {
-		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -79,10 +83,10 @@ public class DancingFlameAI2 extends GeneralNpcAI2
 		if (getNpcId() == 282996 || getNpcId() == 282997) {
 			startTask();
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
-					SkillEngine.getInstance().getSkill(getOwner(), getNpcId() == 282998 ? 20536 : 20535, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), getNpcId() == 282998 ? 20536 : 20535, 60, getOwner()).useNoAnimationSkill();
 				}
 			}, 500);
 			starLifeTask();
@@ -90,7 +94,7 @@ public class DancingFlameAI2 extends GeneralNpcAI2
 	}
 	
 	private void starLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				despawn();

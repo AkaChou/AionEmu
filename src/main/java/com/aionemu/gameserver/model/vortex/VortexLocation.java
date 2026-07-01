@@ -16,8 +16,12 @@
  */
 package com.aionemu.gameserver.model.vortex;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.gameserver.controllers.RVController;
 import com.aionemu.gameserver.model.Race;
@@ -32,13 +36,13 @@ import com.aionemu.gameserver.model.templates.vortex.VortexTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.vortexservice.DimensionalVortex;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.InvasionZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class VortexLocation implements ZoneHandler {
 	protected boolean isActive;
@@ -49,8 +53,8 @@ public class VortexLocation implements ZoneHandler {
 	protected Race offenceRace;
 	protected Race defendsRace;
 	protected List<InvasionZoneInstance> zones;
-	protected FastMap<Integer, Player> players = new FastMap<Integer, Player>();
-	protected FastMap<Integer, Kisk> kisks = new FastMap<Integer, Kisk>();
+	protected Map<Integer, Player> players = new HashMap<>();
+	protected Map<Integer, Kisk> kisks = new LinkedHashMap<Integer, Kisk>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 	protected HomePoint home;
 	protected ResurrectionPoint resurrection;
@@ -131,11 +135,11 @@ public class VortexLocation implements ZoneHandler {
 		return spawned;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 
-	public FastMap<Integer, Kisk> getInvadersKisks() {
+	public Map<Integer, Kisk> getInvadersKisks() {
 		return kisks;
 	}
 
@@ -172,12 +176,12 @@ public class VortexLocation implements ZoneHandler {
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		if (creature instanceof Kisk) {
 			if (creature.getRace().equals(getInvadersRace())) {
-				kisks.putEntry(creature.getObjectId(), (Kisk) creature);
+				kisks.put(creature.getObjectId(), (Kisk) creature);
 			}
 		} else if (creature instanceof Player) {
 			Player player = (Player) creature;
 			if (!players.containsKey(player.getObjectId())) {
-				players.putEntry(player.getObjectId(), player);
+				players.put(player.getObjectId(), player);
 				if (isActive()) {
 					if (player.getRace().equals(getInvadersRace())) {
 						if (getVortexController().getPassedPlayers().containsKey(player.getObjectId())
@@ -205,7 +209,7 @@ public class VortexLocation implements ZoneHandler {
 					if (player.getRace().equals(getInvadersRace())) {
 						if (getVortexController().getPassedPlayers().containsKey(player.getObjectId())) {
 							PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(904305));
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									if (player.isOnline() && !isInsideActiveVortex(player)) {
@@ -215,7 +219,7 @@ public class VortexLocation implements ZoneHandler {
 							}, 10 * 1000);
 						}
 					} else {
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								if (player.isOnline() && !isInsideActiveVortex(player)) {

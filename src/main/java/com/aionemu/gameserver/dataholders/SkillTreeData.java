@@ -19,17 +19,17 @@ package com.aionemu.gameserver.dataholders;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.skillengine.model.SkillLearnTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author ATracer
@@ -41,8 +41,8 @@ public class SkillTreeData {
 	@XmlElement(name = "skill")
 	private List<SkillLearnTemplate> skillTemplates;
 
-	private final TIntObjectHashMap<ArrayList<SkillLearnTemplate>> templates = new TIntObjectHashMap<ArrayList<SkillLearnTemplate>>();
-	private final TIntObjectHashMap<ArrayList<SkillLearnTemplate>> templatesById = new TIntObjectHashMap<ArrayList<SkillLearnTemplate>>();
+	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templates = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
+	private final IntObjectHashMap<ArrayList<SkillLearnTemplate>> templatesById = new IntObjectHashMap<ArrayList<SkillLearnTemplate>>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (SkillLearnTemplate template : skillTemplates) {
@@ -76,7 +76,7 @@ public class SkillTreeData {
 	/**
 	 * @return the templates
 	 */
-	public TIntObjectHashMap<ArrayList<SkillLearnTemplate>> getTemplates() {
+	public IntObjectHashMap<ArrayList<SkillLearnTemplate>> getTemplates() {
 		return templates;
 	}
 

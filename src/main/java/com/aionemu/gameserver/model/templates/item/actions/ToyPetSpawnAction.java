@@ -16,12 +16,16 @@
  */
 package com.aionemu.gameserver.model.templates.item.actions;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.Future;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -36,7 +40,6 @@ import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ToyPetSpawnAction")
@@ -65,7 +68,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_REGISTER_BINDSTONE_FAR_FROM_NPC);
 			return false;
 		}
-		if (KiskService.getInstance().haveKisk(player.getObjectId())) {
+		if (GameFeatureServices.kiskService().haveKisk(player.getObjectId())) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1390160, new Object[0]));
 			return false;
 		}
@@ -113,7 +116,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.ITEM_USE, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.ITEM_USE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
@@ -132,7 +135,7 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 				SpawnTemplate spawn = SpawnEngine.addNewSingleTimeSpawn(worldId, npcid, x, y, z, heading);
 				final Kisk kisk = VisibleObjectSpawner.spawnKisk(spawn, instanceId, player);
 				Integer objOwnerId = player.getObjectId();
-				Future<?> task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				Future<?> task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						kisk.getController().onDelete();
@@ -140,11 +143,11 @@ public class ToyPetSpawnAction extends AbstractItemAction {
 				}, 7200000);
 				kisk.getController().addTask(TaskId.DESPAWN, task);
 				player.getController().cancelTask(TaskId.ITEM_USE);
-				KiskService.getInstance().regKisk(kisk, objOwnerId);
+				GameFeatureServices.kiskService().regKisk(kisk, objOwnerId);
 				if (kisk.getMaxMembers() > 1) {
 					kisk.getController().onDialogRequest(player);
 				} else {
-					KiskService.getInstance().onBind(kisk, player);
+					GameFeatureServices.kiskService().onBind(kisk, player);
 				}
 			}
 		}, 3000));

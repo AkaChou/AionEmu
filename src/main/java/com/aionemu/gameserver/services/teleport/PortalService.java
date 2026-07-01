@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.services.teleport;
 
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -50,9 +50,9 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
+@Slf4j
 
 public class PortalService {
-	private static Logger log = LoggerFactory.getLogger(PortalService.class);
 
 	public static void port(final PortalPath portalPath, final Player player, int npcObjectId) {
 		if (!CustomConfig.ENABLE_INSTANCES) {
@@ -321,7 +321,7 @@ public class PortalService {
 		if (instancecooltime != null && player.isMentor()) {
 			if (!instancecooltime.getCanEnterMentor()) {
 				PacketSendUtility.sendPacket(player,
-						SM_SYSTEM_MESSAGE.STR_MSG_MENTOR_CANT_ENTER(World.getInstance().getWorldMap(mapId).getName()));
+						SM_SYSTEM_MESSAGE.STR_MSG_MENTOR_CANT_ENTER(com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(mapId).getName()));
 				return false;
 			}
 		}
@@ -376,7 +376,7 @@ public class PortalService {
 	}
 
 	private static boolean checkSiegeId(Player player, int siegeId) {
-		FortressLocation loc = SiegeService.getInstance().getFortress(siegeId);
+		FortressLocation loc = GameFeatureServices.siegeService().getFortress(siegeId);
 		if (loc != null && loc.getRace().getRaceId() != player.getRace().getRaceId()) {
 			return false;
 		}

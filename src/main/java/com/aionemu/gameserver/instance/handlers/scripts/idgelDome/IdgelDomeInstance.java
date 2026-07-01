@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.idgelDome;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.configs.main.GroupConfig;
@@ -37,20 +41,17 @@ import com.aionemu.gameserver.model.instance.playerreward.IdgelDomePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     private boolean isInstanceDestroyed = false;
 	private List<Integer> movies = new ArrayList<Integer>();
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> idgelTask = FastList.newInstance();
+    private final List<Future<?>> idgelTask = new ArrayList<Future<?>>();
     
     protected IdgelDomePlayerReward getPlayerReward(Player player) {
         idgelDomeReward.regPlayerReward(player);
@@ -88,21 +89,21 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
             case 702581: //Intelligence Supply Box.
 			case 702582: //Intelligence Supply Box.
 			case 702583: //Intelligence Supply Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000314, 1)); //Devastation Bomb.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000315, 1)); //Freeze Bomb.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000316, 1)); //PvP Defense Scroll.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000314, 1)); //Devastation Bomb.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000315, 1)); //Freeze Bomb.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000316, 1)); //PvP Defense Scroll.
 			break;
 			case 234190: //Destroyer Kunax.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-                        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053033, 1)); //Kunax's Equipment Box.
+                        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053033, 1)); //Kunax's Equipment Box.
                     }
                 }
             break;
@@ -119,7 +120,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
         idgelDomeReward.setInstanceStartTime();
-		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!idgelDomeReward.isRewarded()) {
@@ -132,7 +133,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 				}
             }
         }, 90000));
-		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -145,7 +146,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 				sp(702583, 276.4865f, 271.9778f, 92.94253f, (byte) 75, 0); //Intelligence Supply Box.
             }
         }, 300000));
-		idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
             	sendPacket(false);
@@ -295,14 +296,14 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
         for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
 					for (Player player : instance.getPlayersInside()) {
 						onExitInstance(player);
 					}
-					AutoGroupService.getInstance().unRegisterInstance(instanceId);
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
 		}, 60000);
@@ -447,7 +448,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 			case 234190: //Destroyer Kunax.
                 point = 6000;
 				RaceKilledKunax = mostPlayerDamage.getRace();
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						if (!idgelDomeReward.isRewarded()) {
@@ -520,7 +521,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -534,7 +535,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -547,7 +548,7 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        idgelTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        idgelTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -572,10 +573,10 @@ public class IdgelDomeInstance extends GeneralInstanceHandler
 	}
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = idgelTask.head(), end = idgelTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : idgelTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

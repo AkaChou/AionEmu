@@ -15,6 +15,10 @@
  */
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,7 +31,6 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.QuestService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rolandas
@@ -85,7 +88,7 @@ public class _80033EventAvertingTheGaze extends QuestHandler {
 	@Override
 	public HandlerResult onItemUseEvent(final QuestEnv env, Item item) {
 		// check if the parent quest is active (you get Charm Cards)
-		if (!EventService.getInstance().checkQuestIsActive(80032))
+		if (!GameEventServices.eventService().checkQuestIsActive(80032))
 			return HandlerResult.FAILED;
 
 		final Player player = env.getPlayer();
@@ -93,7 +96,7 @@ public class _80033EventAvertingTheGaze extends QuestHandler {
 		// the same item registered for elyos quests, return UNKNOWN for them
 		// to not start asmodians quests
 		if (item.getItemId() == 188051133 && player.getCommonData().getRace().equals(Race.ASMODIANS)) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {

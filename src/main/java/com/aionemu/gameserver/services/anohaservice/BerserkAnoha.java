@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.anohaservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.anoha.AnohaLocation;
@@ -62,11 +64,11 @@ public abstract class BerserkAnoha<AL extends AnohaLocation> {
 	}
 
 	protected void spawn(AnohaStateType type) {
-		AnohaService.getInstance().spawn(getAnohaLocation(), type);
+		GameLocationBootstrapServices.anohaService().spawn(getAnohaLocation(), type);
 	}
 
 	protected void despawn() {
-		AnohaService.getInstance().despawn(getAnohaLocation());
+		GameLocationBootstrapServices.anohaService().despawn(getAnohaLocation());
 	}
 
 	public boolean isFinished() {

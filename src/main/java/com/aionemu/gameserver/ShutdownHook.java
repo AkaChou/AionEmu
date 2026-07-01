@@ -1,15 +1,12 @@
 package com.aionemu.gameserver;
 
+import lombok.extern.slf4j.Slf4j;
 import static com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE.STR_SERVER_SHUTDOWN;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionProcessExit;
@@ -18,22 +15,23 @@ import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager.SortBy;
 import com.aionemu.gameserver.configs.main.ShutdownConfig;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
-import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 import com.aionemu.gameserver.world.World;
 
 /**
  * @author lord_rex
  */
+@Slf4j
 public class ShutdownHook extends Thread {
 
-	private static final Logger log = LoggerFactory.getLogger(ShutdownHook.class);
 
 	public static ShutdownHook getInstance() {
 		return SingletonHolder.INSTANCE;
@@ -64,7 +62,7 @@ public class ShutdownHook extends Thread {
 
 	private void sendShutdownMessage(int seconds) {
 		try {
-			Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
+			Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			if (!onlinePlayers.hasNext()) {
 				return;
 			}
@@ -82,13 +80,13 @@ public class ShutdownHook extends Thread {
 	private void sendShutdownStatus(boolean status) {
 		if (ShutdownConfig.DESPAWN_NPCS) {
 			if (status) {
-				for (Npc npc : World.getInstance().getNpcs()) {
+				for (Npc npc : new ArrayList<Npc>(com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs())) {
 					npc.getController().onDelete();
 				}
 			}
 		}
 		try {
-			Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
+			Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 			if (!onlinePlayers.hasNext()) {
 				return;
 			}
@@ -113,7 +111,7 @@ public class ShutdownHook extends Thread {
 		
 		for (int i = delay; i >= announceInterval; i -= announceInterval) {
 			try {
-				if (World.getInstance().getPlayersIterator().hasNext()) {
+				if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator().hasNext()) {
 					log.info("Runtime is " + mode.getText() + " in " + i + " seconds.");
 					sendShutdownMessage(i);
 					sendShutdownStatus(ShutdownConfig.SAFE_REBOOT);
@@ -155,20 +153,20 @@ public class ShutdownHook extends Thread {
 		log.info("Starting final shutdown sequence...");
 
 		try {
-			LoginServer.getInstance().gameServerDisconnected();
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().gameServerDisconnected();
 			log.info("Disconnected from Login Server");
 		} catch (Exception e) {
 			log.error("Error disconnecting from Login Server", e);
 		}
 		try {
-			ChatServer.getInstance().gameServerDisconnected();
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer().gameServerDisconnected();
 			log.info("Disconnected from Chat Server");
 		} catch (Exception e) {
 			log.error("Error disconnecting from Chat Server", e);
 		}
 
 		List<Player> playersToDisconnect = new ArrayList<>();
-		Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
+		Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (onlinePlayers.hasNext()) {
 			playersToDisconnect.add(onlinePlayers.next());
 		}
@@ -217,13 +215,13 @@ public class ShutdownHook extends Thread {
 		log.info("All players processed, continuing shutdown...");
 
 		runShutdownStep("dump runnable stats", () -> RunnableStatsManager.dumpClassStats(SortBy.AVG));
-		runShutdownStep("save periodic data", () -> PeriodicSaveService.getInstance().onShutdown());
+		runShutdownStep("save periodic data", () -> GameRuntimeServices.periodicSaveService().onShutdown());
 		runShutdownStep("save game time", GameTimeManager::saveTime);
-		runShutdownStep("shutdown CronService", () -> CronService.getInstance().shutdown());
+		runShutdownStep("shutdown CronService", GameCronServices::shutdownIfInitialized);
 		if (AionRuntimeMode.isBootEmbedded()) {
 			log.info("ThreadPoolManager shutdown is managed by Spring Boot lifecycle.");
 		} else {
-			runShutdownStep("shutdown ThreadPoolManager", () -> ThreadPoolManager.getInstance().shutdown());
+			runShutdownStep("shutdown ThreadPoolManager", () -> GameThreadPoolServices.threadPoolManager().shutdown());
 		}
 		log.info("All service shutdown steps completed");
 

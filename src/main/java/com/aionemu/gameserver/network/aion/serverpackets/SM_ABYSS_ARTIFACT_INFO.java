@@ -16,14 +16,14 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import com.aionemu.gameserver.model.siege.SiegeLocation;
 import com.aionemu.gameserver.model.siege.SiegeType;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
-
-import javolution.util.FastList;
 
 public class SM_ABYSS_ARTIFACT_INFO extends AionServerPacket {
 
@@ -35,7 +35,7 @@ public class SM_ABYSS_ARTIFACT_INFO extends AionServerPacket {
 
 	@Override
 	protected void writeImpl(AionConnection con) {
-		FastList<SiegeLocation> validLocations = new FastList<SiegeLocation>();
+		List<SiegeLocation> validLocations = new ArrayList<>();
 		for (SiegeLocation loc : locations) {
 			if (((loc.getType() == SiegeType.ARTIFACT) || (loc.getType() == SiegeType.FORTRESS))
 					&& (loc.getLocationId() >= 1011) && (loc.getLocationId() <= 10412))

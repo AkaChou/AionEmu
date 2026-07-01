@@ -17,14 +17,14 @@
 package com.aionemu.gameserver.model.towerofeternity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.towerofeternity.TowerOfEternityTemplate;
 import com.aionemu.gameserver.services.towerofeternityservice.TowerOfEternity;
-
-import javolution.util.FastMap;
 
 /**
  * Created by Wnkrz on 22/08/2017.
@@ -35,7 +35,7 @@ public class TowerOfEternityLocation {
 	protected boolean isActive;
 	protected TowerOfEternityTemplate template;
 	protected TowerOfEternity<TowerOfEternityLocation> activeTowerOfEternity;
-	protected FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> players = new HashMap<>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public TowerOfEternityLocation() {
@@ -75,7 +75,7 @@ public class TowerOfEternityLocation {
 		return spawned;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 }

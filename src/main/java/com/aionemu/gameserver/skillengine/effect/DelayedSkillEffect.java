@@ -14,7 +14,11 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import jakarta.xml.bind.annotation.XmlAttribute;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -23,7 +27,6 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -40,18 +43,18 @@ public class DelayedSkillEffect extends EffectTemplate {
 		if (effect.getSkill() == null) {
 			return;
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (effect.getEffected().getEffectController().hasAbnormalEffect(effect.getSkill().getSkillId())) {
 					final SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 					if (template.getProperties().getTargetMaxCount() > 1) {
 						final Effect e = new Effect(effect.getEffector(), effect.getEffected(), template, template.getLvl(), 0);
-						World.getInstance().doOnAllObjects(new Visitor<VisibleObject>() {
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(new Visitor<VisibleObject>() {
 							@Override
 							public void visit(VisibleObject object) {
 								if (MathUtil.getDistance(effect.getEffected(), object) <= template.getProperties().getRevisionDistance()) {
-									SkillEngine.getInstance().applyEffectDirectly(template.getSkillId(), effect.getEffected(), (Creature) object, template.getDuration());
+									GameEngineServices.skillEngine().applyEffectDirectly(template.getSkillId(), effect.getEffected(), (Creature) object, template.getDuration());
 									e.applyEffect();
 									e.initialize();
 								}

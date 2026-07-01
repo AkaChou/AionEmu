@@ -26,14 +26,15 @@ import com.aionemu.gameserver.model.templates.materials.MaterialSkill;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rolandas
  */
 public class MaterialZoneHandler implements ZoneHandler {
 
-	FastMap<Integer, IActor> observed = new FastMap<Integer, IActor>();
+	Map<Integer, IActor> observed = new LinkedHashMap<Integer, IActor>();
 
 	private Spatial geometry;
 	private MaterialTemplate template;

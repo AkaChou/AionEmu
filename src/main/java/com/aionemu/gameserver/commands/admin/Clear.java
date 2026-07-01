@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -39,7 +41,7 @@ public class Clear extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "Not implemented, if need this - pm to AT");
 		}
 		else if(params[0].equalsIgnoreCase("findgroup")){
-			FindGroupService.getInstance().clean();
+			GameRuntimeServices.findGroupService().clean();
 		}
 	}
 

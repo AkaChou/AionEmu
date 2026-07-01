@@ -110,11 +110,9 @@ abstract class DataLoader {
 	 *             method, which should be overriden in subclcass.
 	 */
 	private void loadFile(File file) {
-		LineIterator it = null;
-		try {
-			it = FileUtils.lineIterator(file);
+		try (LineIterator it = FileUtils.lineIterator(file)) {
 			while (it.hasNext()) {
-				String line = it.nextLine();
+				String line = it.next();
 				if (line.isEmpty() || line.startsWith("#")) {
 					continue;
 				}
@@ -122,8 +120,6 @@ abstract class DataLoader {
 			}
 		} catch (IOException e) {
 			log.error("Error while loading " + getClass().getSimpleName() + ", file: " + file.getPath(), e);
-		} finally {
-			LineIterator.closeQuietly(it);
 		}
 	}
 

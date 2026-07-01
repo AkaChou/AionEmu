@@ -16,11 +16,13 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -38,35 +40,33 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 
 /****/
 /** Author (Encom)
 /****/
 
 @InstanceID(302320000)
+@Slf4j
 public class HallOfTenacityInstance extends GeneralInstanceHandler {
 
-	private Logger log = LoggerFactory.getLogger(HallOfTenacityInstance.class);
 	private long instanceTime;
 	private boolean isInstanceDestroyed = false;
 	protected HallOfTenacityReward instanceReward;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> hotTask = FastList.newInstance();
+    private final List<Future<?>> hotTask = new ArrayList<Future<?>>();
 
     protected HallOfTenacityPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
 		return (HallOfTenacityPlayerReward) instanceReward.getPlayerReward(object);
 	}
-    
+
     private boolean containPlayer(Integer object) {
 		return instanceReward.containPlayer(object);
 	}
-    
+
     @Override
 	public InstanceReward<?> getInstanceReward() {
 		return instanceReward;
@@ -79,77 +79,77 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
         instanceReward.setInstanceScoreType(InstanceScoreType.PREPARING);
         startInstanceTask();
     }
-    
+
     @Override
     public void onEnterInstance(final Player player) {
-    	Integer object = player.getObjectId();
-    	if (!containPlayer(object)) {
+	Integer object = player.getObjectId();
+	if (!containPlayer(object)) {
 			instanceReward.regPlayerReward(object);
 			getPlayerReward(object).applyBoostMoraleEffect(player);
 			instanceReward.setStartPositions();
 		}
         //sendEnterPacket(player);
     }
-    
+
     @Override
 	public void onExitInstance(Player player) {
 		TeleportService2.moveToInstanceExit(player, mapId, player.getRace());
 	}
-    
+
     @Override
 	public void onLeaveInstance(Player player) {
 		//clearDebuffs(player);
-    	HallOfTenacityPlayerReward playerReward = getPlayerReward(player.getObjectId());
+	HallOfTenacityPlayerReward playerReward = getPlayerReward(player.getObjectId());
 		if (playerReward != null) {
 			playerReward.endBoostMoraleEffect(player);
 			instanceReward.removePlayerReward(playerReward);
 		}
 	}
-    
+
     @Override
 	public void onInstanceDestroy() {
 		isInstanceDestroyed = true;
 		instanceReward.clear();
 	}
-    
+
     private void sendEnterPacket(final Player player) {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
+	instance.doOnAllPlayers(new Visitor<Player>() {
             @Override
             public void visit(Player player) {
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(0, getTime(), instanceReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(9, getTime(), instanceReward, instance.getPlayersInside(), true));
+	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(0, getTime(), instanceReward, instance.getPlayersInside(), true));
+	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(9, getTime(), instanceReward, instance.getPlayersInside(), true));
             }
         });
     }
 
     protected void startInstanceTask() {
-    	instanceTime = System.currentTimeMillis();
-    	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	instanceTime = System.currentTimeMillis();
+	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!instanceReward.isRewarded()) {
-                	instanceReward.setInstanceStartTime();
-                	instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
-                	instanceReward.setCoupleSlotForBattle32();
-                	instanceReward.sendLog("Hall Of Tenacity got "+instance.getPlayersInside().size()+" player(s)");
-                	//instanceReward.sendPacket(0, null);
-                	//instanceReward.sendPacket(9, null);
-                	instance.doOnAllPlayers(new Visitor<Player>() {
+	instanceReward.setInstanceStartTime();
+	instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+	instanceReward.setCoupleSlotForBattle32();
+	instanceReward.sendLog("Hall Of Tenacity got "+instance.getPlayersInside().size()+" player(s)");
+	//instanceReward.sendPacket(0, null);
+	//instanceReward.sendPacket(9, null);
+	instance.doOnAllPlayers(new Visitor<Player>() {
                         @Override
                         public void visit(Player player) {
-                        	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(0, getTime(), instanceReward, instance.getPlayersInside(), true));
-                        	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(9, getTime(), instanceReward, instance.getPlayersInside(), true));
+	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(0, getTime(), instanceReward, instance.getPlayersInside(), true));
+	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(9, getTime(), instanceReward, instance.getPlayersInside(), true));
                         }
                     });
 				}
             }
         }, 60000));//after enter 1 min will show versus board
-    	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!instanceReward.isRewarded()) {
 				    instance.doOnAllPlayers(new Visitor<Player>() {
-				    	
+
 			            @Override
 			            public void visit(Player player) {
 			            	sendRequest(player);
@@ -159,16 +159,16 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
             }
         }, 150000));//after enter 1 min 30s will show enter battle window
     }
-    
+
     public void sendRequest(final Player player) {
         RequestResponseHandler responseHandler = new RequestResponseHandler(player) {
             @Override
             public void acceptRequest(Creature requester, Player responder) {
-            	instanceReward.portToArena(player);
+	instanceReward.portToArena(player);
             }
             @Override
             public void denyRequest(Creature requester, Player responder) {
-            	//TODO skip battle
+	//TODO skip battle
             }
         };
         boolean requested = player.getResponseRequester().putRequest(907265, responseHandler);
@@ -176,7 +176,7 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
             PacketSendUtility.sendPacket(player, new SM_QUESTION_WINDOW(907265, 60, 0));
         }
     }
-    
+
     protected void stopInstance(Race race) {
         stopInstanceTask();
         //hallOfTenacityReward.setWinner(race);
@@ -184,19 +184,19 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
         reward();
         instanceReward.sendPacket(5, null);//TODO id
     }
-    
+
     protected void reward() {
-    	
+
     }
-    
+
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = hotTask.head(), end = hotTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : hotTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
-    
+
     private int getTime() {
         long result = System.currentTimeMillis() - instanceTime;
         if (result < 60000) {
@@ -206,9 +206,9 @@ public class HallOfTenacityInstance extends GeneralInstanceHandler {
         }
         return 0;
     }
-    
+
     protected void sendMsg(final int msg, final Race race, int time) {
-    	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

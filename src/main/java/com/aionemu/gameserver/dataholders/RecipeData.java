@@ -16,19 +16,19 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.templates.recipe.RecipeTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author ATracer, MrPoke, KID
@@ -38,14 +38,14 @@ import javolution.util.FastList;
 public class RecipeData {
 	@XmlElement(name = "recipe_template")
 	protected List<RecipeTemplate> list;
-	private TIntObjectHashMap<RecipeTemplate> recipeData;
-	private FastList<RecipeTemplate> elyos, asmos, any;
+	private IntObjectHashMap<RecipeTemplate> recipeData;
+	private List<RecipeTemplate> elyos, asmos, any;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		recipeData = new TIntObjectHashMap<RecipeTemplate>();
-		elyos = FastList.newInstance();
-		asmos = FastList.newInstance();
-		any = FastList.newInstance();
+		recipeData = new IntObjectHashMap<RecipeTemplate>();
+		elyos = new ArrayList<>();
+		asmos = new ArrayList<>();
+		any = new ArrayList<>();
 		for (RecipeTemplate it : list) {
 			recipeData.put(it.getId(), it);
 			if (it.getAutoLearn() == 0) {
@@ -66,8 +66,8 @@ public class RecipeData {
 		list = null;
 	}
 
-	public FastList<RecipeTemplate> getAutolearnRecipes(Race race, int skillId, int maxLevel) {
-		FastList<RecipeTemplate> list = FastList.newInstance();
+	public List<RecipeTemplate> getAutolearnRecipes(Race race, int skillId, int maxLevel) {
+		List<RecipeTemplate> list = new ArrayList<>();
 		switch (race) {
 		case ASMODIANS:
 			for (RecipeTemplate recipe : asmos)
@@ -94,7 +94,7 @@ public class RecipeData {
 		return recipeData.get(id);
 	}
 
-	public TIntObjectHashMap<RecipeTemplate> getRecipeTemplates() {
+	public IntObjectHashMap<RecipeTemplate> getRecipeTemplates() {
 		return recipeData;
 	}
 

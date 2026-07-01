@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.model.team.legion;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -28,9 +26,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 /**
  * @author Simple
  */
+@Slf4j
 public class LegionMemberEx extends LegionMember {
 
-	private static Logger log = LoggerFactory.getLogger(LegionMemberEx.class);
 
 	private String name;
 	private PlayerClass playerClass;

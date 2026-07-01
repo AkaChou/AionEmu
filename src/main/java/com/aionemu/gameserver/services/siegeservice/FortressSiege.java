@@ -16,11 +16,17 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.commons.database.dao.DAOManager;
@@ -41,10 +47,7 @@ import com.aionemu.gameserver.model.templates.zone.ZoneType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
-import com.aionemu.gameserver.services.BaseService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.MoltenusService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.mail.AbyssSiegeLevel;
@@ -58,9 +61,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneName;
 import com.google.common.collect.Lists;
+@Slf4j(topic = "SIEGE_LOG")
 
 public class FortressSiege extends Siege<FortressLocation> {
-	private static final Logger log = LoggerFactory.getLogger("SIEGE_LOG");
 	private final AbyssPointsListener addAPListener = new AbyssPointsListener(this);
 
 	public FortressSiege(FortressLocation fortress) {
@@ -76,15 +79,15 @@ public class FortressSiege extends Siege<FortressLocation> {
 		GlobalCallbackHelper.addCallback(addAPListener);
 		deSpawnNpcs(getSiegeLocationId());
 		clearPlayers();
-		// BattlefieldUnionService.getInstance().onSiegeStart(getSiegeLocation().getLocationId());
+		// GameCoreGameplayServices.battlefieldUnionService().onSiegeStart(getSiegeLocation().getLocationId());
 		spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.SIEGE);
 		initSiegeBoss();
 		if (getSiegeLocation().getLocationId() == 1131) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1131: // Siel's Western Fortress.
-				BaseService.getInstance().capture(108, Race.NPC);
-				BaseService.getInstance().capture(109, Race.NPC);
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				GameFeatureServices.baseService().capture(108, Race.NPC);
+				GameFeatureServices.baseService().capture(109, Race.NPC);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// The Gold Sand Negotiation Team is under attack by the Balaur.
@@ -108,8 +111,8 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else if (getSiegeLocation().getLocationId() == 1132) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1132: // Siel's Eastern Fortress.
-				BaseService.getInstance().capture(110, Race.NPC);
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				GameFeatureServices.baseService().capture(110, Race.NPC);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// The Balaur have taken control of the Sasming at Siel's Right Wing.
@@ -125,10 +128,10 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else if (getSiegeLocation().getLocationId() == 1141) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 1141: // Sulfur Fortress.
-				BaseService.getInstance().capture(105, Race.NPC);
-				BaseService.getInstance().capture(106, Race.NPC);
-				BaseService.getInstance().capture(107, Race.NPC);
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				GameFeatureServices.baseService().capture(105, Race.NPC);
+				GameFeatureServices.baseService().capture(106, Race.NPC);
+				GameFeatureServices.baseService().capture(107, Race.NPC);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// The Balaur have taken control of the Oharung at the Sulfur Tree Archipelago.
@@ -156,7 +159,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else if (getSiegeLocation().getLocationId() == 10111) {
 			switch (getSiegeLocation().getLocationId()) {
 			case 10111:
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// The Temple Gate will open in 5 minutes.
@@ -180,7 +183,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 	public void onSiegeFinish() {
 		GlobalCallbackHelper.removeCallback(addAPListener);
 		unregisterSiegeBossListeners();
-		SiegeService.getInstance().deSpawnNpcs(getSiegeLocationId());
+		GameFeatureServices.siegeService().deSpawnNpcs(getSiegeLocationId());
 		getSiegeLocation().setVulnerable(false);
 		getSiegeLocation().setUnderShield(false);
 		if (isBossKilled()) {
@@ -190,7 +193,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		} else {
 			broadcastState(getSiegeLocation());
 		}
-		SiegeService.getInstance().spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.PEACE);
+		GameFeatureServices.siegeService().spawnNpcs(getSiegeLocationId(), getSiegeLocation().getRace(), SiegeModType.PEACE);
 		if (SiegeRace.BALAUR != getSiegeLocation().getRace()) {
 			if (getSiegeLocation().getLegionId() > 0) {
 				giveRewardsToLegion();
@@ -205,32 +208,32 @@ public class FortressSiege extends Siege<FortressLocation> {
 				player.getController().updateZone();
 				player.getController().updateNearbyQuests();
 				if (isBossKilled() && (SiegeRace.getByRace(player.getRace()) == getSiegeLocation().getRace())) {
-					QuestEngine.getInstance().onKill(new QuestEnv(getBoss(), player, 0, 0));
+					GameEngineServices.questEngine().onKill(new QuestEnv(getBoss(), player, 0, 0));
 				}
 				// Enraged Guardian 5.3
 				switch (getSiegeLocationId()) {
 				case 1131: // Siel's Western Fortress.
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						MoltenusService.getInstance().startMoltenus(5);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(5);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						MoltenusService.getInstance().startMoltenus(8);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(8);
 					}
 					break;
 				case 1132: // Siel's Eastern Fortress.
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						MoltenusService.getInstance().startMoltenus(6);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(6);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						MoltenusService.getInstance().startMoltenus(9);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(9);
 					}
 					break;
 				case 1141: // Sulfur Fortress.
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						MoltenusService.getInstance().startMoltenus(4);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(4);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						MoltenusService.getInstance().startMoltenus(7);
+						GameLocationBootstrapServices.moltenusService().startMoltenus(7);
 					}
 					break;
 				}
@@ -262,10 +265,10 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1131:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(108, Race.ASMODIANS);
 						// Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.ASMODIANS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameFeatureServices.baseService().capture(109, Race.ASMODIANS);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
@@ -277,10 +280,10 @@ public class FortressSiege extends Siege<FortressLocation> {
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.ELYOS);
+						GameFeatureServices.baseService().capture(108, Race.ELYOS);
 						// Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.ELYOS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameFeatureServices.baseService().capture(109, Race.ELYOS);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
@@ -295,8 +298,8 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1132:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.ASMODIANS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameFeatureServices.baseService().capture(110, Race.ASMODIANS);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Asmodians have arrived at the Siel's
@@ -308,8 +311,8 @@ public class FortressSiege extends Siege<FortressLocation> {
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.ELYOS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameFeatureServices.baseService().capture(110, Race.ELYOS);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Elyos have arrived at the Siel's
@@ -324,12 +327,12 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1141:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
 						// Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(105, Race.ASMODIANS);
 						// Joarin At Zephyr Island.
-						BaseService.getInstance().capture(106, Race.ASMODIANS);
+						GameFeatureServices.baseService().capture(106, Race.ASMODIANS);
 						// Temirun At Leibo Island.
-						BaseService.getInstance().capture(107, Race.ASMODIANS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameFeatureServices.baseService().capture(107, Race.ASMODIANS);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Asmodians have arrived at the Sulfur
@@ -341,12 +344,12 @@ public class FortressSiege extends Siege<FortressLocation> {
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
 						// Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.ELYOS);
+						GameFeatureServices.baseService().capture(105, Race.ELYOS);
 						// Joarin At Zephyr Island.
-						BaseService.getInstance().capture(106, Race.ELYOS);
+						GameFeatureServices.baseService().capture(106, Race.ELYOS);
 						// Temirun At Leibo Island.
-						BaseService.getInstance().capture(107, Race.ELYOS);
-						World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+						GameFeatureServices.baseService().capture(107, Race.ELYOS);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 							@Override
 							public void visit(Player player) {
 								// The Steel Rose Mercenaries hired by the Elyos have arrived at the Sulfur
@@ -360,38 +363,38 @@ public class FortressSiege extends Siege<FortressLocation> {
 				// Krotan Refuge.
 				case 1221:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						AbyssLandingSpecialService.getInstance().startLanding(16);
-						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(16);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						AbyssLandingSpecialService.getInstance().startLanding(4);
-						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(4);
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					break;
 				// Kysis Fortress.
 				case 1231:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						AbyssLandingSpecialService.getInstance().startLanding(18);
-						AbyssLandingService.getInstance().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(18);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, true);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						AbyssLandingSpecialService.getInstance().startLanding(6);
-						AbyssLandingService.getInstance().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(6);
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE, true);
 					}
 					break;
 				// Miren Fortress.
 				case 1241:
 					if (getSiegeLocation().getRace() == SiegeRace.ASMODIANS) {
-						AbyssLandingSpecialService.getInstance().startLanding(17);
-						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(17);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					if (getSiegeLocation().getRace() == SiegeRace.ELYOS) {
-						AbyssLandingSpecialService.getInstance().startLanding(5);
-						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
+						GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(5);
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE, true);
 					}
 					break;
 				}
-				AbyssLandingService.getInstance().AnnounceToPoints(player,
+				GameLocationBootstrapServices.abyssLandingService().AnnounceToPoints(player,
 						getSiegeLocation().getRace().getDescriptionId(), getSiegeLocation().getNameAsDescriptionId(), 0,
 						LandingPointsEnum.SIEGE);
 			}
@@ -401,80 +404,80 @@ public class FortressSiege extends Siege<FortressLocation> {
 				case 1131:
 					if (looser == SiegeRace.ASMODIANS) {
 						// Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.NPC);
+						GameFeatureServices.baseService().capture(108, Race.NPC);
 						// Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.NPC);
+						GameFeatureServices.baseService().capture(109, Race.NPC);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						// Shairing At Carpus Isle.
-						BaseService.getInstance().capture(108, Race.NPC);
+						GameFeatureServices.baseService().capture(108, Race.NPC);
 						// Bomishung At Siel's Left Wing.
-						BaseService.getInstance().capture(109, Race.NPC);
+						GameFeatureServices.baseService().capture(109, Race.NPC);
 					}
 					break;
 				// Siel's Eastern Fortress.
 				case 1132:
 					if (looser == SiegeRace.ASMODIANS) {
 						// Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.NPC);
+						GameFeatureServices.baseService().capture(110, Race.NPC);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						// Sasming At Siel's Right Wing.
-						BaseService.getInstance().capture(110, Race.NPC);
+						GameFeatureServices.baseService().capture(110, Race.NPC);
 					}
 					break;
 				// Sulfur Fortress.
 				case 1141:
 					if (looser == SiegeRace.ASMODIANS) {
 						// Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.NPC);
+						GameFeatureServices.baseService().capture(105, Race.NPC);
 						// Joarin At Zephyr Island.
-						BaseService.getInstance().capture(106, Race.NPC);
+						GameFeatureServices.baseService().capture(106, Race.NPC);
 						// Temirun At Leibo Island.
-						BaseService.getInstance().capture(107, Race.NPC);
+						GameFeatureServices.baseService().capture(107, Race.NPC);
 					}
 					if (looser == SiegeRace.ELYOS) {
 						// Oharung At The Sulfur Archipelago.
-						BaseService.getInstance().capture(105, Race.NPC);
+						GameFeatureServices.baseService().capture(105, Race.NPC);
 						// Joarin At Zephyr Island.
-						BaseService.getInstance().capture(106, Race.NPC);
+						GameFeatureServices.baseService().capture(106, Race.NPC);
 						// Temirun At Leibo Island.
-						BaseService.getInstance().capture(107, Race.NPC);
+						GameFeatureServices.baseService().capture(107, Race.NPC);
 					}
 					break;
 				// Krotan Refuge.
 				case 1221:
 					if (looser == SiegeRace.ASMODIANS) {
-						AbyssLandingSpecialService.getInstance().stopLanding(16);
-						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
+						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(16);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
 					}
 					if (looser == SiegeRace.ELYOS) {
-						AbyssLandingSpecialService.getInstance().stopLanding(4);
-						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
+						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(4);
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
 								false);
 					}
 					break;
 				// Kysis Fortress.
 				case 1231:
 					if (looser == SiegeRace.ASMODIANS) {
-						AbyssLandingSpecialService.getInstance().stopLanding(18);
-						AbyssLandingService.getInstance().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, false);
+						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(18);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(40000, LandingPointsEnum.SIEGE, false);
 					}
 					if (looser == SiegeRace.ELYOS) {
-						AbyssLandingSpecialService.getInstance().stopLanding(6);
-						AbyssLandingService.getInstance().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE,
+						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(6);
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(40000, LandingPointsEnum.SIEGE,
 								false);
 					}
 					break;
 				// Miren Fortress.
 				case 1241:
 					if (looser == SiegeRace.ASMODIANS) {
-						AbyssLandingSpecialService.getInstance().stopLanding(17);
-						AbyssLandingService.getInstance().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
+						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(17);
+						GameLocationBootstrapServices.abyssLandingService().updateHarbingerLanding(35000, LandingPointsEnum.SIEGE, false);
 					}
 					if (looser == SiegeRace.ELYOS) {
-						AbyssLandingSpecialService.getInstance().stopLanding(5);
-						AbyssLandingService.getInstance().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
+						GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(5);
+						GameLocationBootstrapServices.abyssLandingService().updateRedemptionLanding(35000, LandingPointsEnum.SIEGE,
 								false);
 					}
 					break;
@@ -495,14 +498,14 @@ public class FortressSiege extends Siege<FortressLocation> {
 			getSiegeLocation().setLegionId(topLegionId != null ? topLegionId : 0);
 			getArtifact().setLegionId(topLegionId != null ? topLegionId : 0);
 		}
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Buff for Both Race.
 				if (player.getEffectController().hasAbnormalEffect(getSiegeLocation().getBuffId())) {
 					player.getEffectController().removeEffect(getSiegeLocation().getBuffId());
 				} else {
-					SkillEngine.getInstance().applyEffectDirectly(getSiegeLocation().getBuffId(), player, player, 0);
+					GameEngineServices.skillEngine().applyEffectDirectly(getSiegeLocation().getBuffId(), player, player, 0);
 				}
 				// Buff for Asmodians or Elyos.
 				if (player.getEffectController().hasAbnormalEffect(getSiegeLocation().getBuffIdA())) {
@@ -512,10 +515,10 @@ public class FortressSiege extends Siege<FortressLocation> {
 					player.getEffectController().removeEffect(getSiegeLocation().getBuffIdE());
 				}
 				if (player.getCommonData().getRace() == Race.ASMODIANS) {
-					SkillEngine.getInstance().applyEffectDirectly(getSiegeLocation().getBuffIdA(), player, player, 0);
+					GameEngineServices.skillEngine().applyEffectDirectly(getSiegeLocation().getBuffIdA(), player, player, 0);
 				}
 				if (player.getCommonData().getRace() == Race.ELYOS) {
-					SkillEngine.getInstance().applyEffectDirectly(getSiegeLocation().getBuffIdE(), player, player, 0);
+					GameEngineServices.skillEngine().applyEffectDirectly(getSiegeLocation().getBuffIdE(), player, player, 0);
 				}
 			}
 		});
@@ -540,7 +543,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 		}
 		List<SiegeLegionReward> legionRewards = getSiegeLocation().getLegionReward();
 		SiegeResult resultLegion = isBossKilled() ? SiegeResult.OCCUPY : SiegeResult.DEFENDER;
-		int legionBGeneral = LegionService.getInstance().getLegionBGeneral(getSiegeLocation().getLegionId());
+		int legionBGeneral = GameCoreGameplayServices.legionService().getLegionBGeneral(getSiegeLocation().getLegionId());
 		if (legionBGeneral != 0) {
 			PlayerCommonData BGeneral = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(legionBGeneral);
 			if (legionRewards != null) {
@@ -652,7 +655,7 @@ public class FortressSiege extends Siege<FortressLocation> {
 	}
 
 	protected ArtifactLocation getArtifact() {
-		return SiegeService.getInstance().getFortressArtifacts().get(getSiegeLocationId());
+		return GameFeatureServices.siegeService().getFortressArtifacts().get(getSiegeLocationId());
 	}
 
 	protected boolean hasArtifact() {

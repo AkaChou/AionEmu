@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.beshmundirTemple;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -37,17 +41,17 @@ public class Explosive_RootAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 18900, 60, getOwner()).useNoAnimationSkill(); //Root.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18900, 60, getOwner()).useNoAnimationSkill(); //Root.
 				startLifeTask();
 			}
 		}, 1000);
 	}
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.deleteOwner(Explosive_RootAI2.this);

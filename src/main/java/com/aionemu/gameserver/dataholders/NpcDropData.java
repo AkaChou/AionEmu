@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,21 +35,18 @@ import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlTransient;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropGroup;
@@ -61,9 +59,9 @@ import com.aionemu.gameserver.model.drop.NpcDrop;
 @XmlRootElement(name = "npc_drops")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "npcDropData", propOrder = { "npcDrop" })
+@Slf4j
 public class NpcDropData {
 
-	private static final Logger log = LoggerFactory.getLogger(NpcDropData.class);
 	private static final int DEFAULT_CACHE_MAX_ENTRIES = 2000;
 	private static final long DEFAULT_CACHE_EXPIRE_AFTER_ACCESS_MILLIS = TimeUnit.MINUTES.toMillis(60);
 
@@ -352,10 +350,18 @@ public class NpcDropData {
 	}
 
 	private static JAXBContext createNpcDropContext() {
+		Thread thread = Thread.currentThread();
+		ClassLoader originalClassLoader = thread.getContextClassLoader();
+		ClassLoader npcDropClassLoader = NpcDrop.class.getClassLoader();
 		try {
+			if (npcDropClassLoader != null) {
+				thread.setContextClassLoader(npcDropClassLoader);
+			}
 			return JAXBContext.newInstance(NpcDrop.class);
 		} catch (JAXBException e) {
 			throw new IllegalStateException("Failed to create NPC drop JAXB context", e);
+		} finally {
+			thread.setContextClassLoader(originalClassLoader);
 		}
 	}
 

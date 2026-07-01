@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.HTMLService;
@@ -32,7 +34,7 @@ public class Admin extends AdminCommand {
 
 	@Override
 	public void execute(Player player, String... params) {
-		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("commands.xhtml"));
+		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("commands.xhtml"));
 	}
 
 	@Override

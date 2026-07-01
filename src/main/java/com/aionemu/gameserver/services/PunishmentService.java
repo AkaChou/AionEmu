@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Calendar;
 import java.util.concurrent.Future;
 
@@ -30,7 +32,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.network.chatserver.ChatServer;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapType;
 
@@ -62,7 +63,7 @@ public class PunishmentService {
 				calculateDuration(dayCount), reason);
 
 		// if player is online - kick him
-		Player player = World.getInstance().findPlayer(playerId);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (player != null) {
 			player.getClientConnection().close(new SM_QUIT_RESPONSE(), false);
 		}
@@ -104,7 +105,7 @@ public class PunishmentService {
 			}
 
 			if (GSConfig.ENABLE_CHAT_SERVER) {
-				ChatServer.getInstance().sendPlayerLogout(player);
+				com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer().sendPlayerLogout(player);
 			}
 			player.setStartPrison(System.currentTimeMillis());
 			TeleportService2.teleportToPrison(player);
@@ -166,7 +167,7 @@ public class PunishmentService {
 			if (player.getWorldId() != WorldMapType.DF_PRISON.getId()
 					&& player.getWorldId() != WorldMapType.DE_PRISON.getId()) {
 				PacketSendUtility.sendMessage(player, "You will be teleported to prison in one minute!");
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 					@Override
 					public void run() {
@@ -185,7 +186,7 @@ public class PunishmentService {
 	 */
 	private static void schedulePrisonTask(final Player player, long prisonTimer) {
 		player.setPrisonTimer(prisonTimer);
-		player.getController().addTask(TaskId.PRISON, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.PRISON, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {
@@ -277,7 +278,7 @@ public class PunishmentService {
 	 */
 	private static void scheduleGatherableTask(final Player player, long gatherableTimer) {
 		player.setGatherableTimer(gatherableTimer);
-		player.getController().addTask(TaskId.GATHERABLE, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.GATHERABLE, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

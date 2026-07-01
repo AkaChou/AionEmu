@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,7 +33,6 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.events.LadderService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @Author Rinzler (Encom)
@@ -807,7 +810,7 @@ public class TwoTeamBg extends Battleground {
 				}
 			}
 		}
-		super.setExpireTask(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				endTwoTeamMatch(true);
@@ -871,7 +874,7 @@ public class TwoTeamBg extends Battleground {
 		synchronized (super.getGroups()) {
 			for (final PlayerGroup group : super.getGroups()) {
 				for (final Player pl : group.getMembers()) {
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!pl.isAfk()) {
@@ -889,14 +892,14 @@ public class TwoTeamBg extends Battleground {
 		for (Player pl : super.getSpectators()) {
 			super.createTimer(pl, getMatchLength());
 		}
-		super.setExpireTask(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				endTwoTeamMatch(true);
 			}
 		}, getMatchLength() * 1000));
 		super.startBackgroundTask();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				endCalled = false;
@@ -997,13 +1000,13 @@ public class TwoTeamBg extends Battleground {
 					for (PlayerGroup group : super.getGroups()) {
 						for (Player pl : group.getMembers()) {
 							super.scheduleAnnouncement(pl,
-									LadderService.getInstance().getNameByIndex(roundWinner.getBgIndex())
+									GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex())
 											+ " Win's the round!",
 									0);
 						}
 					}
 					super.specAnnounce(
-							LadderService.getInstance().getNameByIndex(roundWinner.getBgIndex()) + " Win's the round!");
+							GameFeatureServices.ladderService().getNameByIndex(roundWinner.getBgIndex()) + " Win's the round!");
 					startNewRound();
 					return;
 				}
@@ -1126,7 +1129,7 @@ public class TwoTeamBg extends Battleground {
 					}
 				}
 			}
-			super.specAnnounce(LadderService.getInstance().getNameByIndex(winner.getBgIndex()) + " Win's the round!");
+			super.specAnnounce(GameFeatureServices.ladderService().getNameByIndex(winner.getBgIndex()) + " Win's the round!");
 		}
 		super.onEndDefault();
 	}

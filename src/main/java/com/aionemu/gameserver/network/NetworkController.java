@@ -16,15 +16,26 @@
  */
 package com.aionemu.gameserver.network;
 
+import org.springframework.beans.factory.ObjectProvider;
+
 /**
  * @author KID
  */
 public class NetworkController {
 
 	private static NetworkController instance = new NetworkController();
+	private static volatile ObjectProvider<NetworkController> instanceProvider;
 
 	public static NetworkController getInstance() {
-		return instance;
+		ObjectProvider<NetworkController> provider = instanceProvider;
+		if (provider == null) {
+			return instance;
+		}
+		return provider.getIfAvailable(() -> instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<NetworkController> instanceProvider) {
+		NetworkController.instanceProvider = instanceProvider;
 	}
 
 	private byte serverCount = 1;

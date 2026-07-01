@@ -242,7 +242,7 @@ public class _14026A_Lone_Defense extends QuestHandler {
     }
     
     Npc spawn = (Npc) QuestService.spawnQuestNpc(310040000, player.getInstanceId(), mobToSpawn, x, y, z, (byte) 95);
-    Collection<Npc> allNpcs = World.getInstance().getNpcs();
+    Collection<Npc> allNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getNpcs();
     Npc target = null;
     for (Npc npc : allNpcs) {
         if (npc.getNpcId() == 204044) { //Kimeia.

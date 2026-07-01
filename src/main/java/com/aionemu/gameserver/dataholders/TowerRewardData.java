@@ -20,16 +20,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.tower_reward.TowerStageRewardTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by Wnkrz on 17/10/2017.
@@ -42,7 +42,7 @@ public class TowerRewardData {
 	private List<TowerStageRewardTemplate> TowerReward;
 
 	@XmlTransient
-	private TIntObjectHashMap<TowerStageRewardTemplate> templates = new TIntObjectHashMap<TowerStageRewardTemplate>();
+	private IntObjectHashMap<TowerStageRewardTemplate> templates = new IntObjectHashMap<TowerStageRewardTemplate>();
 
 	@XmlTransient
 	private Map<Integer, TowerStageRewardTemplate> templatesMap = new HashMap<Integer, TowerStageRewardTemplate>();

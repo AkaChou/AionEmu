@@ -16,15 +16,19 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.VortexSchedule;
 import com.aionemu.gameserver.configs.schedule.VortexSchedule.Vortex;
@@ -47,20 +51,20 @@ import com.aionemu.gameserver.services.vortexservice.Invasion;
 import com.aionemu.gameserver.services.vortexservice.VortexStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+@Slf4j
 public class VortexService {
 	private static volatile ObjectProvider<VortexService> instanceProvider;
 	private VortexSchedule vortexSchedule;
-	Logger log = LoggerFactory.getLogger(VortexService.class);
 	private Map<Integer, VortexLocation> vortex;
 	private static final int duration = CustomConfig.VORTEX_DURATION;
-	private final Map<Integer, DimensionalVortex<?>> activeInvasions = new FastMap<Integer, DimensionalVortex<?>>()
-			.shared();
+	private final Map<Integer, DimensionalVortex<?>> activeInvasions = new LinkedHashMap<Integer, DimensionalVortex<?>>()
+			;
 
 	public void initVortexLocations() {
 		if (CustomConfig.VORTEX_ENABLED) {
@@ -80,7 +84,7 @@ public class VortexService {
 			vortexSchedule = VortexSchedule.load();
 			for (Vortex vortex : vortexSchedule.getVortexsList()) {
 				for (String invasionTime : vortex.getInvasionTimes()) {
-					CronService.getInstance().schedule(new VortexStartRunnable(vortex.getId()), invasionTime);
+					GameCronServices.cronService().schedule(new VortexStartRunnable(vortex.getId()), invasionTime);
 				}
 			}
 		}
@@ -99,7 +103,7 @@ public class VortexService {
 		theobomosVortexMsg(id);
 		brusthoninVortexMsg(id);
 		dimensionalVortexCountdownMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!invasion.isGeneratorDestroyed()) {
@@ -125,7 +129,7 @@ public class VortexService {
 
 	public void spawn(VortexLocation loc, VortexStateType state) {
 		if (state.equals(VortexStateType.INVASION)) {
-			RiftManager.getInstance().spawnVortex(loc);
+			GameGameplayServices.riftManager().spawnVortex(loc);
 			RiftInformer.sendRiftsInfo(loc.getHomeWorldId());
 		}
 		List<SpawnGroup2> locSpawns = DataManager.SPAWNS_DATA2.getVortexSpawnsByLocId(loc.getId());
@@ -145,7 +149,7 @@ public class VortexService {
 	public boolean theobomosVortexMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ASMODIANS) {
@@ -164,7 +168,7 @@ public class VortexService {
 	public boolean brusthoninVortexMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -186,7 +190,7 @@ public class VortexService {
 	public boolean dimensionalVortexCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Dimensional Vortex will close in 90 minutes. When it closes, the alliance
@@ -242,7 +246,7 @@ public class VortexService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {
@@ -337,7 +341,7 @@ public class VortexService {
 			float y = loc.getHomePoint().getY();
 			float z = loc.getHomePoint().getZ();
 			byte h = loc.getHomePoint().getHeading();
-			World.getInstance().setPosition(player, mapId, x, y, z, h);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, mapId, x, y, z, h);
 		}
 	}
 

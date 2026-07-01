@@ -12,6 +12,6 @@ final class GameShutdownHookFallbacks {
     }
 
     private static final class ShutdownHookFallback {
-        private static final ShutdownHook INSTANCE = ShutdownHook.getInstance();
+        private static final ShutdownHook INSTANCE = new ShutdownHook();
     }
 }

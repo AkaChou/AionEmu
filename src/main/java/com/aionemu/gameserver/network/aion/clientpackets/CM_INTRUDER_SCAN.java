@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -26,10 +25,9 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
  * @author Ranastic (Encom)
  */
 
+@Slf4j
 public class CM_INTRUDER_SCAN extends AionClientPacket {
 	private int value;
-
-	Logger log = LoggerFactory.getLogger(CM_INTRUDER_SCAN.class);
 
 	public CM_INTRUDER_SCAN(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

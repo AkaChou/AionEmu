@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -50,9 +54,9 @@ public class BeritraAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		SkillEngine.getInstance().getSkill(getOwner(), 21610, 60, getOwner()).useNoAnimationSkill(); //Dark Affinity.
-		SkillEngine.getInstance().getSkill(getOwner(), 21611, 60, getOwner()).useNoAnimationSkill(); //Wall Of Blades.
-		SkillEngine.getInstance().getSkill(getOwner(), 21612, 60, getOwner()).useNoAnimationSkill(); //Everlasting Life.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21610, 60, getOwner()).useNoAnimationSkill(); //Dark Affinity.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21611, 60, getOwner()).useNoAnimationSkill(); //Wall Of Blades.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21612, 60, getOwner()).useNoAnimationSkill(); //Everlasting Life.
 	}
 	
 	@Override
@@ -100,7 +104,7 @@ public class BeritraAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -135,7 +139,7 @@ public class BeritraAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {

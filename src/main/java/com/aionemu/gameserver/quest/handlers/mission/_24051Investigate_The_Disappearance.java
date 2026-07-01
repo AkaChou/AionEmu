@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.mission;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.handlers.HandlerResult;
@@ -21,7 +23,6 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 /****/
@@ -138,7 +139,7 @@ public class _24051Investigate_The_Disappearance extends QuestHandler {
 			int var = qs.getQuestVarById(0);
 			if (name == ZoneName.get("MINE_PORT_220040000")) {
 				if (var == 5) {
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							playQuestMovie(env, 236);

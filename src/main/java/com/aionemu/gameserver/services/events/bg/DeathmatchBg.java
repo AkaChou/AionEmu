@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,6 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @Author Rinzler (Encom)
@@ -798,7 +799,7 @@ public class DeathmatchBg extends Battleground {
 				}
 			}
 		}
-		super.setExpireTask(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		super.setExpireTask(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				endDeathmatch();
@@ -839,7 +840,7 @@ public class DeathmatchBg extends Battleground {
 			killer.getLifeStats().increaseHp(SM_ATTACK_STATUS.TYPE.HP, 1000 + 200 * killer.getKillStreak());
 			killer.getLifeStats().increaseMp(SM_ATTACK_STATUS.TYPE.MP, 1000 + 200 * killer.getKillStreak());
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (player.getBattleground() != null && player.getBattleground() instanceof DeathmatchBg) {

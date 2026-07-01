@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.sauroSupplyBase;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -50,7 +56,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void beritraFavor() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21135, 1, getOwner()).useNoAnimationSkill(); //Beritra's Favor.
 	}
 	
 	@Override
@@ -86,7 +92,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			return;
 		} else {
 		   	sendMsg(1500775);
-			SkillEngine.getInstance().getSkill(getOwner(), 21188, 60, getOwner()).useNoAnimationSkill(); //Lingering Doom.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21188, 60, getOwner()).useNoAnimationSkill(); //Lingering Doom.
 			scheduleDelayStage1(delay);
 		}
 	}
@@ -97,7 +103,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			return;
 		} else {
 		   	sendMsg(1500774);
-			SkillEngine.getInstance().getSkill(getOwner(), 21189, 0, getOwner()).useNoAnimationSkill(); //Danuar Henchman.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21189, 0, getOwner()).useNoAnimationSkill(); //Danuar Henchman.
 			spawn(284435, 900.12497f, 879.17401f, 411.625f, (byte) 0); //Corrupted Danuar.
 			spawn(284435, 887.1312f, 889.20688f, 411.875f, (byte) 0); //Corrupted Danuar.
 			spawn(284435, 900.1312f, 901.20688f, 411.875f, (byte) 0); //Corrupted Danuar.
@@ -110,7 +116,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			return;
 		} else {
 		   	sendMsg(1500777);
-			SkillEngine.getInstance().getSkill(getOwner(), 21183, 60, getOwner()).useNoAnimationSkill(); //Out Of Body.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21183, 60, getOwner()).useNoAnimationSkill(); //Out Of Body.
 			scheduleDelayStage3(delay);
 		}
 	}
@@ -121,7 +127,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 			return;
 		} else {
 		   	sendMsg(1500776);
-			SkillEngine.getInstance().getSkill(getOwner(), 21184, 0, getOwner()).useNoAnimationSkill(); //Danuar Channeling.
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21184, 0, getOwner()).useNoAnimationSkill(); //Danuar Channeling.
 			switch (Rnd.get(1, 2)) {
 				case 1:
 					despawnNpcs(284436); //Enslaved Danuar.
@@ -146,7 +152,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage4();
@@ -159,7 +165,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage3();
@@ -172,7 +178,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 		if (!isStart && !isAlreadyDead()) {
 			return;
 		} else {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					stage1();
@@ -191,7 +197,7 @@ public class The_Brigade_General_ShebaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg(int msg) {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
 	
 	@Override

@@ -16,12 +16,15 @@
  */
 package com.aionemu.gameserver.ai.worlds.reshanta.abyssLanding;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.World;
@@ -37,8 +40,8 @@ public class Stolen_Harbinger_CallAI2 extends NpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		SkillEngine.getInstance().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill(); //Guardian Sanctuary Icon.
-		SkillEngine.getInstance().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill(); //Guardian Sanctuary Field.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 22781, 1, getOwner()).useNoAnimationSkill(); //Guardian Sanctuary Icon.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 22783, 1, getOwner()).useNoAnimationSkill(); //Guardian Sanctuary Field.
 	}
 	
 	@Override
@@ -66,56 +69,56 @@ public class Stolen_Harbinger_CallAI2 extends NpcAI2
 	}
 	
 	private void updateHarbingerLanding1() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
                     if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-                        AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 6000);
+                        GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ASMODIANS, 6000);
                     } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-                        AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 6000);
+                        GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS, 6000);
                     }
                 }
 			}
 		});
 	}
 	private void updateHarbingerLanding2() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
                     if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-                        AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 10000);
+                        GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ASMODIANS, 10000);
                     } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-                        AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 10000);
+                        GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS, 10000);
                     }
                 }
 			}
 		});
 	}
 	private void updateHarbingerLanding3() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
                     if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-                        AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 16000);
+                        GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ASMODIANS, 16000);
                     } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-                        AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 16000);
+                        GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS, 16000);
                     }
                 }
 			}
 		});
 	}
 	private void updateHarbingerLanding4() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
                     if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-                        AbyssLandingService.getInstance().onRewardFacility(Race.ASMODIANS, 30000);
+                        GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ASMODIANS, 30000);
                     } else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-                        AbyssLandingService.getInstance().onRewardFacility(Race.ELYOS, 30000);
+                        GameLocationBootstrapServices.abyssLandingService().onRewardFacility(Race.ELYOS, 30000);
                     }
                 }
 			}

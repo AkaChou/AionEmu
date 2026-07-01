@@ -18,6 +18,8 @@
 
 package com.aionemu.chatserver.model;
 
+import lombok.Getter;
+
 /**
  * @author ATracer
  */
@@ -28,6 +30,7 @@ public enum Race {
     /**
      * id of race
      */
+    @Getter
     private int raceId;
 
     /**
@@ -37,10 +40,4 @@ public enum Race {
         this.raceId = raceId;
     }
 
-    /**
-     * @return the raceId
-     */
-    public int getRaceId() {
-        return raceId;
-    }
 }

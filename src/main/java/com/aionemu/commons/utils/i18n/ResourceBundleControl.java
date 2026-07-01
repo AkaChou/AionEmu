@@ -26,14 +26,15 @@ package com.aionemu.commons.utils.i18n;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * This class allows us to read ResourceBundles with custom encodings, so we don't have write \\uxxxx symbols and use utilities like native2ascii to
@@ -68,6 +69,8 @@ public class ResourceBundleControl extends ResourceBundle.Control {
      * 资源文件编码格式 (Resource file encoding format)
      * 默认使用UTF-8编码 (Default to UTF-8 encoding)
      */
+    @Getter
+    @Setter
     private String encoding = "UTF-8";
 
     /**
@@ -109,50 +112,39 @@ public class ResourceBundleControl extends ResourceBundle.Control {
                 // If the class isn't a ResourceBundle subclass, throw a
                 // ClassCastException.
                 if (ResourceBundle.class.isAssignableFrom(bundleClass)) {
-                    bundle = bundleClass.newInstance();
+                    bundle = newResourceBundle(bundleClass);
                 } else {
                     throw new ClassCastException(bundleClass.getName() + " cannot be cast to ResourceBundle");
                 }
             } catch (ClassNotFoundException ignored) {}
         } else if (format.equals("java.properties")) {
-            final String resourceName = toResourceName(bundleName, "properties");
-            final ClassLoader classLoader = loader;
-            final boolean reloadFlag = reload;
+            String resourceName = toResourceName(bundleName, "properties");
             InputStreamReader isr = null;
             InputStream stream;
-            try {
-                stream = AccessController.doPrivileged(new PrivilegedExceptionAction<InputStream>() {
-                    
-                    @Override
-                    public InputStream run() throws IOException {
-                        InputStream is = null;
-                        if (reloadFlag) {
-                            URL url = classLoader.getResource(resourceName);
-                            if (url != null) {
-                                URLConnection connection = url.openConnection();
-                                if (connection != null) {
-                                    // Disable caches to get fresh data for
-                                    // reloading.
-                                    connection.setUseCaches(false);
-                                    is = connection.getInputStream();
-                                }
-                            }
-                        } else {
-                            is = classLoader.getResourceAsStream(resourceName);
-                        }
-                        return is;
+            if (reload) {
+                URL url = loader.getResource(resourceName);
+                if (url != null) {
+                    URLConnection connection = url.openConnection();
+                    if (connection != null) {
+                        // Disable caches to get fresh data for reloading.
+                        connection.setUseCaches(false);
+                        stream = connection.getInputStream();
+                    } else {
+                        stream = null;
                     }
-                });
-                
-                /* 字符编码处理关键段 (Critical section for encoding handling) 
-                 * 使用指定编码的InputStreamReader替代默认实现
-                 * Using InputStreamReader with specified encoding instead of default
-                 */
-                if (stream != null) {
-                    isr = new InputStreamReader(stream, encoding); // 应用自定义编码 Apply custom encoding
+                } else {
+                    stream = null;
                 }
-            } catch (PrivilegedActionException e) {
-                throw (IOException) e.getException();
+            } else {
+                stream = loader.getResourceAsStream(resourceName);
+            }
+
+            /* 字符编码处理关键段 (Critical section for encoding handling)
+             * 使用指定编码的InputStreamReader替代默认实现
+             * Using InputStreamReader with specified encoding instead of default
+             */
+            if (stream != null) {
+                isr = new InputStreamReader(stream, encoding); // 应用自定义编码 Apply custom encoding
             }
             if (isr != null) {
                 try {
@@ -167,19 +159,26 @@ public class ResourceBundleControl extends ResourceBundle.Control {
         return bundle;
     }
 
-    /**
-     * 获取当前编码格式 (Get current encoding format)
-     * @return 当前使用的字符编码 (Currently used character encoding)
-     */
-    public String getEncoding() {
-        return encoding;
+    private ResourceBundle newResourceBundle(Class<? extends ResourceBundle> bundleClass)
+            throws IllegalAccessException, InstantiationException {
+        try {
+            return bundleClass.getDeclaredConstructor().newInstance();
+        } catch (NoSuchMethodException e) {
+            InstantiationException ex = new InstantiationException("No default constructor for " + bundleClass.getName());
+            ex.initCause(e);
+            throw ex;
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException runtimeException) {
+                throw runtimeException;
+            }
+            if (cause instanceof Error error) {
+                throw error;
+            }
+            InstantiationException ex = new InstantiationException("Failed to instantiate " + bundleClass.getName());
+            ex.initCause(cause);
+            throw ex;
+        }
     }
 
-    /**
-     * 设置新的编码格式 (Set new encoding format)
-     * @param encoding 新的字符编码 (New character encoding)
-     */
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
 }

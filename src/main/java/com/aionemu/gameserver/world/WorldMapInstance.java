@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.world;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,9 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.WorldConfig;
 import com.aionemu.gameserver.instance.handlers.InstanceHandler;
@@ -50,23 +51,21 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.RegionZone;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import com.aionemu.gameserver.world.zone.ZoneService;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * World map instance object.
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public abstract class WorldMapInstance {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(WorldMapInstance.class);
 	/**
 	 * Size of region
 	 */
@@ -78,19 +77,19 @@ public abstract class WorldMapInstance {
 	/**
 	 * Map of active regions.
 	 */
-	protected final TIntObjectHashMap<MapRegion> regions = new TIntObjectHashMap<MapRegion>();
+	protected final IntObjectHashMap<MapRegion> regions = new IntObjectHashMap<MapRegion>();
 
 	/**
 	 * All objects spawned in this world map instance
 	 */
-	private final Map<Integer, VisibleObject> worldMapObjects = new FastMap<Integer, VisibleObject>().shared();
+	private final Map<Integer, VisibleObject> worldMapObjects = new LinkedHashMap<Integer, VisibleObject>();
 
 	/**
 	 * All players spawned in this world map instance
 	 */
-	private final FastMap<Integer, Player> worldMapPlayers = new FastMap<Integer, Player>().shared();
+	private final Map<Integer, Player> worldMapPlayers = new LinkedHashMap<Integer, Player>();
 
-	private final Set<Integer> registeredObjects = Collections.newSetFromMap(new FastMap<Integer, Boolean>().shared());
+	private final Set<Integer> registeredObjects = Collections.newSetFromMap(new LinkedHashMap<Integer, Boolean>());
 
 	private PlayerGroup registeredGroup = null;
 
@@ -101,7 +100,7 @@ public abstract class WorldMapInstance {
 	 */
 	private int instanceId;
 
-	private final FastList<Integer> questIds = new FastList<Integer>();
+	private final List<Integer> questIds = new ArrayList<Integer>();
 
 	private InstanceHandler instanceHandler;
 
@@ -121,7 +120,7 @@ public abstract class WorldMapInstance {
 	public WorldMapInstance(WorldMap parent, int instanceId) {
 		this.parent = parent;
 		this.instanceId = instanceId;
-		this.zones = ZoneService.getInstance().getZoneInstancesByWorldId(parent.getMapId());
+		this.zones = GameWorldBootstrapServices.zoneService().getZoneInstancesByWorldId(parent.getMapId());
 		initMapRegions();
 	}
 
@@ -201,7 +200,7 @@ public abstract class WorldMapInstance {
 					+ String.valueOf(this.getMapId()) + " " + String.valueOf(this.getInstanceId()));
 		}
 		if (object instanceof Npc) {
-			QuestNpc data = QuestEngine.getInstance().getQuestNpc(((Npc) object).getNpcId());
+			QuestNpc data = GameEngineServices.questEngine().getQuestNpc(((Npc) object).getNpcId());
 			if (data != null) {
 				for (int id : data.getOnQuestStart()) {
 					if (!questIds.contains(id)) {
@@ -358,14 +357,14 @@ public abstract class WorldMapInstance {
 	 * @return
 	 */
 	public Iterator<VisibleObject> objectIterator() {
-		return worldMapObjects.values().iterator();
+		return new ArrayList<>(worldMapObjects.values()).iterator();
 	}
 
 	/**
 	 * @return
 	 */
 	public Iterator<Player> playerIterator() {
-		return worldMapPlayers.values().iterator();
+		return new ArrayList<Player>(worldMapPlayers.values()).iterator();
 	}
 
 	public void registerGroup(PlayerGroup group) {
@@ -434,7 +433,7 @@ public abstract class WorldMapInstance {
 		return worldMapPlayers.size();
 	}
 
-	public FastList<Integer> getQuestIds() {
+	public List<Integer> getQuestIds() {
 		return questIds;
 	}
 
@@ -460,7 +459,7 @@ public abstract class WorldMapInstance {
 	 */
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (Player player : worldMapPlayers.values()) {
+			for (Player player : new ArrayList<Player>(worldMapPlayers.values())) {
 				if (player != null) {
 					visitor.visit(player);
 				}

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -30,12 +31,10 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.DatabaseFactory;
@@ -52,17 +51,18 @@ import com.aionemu.gameserver.skillengine.model.Times;
 import com.aionemu.gameserver.skillengine.model.WeaponTypeWrapper;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author kecimis
  */
+@Slf4j
 public class MotionLoggingService {
 
 	private static volatile ObjectProvider<MotionLoggingService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(MotionLoggingService.class);
 
-	private FastMap<String, MotionLog> motionsMap = new FastMap<String, MotionLog>().shared();
+	private Map<String, MotionLog> motionsMap = new LinkedHashMap<String, MotionLog>();
 
 	private boolean advancedLog = false;
 
@@ -300,7 +300,7 @@ public class MotionLoggingService {
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(templates.getClass());
 			Marshaller marshaller = jaxbContext.createMarshaller();
-			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, new Boolean(true));
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			marshaller.marshal(templates, new FileOutputStream(Config.dataFile(file)));
 		} catch (JAXBException e) {
 			e.printStackTrace();
@@ -529,9 +529,9 @@ public class MotionLoggingService {
 	}
 
 	private class MotionLog {
-		private FastMap<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new FastMap<WeaponTypeWrapper, List<SkillTime>>();
+		private Map<WeaponTypeWrapper, List<SkillTime>> motionsForWeapons = new LinkedHashMap<WeaponTypeWrapper, List<SkillTime>>();
 
-		public FastMap<WeaponTypeWrapper, List<SkillTime>> getMotionLog() {
+		public Map<WeaponTypeWrapper, List<SkillTime>> getMotionLog() {
 			return this.motionsForWeapons;
 		}
 

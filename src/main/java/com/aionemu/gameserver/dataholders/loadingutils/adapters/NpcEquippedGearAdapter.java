@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders.loadingutils.adapters;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
+import jakarta.xml.bind.annotation.adapters.XmlAdapter;
 
 import com.aionemu.gameserver.model.items.NpcEquippedGear;
 
@@ -28,7 +28,7 @@ public class NpcEquippedGearAdapter extends XmlAdapter<NpcEquipmentList, NpcEqui
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
+	 * @see jakarta.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
 	 */
 	@Override
 	public NpcEquipmentList marshal(NpcEquippedGear v) throws Exception {
@@ -40,7 +40,7 @@ public class NpcEquippedGearAdapter extends XmlAdapter<NpcEquipmentList, NpcEqui
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
+	 * jakarta.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
 	 */
 	@Override
 	public NpcEquippedGear unmarshal(NpcEquipmentList v) throws Exception {

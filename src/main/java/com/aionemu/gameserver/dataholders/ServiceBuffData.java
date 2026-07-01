@@ -18,17 +18,17 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.bonus_service.BonusServiceAttr;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Ranastic (Encom)
@@ -42,7 +42,7 @@ public class ServiceBuffData {
 	protected List<BonusServiceAttr> serviceBonusattr;
 
 	@XmlTransient
-	private TIntObjectHashMap<BonusServiceAttr> templates = new TIntObjectHashMap<BonusServiceAttr>();
+	private IntObjectHashMap<BonusServiceAttr> templates = new IntObjectHashMap<BonusServiceAttr>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (BonusServiceAttr template : serviceBonusattr) {

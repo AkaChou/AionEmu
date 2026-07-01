@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.idiandepthsservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.idiandepths.IdianDepthsLocation;
@@ -62,11 +64,11 @@ public abstract class IdianDepths<IL extends IdianDepthsLocation> {
 	}
 
 	protected void spawn(IdianDepthsStateType type) {
-		IdianDepthsService.getInstance().spawn(getIdianDepthsLocation(), type);
+		GameLocationBootstrapServices.idianDepthsService().spawn(getIdianDepthsLocation(), type);
 	}
 
 	protected void despawn() {
-		IdianDepthsService.getInstance().despawn(getIdianDepthsLocation());
+		GameLocationBootstrapServices.idianDepthsService().despawn(getIdianDepthsLocation());
 	}
 
 	public boolean isClosed() {

@@ -5,16 +5,22 @@ import com.aionemu.loginserver.utils.cron.ThreadPoolManagerRunnableRunner;
 
 public final class LoginCronServices {
 
+    private static volatile CronService resolvedCronService;
+
     private LoginCronServices() {
     }
 
     public static void initialize() {
-        CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
+        resolvedCronService = CronService.initSingleton(ThreadPoolManagerRunnableRunner.class);
     }
 
     public static void shutdownIfInitialized() {
-        if (CronService.isInitialized()) {
-            CronService.getInstance().shutdown();
+        CronService cronService = resolvedCronService;
+        if (cronService != null) {
+            resolvedCronService = null;
+            cronService.shutdown();
+            return;
         }
+        CronService.shutdownCurrentIfInitialized();
     }
 }

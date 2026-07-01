@@ -15,6 +15,10 @@
  */
 package com.aionemu.gameserver.ai2.manager;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Logger;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -23,8 +27,6 @@ import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.utils.MathUtil;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author ATracer Rework: Angry Catster
@@ -63,7 +65,7 @@ public class SimpleAttackManager {
 		npcAI.getOwner().getGameStats().setNextAttackTime(System.currentTimeMillis() + delay);
 		if (delay > 0) {
 			// 延迟执行攻击
-			ThreadPoolManager.getInstance().schedule(new SimpleAttackAction(npcAI), delay);
+			GameThreadPoolServices.threadPoolManager().schedule(new SimpleAttackAction(npcAI), delay);
 		} else {
 			// 立即执行攻击
 			attackAction(npcAI);
@@ -80,7 +82,7 @@ public class SimpleAttackManager {
 			AI2Logger.info(npcAI, "Scheduling checked attack " + delay);
 		}
 		// 安排带检查的攻击动作，在执行前会再次检查攻击是否已调度
-		ThreadPoolManager.getInstance().schedule(new SimpleCheckedAttackAction(npcAI), delay);
+		GameThreadPoolServices.threadPoolManager().schedule(new SimpleCheckedAttackAction(npcAI), delay);
 	}
 	
     public static boolean isTargetInAttackRange(Npc npc) {
@@ -114,7 +116,7 @@ public class SimpleAttackManager {
         if (npc.getTarget() == null) {
             return false;
         }
-        if (!GeoService.getInstance().canSee(npc, npc.getTarget())) {
+        if (!GameWorldServices.geoService().canSee(npc, npc.getTarget())) {
             return false;
         }
     } catch (NullPointerException e) {

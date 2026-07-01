@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.shugoImperialTomb;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -50,7 +52,7 @@ public class Imperial_ShrineAI2 extends GeneralNpcAI2
 		int instanceId = getPosition().getInstanceId();
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
 		env.setExtendedRewardIndex(extendedRewardIndex);
-		if (QuestEngine.getInstance().onDialog(env) && dialogId != 1011) {
+		if (GameEngineServices.questEngine().onDialog(env) && dialogId != 1011) {
 			return true;
 		} if (dialogId == 10000 && player.getInventory().decreaseByItemId(182006989, 1)) { //Emperor's Golden Tag.
 		    TeleportService2.teleportTo(player, 300560000, instanceId, 354.1076f, 188.2339f, 304.3324f, (byte) 110);

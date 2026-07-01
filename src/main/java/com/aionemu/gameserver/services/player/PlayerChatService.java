@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.configs.main.SecurityConfig;
@@ -27,9 +27,9 @@ import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+@Slf4j(topic = "CHAT_LOG")
 
 public class PlayerChatService {
-	private static final Logger log = LoggerFactory.getLogger("CHAT_LOG");
 
 	public static boolean isFlooding(final Player player) {
 		player.setLastMessageTime();
@@ -37,7 +37,7 @@ public class PlayerChatService {
 			player.setGagged(true);
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FLOODING);
 			player.getController().cancelTask(TaskId.GAG);
-			player.getController().addTask(TaskId.GAG, ThreadPoolManager.getInstance().schedule(new Runnable() {
+			player.getController().addTask(TaskId.GAG, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					player.setGagged(false);

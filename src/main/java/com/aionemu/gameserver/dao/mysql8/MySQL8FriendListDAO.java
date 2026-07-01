@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.FriendListDAO;
@@ -8,9 +9,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Friend;
 import com.aionemu.gameserver.model.gameobjects.player.FriendList;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,9 +19,9 @@ import java.util.List;
 /**
  * @author Ben
  */
+@Slf4j
 public class MySQL8FriendListDAO extends FriendListDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8FriendListDAO.class);
     
     private static final String LOAD_QUERY = "SELECT * FROM `friends` WHERE `player`=?";
     private static final String ADD_QUERY = "INSERT INTO `friends` (`player`,`friend`) VALUES (?, ?)";

@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.LadderDAO;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,9 +14,9 @@ import java.util.List;
  * Created by wanke on 12/02/2017.
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8LadderDAO extends LadderDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8LadderDAO.class);
     
     private static final String SELECT_PLAYER_DATA = "SELECT player_id, last_update, rating, wins, rank FROM ladder_player " + "WHERE wins > 0 OR losses > 0 OR leaves > 0 ORDER BY rating DESC, wins DESC, player_id ASC";
     

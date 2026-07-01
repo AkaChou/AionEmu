@@ -16,12 +16,16 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collection;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -32,7 +36,6 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -68,11 +71,11 @@ public class AuraEffect extends EffectTemplate {
 					* effector.getGameStats().getStat(StatEnum.BOOST_MANTRA_RANGE, 100).getCurrent() / 100f);
 			for (Player player : onlinePlayers) {
 				if (MathUtil.isIn3dRange(effector, player, actualRange)) {
-					if (!DuelService.getInstance().isDueling(player.getObjectId()) && player != effector) {
+					if (!GameGameplayServices.duelService().isDueling(player.getObjectId()) && player != effector) {
 						applyAuraTo(player, effect);
 					}
-					if (DuelService.getInstance().isDueling(effector.getObjectId())
-							&& DuelService.getInstance().isDueling(player.getObjectId())) {
+					if (GameGameplayServices.duelService().isDueling(effector.getObjectId())
+							&& GameGameplayServices.duelService().isDueling(player.getObjectId())) {
 						applyAuraTo(effector, effect);
 					} else {
 						applyAuraTo(effector, effect);
@@ -94,7 +97,7 @@ public class AuraEffect extends EffectTemplate {
 
 	@Override
 	public void startEffect(final Effect effect) {
-		effect.setPeriodicTask(ThreadPoolManager.getInstance().scheduleAtFixedRate(new AuraTask(effect), 0, 6500),
+		effect.setPeriodicTask(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new AuraTask(effect), 0, 6500),
 				position);
 	}
 

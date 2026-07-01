@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -61,7 +63,7 @@ public class PostboxObject extends HouseObject<HousingPostbox> {
 		PacketSendUtility.sendPacket(player,
 				SM_SYSTEM_MESSAGE.STR_MSG_HOUSING_OBJECT_USE(getObjectTemplate().getNameId()));
 		player.getController().addTask(TaskId.HOUSE_OBJECT_USE,
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 					@Override
 					public void run() {

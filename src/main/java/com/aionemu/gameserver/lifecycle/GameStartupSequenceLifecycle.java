@@ -1,9 +1,17 @@
 package com.aionemu.gameserver.lifecycle;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.aionemu.gameserver.GameServer;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class GameStartupSequenceLifecycle {
@@ -46,6 +54,7 @@ public class GameStartupSequenceLifecycle {
     private final GameChatServerOverrideLifecycle chatServerOverrideLifecycle;
 
     public void start(Boolean chatServerEnabledOverride) {
+        XmlDataLoader.preloadContextAsync(); // 尽早异步预热 StaticData JAXBContext，与后续启动步骤并行（借鉴 aion-server GameServer:93）
         systemPropertiesLifecycle.start();
         long start = startupLogLifecycle.start();
 
@@ -86,5 +95,26 @@ public class GameStartupSequenceLifecycle {
         ratioLimitLifecycle.start();
         startupHooksLifecycle.start();
         startupCompletionLifecycle.start(startupTime);
+        logStartupPhaseTimings();
+    }
+
+    // ponytail: 每个 lifecycle 已在自身记录 loadTimeMillis，这里反射汇总打印一次；新增 lifecycle 自动纳入，无需维护列表
+    private void logStartupPhaseTimings() {
+        List<Map.Entry<String, Long>> timings = new ArrayList<>();
+        for (Field f : getClass().getDeclaredFields()) {
+            try {
+                f.setAccessible(true);
+                Object bean = f.get(this);
+                long ms = (Long) bean.getClass().getMethod("getLoadTimeMillis").invoke(bean);
+                if (ms >= 0) {
+                    timings.add(new java.util.AbstractMap.SimpleEntry<>(f.getName(), ms));
+                }
+            } catch (ReflectiveOperationException ignored) {
+                // 非 lifecycle 字段或无计时方法，跳过
+            }
+        }
+        timings.sort(Map.Entry.<String, Long>comparingByValue().reversed());
+        log.info("Startup phase timings (ms, slowest first):");
+        timings.forEach(e -> log.info(String.format("  %-28s %7d", e.getKey(), e.getValue())));
     }
 }

@@ -24,7 +24,8 @@ import com.aionemu.gameserver.model.templates.InstanceCooltime;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SM_INSTANCE_INFO extends AionServerPacket {
 	private Player player;
@@ -62,9 +63,7 @@ public class SM_INSTANCE_INFO extends AionServerPacket {
 			writeD(player.getObjectId());
 			writeH(DataManager.INSTANCE_COOLTIME_DATA.size());
 			PortalCooldownList cooldownList = player.getPortalCooldownList();
-			for (FastMap.Entry<Integer, InstanceCooltime> e = DataManager.INSTANCE_COOLTIME_DATA.getAllInstances()
-					.head(),
-					end = DataManager.INSTANCE_COOLTIME_DATA.getAllInstances().tail(); (e = e.getNext()) != end;) {
+			for (Map.Entry<Integer, InstanceCooltime> e : DataManager.INSTANCE_COOLTIME_DATA.getAllInstances().entrySet()) {
 				writeD(e.getValue().getId());
 				writeD(0x00);
 				if (cooldownList.getPortalCooldown(e.getValue().getWorldId()) == 0) {

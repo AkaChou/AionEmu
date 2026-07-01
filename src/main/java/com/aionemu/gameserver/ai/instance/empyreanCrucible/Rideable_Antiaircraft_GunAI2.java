@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -42,7 +44,7 @@ public class Rideable_Antiaircraft_GunAI2 extends ActionItemNpcAI2
 	protected void handleUseItemFinish(Player player) {
 		if (canUse.compareAndSet(true, false)) {
 			int morphSkill = getMorphSkill();
-			SkillEngine.getInstance().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), morphSkill >> 8, morphSkill & 0xFF, player).useNoAnimationSkill();
 			AI2Actions.deleteOwner(this);
 		}
 	}

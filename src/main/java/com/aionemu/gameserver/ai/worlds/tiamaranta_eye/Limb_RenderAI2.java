@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.tiamaranta_eye;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -39,14 +41,14 @@ public class Limb_RenderAI2 extends NpcAI2
     public void handleAttack(Creature creature) {
 		if (isAggred.compareAndSet(false, true)) {
 			//A Limb Render is under attack. Defeat the player attacking the crystal.
-			NpcShoutsService.getInstance().sendMsg(getOwner(), 1401462);
+			GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401462);
 		}
         attackCount++;
         if (attackCount == 195) {
             attackCount = 0;
 			AI2Actions.useSkill(this, 20655); //Crystal Frgament.
 			//A Limb Render has exploded.
-            NpcShoutsService.getInstance().sendMsg(getOwner(), 1401463);
+            GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401463);
         }
 		super.handleAttack(creature);
     }
@@ -58,7 +60,7 @@ public class Limb_RenderAI2 extends NpcAI2
 			case 283072:
 			case 858016:
 			    //A Limb Render has appeared. It explodes when destroyed, inflicting serious damage to those nearby.
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 1401461);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1401461);
 			break;
 		}
 		super.handleSpawned();

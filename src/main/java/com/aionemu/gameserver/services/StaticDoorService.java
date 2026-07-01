@@ -16,8 +16,6 @@
  */
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.administration.AdminConfig;
@@ -26,10 +24,11 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class StaticDoorService {
 	private static volatile ObjectProvider<StaticDoorService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(StaticDoorService.class);
 
 	public static StaticDoorService getInstance() {
 		ObjectProvider<StaticDoorService> provider = instanceProvider;

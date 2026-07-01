@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.skillengine.model;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -56,9 +58,9 @@ import com.aionemu.gameserver.skillengine.effect.TransformEffect;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicAction;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicActions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Effect implements StatOwner {
 
@@ -136,7 +138,7 @@ public class Effect implements StatOwner {
 	private boolean isNoResurrectPenalty;
 	private int tauntHate;
 	private int effectHate;
-	private Map<Integer, EffectTemplate> successEffects = new FastMap<Integer, EffectTemplate>().shared();
+	private Map<Integer, EffectTemplate> successEffects = new LinkedHashMap<Integer, EffectTemplate>();
 	private int carvedSignet = 0;
 	private int signetBurstedCount = 0;
 	protected int abnormals;
@@ -770,7 +772,7 @@ public class Effect implements StatOwner {
 			duration = skillTemplate.getDuration();
 		}
 		endTime = System.currentTimeMillis() + duration;
-		task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				endEffect();
@@ -970,7 +972,7 @@ public class Effect implements StatOwner {
 			return;
 		}
 		int checktime = periodicActions.getChecktime();
-		periodicActionsTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		periodicActionsTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {

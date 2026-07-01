@@ -16,15 +16,17 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.MoltenusSchedule;
 import com.aionemu.gameserver.configs.schedule.MoltenusSchedule.Moltenus;
@@ -44,24 +46,24 @@ import com.aionemu.gameserver.services.moltenusservice.MoltenusFight;
 import com.aionemu.gameserver.services.moltenusservice.MoltenusStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  *         http://aion.power.plaync.com/wiki/%EB%B6%84%EB%85%B8%EC%9D%98+%ED%8C%8C%ED%8E%B8+%EB%A9%94%EB%85%B8%ED%8B%B0%EC%98%A4%EC%8A%A4
  */
+@Slf4j
 
 public class MoltenusService {
 	private static volatile ObjectProvider<MoltenusService> instanceProvider;
 	private MoltenusSchedule moltenusSchedule;
 	private Map<Integer, MoltenusLocation> moltenus;
 	private static final int duration = CustomConfig.MOLTENUS_DURATION;
-	private final Map<Integer, MoltenusFight<?>> activeMoltenus = new FastMap<Integer, MoltenusFight<?>>().shared();
-	private static final Logger log = LoggerFactory.getLogger(MoltenusService.class);
+	private final Map<Integer, MoltenusFight<?>> activeMoltenus = new LinkedHashMap<Integer, MoltenusFight<?>>();
 
 	public void initMoltenusLocations() {
 		if (CustomConfig.MOLTENUS_ENABLED) {
@@ -83,7 +85,7 @@ public class MoltenusService {
 			moltenusSchedule = MoltenusSchedule.load();
 			for (Moltenus moltenus : moltenusSchedule.getMoltenussList()) {
 				for (String fightTime : moltenus.getFightTimes()) {
-					CronService.getInstance().schedule(new MoltenusStartRunnable(moltenus.getId()), fightTime);
+					GameCronServices.cronService().schedule(new MoltenusStartRunnable(moltenus.getId()), fightTime);
 				}
 			}
 		}
@@ -100,7 +102,7 @@ public class MoltenusService {
 		}
 		boss.start();
 		moltenusMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopMoltenus(id);
@@ -139,7 +141,7 @@ public class MoltenusService {
 	public boolean moltenusMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE005",
@@ -156,7 +158,7 @@ public class MoltenusService {
 		switch (id) {
 		case 4:
 		case 7:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Enraged Sulfur Guardian will appear in 10 minutes.
@@ -174,7 +176,7 @@ public class MoltenusService {
 		switch (id) {
 		case 5:
 		case 8:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Enraged Western Guardian will appear in 10 minutes.
@@ -192,7 +194,7 @@ public class MoltenusService {
 		switch (id) {
 		case 6:
 		case 9:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Enraged Eastern Guardian will appear in 10 minutes.
@@ -210,7 +212,7 @@ public class MoltenusService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

@@ -19,7 +19,7 @@ import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -162,7 +162,7 @@ class NavDataTest {
 
 	private static WorldMapsData worldMaps(int worldSize, int... mapIds) throws Exception {
 		List<WorldMapTemplate> templates = new java.util.ArrayList<>();
-		TIntObjectHashMap<WorldMapTemplate> index = new TIntObjectHashMap<>();
+		IntObjectHashMap<WorldMapTemplate> index = new IntObjectHashMap<>();
 		for (int mapId : mapIds) {
 			WorldMapTemplate template = new WorldMapTemplate();
 			setField(template, "mapId", mapId);

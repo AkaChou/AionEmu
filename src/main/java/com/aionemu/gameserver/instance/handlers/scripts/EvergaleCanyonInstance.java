@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
@@ -38,9 +42,8 @@ import com.aionemu.gameserver.model.instance.playerreward.InstancePlayerReward;
 import com.aionemu.gameserver.model.instance.playerreward.EvergaleCanyonPlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
@@ -48,11 +51,9 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -72,7 +73,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	protected EvergaleCanyonReward evergaleCanyonReward;
 	private boolean isInstanceDestroyed = false;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> evergaleCanyonTask = FastList.newInstance();
+	private final List<Future<?>> evergaleCanyonTask = new ArrayList<Future<?>>();
 	
 	protected EvergaleCanyonPlayerReward getPlayerReward(Player player) {
         evergaleCanyonReward.regPlayerReward(player);
@@ -85,7 +86,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
@@ -100,7 +101,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	protected void startInstanceTask() {
 		instanceTime = System.currentTimeMillis();
         evergaleCanyonReward.setInstanceStartTime();
-		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!evergaleCanyonReward.isRewarded()) {
@@ -125,7 +126,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				}
             }
         }, 90000));
-		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//An element of the 2nd stage was added.
@@ -143,7 +144,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				sp(246703, 743.7306f, 487.89166f, 305.3329f, (byte) 23, 15000);
             }
         }, 120000));
-		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//Corrupt Bagatur has appeared at the Jotun Garden.
@@ -151,7 +152,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
             	sp(246704, 747.3699f, 1029.9686f, 334.3001f, (byte) 90, 0);
             }
         }, 480000));
-		evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
             	if (!evergaleCanyonReward.isRewarded()) {
@@ -298,14 +299,14 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
         } for (Npc npc: instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
 					for (Player player : instance.getPlayersInside()) {
 						onExitInstance(player);
 					}
-					AutoGroupService.getInstance().unRegisterInstance(instanceId);
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
 		}, 60000);
@@ -443,7 +444,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
 				}
 				//"Mahot" appears every 3min after being killed.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 				        //"Mahot" has appeared at the remaining altar.
@@ -463,7 +464,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
 				}
 				//"Daglon" appears every 3min after being killed.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						//"Daglon" has appeared at the remaining altar.
@@ -483,7 +484,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
 				}
 				//"Furtive Kaisan" appears every 3min after being killed.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						//"Furtive Kaisan" has appeared at the remaining altar.
@@ -503,7 +504,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 				   ItemService.addItem(mostPlayerDamage, 186000470, 200); //War Points.
 				}
 				//"Corrupt Bagatur" appears every 8min after being killed.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						//"Corrupt Bagatur" has appeared at the Jotun Garden.
@@ -1029,7 +1030,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1043,7 +1044,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1056,7 +1057,7 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
     }
 	
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        evergaleCanyonTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        evergaleCanyonTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -1081,10 +1082,10 @@ public class EvergaleCanyonInstance extends GeneralInstanceHandler
 	}
 	
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = evergaleCanyonTask.head(), end = evergaleCanyonTask.tail(); (n = n.getNext()) != end;) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : evergaleCanyonTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

@@ -14,6 +14,13 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -21,9 +28,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -62,10 +66,8 @@ import com.aionemu.gameserver.services.StigmaService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
-
-import javolution.util.FastList;
+@Slf4j
 
 public class Equipment {
 
@@ -73,7 +75,6 @@ public class Equipment {
 	private Set<Long> markedFreeSlots = new HashSet<Long>();
 	private PersistentState persistentState = PersistentState.UPDATED;
 	private SortedMap<Long, Item> equipment = new TreeMap<Long, Item>();
-	private static final Logger log = LoggerFactory.getLogger(Equipment.class);
 
 	private static final long[] ARMOR_SLOTS = new long[] { ItemSlot.BOOTS.getSlotIdMask(), ItemSlot.GLOVES.getSlotIdMask(), ItemSlot.PANTS.getSlotIdMask(), ItemSlot.SHOULDER.getSlotIdMask(), ItemSlot.TORSO.getSlotIdMask() };
 
@@ -243,9 +244,9 @@ public class Equipment {
 			notifyItemEquipped(item);
 			owner.getLifeStats().updateCurrentStats();
 			setPersistentState(PersistentState.UPDATE_REQUIRED);
-			QuestEngine.getInstance().onEquipItem(new QuestEnv(null, owner, 0, 0), item.getItemId());
+			GameEngineServices.questEngine().onEquipItem(new QuestEnv(null, owner, 0, 0), item.getItemId());
             if (item.getItemTemplate().isEstima()) {
-                CreativityEssenceService.getInstance().addEstimaCp(owner, item.getObjectId());
+                GameCreativityServices.creativityEssenceService().addEstimaCp(owner, item.getObjectId());
             }
 			return item;
 		}
@@ -334,7 +335,7 @@ public class Equipment {
 			return;
 		}
         if (item.getItemTemplate().isEstima()) {
-            CreativityEssenceService.getInstance().removeEstimaCp(owner, item);
+            GameCreativityServices.creativityEssenceService().removeEstimaCp(owner, item);
         }
 		if (allSlots.length > 1) {
 			if (!item.getItemTemplate().isTwoHandWeapon()) {
@@ -600,8 +601,8 @@ public class Equipment {
 	/**
 	 * @return List<Item>
 	 */
-	public FastList<Item> getEquippedItemsWithoutStigma() {
-		FastList<Item> equippedItems = FastList.newInstance();
+	public List<Item> getEquippedItemsWithoutStigma() {
+		List<Item> equippedItems = new ArrayList<Item>();
 		Item twoHanded = null;
 		for (Item item : equipment.values()) {
 			if (!ItemSlot.isStigma(item.getEquipmentSlot())) {
@@ -617,8 +618,8 @@ public class Equipment {
 		return equippedItems;
 	}
 
-	public FastList<Item> getEquippedItemsWithoutStigmaOld() {
-		FastList<Item> equippedItems = FastList.newInstance();
+	public List<Item> getEquippedItemsWithoutStigmaOld() {
+		List<Item> equippedItems = new ArrayList<Item>();
 		Item twoHanded = null;
 		Item offTwoHanded = null;
 		for (Item item : equipment.values()) {
@@ -644,8 +645,8 @@ public class Equipment {
 	/**
 	 * @return ItemSlots
 	 */
-	public FastList<Item> getEquippedForApparence() {
-		FastList<Item> equippedItems = FastList.newInstance();
+	public List<Item> getEquippedForApparence() {
+		List<Item> equippedItems = new ArrayList<Item>();
 		Item twoHanded = null;
 		for (Item item : equipment.values()) {
 			long slot = item.getEquipmentSlot();
@@ -1186,7 +1187,7 @@ public class Equipment {
 				};
 				player.getObserveController().attach(moveObserver);
 				player.getController().addTask(TaskId.ITEM_USE,
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								player.getObserveController().removeObserver(moveObserver);

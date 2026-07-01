@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -49,7 +51,7 @@ public class CM_PLAY_MOVIE_END extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		Player player = getConnection().getActivePlayer();
-		QuestEngine.getInstance().onMovieEnd(new QuestEnv(null, player, 0, 0), movieId);
+		GameEngineServices.questEngine().onMovieEnd(new QuestEnv(null, player, 0, 0), movieId);
 		player.getPosition().getWorldMapInstance().getInstanceHandler().onPlayMovieEnd(player, movieId);
 	}
 }

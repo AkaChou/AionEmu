@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
@@ -29,8 +28,8 @@ import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
 
+@Slf4j
 public class SM_STATS_INFO extends AionServerPacket {
-	Logger log = LoggerFactory.getLogger(SM_STATS_INFO.class);
 	private Player player;
 	private PlayerGameStats pgs;
 	private PlayerLifeStats pls;

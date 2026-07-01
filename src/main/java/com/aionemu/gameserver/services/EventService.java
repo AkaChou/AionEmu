@@ -15,15 +15,18 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.main.EventsConfig;
@@ -38,18 +41,15 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
-
-import gnu.trove.map.hash.TIntObjectHashMap;
 
 /**
  * @author Rolandas
  */
+@Slf4j
 public class EventService {
 
 	private static volatile ObjectProvider<EventService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(EventService.class);
 
 	private final int CHECK_TIME_PERIOD = 1000 * 60 * 5;
 
@@ -59,9 +59,9 @@ public class EventService {
 
 	private List<EventTemplate> activeEvents;
 
-	TIntObjectHashMap<List<EventTemplate>> eventsForStartQuest = new TIntObjectHashMap<List<EventTemplate>>();
+	Map<Integer, List<EventTemplate>> eventsForStartQuest = new HashMap<Integer, List<EventTemplate>>();
 
-	TIntObjectHashMap<List<EventTemplate>> eventsForMaintainQuest = new TIntObjectHashMap<List<EventTemplate>>();
+	Map<Integer, List<EventTemplate>> eventsForMaintainQuest = new HashMap<Integer, List<EventTemplate>>();
 
 	private static class SingletonHolder {
 
@@ -92,8 +92,8 @@ public class EventService {
 	public void onPlayerLogin(Player player) {
 		List<Integer> activeStartQuests = new ArrayList<Integer>();
 		List<Integer> activeMaintainQuests = new ArrayList<Integer>();
-		TIntObjectHashMap<List<EventTemplate>> map1 = null;
-		TIntObjectHashMap<List<EventTemplate>> map2 = null;
+		Map<Integer, List<EventTemplate>> map1 = null;
+		Map<Integer, List<EventTemplate>> map2 = null;
 
 		synchronized (activeEvents) {
 			for (EventTemplate et : activeEvents) {
@@ -102,8 +102,8 @@ public class EventService {
 					activeMaintainQuests.addAll(et.getMaintainableQuests());
 				}
 			}
-			map1 = new TIntObjectHashMap<List<EventTemplate>>(eventsForStartQuest);
-			map2 = new TIntObjectHashMap<List<EventTemplate>>(eventsForMaintainQuest);
+			map1 = new HashMap<Integer, List<EventTemplate>>(eventsForStartQuest);
+			map2 = new HashMap<Integer, List<EventTemplate>>(eventsForMaintainQuest);
 		}
 
 		StartOrMaintainQuests(player, activeStartQuests.listIterator(), map1, true);
@@ -115,7 +115,7 @@ public class EventService {
 		map2.clear();
 	}
 
-	void StartOrMaintainQuests(Player player, ListIterator<Integer> questList, TIntObjectHashMap<List<EventTemplate>> templateMap, boolean start) {
+	void StartOrMaintainQuests(Player player, ListIterator<Integer> questList, Map<Integer, List<EventTemplate>> templateMap, boolean start) {
 		while (questList.hasNext()) {
 			int questId = questList.next();
 			QuestState qs = player.getQuestStateList().getQuestState(questId);
@@ -201,7 +201,7 @@ public class EventService {
 		}
 		isStarted = true;
 
-		checkTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		checkTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {

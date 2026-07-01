@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.inggison;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
@@ -44,11 +46,11 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 			sendDredgionGuide();
 		}
 		announceKilledBattleship();
-		ZorshivDredgionService.getInstance().stopZorshivDredgion(3);
+		GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(3);
 	}
 	
 	private void announceKilledBattleship() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
@@ -61,7 +63,7 @@ public class Dredgion_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void sendDredgionGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {

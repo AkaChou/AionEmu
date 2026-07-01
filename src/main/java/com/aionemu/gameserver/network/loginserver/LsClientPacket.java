@@ -16,20 +16,15 @@
  */
 package com.aionemu.gameserver.network.loginserver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.network.packet.BaseClientPacket;
 
 /**
  * @author -Nemesiss-
  */
+@Slf4j
 public abstract class LsClientPacket extends BaseClientPacket<LoginServerConnection> implements Cloneable {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(LsClientPacket.class);
 
 	/**
 	 * Constructs new client packet with specified opcode. If using this

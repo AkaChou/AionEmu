@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.model.templates.item;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlType;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.utils.Rnd;
 
@@ -27,6 +27,7 @@ import com.aionemu.commons.utils.Rnd;
  * @author vlog
  */
 @XmlType(name = "RandomItem")
+@Slf4j
 public class RandomItem {
 
 	@XmlAttribute(name = "type")
@@ -62,8 +63,7 @@ public class RandomItem {
 		}
 		if ((rndMin > 0) || (rndMax > 0)) {
 			if (rndMax < rndMin) {
-				LoggerFactory.getLogger(RandomItem.class).warn("Wrong rnd result item definition {} {}", rndMin,
-						rndMax);
+				log.warn("Wrong rnd result item definition {} {}", rndMin, rndMax);
 				return 1;
 			}
 			return Rnd.get(rndMin, rndMax);

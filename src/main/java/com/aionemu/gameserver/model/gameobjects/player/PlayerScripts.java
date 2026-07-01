@@ -16,15 +16,13 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.apache.commons.lang3.StringUtils;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.dao.HouseScriptsDAO;
@@ -34,9 +32,9 @@ import com.aionemu.gameserver.utils.xml.CompressUtil;
 /**
  * @author Rolandas
  */
+@Slf4j
 public class PlayerScripts {
 
-	private static final Logger logger = LoggerFactory.getLogger(PlayerScripts.class);
 	private final Map<Integer, PlayerScript> scripts;
 	private final int houseObjId;
 
@@ -69,7 +67,7 @@ public class PlayerScripts {
 			}
 			script.setData(bytes, scriptXML.length() * 2);
 		} catch (Exception ex) {
-			logger.error("Script compression failed: " + ex);
+			log.error("Script compression failed: " + ex);
 			return false;
 		}
 		return script == null;
@@ -98,7 +96,7 @@ public class PlayerScripts {
 		try {
 			return CompressUtil.Decompress(bytes);
 		} catch (Exception ex) {
-			logger.error("Script decompression failed: " + ex);
+			log.error("Script decompression failed: " + ex);
 			return null;
 		}
 	}
@@ -138,7 +136,7 @@ public class PlayerScripts {
 		}
 
 		if (HousingConfig.HOUSE_SCRIPT_DEBUG) {
-			logger.info(content);
+			log.info(content);
 		}
 		return true;
 	}

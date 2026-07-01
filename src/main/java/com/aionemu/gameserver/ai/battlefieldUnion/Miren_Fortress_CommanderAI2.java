@@ -99,7 +99,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 	* Elyos
 	*/
 	private void announceSunbathedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sunbathed Commander has appeared!
@@ -108,7 +108,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSunsoakedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sunsoaked Commander has appeared!
@@ -117,7 +117,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSuntouchedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Suntouched Commander has appeared!
@@ -126,7 +126,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSunsteepedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sunsteeped Commander has appeared!
@@ -135,7 +135,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSundrenchedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sundrenched Commander has appeared!
@@ -144,7 +144,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSunblessedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sunblessed Commander has appeared!
@@ -157,7 +157,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 	* Asmodians
 	*/
 	private void announceShadeprotectedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadeprotected Commander has appeared!
@@ -166,7 +166,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadesoakedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadesoaked Commander has appeared!
@@ -175,7 +175,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadetouchedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadetouched Commander has appeared!
@@ -184,7 +184,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadesteepedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadesteeped Commander has appeared!
@@ -193,7 +193,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadedrenchedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadedrenched Commander has appeared!
@@ -202,7 +202,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadeblessedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadeblessed Commander has appeared!
@@ -215,7 +215,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 	* Balaur
 	*/
 	private void announceIcecrownedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icecrowned Miren Commander has appeared!
@@ -224,7 +224,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcecoatedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icecoated Miren Commander has appeared!
@@ -233,7 +233,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcebladedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icebladed Miren Commander has appeared!
@@ -242,7 +242,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcesteepedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icesteeped Miren Commander has appeared!
@@ -251,7 +251,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcedrenchedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icedrenched Miren Commander has appeared!
@@ -260,7 +260,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcebloodedAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Iceblooded Miren Commander has appeared!
@@ -337,7 +337,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 	* Elyos
 	*/
 	private void announceSunbathedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sunbathed Commander has been slain!
@@ -346,7 +346,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSunsoakedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sunsoaked Commander has been slain!
@@ -355,7 +355,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSuntouchedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Suntouched Commander has been slain!
@@ -364,7 +364,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSunsteepedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sunsteeped Commander has been slain!
@@ -373,7 +373,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSundrenchedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sundrenched Commander has been slain!
@@ -382,7 +382,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceSunblessedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Sunblessed Commander has been slain!
@@ -395,7 +395,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 	* Asmodians
 	*/
 	private void announceShadeprotectedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadeprotected Commander has been slain!
@@ -404,7 +404,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadesoakedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadesoaked Commander has been slain!
@@ -413,7 +413,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadetouchedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadetouched Commander has been slain!
@@ -422,7 +422,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadesteepedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadesteeped Commander has been slain!
@@ -431,7 +431,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadedrenchedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadedrenched Commander has been slain!
@@ -440,7 +440,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceShadeblessedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Miren Fortress Shadeblessed Commander has been slain!
@@ -453,7 +453,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 	* Balaur
 	*/
 	private void announceIcecrownedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icecrowned Miren Commander has been slain!
@@ -462,7 +462,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcecoatedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icecoated Miren Commander has been slain!
@@ -471,7 +471,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcebladedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icebladed Miren Commander has been slain!
@@ -480,7 +480,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcesteepedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icesteeped Miren Commander has been slain!
@@ -489,7 +489,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcedrenchedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Icedrenched Miren Commander has been slain!
@@ -498,7 +498,7 @@ public class Miren_Fortress_CommanderAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceIcebloodedDied() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Ereshkigal Iceblooded Miren Commander has been slain!

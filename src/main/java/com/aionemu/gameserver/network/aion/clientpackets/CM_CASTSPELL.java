@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -27,6 +26,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+@Slf4j
 public class CM_CASTSPELL extends AionClientPacket {
 	private int spellid;
 	private int targetType;
@@ -36,7 +36,6 @@ public class CM_CASTSPELL extends AionClientPacket {
 	private int hitTime;
 	private int level;
 	private int unk;
-	Logger log = LoggerFactory.getLogger(CM_CASTSPELL.class);
 
 	public CM_CASTSPELL(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

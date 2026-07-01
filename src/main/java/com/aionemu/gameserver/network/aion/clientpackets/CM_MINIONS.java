@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
 import java.util.ArrayList;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -182,38 +184,38 @@ public class CM_MINIONS extends AionClientPacket {
 		}
 		switch (actionId) {
 		case 0:
-			MinionService.getInstance().addMinion(player, itemObjectId);
+			GameEventBootstrapServices.minionService().addMinion(player, itemObjectId);
 			break;
 		case 1:
-			MinionService.getInstance().deleteMinion(player, objectId, false);
+			GameEventBootstrapServices.minionService().deleteMinion(player, objectId, false);
 			break;
 		case 2:
 			if (NameRestrictionService.isForbiddenWord(minionName)) {
 				PacketSendUtility.sendMessage(player, "You are trying to use a forbidden name. Choose another one!");
 			} else {
-				MinionService.getInstance().renameMinion(player, objectId, minionName);
+				GameEventBootstrapServices.minionService().renameMinion(player, objectId, minionName);
 			}
 			break;
 		case 3:
-			MinionService.getInstance().lockMinion(player, objectId, lock);
+			GameEventBootstrapServices.minionService().lockMinion(player, objectId, lock);
 			break;
 		case 4:
 			if (player.getPet() != null) {
 				PetSpawnService.dismissPet(player, true);
 			}
-			MinionService.getInstance().spawnMinion(player, minionObjectId);
+			GameEventBootstrapServices.minionService().spawnMinion(player, minionObjectId);
 			break;
 		case 5:
-			MinionService.getInstance().despawnMinion(player, minionObjectId);
+			GameEventBootstrapServices.minionService().despawnMinion(player, minionObjectId);
 			break;
 		case 6:
-			MinionService.getInstance().growthUpMinion(player, objectId, MaterialObjIds);
+			GameEventBootstrapServices.minionService().growthUpMinion(player, objectId, MaterialObjIds);
 			break;
 		case 7:
-			MinionService.getInstance().evolutionUpMinion(player, objectId);
+			GameEventBootstrapServices.minionService().evolutionUpMinion(player, objectId);
 			break;
 		case 8:
-			MinionService.getInstance().CombinationMinion(player, MaterialObjIds);
+			GameEventBootstrapServices.minionService().CombinationMinion(player, MaterialObjIds);
 			break;
 		case 9: // TODO
 			switch (subSwitch) {
@@ -221,18 +223,18 @@ public class CM_MINIONS extends AionClientPacket {
 				switch (functId) {
 				case 0: { // Add Item
 					System.out.println("ITEM_ADD");
-					MinionService.getInstance().addMinionFunctionItems(player, functId, minionObjectId, dopingItemId,
+					GameEventBootstrapServices.minionService().addMinionFunctionItems(player, functId, minionObjectId, dopingItemId,
 							targetSlot, destinationSlot); // Scrolls etc
 					break;
 				}
 				case 2: {
 					System.out.println("XD");
-					MinionService.getInstance().relocateDoping(player, minionObjectId, targetSlot, destinationSlot);
+					GameEventBootstrapServices.minionService().relocateDoping(player, minionObjectId, targetSlot, destinationSlot);
 					break;
 				}
 				case 3: {
 					System.out.println("BUFF_ON");
-					MinionService.getInstance().buffPlayer(player, minionObjectId, dopingItemId, targetSlot); // Buff
+					GameEventBootstrapServices.minionService().buffPlayer(player, minionObjectId, dopingItemId, targetSlot); // Buff
 					break;
 				}
 				}
@@ -240,19 +242,19 @@ public class CM_MINIONS extends AionClientPacket {
 			}
 			case 1: {
 				System.out.println("AUTOLOOT_ACTIVATION_DEACTIVATION");
-				MinionService.getInstance().activateLoot(player, true);
+				GameEventBootstrapServices.minionService().activateLoot(player, true);
 				break;
 			}
 			}
 			break;
 		case 10: // MinionFunction (Activate)
-			MinionService.getInstance().activateMinionFunction(player);
+			GameEventBootstrapServices.minionService().activateMinionFunction(player);
 			break;
 		case 11:
-			MinionService.getInstance().addMinionSkillPoints(player, charge == 1 ? true : false,
+			GameEventBootstrapServices.minionService().addMinionSkillPoints(player, charge == 1 ? true : false,
 					autoCharge == 1 ? true : false);
 			// TODO
-			// MinionService.getInstance().chargeMinion(player, todo2 == 1 ? true : false);
+			// GameEventBootstrapServices.minionService().chargeMinion(player, todo2 == 1 ? true : false);
 			break;
 		case 12:
 			break;

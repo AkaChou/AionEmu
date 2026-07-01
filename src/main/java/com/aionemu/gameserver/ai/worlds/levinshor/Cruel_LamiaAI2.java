@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.worlds.levinshor;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -71,22 +77,22 @@ public class Cruel_LamiaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		lamiaTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		lamiaTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
 					getOwner().getController().cancelCurrentSkill();
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500230, getObjectId(), 0, 0);
-					SkillEngine.getInstance().getSkill(getOwner(), 19551, 60, getOwner()).useNoAnimationSkill();
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500230, getObjectId(), 0, 0);
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19551, 60, getOwner()).useNoAnimationSkill();
 				}
 			}
 		}, 3000, 15000);
 	}
 	
 	private void sendMsg(int msg) {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), false, 0, 0);
 	}
 	
 	@Override

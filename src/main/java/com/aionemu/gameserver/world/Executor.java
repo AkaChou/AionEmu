@@ -16,20 +16,19 @@
  */
 package com.aionemu.gameserver.world;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.gameserver.model.gameobjects.AionObject;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author xavier
  */
+@Slf4j
 public abstract class Executor<T extends AionObject> {
 
-	private static final Logger log = LoggerFactory.getLogger(Executor.class);
 
 	public abstract boolean run(T object);
 
@@ -51,7 +50,7 @@ public abstract class Executor<T extends AionObject> {
 		if (now) {
 			runImpl(objects);
 		} else {
-			ThreadPoolManager.getInstance().execute(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
 
 				@Override
 				public void run() {

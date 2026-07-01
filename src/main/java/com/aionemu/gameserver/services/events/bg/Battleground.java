@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.services.events.bg;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,12 +70,12 @@ import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @Author Rinzler (Encom)
@@ -109,12 +115,12 @@ public abstract class Battleground {
 	protected boolean isDone = false;
 	protected boolean shouldDisband = true;
 	protected boolean teamBased = false;
-	protected Map<Integer, WorldPosition> previousLocations = new FastMap<Integer, WorldPosition>();
+	protected Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
 	protected List<Player> _players = Collections.synchronizedList(new ArrayList<Player>());
 	protected List<PlayerGroup> _groups = Collections.synchronizedList(new ArrayList<PlayerGroup>());
 	protected List<PlayerAlliance> _alliances = Collections.synchronizedList(new ArrayList<PlayerAlliance>());
 	protected List<Player> _spectators = Collections.synchronizedList(new ArrayList<Player>());
-	protected Map<Integer, AionObject> _leavers = Collections.synchronizedMap(new FastMap<Integer, AionObject>());
+	protected Map<Integer, AionObject> _leavers = Collections.synchronizedMap(new LinkedHashMap<Integer, AionObject>());
 
 	public abstract void createMatch(List<Integer> players);
 
@@ -189,7 +195,7 @@ public abstract class Battleground {
 		int playerIndex = 0;
 		while (players.size() > 0) {
 			int objId = players.remove(0);
-			Player pl = World.getInstance().findPlayer(objId);
+			Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 			if (pl == null) {
 				continue;
 			}
@@ -216,7 +222,7 @@ public abstract class Battleground {
 			List<Player> groupPlayers = new ArrayList<Player>();
 			while (groupPlayers.size() < groupSize && players.size() > 0) {
 				int objId = players.remove(0);
-				Player pl = World.getInstance().findPlayer(objId);
+				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 				if (pl != null) {
 					removePlayerFromTeam(pl);
 					groupPlayers.add(pl);
@@ -248,7 +254,7 @@ public abstract class Battleground {
 			List<Player> alliancePlayers = new ArrayList<Player>();
 			while (alliancePlayers.size() < allianceSize && players.size() > 0) {
 				int objId = players.remove(0);
-				Player pl = World.getInstance().findPlayer(objId);
+				Player pl = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 				if (pl != null) {
 					alliancePlayers.add(pl);
 					pl.setBattleground(this);
@@ -379,7 +385,7 @@ public abstract class Battleground {
 		player.getEffectController().setAbnormal(AbnormalState.PARALYZE.getId());
 		player.getEffectController().updatePlayerEffectIcons();
 		player.getEffectController().broadCastEffects();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				player.getEffectController().unsetAbnormal(AbnormalState.PARALYZE.getId());
@@ -441,7 +447,7 @@ public abstract class Battleground {
 
 	protected void scheduleAnnouncement(final Player player, final String sender, final String msg, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					PacketSendUtility.sendSys3Message(player, sender, msg);
@@ -469,7 +475,7 @@ public abstract class Battleground {
 	}
 
 	protected void specAnnounce(final String msg, int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				for (Iterator<Player> it = getSpectators().iterator(); it.hasNext();) {
@@ -486,7 +492,7 @@ public abstract class Battleground {
 	}
 
 	protected void scheduleGroupDisband(final PlayerGroup group, int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				while (group.size() > 0) {
@@ -497,7 +503,7 @@ public abstract class Battleground {
 	}
 
 	protected void scheduleAllianceDisband(final PlayerAlliance alliance, int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				while (alliance.size() > 0) {
@@ -512,7 +518,7 @@ public abstract class Battleground {
 	}
 
 	protected void preparePlayer(final Player pl, int time, boolean announce) {
-		DuelService.getInstance().loseDuel(pl);
+		GameGameplayServices.duelService().loseDuel(pl);
 		pl.setKillStreak(0);
 		pl.setLastAction();
 		pl.getFlyController().endFly(true);
@@ -534,13 +540,13 @@ public abstract class Battleground {
 				scheduleAnnouncement(pl, "The match begin's!!!", time);
 				// sendEventPacket(StageType.PVP_STAGE_1, 0);
 			}
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					pl.getEffectController().removeAllEffects();
 				}
 			}, 2500);
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					createTimer(pl, getSecondsLeft());
@@ -573,7 +579,7 @@ public abstract class Battleground {
 
 	protected void resetPlayerKnownlist(final Player player, int delay) {
 		if (delay > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					player.clearKnownlist();
@@ -660,7 +666,7 @@ public abstract class Battleground {
 	}
 
 	protected void startBackgroundTask() {
-		setBackgroundTask(ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		setBackgroundTask(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				backgroundCounter++;
@@ -670,7 +676,7 @@ public abstract class Battleground {
 				}
 			}
 		}, 30 * 1000, 1 * 1000));
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (getBackgroundTask() != null) {
@@ -844,12 +850,12 @@ public abstract class Battleground {
 	}
 
 	protected void onEndDefault() {
-		LadderService.getInstance().onBgEnd(this);
+		GameFeatureServices.ladderService().onBgEnd(this);
 		if (getPlayers().size() > 0) {
 			for (Player pl : getPlayers()) {
 				freezePlayer(pl, 7500);
 			}
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					for (Player pl : getPlayers()) {
@@ -864,7 +870,7 @@ public abstract class Battleground {
 					freezePlayer(pl, 7500);
 				}
 			}
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					for (PlayerGroup group : getGroups()) {
@@ -887,7 +893,7 @@ public abstract class Battleground {
 					freezePlayer(pl, 7500);
 				}
 			}
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					for (PlayerAlliance alliance : getAlliances()) {
@@ -904,7 +910,7 @@ public abstract class Battleground {
 				}
 			}, 5000);
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				List<Player> spectators = getSpectators();
@@ -917,7 +923,7 @@ public abstract class Battleground {
 				}
 			}
 		}, 5000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				for (Player pl : getInstance().getPlayersInside()) {
@@ -949,7 +955,7 @@ public abstract class Battleground {
 	public void onSpectatorLeave(final Player spectator, boolean isIterating) {
 		endTimer(spectator);
 		returnToPreviousLocation(spectator);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spectator.getEffectController().unsetAbnormal(AbnormalState.HIDE.getId());
@@ -1049,7 +1055,7 @@ public abstract class Battleground {
 		}
 		for (Player pl : getPlayers()) {
 			for (Integer doorId : getMap().getStaticDoors()) {
-				StaticDoorService.getInstance().openStaticDoor(pl, doorId);
+				GameFeatureServices.staticDoorService().openStaticDoor(pl, doorId);
 			}
 		}
 	}

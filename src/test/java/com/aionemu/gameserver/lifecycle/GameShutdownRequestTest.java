@@ -2,6 +2,7 @@ package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.ShutdownHook;
 import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
@@ -47,6 +48,14 @@ class GameShutdownRequestTest {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameShutdownRequest.java"));
 
         assertFalse(source.contains("ShutdownHook.getInstance()"));
+    }
+
+    @Test
+    void fallbackCreatesLocalShutdownHookInsteadOfLegacySingleton() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameShutdownHookFallbacks.java"));
+
+        assertFalse(source.contains("ShutdownHook.getInstance()"));
+        assertTrue(source.contains("new ShutdownHook()"));
     }
 
     private static ObjectProvider<ShutdownHook> provider(ShutdownHook shutdownHook) {

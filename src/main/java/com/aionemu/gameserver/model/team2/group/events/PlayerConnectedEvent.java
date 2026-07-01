@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.model.team2.group.events;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.team2.common.events.AlwaysTrueTeamEvent;
 import com.aionemu.gameserver.model.team2.common.legacy.GroupEvent;
@@ -33,9 +31,9 @@ import com.google.common.base.Predicate;
 /**
  * @author ATracer
  */
+@Slf4j
 public class PlayerConnectedEvent extends AlwaysTrueTeamEvent implements Predicate<Player> {
 
-	private static final Logger log = LoggerFactory.getLogger(PlayerConnectedEvent.class);
 	private final PlayerGroup group;
 	private final Player player;
 

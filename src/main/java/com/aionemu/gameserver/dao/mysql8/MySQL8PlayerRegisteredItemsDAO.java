@@ -1,5 +1,10 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.dao.PlayerRegisteredItemsDAO;
@@ -8,14 +13,9 @@ import com.aionemu.gameserver.model.house.House;
 import com.aionemu.gameserver.model.house.HouseRegistry;
 import com.aionemu.gameserver.model.templates.housing.HouseType;
 import com.aionemu.gameserver.model.templates.housing.PartType;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
-import javolution.util.FastList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,9 +26,9 @@ import java.util.List;
  * MySQL 8 implementation of PlayerRegisteredItemsDAO
  * Fixed connection leaks
  */
+@Slf4j
 public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
     
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerRegisteredItemsDAO.class);
     
     public static final String CLEAN_PLAYER_QUERY = "DELETE FROM `player_registered_items` WHERE `player_id` = ?";
     
@@ -69,10 +69,10 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
     
     @Override
     public void loadRegistry(int playerId) {
-        House house = HousingService.getInstance().getPlayerStudio(playerId);
+        House house = GameHousingServices.housingService().getPlayerStudio(playerId);
         if (house == null) {
-            int address = HousingService.getInstance().getPlayerAddress(playerId);
-            house = HousingService.getInstance().getHouseByAddress(address);
+            int address = GameHousingServices.housingService().getPlayerAddress(playerId);
+            house = GameHousingServices.housingService().getHouseByAddress(address);
         }
         
         if (house == null) {
@@ -144,7 +144,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
     
     private HouseObject<?> constructObject(final HouseRegistry registry, House house, ResultSet rset) throws SQLException {
         int itemUniqueId = rset.getInt("item_unique_id");
-        VisibleObject visObj = World.getInstance().findVisibleObject(itemUniqueId);
+        VisibleObject visObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(itemUniqueId);
         HouseObject<?> obj = null;
         
         if (visObj != null) {
@@ -187,8 +187,8 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
     
     @Override
     public boolean store(HouseRegistry registry, int playerId) {
-        FastList<HouseObject<?>> objects = registry.getObjects();
-        FastList<HouseDecoration> decors = registry.getAllParts();
+        List<HouseObject<?>> objects = registry.getObjects();
+        List<HouseDecoration> decors = registry.getAllParts();
         
         Collection<HouseObject<?>> objectsToAdd = new ArrayList<>();
         Collection<HouseObject<?>> objectsToUpdate = new ArrayList<>();
@@ -274,7 +274,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
         if (!objectsToDelete.isEmpty()) {
             for (HouseObject<?> obj : objectsToDelete) {
                 if (obj != null && obj.getObjectId() != 0) {
-                    IDFactory.getInstance().releaseId(obj.getObjectId());
+                    GameWorldBootstrapServices.idFactory().releaseId(obj.getObjectId());
                 }
             }
         }
@@ -282,7 +282,7 @@ public class MySQL8PlayerRegisteredItemsDAO extends PlayerRegisteredItemsDAO {
         if (!partsToDelete.isEmpty()) {
             for (HouseDecoration part : partsToDelete) {
                 if (part != null && part.getObjectId() != 0) {
-                    IDFactory.getInstance().releaseId(part.getObjectId());
+                    GameWorldBootstrapServices.idFactory().releaseId(part.getObjectId());
                 }
             }
         }

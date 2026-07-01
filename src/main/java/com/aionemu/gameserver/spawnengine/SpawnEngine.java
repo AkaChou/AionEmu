@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -52,7 +52,6 @@ import com.aionemu.gameserver.model.templates.spawns.towerofeternityspawns.Tower
 import com.aionemu.gameserver.model.templates.spawns.vortexspawns.VortexSpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.zorshivdredgionspawns.ZorshivDredgionSpawnTemplate;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -63,9 +62,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
  * 
  * @author Luno modified by ATracer, Source, Wakizashi, xTz, nrg
  */
+@Slf4j
 public class SpawnEngine {
 
-	private static Logger log = LoggerFactory.getLogger(SpawnEngine.class);
 
 	/**
 	 * Creates VisibleObject instance and spawns it using given
@@ -221,7 +220,7 @@ public class SpawnEngine {
 
 	public static void bringIntoWorld(VisibleObject visibleObject, int worldId, int instanceIndex, float x, float y,
 			float z, byte h) {
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		world.storeObject(visibleObject);
 		world.setPosition(visibleObject, worldId, instanceIndex, x, y, z, h);
 		world.spawn(visibleObject);
@@ -230,7 +229,7 @@ public class SpawnEngine {
 	public static void bringIntoWorld(VisibleObject visibleObject) {
 		if (visibleObject.getPosition() == null)
 			throw new IllegalArgumentException("Position is null");
-		World world = World.getInstance();
+		World world = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world();
 		world.storeObject(visibleObject);
 		world.spawn(visibleObject);
 	}
@@ -332,7 +331,7 @@ public class SpawnEngine {
 			WalkerFormator.organizeAndSpawn(worldId, instanceId);
 		}
 		log.info("Spawned " + worldId + " [" + instanceId + "] : " + spawnedCounter);
-		HousingService.getInstance().spawnHouses(worldId, instanceId, ownerId);
+		GameHousingServices.housingService().spawnHouses(worldId, instanceId, ownerId);
 	}
 
 	private static boolean checkPool(SpawnGroup2 spawn) {
@@ -345,7 +344,7 @@ public class SpawnEngine {
 
 	public static void printWorldSpawnStats() {
 		StatsCollector visitor = new StatsCollector();
-		World.getInstance().doOnAllObjects(visitor);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllObjects(visitor);
 		log.info("Loaded " + visitor.getNpcCount() + " Npc Spawns");
 		log.info("Loaded " + visitor.getGatherableCount() + " Gatherable Spawns");
 	}

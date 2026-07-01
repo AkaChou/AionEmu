@@ -4,9 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.boot.config.AionServicesProperties;
+import com.aionemu.boot.config.LegacyLoginConfigOverrides;
+import com.aionemu.boot.config.LegacyLoginProperties;
 import com.aionemu.loginserver.lifecycle.LoginProcessRuntimeBridge;
 import com.aionemu.loginserver.lifecycle.LoginStartupSequenceLifecycle;
-import java.lang.reflect.Proxy;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,11 @@ class LoginServiceLifecycleTest {
         configureLoginPaths();
         List<String> events = new ArrayList<>();
         LoginServerLifecycleGateway gateway = new RecordingLoginServerLifecycleGateway(events, true);
-        LoginServiceLifecycle lifecycle = new LoginServiceLifecycle(new AionServicesProperties(), gateway);
+        LoginServiceLifecycle lifecycle = new LoginServiceLifecycle(
+            new AionServicesProperties(),
+            new RecordingLegacyLoginConfigOverrides(events),
+            gateway
+        );
 
         IllegalStateException thrown = assertThrows(
             IllegalStateException.class,
@@ -54,11 +59,11 @@ class LoginServiceLifecycleTest {
         );
 
         assertEquals("login failed", thrown.getMessage());
-        assertEquals(List.of("start", "stop"), events);
+        assertEquals(List.of("apply", "start", "stop"), events);
 
         lifecycle.stop();
 
-        assertEquals(List.of("start", "stop"), events);
+        assertEquals(List.of("apply", "start", "stop"), events);
     }
 
     @Test
@@ -66,13 +71,32 @@ class LoginServiceLifecycleTest {
         configureLoginPaths();
         List<String> events = new ArrayList<>();
         LoginServerLifecycleGateway gateway = new RecordingLoginServerLifecycleGateway(events, false);
-        LoginServiceLifecycle lifecycle = new LoginServiceLifecycle(new AionServicesProperties(), gateway);
+        LoginServiceLifecycle lifecycle = new LoginServiceLifecycle(
+            new AionServicesProperties(),
+            new RecordingLegacyLoginConfigOverrides(events),
+            gateway
+        );
 
         lifecycle.start(new DefaultApplicationArguments("--login=true"));
         lifecycle.stop();
         lifecycle.stop();
 
-        assertEquals(List.of("start:1", "stop"), events);
+        assertEquals(List.of("apply", "start:1", "stop"), events);
+    }
+
+    @Test
+    void startAppliesLegacyConfigOverridesBeforeStartingLoginServer() {
+        configureLoginPaths();
+        List<String> events = new ArrayList<>();
+        LoginServiceLifecycle lifecycle = new LoginServiceLifecycle(
+            new AionServicesProperties(),
+            new RecordingLegacyLoginConfigOverrides(events),
+            new RecordingLoginServerLifecycleGateway(events, false)
+        );
+
+        lifecycle.start(new DefaultApplicationArguments("--login=true"));
+
+        assertEquals(List.of("apply", "start:1"), events);
     }
 
     @Test
@@ -162,6 +186,21 @@ class LoginServiceLifecycleTest {
         }
     }
 
+    private static final class RecordingLegacyLoginConfigOverrides extends LegacyLoginConfigOverrides {
+
+        private final List<String> events;
+
+        private RecordingLegacyLoginConfigOverrides(List<String> events) {
+            super(new LegacyLoginProperties());
+            this.events = events;
+        }
+
+        @Override
+        public void applyToLoginConfig() {
+            events.add("apply");
+        }
+    }
+
     private static final class RecordingLoginServerRuntimeBridge extends LoginServerRuntimeBridge {
 
         private final List<String> events;
@@ -248,27 +287,25 @@ class LoginServiceLifecycleTest {
 
     private static <T> ObjectProvider<T> oneShotProvider(T instance) {
         AtomicBoolean used = new AtomicBoolean();
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "oneShotProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                if ("getIfAvailable".equals(method.getName())) {
-                    if (!used.compareAndSet(false, true)) {
-                        throw new ProviderUsedAfterPreparationException();
-                    }
-                    return instance;
-                }
-                throw new UnsupportedOperationException(method.toString());
+        return new ObjectProvider<>() {
+            @Override
+            public T getObject(Object... args) {
+                return getIfAvailable();
             }
-        ));
+
+            @Override
+            public T getIfAvailable() {
+                if (!used.compareAndSet(false, true)) {
+                    throw new ProviderUsedAfterPreparationException();
+                }
+                return instance;
+            }
+
+            @Override
+            public T getObject() {
+                return getIfAvailable();
+            }
+        };
     }
 
     private static final class ProviderUsedAfterPreparationException extends RuntimeException {

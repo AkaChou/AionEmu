@@ -31,9 +31,11 @@ class ChatNettyServersTest {
     void springAndLegacyPathsUseNettyBridgeInsteadOfDirectSingleton() throws IOException, NoSuchMethodException {
         String configurationSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/configs/ChatServerSpringConfiguration.java"));
         String dependenciesSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/ChatServerLegacyDependencies.java"));
+        String nettyBridgeSource = Files.readString(Path.of("src/main/java/com/aionemu/chatserver/service/ChatNettyServers.java"));
 
         assertFalse(configurationSource.contains("NettyServer.getInstance("));
         assertFalse(dependenciesSource.contains("NettyServer.getInstance()"));
+        assertFalse(nettyBridgeSource.contains("NettyServer.getInstance()"));
         assertTrue(configurationSource.contains("return ChatNettyServers.register(new NettyServer(clientPacketHandler));"));
         assertTrue(dependenciesSource.contains("ChatNettyServers.nettyServer()"));
         assertTrue(NettyServer.class.getMethod("getInstance").isAnnotationPresent(Deprecated.class));

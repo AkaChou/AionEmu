@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -23,8 +24,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -38,9 +37,9 @@ import com.aionemu.gameserver.world.World;
 /**
  * @author zdead
  */
+@Slf4j
 public class PetitionService {
 
-	private static Logger log = LoggerFactory.getLogger(PetitionService.class);
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
 
 	private static SortedMap<Integer, Petition> registeredPetitions = new TreeMap<Integer, Petition>();
@@ -83,8 +82,8 @@ public class PetitionService {
 			}
 		}
 		DAOManager.getDAO(PetitionDAO.class).deletePetition(playerObjId);
-		if (playerObjId > 0 && World.getInstance().findPlayer(playerObjId) != null) {
-			Player p = World.getInstance().findPlayer(playerObjId);
+		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
+			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
 		}
 		rebroadcastPlayerData();
@@ -95,8 +94,8 @@ public class PetitionService {
 		DAOManager.getDAO(PetitionDAO.class).setReplied(petitionId);
 		registeredPetitions.remove(petitionId);
 		rebroadcastPlayerData();
-		if (playerObjId > 0 && World.getInstance().findPlayer(playerObjId) != null) {
-			Player p = World.getInstance().findPlayer(playerObjId);
+		if (playerObjId > 0 && com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId) != null) {
+			Player p = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjId);
 			PacketSendUtility.sendPacket(p, new SM_PETITION());
 		}
 	}
@@ -113,7 +112,7 @@ public class PetitionService {
 
 	private void rebroadcastPlayerData() {
 		for (Petition p : registeredPetitions.values()) {
-			Player player = World.getInstance().findPlayer(p.getPlayerObjId());
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(p.getPlayerObjId());
 			if (player != null) {
 				PacketSendUtility.sendPacket(player, new SM_PETITION(p));
 			}
@@ -121,7 +120,7 @@ public class PetitionService {
 	}
 
 	private void broadcastMessageToGM(Player sender, int petitionId) {
-		Iterator<Player> players = World.getInstance().getPlayersIterator();
+		Iterator<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (players.hasNext()) {
 			Player p = players.next();
 			if (p.getAccessLevel() > 0) {

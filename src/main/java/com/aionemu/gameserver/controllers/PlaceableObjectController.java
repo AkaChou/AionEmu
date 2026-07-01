@@ -29,10 +29,11 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class PlaceableObjectController<T extends PlaceableHouseObject> extends VisibleObjectController<HouseObject<T>> {
-	FastMap<Integer, ActionObserver> observed = new FastMap<Integer, ActionObserver>().shared();
+	Map<Integer, ActionObserver> observed = new LinkedHashMap<Integer, ActionObserver>();
 
 	public void see(VisibleObject object) {
 		Player p = (Player) object;
@@ -58,9 +59,9 @@ public class PlaceableObjectController<T extends PlaceableHouseObject> extends V
 
 	public void delete() {
 		if (getOwner().isSpawned()) {
-			World.getInstance().despawn(getOwner(), false);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(getOwner(), false);
 		}
-		World.getInstance().removeObject(getOwner());
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().removeObject(getOwner());
 	}
 
 	public void onDialogRequest(Player player) {

@@ -16,15 +16,17 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.AgentSchedule;
 import com.aionemu.gameserver.configs.schedule.AgentSchedule.Agent;
@@ -44,23 +46,23 @@ import com.aionemu.gameserver.services.agentservice.AgentStartRunnable;
 import com.aionemu.gameserver.services.agentservice.Fight;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class AgentService {
 	private static volatile ObjectProvider<AgentService> instanceProvider;
 	private AgentSchedule agentSchedule;
 	private Map<Integer, AgentLocation> agent;
 	private static final int duration = CustomConfig.AGENT_DURATION;
-	private final Map<Integer, AgentFight<?>> activeFights = new FastMap<Integer, AgentFight<?>>().shared();
-	private static final Logger log = LoggerFactory.getLogger(AgentService.class);
+	private final Map<Integer, AgentFight<?>> activeFights = new LinkedHashMap<Integer, AgentFight<?>>();
 
 	public void initAgentLocations() {
 		if (CustomConfig.AGENT_ENABLED) {
@@ -81,7 +83,7 @@ public class AgentService {
 			agentSchedule = AgentSchedule.load();
 			for (Agent agent : agentSchedule.getAgentsList()) {
 				for (String fightTime : agent.getFightTimes()) {
-					CronService.getInstance().schedule(new AgentStartRunnable(agent.getId()), fightTime);
+					GameCronServices.cronService().schedule(new AgentStartRunnable(agent.getId()), fightTime);
 				}
 			}
 		}
@@ -98,7 +100,7 @@ public class AgentService {
 		}
 		fight.start();
 		empyreanLordCountdownMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopAgentFight(id);
@@ -140,7 +142,7 @@ public class AgentService {
 	public boolean empyreanLordCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Empyrean Lord's Agent will end the battle in 30 minutes.
@@ -160,7 +162,7 @@ public class AgentService {
 	public boolean agentBattleMsg1(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Agent battle will start in 10 minutes.
@@ -177,7 +179,7 @@ public class AgentService {
 	public boolean agentBattleMsg2(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Agent battle will start in 5 minutes.
@@ -194,7 +196,7 @@ public class AgentService {
 	public boolean governorSunayakaMsg(int id) {
 		switch (id) {
 		case 2:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Tiamat's Incarnation has appeared.
@@ -213,7 +215,7 @@ public class AgentService {
 	public boolean berserkerSunayakaMsg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Tiamat's Incarnation has appeared.
@@ -233,7 +235,7 @@ public class AgentService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

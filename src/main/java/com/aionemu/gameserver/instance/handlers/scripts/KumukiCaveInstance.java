@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -28,14 +32,12 @@ import com.aionemu.gameserver.model.gameobjects.StaticDoor;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,26 +60,26 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	private Map<Integer, StaticDoor> doors;
 	private List<Npc> Poppy = new ArrayList<Npc>();
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> kumukiCaveTask = FastList.newInstance();
+	private final List<Future<?>> kumukiCaveTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 246294: //Key Chest.
 			case 246327: //Key Chest.
 			case 246328: //Suspicious Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000295, 1)); //Iron Fence Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000295, 1)); //Iron Fence Key.
 			break;
 			case 246381: //Supplies Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002390, 1)); //Shabby Kumuki Transformation Scroll.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002390, 1)); //Shabby Kumuki Transformation Scroll.
 			break;
 			case 246377: //Kumuki Crate.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188056897, 1)); //Hansel's Gift Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188056897, 1)); //Hansel's Gift Bundle.
 			break;
 			case 246379: //Golden Treasure Chest.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188056994, 1)); //Golden Treasure Chest.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188056994, 1)); //Golden Treasure Chest.
 			break;
 		}
 	}
@@ -107,7 +109,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startKumukiCaveTimer();
@@ -132,7 +134,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				});
             }
         }, 10000));
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The first Porgus made for a fine barbecue! There are 3 Porguses left.
@@ -142,7 +144,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				Poppy.get(0).getController().onDelete();
             }
         }, 225000));
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The second Porgus smells delicious! There are 2 Porguses left.
@@ -155,7 +157,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				sp(835130, 142.37743f, 19.93851f, 144.2455f, (byte) 5, 0, 0, null);
             }
         }, 450000));
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The third Porgus is slathered in barbecue sauce! There is 1 Porgus left.
@@ -165,7 +167,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				Poppy.get(2).getController().onDelete();
             }
         }, 675000));
-		kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -265,7 +267,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 			break;
 			case 703425: //Door Activator.
 				doors.get(19).setOpen(true);
-				SkillEngine.getInstance().applyEffectDirectly(17619, player, player, 900000 * 1); //Shabby Kumuki Transformation.
+				GameEngineServices.skillEngine().applyEffectDirectly(17619, player, player, 900000 * 1); //Shabby Kumuki Transformation.
 			break;
 			case 703426: //Door Activator.
 				doors.get(3).setOpen(true);
@@ -277,13 +279,13 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 				doors.get(2).setOpen(true);
 			break;
 			case 835026: //Suspicious Wagon.
-				//SkillEngine.getInstance().getSkill(npc, 16973, 60, player).useNoAnimationSkill(); //Riding A Wagon.
+				//GameEngineServices.skillEngine().getSkill(npc, 16973, 60, player).useNoAnimationSkill(); //Riding A Wagon.
 			break;
 			case 835028: //Suspicious Basket.
-				//SkillEngine.getInstance().getSkill(npc, 16974, 60, player).useNoAnimationSkill(); //In Basket Camouflage.
+				//GameEngineServices.skillEngine().getSkill(npc, 16974, 60, player).useNoAnimationSkill(); //In Basket Camouflage.
 			break;
 			case 835071: //Suspicious Ginseng Snack.
-			    SkillEngine.getInstance().applyEffectDirectly(17623, player, player, 4000 * 1); //Ginseng Transformation.
+			    GameEngineServices.skillEngine().applyEffectDirectly(17623, player, player, 4000 * 1); //Ginseng Transformation.
 			break;
 		}
 	}
@@ -314,10 +316,10 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = kumukiCaveTask.head(), end = kumukiCaveTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : kumukiCaveTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -330,7 +332,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -344,7 +346,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        kumukiCaveTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        kumukiCaveTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -369,7 +371,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -378,7 +380,7 @@ public class KumukiCaveInstance extends GeneralInstanceHandler
     }
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

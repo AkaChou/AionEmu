@@ -1,18 +1,16 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerSkillSkinListDAO;
 import com.aionemu.gameserver.model.skinskill.SkillSkin;
 import com.aionemu.gameserver.model.skinskill.SkillSkinList;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
+@Slf4j
 
 public class MySQL8PlayerSkillSkinListDAO extends PlayerSkillSkinListDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerSkillSkinListDAO.class);
     
     private static final String LOAD_QUERY = "SELECT `skin_id`, `remaining`, `active` FROM `player_skill_skins` WHERE `player_id`=?";
     private static final String INSERT_QUERY = "INSERT INTO `player_skill_skins`(`player_id`, `skin_id`, `remaining`, `active`) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE `remaining` = VALUES(`remaining`), `active` = VALUES(`active`)";

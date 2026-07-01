@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.kromedesTrial;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -34,11 +36,11 @@ public class Altar_Of_HealingAI2 extends AggressiveNpcAI2
 	@Override
     protected void handleCreatureMoved(Creature creature) {
         CreatureEventHandler.onCreatureSee(this, creature);
-    	if (creature instanceof Player) {
+	if (creature instanceof Player) {
 			final Player player = (Player) creature;
-    		if (!creature.getEffectController().hasAbnormalEffect(17560)) { //Bless Of Guardian Spring.
-    		    SkillEngine.getInstance().getSkill(getOwner(), 17560, 1, (Player) creature).useNoAnimationSkill(); //Bless Of Guardian Spring.
+		if (!creature.getEffectController().hasAbnormalEffect(17560)) { //Bless Of Guardian Spring.
+		    GameEngineServices.skillEngine().getSkill(getOwner(), 17560, 1, (Player) creature).useNoAnimationSkill(); //Bless Of Guardian Spring.
 			}
-    	}
+	}
     }
 }

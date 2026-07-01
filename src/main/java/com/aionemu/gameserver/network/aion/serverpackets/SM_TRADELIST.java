@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.limiteditems.LimitedItem;
@@ -65,8 +67,8 @@ public class SM_TRADELIST extends AionServerPacket {
 			}
 			int i = 0;
 			LimitedTradeNpc limitedTradeNpc = null;
-			if (LimitedItemTradeService.getInstance().isLimitedTradeNpc(npcId)) {
-				limitedTradeNpc = LimitedItemTradeService.getInstance().getLimitedTradeNpc(npcId);
+			if (GameRuntimeServices.limitedItemTradeService().isLimitedTradeNpc(npcId)) {
+				limitedTradeNpc = GameRuntimeServices.limitedItemTradeService().getLimitedTradeNpc(npcId);
 				i = limitedTradeNpc.getLimitedItems().size();
 			}
 			writeH(i);

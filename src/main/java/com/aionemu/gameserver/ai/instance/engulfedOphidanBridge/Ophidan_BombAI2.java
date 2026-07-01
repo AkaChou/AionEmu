@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.engulfedOphidanBridge;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -36,17 +40,17 @@ public class Ophidan_BombAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startLifeTask();
-				SkillEngine.getInstance().getSkill(getOwner(), 21709, 60, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 21709, 60, getOwner()).useNoAnimationSkill();
 			}
 		}, 1000);
 	}
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.deleteOwner(Ophidan_BombAI2.this);

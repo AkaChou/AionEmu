@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Equipment;
@@ -30,13 +28,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_UPDATE_PLAYER_APPEAR
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+@Slf4j
 
 public class CM_EQUIP_ITEM extends AionClientPacket {
 	public long slotRead;
 	public int itemUniqueId;
 	public int action;
 
-	private static final Logger log = LoggerFactory.getLogger(CM_EQUIP_ITEM.class);
 
 	public CM_EQUIP_ITEM(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);

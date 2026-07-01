@@ -14,8 +14,10 @@
  */
 package com.aionemu.gameserver.model.items;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
@@ -38,10 +40,9 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
+@Slf4j
 
 public class GodStone extends ItemStone {
-    private static final Logger log = LoggerFactory.getLogger(GodStone.class);
     
     // 字段声明分组
     private final GodstoneInfo godstoneInfo;
@@ -191,7 +192,7 @@ public class GodStone extends ItemStone {
     }
 
     private Skill createSkill(Player player, Creature creature) {
-        return SkillEngine.getInstance().getSkill(player, godstoneInfo.getSkillid(), godstoneInfo.getSkilllvl(), player.getTarget(), godItem);
+        return GameEngineServices.skillEngine().getSkill(player, godstoneInfo.getSkillid(), godstoneInfo.getSkilllvl(), player.getTarget(), godItem);
     }
 
     private void applySkillEffect(Player player, Creature creature, Skill skill) {
@@ -228,7 +229,7 @@ public class GodStone extends ItemStone {
     }
 
     private void scheduleItemRemoval(Player player, Item equippedItem) {
-        ThreadPoolManager.getInstance().schedule(() -> {
+        GameThreadPoolServices.threadPoolManager().schedule(() -> {
             onUnEquip(player);
             equippedItem.setGodStone(null);
             setPersistentState(PersistentState.DELETED);

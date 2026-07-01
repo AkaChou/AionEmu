@@ -18,18 +18,16 @@
 
 package com.aionemu.chatserver.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.network.gameserver.GsAuthResponse;
 
 /**
  * @author ATracer, KID
  */
+@Slf4j
 public class GameServerService {
 
-    private Logger log = LoggerFactory.getLogger(GameServerService.class);
 
     @Deprecated(since = "boot-migration")
     public static GameServerService getInstance() {

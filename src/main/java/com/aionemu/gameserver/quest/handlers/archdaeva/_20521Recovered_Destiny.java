@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.archdaeva;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -30,7 +32,6 @@ import com.aionemu.gameserver.services.QuestService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
@@ -178,7 +179,7 @@ public class _20521Recovered_Destiny extends QuestHandler {
 						}
 					}
 					case STEP_TO_9: {
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								QuestService.addNewSpawn(301570000, player.getInstanceId(), 857948, (float) 446.12146, (float) 654.5927, (float) 468.97745, (byte) 19); //IDEternity_Q_Sado_Wi_65_An_02.
@@ -227,7 +228,7 @@ public class _20521Recovered_Destiny extends QuestHandler {
 						}
 					}
 					case STEP_TO_12: {
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								QuestService.addNewSpawn(301570000, player.getInstanceId(), 857915, (float) 346.18872, (float) 516.0532, (float) 468.937, (byte) 119); //IDEternity_Q_Cube_As_65_An.

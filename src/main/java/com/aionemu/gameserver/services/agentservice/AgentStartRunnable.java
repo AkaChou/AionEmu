@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services.agentservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.agent.AgentLocation;
@@ -23,7 +27,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AgentService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -41,29 +44,29 @@ public class AgentStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// The Agent battle will start in 10 minutes.
-		AgentService.getInstance().agentBattleMsg1(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameLocationBootstrapServices.agentService().agentBattleMsg1(id);
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// The Agent battle will start in 5 minutes.
-				AgentService.getInstance().agentBattleMsg2(id);
+				GameLocationBootstrapServices.agentService().agentBattleMsg2(id);
 			}
 		}, 300000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				Map<Integer, AgentLocation> locations = AgentService.getInstance().getAgentLocations();
+				Map<Integer, AgentLocation> locations = GameLocationBootstrapServices.agentService().getAgentLocations();
 				for (final AgentLocation loc : locations.values()) {
 					if (loc.getId() == id) {
 						// Governor Sunayaka 5.8
-						AgentService.getInstance().governorSunayakaMsg(id);
+						GameLocationBootstrapServices.agentService().governorSunayakaMsg(id);
 						// Berserker Sunayaka 5.8
-						AgentService.getInstance().berserkerSunayakaMsg(id);
+						GameLocationBootstrapServices.agentService().berserkerSunayakaMsg(id);
 						// Agent Fight 4.7
-						AgentService.getInstance().startAgentFight(loc.getId());
+						GameLocationBootstrapServices.agentService().startAgentFight(loc.getId());
 					}
 				}
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						// An Agent has spawned.

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.questEngine.model;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.Gatherable;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.StaticObject;
@@ -97,7 +99,7 @@ public class QuestEnv {
 	}
 
 	public QuestDialog getDialog() {
-		QuestDialog dialog = QuestEngine.getInstance().getDialog(dialogId);
+		QuestDialog dialog = GameEngineServices.questEngine().getDialog(dialogId);
 		if (dialog == null) {
 			return QuestDialog.NULL;
 		}

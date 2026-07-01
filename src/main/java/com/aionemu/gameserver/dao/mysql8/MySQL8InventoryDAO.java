@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.dao.InventoryDAO;
@@ -11,10 +12,6 @@ import com.aionemu.gameserver.model.items.storage.PlayerStorage;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.services.item.ItemService;
-import javolution.util.FastList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,9 +21,9 @@ import java.util.List;
  * @author ATracer
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8InventoryDAO extends InventoryDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8InventoryDAO.class);
     
     public static final String SELECT_QUERY = "SELECT `item_unique_id`, `item_id`, `item_count`, `item_color`, `color_expires`, " + "`item_creator`, `expire_time`, `activation_count`, `is_equiped`, `is_soul_bound`, " + "`slot`, `enchant`, `enchant_bonus`, `item_skin`, `fusioned_item`, `optional_socket`, " + "`optional_fusion_socket`, `charge`, `rnd_bonus`, `rnd_count`, `wrappable_count`, " + "`is_packed`, `tempering_level`, `is_topped`, `strengthen_skill`, `skin_skill`, " + "`luna_reskin`, `reduction_level`, `is_seal`, `isEnhance`, `enhanceSkillId`, " + "`enhanceSkillEnchant` FROM `inventory` WHERE `item_owner` = ? AND " + "`item_location` = ? AND `is_equiped` = ?";
     
@@ -88,7 +85,7 @@ public class MySQL8InventoryDAO extends InventoryDAO {
     
     @Override
     public List<Item> loadStorageDirect(int playerId, StorageType storageType) {
-        List<Item> list = FastList.newInstance();
+        List<Item> list = new ArrayList<>();
         final int storage = storageType.getId();
 
         if (storageType == StorageType.ACCOUNT_WAREHOUSE) {

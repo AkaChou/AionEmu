@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services.mail;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -28,6 +29,7 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.MailDAO;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Letter;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -44,10 +46,10 @@ import com.aionemu.gameserver.services.player.PlayerMailboxState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
+@Slf4j(topic = "SYSMAIL_LOG")
 
 public class SystemMailService {
 	private static volatile ObjectProvider<SystemMailService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger("SYSMAIL_LOG");
 
 	public static final SystemMailService getInstance() {
 		ObjectProvider<SystemMailService> provider = instanceProvider;
@@ -107,7 +109,7 @@ public class SystemMailService {
 			// CHARACTER NAME.");
 			return false;
 		}
-		Player recipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 		if (recipient != null) {
 			if (recipient.getMailbox() != null && !(recipient.getMailbox().size() < 200)) {
 				// log.info("[SYSMAILSERVICE] > [SenderName: " + sender + "] [RecipientName: " +
@@ -141,7 +143,7 @@ public class SystemMailService {
 		}
 		String finalSender = sender;
 		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
-		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, finalAttachedKinahCount, finalAttachedApCount, title, message, finalSender, time, true,
 				letterType);
 		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
@@ -191,7 +193,7 @@ public class SystemMailService {
 		if (recipientCommonData == null) {
 			return false;
 		}
-		Player recipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 		if (recipient != null) {
 			if (recipient.getMailbox() != null && !(recipient.getMailbox().size() < 200)) {
 				return false;
@@ -204,13 +206,13 @@ public class SystemMailService {
 			return false;
 		}
 		if (recipientCommonData.isOnline()) {
-			onlineRecipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+			onlineRecipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 		}
 		attachedItem.setEquipped(false);
 		attachedItem.setEquipmentSlot(0);
 		attachedItem.setItemLocation(StorageType.MAILBOX.getId());
 		Timestamp time = new Timestamp(System.currentTimeMillis());
-		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, attachedKinahCount, attachedApCount, title, message, sender, time, true, type);
 		if (!DAOManager.getDAO(MailDAO.class).storeLetter(time, newLetter)) {
 			return false;
@@ -240,7 +242,7 @@ public class SystemMailService {
 
 	public static void sendTemplateRewardMail(final int templateId, final PlayerCommonData playerData) {
 		final MailRewardTemplate reward = DataManager.MAIL_REWARD.getMailReward(templateId);
-		SystemMailService.getInstance().sendMail(reward.getSender(), playerData.getName(), reward.getTitle(),
+		GameFeatureServices.systemMailService().sendMail(reward.getSender(), playerData.getName(), reward.getTitle(),
 				reward.getBody() + "\\n\\n" + reward.getTail(), reward.getItemId(), reward.getItemCount(),
 				reward.getKinahCount(), reward.getApCount(), LetterType.NORMAL);
 	}

@@ -16,12 +16,10 @@
  */
 package com.aionemu.gameserver.network.aion;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -29,13 +27,10 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
+@Slf4j
 
 public class AionPacketHandler {
 
-	/**
-	 * logger for this class
-	 */
-	private static final Logger log = LoggerFactory.getLogger(AionPacketHandler.class);
 	private Map<Integer, AionClientPacket> packetsPrototypes = new HashMap<Integer, AionClientPacket>();
 
 	/**

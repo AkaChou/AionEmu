@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.worlds.cygnea;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -59,7 +65,7 @@ public class Aurelian_DadarAI2 extends AggressiveNpcAI2
 	}
 	
 	private void darkLordBlessing() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 22664, 1, getOwner()).useNoAnimationSkill(); //Dark Lord's Blessing.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 22664, 1, getOwner()).useNoAnimationSkill(); //Dark Lord's Blessing.
 	}
 	
 	@Override
@@ -73,7 +79,7 @@ public class Aurelian_DadarAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg(int msg) {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(),false, 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(),false, 0, 0);
 	}
 	
 	private synchronized void checkPercentage(int hpPercentage) {
@@ -88,13 +94,13 @@ public class Aurelian_DadarAI2 extends AggressiveNpcAI2
 						cancelspecialSkillTask();
 						think = false;
 						EmoteManager.emoteStopAttacking(getOwner());
-						SkillEngine.getInstance().getSkill(getOwner(), 20483, 60, getOwner()).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), 20483, 60, getOwner()).useNoAnimationSkill();
 						sendMsg(1500501);
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								if (!isAlreadyDead()) {
-									SkillEngine.getInstance().getSkill(getOwner(), 20216, 60, getOwner()).useNoAnimationSkill();
+									GameEngineServices.skillEngine().getSkill(getOwner(), 20216, 60, getOwner()).useNoAnimationSkill();
 									startThinkTask();
 								}
 							}
@@ -128,7 +134,7 @@ public class Aurelian_DadarAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startThinkTask() {
-		thinkTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
@@ -155,9 +161,9 @@ public class Aurelian_DadarAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		SkillEngine.getInstance().getSkill(getOwner(), 20481, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20481, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500500);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
@@ -169,27 +175,27 @@ public class Aurelian_DadarAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startSpecialSkillTask() {
-		specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(getOwner(), 20223, 60, getOwner()).useNoAnimationSkill();
-					specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20223, 60, getOwner()).useNoAnimationSkill();
+					specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isAlreadyDead()) {
-								SkillEngine.getInstance().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
-								specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameEngineServices.skillEngine().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
+								specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										if (!isAlreadyDead()) {
-											SkillEngine.getInstance().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
+											GameEngineServices.skillEngine().getSkill(getOwner(), 20224, 60, getOwner()).useNoAnimationSkill();
 											if (curentPercent <= 63) {
-												specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+												specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 													@Override
 													public void run() {
 														if (!isAlreadyDead()) {
-															SkillEngine.getInstance().getSkill(getOwner(), 20480, 60, getOwner()).useNoAnimationSkill();
+															GameEngineServices.skillEngine().getSkill(getOwner(), 20480, 60, getOwner()).useNoAnimationSkill();
 															sendMsg(1500502);
 														}
 													}

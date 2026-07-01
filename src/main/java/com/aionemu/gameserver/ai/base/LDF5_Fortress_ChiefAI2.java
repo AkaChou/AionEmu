@@ -121,6 +121,6 @@ public class LDF5_Fortress_ChiefAI2 extends AggressiveNpcAI2
 	}
 
 	private void announce(SM_SYSTEM_MESSAGE message) {
-		World.getInstance().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, message));
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> PacketSendUtility.sendPacket(player, message));
 	}
 }

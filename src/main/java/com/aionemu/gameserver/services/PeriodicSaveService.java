@@ -16,11 +16,13 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Iterator;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -29,16 +31,17 @@ import com.aionemu.gameserver.dao.InventoryDAO;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.team.legion.Legion;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author ATracer
  */
+@Slf4j
 public class PeriodicSaveService {
 
-	private static final Logger log = LoggerFactory.getLogger(PeriodicSaveService.class);
 	private static volatile ObjectProvider<PeriodicSaveService> instanceProvider;
 
 	private Future<?> legionWhUpdateTask;
@@ -59,7 +62,7 @@ public class PeriodicSaveService {
 
 		int DELAY_LEGION_ITEM = PeriodicSaveConfig.LEGION_ITEMS * 1000;
 
-		legionWhUpdateTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new LegionWhUpdateTask(),
+		legionWhUpdateTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new LegionWhUpdateTask(),
 				DELAY_LEGION_ITEM, DELAY_LEGION_ITEM);
 	}
 
@@ -69,11 +72,11 @@ public class PeriodicSaveService {
 		public void run() {
 			log.info("Legion WH update task started.");
 			long startTime = System.currentTimeMillis();
-			Iterator<Legion> legionsIterator = LegionService.getInstance().getCachedLegionIterator();
+			Iterator<Legion> legionsIterator = GameCoreGameplayServices.legionService().getCachedLegionIterator();
 			int legionWhUpdated = 0;
 			while (legionsIterator.hasNext()) {
 				Legion legion = legionsIterator.next();
-				FastList<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
+				List<Item> allItems = legion.getLegionWarehouse().getItemsWithKinah();
 				allItems.addAll(legion.getLegionWarehouse().getDeletedItems());
 				try {
 					/**

@@ -17,7 +17,7 @@ class StaticDataTest {
 
 	@Test
 	void afterUnmarshalDoesNotEmitDetailedSummaryByDefault() throws Exception {
-		Method afterUnmarshal = StaticData.class.getDeclaredMethod("afterUnmarshal", javax.xml.bind.Unmarshaller.class, Object.class);
+		Method afterUnmarshal = StaticData.class.getDeclaredMethod("afterUnmarshal", jakarta.xml.bind.Unmarshaller.class, Object.class);
 		afterUnmarshal.setAccessible(true);
 
 		assertDoesNotThrow(() -> afterUnmarshal.invoke(new StaticData(), null, null));

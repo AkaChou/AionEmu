@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services.outpost;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +40,6 @@ import com.aionemu.gameserver.model.templates.spawns.outpostspawns.OutpostSpawnT
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.SpawnHandlerType;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
 /**
@@ -118,14 +121,14 @@ public class Outpost<OL extends OutpostLocation> {
 
 	protected void despawn(int outpostLocationId) {
 		setFlag(null);
-		Collection<OutpostNpc> outpostNpcs = World.getInstance().getLocalOutpostNpcs(outpostLocationId);
-		for (OutpostNpc npc : outpostNpcs) {
+		Collection<OutpostNpc> outpostNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalOutpostNpcs(outpostLocationId);
+		for (OutpostNpc npc : new ArrayList<OutpostNpc>(outpostNpcs)) {
 			npc.getController().onDelete();
 		}
 	}
 
 	private void delayedAssault() {
-		startAssault = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		startAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				chooseAttackersRace();
@@ -149,8 +152,8 @@ public class Outpost<OL extends OutpostLocation> {
 		if (getFlag() == null) {
 		} else if (!getFlag().getPosition().getMapRegion().isMapRegionActive()) {
 			if (Math.random() < 0.5) {
-				OutpostService.getInstance().capture(getId(), race);
-				OutpostService.getInstance().captureArtifact(getId(), race);
+				GameLocationBootstrapServices.outpostService().capture(getId(), race);
+				GameLocationBootstrapServices.outpostService().captureArtifact(getId(), race);
 			} else {
 				delayedAssault();
 			}
@@ -172,7 +175,7 @@ public class Outpost<OL extends OutpostLocation> {
 			}
 			if (getAttackers().isEmpty()) {
 			} else {
-				stopAssault = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				stopAssault = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnAttackers();
@@ -184,7 +187,7 @@ public class Outpost<OL extends OutpostLocation> {
 	}
 
 	protected void despawnAttackers() {
-		for (Npc attacker : getAttackers()) {
+		for (Npc attacker : new ArrayList<Npc>(getAttackers())) {
 			attacker.getController().onDelete();
 		}
 		getAttackers().clear();

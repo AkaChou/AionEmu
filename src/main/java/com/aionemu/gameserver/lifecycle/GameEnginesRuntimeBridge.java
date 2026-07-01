@@ -3,6 +3,7 @@ package com.aionemu.gameserver.lifecycle;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.questEngine.QuestEngine;
+import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import org.springframework.beans.factory.ObjectProvider;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class GameEnginesRuntimeBridge {
 
     private ObjectProvider<QuestEngine> questEngineProvider;
+    private ObjectProvider<SkillEngine> skillEngineProvider;
     private ObjectProvider<InstanceEngine> instanceEngineProvider;
     private ObjectProvider<AI2Engine> ai2EngineProvider;
     private ObjectProvider<ChatProcessor> chatProcessorProvider;
@@ -21,6 +23,11 @@ public class GameEnginesRuntimeBridge {
     @Autowired(required = false)
     void setQuestEngineProvider(ObjectProvider<QuestEngine> questEngineProvider) {
         this.questEngineProvider = questEngineProvider;
+    }
+
+    @Autowired(required = false)
+    void setSkillEngineProvider(ObjectProvider<SkillEngine> skillEngineProvider) {
+        this.skillEngineProvider = skillEngineProvider;
     }
 
     @Autowired(required = false)
@@ -48,6 +55,13 @@ public class GameEnginesRuntimeBridge {
             return GameEngineServiceFallbacks.questEngine();
         }
         return questEngineProvider.getIfAvailable(GameEngineServiceFallbacks::questEngine);
+    }
+
+    public SkillEngine skillEngine() {
+        if (skillEngineProvider == null) {
+            return GameEngineServiceFallbacks.skillEngine();
+        }
+        return skillEngineProvider.getIfAvailable(GameEngineServiceFallbacks::skillEngine);
     }
 
     public InstanceEngine instanceEngine() {

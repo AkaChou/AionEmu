@@ -16,15 +16,13 @@
  */
 package com.aionemu.gameserver.model.stats.container;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
 import java.util.concurrent.Future;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.annotation.Nonnull;
-
-import org.apache.commons.lang.NullArgumentException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS;
@@ -33,9 +31,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
 import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+@Slf4j
 
 public abstract class CreatureLifeStats<T extends Creature> {
-	private static final Logger log = LoggerFactory.getLogger(CreatureLifeStats.class);
 	protected int currentHp;
 	protected int currentMp;
 	protected boolean alreadyDead = false;
@@ -75,9 +73,9 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		return alreadyDead;
 	}
 
-	public int reduceHp(int value, @Nonnull Creature attacker) {
+	public int reduceHp(int value, Creature attacker) {
 		if (attacker == null) {
-			throw new NullArgumentException("attacker");
+			throw new IllegalArgumentException("attacker");
 		}
 		boolean isDied = false;
 		hpLock.lock();
@@ -199,7 +197,7 @@ public abstract class CreatureLifeStats<T extends Creature> {
 		restoreLock.lock();
 		try {
 			if (lifeRestoreTask == null && !alreadyDead) {
-				lifeRestoreTask = LifeStatsRestoreService.getInstance().scheduleRestoreTask(this);
+				lifeRestoreTask = GameGameplayServices.lifeStatsRestoreService().scheduleRestoreTask(this);
 			}
 		} finally {
 			restoreLock.unlock();

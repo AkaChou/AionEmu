@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.kromedesTrial;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -40,7 +42,7 @@ public class Porgus_BarbecueAI2 extends NpcAI2
     public boolean onDialogSelect(final Player player, int dialogId, int questId, int extendedRewardIndex) {
         if (dialogId == 1012) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400657));
-			SkillEngine.getInstance().getSkill(getOwner(), 19218, 1, player).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 19218, 1, player).useNoAnimationSkill();
         }
 		PacketSendUtility.sendPacket(player, new SM_DIALOG_WINDOW(getObjectId(), 0));
         return true;

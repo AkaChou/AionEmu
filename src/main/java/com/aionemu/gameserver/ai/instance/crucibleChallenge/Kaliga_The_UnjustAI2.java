@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.crucibleChallenge;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -52,7 +58,7 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 			final Player player = (Player) creature;
 			if (MathUtil.getDistance(getOwner(), player) <= 25) {
 				if (startedEvent.compareAndSet(false, true)) {
-					SkillEngine.getInstance().getSkill(getOwner(), 19246, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19246, 60, getOwner()).useNoAnimationSkill();
 					//This is my first judgment!
 				    sendMsg(1500171, getObjectId(), false, 3000);
 				    //This is my second judgment!
@@ -99,14 +105,14 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
 					//Mmmmm.... Rumble....
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1500175, getObjectId(), 0, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500175, getObjectId(), 0, 0);
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -134,7 +140,7 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
@@ -194,6 +200,6 @@ public class Kaliga_The_UnjustAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 }

@@ -175,8 +175,8 @@
 		</encoder>
 	</appender>
 	<appender name="out_error" class="ch.qos.logback.core.FileAppender">
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>ERROR</level>
+		<filter class="com.aionemu.commons.logging.slf4j.filters.ExactLevelFilter">
+			<targetLevel>ERROR</targetLevel>
 			<onMatch>ACCEPT</onMatch>
 			<onMismatch>DENY</onMismatch>
 		</filter>
@@ -187,8 +187,8 @@
 		</encoder>
 	</appender>
 	<appender name="out_warn" class="ch.qos.logback.core.FileAppender">
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>WARN</level>
+		<filter class="com.aionemu.commons.logging.slf4j.filters.ExactLevelFilter">
+			<targetLevel>WARN</targetLevel>
 			<onMatch>ACCEPT</onMatch>
 			<onMismatch>DENY</onMismatch>
 		</filter>
@@ -269,8 +269,7 @@
 		<appender-ref ref="app_login_audit"/>
 	</logger>
 
-	<root>
-		<level value="info"/>
+	<root level="info">
 		<appender-ref ref="app_console"/>
 		<appender-ref ref="out_console"/>
 		<appender-ref ref="out_error"/>

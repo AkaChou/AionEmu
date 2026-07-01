@@ -18,9 +18,7 @@
 
 package com.aionemu.chatserver.network.netty;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.gameserver.GsConnectionFactoryImpl;
@@ -30,10 +28,9 @@ import com.aionemu.commons.network.ServerTransport;
 /**
  * @author ATracer
  */
+@Slf4j
 public class NettyServer {
 
-    @SuppressWarnings("unused")
-    private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
     private Netty4ChatClientServer netty4ChatClientServer;
     private ServerTransport gameServerTransport;
     private static NettyServer instance;

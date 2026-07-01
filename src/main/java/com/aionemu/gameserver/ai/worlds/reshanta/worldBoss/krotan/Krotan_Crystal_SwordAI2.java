@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.reshanta.worldBoss.krotan;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DIALOG_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -52,7 +53,7 @@ public class Krotan_Crystal_SwordAI2 extends NpcAI2
 				case 702840: //Krotan's Crystal Sword [Elyos]
 				    announceSpiritOfKrotan30Min();
 					announceSpiritOfKrotanAppears();
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							spawn(883323, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Spirit Of Krotan.
@@ -62,7 +63,7 @@ public class Krotan_Crystal_SwordAI2 extends NpcAI2
 				case 702841: //Krotan's Crystal Sword [Asmodians]
 				    announceSpiritOfKrotan30Min();
 					announceSpiritOfKrotanAppears();
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							spawn(884027, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading()); //Spirit Of Krotan.
@@ -80,7 +81,7 @@ public class Krotan_Crystal_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceSpiritOfKrotanAppears() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Krotan Protector Spirit will appear after 5 minutes.
@@ -94,7 +95,7 @@ public class Krotan_Crystal_SwordAI2 extends NpcAI2
 	}
 	
 	private void announceSpiritOfKrotan30Min() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Spirit of Krotan will be summoned from Krotan's Crystal Sword in 30 minutes.

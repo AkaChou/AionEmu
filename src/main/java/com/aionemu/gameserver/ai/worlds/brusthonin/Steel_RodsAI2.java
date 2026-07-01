@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.ai.worlds.brusthonin;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class Steel_RodsAI2 extends NpcAI2
 {
 	@Override
 	protected void handleDied() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 			    despawnNpc(209479); //Captured Griffon's Claw Legionnary.

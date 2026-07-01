@@ -10,12 +10,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public final class DatabaseFactory {
     
-    private static final Logger log = LoggerFactory.getLogger(DatabaseFactory.class);
     private static final Map<String, DatabaseState> states = new ConcurrentHashMap<>();
     
     private DatabaseFactory() {}

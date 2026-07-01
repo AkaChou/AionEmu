@@ -16,10 +16,10 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank.AbyssRankUpdateType;
@@ -32,13 +32,13 @@ import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 /**
  * @author SheppeR
  */
+@Slf4j
 public class CM_ABYSS_RANKING_PLAYERS extends AionClientPacket {
 
 	private Race queriedRace;
 	private int raceId;
 	private AbyssRankUpdateType updateType;
 
-	private static final Logger log = LoggerFactory.getLogger(CM_ABYSS_RANKING_PLAYERS.class);
 
 	public CM_ABYSS_RANKING_PLAYERS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -70,9 +70,9 @@ public class CM_ABYSS_RANKING_PLAYERS extends AionClientPacket {
 		if (queriedRace != null) {
 			Player player = this.getConnection().getActivePlayer();
 			if (player.isAbyssRankListUpdated(updateType)) {
-				sendPacket(new SM_ABYSS_RANKING_PLAYERS(AbyssRankingCache.getInstance().getLastUpdate(), queriedRace));
+				sendPacket(new SM_ABYSS_RANKING_PLAYERS(GameCoreGameplayServices.abyssRankingCache().getLastUpdate(), queriedRace));
 			} else {
-				List<SM_ABYSS_RANKING_PLAYERS> results = AbyssRankingCache.getInstance().getPlayers(queriedRace);
+				List<SM_ABYSS_RANKING_PLAYERS> results = GameCoreGameplayServices.abyssRankingCache().getPlayers(queriedRace);
 				for (SM_ABYSS_RANKING_PLAYERS packet : results) {
 					sendPacket(packet);
 				}

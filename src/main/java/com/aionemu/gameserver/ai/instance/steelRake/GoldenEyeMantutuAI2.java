@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.steelRake;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
@@ -29,7 +33,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -82,7 +85,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startFeedTime(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead() && npc != null) {
@@ -151,7 +154,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 	}
 	
 	private void doSchedule() {
-		hungerTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		hungerTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				int rnd = Rnd.get(1, 2);
@@ -164,7 +167,7 @@ public class GoldenEyeMantutuAI2 extends AggressiveNpcAI2
 						skill = 20490; //Thirst.
 					break;
 				}
-				SkillEngine.getInstance().getSkill(getOwner(), skill, 20, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), skill, 20, getOwner()).useNoAnimationSkill();
 			}
 		}, 10000, 30000);
 	}

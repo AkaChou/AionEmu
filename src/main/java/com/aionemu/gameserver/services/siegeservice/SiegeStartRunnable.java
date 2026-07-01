@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.services.SiegeService;
 
 public class SiegeStartRunnable implements Runnable {
@@ -28,7 +30,7 @@ public class SiegeStartRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		SiegeService.getInstance().checkSiegeStart(getLocationId());
+		GameFeatureServices.siegeService().checkSiegeStart(getLocationId());
 	}
 
 	public int getLocationId() {

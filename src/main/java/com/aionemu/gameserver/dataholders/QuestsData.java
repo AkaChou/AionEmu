@@ -16,14 +16,17 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.QuestTemplate;
@@ -31,7 +34,7 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.QuestService;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author MrPoke
@@ -42,8 +45,10 @@ public class QuestsData {
 
 	@XmlElement(name = "quest", required = true)
 	protected List<QuestTemplate> questsData;
-	private TIntObjectHashMap<QuestTemplate> questData = new TIntObjectHashMap<QuestTemplate>();
-	private TIntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new TIntObjectHashMap<List<QuestTemplate>>();
+	@XmlTransient
+	private IntObjectHashMap<QuestTemplate> questData = new IntObjectHashMap<QuestTemplate>();
+	@XmlTransient
+	private IntObjectHashMap<List<QuestTemplate>> sortedByFactionId = new IntObjectHashMap<List<QuestTemplate>>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		questData.clear();
@@ -73,7 +78,7 @@ public class QuestsData {
 		List<QuestTemplate> quests = new ArrayList<QuestTemplate>();
 		QuestEnv questEnv = new QuestEnv(null, player, 0, 0);
 		for (QuestTemplate questTemplate : factionQuests) {
-			if (!QuestEngine.getInstance().isHaveHandler(questTemplate.getId())) {
+			if (!GameEngineServices.questEngine().isHaveHandler(questTemplate.getId())) {
 				continue;
 			}
 			if (questTemplate.getMinlevelPermitted() != 0 && player.getLevel() < questTemplate.getMinlevelPermitted()) {

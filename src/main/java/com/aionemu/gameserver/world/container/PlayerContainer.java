@@ -16,35 +16,35 @@
  */
 package com.aionemu.gameserver.world.container;
 
+import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Container for storing Players by objectId and name.
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class PlayerContainer implements Iterable<Player> {
 
-	private static final Logger log = LoggerFactory.getLogger(PlayerContainer.class);
 
 	/**
 	 * Map<ObjectId,Player>
 	 */
-	private final FastMap<Integer, Player> playersById = new FastMap<Integer, Player>().shared();
+	private final Map<Integer, Player> playersById = new LinkedHashMap<Integer, Player>();
 	/**
 	 * Map<Name,Player>
 	 */
-	private final FastMap<String, Player> playersByName = new FastMap<String, Player>().shared();
+	private final Map<String, Player> playersByName = new LinkedHashMap<String, Player>();
 
 	/**
 	 * Add Player to this Container.
@@ -94,7 +94,7 @@ public class PlayerContainer implements Iterable<Player> {
 
 	@Override
 	public Iterator<Player> iterator() {
-		return playersById.values().iterator();
+		return new ArrayList<Player>(playersById.values()).iterator();
 	}
 
 	/**
@@ -103,9 +103,7 @@ public class PlayerContainer implements Iterable<Player> {
 	@SuppressWarnings("unused")
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (FastMap.Entry<Integer, Player> e = playersById.head(),
-					mapEnd = playersById.tail(); (e = e.getNext()) != mapEnd;) {
-				Player player = e.getValue();
+			for (Player player : new ArrayList<Player>(playersById.values())) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -116,6 +114,6 @@ public class PlayerContainer implements Iterable<Player> {
 	}
 
 	public Collection<Player> getAllPlayers() {
-		return playersById.values();
+		return new ArrayList<Player>(playersById.values());
 	}
 }

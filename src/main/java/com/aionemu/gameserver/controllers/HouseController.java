@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -37,13 +39,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class HouseController extends VisibleObjectController<House> {
-	FastMap<Integer, ActionObserver> observed = new FastMap<Integer, ActionObserver>().shared();
+	Map<Integer, ActionObserver> observed = new LinkedHashMap<Integer, ActionObserver>();
 
 	@Override
 	public void see(VisibleObject object) {
@@ -83,11 +85,11 @@ public class HouseController extends VisibleObjectController<House> {
 	}
 
 	public void updateAppearance() {
-		ThreadPoolManager.getInstance().execute(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
 			@Override
 			public void run() {
 				for (int playerId : observed.keySet()) {
-					Player player = World.getInstance().findPlayer(playerId);
+					Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 					if (player == null) {
 						continue;
 					}
@@ -98,11 +100,11 @@ public class HouseController extends VisibleObjectController<House> {
 	}
 
 	public void broadcastAppearance() {
-		ThreadPoolManager.getInstance().execute(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().execute(new Runnable() {
 			@Override
 			public void run() {
 				for (int playerId : observed.keySet()) {
-					Player player = World.getInstance().findPlayer(playerId);
+					Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 					if (player == null) {
 						continue;
 					}
@@ -123,7 +125,7 @@ public class HouseController extends VisibleObjectController<House> {
 					if (!kickFriends && kicker != null && kicker.getFriendList().getFriend(objId) != null) {
 						continue;
 					}
-					Player visitor = World.getInstance().findPlayer(objId);
+					Player visitor = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objId);
 					if (visitor != null) {
 						if (visitor.isInsideZone(info.getZoneTemplate().getName())) {
 							moveOutside(visitor, onSettingsChange);

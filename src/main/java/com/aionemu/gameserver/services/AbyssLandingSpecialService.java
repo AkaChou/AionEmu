@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -38,14 +38,15 @@ import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice
 import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice.SpecialLanding;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+@Slf4j(topic = "com.aionemu.gameserver.services.AbyssLandingService")
 public class AbyssLandingSpecialService {
 	private static volatile ObjectProvider<AbyssLandingSpecialService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(AbyssLandingService.class);
 	private static Map<Integer, LandingSpecialLocation> abyssSpecialLanding;
-	private final Map<Integer, SpecialLanding<?>> activeSpecialLanding = new FastMap<Integer, SpecialLanding<?>>()
-			.shared();
+	private final Map<Integer, SpecialLanding<?>> activeSpecialLanding = new LinkedHashMap<Integer, SpecialLanding<?>>()
+			;
 
 	public void initLandingSpecialLocations() {
 		abyssSpecialLanding = DataManager.LANDING_SPECIAL_LOCATION_DATA.getLandingSpecialLocations();
@@ -107,7 +108,7 @@ public class AbyssLandingSpecialService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

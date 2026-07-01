@@ -16,8 +16,12 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 import com.aionemu.gameserver.controllers.HouseController;
 import com.aionemu.gameserver.model.Race;
@@ -36,14 +40,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_EDIT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOUSE_REGISTRY;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.item.HouseObjectFactory;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemDeleteType;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
+@Slf4j
 
 public class CM_HOUSE_EDIT extends AionClientPacket {
-	private static final Logger log = LoggerFactory.getLogger(CM_HOUSE_EDIT.class);
 	private HousingAction action;
 	private int actionId;
 	int itemObjectId;
@@ -97,7 +100,7 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 			player.getInventory().delete(item, ItemDeleteType.REGISTER);
 			DecorateAction decorateAction = template.getActions().getDecorateAction();
 			if (decorateAction != null) {
-				HouseDecoration decor = new HouseDecoration(IDFactory.getInstance().nextId(),
+				HouseDecoration decor = new HouseDecoration(GameWorldBootstrapServices.idFactory().nextId(),
 						decorateAction.getTemplateId());
 				player.getHouseRegistry().putCustomPart(decor);
 				sendPacket(new SM_HOUSE_EDIT(actionId, 2, decor.getObjectId()));
@@ -124,7 +127,7 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 			obj.spawn();
 			player.getHouseRegistry().setPersistentState(PersistentState.UPDATE_REQUIRED);
 			sendPacket(new SM_HOUSE_EDIT(4, 1, itemObjectId));
-			QuestEngine.getInstance().onHouseItemUseEvent(new QuestEnv(null, player, 0, 0),
+			GameEngineServices.questEngine().onHouseItemUseEvent(new QuestEnv(null, player, 0, 0),
 					obj.getObjectTemplate().getTemplateId());
 		} else if (action == HousingAction.MOVE_OBJECT) {
 			HouseObject<?> obj = player.getHouseRegistry().getObjectByObjId(itemObjectId);
@@ -163,7 +166,7 @@ public class CM_HOUSE_EDIT extends AionClientPacket {
 				AuditLogger.info(player, "Try house renovation without coupon");
 				return;
 			}
-			HousingService.getInstance().switchHouseBuilding(house, buildingId);
+			GameHousingServices.housingService().switchHouseBuilding(house, buildingId);
 			player.setHouseRegistry(house.getRegistry());
 			((HouseController) house.getController()).updateAppearance();
 		}

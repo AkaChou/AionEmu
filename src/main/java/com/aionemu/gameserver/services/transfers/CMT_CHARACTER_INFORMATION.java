@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.transfers;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -62,8 +65,6 @@ import com.aionemu.gameserver.services.player.PlayerService;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 
-import javolution.util.FastList;
-
 /**
  * @author KID
  */
@@ -84,7 +85,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 	public Player readInfo(String name, int targetAccount, String accountName, List<Integer> rsList, Logger textLog) {
 
 		long st = System.currentTimeMillis();
-		PlayerCommonData playerCommonData = new PlayerCommonData(IDFactory.getInstance().nextId());
+		PlayerCommonData playerCommonData = new PlayerCommonData(GameWorldBootstrapServices.idFactory().nextId());
 		playerCommonData.setName(name);
 		playerCommonData.setExp(readQ(), false);
 		playerCommonData.setPlayerClass(PlayerClass.getPlayerClassById((byte) readD()));
@@ -158,12 +159,12 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 
 		if (!PlayerService.storeNewPlayer(player, accountName, targetAccount)) {
 			textLog.info("failed to store new player to " + accountName);
-			IDFactory.getInstance().releaseId(playerCommonData.getPlayerObjId());
+			GameWorldBootstrapServices.idFactory().releaseId(playerCommonData.getPlayerObjId());
 			return null;
 		}
 
 		int cnt = readD();
-		FastList<String> itemOut = FastList.newInstance();
+		List<String> itemOut = new ArrayList<String>();
 		for (int a = 0; a < cnt; a++) { // inventory
 			int objIdOld = readD();
 			int itemId = readD();
@@ -182,7 +183,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 			int optSocket = readD();
 			int optFusion = readD();
 			int charge = readD();
-			FastList<int[]> manastones = FastList.newInstance(), fusions = FastList.newInstance();
+			List<int[]> manastones = new ArrayList<int[]>(), fusions = new ArrayList<int[]>();
 			int len = readD();
 			for (int b = 0; b < len; b++) {
 				manastones.add(new int[] { readD(), readD() });
@@ -218,7 +219,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 					continue;
 				}
 
-				int newId = IDFactory.getInstance().nextId();
+				int newId = GameWorldBootstrapServices.idFactory().nextId();
 				Item item = new Item(newId, itemId, itemCnt, itemColor, colorExpires, itemCreator, itemExpireTime,
 						itemActivationCnt, itemEquipped, itemSoulBound, equipSlot, location, enchant, skinId, fusionId,
 						optSocket, optFusion, charge, bonusNum, randomNum, wrappingNum, newId, itemPacked, 0,
@@ -269,7 +270,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 			int optSocket = readD();
 			int optFusion = readD();
 			int charge = readD();
-			FastList<int[]> manastones = FastList.newInstance(), fusions = FastList.newInstance();
+			List<int[]> manastones = new ArrayList<int[]>(), fusions = new ArrayList<int[]>();
 			int len = readD();
 			for (int b = 0; b < len; b++) {
 				manastones.add(new int[] { readD(), readD() });
@@ -305,7 +306,7 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 					continue;
 				}
 
-				int newId = IDFactory.getInstance().nextId();
+				int newId = GameWorldBootstrapServices.idFactory().nextId();
 				Item item = new Item(newId, itemId, itemCnt, itemColor, 0, itemCreator, itemExpireTime,
 						itemActivationCnt, itemEquipped, itemSoulBound, equipSlot, location, enchant, skinId, fusionId,
 						optSocket, optFusion, charge, bonusNum, randomNum, wrappingNum, newId, itemPacked, 0,
@@ -340,7 +341,6 @@ public class CMT_CHARACTER_INFORMATION extends AionClientPacket {
 		for (String s : itemOut) {
 			textLog.info(s);
 		}
-		FastList.recycle(itemOut);
 		cnt = readD();
 		textLog.info("EmotionList:" + cnt);
 		player.setEmotions(new EmotionList(player));

@@ -22,15 +22,13 @@
  */
 package com.aionemu.commons.network.util;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
@@ -59,6 +57,7 @@ import com.google.common.util.concurrent.MoreExecutors;
  *
  * @author -Nemesiss-, Rolandas
  */
+@Slf4j
 public class ThreadPoolManager implements Executor {
     
     /**
@@ -69,7 +68,6 @@ public class ThreadPoolManager implements Executor {
         protected static final ThreadPoolManager instance = new ThreadPoolManager();
     }
     
-    private static final Logger log = LoggerFactory.getLogger(ThreadPoolManager.class);
     
     /**
      * 获取ThreadPoolManager实例
@@ -99,7 +97,7 @@ public class ThreadPoolManager implements Executor {
      * 构造函数，初始化线程池和死锁检测器
      * Constructor, initialize thread pools and deadlock detector
      */
-    private ThreadPoolManager() {
+    public ThreadPoolManager() {
         DeadLockDetector deadLockDetector = new DeadLockDetector(
             60,
             AionRuntimeMode.isBootEmbedded() ? DeadLockDetector.NOTHING : DeadLockDetector.RESTART

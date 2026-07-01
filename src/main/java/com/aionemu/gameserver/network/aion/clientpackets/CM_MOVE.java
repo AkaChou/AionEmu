@@ -18,12 +18,12 @@ package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.controllers.movement.MovementMask;
 import com.aionemu.gameserver.controllers.movement.PlayerMoveController;
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
 import com.aionemu.gameserver.services.antihack.AntiHackService;
-import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
@@ -101,7 +101,7 @@ public class CM_MOVE extends AionClientPacket {
 		if (player.getAdminTeleportation() && ((type & MovementMask.STARTMOVE) == MovementMask.STARTMOVE)
 				&& ((type & MovementMask.MOUSE) == MovementMask.MOUSE)) {
 			m.setNewDirection(x2, y2, z2);
-			World.getInstance().updatePosition(player, x2, y2, z2, heading);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(player, x2, y2, z2, heading);
 			PacketSendUtility.broadcastPacketAndReceive(player, new SM_MOVE(player));
 		}
 		float speed = player.getGameStats().getMovementSpeedFloat();
@@ -143,10 +143,10 @@ public class CM_MOVE extends AionClientPacket {
 			return;
 		}
 
-		World.getInstance().updatePosition(player, x, y, z, heading);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(player, x, y, z, heading);
 		m.updateLastMove();
 		if (player.isInGroup2() || player.isInAlliance2()) {
-			TeamMoveUpdater.getInstance().startTask(player);
+			GameTaskManagerServices.teamMoveUpdater().startTask(player);
 		}
 		if ((type & MovementMask.STARTMOVE) == MovementMask.STARTMOVE || type == 0) {
 			PacketSendUtility.broadcastPacket(player, new SM_MOVE(player));

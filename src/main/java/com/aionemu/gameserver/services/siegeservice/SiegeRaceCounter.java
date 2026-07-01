@@ -32,12 +32,13 @@ import com.aionemu.gameserver.world.World;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	private final AtomicLong totalDamage = new AtomicLong();
-	private final Map<Integer, AtomicLong> playerDamageCounter = new FastMap<Integer, AtomicLong>().shared();
-	private final Map<Integer, AtomicLong> playerAPCounter = new FastMap<Integer, AtomicLong>().shared();
+	private final Map<Integer, AtomicLong> playerDamageCounter = new LinkedHashMap<Integer, AtomicLong>();
+	private final Map<Integer, AtomicLong> playerAPCounter = new LinkedHashMap<Integer, AtomicLong>();
 	private final SiegeRace siegeRace;
 
 	public SiegeRaceCounter(SiegeRace siegeRace) {
@@ -98,7 +99,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 		Collections.sort(tempList, new Comparator<Map.Entry<K, AtomicLong>>() {
 			@Override
 			public int compare(Map.Entry<K, AtomicLong> o1, Map.Entry<K, AtomicLong> o2) {
-				return new Long(o2.getValue().get()).compareTo(o1.getValue().get());
+				return Long.compare(o2.getValue().get(), o1.getValue().get());
 			}
 		});
 		Map<K, Long> result = Maps.newLinkedHashMap();
@@ -112,7 +113,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 
 	@Override
 	public int compareTo(SiegeRaceCounter o) {
-		return new Long(o.getTotalDamage()).compareTo(getTotalDamage());
+		return Long.compare(o.getTotalDamage(), getTotalDamage());
 	}
 
 	public SiegeRace getSiegeRace() {
@@ -122,7 +123,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	public Integer getWinnerLegionId() {
 		Map<Player, AtomicLong> teamDamageMap = new HashMap<Player, AtomicLong>();
 		for (Integer id : playerDamageCounter.keySet()) {
-			Player player = World.getInstance().findPlayer(id);
+			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(id);
 			if (player != null && player.getCurrentTeam() != null) {
 				Player teamLeader = player.getCurrentTeam().getLeaderObject();
 				long damage = playerDamageCounter.get(id).get();

@@ -16,23 +16,23 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Iterator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author ATracer
  */
+@Slf4j
 public class DebugService {
 
-	private static final Logger log = LoggerFactory.getLogger(DebugService.class);
 	private static volatile ObjectProvider<DebugService> instanceProvider;
 
 	private static final int ANALYZE_PLAYERS_INTERVAL = 30 * 60 * 1000;
@@ -50,7 +50,7 @@ public class DebugService {
 	}
 
 	public DebugService() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 			@Override
 			public void run() {
@@ -64,7 +64,7 @@ public class DebugService {
 	private void analyzeWorldPlayers() {
 		log.info("Starting analysis of world players at " + System.currentTimeMillis());
 
-		Iterator<Player> playersIterator = World.getInstance().getPlayersIterator();
+		Iterator<Player> playersIterator = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (playersIterator.hasNext()) {
 			Player player = playersIterator.next();
 

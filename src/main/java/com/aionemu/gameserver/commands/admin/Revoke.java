@@ -54,12 +54,12 @@ public class Revoke extends AdminCommand {
 			return;
 		}
 
-		Player player = World.getInstance().findPlayer(Util.convertName(params[0]));
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 		if (player == null) {
 			PacketSendUtility.sendMessage(admin, "The specified player is not online.");
 			return;
 		}
-		LoginServer.getInstance().sendLsControlPacket(player.getAcountName(), player.getName(), admin.getName(), 0, type);
+		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendLsControlPacket(player.getAcountName(), player.getName(), admin.getName(), 0, type);
 	}
 
 	@Override

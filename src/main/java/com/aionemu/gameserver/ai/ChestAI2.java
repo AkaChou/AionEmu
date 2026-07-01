@@ -16,16 +16,18 @@
  */
 package com.aionemu.gameserver.ai;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.chest.ChestTemplate;
 import com.aionemu.gameserver.model.templates.chest.KeyItem;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -70,8 +72,8 @@ public class ChestAI2 extends ActionItemNpcAI2
 			} else {
 				players.add(player);
 			}
-			DropRegistrationService.getInstance().registerDrop(getOwner(), player, maxLevel(players), players);
-			DropService.getInstance().requestDropList(player, getObjectId());
+			GameWorldServices.dropRegistrationService().registerDrop(getOwner(), player, maxLevel(players), players);
+			GameCoreGameplayServices.dropService().requestDropList(player, getObjectId());
 		} else {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(false, 1111300, player.getObjectId(), 2));
 		}

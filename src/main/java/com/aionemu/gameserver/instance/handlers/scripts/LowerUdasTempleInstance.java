@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -24,9 +26,8 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.ArrayList;
@@ -57,32 +58,32 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 	private List<Npc> udasTempleChest = new ArrayList<Npc>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 702658: //Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
 		    break;
 			case 702659: //Noble Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
 		    break;
 			case 215796: //Gradarim The Collector.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000087, 1)); //Jotun Vault Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000087, 1)); //Jotun Vault Key.
 		    break;
 			case 215786: //Garha The Punisher.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000086, 1)); //Shadowy Prison Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000086, 1)); //Shadowy Prison Key.
 		    break;
 			case 215797: //Bergrisar.
 			case 216149: //Udas Temple Treasure Box.
 			case 216150: //Udas Temple Treasure Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188052306, 1)); //Udas Temple Contribution Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188052306, 1)); //Udas Temple Contribution Bundle.
 		    break;
 			case 215783: //Nexus.
 			case 215795: //Debilkarim The Maker.
                 for (Player player: instance.getPlayersInside()) {
                     if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundlele.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundlele.
                     }
                 }
             break;
@@ -142,7 +143,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
             udasTempleChest.add((Npc) spawn(216150, 455.50082f, 1176.3575f, 192.6768f, (byte) 34));
 			udasTempleChest.add((Npc) spawn(216150, 436.63177f, 1192.1348f, 190.88254f, (byte) 119));
             udasTempleChest.add((Npc) spawn(216150, 438.38586f, 1202.9849f, 192.8323f, (byte) 105));
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer2();
@@ -165,7 +166,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer3();
@@ -188,7 +189,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer4();
@@ -211,7 +212,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer5();
@@ -234,7 +235,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer6();
@@ -257,7 +258,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer7();
@@ -280,7 +281,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer8();
@@ -303,7 +304,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer9();
@@ -326,7 +327,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer10();
@@ -349,7 +350,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer11();
@@ -372,7 +373,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					StartTimer12();
@@ -395,7 +396,7 @@ public class LowerUdasTempleInstance extends GeneralInstanceHandler
 					}
 				}
 			});
-			chestUdasTempleTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			chestUdasTempleTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					sendMsg(1400244);

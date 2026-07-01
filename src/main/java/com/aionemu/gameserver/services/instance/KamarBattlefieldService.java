@@ -16,34 +16,37 @@
  */
 package com.aionemu.gameserver.services.instance;
 
-import java.util.Iterator;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastList;
 
 /****/
 /**
  * Author Rinzler (Encom) /
  ****/
+@Slf4j
 
 public class KamarBattlefieldService {
 	private static volatile ObjectProvider<KamarBattlefieldService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(KamarBattlefieldService.class);
 	private boolean registerAvailable;
-	private final FastList<Integer> playersWithCooldown = FastList.newInstance();
+	private final List<Integer> playersWithCooldown = new ArrayList<Integer>();
 	public static final byte minLevel = 66, capLevel = 76;
 	public static final int maskId = 107;
 
@@ -51,7 +54,7 @@ public class KamarBattlefieldService {
 		if (AutoGroupConfig.KAMAR_ENABLED) {
 			log.info("Kamar Battlefield 4.3");
 			// Kamar Battlefield FRI "11PM-0AM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startKamarRegistration();
@@ -61,13 +64,13 @@ public class KamarBattlefieldService {
 	}
 
 	private void startUregisterKamarTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				registerAvailable = false;
 				playersWithCooldown.clear();
-				AutoGroupService.getInstance().unRegisterInstance(maskId);
-				Iterator<Player> iter = World.getInstance().getPlayersIterator();
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskId);
+				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 				while (iter.hasNext()) {
 					Player player = iter.next();
 					if (player.getLevel() > minLevel) {
@@ -85,7 +88,7 @@ public class KamarBattlefieldService {
 	public void startKamarRegistration() {
 		this.registerAvailable = true;
 		startUregisterKamarTask();
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {

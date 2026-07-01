@@ -16,30 +16,33 @@
  */
 package com.aionemu.gameserver.services.instance;
 
-import java.util.Iterator;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.AutoGroupConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_AUTO_GROUP;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
+@Slf4j
 
-import javolution.util.FastList;
 
 public class DredgionService2 {
-	private static final Logger log = LoggerFactory.getLogger(DredgionService2.class);
 	private static volatile ObjectProvider<DredgionService2> instanceProvider;
 
 	private boolean registerAvailable;
-	private FastList<Integer> playersWithCooldown = new FastList<Integer>();
+	private List<Integer> playersWithCooldown = new ArrayList<Integer>();
 	private SM_AUTO_GROUP[] autoGroupUnreg, autoGroupReg;
 	private final byte maskLvlGradeC = 1, maskLvlGradeB = 2, maskLvlGradeA = 3;
 	public static final byte minLevel = 46, capLevel = 61;
@@ -57,21 +60,21 @@ public class DredgionService2 {
 		if (AutoGroupConfig.DREDGION_ENABLED) {
 			log.info("[Baranath/Chantra/Terath] Dredgion");
 			// Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "12PM-1PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startDredgionRegistration();
 				}
 			}, AutoGroupConfig.DREDGION_SCHEDULE_MIDDAY);
 			// Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "8PM-9PM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startDredgionRegistration();
 				}
 			}, AutoGroupConfig.DREDGION_SCHEDULE_EVENING);
 			// Dredgion MON-TUE-WED-THU-FRI-SAT-SUN "23PM-0AM"
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startDredgionRegistration();
@@ -81,15 +84,15 @@ public class DredgionService2 {
 	}
 
 	private void startUregisterDredgionTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				registerAvailable = false;
 				playersWithCooldown.clear();
-				AutoGroupService.getInstance().unRegisterInstance(maskLvlGradeA);
-				AutoGroupService.getInstance().unRegisterInstance(maskLvlGradeB);
-				AutoGroupService.getInstance().unRegisterInstance(maskLvlGradeC);
-				Iterator<Player> iter = World.getInstance().getPlayersIterator();
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeA);
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeB);
+				GameCoreGameplayServices.autoGroupService().unRegisterInstance(maskLvlGradeC);
+				Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 				while (iter.hasNext()) {
 					Player player = iter.next();
 					if (player.getLevel() > minLevel) {
@@ -106,7 +109,7 @@ public class DredgionService2 {
 	private void startDredgionRegistration() {
 		this.registerAvailable = true;
 		startUregisterDredgionTask();
-		Iterator<Player> iter = World.getInstance().getPlayersIterator();
+		Iterator<Player> iter = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (iter.hasNext()) {
 			Player player = iter.next();
 			if (player.getLevel() > minLevel && player.getLevel() < capLevel) {

@@ -19,16 +19,16 @@ package com.aionemu.gameserver.dataholders;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.minion.MinionTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "minions")
@@ -36,7 +36,7 @@ public class MinionData {
 	@XmlElement(name = "minion")
 	private List<MinionTemplate> minionTemplates;
 	@XmlTransient
-	private TIntObjectHashMap<MinionTemplate> minionData = new TIntObjectHashMap<>();
+	private IntObjectHashMap<MinionTemplate> minionData = new IntObjectHashMap<>();
 	@XmlTransient
 	private List<Integer> minionDataList = new ArrayList<Integer>();
 

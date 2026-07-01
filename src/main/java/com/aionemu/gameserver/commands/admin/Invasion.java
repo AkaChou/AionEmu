@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -24,7 +26,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class Invasion extends AdminCommand
 {
@@ -55,11 +57,11 @@ public class Invasion extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (VortexService.getInstance().isInvasionInProgress(vortexId)) {
+			if (GameLocationBootstrapServices.vortexService().isInvasionInProgress(vortexId)) {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " started!");
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						if (player.getCommonData().getRace() == Race.ELYOS) {
@@ -68,7 +70,7 @@ public class Invasion extends AdminCommand
 						}
 					}
 				});
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						if (player.getCommonData().getRace() == Race.ASMODIANS) {
@@ -77,20 +79,20 @@ public class Invasion extends AdminCommand
 						}
 					}
 				});
-				VortexService.getInstance().startInvasion(vortexId);
+				GameLocationBootstrapServices.vortexService().startInvasion(vortexId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!VortexService.getInstance().isInvasionInProgress(vortexId)) {
+			if (!GameLocationBootstrapServices.vortexService().isInvasionInProgress(vortexId)) {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Vortex Location> " + vortexId + " stopped!");
-				VortexService.getInstance().stopInvasion(vortexId);
+				GameLocationBootstrapServices.vortexService().stopInvasion(vortexId);
 			}
 		}
 	}
 	
 	protected boolean isValidVortexLocationId(Player player, int vortexId) {
-		if (!VortexService.getInstance().getVortexLocations().keySet().contains(vortexId)) {
+		if (!GameLocationBootstrapServices.vortexService().getVortexLocations().keySet().contains(vortexId)) {
 			PacketSendUtility.sendMessage(player, "Id " + vortexId + " is invalid");
 			return false;
 		}

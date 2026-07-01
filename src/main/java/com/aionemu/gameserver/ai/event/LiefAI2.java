@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.event;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 
 import com.aionemu.gameserver.ai2.AIName;
@@ -41,7 +43,7 @@ public class LiefAI2 extends GeneralNpcAI2
 		if (dialogId == 10000) {
 			switch (getNpcId()) {
 			    case 835271: //Lief.
-					SkillEngine.getInstance().applyEffectDirectly(11253, player, player, 7200000 * 1);
+					GameEngineServices.skillEngine().applyEffectDirectly(11253, player, player, 7200000 * 1);
 				break;
 			}
 		}

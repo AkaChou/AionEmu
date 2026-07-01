@@ -18,16 +18,17 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.arcadeupgrade.ArcadeTab;
 import com.aionemu.gameserver.model.templates.arcadeupgrade.ArcadeTabItem;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by wanke on 17/02/2017.
@@ -37,7 +38,8 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 public class ArcadeUpgradeData {
 	@XmlElement(name = "tab")
 	private List<ArcadeTab> arcadeTabTemplate;
-	private TIntObjectHashMap<List<ArcadeTabItem>> arcadeItemList = new TIntObjectHashMap<>();
+	@XmlTransient
+	private IntObjectHashMap<List<ArcadeTabItem>> arcadeItemList = new IntObjectHashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		arcadeItemList.clear();

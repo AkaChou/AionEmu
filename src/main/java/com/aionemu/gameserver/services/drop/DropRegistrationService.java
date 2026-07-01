@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services.drop;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -23,8 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.utils.Rnd;
@@ -66,17 +69,16 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.DropRewardEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+@Slf4j
 public class DropRegistrationService {
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
 
-	private Map<Integer, Set<DropItem>> currentDropMap = new FastMap<Integer, Set<DropItem>>().shared();
-	private Map<Integer, DropNpc> dropRegistrationMap = new FastMap<Integer, DropNpc>().shared();
-	private FastList<Integer> noReductionMaps;
-
-	Logger log = LoggerFactory.getLogger(DropRegistrationService.class);
+	private Map<Integer, Set<DropItem>> currentDropMap = new LinkedHashMap<Integer, Set<DropItem>>();
+	private Map<Integer, DropNpc> dropRegistrationMap = new LinkedHashMap<Integer, DropNpc>();
+	private List<Integer> noReductionMaps;
 
 	public void registerDrop(Npc npc, Player player, Collection<Player> groupMembers) {
 		registerDrop(npc, player, player.getLevel(), groupMembers);
@@ -84,7 +86,7 @@ public class DropRegistrationService {
 
 	public DropRegistrationService() {
 		init();
-		noReductionMaps = new FastList<Integer>();
+		noReductionMaps = new ArrayList<Integer>();
 		for (String zone : DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES.split(",")) {
 			noReductionMaps.add(Integer.parseInt(zone));
 		}
@@ -187,7 +189,7 @@ public class DropRegistrationService {
 		currentDropMap.put(npcObjId, droppedItems);
 		index = QuestService.getQuestDrop(droppedItems, index, npc, groupMembers, genesis);
 		if (EventsConfig.ENABLE_EVENT_SERVICE) {
-			List<EventTemplate> activeEvents = EventService.getInstance().getActiveEvents();
+			List<EventTemplate> activeEvents = GameEventServices.eventService().getActiveEvents();
 			for (EventTemplate eventTemplate : activeEvents) {
 				if (eventTemplate.EventDrop() == null) {
 					continue;
@@ -398,7 +400,7 @@ public class DropRegistrationService {
 			} else {
 				DropItem[] dropItems = drops.toArray(new DropItem[0]);
 				for (int i = 0; i < dropItems.length; i++) {
-					DropService.getInstance().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
+					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_PET(false, npcObjId));
@@ -414,7 +416,7 @@ public class DropRegistrationService {
 			} else {
 				DropItem[] dropItems = drops.toArray(new DropItem[drops.size()]);
 				for (int i = 0; i < dropItems.length; i++) {
-					DropService.getInstance().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
+					GameCoreGameplayServices.dropService().requestDropItem(player, npcObjId, dropItems[i].getIndex(), true);
 				}
 			}
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(8, 1, npcObjId, true));
@@ -422,7 +424,7 @@ public class DropRegistrationService {
 				return;
 			}
 		}
-		DropService.getInstance().scheduleFreeForAll(npcObjId);
+		GameCoreGameplayServices.dropService().scheduleFreeForAll(npcObjId);
 	}
 
 	public void setItemsToWinner(Set<DropItem> droppedItems, Integer obj) {

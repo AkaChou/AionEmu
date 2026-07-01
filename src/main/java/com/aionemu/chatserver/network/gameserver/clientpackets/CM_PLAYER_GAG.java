@@ -20,8 +20,7 @@ package com.aionemu.chatserver.network.gameserver.clientpackets;
 
 import java.nio.ByteBuffer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.chatserver.network.gameserver.GsClientPacket;
 import com.aionemu.chatserver.network.gameserver.GsConnection;
@@ -31,9 +30,9 @@ import com.aionemu.chatserver.service.ChatCoreServices;
  * @author ViAl
  *
  */
+@Slf4j(topic = "com.aionemu.chatserver.network.gameserver.clientpackets.CM_PLAYER_LOGOUT")
 public class CM_PLAYER_GAG extends GsClientPacket {
 
-    private static final Logger log = LoggerFactory.getLogger(CM_PLAYER_LOGOUT.class);
     private int playerId;
     private long gagTime;
 

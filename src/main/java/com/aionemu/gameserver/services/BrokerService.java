@@ -16,6 +16,13 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,9 +30,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -56,23 +61,23 @@ import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author kosyachok
  * @author ATracer
  * @author Antraxx
  */
+@Slf4j(topic = "EXCHANGE_LOG")
 public class BrokerService {
 
-	private Map<Integer, BrokerItem> elyosBrokerItems = new FastMap<Integer, BrokerItem>().shared();
-	private Map<Integer, BrokerItem> elyosSettledItems = new FastMap<Integer, BrokerItem>().shared();
-	private Map<Integer, BrokerItem> asmodianBrokerItems = new FastMap<Integer, BrokerItem>().shared();
-	private Map<Integer, BrokerItem> asmodianSettledItems = new FastMap<Integer, BrokerItem>().shared();
-	private static final Logger log = LoggerFactory.getLogger("EXCHANGE_LOG");
+	private Map<Integer, BrokerItem> elyosBrokerItems = new LinkedHashMap<Integer, BrokerItem>();
+	private Map<Integer, BrokerItem> elyosSettledItems = new LinkedHashMap<Integer, BrokerItem>();
+	private Map<Integer, BrokerItem> asmodianBrokerItems = new LinkedHashMap<Integer, BrokerItem>();
+	private Map<Integer, BrokerItem> asmodianSettledItems = new LinkedHashMap<Integer, BrokerItem>();
 	private final int DELAY_BROKER_SAVE = (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000) >= 6000
 			? (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000)
 			: 6000;
@@ -80,7 +85,7 @@ public class BrokerService {
 			? (BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL * 1000)
 			: 60000;
 	private BrokerPeriodicTaskManager saveManager;
-	private Map<Integer, BrokerPlayerCache> playerBrokerCache = new FastMap<Integer, BrokerPlayerCache>().shared();
+	private Map<Integer, BrokerPlayerCache> playerBrokerCache = new LinkedHashMap<Integer, BrokerPlayerCache>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
 
 	public static final BrokerService getInstance() {
@@ -98,7 +103,7 @@ public class BrokerService {
 	public BrokerService() {
 		initBrokerService();
 		saveManager = new BrokerPeriodicTaskManager(DELAY_BROKER_SAVE);
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				checkExpiredItems();
@@ -375,7 +380,9 @@ public class BrokerService {
 				} else {
 					int buyingItemIndex = ArrayUtils.indexOf(getFilteredItems(player), buyingItem);
 					newCache = (BrokerItem[]) ArrayUtils.removeElement(getFilteredItems(player), buyingItem);
-					newCache = (BrokerItem[]) ArrayUtils.add(newCache, buyingItemIndex, buyingItem);
+					List<BrokerItem> updatedCache = new ArrayList<BrokerItem>(Arrays.asList(newCache));
+					updatedCache.add(buyingItemIndex, buyingItem);
+					newCache = updatedCache.toArray(new BrokerItem[updatedCache.size()]);
 				}
 				getPlayerCache(player).setBrokerListCache(newCache);
 			}
@@ -421,7 +428,7 @@ public class BrokerService {
 			elyosBrokerItems.put(brokerItem.getItemUniqueId(), brokerItem);
 			elyosSettledItems.put(newBrokerItem.getItemUniqueId(), newBrokerItem);
 		}
-		Player seller = World.getInstance().findPlayer(brokerItem.getSellerId());
+		Player seller = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(brokerItem.getSellerId());
 		if (seller != null) {
 			PacketSendUtility.sendPacket(seller, new SM_BROKER_SERVICE(true, getTotalSettledKinah(seller)));
 			PacketSendUtility.sendPacket(seller, SM_SYSTEM_MESSAGE.STR_VENDOR_REGISTER_SOLD_OUT(itemNameId));
@@ -491,7 +498,7 @@ public class BrokerService {
 			elyosSettledItems.put(brokerItem.getItemUniqueId(), brokerItem);
 		}
 
-		Player seller = World.getInstance().findPlayer(brokerItem.getSellerId());
+		Player seller = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(brokerItem.getSellerId());
 
 		saveManager.add(new BrokerOpSaveTask(brokerItem));
 
@@ -553,7 +560,7 @@ public class BrokerService {
 			return;
 		}
 
-		if (!AdminService.getInstance().canOperate(player, null, itemToRegister, "broker")) {
+		if (!GameRuntimeServices.adminService().canOperate(player, null, itemToRegister, "broker")) {
 			return;
 		}
 
@@ -918,7 +925,7 @@ public class BrokerService {
 	}
 
 	private void expireItem(Race race, BrokerItem item) {
-		if (SystemMailService.getInstance().sendSystemMail("$$VENDOR_RETURN_MAIL", "", "", item.getSeller(),
+		if (GameFeatureServices.systemMailService().sendSystemMail("$$VENDOR_RETURN_MAIL", "", "", item.getSeller(),
 				item.getItem(), 0, 0, LetterType.NORMAL)) {
 			item.setPersistentState(PersistentState.DELETED);
 			saveManager.add(new BrokerOpSaveTask(item));

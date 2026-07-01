@@ -18,11 +18,8 @@
 
 package com.aionemu.chatserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.UnsupportedEncodingException;
-
-import org.slf4j.LoggerFactory;
-
-import org.slf4j.Logger;
 
 import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.configs.Config;
@@ -36,9 +33,9 @@ import com.aionemu.chatserver.service.ChatService;
 /**
  * @author ATracer
  */
+@Slf4j
 public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
 
-    private static final Logger log = LoggerFactory.getLogger(CM_CHANNEL_REQUEST.class);
     private int channelIndex;
     private byte[] channelIdentifier;
     private ChatService chatService;

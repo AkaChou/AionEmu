@@ -16,15 +16,18 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.DredgionSchedule;
 import com.aionemu.gameserver.configs.schedule.DredgionSchedule.Dredgion;
@@ -44,29 +47,29 @@ import com.aionemu.gameserver.services.zorshivdredgionservice.Zorshiv;
 import com.aionemu.gameserver.services.zorshivdredgionservice.ZorshivDredgion;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class ZorshivDredgionService {
 	private static volatile ObjectProvider<ZorshivDredgionService> instanceProvider;
 	private DredgionSchedule dredgionSchedule;
 	private Map<Integer, ZorshivDredgionLocation> zorshivDredgion;
 	private static final int duration = CustomConfig.ZORSHIV_DREDGION_DURATION;
-	private final Map<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new FastMap<Integer, ZorshivDredgion<?>>()
-			.shared();
-	private static final Logger log = LoggerFactory.getLogger(ZorshivDredgionService.class);
+	private final Map<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new LinkedHashMap<Integer, ZorshivDredgion<?>>()
+			;
 
 	// Inggison Invasion
-	private FastMap<Integer, VisibleObject> adventPortal = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventEffect = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventControl = new FastMap<Integer, VisibleObject>();
-	private FastMap<Integer, VisibleObject> adventDirecting = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
+	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
+	private Map<Integer, VisibleObject> adventControl = new HashMap<>();
+	private Map<Integer, VisibleObject> adventDirecting = new HashMap<>();
 
 	public void initZorshivDredgionLocations() {
 		if (CustomConfig.ZORSHIV_DREDGION_ENABLED) {
@@ -87,7 +90,7 @@ public class ZorshivDredgionService {
 			dredgionSchedule = DredgionSchedule.load();
 			for (Dredgion dredgion : dredgionSchedule.getDredgionsList()) {
 				for (String zorshivTime : dredgion.getZorshivTimes()) {
-					CronService.getInstance().schedule(new DredgionStartRunnable(dredgion.getId()), zorshivTime);
+					GameCronServices.cronService().schedule(new DredgionStartRunnable(dredgion.getId()), zorshivTime);
 				}
 			}
 		}
@@ -103,7 +106,7 @@ public class ZorshivDredgionService {
 			activeZorshivDredgion.put(id, zorshiv);
 		}
 		zorshiv.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopZorshivDredgion(id);
@@ -146,7 +149,7 @@ public class ZorshivDredgionService {
 		switch (id) {
 		case 1:
 		case 2:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE050",
@@ -171,7 +174,7 @@ public class ZorshivDredgionService {
 	public boolean inggisonMsg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE050",
@@ -245,7 +248,7 @@ public class ZorshivDredgionService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

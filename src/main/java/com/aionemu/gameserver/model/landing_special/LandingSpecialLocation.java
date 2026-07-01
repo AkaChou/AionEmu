@@ -17,14 +17,14 @@
 package com.aionemu.gameserver.model.landing_special;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.landing_special.LandingSpecialTemplate;
 import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice.SpecialLanding;
-
-import javolution.util.FastMap;
 
 public class LandingSpecialLocation {
 	protected int id;
@@ -32,7 +32,7 @@ public class LandingSpecialLocation {
 	protected LandingSpecialStateType type;
 	protected LandingSpecialTemplate template;
 	protected SpecialLanding<LandingSpecialLocation> activeLandingSpecial;
-	protected FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> players = new HashMap<>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 
 	public LandingSpecialLocation() {
@@ -68,7 +68,7 @@ public class LandingSpecialLocation {
 		return spawned;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 

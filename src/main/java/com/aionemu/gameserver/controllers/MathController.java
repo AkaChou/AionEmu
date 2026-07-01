@@ -1,10 +1,13 @@
 /*
  * Decompiled with CFR 0.150.
  * 
- * Could not load the following classes:
- *  javolution.util.FastMap
+ * Could not load legacy collection classes.
  */
 package com.aionemu.gameserver.controllers;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.controllers.observer.MathObjectObserver;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -13,13 +16,13 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.math.MathObject;
 import com.aionemu.gameserver.model.gameobjects.math.MathObjectReaction;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MathController extends VisibleObjectController<MathObject> {
-	FastMap<Creature, MathObjectObserver> observers = new FastMap<Creature, MathObjectObserver>().shared();
+	Map<Creature, MathObjectObserver> observers = new LinkedHashMap<Creature, MathObjectObserver>();
 
 	@Override
 	public void see(VisibleObject object) {
@@ -64,13 +67,13 @@ public class MathController extends VisibleObjectController<MathObject> {
 	 * (Npc)SpawnEngine.spawnObject(template, instanceId); if (randomWalk > 0) { if
 	 * (master.getObjectTemplate().getStatsTemplate().getWalkSpeed() == 0.0f) { //
 	 * empty if block } WalkManager.startWalking((NpcAI2)master.getAi2()); } if (ai
-	 * != null) { AI2Engine.getInstance().setupAI(ai, (Creature)master);
+	 * != null) { GameEngineServices.ai2Engine().setupAI(ai, (Creature)master);
 	 * ((NpcAI2)master.getAi2()).setStateIfNot(AIState.IDLE); }
 	 * ((MathObject)this.getOwner()).setMaster(master); return
 	 * ((MathObject)this.getOwner()).getMaster(); }
 	 */
 	public void onDelete(int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

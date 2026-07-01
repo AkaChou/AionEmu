@@ -49,7 +49,7 @@ public class CM_BAN_RESPONSE extends LsClientPacket {
 
 	@Override
 	public void runImpl() {
-		Player admin = World.getInstance().findPlayer(adminObjId);
+		Player admin = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(adminObjId);
 
 		if (admin == null) {
 			return;

@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 
@@ -37,14 +41,13 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,11 +92,11 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	private boolean isInstanceDestroyed;
 	private Map<Integer, StaticDoor> doors;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> bastionTask = FastList.newInstance();
+	private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -102,71 +105,71 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			case 835486: //Ornate Bastion Of Souls Treasure Chest.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058413, 1)); //? ?  ??.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 152012766, 4)); //material_idere_evolution_01.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058413, 1)); //? ?  ??.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 152012766, 4)); //material_idere_evolution_01.
 				        switch (Rnd.get(1, 4)) {
 					        case 1:
-						        dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058361, 1)); //Harvester's Armor Box.
+						        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058361, 1)); //Harvester's Armor Box.
 					        break;
 					        case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058362, 1)); //Harvester's Weapon Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058362, 1)); //Harvester's Weapon Box.
 					        break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058363, 1)); //Harvester's Accessory Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058363, 1)); //Harvester's Accessory Box.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188058364, 1)); //Harvester's Hat Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188058364, 1)); //Harvester's Hat Box.
 							break;
 						} switch (Rnd.get(1, 7)) {
 							case 1:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055498, 1)); //Tike Manastone Bundle: +8.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055498, 1)); //Tike Manastone Bundle: +8.
 							break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188057819, 1)); //Legendary Illusion Godstone Bundle.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188057819, 1)); //Legendary Illusion Godstone Bundle.
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190080005, 5)); //Lesser Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080005, 5)); //Lesser Minion Contract.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190080006, 5)); //Greater Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080006, 5)); //Greater Minion Contract.
 							break;
 							case 5:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190080007, 5)); //Major Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080007, 5)); //Major Minion Contract.
 							break;
 							case 6:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190080008, 5)); //Cute Minion Contract.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190080008, 5)); //Cute Minion Contract.
 							break;
 							case 7:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 190200000, 150)); //Minium.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 190200000, 150)); //Minium.
 							break;
 						}
 					}
 				}
 			break;
 			case 246727: //Sahidtan.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000308, 1)); //Meditation Chamber Key.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000308, 1)); //Meditation Chamber Key.
 			break;
 			case 246730: //Manusha.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000309, 1)); //Lift To Enlightenment Key.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000309, 1)); //Lift To Enlightenment Key.
 			break;
 			case 246731: //Kramush.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000310, 1)); //Enlightenment Key.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000310, 1)); //Enlightenment Key.
 			break;
 			case 246798: //Kargata.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000311, 5)); //Black Oil.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000311, 5)); //Black Oil.
 			break;
 			case 246881: //Harvesters Drakan Butcher Captain.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164002394, 5)); //Jail Key.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164002394, 5)); //Jail Key.
 			break;
 			case 246885: //Harvesters Drakan Slaughterer.
 			case 247181: //Harvesters Drakan Slaughterer.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000302, 1)); //Purification Chamber Key - 4.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000302, 1)); //Purification Chamber Key - 4.
 			break;
 			case 246895: //Harvesters Drakan Slaughterer.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000303, 1)); //Purification Chamber Key - 3.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000303, 1)); //Purification Chamber Key - 3.
 			break;
 			case 246905: //Harvesters Drakan Slaughterer.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000304, 1)); //Purification Chamber Key - 2.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000304, 1)); //Purification Chamber Key - 2.
 			break;
         }
     }
@@ -319,7 +322,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 	
 	private void bastionToStartRoom(Player player) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -332,7 +335,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
 			}
 		}, 3000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startRescueDaevaTimer();
@@ -439,7 +442,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				sendMsgByRace(1404218, Race.ELYOS, 30000);
 				//The Harvesters are attacking Captain Batiskan. Restore Batiskan's HP to get rid of the Incarna roots.
 				sendMsgByRace(1404219, Race.ASMODIANS, 30000);
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(246519, 233.40959f, 745.22186f, 421.30054f, (byte) 81);
@@ -576,10 +579,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 			    despawnNpc(npc);
 				switch (Rnd.get(1, 2)) {
 					case 1:
-					    SkillEngine.getInstance().getSkill(npc, 17649, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost.
+					    GameEngineServices.skillEngine().getSkill(npc, 17649, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost.
 					break;
 					case 2:
-					    SkillEngine.getInstance().getSkill(npc, 17672, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost_2.
+					    GameEngineServices.skillEngine().getSkill(npc, 17672, 1, player).useNoAnimationSkill(); //IDAb1_Ere_Hero_HealBoost_2.
 					break;
 				}
 			break;
@@ -812,7 +815,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA2();
@@ -831,7 +834,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 60000)); //...1Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA3();
@@ -851,7 +854,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 120000)); //...2Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA4();
@@ -871,7 +874,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 180000)); //...3Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA5();
@@ -891,7 +894,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 240000)); //...4Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA6();
@@ -911,7 +914,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 300000)); //...5Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA7();
@@ -931,7 +934,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 360000)); //...6Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA8();
@@ -951,7 +954,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 420000)); //...7Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA9();
@@ -971,7 +974,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 480000)); //...8Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA10();
@@ -991,7 +994,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 540000)); //...9Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA11();
@@ -1011,7 +1014,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 600000)); //...10Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startBastionA12();
@@ -1031,7 +1034,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				});
             }
         }, 660000)); //...11Min
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The additional mission "Attack of the Harvesters" is complete.
@@ -1053,7 +1056,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 	
 	private void rushBastion(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -1070,7 +1073,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA2() {
-		bastionTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1079,7 +1082,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1091,7 +1094,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA3() {
-		bastionTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1100,7 +1103,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1112,7 +1115,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA4() {
-		bastionTaskA4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1121,7 +1124,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1133,7 +1136,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA5() {
-		bastionTaskA5 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1142,7 +1145,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA5 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1154,7 +1157,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA6() {
-		bastionTaskA6 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1163,7 +1166,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA6 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1175,7 +1178,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA7() {
-		bastionTaskA7 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1184,7 +1187,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA7 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1196,7 +1199,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA8() {
-		bastionTaskA8 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1205,7 +1208,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA8 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1217,7 +1220,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA9() {
-		bastionTaskA9 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA9 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1226,7 +1229,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA9 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA9 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1238,7 +1241,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA10() {
-		bastionTaskA10 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA10 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1247,7 +1250,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA10 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA10 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1259,7 +1262,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA11() {
-		bastionTaskA11 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA11 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1268,7 +1271,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA11 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA11 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1280,7 +1283,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void startBastionA12() {
-		bastionTaskA12 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA12 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1289,7 +1292,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 				rushBastion((Npc)spawn(246525, 244.47363f, 733.99384f, 421.38748f, (byte) 33));
 			}
 		}, 1000);
-		bastionTaskA12 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTaskA12 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				rushBastion((Npc)spawn(246523, 260.62317f, 753.64874f, 421.74033f, (byte) 67));
@@ -1316,10 +1319,10 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = bastionTask.head(), end = bastionTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : bastionTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -1332,7 +1335,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1346,7 +1349,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -1371,7 +1374,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -1380,7 +1383,7 @@ public class BastionOfSoulsInstance extends GeneralInstanceHandler
     }
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

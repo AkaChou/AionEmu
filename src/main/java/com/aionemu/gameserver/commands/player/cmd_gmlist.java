@@ -38,7 +38,7 @@ public class cmd_gmlist extends PlayerCommand {
     @Override
     public void execute(Player player, String... params) {
         final List<Player> admins = new ArrayList<Player>();
-        World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+        com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
             @Override
             public void visit(Player object) {
                 if (object.getAccessLevel() > 0 && object.getFriendList().getStatus() != FriendList.Status.OFFLINE) {

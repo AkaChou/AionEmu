@@ -2,17 +2,14 @@
  * Decompiled with CFR 0.150.
  * 
  * Could not load the following classes:
- *  javolution.context.ObjectFactory
- *  javolution.lang.Reusable
+ *  object factory
+ *  reusable object
  */
 package com.aionemu.gameserver.geoEngine.math;
 
 import java.util.logging.Logger;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
-
-import javolution.context.ObjectFactory;
-import javolution.lang.Reusable;
 
 public final class Vector3f implements Cloneable, Reusable {
 	private static final Logger logger = Logger.getLogger(Vector3f.class.getName());

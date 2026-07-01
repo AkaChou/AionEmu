@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.crucibleChallenge;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -52,19 +54,19 @@ public class CrucibleRiftAI2 extends ActionItemNpcAI2
 	protected void handleSpawned() {
 		switch (getNpcId()) {
 			case 730459: //Crucible Rift.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						announceCrucibleRift1();
 					}
 				}, 2000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						announceCrucibleRift2();
 					}
 				}, 6000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						announceCrucibleRift3();

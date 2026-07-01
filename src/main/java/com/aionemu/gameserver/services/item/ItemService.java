@@ -16,11 +16,13 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.util.Collection;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.Rnd;
@@ -56,9 +58,9 @@ import com.google.common.collect.Collections2;
 /**
  * @author KID
  */
+@Slf4j(topic = "ITEM_LOG")
 public class ItemService {
 
-	private static final Logger log = LoggerFactory.getLogger("ITEM_LOG");
 
 	public static final ItemUpdatePredicate DEFAULT_UPDATE_PREDICATE = new ItemUpdatePredicate(ItemAddType.ITEM_COLLECT,
 			ItemUpdateType.INC_ITEM_COLLECT);
@@ -155,7 +157,7 @@ public class ItemService {
 		while (!inventory.isFull(itemTemplate.getExtraInventoryId()) && count > 0) {
 			Item newItem = ItemFactory.newItem(itemTemplate.getTemplateId());
 			if (newItem.getExpireTime() != 0) {
-				ExpireTimerTask.getInstance().addTask(newItem, player);
+				GameTaskManagerServices.expireTimerTask().addTask(newItem, player);
 			}
 			if (sourceItem != null) {
 				copyItemInfo(sourceItem, newItem);
@@ -309,16 +311,16 @@ public class ItemService {
 	}
 
 	public static void releaseItemId(Item item) {
-		IDFactory.getInstance().releaseId(item.getObjectId());
+		GameWorldBootstrapServices.idFactory().releaseId(item.getObjectId());
 	}
 
 	public static void releaseItemIds(Collection<Item> items) {
 		Collection<Integer> idIterator = Collections2.transform(items, AionObject.OBJECT_TO_ID_TRANSFORMER);
-		IDFactory.getInstance().releaseIds(idIterator);
+		GameWorldBootstrapServices.idFactory().releaseIds(idIterator);
 	}
 
 	public static boolean dropItemToInventory(int playerObjectId, int itemId) {
-		return dropItemToInventory(World.getInstance().findPlayer(playerObjectId), itemId);
+		return dropItemToInventory(com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerObjectId), itemId);
 	}
 
 	public static boolean dropItemToInventory(Player player, int itemId) {
@@ -369,7 +371,7 @@ public class ItemService {
 
 		// TODO if Item object will contain ownerId - item can be saved to DB before
 		// return
-		Item temp = new Item(IDFactory.getInstance().nextId(), itemTemplate, count, false, 0);
+		Item temp = new Item(GameWorldBootstrapServices.idFactory().nextId(), itemTemplate, count, false, 0);
 
 		if (itemTemplate.isWeapon() || itemTemplate.isArmor()) {
 			temp.setOptionalSocket(Rnd.get(0, itemTemplate.getOptionSlotBonus()));

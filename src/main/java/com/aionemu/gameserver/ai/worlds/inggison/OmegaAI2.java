@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.worlds.inggison;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -69,13 +75,13 @@ public class OmegaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
 					cancelPhaseTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 18671, 60, getOwner()).useNoAnimationSkill(); //Magic Ward.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18671, 60, getOwner()).useNoAnimationSkill(); //Magic Ward.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -103,34 +109,34 @@ public class OmegaAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
 						switch (Rnd.get(1, 5)) {
 						    case 1:
 							    //Omega summons a creature.
-								NpcShoutsService.getInstance().sendMsg(getOwner(), 1400606, 0);
+								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400606, 0);
 								spawn(281945, x, y, z, (byte) 0); //Clone Of Power.
 							break;
 							case 2:
 							    //Omega summons a powerful creature.
-								NpcShoutsService.getInstance().sendMsg(getOwner(), 1400607, 0);
+								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400607, 0);
 							    spawn(281946, x, y, z, (byte) 0); //Clone Of Explosion.
 							break;
 							case 3:
 							    //Omega summons a healing creature.
-								NpcShoutsService.getInstance().sendMsg(getOwner(), 1400608, 0);
+								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400608, 0);
 							    spawn(281947, x, y, z, (byte) 0); //Clone Of Healing.
 							break;
 							case 4:
 							    //Omega summons a creature that creates barriers.
-								NpcShoutsService.getInstance().sendMsg(getOwner(), 1400609, 0);
+								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
 							    spawn(281948, x, y, z, (byte) 0); //Clone Of Physical Barrier.
 							break;
 							case 5:
 							    //Omega summons a creature that creates barriers.
-								NpcShoutsService.getInstance().sendMsg(getOwner(), 1400609, 0);
+								GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1400609, 0);
 							    spawn(281949, x, y, z, (byte) 0); //Clone Of Magical Barrier.
 							break;
 						}

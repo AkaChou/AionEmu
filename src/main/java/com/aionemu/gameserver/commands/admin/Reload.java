@@ -16,6 +16,13 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.*;
@@ -31,13 +38,11 @@ import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
@@ -51,9 +56,9 @@ import static org.apache.commons.io.filefilter.FileFilterUtils.*;
 /**
  * @author MrPoke
  */
+@Slf4j
 public class Reload extends AdminCommand {
 
-	private static final Logger log = LoggerFactory.getLogger(Reload.class);
 
 	public Reload() {
 		super("reload");
@@ -69,7 +74,7 @@ public class Reload extends AdminCommand {
 			File xml = new File("./data/static_data/quest_data/quest_data.xml");
 			File dir = new File("./data/static_data/quest_script_data");
 			try {
-				QuestEngine.getInstance().shutdown();
+				GameEngineServices.questEngine().shutdown();
 				JAXBContext jc = JAXBContext.newInstance(StaticData.class);
 				Unmarshaller un = jc.createUnmarshaller();
 				un.setSchema(getSchema("./data/static_data/static_data.xsd"));
@@ -84,7 +89,7 @@ public class Reload extends AdminCommand {
 						if (data.getQuest() != null)
 							questScriptsData.getQuest().addAll(data.getQuest());
 				}
-				QuestEngine.getInstance().load(null);
+				GameEngineServices.questEngine().load(null);
 			}
 			catch (Exception e) {
 				PacketSendUtility.sendMessage(admin, "Quest reload failed!");
@@ -134,7 +139,7 @@ public class Reload extends AdminCommand {
 			}
 		}
 		else if (params[0].equals("commands")) {
-			ChatProcessor.getInstance().reload();
+			GameEngineServices.chatProcessor().reload();
 			PacketSendUtility.sendMessage(admin, "Admin commands successfully reloaded!");
 		}
 		else if (params[0].equals("config")) {
@@ -152,7 +157,7 @@ public class Reload extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "NpcDrops successfully reloaded!");
 		}
 		else if (params[0].equals("gameshop")) {
-			InGameShopEn.getInstance().reload();
+			GameRuntimeServices.inGameShopEn().reload();
 			PacketSendUtility.sendMessage(admin, "Gameshop successfully reloaded!");
 		}
 		else if (params[0].equals("events")) {
@@ -171,13 +176,13 @@ public class Reload extends AdminCommand {
 				return;
 			}
 			if (data != null) {
-				EventService.getInstance().stop();
+				GameEventServices.eventService().stop();
 				String text = data.getActiveText();
 				if (text == null || text.trim().length() == 0)
 					text = "NONE";
 				DataManager.EVENT_DATA.setAllEvents(data.getAllEvents(), data.getActiveText());
 				PacketSendUtility.sendMessage(admin, "Active events: " + text);
-				EventService.getInstance().start();
+				GameEventServices.eventService().start();
 			}
 		}
 		else

@@ -18,22 +18,21 @@ package com.aionemu.gameserver.model.assemblednpc;
 
 import com.aionemu.gameserver.model.templates.assemblednpc.AssembledNpcTemplate.AssembledNpcPartTemplate;
 
+import lombok.Getter;
+
 /**
  *
  * @author xTz
  */
 public class AssembledNpcPart {
 
+	@Getter
 	private Integer object;
 	private AssembledNpcPartTemplate template;
 
 	public AssembledNpcPart(Integer object, AssembledNpcPartTemplate template) {
 		this.object = object;
 		this.template = template;
-	}
-
-	public Integer getObject() {
-		return object;
 	}
 
 	public AssembledNpcPartTemplate getAssembledNpcPartTemplate() {

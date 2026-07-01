@@ -3,6 +3,7 @@ package com.aionemu.commons.versionning;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
@@ -84,8 +85,8 @@ public final class Locator {
         URL url = null;
 
         try {
-            url = new URL(uri);
-        } catch (MalformedURLException var6) {
+            url = URI.create(uri).toURL();
+        } catch (IllegalArgumentException | MalformedURLException var6) {
         }
 
         if (url != null && "file".equals(url.getProtocol())) {

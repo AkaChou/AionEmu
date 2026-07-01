@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.enshar;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
@@ -94,7 +96,7 @@ public class _20500Enshar_Expedition extends QuestHandler {
                 } else {
                     int[] ensharMission = {20501, 20502, 20503, 20504, 20505, 20506, 20507};
                     for (int quest: ensharMission) {
-                        QuestEngine.getInstance().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), quest, env.getDialogId()));
+                        GameEngineServices.questEngine().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), quest, env.getDialogId()));
                     }
                     return sendQuestEndDialog(env);
                 }

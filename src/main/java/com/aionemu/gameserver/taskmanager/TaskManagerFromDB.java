@@ -16,12 +16,12 @@
  */
 package com.aionemu.gameserver.taskmanager;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -30,15 +30,15 @@ import com.aionemu.gameserver.model.tasks.TaskFromDB;
 import com.aionemu.gameserver.model.templates.tasks.TaskFromDBHandler;
 import com.aionemu.gameserver.taskmanager.tasks.RestartTask;
 import com.aionemu.gameserver.taskmanager.tasks.ShutdownTask;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Divinity Based on L2J Emulator Global Tasks System
  * @author From L2J : Layane
  */
+@Slf4j
 public class TaskManagerFromDB {
 
-	private static final Logger log = LoggerFactory.getLogger(TaskManagerFromDB.class);
 	private static volatile ObjectProvider<TaskManagerFromDB> instanceProvider;
 
 	private ArrayList<TaskFromDB> tasksList;
@@ -87,10 +87,8 @@ public class TaskManagerFromDB {
 
 				try {
 					// Create new instance of the task
-					currentTask = tmpClass.newInstance();
-				} catch (InstantiationException e) {
-					log.error(e.getMessage(), e);
-				} catch (IllegalAccessException e) {
+					currentTask = tmpClass.getDeclaredConstructor().newInstance();
+				} catch (ReflectiveOperationException e) {
 					log.error(e.getMessage(), e);
 				}
 
@@ -133,7 +131,7 @@ public class TaskManagerFromDB {
 		if (delay < 0) {
 			delay += 1 * 24 * 60 * 60 * 1000;
 		}
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(handler, delay, 1 * 24 * 60 * 60 * 1000);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(handler, delay, 1 * 24 * 60 * 60 * 1000);
 	}
 
 	/**

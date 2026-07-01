@@ -16,12 +16,12 @@
  */
 package com.aionemu.gameserver.model.templates.spawns;
 
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlType;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SpawnSpotTemplate")
@@ -118,7 +118,7 @@ public class SpawnSpotTemplate {
 
 	@XmlElement(name = "model")
 	private SpawnModel model;
-	private static final Integer ZERO = new Integer(0);
+	private static final Integer ZERO = Integer.valueOf(0);
 
 	public SpawnSpotTemplate() {
 	}

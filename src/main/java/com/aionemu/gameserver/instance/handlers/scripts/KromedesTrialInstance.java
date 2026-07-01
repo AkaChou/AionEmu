@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -31,13 +37,12 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PLAY_MOVIE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.HTMLService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
@@ -62,9 +67,9 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	@Override
 	public void onEnterInstance(Player player) {
 		final int transformation = skillRace == Race.ASMODIANS ? 19270 : 19220;
-		SkillEngine.getInstance().applyEffectDirectly(transformation, player, player, 3600000 * 1);
+		GameEngineServices.skillEngine().applyEffectDirectly(transformation, player, player, 3600000 * 1);
 		sendMovie(player, 453);
-		HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("instances/kromedeTrial.xhtml"));
+		HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("instances/kromedeTrial.xhtml"));
 	}
 	
 	@Override
@@ -82,258 +87,258 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
     }
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 216967: //Petrahulk Gatekeeper.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000098, 1)); //Temple Vault Door Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000098, 1)); //Temple Vault Door Key.
 			break;	
 			case 216968: //Divine Hisen.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000109, 1)); //Relic Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000109, 1)); //Relic Key.
 			break;
 			case 216980: //Warden Baal.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000099, 1)); //Dungeon Grate Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000099, 1)); //Dungeon Grate Key.
 			break;
 			case 216981: //Manor Guard Captain.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000100, 1)); //Dungeon Door Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000100, 1)); //Dungeon Door Key.
 			break;
 			case 216999: //Jesse.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000101, 1)); //Secret Safe Key.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000101, 1)); //Secret Safe Key.
 			break;
 			case 217005: //Shadow Judge Kaliga.
 			case 217006: //Kaliga The Unjust.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188052826, 1)); //Judge's Fabled Weapon Chest.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000102, 1)); //Kaliga's Key.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053787, 1)); //Stigma Support Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188052826, 1)); //Judge's Fabled Weapon Chest.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000102, 1)); //Kaliga's Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053787, 1)); //Stigma Support Bundle.
 				switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
 					break;
 					case 5:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					break;
 				}
 			break;
 			case 211861: //Ancient Treasure Box.
 				switch (Rnd.get(1, 13)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 110601097, 1)); //Corrupt Judge's Breastplate.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110601097, 1)); //Corrupt Judge's Breastplate.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 111601074, 1)); //Corrupt Judge's Gauntlets.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 111601074, 1)); //Corrupt Judge's Gauntlets.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 113601058, 1)); //Corrupt Judge's Greaves.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 113601058, 1)); //Corrupt Judge's Greaves.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125002432, 1)); //Corrupt Judge's Helm.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125002432, 1)); //Corrupt Judge's Helm.
 					break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 114601054, 1)); //Corrupt Judge's Sabatons.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 114601054, 1)); //Corrupt Judge's Sabatons.
 					break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 112601049, 1)); //Corrupt Judge's Shoulderplates.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 112601049, 1)); //Corrupt Judge's Shoulderplates.
 					break;
 					case 7:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001099, 1)); //Corrupt Judge's Belt.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001099, 1)); //Corrupt Judge's Belt.
 					break;
 					case 8:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001391, 1)); //Corrupt Judge's Topaz Earrings.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001391, 1)); //Corrupt Judge's Topaz Earrings.
 					break;
 					case 9:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001392, 1)); //Corrupt Judge's Aquamarine Earrings.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001392, 1)); //Corrupt Judge's Aquamarine Earrings.
 					break;
 					case 10:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001274, 1)); //Corrupt Judge's Topaz Necklace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001274, 1)); //Corrupt Judge's Topaz Necklace.
 					break;
 					case 11:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001275, 1)); //Corrupt Judge's Aquamarine Necklace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001275, 1)); //Corrupt Judge's Aquamarine Necklace.
 					break;
 					case 12:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001543, 1)); //Corrupt Judge's Topaz Ring.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001543, 1)); //Corrupt Judge's Topaz Ring.
 					break;
 					case 13:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001544, 1)); //Corrupt Judge's Aquamarine Ring.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001544, 1)); //Corrupt Judge's Aquamarine Ring.
 					break;
 				}
 			break;
 			case 212333: //Ancient Treasure Box.
 				switch (Rnd.get(1, 13)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125002429, 1)); //Corrupt Judge's Bandana.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125002429, 1)); //Corrupt Judge's Bandana.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 111101099, 1)); //Corrupt Judge's Gloves.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 111101099, 1)); //Corrupt Judge's Gloves.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 113101113, 1)); //Corrupt Judge's Leggings.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 113101113, 1)); //Corrupt Judge's Leggings.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 112101059, 1)); //Corrupt Judge's Pauldrons.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 112101059, 1)); //Corrupt Judge's Pauldrons.
 					break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 114101140, 1)); //Corrupt Judge's Shoes.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 114101140, 1)); //Corrupt Judge's Shoes.
 					break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 110101209, 1)); //Corrupt Judge's Tunic.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110101209, 1)); //Corrupt Judge's Tunic.
 					break;
 					case 7:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001099, 1)); //Corrupt Judge's Belt.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001099, 1)); //Corrupt Judge's Belt.
 					break;
 					case 8:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001391, 1)); //Corrupt Judge's Topaz Earrings.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001391, 1)); //Corrupt Judge's Topaz Earrings.
 					break;
 					case 9:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001392, 1)); //Corrupt Judge's Aquamarine Earrings.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001392, 1)); //Corrupt Judge's Aquamarine Earrings.
 					break;
 					case 10:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001274, 1)); //Corrupt Judge's Topaz Necklace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001274, 1)); //Corrupt Judge's Topaz Necklace.
 					break;
 					case 11:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001275, 1)); //Corrupt Judge's Aquamarine Necklace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001275, 1)); //Corrupt Judge's Aquamarine Necklace.
 					break;
 					case 12:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001543, 1)); //Corrupt Judge's Topaz Ring.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001543, 1)); //Corrupt Judge's Topaz Ring.
 					break;
 					case 13:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001544, 1)); //Corrupt Judge's Aquamarine Ring.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001544, 1)); //Corrupt Judge's Aquamarine Ring.
 					break;
 				}
 			break;
 			case 212335: //Ancient Treasure Box.
 				switch (Rnd.get(1, 20)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 114501100, 1)); //Corrupt Judge's Brogans.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 114501100, 1)); //Corrupt Judge's Brogans.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 114501598, 1)); //Corrupt Judge's Magic Brogans.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 114501598, 1)); //Corrupt Judge's Magic Brogans.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125002431, 1)); //Corrupt Judge's Chain Hood.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125002431, 1)); //Corrupt Judge's Chain Hood.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125003841, 1)); //Corrupt Judge's Magic Helm.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125003841, 1)); //Corrupt Judge's Magic Helm.
 					break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 113501093, 1)); //Corrupt Judge's Chausses.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 113501093, 1)); //Corrupt Judge's Chausses.
 					break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 113501589, 1)); //Corrupt Judge's Magic Chausses.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 113501589, 1)); //Corrupt Judge's Magic Chausses.
 					break;
 					case 7:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 111501084, 1)); //Corrupt Judge's Handguards.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 111501084, 1)); //Corrupt Judge's Handguards.
 					break;
 					case 8:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 111501571, 1)); //Corrupt Judge's Magic Handguards.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 111501571, 1)); //Corrupt Judge's Magic Handguards.
 					break;
 					case 9:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 110501115, 1)); //Corrupt Judge's Hauberk.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110501115, 1)); //Corrupt Judge's Hauberk.
 					break;
 					case 10:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 110551013, 1)); //Corrupt Judge's Magic Hauberk.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110551013, 1)); //Corrupt Judge's Magic Hauberk.
 					break;
 					case 11:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 112501035, 1)); //Corrupt Judge's Spaulders.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 112501035, 1)); //Corrupt Judge's Spaulders.
 					break;
 					case 12:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 112501513, 1)); //Corrupt Judge's Magic Spaulders.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 112501513, 1)); //Corrupt Judge's Magic Spaulders.
 					break;
 					case 13:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001099, 1)); //Corrupt Judge's Belt.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001099, 1)); //Corrupt Judge's Belt.
 					break;
 					case 14:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001334, 1)); //Corrupt Judge's Belt.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001334, 1)); //Corrupt Judge's Belt.
 					break;
 					case 15:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001391, 1)); //Corrupt Judge's Topaz Earrings.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001391, 1)); //Corrupt Judge's Topaz Earrings.
 					break;
 					case 16:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001392, 1)); //Corrupt Judge's Aquamarine Earrings.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001392, 1)); //Corrupt Judge's Aquamarine Earrings.
 					break;
 					case 17:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001274, 1)); //Corrupt Judge's Topaz Necklace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001274, 1)); //Corrupt Judge's Topaz Necklace.
 					break;
 					case 18:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001275, 1)); //Corrupt Judge's Aquamarine Necklace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001275, 1)); //Corrupt Judge's Aquamarine Necklace.
 					break;
 					case 19:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001543, 1)); //Corrupt Judge's Topaz Ring.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001543, 1)); //Corrupt Judge's Topaz Ring.
 					break;
 					case 20:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001544, 1)); //Corrupt Judge's Aquamarine Ring.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001544, 1)); //Corrupt Judge's Aquamarine Ring.
 					break;
 				}
 			break;
 			case 212338: //Ancient Treasure Box.
 				switch (Rnd.get(1, 20)) {
 				    case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 114301150, 1)); //Corrupt Judge's Boots.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 114301150, 1)); //Corrupt Judge's Boots.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 114301595, 1)); //Corrupt Judge's Magic Boots.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 114301595, 1)); //Corrupt Judge's Magic Boots.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 113301116, 1)); //Corrupt Judge's Breeches.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 113301116, 1)); //Corrupt Judge's Breeches.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 113301557, 1)); //Corrupt Judge's Magic Breeches.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 113301557, 1)); //Corrupt Judge's Magic Breeches.
 					break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125002430, 1)); //Corrupt Judge's Hat.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125002430, 1)); //Corrupt Judge's Hat.
 					break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 125003573, 1)); //Corrupt Judge's Hat.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 125003573, 1)); //Corrupt Judge's Hat.
 					break;
 					case 7:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 110301144, 1)); //Corrupt Judge's Jerkin.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110301144, 1)); //Corrupt Judge's Jerkin.
 					break;
 					case 8:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 110301591, 1)); //Corrupt Judge's Magic Jerkin.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 110301591, 1)); //Corrupt Judge's Magic Jerkin.
 					break;
 					case 9:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 112301045, 1)); //Corrupt Judge's Shoulderguards.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 112301045, 1)); //Corrupt Judge's Shoulderguards.
 					break;
 					case 10:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 112301470, 1)); //Corrupt Judge's Magic Shoulderguards.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 112301470, 1)); //Corrupt Judge's Magic Shoulderguards.
 					break;
 					case 11:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 111301098, 1)); //Corrupt Judge's Vambrace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 111301098, 1)); //Corrupt Judge's Vambrace.
 					break;
 					case 12:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 111301529, 1)); //Corrupt Judge's Magic Vambrace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 111301529, 1)); //Corrupt Judge's Magic Vambrace.
 					break;
 					case 13:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001099, 1)); //Corrupt Judge's Belt.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001099, 1)); //Corrupt Judge's Belt.
 					break;
 					case 14:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 123001098, 1)); //Corrupt Judge's Leather Belt.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 123001098, 1)); //Corrupt Judge's Leather Belt.
 					break;
 					case 15:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001391, 1)); //Corrupt Judge's Topaz Earrings.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001391, 1)); //Corrupt Judge's Topaz Earrings.
 					break;
 					case 16:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 120001392, 1)); //Corrupt Judge's Aquamarine Earrings.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 120001392, 1)); //Corrupt Judge's Aquamarine Earrings.
 					break;
 					case 17:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001274, 1)); //Corrupt Judge's Topaz Necklace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001274, 1)); //Corrupt Judge's Topaz Necklace.
 					break;
 					case 18:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 121001275, 1)); //Corrupt Judge's Aquamarine Necklace.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 121001275, 1)); //Corrupt Judge's Aquamarine Necklace.
 					break;
 					case 19:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001543, 1)); //Corrupt Judge's Topaz Ring.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001543, 1)); //Corrupt Judge's Topaz Ring.
 					break;
 					case 20:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 122001544, 1)); //Corrupt Judge's Aquamarine Ring.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 122001544, 1)); //Corrupt Judge's Aquamarine Ring.
 					break;
 				}
 			break;
@@ -344,10 +349,10 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	public void handleUseItemFinish(Player player, Npc npc) {
 		switch (npc.getNpcId()) {
 			case 282093: //Mana Relic.
-				SkillEngine.getInstance().getSkill(npc, 19248, 1, player).useNoAnimationSkill(); //Mana Relic Effect.
+				GameEngineServices.skillEngine().getSkill(npc, 19248, 1, player).useNoAnimationSkill(); //Mana Relic Effect.
 			break;
 			case 282095: //Strength Relic.
-			    SkillEngine.getInstance().getSkill(npc, 19247, 1, player).useNoAnimationSkill(); //Strength Relic Effect.
+			    GameEngineServices.skillEngine().getSkill(npc, 19247, 1, player).useNoAnimationSkill(); //Strength Relic Effect.
 			break;
 		}
 	}
@@ -528,7 +533,7 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

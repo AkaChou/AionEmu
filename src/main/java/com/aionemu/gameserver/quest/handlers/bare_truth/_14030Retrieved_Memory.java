@@ -12,6 +12,10 @@
  */
 package com.aionemu.gameserver.quest.handlers.bare_truth;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -31,7 +35,6 @@ import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 
 /****/
@@ -124,13 +127,13 @@ public class _14030Retrieved_Memory extends QuestHandler
                         } case STEP_TO_5: {
                             if (var == 4) {
                                 removeQuestItem(env, 182215387, 1);
-                                SkillEngine.getInstance().applyEffectDirectly(281, player, player, 0);
+                                GameEngineServices.skillEngine().applyEffectDirectly(281, player, player, 0);
                                 player.setState(CreatureState.FLIGHT_TELEPORT);
                                 player.unsetState(CreatureState.ACTIVE);
                                 player.setFlightTeleportId(1001);
                                 PacketSendUtility.sendPacket(player, new SM_EMOTION(player, EmotionType.START_FLYTELEPORT, 1001, 0));
                                 final QuestEnv qe = env;
-                                ThreadPoolManager.getInstance().schedule(new Runnable() {
+                                GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                                     @Override
                                     public void run() {
                                         changeQuestStep(qe, 4, 5, false);

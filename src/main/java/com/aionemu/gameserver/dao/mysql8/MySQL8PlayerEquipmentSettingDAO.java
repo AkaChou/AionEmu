@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerEquipmentSettingDAO;
@@ -13,10 +11,10 @@ import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.equipmentsetting.EquipmentSetting;
 import com.aionemu.gameserver.model.gameobjects.player.equipmentsetting.EquipmentSettingList;
+@Slf4j
 
 public class MySQL8PlayerEquipmentSettingDAO extends PlayerEquipmentSettingDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerEquipmentSettingDAO.class);
 
 	static final String INSERT_QUERY = "INSERT INTO `player_equipment_setting` (`player_id`, `slot`, `name`, `display`, `m_hand`, `s_hand`, `helmet`, `torso`, `glove`, `boots`, `earrings_left`, `earrings_right`, `ring_left`, `ring_right`, `necklace`, `shoulder`, `pants`, `powershard_left`, `powershard_right`, `wings`, `waist`, `m_off_hand`, `s_off_hand`, `plume`, `bracelet`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE `name` = IF(`name` = '', VALUES(`name`), `name`), `display` = VALUES(`display`), `m_hand` = VALUES(`m_hand`), `s_hand` = VALUES(`s_hand`), `helmet` = VALUES(`helmet`), `torso` = VALUES(`torso`), `glove` = VALUES(`glove`), `boots` = VALUES(`boots`), `earrings_left` = VALUES(`earrings_left`), `earrings_right` = VALUES(`earrings_right`), `ring_left` = VALUES(`ring_left`), `ring_right` = VALUES(`ring_right`), `necklace` = VALUES(`necklace`), `shoulder` = VALUES(`shoulder`), `pants` = VALUES(`pants`), `powershard_left` = VALUES(`powershard_left`), `powershard_right` = VALUES(`powershard_right`), `wings` = VALUES(`wings`), `waist` = VALUES(`waist`), `m_off_hand` = VALUES(`m_off_hand`), `s_off_hand` = VALUES(`s_off_hand`), `plume` = VALUES(`plume`), `bracelet` = VALUES(`bracelet`)";
 	private static final String SELECT_QUERY = "SELECT * FROM `player_equipment_setting` WHERE `player_id` = ?";

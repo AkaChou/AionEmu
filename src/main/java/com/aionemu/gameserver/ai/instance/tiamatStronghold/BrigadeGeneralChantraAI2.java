@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.tiamatStronghold;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -50,7 +52,7 @@ public class BrigadeGeneralChantraAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startSkillTask()	{
-		trapTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		trapTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run()	{
 				if (isAlreadyDead()) {
@@ -73,7 +75,7 @@ public class BrigadeGeneralChantraAI2 extends AggressiveNpcAI2
 		final int trap = trapNpc[Rnd.get(0, trapNpc.length -1)]; 
 		if (getPosition().getWorldMapInstance().getNpc(trap) == null) {
 			spawn(trap, 1031.1f, 466.38f, 445.45f, (byte) 0);
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 	  		    @Override
 	  		    public void run() {
 	  			    Npc ring = getPosition().getWorldMapInstance().getNpc(trap);

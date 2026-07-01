@@ -16,8 +16,10 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.gameobjects.Pet;
@@ -38,10 +40,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author M@xx, xTz
  */
+@Slf4j
 public class CM_PET extends AionClientPacket {
 
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(CM_PET.class);
 	private int actionId;
 	private PetAction action;
 	private int petId;
@@ -171,37 +172,37 @@ public class CM_PET extends AionClientPacket {
 			break;
 		case SPAWN:
 			if (player.getMinion() != null) {
-				MinionService.getInstance().despawnMinion(player, 0);
+				GameEventBootstrapServices.minionService().despawnMinion(player, 0);
 			}
-			PetService.getInstance().switchOffBuff(player);
+			GameFeatureServices.petService().switchOffBuff(player);
 			PetSpawnService.summonPet(player, petId, true);
 			break;
 		case DISMISS:
-			PetService.getInstance().switchOffBuff(player);
+			GameFeatureServices.petService().switchOffBuff(player);
 			PetSpawnService.dismissPet(player, true);
 			break;
 		case FOOD:
 			if (actionType == 2) {
 				// Pet doping
 				if (dopingAction == 2) {
-					PetService.getInstance().relocateDoping(player, dopingSlot1, dopingSlot2);
+					GameFeatureServices.petService().relocateDoping(player, dopingSlot1, dopingSlot2);
 				} else {
-					PetService.getInstance().useDoping(player, dopingAction, dopingItemId, dopingSlot1);
+					GameFeatureServices.petService().useDoping(player, dopingAction, dopingItemId, dopingSlot1);
 				}
 			} else if (actionType == 3) {
 				// Pet looting
-				PetService.getInstance().activateLoot(player, activateLoot != 0);
+				GameFeatureServices.petService().activateLoot(player, activateLoot != 0);
 			} else if (actionType == 4) {
 				if (activateAutoSell == 1) {
-					PetService.getInstance().activeAutoSell(player, true);
+					GameFeatureServices.petService().activeAutoSell(player, true);
 				} else if (activateAutoSell == 0) {
-					PetService.getInstance().activeAutoSell(player, false);
+					GameFeatureServices.petService().activeAutoSell(player, false);
 				}
 			} else if (actionType == 5) {
 				if (activateCheering == 1) {
-					PetService.getInstance().activateBuff(player, true);
+					GameFeatureServices.petService().activateBuff(player, true);
 				} else if (activateCheering == 0) {
-					PetService.getInstance().activateBuff(player, false);
+					GameFeatureServices.petService().activateBuff(player, false);
 				}
 			} else if (pet != null) {
 				if (objectId == 0) {
@@ -212,7 +213,7 @@ public class CM_PET extends AionClientPacket {
 				} else if (!pet.getCommonData().isFeedingTime()) {
 					PacketSendUtility.sendPacket(player, new SM_PET(8, actionId, objectId, count, player.getPet()));
 				} else {
-					PetService.getInstance().removeObject(objectId, count, actionId, player);
+					GameFeatureServices.petService().removeObject(objectId, count, actionId, player);
 				}
 			}
 			break;
@@ -220,7 +221,7 @@ public class CM_PET extends AionClientPacket {
 			if (NameRestrictionService.isForbiddenWord(petName)) {
 				PacketSendUtility.sendMessage(player, "You are trying to use a forbidden name. Choose another one!");
 			} else {
-				PetService.getInstance().renamePet(player, petName);
+				GameFeatureServices.petService().renamePet(player, petName);
 			}
 			break;
 		case MOOD:

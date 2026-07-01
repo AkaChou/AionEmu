@@ -88,6 +88,10 @@ public class Config {
 		bootOverrides = copy;
 	}
 
+	public static String bootOverride(String key) {
+		return bootOverrides.getProperty(key);
+	}
+
 	public static File configFile(String relativePath) {
 		return new File(configDir(), relativePath);
 	}

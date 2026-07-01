@@ -16,12 +16,13 @@
  */
 package com.aionemu.gameserver.ai.beritraInvasion;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AbyssLandingService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -54,7 +55,7 @@ public class BenoidAI2 extends AggressiveNpcAI2
 	}
 	
 	private void addGpPlayer() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -64,7 +65,7 @@ public class BenoidAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceBenoidDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Devil Unit's Benoid has been destroyed.
@@ -74,14 +75,14 @@ public class BenoidAI2 extends AggressiveNpcAI2
 	}
 	
 	private void updateBenoidLanding() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(getOwner().getAggroList().getMostHated(), getOwner(), 20)) {
 					if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ASMODIANS) {
-						AbyssLandingService.getInstance().onRewardMonuments(Race.ASMODIANS, 19, 0);
+						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ASMODIANS, 19, 0);
 					} else if (getOwner().getAggroList().getPlayerWinnerRace() == Race.ELYOS) {
-						AbyssLandingService.getInstance().onRewardMonuments(Race.ELYOS, 7, 0);
+						GameLocationBootstrapServices.abyssLandingService().onRewardMonuments(Race.ELYOS, 7, 0);
 					}
 				}
 			}

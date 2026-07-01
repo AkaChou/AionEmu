@@ -18,17 +18,18 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.idiandepths.IdianDepthsLocation;
 import com.aionemu.gameserver.model.templates.idiandepths.IdianDepthsTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class IdianDepthsData {
 	private List<IdianDepthsTemplate> idianDepthsTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, IdianDepthsLocation> idianDepths = new FastMap<Integer, IdianDepthsLocation>();
+	private Map<Integer, IdianDepthsLocation> idianDepths = new LinkedHashMap<Integer, IdianDepthsLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (IdianDepthsTemplate template : idianDepthsTemplates) {
@@ -53,7 +54,7 @@ public class IdianDepthsData {
 		return idianDepths.size();
 	}
 
-	public FastMap<Integer, IdianDepthsLocation> getIdianDepthsLocations() {
+	public Map<Integer, IdianDepthsLocation> getIdianDepthsLocations() {
 		return idianDepths;
 	}
 }

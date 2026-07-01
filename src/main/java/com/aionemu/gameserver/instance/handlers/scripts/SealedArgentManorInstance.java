@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -32,15 +36,14 @@ import com.aionemu.gameserver.model.instance.instancereward.SealedArgentManorRew
 import com.aionemu.gameserver.model.instance.playerreward.SealedArgentManorPlayerReward;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -81,7 +84,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 900000; //...15Min
 	private SealedArgentManorReward instanceReward;
-	private final FastList<Future<?>> sealedTask = FastList.newInstance();
+	private final List<Future<?>> sealedTask = new ArrayList<Future<?>>();
 	
 	protected SealedArgentManorPlayerReward getPlayerReward(Integer object) {
 		return (SealedArgentManorPlayerReward) instanceReward.getPlayerReward(object);
@@ -102,42 +105,42 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 237190: //Manor Usher.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000242, 1)); //Rechargeable Electric Fuel.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000242, 1)); //Rechargeable Electric Fuel.
 			break;
 		   /**
 			* Apart from the rank rewards there are many additional items awaiting in the "Argent Manor Treasure Box"
 			*/
 			case 702816: //Argent Manor Treasure Box.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054117, 1)); //Argent Manor Composite Manastone Bundle.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054118, 1)); //Argent Manor Ancient Coin Bundle.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166100008, 5)); //Greater Supplements (Eternal).
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166100011, 5)); //Greater Supplements (Mythic).
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000119, 2)); //Superior Life Potion.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000122, 2)); //Superior Life Serum.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000120, 2)); //Superior Mana Potion.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 162000123, 2)); //Superior Mana Serum.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054117, 1)); //Argent Manor Composite Manastone Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054118, 1)); //Argent Manor Ancient Coin Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166100008, 5)); //Greater Supplements (Eternal).
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166100011, 5)); //Greater Supplements (Mythic).
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000119, 2)); //Superior Life Potion.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000122, 2)); //Superior Life Serum.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000120, 2)); //Superior Mana Potion.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 162000123, 2)); //Superior Mana Serum.
 			break;
 			case 237193: //Forgotten Zadra.
 			case 237194: //Lost Zadra.
 			    switch (Rnd.get(1, 5)) {
 					case 1:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 2)); //Lesser Minion Contract.
 					break;
 					case 2:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 2)); //Greater Minion Contract.
 					break;
 					case 3:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 2)); //Major Minion Contract.
 					break;
 					case 4:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 2)); //Cute Minion Contract.
 					break;
 					case 5:
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					break;
 				}
 			break;
@@ -148,16 +151,16 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
     public void handleUseItemFinish(Player player, Npc npc) {
         switch (npc.getNpcId()) {
             case 701001: //Transformation Bonfire.
-                SkillEngine.getInstance().getSkill(npc, 19316, 60, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 19316, 60, player).useNoAnimationSkill();
             break;
             case 701002: //Spirit's Bucket.
-                SkillEngine.getInstance().getSkill(npc, 19317, 60, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 19317, 60, player).useNoAnimationSkill();
             break;
             case 701003: //Magic Pinwheel.
-                SkillEngine.getInstance().getSkill(npc, 19318, 60, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 19318, 60, player).useNoAnimationSkill();
             break;
             case 701004: //Magical Soil Mound.
-                SkillEngine.getInstance().getSkill(npc, 19319, 60, player).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(npc, 19319, 60, player).useNoAnimationSkill();
             break;
 			case 856547: //Drained Hetgolem.
 				if (player.getInventory().decreaseByItemId(185000242, 1)) { //Rechargeable Electric Fuel.
@@ -201,7 +204,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 			break;
 			case 237193: //Forgotten Zadra.
 			case 237194: //Lost Zadra.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -260,7 +263,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		sealedTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		sealedTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -316,7 +319,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -397,7 +400,7 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -435,26 +438,26 @@ public class SealedArgentManorInstance extends GeneralInstanceHandler
 		if (npc != null) {
 			switch (Rnd.get(1, 4)) {
 				case 1: //Resistance: Water.
-				    SkillEngine.getInstance().getSkill(npc, 19312, 60, npc).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 19312, 60, npc).useNoAnimationSkill();
 				break;
 				case 2: //Resistance: Fire.
-				    SkillEngine.getInstance().getSkill(npc, 19313, 60, npc).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 19313, 60, npc).useNoAnimationSkill();
 				break;
 				case 3: //Resistance: Earth.
-				    SkillEngine.getInstance().getSkill(npc, 19314, 60, npc).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 19314, 60, npc).useNoAnimationSkill();
 				break;
 				case 4: //Resistance: Wind.
-				    SkillEngine.getInstance().getSkill(npc, 19315, 60, npc).useNoAnimationSkill();
+				    GameEngineServices.skillEngine().getSkill(npc, 19315, 60, npc).useNoAnimationSkill();
 				break;
 			}
 		}
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = sealedTask.head(), end = sealedTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : sealedTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	

@@ -7,17 +7,25 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.services.GameLegacyServiceBridgeConfiguration;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 class GameStaticDataLifecycleTest {
+
+    private final ObjenesisStd objenesis = new ObjenesisStd();
 
     @Test
     void usesStaticDataGatewayCollaborator() {
@@ -32,6 +40,32 @@ class GameStaticDataLifecycleTest {
     @Test
     void staticDataGatewayBridgesLegacyFallbackThroughRuntimeBridgeProvider() {
         assertEquals(ObjectProvider.class, fieldType(GameStaticDataGateway.class, "runtimeBridgeProvider"));
+    }
+
+    @Test
+    void staticDataServicesXmlDataLoaderAccessorUsesSpringProviderBeforeLegacyFallback() {
+        XmlDataLoader xmlDataLoader = objenesis.newInstance(XmlDataLoader.class);
+        GameStaticDataServices staticDataServices = new GameStaticDataServices(
+            provider(DataManager.class, objenesis.newInstance(DataManager.class)),
+            provider(HTMLCache.class, objenesis.newInstance(HTMLCache.class)),
+            provider(XmlDataLoader.class, xmlDataLoader)
+        );
+
+        try {
+            assertSame(xmlDataLoader, GameStaticDataServices.xmlDataLoader());
+            assertSame(xmlDataLoader, XmlDataLoader.getInstance());
+        } finally {
+            staticDataServices.destroy();
+            XmlDataLoader.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void dataManagerUsesStaticDataServicesBridgeForXmlDataLoader() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/dataholders/DataManager.java"));
+
+        assertFalse(source.contains("XmlDataLoader.getInstance()"));
+        assertTrue(source.contains("GameStaticDataServices.xmlDataLoader()"));
     }
 
     @Test

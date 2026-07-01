@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank.AbyssRankUpdateType;
@@ -30,13 +30,13 @@ import com.aionemu.gameserver.services.abyss.AbyssRankingCache;
 /**
  * @author SheppeR
  */
+@Slf4j
 public class CM_ABYSS_RANKING_LEGIONS extends AionClientPacket {
 
 	private Race queriedRace;
 	private AbyssRankUpdateType updateType;
 	private int raceId;
 
-	private static final Logger log = LoggerFactory.getLogger(CM_ABYSS_RANKING_LEGIONS.class);
 
 	public CM_ABYSS_RANKING_LEGIONS(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -69,9 +69,9 @@ public class CM_ABYSS_RANKING_LEGIONS extends AionClientPacket {
 		if (queriedRace != null) {
 			Player player = this.getConnection().getActivePlayer();
 			if (player.isAbyssRankListUpdated(updateType)) {
-				sendPacket(new SM_ABYSS_RANKING_LEGIONS(AbyssRankingCache.getInstance().getLastUpdate(), queriedRace));
+				sendPacket(new SM_ABYSS_RANKING_LEGIONS(GameCoreGameplayServices.abyssRankingCache().getLastUpdate(), queriedRace));
 			} else {
-				SM_ABYSS_RANKING_LEGIONS results = AbyssRankingCache.getInstance().getLegions(queriedRace);
+				SM_ABYSS_RANKING_LEGIONS results = GameCoreGameplayServices.abyssRankingCache().getLegions(queriedRace);
 				sendPacket(results);
 				player.setAbyssRankListUpdated(updateType);
 			}

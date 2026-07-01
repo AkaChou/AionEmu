@@ -17,6 +17,10 @@
  */
 package com.aionemu.gameserver.ai.instance.crucibleChallenge;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -37,17 +41,17 @@ public class Weakened_Dimensional_VortexAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				SkillEngine.getInstance().getSkill(getOwner(), 19570, 46, getOwner()).useNoAnimationSkill(); //Dimensional Vortex.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19570, 46, getOwner()).useNoAnimationSkill(); //Dimensional Vortex.
 				startLifeTask();
 			}
 		}, 1000);
 	}
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				AI2Actions.deleteOwner(Weakened_Dimensional_VortexAI2.this);

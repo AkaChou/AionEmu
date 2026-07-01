@@ -15,24 +15,24 @@
  */
 package com.aionemu.gameserver.model.templates.event;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlList;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlList;
+import jakarta.xml.bind.annotation.XmlSchemaType;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.SpawnsData2;
@@ -45,16 +45,15 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnSpotTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.gametime.DateTimeUtil;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "EventTemplate")
+@Slf4j
 public class EventTemplate {
 
-	private static Logger log = LoggerFactory.getLogger(EventTemplate.class);
 
 	@XmlElement(name = "event_drops", required = false)
 	protected EventDrops eventDrops;
@@ -153,7 +152,7 @@ public class EventTemplate {
 			int spawnCount = 0;
 			for (SpawnMap map : spawns.getTemplates()) {
 				DataManager.SPAWNS_DATA2.addNewSpawnMap(map);
-				Collection<Integer> instanceIds = World.getInstance().getWorldMap(map.getMapId()).getAvailableInstanceIds();
+				Collection<Integer> instanceIds = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(map.getMapId()).getAvailableInstanceIds();
 				for (Integer instanceId : instanceIds) {
 					for (Spawn spawn : map.getSpawns()) {
 						spawn.setEventTemplate(this);
@@ -171,10 +170,10 @@ public class EventTemplate {
 			DataManager.SPAWNS_DATA2.clearTemplates();
 		}
 		if (inventoryDrop != null) {
-			invDropTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							if (player.getCommonData().getLevel() >= inventoryDrop.getStartLevel()) {
@@ -186,10 +185,10 @@ public class EventTemplate {
 			}, inventoryDrop.getInterval() * 60000, inventoryDrop.getInterval() * 60000);
 		}
 		if (getInventoryDrop() != null) {
-			invDropTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
-					World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 						@Override
 						public void visit(Player player) {
 							int itemId = getInventoryDrop().getDropItem();

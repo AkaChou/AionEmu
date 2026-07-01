@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.configs.network;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,8 +26,6 @@ import java.util.List;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -37,12 +36,9 @@ import com.aionemu.gameserver.configs.Config;
 /**
  * @author Taran, SoulKeeper Class that is designed to read IPConfig.xml
  */
+@Slf4j
 public class IPConfig {
 
-	/**
-	 * Logger
-	 */
-	private static final Logger log = LoggerFactory.getLogger(IPConfig.class);
 	/**
 	 * Location of config file
 	 */
@@ -68,11 +64,15 @@ public class IPConfig {
 						throws SAXException {
 
 					if (qName.equals("ipconfig")) {
+						String defaultAddressValue = Config.bootOverride("gameserver.network.ipconfig.default");
+						if (defaultAddressValue == null || defaultAddressValue.isBlank()) {
+							defaultAddressValue = attributes.getValue("default");
+						}
 						try {
-							defaultAddress = InetAddress.getByName(attributes.getValue("default")).getAddress();
+							defaultAddress = InetAddress.getByName(defaultAddressValue).getAddress();
 						} catch (UnknownHostException e) {
 							throw new RuntimeException(
-									"Failed to resolve DSN for address: " + attributes.getValue("default"), e);
+									"Failed to resolve DSN for address: " + defaultAddressValue, e);
 						}
 					} else if (qName.equals("iprange")) {
 						String min = attributes.getValue("min");

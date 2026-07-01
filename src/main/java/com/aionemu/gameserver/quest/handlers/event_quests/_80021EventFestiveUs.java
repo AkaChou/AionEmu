@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.EmotionId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
@@ -119,7 +121,7 @@ public class _80021EventFestiveUs extends QuestHandler {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
 
-		if (EventService.getInstance().checkQuestIsActive(questId)) {
+		if (GameEventServices.eventService().checkQuestIsActive(questId)) {
 			return QuestService.checkLevelRequirement(questId, player.getCommonData().getLevel());
 		}
 		else if (qs != null) {

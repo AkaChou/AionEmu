@@ -30,22 +30,22 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
+import lombok.extern.slf4j.Slf4j;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @authors Layane, nbali, savormix, hex1r0, lord_rex
  */
+@Slf4j
 public final class HTMLCache {
 
 	private static volatile ObjectProvider<HTMLCache> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(HTMLCache.class);
 
 	private static final FileFilter HTML_FILTER = new FileFilter() {
 
@@ -76,7 +76,7 @@ public final class HTMLCache {
 		instanceProvider = provider;
 	}
 
-	private FastMap<String, String> cache = new FastMap<String, String>(16000);
+	private Map<String, String> cache = new LinkedHashMap<String, String>(16000);
 
 	private int loadedFiles;
 	private int size;
@@ -107,7 +107,7 @@ public final class HTMLCache {
 			try {
 				ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(getCacheFile())));
 
-				cache = (FastMap<String, String>) ois.readObject();
+				cache = (Map<String, String>) ois.readObject();
 
 				for (String html : cache.values()) {
 					loadedFiles++;

@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.vortexservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.commons.callbacks.EnhancedObject;
@@ -27,7 +30,8 @@ import com.aionemu.gameserver.model.vortex.VortexLocation;
 import com.aionemu.gameserver.model.vortex.VortexStateType;
 import com.aionemu.gameserver.services.VortexService;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class DimensionalVortex<VL extends VortexLocation> {
 	private final VL vortexLocation;
@@ -49,9 +53,9 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 
 	public abstract void updateInvaders(Player invader);
 
-	public abstract FastMap<Integer, Player> getDefenders();
+	public abstract Map<Integer, Player> getDefenders();
 
-	public abstract FastMap<Integer, Player> getInvaders();
+	public abstract Map<Integer, Player> getInvaders();
 
 	public DimensionalVortex(VL vortexLocation) {
 		this.vortexLocation = vortexLocation;
@@ -80,7 +84,7 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 
 	protected void initRiftGenerator() {
 		Npc gen = null;
-		for (VisibleObject obj : getVortexLocation().getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(getVortexLocation().getSpawned())) {
 			int npcId = ((Npc) obj).getNpcId();
 			if (npcId == 209486 || npcId == 209487) {
 				gen = (Npc) obj;
@@ -94,11 +98,11 @@ public abstract class DimensionalVortex<VL extends VortexLocation> {
 	}
 
 	protected void spawn(VortexStateType type) {
-		VortexService.getInstance().spawn(getVortexLocation(), type);
+		GameLocationBootstrapServices.vortexService().spawn(getVortexLocation(), type);
 	}
 
 	protected void despawn() {
-		VortexService.getInstance().despawn(getVortexLocation());
+		GameLocationBootstrapServices.vortexService().despawn(getVortexLocation());
 	}
 
 	protected void registerSiegeBossListeners() {

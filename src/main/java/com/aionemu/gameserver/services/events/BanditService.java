@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
@@ -47,7 +48,6 @@ import com.aionemu.gameserver.skillengine.model.DispelCategoryType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.skillengine.model.TransformType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -55,9 +55,9 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class BanditService {
 	private static volatile ObjectProvider<BanditService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(BanditService.class);
 	private Map<Integer, Integer> zergMeters = new HashMap<Integer, Integer>();
 	private Map<Player, Long> outlaws = new HashMap<Player, Long>();
 	private WorldMapInstance activeInstance;
@@ -82,7 +82,7 @@ public class BanditService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.PK, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -131,7 +131,7 @@ public class BanditService {
 			}
 		};
 		player.getObserveController().attach(observer);
-		player.getController().addTask(TaskId.PK, ThreadPoolManager.getInstance().schedule(new Runnable() {
+		player.getController().addTask(TaskId.PK, GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				player.getObserveController().removeObserver(observer);
@@ -180,7 +180,7 @@ public class BanditService {
 				100, false);
 		player.setTarget(null);
 		PacketSendUtility.sendPacket(player, new SM_TARGET_SELECTED(player));
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (player.isBandit()) {
@@ -223,7 +223,7 @@ public class BanditService {
 	}
 
 	public void sendAnnounce(final Player player) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player pl) {
 				if (pl.getWorldId() == player.getWorldId() && pl != player) {
@@ -234,7 +234,7 @@ public class BanditService {
 	}
 
 	public void sendDieAnnounce(final Player looser, final Player killer) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player pl) {
 				if (pl.getWorldId() == looser.getWorldId()) {

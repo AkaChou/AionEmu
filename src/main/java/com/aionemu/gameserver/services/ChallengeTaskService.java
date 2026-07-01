@@ -16,14 +16,16 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -48,11 +50,13 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ChallengeTaskService {
 	private static volatile ObjectProvider<ChallengeTaskService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(ChallengeTaskService.class);
 	private Map<Integer, Map<Integer, ChallengeTask>> cityTasks;
 	private Map<Integer, Map<Integer, ChallengeTask>> legionTasks;
 
@@ -73,8 +77,8 @@ public class ChallengeTaskService {
 	}
 
 	public ChallengeTaskService() {
-		cityTasks = new FastMap<Integer, Map<Integer, ChallengeTask>>().shared();
-		legionTasks = new FastMap<Integer, Map<Integer, ChallengeTask>>().shared();
+		cityTasks = new LinkedHashMap<Integer, Map<Integer, ChallengeTask>>();
+		legionTasks = new LinkedHashMap<Integer, Map<Integer, ChallengeTask>>();
 		log.info("ChallengeTaskService initialized.");
 	}
 
@@ -86,7 +90,7 @@ public class ChallengeTaskService {
 				ownerLevel = player.getLegion().getLegionLevel();
 				break;
 			case TOWN:
-				ownerLevel = TownService.getInstance().getTownById(ownerId).getLevel();
+				ownerLevel = GameHousingServices.townService().getTownById(ownerId).getLevel();
 				break;
 			default:
 				break;
@@ -106,7 +110,7 @@ public class ChallengeTaskService {
 		} else if (challengeType == ChallengeType.TOWN) {
 			taskMap = cityTasks;
 		}
-		int playerTownId = TownService.getInstance().getTownResidence(player);
+		int playerTownId = GameHousingServices.townService().getTownResidence(player);
 		List<ChallengeTask> availableTasks = new ArrayList<ChallengeTask>();
 		if (!taskMap.containsKey(ownerId)) {
 			Map<Integer, ChallengeTask> tasks = DAOManager.getDAO(ChallengeTasksDAO.class).load(ownerId, challengeType);
@@ -164,9 +168,9 @@ public class ChallengeTaskService {
 	}
 
 	private void onCityTaskFinish(Player player, ChallengeTaskTemplate taskTemplate, int questId) {
-		int townId = TownService.getInstance().getTownIdByPosition(player);
+		int townId = GameHousingServices.townService().getTownIdByPosition(player);
 		if (cityTasks.get(townId) == null) {
-			buildTaskList(player, ChallengeType.TOWN, townId, TownService.getInstance().getTownById(townId).getLevel());
+			buildTaskList(player, ChallengeType.TOWN, townId, GameHousingServices.townService().getTownById(townId).getLevel());
 			if (cityTasks.get(townId) == null) {
 				return;
 			}
@@ -183,7 +187,7 @@ public class ChallengeTaskService {
 			task.updateCompleteTime();
 			quest.increaseCompleteCount();
 			DAOManager.getDAO(ChallengeTasksDAO.class).storeTask(task);
-			Town town = TownService.getInstance().getTownById(townId);
+			Town town = GameHousingServices.townService().getTownById(townId);
 			if (town != null) {
 				int oldLevel = town.getLevel();
 				town.increasePoints(quest.getScorePerQuest());
@@ -231,7 +235,7 @@ public class ChallengeTaskService {
 			if (task.isCompleted()) {
 				TreeMap<Integer, List<Integer>> winnersByPoints = new TreeMap<Integer, List<Integer>>();
 				for (Integer memberObjId : player.getLegion().getLegionMembers()) {
-					Player member = World.getInstance().findPlayer(memberObjId);
+					Player member = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(memberObjId);
 					if (member != null) {
 						int score = member.getLegionMember().getChallengeScore();
 						if (winnersByPoints.get(score) == null) {
@@ -265,7 +269,7 @@ public class ChallengeTaskService {
 								itemCount = reward.getItemCount();
 								String recipientName = DAOManager.getDAO(PlayerDAO.class).loadPlayerCommonData(objectId)
 										.getName();
-								SystemMailService.getInstance().sendMail("Legion reward", recipientName, "", "", itemId,
+								GameFeatureServices.systemMailService().sendMail("Legion reward", recipientName, "", "", itemId,
 										itemCount, 0, 0, LetterType.NORMAL);
 								break;
 							}

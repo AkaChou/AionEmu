@@ -1,11 +1,9 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.AnnouncementsDAO;
 import com.aionemu.gameserver.model.Announcement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,9 +15,9 @@ import java.util.Set;
  * @author Divinity
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8AnnouncementsDAO extends AnnouncementsDAO {
 
-	private static final Logger log = LoggerFactory.getLogger(MySQL8AnnouncementsDAO.class);
 	
 	private static final String SELECT_QUERY = "SELECT * FROM announcements ORDER BY id";
 	private static final String INSERT_QUERY = "INSERT INTO announcements (announce, faction, type, delay) VALUES (?, ?, ?, ?)";

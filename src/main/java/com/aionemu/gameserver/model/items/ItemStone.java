@@ -18,10 +18,12 @@ package com.aionemu.gameserver.model.items;
 
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
+import lombok.Getter;
 
 /**
  * @author ATracer modified by Wakizashi
  */
+@Getter
 public class ItemStone implements StatOwner {
 
 	private int itemObjId;
@@ -50,39 +52,11 @@ public class ItemStone implements StatOwner {
 	}
 
 	/**
-	 * @return the itemObjId
-	 */
-	public int getItemObjId() {
-		return itemObjId;
-	}
-
-	/**
-	 * @return the itemId
-	 */
-	public int getItemId() {
-		return itemId;
-	}
-
-	/**
-	 * @return the slot
-	 */
-	public int getSlot() {
-		return slot;
-	}
-
-	/**
 	 * @param slot the slot to set
 	 */
 	public void setSlot(int slot) {
 		this.slot = slot;
 		setPersistentState(PersistentState.UPDATE_REQUIRED);
-	}
-
-	/**
-	 * @return the pState
-	 */
-	public PersistentState getPersistentState() {
-		return persistentState;
 	}
 
 	/**

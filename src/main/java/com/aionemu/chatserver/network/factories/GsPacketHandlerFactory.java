@@ -18,10 +18,8 @@
 
 package com.aionemu.chatserver.network.factories;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.chatserver.network.gameserver.GsClientPacket;
 import com.aionemu.chatserver.network.gameserver.GsConnection;
@@ -34,12 +32,9 @@ import com.aionemu.chatserver.network.gameserver.clientpackets.CM_PLAYER_LOGOUT;
 /**
  * @author -Nemesiss-
  */
+@Slf4j
 public class GsPacketHandlerFactory {
 
-    /**
-     * logger for this class
-     */
-    private static final Logger log = LoggerFactory.getLogger(GsPacketHandlerFactory.class);
 
     /**
      * Reads one packet from given ByteBuffer

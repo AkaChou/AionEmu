@@ -57,7 +57,7 @@ public class CM_FRIEND_ADD extends AionClientPacket {
 	protected void runImpl() {
 
 		final Player activePlayer = getConnection().getActivePlayer();
-		final Player targetPlayer = World.getInstance().findPlayer(targetName);
+		final Player targetPlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(targetName);
 
 		if (targetName.equalsIgnoreCase(activePlayer.getName())) {
 			// Adding self to friend list not allowed - Its blocked by the client by

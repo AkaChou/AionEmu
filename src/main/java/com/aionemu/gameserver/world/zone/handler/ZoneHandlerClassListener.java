@@ -18,20 +18,17 @@ package com.aionemu.gameserver.world.zone.handler;
 
 import java.lang.reflect.Modifier;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.scripting.classlistener.ClassListener;
 import com.aionemu.commons.utils.ClassUtils;
-import com.aionemu.gameserver.instance.InstanceHandlerClassListener;
-import com.aionemu.gameserver.world.zone.ZoneService;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
 /**
  * @author MrPoke
  */
+@Slf4j(topic = "com.aionemu.gameserver.instance.InstanceHandlerClassListener")
 public class ZoneHandlerClassListener implements ClassListener {
-
-	private static final Logger log = LoggerFactory.getLogger(InstanceHandlerClassListener.class);
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -47,7 +44,7 @@ public class ZoneHandlerClassListener implements ClassListener {
 			if (ClassUtils.isSubclass(c, ZoneHandler.class)) {
 				Class<? extends ZoneHandler> tmp = (Class<? extends ZoneHandler>) c;
 				if (tmp != null) {
-					ZoneService.getInstance().addZoneHandlerClass(tmp);
+					GameWorldBootstrapServices.zoneService().addZoneHandlerClass(tmp);
 				}
 			}
 		}

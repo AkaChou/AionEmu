@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.team2.TeamType;
 import com.aionemu.gameserver.model.team2.common.legacy.LootGroupRules;

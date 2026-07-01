@@ -16,13 +16,21 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.event.AIEventType;
@@ -33,6 +41,7 @@ import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
 import com.aionemu.gameserver.controllers.attack.AggroList;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.EmotionType;
 import com.aionemu.gameserver.model.TaskId;
@@ -63,21 +72,18 @@ import com.aionemu.gameserver.services.DialogService;
 import com.aionemu.gameserver.services.RespawnService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
 import com.aionemu.gameserver.services.drop.DropService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
-import com.aionemu.gameserver.services.player.GrowthEnergy;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
+@Slf4j
 
 public class NpcController extends CreatureController<Npc> {
-	private static final Logger log = LoggerFactory.getLogger(NpcController.class);
 
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
@@ -105,9 +111,9 @@ public class NpcController extends CreatureController<Npc> {
 					owner.setState(CreatureState.DEAD);
 				}
 				
-				DropService.getInstance().see(player, owner);
+				GameCoreGameplayServices.dropService().see(player, owner);
 				
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (owner.isSpawned() && owner.getLifeStats().isAlreadyDead()) {
@@ -157,7 +163,7 @@ public class NpcController extends CreatureController<Npc> {
 	@Override
 	public void onDespawn() {
 		Npc owner = getOwner();
-		DropService.getInstance().unregisterDrop(getOwner());
+		GameCoreGameplayServices.dropService().unregisterDrop(getOwner());
 		owner.getAi2().onGeneralEvent(AIEventType.DESPAWNED);
 		super.onDespawn();
 	}
@@ -167,7 +173,7 @@ public class NpcController extends CreatureController<Npc> {
 		final int npcNameId = owner.getObjectTemplate().getNameId();
 		NpcRank npcRank = owner.getObjectTemplate().getRank();
 		if (npcRank == NpcRank.EXPERT && !player.isInInstance()) {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player players) {
 					// "Player Name" has killed "Named Monster"
@@ -202,7 +208,7 @@ public class NpcController extends CreatureController<Npc> {
 			if (owner.getAi2().poll(AIQuestion.SHOULD_DECAY)) {
 				addTask(TaskId.DECAY, RespawnService.scheduleDecayTask(owner));
 			}
-			if (owner.getAi2().poll(AIQuestion.SHOULD_RESPAWN) && !owner.isDeleteDelayed() && !SiegeService.getInstance().isSiegeNpcInActiveSiege(owner)) {
+			if (owner.getAi2().poll(AIQuestion.SHOULD_RESPAWN) && !owner.isDeleteDelayed() && !GameFeatureServices.siegeService().isSiegeNpcInActiveSiege(owner)) {
 				Future<?> respawnTask = scheduleRespawn();
 				if (respawnTask != null) {
 					addTask(TaskId.RESPAWN, respawnTask);
@@ -249,7 +255,7 @@ public class NpcController extends CreatureController<Npc> {
 						Player player = (Player) attacker;
 						for (String worldIds : CustomConfig.TOLL_PVE_WORLDID.split(",")) {
 							if (player.getWorldId() == Integer.parseInt(worldIds)) {
-								InGameShopEn.getInstance().addToll(player, CustomConfig.TOLL_PVE_QUANTITY);
+								GameRuntimeServices.inGameShopEn().addToll(player, CustomConfig.TOLL_PVE_QUANTITY);
 								PacketSendUtility.sendMessage(player, "You have received " + CustomConfig.TOLL_PVE_QUANTITY + " tolls from PvE!");
 							}
 						}
@@ -279,7 +285,7 @@ public class NpcController extends CreatureController<Npc> {
 					rewardXp *= percentage;
 					rewardDp *= percentage;
 					rewardAp *= percentage;
-					QuestEngine.getInstance().onKill(new QuestEnv(getOwner(), player, 0, 0));
+					GameEngineServices.questEngine().onKill(new QuestEnv(getOwner(), player, 0, 0));
 					// When a player defeat a "Boss" all ppls on server see!!!
 					defeatNamedMsg(player);
 					// Reward XP Solo (New system, Exp Retail NA)
@@ -308,7 +314,7 @@ public class NpcController extends CreatureController<Npc> {
 						}
 					}
 					if (attacker.equals(winner)) {
-						DropRegistrationService.getInstance().registerDrop(getOwner(), player, player.getLevel(), null);
+						GameWorldServices.dropRegistrationService().registerDrop(getOwner(), player, player.getLevel(), null);
 					}
 					// Auto Drop Kinah.
 					if (CustomConfig.AUTO_KINAH_ENABLED) {
@@ -424,13 +430,13 @@ public class NpcController extends CreatureController<Npc> {
 					// Aura Of Growth.
 					if (getOwner().getLevel() >= 66) {
 						if (Rnd.get(1, 100) < RateConfig.AURA_OF_GROWTH) {
-							GrowthEnergy.getInstance().addGrowthEnergy(player);
+							GameFeatureServices.growthEnergy().addGrowthEnergy(player);
 							PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
 						}
 					}
 					// Atreian Bestiary.
 					if (getOwner().getLevel() >= 66) {
-						AtreianBestiaryService.getInstance().onKill(player, getOwner().getNpcId());
+						GameFeatureServices.atreianBestiaryService().onKill(player, getOwner().getNpcId());
 					}
 				}
 			}
@@ -455,7 +461,7 @@ public class NpcController extends CreatureController<Npc> {
 	@Override
 	public void onDialogSelect(int dialogId, final Player player, int questId, int extendedRewardIndex, int unk) {// TODO unk need to be figure out
 		QuestEnv env = new QuestEnv(getOwner(), player, questId, dialogId);
-		if (!MathUtil.isInRange(getOwner(), player, getOwner().getObjectTemplate().getTalkDistance() + 2) && !QuestEngine.getInstance().onDialog(env)) {
+		if (!MathUtil.isInRange(getOwner(), player, getOwner().getObjectTemplate().getTalkDistance() + 2) && !GameEngineServices.questEngine().onDialog(env)) {
 			return;
 		}
 		if (!getOwner().getAi2().onDialogSelect(player, dialogId, questId, extendedRewardIndex)) {
@@ -483,7 +489,7 @@ public class NpcController extends CreatureController<Npc> {
 		Npc npc = getOwner();
 
 		if (actingCreature instanceof Player) {
-			QuestEngine.getInstance().onAttack(new QuestEnv(npc, (Player) actingCreature, 0, 0));
+			GameEngineServices.questEngine().onAttack(new QuestEnv(npc, (Player) actingCreature, 0, 0));
 		}
 
 		PacketSendUtility.broadcastPacket(npc, new SM_ATTACK_STATUS(npc, actingCreature, type, skillId, damage, log));

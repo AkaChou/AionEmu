@@ -16,13 +16,20 @@
  */
 package com.aionemu.gameserver.services.mail;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -49,7 +56,6 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.player.PlayerMailboxState;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
@@ -57,9 +63,9 @@ import com.aionemu.gameserver.world.World;
 /**
  * @author kosyachok
  */
+@Slf4j(topic = "MAIL_LOG")
 public class MailService {
 
-	private static final Logger log = LoggerFactory.getLogger("MAIL_LOG");
 	private static volatile ObjectProvider<MailService> instanceProvider;
 	protected Queue<Player> newPlayers;
 
@@ -115,7 +121,7 @@ public class MailService {
 			return;
 		}
 
-		Player recipient = World.getInstance().findPlayer(recipientCommonData.getPlayerObjId());
+		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
 		if (recipient != null) {
 			if (!recipient.getMailbox().haveFreeSlots()) {
 				PacketSendUtility.sendPacket(sender, new SM_MAIL_SERVICE(MailMessage.RECIPIENT_MAILBOX_FULL));
@@ -145,7 +151,7 @@ public class MailService {
 				return;
 			}
 
-			if (!AdminService.getInstance().canOperate(sender, null, senderItem, "mail")) {
+			if (!GameRuntimeServices.adminService().canOperate(sender, null, senderItem, "mail")) {
 				return;
 			}
 			float qualityPriceRate;
@@ -239,7 +245,7 @@ public class MailService {
 
 		Timestamp time = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
-		Letter newLetter = new Letter(IDFactory.getInstance().nextId(), recipientCommonData.getPlayerObjId(),
+		Letter newLetter = new Letter(GameWorldBootstrapServices.idFactory().nextId(), recipientCommonData.getPlayerObjId(),
 				attachedItem, finalAttachedKinahCount, finaAttachedApCount, title, message, sender.getName(), time,
 				true, letterType);
 
@@ -425,7 +431,7 @@ public class MailService {
 	 * @param player
 	 */
 	public void onPlayerLogin(Player player) {
-		ThreadPoolManager.getInstance().schedule(new MailLoadTask(player), 5000);
+		GameThreadPoolServices.threadPoolManager().schedule(new MailLoadTask(player), 5000);
 	}
 
 	public void refreshMail(Player player) {
@@ -450,7 +456,7 @@ public class MailService {
 		public void run() {
 			player.setMailbox(DAOManager.getDAO(MailDAO.class).loadPlayerMailbox(player));
 			PacketSendUtility.sendPacket(player, new SM_MAIL_SERVICE(player.getMailbox()));
-			HousingBidService.getInstance().onPlayerLogin(player);
+			GameHousingServices.housingBidService().onPlayerLogin(player);
 		}
 	}
 

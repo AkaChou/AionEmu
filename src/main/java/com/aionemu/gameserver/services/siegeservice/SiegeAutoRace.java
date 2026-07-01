@@ -16,8 +16,12 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.SiegeConfig;
@@ -29,29 +33,27 @@ import com.aionemu.gameserver.model.siege.SiegeModType;
 import com.aionemu.gameserver.model.siege.SiegeRace;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SIEGE_LOCATION_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+@Slf4j(topic = "SIEGE_LOG")
 
 public class SiegeAutoRace {
-	private static final Logger log = LoggerFactory.getLogger("SIEGE_LOG");
 	private static String[] siegeIds = SiegeConfig.SIEGE_AUTO_LOCID.split(";");
 
 	public static void AutoSiegeRace(final int locid) {
-		final SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(locid);
+		final SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(locid);
 		if (!loc.getRace().equals(SiegeRace.ASMODIANS) || !loc.getRace().equals(SiegeRace.ELYOS)) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				public void run() {
-					SiegeService.getInstance().startSiege(locid);
+					GameFeatureServices.siegeService().startSiege(locid);
 				}
 			}, 300000);
-			SiegeService.getInstance().deSpawnNpcs(locid);
+			GameFeatureServices.siegeService().deSpawnNpcs(locid);
 			final int oldOwnerRaceId = loc.getRace().getRaceId();
 			final int legionId = loc.getLegionId();
-			final String legionName = legionId != 0 ? LegionService.getInstance().getLegion(legionId).getLegionName()
+			final String legionName = legionId != 0 ? GameCoreGameplayServices.legionService().getLegion(legionId).getLegionName()
 					: "";
 			final DescriptionId NameId = new DescriptionId(loc.getTemplate().getNameId());
 			if (ElyosAutoSiege(locid)) {
@@ -61,7 +63,7 @@ public class SiegeAutoRace {
 				loc.setRace(SiegeRace.ASMODIANS);
 			}
 			loc.setLegionId(0);
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				public void visit(Player player) {
 					if (legionId != 0 && player.getRace().getRaceId() == oldOwnerRaceId) {
 						// %0 has conquered %1.
@@ -74,13 +76,13 @@ public class SiegeAutoRace {
 				}
 			});
 			if (ElyosAutoSiege(locid)) {
-				SiegeService.getInstance().spawnNpcs(locid, SiegeRace.ELYOS, SiegeModType.PEACE);
+				GameFeatureServices.siegeService().spawnNpcs(locid, SiegeRace.ELYOS, SiegeModType.PEACE);
 			} else if (AsmoAutoSiege(locid)) {
-				SiegeService.getInstance().spawnNpcs(locid, SiegeRace.ASMODIANS, SiegeModType.PEACE);
+				GameFeatureServices.siegeService().spawnNpcs(locid, SiegeRace.ASMODIANS, SiegeModType.PEACE);
 			}
 			DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
 		}
-		SiegeService.getInstance().broadcastUpdate(loc);
+		GameFeatureServices.siegeService().broadcastUpdate(loc);
 	}
 
 	public static boolean isAutoSiege(int locId) {

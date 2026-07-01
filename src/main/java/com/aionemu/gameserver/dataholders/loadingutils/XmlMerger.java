@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import lombok.extern.slf4j.Slf4j;
 import static org.apache.commons.io.filefilter.FileFilterUtils.andFileFilter;
 import static org.apache.commons.io.filefilter.FileFilterUtils.makeSVNAware;
 import static org.apache.commons.io.filefilter.FileFilterUtils.notFileFilter;
@@ -50,8 +51,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -101,9 +100,9 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author Aquanox
  */
+@Slf4j
 public class XmlMerger {
 
-	private static final Logger logger = LoggerFactory.getLogger(XmlMerger.class);
 	private final File baseDir;
 	private final File sourceFile;
 	private final File destFile;
@@ -147,8 +146,8 @@ public class XmlMerger {
 	 * @throws FileNotFoundException when source file doesn't exists.
 	 * @throws XMLStreamException    when XML processing error was occurred.
 	 */
-	public void process() throws Exception {
-		logger.debug("Processing " + sourceFile + " files into " + destFile);
+	public boolean process() throws Exception {
+		log.debug("Processing " + sourceFile + " files into " + destFile);
 
 		if (!sourceFile.exists()) {
 			throw new FileNotFoundException("Source file " + sourceFile.getPath() + " not found.");
@@ -157,27 +156,29 @@ public class XmlMerger {
 		boolean needUpdate = false;
 
 		if (!destFile.exists()) {
-			logger.debug("Dest file not found - creating new file");
+			log.debug("Dest file not found - creating new file");
 			needUpdate = true;
 		} else if (!metaDataFile.exists()) {
-			logger.debug("Meta file not found - creating new file");
+			log.debug("Meta file not found - creating new file");
 			needUpdate = true;
 		} else {
-			logger.debug("Dest file found - checking file modifications");
+			log.debug("Dest file found - checking file modifications");
 			needUpdate = checkFileModifications();
 		}
 
 		if (needUpdate) {
-			logger.debug("Modifications found. Updating...");
+			log.debug("Modifications found. Updating...");
 			try {
 				doUpdate();
+				return true;
 			} catch (Exception e) {
 				FileUtils.deleteQuietly(destFile);
 				FileUtils.deleteQuietly(metaDataFile);
 				throw e;
 			}
 		} else {
-			logger.debug("Files are up-to-date");
+			log.debug("Files are up-to-date");
+			return false;
 		}
 	}
 
@@ -195,7 +196,7 @@ public class XmlMerger {
 		long destFileTime = destFile.lastModified();
 
 		if (sourceFile.lastModified() > destFileTime) {
-			logger.debug("Source file was modified ");
+			log.debug("Source file was modified ");
 			return true;
 		}
 
@@ -315,7 +316,7 @@ public class XmlMerger {
 		if (file.isFile()) {
 			importFile(file, skipRoot, writer, metadata);
 		} else {
-			logger.debug("Processing dir " + file);
+			log.debug("Processing dir " + file);
 
 			Collection<File> files = listFiles(file, recImport);
 
@@ -373,7 +374,7 @@ public class XmlMerger {
 	 */
 	private void importFile(File file, boolean skipRoot, XMLEventWriter writer, Properties metadata)
 			throws XMLStreamException, IOException {
-		logger.debug("Appending file " + file);
+		log.debug("Appending file " + file);
 		metadata.setProperty(file.getPath(), makeHash(file));
 
 		XMLEventReader reader = null;
@@ -496,7 +497,7 @@ public class XmlMerger {
 					return true;
 				}
 			} catch (IOException e) {
-				logger.warn("File varification error. File: " + file.getPath() + ", location=" + locator.getLineNumber()
+				log.warn("File varification error. File: " + file.getPath() + ", location=" + locator.getLineNumber()
 						+ ":" + locator.getColumnNumber(), e);
 				return true;// was modified.
 			}
@@ -520,7 +521,7 @@ public class XmlMerger {
 			props.load(reader);
 			return props;
 		} catch (IOException e) { // properties
-			logger.debug("File modfications restoring error. ", e);
+			log.debug("File modfications restoring error. ", e);
 			return null;
 		} finally {
 			IOUtils.closeQuietly(reader);
@@ -533,7 +534,7 @@ public class XmlMerger {
 			writer = new FileWriter(file, false);
 			props.store(writer, " This file is machine-generated. DO NOT EDIT!");
 		} catch (IOException e) {
-			logger.error("Failed to store file modification data.");
+			log.error("Failed to store file modification data.");
 			throw e;
 		} finally {
 			IOUtils.closeQuietly(writer);

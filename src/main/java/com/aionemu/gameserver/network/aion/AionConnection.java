@@ -16,12 +16,12 @@
  */
 package com.aionemu.gameserver.network.aion;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.nio.ByteBuffer;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
@@ -33,29 +33,25 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 import com.aionemu.gameserver.model.account.Account;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.Crypt;
-import com.aionemu.gameserver.network.PacketFloodFilter;
-import com.aionemu.gameserver.network.PacketLoggerService;
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_KEY;
 import com.aionemu.gameserver.network.factories.AionPacketHandlerFactory;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_MAC;
 import com.aionemu.gameserver.services.player.PlayerLeaveWorldService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.google.common.base.Preconditions;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Object representing connection between GameServer and Aion Client.
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class AionConnection extends AConnection {
 
-	/**
-	 * Logger for this class.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(AionConnection.class);
 
 	private static final PacketProcessor<AionConnection> packetProcessor = new PacketProcessor<AionConnection>(
 			NetworkConfig.PACKET_PROCESSOR_MIN_THREADS, NetworkConfig.PACKET_PROCESSOR_MAX_THREADS,
@@ -83,7 +79,7 @@ public class AionConnection extends AConnection {
 	/**
 	 * Server Packet "to send" Queue
 	 */
-	private final FastList<AionServerPacket> sendMsgQueue = new FastList<AionServerPacket>();
+	private final List<AionServerPacket> sendMsgQueue = new ArrayList<AionServerPacket>();
 
 	/**
 	 * Current state of this connection
@@ -129,7 +125,7 @@ public class AionConnection extends AConnection {
 	}
 
 	private void initialize() {
-		AionPacketHandlerFactory aionPacketHandlerFactory = AionPacketHandlerFactory.getInstance();
+		AionPacketHandlerFactory aionPacketHandlerFactory = GameServerNetworkServices.aionPacketHandlerFactory();
 		this.aionPacketHandler = aionPacketHandlerFactory.getPacketHandler();
 
 		state = State.CONNECTED;
@@ -141,7 +137,7 @@ public class AionConnection extends AConnection {
 		pingChecker.start();
 
 		if (SecurityConfig.PFF_ENABLE) {
-			pff = PacketFloodFilter.getInstance().getPackets();
+			pff = GameServerNetworkServices.packetFloodFilter().getPackets();
 			pffRequests = new long[pff.length];
 		}
 	}
@@ -226,7 +222,7 @@ public class AionConnection extends AConnection {
 				}
 			}
 
-			PacketLoggerService.getInstance().logPacketCM(pck.getPacketName());
+			GameServerNetworkServices.packetLoggerService().logPacketCM(pck.getPacketName());
 
 			if (pck.read()) {
 				packetProcessor.executePacket(pck);
@@ -251,7 +247,7 @@ public class AionConnection extends AConnection {
 				return false;
 			}
 			AionServerPacket packet = sendMsgQueue.removeFirst();
-			PacketLoggerService.getInstance().logPacketSM(packet.getPacketName());
+			GameServerNetworkServices.packetLoggerService().logPacketSM(packet.getPacketName());
 			try {
 				packet.write(this, data);
 				return true;
@@ -282,8 +278,8 @@ public class AionConnection extends AConnection {
 		 */
 		pingChecker.stop();
 		if (getAccount() != null) {
-			LoginServer.getInstance().aionClientDisconnected(getAccount().getId());
-			LoginServer.getInstance().sendPacket(new SM_MAC(getAccount().getId(), macAddress));
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().aionClientDisconnected(getAccount().getId());
+			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_MAC(getAccount().getId(), macAddress));
 		}
 
 		Player player = getActivePlayer();
@@ -464,7 +460,7 @@ public class AionConnection extends AConnection {
 		private void start() {
 			Preconditions.checkState(!started, "PingChecker can be started only one time!");
 			started = true;
-			task = ThreadPoolManager.getInstance().scheduleAtFixedRate(this, checkTime, checkTime);
+			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(this, checkTime, checkTime);
 		}
 
 		private void stop() {

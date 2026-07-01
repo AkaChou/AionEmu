@@ -1,13 +1,11 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerMinionsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.minion.MinionDopingBag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +14,9 @@ import java.util.List;
  * @author Falke_34
  * Updated for MySQL 8 support
  */
+@Slf4j
 public class MySQL8PlayerMinionsDAO extends PlayerMinionsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerMinionsDAO.class);
 
     private static final String INSERT_QUERY = "INSERT INTO player_minions (player_id, object_id, minion_id, name, grade, level, growthpoints, birthday, is_locked, buff_bag) VALUES (?, ?, ?, ?, ?, ?, 0, NOW(), 0, '')";
     private static final String DELETE_QUERY = "DELETE FROM player_minions WHERE player_id = ? AND object_id = ?";

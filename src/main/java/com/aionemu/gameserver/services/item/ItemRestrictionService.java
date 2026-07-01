@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.item;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import com.aionemu.gameserver.configs.main.LegionConfig;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,7 +26,6 @@ import com.aionemu.gameserver.model.team.legion.LegionPermissionsMask;
 import com.aionemu.gameserver.model.templates.item.ItemCategory;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -39,7 +40,7 @@ public class ItemRestrictionService {
 		StorageType type = StorageType.getStorageTypeById(storage);
 		switch (type) {
 		case LEGION_WAREHOUSE:
-			if (!LegionService.getInstance().getLegionMember(player.getObjectId())
+			if (!GameCoreGameplayServices.legionService().getLegionMember(player.getObjectId())
 					.hasRights(LegionPermissionsMask.WH_WITHDRAWAL) || !LegionConfig.LEGION_WAREHOUSE
 					|| !player.isLegionMember()) {
 				// You do not have the authority to use the Legion warehouse.
@@ -76,7 +77,7 @@ public class ItemRestrictionService {
 				// You cannot store this item in the Legion warehouse.
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400355));
 				return true;
-			} else if (!player.isLegionMember() || !LegionService.getInstance().getLegionMember(player.getObjectId())
+			} else if (!player.isLegionMember() || !GameCoreGameplayServices.legionService().getLegionMember(player.getObjectId())
 					.hasRights(LegionPermissionsMask.WH_DEPOSIT)) {
 				// You do not have the authority to use the Legion warehouse.
 				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300322));

@@ -16,13 +16,11 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.MembershipConfig;
@@ -34,9 +32,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_FRIEND_UPDATE;
  * 
  * @author Ben
  */
+@Slf4j
 public class FriendList implements Iterable<Friend> {
 
-	private static final Logger log = LoggerFactory.getLogger(FriendList.class);
 	private Status status = Status.OFFLINE;
 	private volatile byte friendListSent = 0;
 

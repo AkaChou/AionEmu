@@ -16,18 +16,18 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.recipe.LunaTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Made by Ghostfur (Aion-Unique)
@@ -39,15 +39,15 @@ public class LunaData {
 	@XmlElement(name = "luna_template")
 	protected List<LunaTemplate> list;
 
-	private TIntObjectHashMap<LunaTemplate> lunaData;
+	private IntObjectHashMap<LunaTemplate> lunaData;
 
-	private FastList<LunaTemplate> elyos, asmos, any;
+	private List<LunaTemplate> elyos, asmos, any;
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
-		lunaData = new TIntObjectHashMap<LunaTemplate>();
-		elyos = FastList.newInstance();
-		asmos = FastList.newInstance();
-		any = FastList.newInstance();
+		lunaData = new IntObjectHashMap<LunaTemplate>();
+		elyos = new ArrayList<>();
+		asmos = new ArrayList<>();
+		any = new ArrayList<>();
 		for (LunaTemplate lt : list) {
 			lunaData.put(lt.getId(), lt);
 			switch (lt.getRace()) {
@@ -67,7 +67,7 @@ public class LunaData {
 		list = null;
 	}
 
-	public FastList<LunaTemplate> getLunaTemplatesAny() {
+	public List<LunaTemplate> getLunaTemplatesAny() {
 		return any;
 	}
 
@@ -75,7 +75,7 @@ public class LunaData {
 		return lunaData.get(id);
 	}
 
-	public TIntObjectHashMap<LunaTemplate> getLunaTemplates() {
+	public IntObjectHashMap<LunaTemplate> getLunaTemplates() {
 		return lunaData;
 	}
 

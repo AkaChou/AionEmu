@@ -16,18 +16,19 @@
  */
 package com.aionemu.gameserver.services.player;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.dao.PlayerLunaShopDAO;
 import com.aionemu.gameserver.dao.PlayerWardrobeDAO;
@@ -52,22 +53,19 @@ import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-
-import javolution.util.FastList;
 
 /****/
 /**
  * Reworked by G-Robson26 /
  ****/
+@Slf4j
 
 public class LunaShopService {
 
 	private static volatile ObjectProvider<LunaShopService> instanceProvider;
-	private Logger log = LoggerFactory.getLogger(LunaShopService.class);
 	PlayerWardrobeDAO wDAO = DAOManager.getDAO(PlayerWardrobeDAO.class);
 	private boolean dailyGenerated = true;
 	private boolean specialGenerated = true;
@@ -92,7 +90,7 @@ public class LunaShopService {
 			generateSpecialCraft();
 		}
 
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				dailyGenerated = false;
 				generateDailyCraft();
@@ -100,7 +98,7 @@ public class LunaShopService {
 			}
 		}, daily);
 
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				specialGenerated = false;
 				generateSpecialCraft();
@@ -182,7 +180,7 @@ public class LunaShopService {
 	}
 
 	private void updateSpecialCraft() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(2, 0, SpecialCraft));
@@ -191,7 +189,7 @@ public class LunaShopService {
 	}
 
 	private void updateFreeLuna() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 			@Override
 			public void visit(Player player) {
@@ -210,7 +208,7 @@ public class LunaShopService {
 			DailyCraft.clear();
 		}
 
-		FastList<LunaTemplate> test = DataManager.LUNA_DATA.getLunaTemplatesAny();
+		List<LunaTemplate> test = DataManager.LUNA_DATA.getLunaTemplatesAny();
 		Random rand = new Random();
 		for (int i = 0; i < 5; i++) {
 			int randomIndex = rand.nextInt(test.size());
@@ -228,7 +226,7 @@ public class LunaShopService {
 	}
 
 	private void updateDailyCraft() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(DailyCraft));
@@ -562,7 +560,7 @@ public class LunaShopService {
 			Object key = crunchifyKeys[new Random().nextInt(crunchifyKeys.length)];
 			mt.put((int) key, (long) hm.get(key));
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

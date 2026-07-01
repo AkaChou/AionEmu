@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.event.conquestOffering;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -60,13 +64,13 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 	}
 	
     private void spawnSecretPortal() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(833021, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Secret Portal.
 			}
 		}, 15000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				despawnNpc(833021); //Secret Portal.
@@ -75,13 +79,13 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
     }
 	
     private void spawnQuestionablePortal() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(833022, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) 0); //Questionable Portal.
 			}
 		}, 15000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				despawnNpc(833022); //Secret Portal.
@@ -90,7 +94,7 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
     }
 	
     private void spawnConquestNpcBuff() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				switch (Rnd.get(1, 4)) {
@@ -112,11 +116,11 @@ public class Conquest_Gelkmaros_BossAI2 extends AggressiveNpcAI2
 	}
 	
 	private void boostDefense() {
-		SkillEngine.getInstance().getSkill(getOwner(), 21923, 1, getOwner()).useNoAnimationSkill(); //Boost Defense.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21923, 1, getOwner()).useNoAnimationSkill(); //Boost Defense.
 	}
 	
 	private void sendGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {

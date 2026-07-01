@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.commands.player;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
@@ -83,7 +83,7 @@ public class cmd_faction extends PlayerCommand {
 		if (CustomConfig.FACTION_CHAT_CHANNEL) {
 			ChatType channel = ChatType.CH1;
 
-			for (Player listener : World.getInstance().getAllPlayers()) {
+			for (Player listener : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 				if (listener.getAccessLevel() > 1) {
 					PacketSendUtility.sendPacket(listener, new SM_MESSAGE(player.getObjectId(), (player.getRace() == Race.ASMODIANS ? "(A) " : "(E) ") + player.getName(), message, channel));
 				}
@@ -94,7 +94,7 @@ public class cmd_faction extends PlayerCommand {
 		}
 		else {
 			message = player.getName() + ": " + message;
-			for (Player a : World.getInstance().getAllPlayers()) {
+			for (Player a : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 				if (a.getAccessLevel() > 1) {
 					PacketSendUtility.sendMessage(a, (player.getRace() == Race.ASMODIANS ? "[A] " : "[E] ") + message);
 				}

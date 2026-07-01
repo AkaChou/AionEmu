@@ -16,8 +16,9 @@
  */
 package com.aionemu.gameserver.services.events;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -34,15 +35,14 @@ import com.aionemu.gameserver.model.templates.shugosweep.ShugoSweepReward;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SHUGO_SWEEP;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class ShugoSweepService {
 
 	private static volatile ObjectProvider<ShugoSweepService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(ShugoSweepService.class);
 	private final int boardId = EventsConfig.EVENT_SHUGOSWEEP_BOARD;
 
 	public void initShugoSweep() {
@@ -138,7 +138,7 @@ public class ShugoSweepService {
 	}
 
 	private void rewardPlayer(final Player player, final int step, final int move) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (player.isOnline()) {

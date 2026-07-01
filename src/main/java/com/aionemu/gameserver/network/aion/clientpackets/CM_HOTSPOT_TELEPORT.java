@@ -16,13 +16,13 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_HOTSPOT_TELEPORT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.teleport.HotspotTeleportService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
@@ -59,7 +59,7 @@ public class CM_HOTSPOT_TELEPORT extends AionClientPacket {
 			return;
 		}
 		if (action == 1) {
-			HotspotTeleportService.getInstance().doTeleport(player, teleportId, price);
+			GameWorldBootstrapServices.hotspotTeleportService().doTeleport(player, teleportId, price);
 		} else if (action == 2) {
 			player.getController().cancelTask(TaskId.HOTSPOT_TELEPORT);
 			PacketSendUtility.broadcastPacketAndReceive(player, new SM_HOTSPOT_TELEPORT(2, player.getObjectId()));

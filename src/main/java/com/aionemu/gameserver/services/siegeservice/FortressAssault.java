@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.services.siegeservice;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +38,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -50,14 +53,14 @@ public class FortressAssault extends Assault<FortressSiege> {
 
 	@Override
 	protected void scheduleAssault(int delay) {
-		dredgionTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		dredgionTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				spawnTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+				spawnTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawnAttackers();
-						// BalaurAssaultService.getInstance().spawnDredgion(getSpawnIdByFortressId());
+						// GameCoreGameplayServices.balaurAssaultService().spawnDredgion(getSpawnIdByFortressId());
 					}
 				}, Rnd.get(240, 300) * 1000);
 			}
@@ -73,7 +76,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 		if (!captured) {
 			rewardDefendingPlayers();
 		} else {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Balaur have killed the Guardian General.
@@ -132,7 +135,7 @@ public class FortressAssault extends Assault<FortressSiege> {
 				SpawnEngine.spawnObject(spawn, 1);
 			}
 		}
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// The Dredgion has disgorged a horde of Balaur troopers.

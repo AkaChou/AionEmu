@@ -16,8 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -37,10 +37,9 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author Falke_34
  */
+@Slf4j
 public class CM_CREATIVITY_POINTS extends AionClientPacket {
 
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory.getLogger(CM_CREATIVITY_POINTS.class);
 
 	private Player activePlayer;
 	private int type;
@@ -66,18 +65,18 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 
 				if (pcp.getPanelCpType() == PanelCpType.STAT_UP) {
 					if (point <= 255) {
-						CreativityStatsService.getInstance().onEssenceApply(activePlayer, type, plusSize, id, point);
+						GameCreativityServices.creativityStatsService().onEssenceApply(activePlayer, type, plusSize, id, point);
 					} else if (point > 255) {
 						PacketSendUtility.sendBrightYellowMessageOnCenter(activePlayer, "Essence bug detected... Please reset points or relog for solv this issue!");
 					}
 				} else if (pcp.getPanelCpType() == PanelCpType.LEARN_SKILL) {
-					CreativitySkillService.getInstance().learnSkill(activePlayer, id, point);
+					GameCreativityServices.creativitySkillService().learnSkill(activePlayer, id, point);
 				} else if (pcp.getPanelCpType() == PanelCpType.ENCHANT_SKILL) {
 					if (point > pcp.getCountMax()) {
 						log.warn("Allocated essence bug on enchant skill, allowed max point: " + pcp.getCountMax() + " Player Point: " + point + "Essence ID: " + id + " Player Name: " + activePlayer.getName());
 						return;
 					}
-					CreativitySkillService.getInstance().enchantSkill(activePlayer, id, point);
+					GameCreativityServices.creativitySkillService().enchantSkill(activePlayer, id, point);
 				}
 			}
 			PacketSendUtility.sendPacket(activePlayer, new SM_STATS_INFO(activePlayer));
@@ -99,7 +98,7 @@ public class CM_CREATIVITY_POINTS extends AionClientPacket {
 			return;
 		}
 		if (type == 1) {
-			CreativityEssenceService.getInstance().onResetEssence(activePlayer, plusSize);
+			GameCreativityServices.creativityEssenceService().onResetEssence(activePlayer, plusSize);
 		}
 		
 		// Check quests after applying creativity points

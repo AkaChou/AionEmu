@@ -18,16 +18,17 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.luna_dice.LunaDiceItem;
 import com.aionemu.gameserver.model.templates.luna_dice.LunaDiceTable;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * Created by Wnkrz on 26/07/2017.
@@ -39,7 +40,8 @@ public class LunaDiceData {
 
 	@XmlElement(name = "table")
 	private List<LunaDiceTable> lunaDiceTabTemplate;
-	private TIntObjectHashMap<List<LunaDiceItem>> diceItemList = new TIntObjectHashMap<>();
+	@XmlTransient
+	private IntObjectHashMap<List<LunaDiceItem>> diceItemList = new IntObjectHashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		diceItemList.clear();

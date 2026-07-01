@@ -16,7 +16,8 @@
  */
 package com.aionemu.gameserver.services.player;
 
-import com.aionemu.commons.services.CronService;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.SellLimit;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -24,14 +25,15 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import org.springframework.beans.factory.ObjectProvider;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Source
  */
 public class PlayerLimitService {
 
-	private static FastMap<Integer, Long> sellLimit = new FastMap<Integer, Long>().shared();
+	private static Map<Integer, Long> sellLimit = new LinkedHashMap<Integer, Long>();
 	private static volatile ObjectProvider<PlayerLimitService> instanceProvider;
 
 	public static boolean updateSellLimit(Player player, long reward) {
@@ -50,13 +52,13 @@ public class PlayerLimitService {
 			return false;
 		} else {
 			limit -= reward;
-			sellLimit.putEntry(accoutnId, limit);
+			sellLimit.put(accoutnId, limit);
 			return true;
 		}
 	}
 
 	public void scheduleUpdate() {
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 
 			@Override
 			public void run() {

@@ -6,17 +6,14 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class NettyTransportLifecycle implements AionTransportLifecycle {
-
-    private static final Logger log = LoggerFactory.getLogger(NettyTransportLifecycle.class);
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
@@ -32,8 +29,8 @@ public class NettyTransportLifecycle implements AionTransportLifecycle {
             return;
         }
 
-        bossGroup = new NioEventLoopGroup(1);
-        workerGroup = new NioEventLoopGroup();
+        bossGroup = NettyEventLoopProvider.newBossGroup();
+        workerGroup = NettyEventLoopProvider.newWorkerGroup();
         NettyEventLoopProvider.useShared(bossGroup, workerGroup);
         log.info("Netty transport event loops started.");
     }

@@ -17,6 +17,8 @@
 package com.aionemu.gameserver.taskmanager.tasks;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -28,16 +30,14 @@ import com.aionemu.gameserver.taskmanager.AbstractPeriodicTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import javolution.util.FastMap;
-
 /**
  * @author Mr. Poke
  */
 public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	private static volatile ObjectProvider<TemporaryTradeTimeTask> instanceProvider;
 
-	private final FastMap<Item, Collection<Integer>> items = new FastMap<Item, Collection<Integer>>();
-	private final FastMap<Integer, Item> itemById = new FastMap<Integer, Item>();
+	private final Map<Item, Collection<Integer>> items = new HashMap<Item, Collection<Integer>>();
+	private final Map<Integer, Item> itemById = new HashMap<Integer, Item>();
 
 	/**
 	 * @param period
@@ -97,12 +97,13 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	public void run() {
 		writeLock();
 		try {
-			for (Map.Entry<Item, Collection<Integer>> entry : items.entrySet()) {
+			for (Iterator<Map.Entry<Item, Collection<Integer>>> i = items.entrySet().iterator(); i.hasNext();) {
+				Map.Entry<Item, Collection<Integer>> entry = i.next();
 				Item item = entry.getKey();
 				int time = (item.getTemporaryExchangeTime() - (int) (System.currentTimeMillis() / 1000));
 				if (time == 60) {
 					for (int playerId : entry.getValue()) {
-						Player player = World.getInstance().findPlayer(playerId);
+						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 						if (player != null) {
 							PacketSendUtility.sendPacket(player,
 									SM_SYSTEM_MESSAGE.STR_MSG_END_OF_EXCHANGE_TIME(item.getNameId(), time));
@@ -110,14 +111,14 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 					}
 				} else if (time <= 0) {
 					for (int playerId : entry.getValue()) {
-						Player player = World.getInstance().findPlayer(playerId);
+						Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 						if (player != null) {
 							PacketSendUtility.sendPacket(player,
 									SM_SYSTEM_MESSAGE.STR_MSG_EXCHANGE_TIME_OVER(item.getNameId()));
 						}
 					}
 					item.setTemporaryExchangeTime(0);
-					items.remove(item);
+					i.remove();
 					itemById.remove(item.getObjectId());
 				}
 			}

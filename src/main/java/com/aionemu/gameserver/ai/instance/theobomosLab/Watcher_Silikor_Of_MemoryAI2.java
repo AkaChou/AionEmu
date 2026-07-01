@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.theobomosLab;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
@@ -98,7 +100,7 @@ public class Watcher_Silikor_Of_MemoryAI2 extends AggressiveNpcAI2
 		super.handleSpawned();
 		switch (this.getNpcId()) {
 			case 237248: //Watcher Silikor Of Memory.
-				SkillEngine.getInstance().getSkill(getOwner(), 18481, 1, getOwner()).useSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 18481, 1, getOwner()).useSkill();
 			break;
 		}
 	}

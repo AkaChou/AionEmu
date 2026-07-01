@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.BeritraService;
@@ -23,7 +25,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class Beritra extends AdminCommand
 {
@@ -54,25 +56,25 @@ public class Beritra extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (BeritraService.getInstance().isInvasionInProgress(beritraId)) {
+			if (GameLocationBootstrapServices.beritraService().isInvasionInProgress(beritraId)) {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " started!");
-				BeritraService.getInstance().startBeritraInvasion(beritraId);
+				GameLocationBootstrapServices.beritraService().startBeritraInvasion(beritraId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!BeritraService.getInstance().isInvasionInProgress(beritraId)) {
+			if (!GameLocationBootstrapServices.beritraService().isInvasionInProgress(beritraId)) {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " is not start!");
 				
 			} else {
 				PacketSendUtility.sendMessage(player, "<Beritra Location> " + beritraId + " stopped!");
-				BeritraService.getInstance().stopBeritraInvasion(beritraId);
+				GameLocationBootstrapServices.beritraService().stopBeritraInvasion(beritraId);
 			}
 		}
 	}
 	
 	protected boolean isValidBeritraLocationId(Player player, int beritraId) {
-		if (!BeritraService.getInstance().getBeritraLocations().keySet().contains(beritraId)) {
+		if (!GameLocationBootstrapServices.beritraService().getBeritraLocations().keySet().contains(beritraId)) {
 			PacketSendUtility.sendMessage(player, "Id " + beritraId + " is invalid");
 			return false;
 		}

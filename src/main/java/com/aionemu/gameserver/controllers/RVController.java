@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -35,12 +37,13 @@ import com.aionemu.gameserver.services.rift.RiftManager;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class RVController extends NpcController {
 	private boolean isMaster = false;
 	private boolean isVortex = false;
-	protected FastMap<Integer, Player> passedPlayers = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> passedPlayers = new LinkedHashMap<Integer, Player>();
 	private SpawnTemplate slaveSpawnTemplate;
 	private Npc slave;
 	private Integer minLevel;
@@ -60,8 +63,8 @@ public class RVController extends NpcController {
 		this.minLevel = riftTemplate.getMinLevel();
 		this.maxLevel = riftTemplate.getMaxLevel();
 		this.deSpawnedTime = ((int) (System.currentTimeMillis() / 1000))
-				+ (isVortex ? VortexService.getInstance().getDuration() * 3600
-						: RiftService.getInstance().getDuration() * 3600);
+				+ (isVortex ? GameLocationBootstrapServices.vortexService().getDuration() * 3600
+						: GameLocationBootstrapServices.riftService().getDuration() * 3600);
 		if (slave != null) {
 			this.slave = slave;
 			this.slaveSpawnTemplate = slave.getSpawn();
@@ -91,7 +94,7 @@ public class RVController extends NpcController {
 								PlayerAllianceService.removePlayer(responder);
 							}
 						}
-						VortexLocation loc = VortexService.getInstance().getLocationByRift(getOwner().getNpcId());
+						VortexLocation loc = GameLocationBootstrapServices.vortexService().getLocationByRift(getOwner().getNpcId());
 						TeleportService2.teleportTo(responder, loc.getStartPoint());
 						PacketSendUtility.playerSendPacketTime(responder,
 								SM_SYSTEM_MESSAGE.STR_MSG_INVADE_DIRECT_PORTAL_OPEN_NOTICE, 10000);
@@ -209,7 +212,7 @@ public class RVController extends NpcController {
 		return deSpawnedTime - (int) (System.currentTimeMillis() / 1000);
 	}
 
-	public FastMap<Integer, Player> getPassedPlayers() {
+	public Map<Integer, Player> getPassedPlayers() {
 		return passedPlayers;
 	}
 

@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.worlds.kaldor;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -73,10 +79,10 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			        @Override
 			        public void visit(Player player) {
 						AI2Actions.deleteOwner(Berserk_AnohaAI2.this);
@@ -110,16 +116,16 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 					case 23:
 						think = false;
 						EmoteManager.emoteStopAttacking(getOwner());
-						SkillEngine.getInstance().getSkill(getOwner(), 21765, 60, getOwner()).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), 21765, 60, getOwner()).useNoAnimationSkill();
 						//I fight for Ereshkigal. You shall not distrub her.
 						sendMsg(1501393, getObjectId(), false, 0);
 						//Leave Ereshkigal's fortress!
 						sendMsg(1501394, getObjectId(), false, 5000);
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								if (!isAlreadyDead()) {
-									SkillEngine.getInstance().getSkill(getOwner(), 21767, 60, getOwner()).useNoAnimationSkill();
+									GameEngineServices.skillEngine().getSkill(getOwner(), 21767, 60, getOwner()).useNoAnimationSkill();
 									startThinkTask();
 									int total = explosiveSacrifice(855262); //Explosive Sacrifice.
 									if (total == 0 || (6 - total) != 0) {
@@ -158,7 +164,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startThinkTask() {
-		thinkTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		thinkTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
@@ -184,12 +190,12 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		SkillEngine.getInstance().getSkill(getOwner(), 21755, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21755, 60, getOwner()).useNoAnimationSkill();
 		//You must want to perish. So be it!
 		sendMsg(1501395, getObjectId(), false, 0);
 		//Freeze and face oblivion!
 		sendMsg(1501397, getObjectId(), false, 5000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
@@ -207,30 +213,30 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startSpecialSkillTask() {
-		specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(getOwner(), 21761, 60, getOwner()).useNoAnimationSkill();
-					specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameEngineServices.skillEngine().getSkill(getOwner(), 21761, 60, getOwner()).useNoAnimationSkill();
+					specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isAlreadyDead()) {
-								SkillEngine.getInstance().getSkill(getOwner(), 21762, 60, getOwner()).useNoAnimationSkill();
-								specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameEngineServices.skillEngine().getSkill(getOwner(), 21762, 60, getOwner()).useNoAnimationSkill();
+								specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										if (!isAlreadyDead()) {
-											SkillEngine.getInstance().getSkill(getOwner(), 21763, 60, getOwner()).useNoAnimationSkill();
+											GameEngineServices.skillEngine().getSkill(getOwner(), 21763, 60, getOwner()).useNoAnimationSkill();
 											if (curentPercent <= 63) {
-												specialSkillTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+												specialSkillTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 													@Override
 													public void run() {
 														if (!isAlreadyDead()) {
-															SkillEngine.getInstance().getSkill(getOwner(), 21764, 60, getOwner()).useNoAnimationSkill();
+															GameEngineServices.skillEngine().getSkill(getOwner(), 21764, 60, getOwner()).useNoAnimationSkill();
 															//Muhahaha! Experience true power!
 															sendMsg(1501157, getObjectId(), false, 0);
-															ThreadPoolManager.getInstance().schedule(new Runnable() {
+															GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 																@Override
 																public void run() {
 																	if (!isAlreadyDead()) {
@@ -339,7 +345,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 		if (p != null) {
 			sendBerserkAnohaGuide();
 		}
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Berserk Anoha has been defeated.
@@ -351,7 +357,7 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendBerserkAnohaGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -377,6 +383,6 @@ public class Berserk_AnohaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 }

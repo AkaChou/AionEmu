@@ -16,14 +16,13 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -40,10 +39,10 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class AtreianPassportService {
 
 	private static volatile ObjectProvider<AtreianPassportService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(AtreianPassportService.class);
 	private Map<Integer, AtreianPassport> basic = new HashMap<Integer, AtreianPassport>(1);
 	private Map<Integer, AtreianPassport> anny = new HashMap<Integer, AtreianPassport>(1);
 	public Map<Integer, AtreianPassport> data = new HashMap<Integer, AtreianPassport>(1);

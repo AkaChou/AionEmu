@@ -16,8 +16,14 @@
  */
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -29,13 +35,11 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
-
+@Slf4j
 public class CuringZoneService {
 
 	private static volatile ObjectProvider<CuringZoneService> instanceProvider;
-	Logger log = LoggerFactory.getLogger(CuringZoneService.class);
-	private FastList<CuringObject> curingObjects = new FastList<CuringObject>();
+	private List<CuringObject> curingObjects = new ArrayList<CuringObject>();
 
 	public CuringZoneService() {
 		for (CuringTemplate t : DataManager.CURING_OBJECTS_DATA.getCuringObject()) {
@@ -48,7 +52,7 @@ public class CuringZoneService {
 	}
 
 	private void startTask() {
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 
 			public void run() {
 				for (final CuringObject obj : curingObjects)
@@ -56,7 +60,7 @@ public class CuringZoneService {
 						public void visit(Player player) {
 							if ((MathUtil.isIn3dRange(obj, player, obj.getRange()))
 									&& (!player.getEffectController().hasAbnormalEffect(8751))) {
-								SkillEngine.getInstance().getSkill(player, 8751, 1, player).useNoAnimationSkill();
+								GameEngineServices.skillEngine().getSkill(player, 8751, 1, player).useNoAnimationSkill();
 							}
 						}
 					});

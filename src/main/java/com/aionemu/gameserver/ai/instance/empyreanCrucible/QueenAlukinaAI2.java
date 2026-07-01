@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -71,11 +77,11 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startEvent(int percent) {
-		SkillEngine.getInstance().getSkill(getOwner(), 17899, 41, getTarget()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 17899, 41, getTarget()).useNoAnimationSkill();
 		switch (percent) {
 			case 75:
 				scheduleSkill(17900, 4500);
-				NpcShoutsService.getInstance().sendMsg(getOwner(), 340487, getObjectId(), 0, 10000);
+				GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 340487, getObjectId(), 0, 10000);
 				scheduleSkill(17899, 14000);
 				scheduleSkill(17900, 18000);
 			break;
@@ -84,13 +90,13 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 				scheduleSkill(17902, 8000);
 			break;
 			case 25:
-				task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+				task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
 					if (isAlreadyDead()) {
 						cancelTask();
 					} else {
-						SkillEngine.getInstance().getSkill(getOwner(), 17901, 41, getTarget()).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), 17901, 41, getTarget()).useNoAnimationSkill();
 						scheduleSkill(17902, 5500);
 						scheduleSkill(17902, 7500);
 					}
@@ -106,11 +112,11 @@ public class QueenAlukinaAI2 extends AggressiveNpcAI2
 	}
 	
 	private void scheduleSkill(final int skillId , int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(getOwner(), skillId, 41, getTarget()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), skillId, 41, getTarget()).useNoAnimationSkill();
 				}
 			}
 		}, delay);

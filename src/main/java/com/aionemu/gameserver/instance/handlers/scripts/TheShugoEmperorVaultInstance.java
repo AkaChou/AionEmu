@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -32,16 +34,16 @@ import com.aionemu.gameserver.model.instance.instancereward.ShugoEmperorVaultRew
 import com.aionemu.gameserver.model.instance.playerreward.ShugoEmperorVaultPlayerReward;
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 
 /****/
@@ -63,7 +65,7 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 600000; //...10Min
 	private ShugoEmperorVaultReward instanceReward;
-	private final FastList<Future<?>> vaultTask = FastList.newInstance();
+	private final List<Future<?>> vaultTask = new ArrayList<Future<?>>();
 	
 	protected ShugoEmperorVaultPlayerReward getPlayerReward(Integer object) {
 		return (ShugoEmperorVaultPlayerReward) instanceReward.getPlayerReward(object);
@@ -84,19 +86,19 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	}
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 235643: //Indirunerk Jonakak's Supply Box.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002031, 2)); //Shugo Warrior's Minor Salve.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002032, 2)); //Shugo Warrior's Greater Salve.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002033, 2)); //Shugo Warrior's Minor Adrenaline.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002034, 2)); //Shugo Warrior's Greater Adrenaline.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002035, 2)); //Shugo Warrior's Minor Salve.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 162002036, 2)); //Shugo Warrior's Greater Salve.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002031, 2)); //Shugo Warrior's Minor Salve.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002032, 2)); //Shugo Warrior's Greater Salve.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002033, 2)); //Shugo Warrior's Minor Adrenaline.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002034, 2)); //Shugo Warrior's Greater Adrenaline.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002035, 2)); //Shugo Warrior's Minor Salve.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 162002036, 2)); //Shugo Warrior's Greater Salve.
 					}
 				}
 			break;
@@ -104,26 +106,26 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 			case 832930: //Emperor's Quality Treasure Box.
 				switch (Rnd.get(1, 2)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054631, 1)); //Middle Grade Reward Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054631, 1)); //Middle Grade Reward Bundle.
 				    break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054632, 1)); //Low Grade Reward Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054632, 1)); //Low Grade Reward Bundle.
 				    break;
 				}
 			break;
 			case 832931: //Emperor's Premium Treasure Box.
 				switch (Rnd.get(1, 4)) {
 					case 1:
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054629, 1)); //Highest Grade Reward Bundle.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054629, 1)); //Highest Grade Reward Bundle.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054630, 1)); //High Grade Reward Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054630, 1)); //High Grade Reward Bundle.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054631, 1)); //Middle Grade Reward Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054631, 1)); //Middle Grade Reward Bundle.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188054632, 1)); //Low Grade Reward Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188054632, 1)); //Low Grade Reward Bundle.
 					break;
 				}
 			break;
@@ -196,7 +198,7 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 				//All the intruders have fled. You've cleared the Vault!
 				sendMsgByRace(1402681, Race.PC_ALL, 2000);
                 spawn(832932, 360.03033f, 757.95233f, 398.42203f, (byte) 104); //The Shugo Emperor's Butler.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -328,7 +330,7 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		vaultTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		vaultTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -391,7 +393,7 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -467,10 +469,10 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = vaultTask.head(), end = vaultTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : vaultTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -503,7 +505,7 @@ public class TheShugoEmperorVaultInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

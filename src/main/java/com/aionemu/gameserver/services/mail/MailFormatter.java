@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.mail;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.LetterType;
@@ -46,7 +48,7 @@ public final class MailFormatter {
 		};
 		String title = template.getFormattedTitle(formatter);
 		String body = template.getFormattedMessage(formatter);
-		SystemMailService.getInstance().sendMail("$$CASH_ITEM_MAIL", recipientName, title, body, itemObjectId,
+		GameFeatureServices.systemMailService().sendMail("$$CASH_ITEM_MAIL", recipientName, title, body, itemObjectId,
 				itemCount, 0, 0, LetterType.BLACKCLOUD);
 	}
 
@@ -80,7 +82,7 @@ public final class MailFormatter {
 		};
 		String title = template.getFormattedTitle(null);
 		String message = template.getFormattedMessage(formatter);
-		SystemMailService.getInstance().sendMail(templateName, ownedHouse.getButler().getMasterName(), title, message,
+		GameFeatureServices.systemMailService().sendMail(templateName, ownedHouse.getButler().getMasterName(), title, message,
 				0, 0, 0, 0, LetterType.NORMAL);
 	}
 
@@ -108,7 +110,7 @@ public final class MailFormatter {
 		};
 		String title = template.getFormattedTitle(formatter);
 		String message = template.getFormattedMessage(formatter);
-		SystemMailService.getInstance().sendMail("$$HS_AUCTION_MAIL", playerData.getName(), title, message, 0, 0,
+		GameFeatureServices.systemMailService().sendMail("$$HS_AUCTION_MAIL", playerData.getName(), title, message, 0, 0,
 				returnKinah, 0, LetterType.NORMAL);
 	}
 
@@ -136,7 +138,7 @@ public final class MailFormatter {
 		};
 		String title = template.getFormattedTitle(formatter);
 		String message = template.getFormattedMessage(formatter);
-		SystemMailService.getInstance().sendMail("$$ABYSS_REWARD_MAIL", playerData.getName(), title, message,
+		GameFeatureServices.systemMailService().sendMail("$$ABYSS_REWARD_MAIL", playerData.getName(), title, message,
 				attachedItemObjId, attachedItemCount, attachedKinahCount, 0, LetterType.NORMAL);
 	}
 
@@ -164,7 +166,7 @@ public final class MailFormatter {
 		};
 		String title = template.getFormattedTitle(formatter);
 		String message = template.getFormattedMessage(formatter);
-		SystemMailService.getInstance().sendMail("$$ABYSS_REWARD_MAIL", playerData.getName(), title, message,
+		GameFeatureServices.systemMailService().sendMail("$$ABYSS_REWARD_MAIL", playerData.getName(), title, message,
 				attachedItemObjId, attachedItemCount, 0, attachedApCount, LetterType.NORMAL);
 	}
 
@@ -192,7 +194,7 @@ public final class MailFormatter {
 		};
 		String title = template.getFormattedTitle(formatter);
 		String message = template.getFormattedMessage(formatter);
-		SystemMailService.getInstance().sendMail("$$LUNA_REWARD_MAIL", playerData.getName(), title, message,
+		GameFeatureServices.systemMailService().sendMail("$$LUNA_REWARD_MAIL", playerData.getName(), title, message,
 				attachedItemObjId, attachedItemCount, attachedKinahCount, 0, LetterType.NORMAL);
 	}
 }

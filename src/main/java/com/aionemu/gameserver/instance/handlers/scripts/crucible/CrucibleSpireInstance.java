@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.crucible;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -35,7 +37,7 @@ import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.templates.tower_reward.TowerStageRewardTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
@@ -44,7 +46,6 @@ import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.*;
 import java.util.concurrent.Future;
@@ -61,7 +62,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     private Race spawnRace;
     private Map<Integer, StaticDoor> doors;
     protected boolean isInstanceDestroyed = false;
-    private final FastList<Future<?>> crucibleTask = FastList.newInstance();
+    private final List<Future<?>> crucibleTask = new ArrayList<>();
     private final Map<Integer, Long> lastTeleportTime = new HashMap<>();
     private boolean isSpawning = false;
 
@@ -113,11 +114,11 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     
     @Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
         int npcId = npc.getNpcId();
         switch (npcId) {
             case 247546: //IDInfinity Heal 02.
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000530, 1));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000530, 1));
                 break;
         }
     }
@@ -174,7 +175,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
         isSpawning = true;
         int pfloor = player.getFloor();
         spawnNextFloor(pfloor + 1);
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 deleteNpc(701773);
@@ -664,7 +665,7 @@ public class CrucibleSpireInstance extends GeneralInstanceHandler {
     }
     
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

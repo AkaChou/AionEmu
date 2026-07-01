@@ -26,6 +26,7 @@ import com.aionemu.chatserver.service.RestartService;
 import com.aionemu.commons.network.CommonsNetworkThreadPoolServices;
 import com.aionemu.commons.utils.ExitCode;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.springframework.beans.factory.ObjectProvider;
 
 /**
  *
@@ -38,6 +39,8 @@ public class ShutdownHook extends Thread {
     private volatile ChatProcessRuntimeBridge processBridge = new ChatProcessRuntimeBridge();
     private volatile RestartService restartService;
     private volatile GameServerService gameServerService;
+    private volatile ObjectProvider<RestartService> restartServiceProvider;
+    private volatile ObjectProvider<GameServerService> gameServerServiceProvider;
     /**
      * Indicates wether the loginserver should shut dpwn or only restart
      */
@@ -48,6 +51,16 @@ public class ShutdownHook extends Thread {
 
     public ShutdownHook(ChatProcessRuntimeBridge processBridge, RestartService restartService, GameServerService gameServerService) {
         configure(processBridge, restartService, gameServerService);
+    }
+
+    public ShutdownHook(
+        ChatProcessRuntimeBridge processBridge,
+        ObjectProvider<RestartService> restartServiceProvider,
+        ObjectProvider<GameServerService> gameServerServiceProvider
+    ) {
+        setProcessBridge(processBridge);
+        setRestartServiceProvider(restartServiceProvider);
+        setGameServerServiceProvider(gameServerServiceProvider);
     }
 
     /**
@@ -98,6 +111,14 @@ public class ShutdownHook extends Thread {
         this.gameServerService = gameServerService;
     }
 
+    private void setRestartServiceProvider(ObjectProvider<RestartService> restartServiceProvider) {
+        this.restartServiceProvider = restartServiceProvider;
+    }
+
+    private void setGameServerServiceProvider(ObjectProvider<GameServerService> gameServerServiceProvider) {
+        this.gameServerServiceProvider = gameServerServiceProvider;
+    }
+
     /**
      * Set's restartOnly attribute
      *
@@ -139,6 +160,13 @@ public class ShutdownHook extends Thread {
         if (configuredRestartService != null) {
             return configuredRestartService;
         }
+        ObjectProvider<RestartService> provider = restartServiceProvider;
+        if (provider != null) {
+            RestartService providedRestartService = provider.getIfAvailable();
+            if (providedRestartService != null) {
+                return providedRestartService;
+            }
+        }
         return ChatRestartServices.restartService();
     }
 
@@ -146,6 +174,13 @@ public class ShutdownHook extends Thread {
         GameServerService configuredGameServerService = gameServerService;
         if (configuredGameServerService != null) {
             return configuredGameServerService;
+        }
+        ObjectProvider<GameServerService> provider = gameServerServiceProvider;
+        if (provider != null) {
+            GameServerService providedGameServerService = provider.getIfAvailable();
+            if (providedGameServerService != null) {
+                return providedGameServerService;
+            }
         }
         return ChatCoreServices.gameServerService();
     }

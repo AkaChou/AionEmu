@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.aionemu.gameserver.controllers.attack.AttackResult;
@@ -37,8 +38,6 @@ import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.Skill;
 
-import javolution.util.FastList;
-
 /**
  * Notes:<br>
  * 1) There should be locking against onceUsedObservers<br>
@@ -50,9 +49,9 @@ import javolution.util.FastList;
 public class ObserveController {
 
 	private ReentrantLock lock = new ReentrantLock();
-	protected Collection<ActionObserver> observers = new FastList<ActionObserver>(0).shared();
-	protected FastList<ActionObserver> onceUsedObservers = new FastList<ActionObserver>(0);
-	protected Collection<AttackCalcObserver> attackCalcObservers = new FastList<AttackCalcObserver>(0).shared();
+	protected Collection<ActionObserver> observers = new CopyOnWriteArrayList<ActionObserver>();
+	protected List<ActionObserver> onceUsedObservers = new ArrayList<ActionObserver>(0);
+	protected Collection<AttackCalcObserver> attackCalcObservers = new CopyOnWriteArrayList<AttackCalcObserver>();
 
 	/**
 	 * Once used observer add to observerController. If observer notify will be

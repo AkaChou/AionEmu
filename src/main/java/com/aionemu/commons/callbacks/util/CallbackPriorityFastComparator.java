@@ -1,18 +1,16 @@
 package com.aionemu.commons.callbacks.util;
 
 import com.aionemu.commons.callbacks.Callback;
-import javolution.util.FastComparator;
+import java.util.Comparator;
 
 /**
- * 快速回调优先级比较器，继承自FastComparator以提供高性能的比较操作
- * Fast callback priority comparator that extends FastComparator for high-performance comparison operations
+ * 快速回调优先级比较器，保留旧类名以兼容现有回调排序代码
+ * Fast callback priority comparator that keeps the legacy class name for existing callback ordering code
  *
  * 该类使用CallbackPriorityComparator来实现实际的优先级比较逻辑
  * This class uses CallbackPriorityComparator to implement the actual priority comparison logic
  */
-public class CallbackPriorityFastComparator extends FastComparator<Callback<?>> {
-    
-    private static final long serialVersionUID = 5346780764438744817L;
+public class CallbackPriorityFastComparator implements Comparator<Callback<?>> {
     
     /**
      * 内部使用的回调优先级比较器实例

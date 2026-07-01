@@ -16,6 +16,11 @@
  */
 package com.aionemu.gameserver.model.house;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
+
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -25,10 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.apache.commons.lang3.StringUtils;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.main.HousingConfig;
 import com.aionemu.gameserver.controllers.HouseController;
@@ -58,7 +60,6 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.SpawnType;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
 import com.aionemu.gameserver.services.HousingBidService;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 import com.aionemu.gameserver.utils.idfactory.IDFactory;
@@ -66,10 +67,9 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
-import com.aionemu.gameserver.world.zone.ZoneService;
+@Slf4j
 
 public class House extends VisibleObject {
-	private static final Logger log = LoggerFactory.getLogger(House.class);
 	private HousingLand land;
 	private HouseAddress address;
 	private Building building;
@@ -93,7 +93,7 @@ public class House extends VisibleObject {
 	public static final int NOTICE_LENGTH = 130;
 
 	public House(Building building, HouseAddress address, int instanceId) {
-		this(IDFactory.getInstance().nextId(), building, address, instanceId);
+		this(GameWorldBootstrapServices.idFactory().nextId(), building, address, instanceId);
 	}
 
 	public House(int objectId, Building building, HouseAddress address, int instanceId) {
@@ -164,14 +164,14 @@ public class House extends VisibleObject {
 		}
 		fixBuildingStates();
 		if (getPosition() == null || !getPosition().isSpawned()) {
-			WorldPosition position = World.getInstance().createPosition(address.getMapId(), address.getX(),
+			WorldPosition position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(address.getMapId(), address.getX(),
 					address.getY(), address.getZ(), (byte) 0, instanceId);
 			this.setPosition(position);
 			SpawnEngine.bringIntoWorld(this);
 		}
 		List<HouseSpawn> templates = DataManager.HOUSE_NPCS_DATA.getSpawnsByAddress(getAddress().getId());
 		if (templates == null) {
-			Collection<ZoneInstance> zones = ZoneService.getInstance()
+			Collection<ZoneInstance> zones = GameWorldBootstrapServices.zoneService()
 					.getZoneInstancesByWorldId(getAddress().getMapId()).values();
 			String msg = null;
 			for (ZoneInstance zone : zones) {
@@ -357,9 +357,9 @@ public class House extends VisibleObject {
 	}
 
 	public boolean isInGracePeriod() {
-		return playerObjectId > 0 && HousingService.getInstance().searchPlayerHouses(playerObjectId).size() == 2
+		return playerObjectId > 0 && GameHousingServices.housingService().searchPlayerHouses(playerObjectId).size() == 2
 				&& (status == HouseStatus.ACTIVE || status == HouseStatus.SELL_WAIT) && sellStarted != null
-				&& sellStarted.getTime() <= HousingBidService.getInstance().getAuctionStartTime();
+				&& sellStarted.getTime() <= GameHousingServices.housingBidService().getAuctionStartTime();
 	}
 
 	public synchronized Npc getButler() {
@@ -400,7 +400,7 @@ public class House extends VisibleObject {
 		if (status == HouseStatus.NOSALE) {
 			npcId = getLand().getNosaleSignNpcId();
 		} else if (status == HouseStatus.SELL_WAIT) {
-			if (HousingBidService.getInstance().isBiddingAllowed()) {
+			if (GameHousingServices.housingBidService().isBiddingAllowed()) {
 				npcId = getLand().getSaleSignNpcId();
 			}
 		} else if (playerObjectId != 0) {
@@ -417,7 +417,7 @@ public class House extends VisibleObject {
 		}
 		getRegistry().despawnObjects();
 		if (this.getBuilding().getType() == BuildingType.PERSONAL_INS) {
-			HousingService.getInstance().removeStudio(playerObjectId);
+			GameHousingServices.housingService().removeStudio(playerObjectId);
 			DAOManager.getDAO(HousesDAO.class).deleteHouse(playerObjectId);
 			return true;
 		}
@@ -429,7 +429,7 @@ public class House extends VisibleObject {
 		Building defaultBuilding = getLand().getDefaultBuilding();
 		setOwnerId(0);
 		if (defaultBuilding != building) {
-			HousingService.getInstance().switchHouseBuilding(this, defaultBuilding.getId());
+			GameHousingServices.housingService().switchHouseBuilding(this, defaultBuilding.getId());
 		}
 		setStatus(HouseStatus.NOSALE);
 		save();

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers.attack;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +38,8 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author ATracer, KKnD
@@ -45,7 +48,7 @@ import javolution.util.FastMap;
 public class AggroList {
 
 	protected final Creature owner;
-	private FastMap<Integer, AggroInfo> aggroList = new FastMap<Integer, AggroInfo>().shared();
+	private Map<Integer, AggroInfo> aggroList = new LinkedHashMap<Integer, AggroInfo>();
 
 	public AggroList(Creature owner) {
 		this.owner = owner;
@@ -98,7 +101,7 @@ public class AggroList {
 		if (creature instanceof Player && owner instanceof Npc) {
 			for (Player player : owner.getKnownList().getKnownPlayers().values()) {
 				if (MathUtil.isIn3dRange(owner, player, 50)) {
-					QuestEngine.getInstance().onAddAggroList(new QuestEnv(owner, player, 0, 0));
+					GameEngineServices.questEngine().onAddAggroList(new QuestEnv(owner, player, 0, 0));
 				}
 			}
 		}
@@ -199,9 +202,7 @@ public class AggroList {
 		Creature mostHated = null;
 		int maxHate = 0;
 
-		for (FastMap.Entry<Integer, AggroInfo> e = aggroList.head(),
-				mapEnd = aggroList.tail(); (e = e.getNext()) != mapEnd;) {
-			AggroInfo ai = e.getValue();
+		for (AggroInfo ai : aggroList.values()) {
 			if (ai == null) {
 				continue;
 			}

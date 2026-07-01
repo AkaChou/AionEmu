@@ -18,17 +18,18 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.iu.IuLocation;
 import com.aionemu.gameserver.model.templates.iu.IuTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class IuData {
 	private List<IuTemplate> iuTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, IuLocation> iu = new FastMap<Integer, IuLocation>();
+	private Map<Integer, IuLocation> iu = new LinkedHashMap<Integer, IuLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (IuTemplate template : iuTemplates) {
@@ -53,7 +54,7 @@ public class IuData {
 		return iu.size();
 	}
 
-	public FastMap<Integer, IuLocation> getIuLocations() {
+	public Map<Integer, IuLocation> getIuLocations() {
 		return iu;
 	}
 }

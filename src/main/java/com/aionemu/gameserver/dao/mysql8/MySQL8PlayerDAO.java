@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.utils.GenericValidator;
 import com.aionemu.gameserver.configs.main.CacheConfig;
@@ -21,11 +22,9 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.google.common.collect.Maps;
-import javolution.util.FastMap;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import java.sql.*;
 import java.util.*;
 
@@ -33,12 +32,12 @@ import java.util.*;
  * MySQL 8 implementation of PlayerDAO
  * Fixed connection leaks - removed all DB.insertUpdate() and DB.prepareStatement()
  */
+@Slf4j
 public class MySQL8PlayerDAO extends PlayerDAO {
     
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerDAO.class);
     
-    private FastMap<Integer, PlayerCommonData> playerCommonData = new FastMap<Integer, PlayerCommonData>().shared();
-    private FastMap<String, PlayerCommonData> playerCommonDataByName = new FastMap<String, PlayerCommonData>().shared();
+    private Map<Integer, PlayerCommonData> playerCommonData = new LinkedHashMap<Integer, PlayerCommonData>();
+    private Map<String, PlayerCommonData> playerCommonDataByName = new LinkedHashMap<String, PlayerCommonData>();
 
     // Queries
     private static final String CHECK_NAME_USED_QUERY = "SELECT COUNT(id) as cnt FROM players WHERE name = ?";
@@ -233,7 +232,7 @@ public class MySQL8PlayerDAO extends PlayerDAO {
 
     @Override
     public PlayerCommonData loadPlayerCommonDataByName(final String name) {
-        Player player = World.getInstance().findPlayer(name);
+        Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
         if (player != null) {
             return player.getCommonData();
         }
@@ -325,7 +324,7 @@ public class MySQL8PlayerDAO extends PlayerDAO {
                     int worldId = resultSet.getInt("world_id");
                     
                     PlayerInitialData playerInitialData = DataManager.PLAYER_INITIAL_DATA;
-                    MapRegion mr = World.getInstance().getWorldMap(worldId).getMainWorldMapInstance().getRegion(x, y, z);
+                    MapRegion mr = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getMainWorldMapInstance().getRegion(x, y, z);
                     
                     if (mr == null && playerInitialData != null) {
                         LocationData ld = playerInitialData.getSpawnLocation(cd.getRace());
@@ -338,7 +337,7 @@ public class MySQL8PlayerDAO extends PlayerDAO {
                         }
                     }
                     
-                    WorldPosition position = World.getInstance().createPosition(worldId, x, y, z, heading, 0);
+                    WorldPosition position = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().createPosition(worldId, x, y, z, heading, 0);
                     cd.setPosition(position);
                     
                     cd.setWorldOwnerId(resultSet.getInt("world_owner"));

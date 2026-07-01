@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.model.siege;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -30,10 +30,11 @@ import com.aionemu.gameserver.world.zone.SiegeZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+@Slf4j
 
 public class SiegeLocation implements ZoneHandler {
-	private static final Logger log = LoggerFactory.getLogger(SiegeLocation.class);
 	public static final int STATE_INVULNERABLE = 0;
 	public static final int STATE_VULNERABLE = 1;
 
@@ -52,8 +53,8 @@ public class SiegeLocation implements ZoneHandler {
 	private boolean canTeleport;
 	protected int siegeDuration;
 	protected int influenceValue;
-	private FastMap<Integer, Creature> creatures = new FastMap<Integer, Creature>();
-	private FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	private Map<Integer, Creature> creatures = new LinkedHashMap<Integer, Creature>();
+	private Map<Integer, Player> players = new HashMap<>();
 	protected int buffId;
 	protected int buffIdA;
 	protected int buffIdE;
@@ -208,9 +209,7 @@ public class SiegeLocation implements ZoneHandler {
 
 	public void doOnAllPlayers(Visitor<Player> visitor) {
 		try {
-			for (FastMap.Entry<Integer, Player> e = players.head(),
-					mapEnd = players.tail(); (e = e.getNext()) != mapEnd;) {
-				Player player = e.getValue();
+			for (Player player : players.values()) {
 				if (player != null) {
 					visitor.visit(player);
 				}
@@ -220,11 +219,11 @@ public class SiegeLocation implements ZoneHandler {
 		}
 	}
 
-	public FastMap<Integer, Creature> getCreatures() {
+	public Map<Integer, Creature> getCreatures() {
 		return creatures;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 

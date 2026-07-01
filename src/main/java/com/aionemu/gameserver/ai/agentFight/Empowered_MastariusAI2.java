@@ -16,6 +16,11 @@
  */
 package com.aionemu.gameserver.ai.agentFight;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.Race;
@@ -25,7 +30,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.AgentService;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.HTMLService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
@@ -84,13 +88,13 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
         applyVeilleEnergy();
 		announceKilledMarchutan();
         announceEmpoweredMastariusDie();
-		AgentService.getInstance().stopAgentFight(1);
-        BaseService.getInstance().capture(90, Race.ELYOS);
+		GameLocationBootstrapServices.agentService().stopAgentFight(1);
+        GameFeatureServices.baseService().capture(90, Race.ELYOS);
 		super.handleDied();
 	}
 	
 	private void sendMastariusGuide() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -100,7 +104,7 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void addGpPlayer() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (MathUtil.isIn3dRange(player, getOwner(), 15)) {
@@ -111,7 +115,7 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceKilledMarchutan() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AionObject winner = getAggroList().getMostDamage();
@@ -124,7 +128,7 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceAgentUnderAttack() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//Marchutan's Agent Mastarius is under attack!
@@ -133,7 +137,7 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceJusinOdSpawn() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Empyrean Lord Agent summoned the Aether Concentrator.
@@ -144,7 +148,7 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceEmpyreanLordAgentHP50() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Empyrean Lord Agent's HP has dropped below 50%
@@ -153,7 +157,7 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceEmpyreanLordAgentHP10() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Empyrean Lord Agent's HP has dropped below 10%
@@ -162,7 +166,7 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceEmpoweredMastariusDie() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The Agent battle has ended.
@@ -172,12 +176,12 @@ public class Empowered_MastariusAI2 extends AggressiveNpcAI2
 	}
 	
 	public void applyVeilleEnergy() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				if (player.getCommonData().getRace() == Race.ELYOS) {
-				    SkillEngine.getInstance().applyEffectDirectly(12119, player, player, 0); //Veille's Energy.
-					SkillEngine.getInstance().applyEffectDirectly(20410, player, player, 0); //Victory Salute.
+				    GameEngineServices.skillEngine().applyEffectDirectly(12119, player, player, 0); //Veille's Energy.
+					GameEngineServices.skillEngine().applyEffectDirectly(20410, player, player, 0); //Victory Salute.
 				}
 			}
 		});

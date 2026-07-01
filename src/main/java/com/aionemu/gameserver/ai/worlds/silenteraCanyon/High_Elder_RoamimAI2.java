@@ -59,7 +59,7 @@ public class High_Elder_RoamimAI2 extends AggressiveNpcAI2
 	}
 	
 	private void announceHighElderRoamimFurious() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//High Elder Roamim is furious!
@@ -68,7 +68,7 @@ public class High_Elder_RoamimAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceHighElderRoamimSummoned() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//High Elder Roamim has summoned players.
@@ -77,7 +77,7 @@ public class High_Elder_RoamimAI2 extends AggressiveNpcAI2
 		});
 	}
 	private void announceHighElderRoamimReset() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//High Elder Roamim's threat level has reset!

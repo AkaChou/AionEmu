@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.pvparenas;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.attack.AggroInfo;
@@ -40,7 +46,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
@@ -75,7 +80,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 				PvPArenaPlayerReward reward = getPlayerReward(winner.getObjectId());
 				reward.addPvPKillToPlayer();
 				int worldId = winner.getWorldId();
-				QuestEngine.getInstance().onKillInWorld(new QuestEnv(player, winner, 0, 0), worldId);
+				GameEngineServices.questEngine().onKillInWorld(new QuestEnv(player, winner, 0, 0), worldId);
 			}
 		}
 		updatePoints(player);
@@ -163,7 +168,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	}
 	
 	private void spawnBlessedRelics(int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -174,7 +179,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	}
 	
 	private void spawnCursedRelics(int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -243,7 +248,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 			spawnBlessedRelics(0);
 		}
 		instanceReward.setInstanceStartTime();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed && !instanceReward.isRewarded() && canStart()) {
@@ -252,7 +257,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 					sendMsgByRace(1401181, Race.PC_ALL, 0);
 					instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 					sendPacket();
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -262,7 +267,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 								changeZone();
 								//If you defeat a higher rank group in this round, you can earn additional points.
 								sendMsgByRace(1401491, Race.PC_ALL, 2000);
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -272,7 +277,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 											changeZone();
 											//If you defeat a higher rank group in this round, you can earn additional points.
 											sendMsgByRace(1401491, Race.PC_ALL, 2000);
-											ThreadPoolManager.getInstance().schedule(new Runnable() {
+											GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 												@Override
 												public void run() {
 													if (!isInstanceDestroyed && !instanceReward.isRewarded()) {
@@ -307,7 +312,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -382,7 +387,7 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	}
 	
 	private void changeZone() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				for (Player player : instance.getPlayersInside()) {
@@ -445,14 +450,14 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 		for (Npc npc : instance.getNpcs()) {
 			npc.getController().onDelete();
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
 					for (Player player : instance.getPlayersInside()) {
 						onExitInstance(player);
 					}
-					AutoGroupService.getInstance().unRegisterInstance(instanceId);
+					GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
 				}
 			}
 		}, 10000);
@@ -572,6 +577,6 @@ public class PvPArenaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void useSkill(Npc npc, Player player, int skillId, int level) {
-		SkillEngine.getInstance().getSkill(npc, skillId, level, player).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(npc, skillId, level, player).useNoAnimationSkill();
 	}
 }

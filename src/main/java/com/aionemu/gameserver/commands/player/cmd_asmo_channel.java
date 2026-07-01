@@ -89,7 +89,7 @@ public class cmd_asmo_channel extends PlayerCommand {
 			final boolean toAll = params[0].equals("ALL");
 			final Race race = adminRace;
 
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 
 				@Override
 				public void visit(Player player) {

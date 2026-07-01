@@ -16,9 +16,11 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
@@ -31,7 +33,6 @@ import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
-import com.aionemu.gameserver.world.geo.GeoService;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SimpleRootEffect")
@@ -64,12 +65,12 @@ public class SimpleRootEffect extends EffectTemplate {
 		float y1 = (float) (Math.sin(radian) * 0.7f);
 		float z = effected.getZ();
 		byte intentions = (byte) (CollisionIntention.PHYSICAL.getId() | CollisionIntention.DOOR.getId());
-		Vector3f closestCollision = GeoService.getInstance().getClosestCollision(effected, effector.getX() + x1,
+		Vector3f closestCollision = GameWorldServices.geoService().getClosestCollision(effected, effector.getX() + x1,
 				effector.getY() + y1, effected.getZ() - 0.4f, false, intentions);
 		x1 = closestCollision.x;
 		y1 = closestCollision.y;
 		z = closestCollision.z;
-		World.getInstance().updatePosition(effected, x1, y1, z, heading, false);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(effected, x1, y1, z, heading, false);
 		PacketSendUtility.broadcastPacketAndReceive(effected,
 				new SM_FORCED_MOVE(effect.getEffector(), effected.getObjectId(), x1, y1, z));
 	}

@@ -16,21 +16,19 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Manages the asking of and responding to <tt>SM_QUESTION_WINDOW</tt>
  * 
  * @author Ben
  */
+@Slf4j
 public class ResponseRequester {
 
 	private Player player;
 	private HashMap<Integer, RequestResponseHandler> map = new HashMap<Integer, RequestResponseHandler>();
-	private static Logger log = LoggerFactory.getLogger(ResponseRequester.class);
 
 	public ResponseRequester(Player player) {
 		this.player = player;

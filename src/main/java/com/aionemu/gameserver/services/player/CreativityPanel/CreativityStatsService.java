@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.player.CreativityPanel;
 
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
+
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -37,27 +39,27 @@ public class CreativityStatsService {
 			switch (id) {
 			case 1:
 				player.setCPSlot1(point);
-				Power.getInstance().onChange(player, point);
+				GameCreativityServices.power().onChange(player, point);
 				break;
 			case 2:
 				player.setCPSlot2(point);
-				Health.getInstance().onChange(player, point);
+				GameCreativityServices.health().onChange(player, point);
 				break;
 			case 3:
 				player.setCPSlot3(point);
-				Agility.getInstance().onChange(player, point);
+				GameCreativityServices.agility().onChange(player, point);
 				break;
 			case 4:
 				player.setCPSlot4(point);
-				Precision.getInstance().onChange(player, point);
+				GameCreativityServices.precision().onChange(player, point);
 				break;
 			case 5:
 				player.setCPSlot5(point);
-				Knowledge.getInstance().onChange(player, point);
+				GameCreativityServices.knowledge().onChange(player, point);
 				break;
 			case 6:
 				player.setCPSlot6(point);
-				Will.getInstance().onChange(player, point);
+				GameCreativityServices.will().onChange(player, point);
 				break;
 			}
 			PacketSendUtility.sendPacket(player, new SM_CREATIVITY_POINTS_APPLY(type, size, id, point));

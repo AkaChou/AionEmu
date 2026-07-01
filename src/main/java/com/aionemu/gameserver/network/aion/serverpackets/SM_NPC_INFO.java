@@ -17,9 +17,11 @@
 // Credits To Magenik and to the Cinus
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
 import java.util.Map.Entry;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.aionemu.gameserver.model.NpcType;
 import com.aionemu.gameserver.model.Race;
@@ -171,7 +173,7 @@ public class SM_NPC_INFO extends AionServerPacket {
 		writeH(_npc.getNpcObjectType().getId());
 		writeC(0x00);
 		writeD(_npc.getTarget() == null ? 0 : _npc.getTarget().getObjectId());
-		writeD(TownService.getInstance().getTownIdByPosition(_npc));
+		writeD(GameHousingServices.townService().getTownIdByPosition(_npc));
 		writeD(0x00);
 	}
 }

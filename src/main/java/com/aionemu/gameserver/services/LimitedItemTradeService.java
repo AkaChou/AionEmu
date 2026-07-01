@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
+import java.util.List;
+
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.GoodsListData;
 import com.aionemu.gameserver.dataholders.TradeListData;
@@ -29,15 +30,16 @@ import com.aionemu.gameserver.model.limiteditems.LimitedTradeNpc;
 import com.aionemu.gameserver.model.templates.goods.GoodsList;
 import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate.TradeTab;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LimitedItemTradeService {
-	private static final Logger log = LoggerFactory.getLogger(LimitedItemTradeService.class);
 	private static volatile ObjectProvider<LimitedItemTradeService> instanceProvider;
 	private GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 	private TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
-	private FastMap<Integer, LimitedTradeNpc> limitedTradeNpcs = new FastMap<Integer, LimitedTradeNpc>().shared();
+	private Map<Integer, LimitedTradeNpc> limitedTradeNpcs = new LinkedHashMap<Integer, LimitedTradeNpc>();
 
 	public void start() {
 		for (int npcId : tradeListData.getTradeListTemplate().keys()) {
@@ -46,7 +48,7 @@ public class LimitedItemTradeService {
 				if (goodsList == null) {
 					continue;
 				}
-				FastList<LimitedItem> limitedItems = goodsList.getLimitedItems();
+				List<LimitedItem> limitedItems = goodsList.getLimitedItems();
 				if (limitedItems.isEmpty()) {
 					continue;
 				}
@@ -59,7 +61,7 @@ public class LimitedItemTradeService {
 		}
 		for (LimitedTradeNpc limitedTradeNpc : limitedTradeNpcs.values()) {
 			for (final LimitedItem limitedItem : limitedTradeNpc.getLimitedItems()) {
-				CronService.getInstance().schedule(new Runnable() {
+				GameCronServices.cronService().schedule(new Runnable() {
 					@Override
 					public void run() {
 						limitedItem.setToDefault();

@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.dredgionDefense;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -33,7 +37,7 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.AutoGroupService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.skillengine.SkillEngine;
@@ -42,7 +46,6 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +66,10 @@ public class SanctumInstance extends GeneralInstanceHandler
 	private int surkanaShockCannon;
 	private boolean isInstanceDestroyed;
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> sanctumTask = FastList.newInstance();
+	private final List<Future<?>> sanctumTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		switch (npcId) {
 			case 0:
@@ -80,7 +83,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		Player player = npc.getAggroList().getMostPlayerDamage();
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 220729: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 1865.2926f, 1611.8842f, 590.01190f, (byte) 106);
@@ -92,7 +95,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221015: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 1861.3127f, 1410.2605f, 590.0112f, (byte) 75);
@@ -104,7 +107,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221016: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 1568.4277f, 1480.0232f, 573.01764f, (byte) 45);
@@ -116,7 +119,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221017: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 1572.8469f, 1541.8624f, 573.02800f, (byte) 76);
@@ -128,7 +131,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}, 180000);
 			break;
 			case 221018: //Frigida Drakan Overseer.
-			    ThreadPoolManager.getInstance().schedule(new Runnable() {
+			    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						spawn(220730, 1441.1407f, 1511.2439f, 573.16920f, (byte) 0);
@@ -182,7 +185,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 			//Commander Zedas.
 			case 220705:
 				despawnNpc(npc);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						instance.doOnAllPlayers(new Visitor<Player>() {
@@ -225,7 +228,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 					sendMovie(player, 949);
 					//The Dredgion was destroyed.
 					sendMsgByRace(1403958, Race.PC_ALL, 0);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							instance.doOnAllPlayers(new Visitor<Player>() {
@@ -319,7 +322,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				deleteNpc(220716); //Frigida Drakan Commander.
 				//The Lyceum in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403780, Race.PC_ALL, 0);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(220915, 1411.3159f, 1671.2926f, 572.88416f, (byte) 105); //Jucleas.
@@ -344,7 +347,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				deleteNpc(220717); //Frigida Drakan Commander.
 				//The Hall of Prosperity in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403781, Race.PC_ALL, 0);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(220922, 1351.9054f, 1388.6754f, 572.99274f, (byte) 9); //Fasimedes.
@@ -369,7 +372,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				deleteNpc(220718); //Frigida Drakan Commander.
 				//The Protector's Hall in Sanctum has been destroyed by the Frigida Fregida Legion.
 				sendMsgByRace(1403782, Race.PC_ALL, 0);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 				    public void run() {
 						spawn(220929, 1848.4662f, 1511.1677f, 590.06964f, (byte) 0); //Lavirintos.
@@ -391,7 +394,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 220778: //Boardable Sanctum Defense Turret.
 				despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
+				GameEngineServices.skillEngine().getSkill(npc, 18290, 1, player).useNoAnimationSkill(); //Use Guard Tower.
 			break;
 			case 220782: //Turret Generator.
 				sp(221022, 1794.3324f, 2132.3911f, 545.47992f, (byte) 0, 624, 2000, 0, null);
@@ -525,7 +528,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -549,7 +552,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				sp(703406, 1865.9791f, 1510.8478f, 590.73645f, (byte) 106, 20000); //Frigida Drakan Commander [Flag].
             }
         }, 60000)); //1 Min.
-		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -598,7 +601,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				}
             }
         }, 180000)); //3 Min.
-		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -618,7 +621,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				spawn(703403, 1680.2438f, 1615.4294f, 566.652f, (byte) 61); //Sald [Flag].
             }
         }, 300000)); //5 Min.
-		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -645,7 +648,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				spawn(703401, 1436.4160f, 1458.1833f, 572.87780f, (byte) 1); //Idorunerk [Flag].
             }
         }, 900000)); //15 Min.
-		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -682,7 +685,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				spawn(834507, 1366.2908f, 1478.9144f, 569.04498f, (byte) 0, 234); //Turret Core 4.
             }
         }, 1200000)); //20 Min.
-		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -735,7 +738,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 				sp(220705, 1532.3103f, 1511.6292f, 565.8826f, (byte) 61, 52000); //Commander Zedas.
             }
         }, 1800000)); //30 Min.
-		sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			   /**
@@ -856,10 +859,10 @@ public class SanctumInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = sanctumTask.head(), end = sanctumTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : sanctumTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -872,7 +875,7 @@ public class SanctumInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -886,7 +889,7 @@ public class SanctumInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        sanctumTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        sanctumTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -969,7 +972,7 @@ public class SanctumInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

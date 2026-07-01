@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,14 +28,13 @@ import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastList;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
 	private Player player;
 	private int nrList;
 	private int salesRanking;
-	private TIntObjectHashMap<FastList<IGItem>> allItems = new TIntObjectHashMap<FastList<IGItem>>();
+	private IntObjectHashMap<List<IGItem>> allItems = new IntObjectHashMap<List<IGItem>>();
 
 	public SM_IN_GAME_SHOP_LIST(Player player, int nrList, int salesRanking) {
 		this.player = player;
@@ -45,7 +47,7 @@ public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
 		byte category = player.inGameShop.getCategory();
 		byte subCategory = player.inGameShop.getSubCategory();
 		if (salesRanking == 1) {
-			Collection<IGItem> items = InGameShopEn.getInstance().getItems(category);
+			Collection<IGItem> items = GameRuntimeServices.inGameShopEn().getItems(category);
 			int size = 0;
 			int tabSize = 9;
 			int f = 0;
@@ -55,9 +57,9 @@ public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
 						tabSize += 9;
 						f++;
 					}
-					FastList<IGItem> template = allItems.get(f);
+					List<IGItem> template = allItems.get(f);
 					if (template == null) {
-						template = FastList.newInstance();
+						template = new ArrayList<>();
 						allItems.put(f, template);
 					}
 					template.add(a);
@@ -75,15 +77,14 @@ public class SM_IN_GAME_SHOP_LIST extends AionServerPacket {
 				}
 			}
 		} else {
-			FastList<Integer> salesRankingItems = InGameShopEn.getInstance().getTopSales(subCategory, category);
+			List<Integer> salesRankingItems = GameRuntimeServices.inGameShopEn().getTopSales(subCategory, category);
 			writeD(salesRanking);
 			writeD(nrList);
-			writeD((InGameShopEn.getInstance().getMaxList(subCategory, category) + 1) * 9);
+			writeD((GameRuntimeServices.inGameShopEn().getMaxList(subCategory, category) + 1) * 9);
 			writeH(salesRankingItems.size());
 			for (int id : salesRankingItems) {
 				writeD(id);
 			}
-			FastList.recycle(salesRankingItems);
 		}
 	}
 }

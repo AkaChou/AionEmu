@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -27,9 +29,8 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.templates.flyring.FlyRingTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -108,7 +109,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
     }
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -116,7 +117,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			case 214781: //Dakaer Bloodmender.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000036, 1)); //Golden Ruins Of Roah Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000036, 1)); //Golden Ruins Of Roah Key.
 					}
 				}
 			break;
@@ -124,7 +125,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			case 214784: //Dakaer Physician.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000037, 1)); //Jeweled Ruins Of Roah Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000037, 1)); //Jeweled Ruins Of Roah Key.
 					}
 				}
 			break;
@@ -132,7 +133,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 			case 215450: //Ebonlord Vasana.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000038, 1)); //Magic Ruins Of Roah Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000038, 1)); //Magic Ruins Of Roah Key.
 					}
 				}
 			break;
@@ -178,7 +179,7 @@ public class HamateIsleStoreroomInstance extends GeneralInstanceHandler
 	}
 	
 	private void startHamateIsleStoreroomTimer() {
-		hamateIsleStoreroomTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		hamateIsleStoreroomTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//All Balaur treasure chests have disappeared.

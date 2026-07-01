@@ -16,6 +16,9 @@
  */
 package com.aionemu.gameserver.services.conquestservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.commons.callbacks.EnhancedObject;
@@ -70,7 +73,7 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 
 	protected void initConquestBoss() {
 		Npc cb = null;
-		for (VisibleObject obj : getConquestLocation().getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(getConquestLocation().getSpawned())) {
 			int npcId = ((Npc) obj).getNpcId();
 			// Conquest/Offering Inggison.
 			if ((npcId < 236530) || npcId > 236553) {
@@ -89,11 +92,11 @@ public abstract class ConquestOffering<CL extends ConquestLocation> {
 	}
 
 	protected void spawn(ConquestStateType type) {
-		ConquestService.getInstance().spawn(getConquestLocation(), type);
+		GameLocationBootstrapServices.conquestService().spawn(getConquestLocation(), type);
 	}
 
 	protected void despawn() {
-		ConquestService.getInstance().despawn(getConquestLocation());
+		GameLocationBootstrapServices.conquestService().despawn(getConquestLocation());
 	}
 
 	protected void addConquestBossListeners() {

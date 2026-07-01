@@ -16,16 +16,15 @@
  */
 package com.aionemu.gameserver.configs.ingameshop;
 
-import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import org.apache.commons.io.FileUtils;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
@@ -58,7 +57,7 @@ public class InGameShopProperty {
 	public static InGameShopProperty load() {
 		InGameShopProperty ing = null;
 		try {
-			String xml = FileUtils.readFileToString(Config.configFile("ingameshop/in_game_shop.xml"), "UTF-8");
+			String xml = Files.readString(Config.configFile("ingameshop/in_game_shop.xml").toPath(), StandardCharsets.UTF_8);
 			ing = (InGameShopProperty) JAXBUtil.deserialize(xml, InGameShopProperty.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize ingameshop", e);

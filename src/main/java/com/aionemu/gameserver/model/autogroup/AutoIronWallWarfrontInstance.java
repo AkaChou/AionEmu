@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.autogroup;
 
+import com.aionemu.gameserver.lifecycle.GameBattlefieldServices;
+
 import java.util.List;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -84,7 +86,7 @@ public class AutoIronWallWarfrontInstance extends AutoInstance {
 	@Override
 	public void onPressEnter(Player player) {
 		super.onPressEnter(player);
-		IronWallWarfrontService.getInstance().addCoolDown(player);
+		GameBattlefieldServices.ironWallWarfrontService().addCoolDown(player);
 		((IronWallWarfrontReward) instance.getInstanceHandler().getInstanceReward()).portToPosition(player);
 	}
 

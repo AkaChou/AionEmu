@@ -42,7 +42,7 @@ public class CM_CHAT_AUTH extends AionClientPacket {
 		Player player = getConnection().getActivePlayer();
 		if (GSConfig.ENABLE_CHAT_SERVER) {
 			if (!player.isInPrison()) {
-				ChatServer.getInstance().sendPlayerLoginRequst(player);
+				com.aionemu.gameserver.lifecycle.GameServerNetworkServices.chatServer().sendPlayerLoginRequst(player);
 			}
 		} else {
 			PacketSendUtility.sendPacket(player, new SM_CHAT_INIT(new byte[0]));

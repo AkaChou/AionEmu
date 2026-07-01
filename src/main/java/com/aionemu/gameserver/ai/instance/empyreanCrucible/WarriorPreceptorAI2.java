@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -69,7 +73,7 @@ public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startSkillTask() {
-		task = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -88,12 +92,12 @@ public class WarriorPreceptorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startSkillEvent() {
-		SkillEngine.getInstance().getSkill(getOwner(), 19595, 46, getTargetPlayer()).useNoAnimationSkill();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameEngineServices.skillEngine().getSkill(getOwner(), 19595, 46, getTargetPlayer()).useNoAnimationSkill();
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(getOwner(), 19596, 46, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19596, 46, getOwner()).useNoAnimationSkill();
 				}
 			}
 		}, 6000);

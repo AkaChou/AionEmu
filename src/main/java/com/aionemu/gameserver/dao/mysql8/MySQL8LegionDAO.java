@@ -1,15 +1,14 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.LegionDAO;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.model.team.legion.*;
-import javolution.util.FastList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,9 +20,9 @@ import java.util.TreeMap;
  * @modified cura
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8LegionDAO extends LegionDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8LegionDAO.class);
     
     private static final String INSERT_LEGION_QUERY = "INSERT INTO legions (id, `name`) VALUES (?, ?)";
     private static final String SELECT_LEGION_QUERY1 = "SELECT * FROM legions WHERE id = ?";
@@ -567,8 +566,8 @@ public class MySQL8LegionDAO extends LegionDAO {
     }
     
     @Override
-    public FastList<LegionJoinRequest> loadLegionJoinRequests(final int legionId) {
-        final FastList<LegionJoinRequest> requestList = new FastList<>();
+    public List<LegionJoinRequest> loadLegionJoinRequests(final int legionId) {
+        final List<LegionJoinRequest> requestList = new ArrayList<>();
         
         try (Connection con = DatabaseFactory.getConnection();
              PreparedStatement stmt = con.prepareStatement(SELECT_RECRUIT_LIST_QUERY)) {

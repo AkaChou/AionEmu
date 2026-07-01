@@ -41,9 +41,9 @@ class AionServicePathsTest {
         assertEquals(aionHome.resolve("game/config").toString(), System.getProperty("aion.game.config.dir"));
         assertEquals(aionHome.resolve("game/data").toString(), System.getProperty("aion.game.data.dir"));
         assertEquals(aionHome.resolve("game/cache").toString(), System.getProperty("aion.game.cache.dir"));
-        assertEquals(aionHome.resolve("logback-spring.xml").toString(), System.getProperty("aion.logging.config"));
+        assertEquals(aionHome.resolve("log/logback-spring.xml").toString(), System.getProperty("aion.logging.config"));
 
-        assertTrue(aionHome.resolve("logback-spring.xml").toFile().isFile());
+        assertTrue(aionHome.resolve("log/logback-spring.xml").toFile().isFile());
         assertTrue(aionHome.resolve("login/config/network/database.properties").toFile().isFile());
         assertTrue(aionHome.resolve("chat/config/chatserver.properties").toFile().isFile());
         assertTrue(aionHome.resolve("game/config/main/gameserver.properties").toFile().isFile());
@@ -65,7 +65,7 @@ class AionServicePathsTest {
     }
 
     @Test
-    void usesProjectResourceGameConfigDirectoryWhenAvailable() throws Exception {
+    void prefersRuntimeGameConfigDirectoryOverProjectResources() throws Exception {
         Path sourceGameConfig = aionHome.resolve("src/main/resources/aion/game/config");
         java.nio.file.Files.createDirectories(sourceGameConfig.resolve("main"));
         java.nio.file.Files.writeString(sourceGameConfig.resolve("main/geodata.properties"), "gameserver.geo.nav.pathfinding.enable = true");
@@ -74,11 +74,12 @@ class AionServicePathsTest {
 
         AionServicePaths.configureGame();
 
-        assertEquals(sourceGameConfig.toString(), System.getProperty("aion.game.config.dir"));
+        assertEquals(aionHome.resolve("game/config").toString(), System.getProperty("aion.game.config.dir"));
+        assertTrue(aionHome.resolve("game/config/main/gameserver.properties").toFile().isFile());
     }
 
     @Test
-    void usesProjectResourceLogbackFileWhenAvailable() throws Exception {
+    void prefersRuntimeLogbackFileOverProjectResources() throws Exception {
         Path sourceLogback = aionHome.resolve("src/main/resources/logback-spring.xml");
         java.nio.file.Files.createDirectories(sourceLogback.getParent());
         java.nio.file.Files.writeString(sourceLogback, "<configuration/>");
@@ -87,7 +88,8 @@ class AionServicePathsTest {
 
         AionServicePaths.configureGame();
 
-        assertEquals(sourceLogback.toString(), System.getProperty("aion.logging.config"));
+        assertEquals(aionHome.resolve("log/logback-spring.xml").toString(), System.getProperty("aion.logging.config"));
+        assertTrue(aionHome.resolve("log/logback-spring.xml").toFile().isFile());
     }
 
     @Test

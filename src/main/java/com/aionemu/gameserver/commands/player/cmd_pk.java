@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.player;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.events.BanditService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -34,10 +36,10 @@ public class cmd_pk extends PlayerCommand
     @Override
     public void execute(Player player, String... params) {
         if (!player.isBandit()) {
-            BanditService.getInstance().startBandit(player);
+            GameFeatureServices.banditService().startBandit(player);
             PacketSendUtility.sendSys3Message(player, "\uE005", "<[PK] Bandit> started !!!");
         } else {
-            BanditService.getInstance().stopBandit(player);
+            GameFeatureServices.banditService().stopBandit(player);
             PacketSendUtility.sendSys3Message(player, "\uE005", "<[PK] Bandit> stop !!!");
         }
     }

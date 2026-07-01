@@ -1,20 +1,18 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.HouseScriptsDAO;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerScripts;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 
 /**
  * MySQL 8 implementation of HouseScriptsDAO
  * @author Rolandas, Updated for MySQL 8
  */
+@Slf4j
 public class MySQL8HouseScriptsDAO extends HouseScriptsDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8HouseScriptsDAO.class);
 
     private static final String MERGE_QUERY = "INSERT INTO `house_scripts` (`house_id`, `index`, `script`) VALUES (?, ?, ?) " + "ON DUPLICATE KEY UPDATE `script` = VALUES(`script`)";
     private static final String DELETE_QUERY = "DELETE FROM `house_scripts` WHERE `house_id` = ? AND `index` = ?";

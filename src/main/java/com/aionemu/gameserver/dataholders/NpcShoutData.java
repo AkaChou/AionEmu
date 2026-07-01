@@ -19,21 +19,22 @@ package com.aionemu.gameserver.dataholders;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.npcshout.NpcShout;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutEventType;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutGroup;
 import com.aionemu.gameserver.model.templates.npcshout.ShoutList;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rolandas
@@ -67,7 +68,7 @@ public class NpcShoutData {
 	protected List<ShoutGroup> shoutGroups;
 
 	@XmlTransient
-	private TIntObjectHashMap<FastMap<Integer, List<NpcShout>>> shoutsByWorldNpcs = new TIntObjectHashMap<FastMap<Integer, List<NpcShout>>>();
+	private IntObjectHashMap<Map<Integer, List<NpcShout>>> shoutsByWorldNpcs = new IntObjectHashMap<Map<Integer, List<NpcShout>>>();
 
 	@XmlTransient
 	private int count = 0;
@@ -78,9 +79,9 @@ public class NpcShoutData {
 				ShoutList shoutList = group.getShoutNpcs().get(i);
 				int worldId = shoutList.getRestrictWorld();
 
-				FastMap<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(worldId);
+				Map<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(worldId);
 				if (worldShouts == null) {
-					worldShouts = FastMap.newInstance();
+					worldShouts = new LinkedHashMap<>();
 					this.shoutsByWorldNpcs.put(worldId, worldShouts);
 				}
 
@@ -116,7 +117,7 @@ public class NpcShoutData {
 	 * @return null if not found
 	 */
 	public List<NpcShout> getNpcShouts(int worldId, int npcId) {
-		FastMap<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(0);
+		Map<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(0);
 
 		if (worldShouts == null || worldShouts.get(npcId) == null) {
 			worldShouts = shoutsByWorldNpcs.get(worldId);
@@ -139,7 +140,7 @@ public class NpcShoutData {
 	 * {@link #getNpcShouts(int worldId, int npcId)})
 	 */
 	public boolean hasAnyShout(int worldId, int npcId) {
-		FastMap<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(0);
+		Map<Integer, List<NpcShout>> worldShouts = shoutsByWorldNpcs.get(0);
 
 		if (worldShouts == null || worldShouts.get(npcId) == null) {
 			worldShouts = shoutsByWorldNpcs.get(worldId);

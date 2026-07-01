@@ -16,11 +16,13 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -51,13 +53,14 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+@Slf4j
 
 public class AbyssLandingService {
 	private static volatile ObjectProvider<AbyssLandingService> instanceProvider;
-	private static Logger log = LoggerFactory.getLogger(AbyssLandingService.class);
 	private static Map<Integer, LandingLocation> abyssLanding;
-	private final Map<Integer, Landing<?>> activeLanding = new FastMap<Integer, Landing<?>>().shared();
+	private final Map<Integer, Landing<?>> activeLanding = new LinkedHashMap<Integer, Landing<?>>();
 	private final int questRate = AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE;
 
 	public void initLandingLocations() {
@@ -113,7 +116,7 @@ public class AbyssLandingService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {
@@ -306,7 +309,7 @@ public class AbyssLandingService {
 
 	public void AnnounceToPoints(final Player pl, final DescriptionId race, final DescriptionId name, final int points,
 			final LandingPointsEnum type) {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				switch (type) {
@@ -390,7 +393,7 @@ public class AbyssLandingService {
 		redemptionLanding().setLevel(level);
 		stopLanding(redemptionLanding().getId());
 		startLanding(redemptionLanding().getId());
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Landing Level Up.
@@ -405,7 +408,7 @@ public class AbyssLandingService {
 		harbingerLanding().setLevel(level);
 		stopLanding(harbingerLanding().getId());
 		startLanding(harbingerLanding().getId());
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Landing Level Up.
@@ -420,7 +423,7 @@ public class AbyssLandingService {
 		harbingerLanding().setLevel(level);
 		stopLanding(harbingerLanding().getId());
 		startLanding(harbingerLanding().getId());
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Landing Weakened.
@@ -435,7 +438,7 @@ public class AbyssLandingService {
 		redemptionLanding().setLevel(level);
 		stopLanding(redemptionLanding().getId());
 		startLanding(redemptionLanding().getId());
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				// Landing Weakened.
@@ -450,20 +453,20 @@ public class AbyssLandingService {
 	 * MONUMENT
 	 */
 	public void onRewardMonuments(Race race, int id, int points) {
-		LandingSpecialLocation lsl = AbyssLandingSpecialService.getInstance().getLandingSpecialLocation(id);
+		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
 		if (race == Race.ASMODIANS) {
 			updateHarbingerLanding(points, LandingPointsEnum.MONUMENT, true);
-			AbyssLandingSpecialService.getInstance().startLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
 		} else {
 			updateRedemptionLanding(points, LandingPointsEnum.MONUMENT, true);
-			AbyssLandingSpecialService.getInstance().startLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
 		}
 		lsl.setType(LandingSpecialStateType.ACTIVE);
 		AbyssLandingSpecialService.onSave(lsl);
 	}
 
 	public void onDieMonuments(Race race, int id, int points) {
-		LandingSpecialLocation lsl = AbyssLandingSpecialService.getInstance().getLandingSpecialLocation(id);
+		LandingSpecialLocation lsl = GameLocationBootstrapServices.abyssLandingSpecialService().getLandingSpecialLocation(id);
 		if (race == Race.ELYOS) {
 			updateRedemptionLanding(points, LandingPointsEnum.MONUMENT, true);
 			updateHarbingerLanding(points, LandingPointsEnum.MONUMENT, false);
@@ -483,10 +486,10 @@ public class AbyssLandingService {
 	public void onRewardCommander(Race race, int id, int points) {
 		if (race == Race.ASMODIANS) {
 			updateHarbingerLanding(points, LandingPointsEnum.COMMANDER, true);
-			AbyssLandingSpecialService.getInstance().startLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
 		} else {
 			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, true);
-			AbyssLandingSpecialService.getInstance().startLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().startLanding(id);
 		}
 	}
 
@@ -494,11 +497,11 @@ public class AbyssLandingService {
 		if (race == Race.ELYOS) {
 			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, true);
 			updateHarbingerLanding(points, LandingPointsEnum.COMMANDER, false);
-			AbyssLandingSpecialService.getInstance().stopLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(id);
 		} else {
 			updateRedemptionLanding(points, LandingPointsEnum.COMMANDER, false);
 			updateHarbingerLanding(points, LandingPointsEnum.COMMANDER, true);
-			AbyssLandingSpecialService.getInstance().stopLanding(id);
+			GameLocationBootstrapServices.abyssLandingSpecialService().stopLanding(id);
 		}
 	}
 

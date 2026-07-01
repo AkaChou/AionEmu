@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.controllers.movement;
 
+import com.aionemu.gameserver.lifecycle.GameMovementLoopServices;
+
 import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MOVE;
@@ -61,7 +63,7 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 	@Override
 	public void moveToTargetObject() {
 		updateLastMove();
-		MoveTaskManager.getInstance().addCreature(owner);
+		GameMovementLoopServices.moveTaskManager().addCreature(owner);
 	}
 
 	protected void moveToLocation(float targetX, float targetY, float targetZ, float offset) {
@@ -97,7 +99,7 @@ public class SiegeWeaponMoveController extends SummonMoveController {
 		float newX = (targetDestX - ownerX) * distFraction + ownerX;
 		float newY = (targetDestY - ownerY) * distFraction + ownerY;
 		float newZ = (targetDestZ - ownerZ) * distFraction + ownerZ;
-		World.getInstance().updatePosition(owner, newX, newY, newZ, heading, false);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(owner, newX, newY, newZ, heading, false);
 		if (directionChanged) {
 			movementMask = -32;
 			PacketSendUtility.broadcastPacket(owner, new SM_MOVE(owner));

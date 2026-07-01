@@ -14,13 +14,14 @@
  */
 package com.aionemu.gameserver.services.events;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -34,22 +35,19 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EVENT_WINDOW_ITEMS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
-
-import javolution.util.FastMap;
 
 /**
  * @author Rinzler (Encom)
  * @rework FrozenKiller
  */
+@Slf4j
 public class EventWindowService {
 
 	private static volatile ObjectProvider<EventWindowService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(EventWindowService.class);
 	private Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
 	private HashMap<Integer, EventsWindow> activeEvents = new HashMap<Integer, EventsWindow>();
 	private HashMap<Integer, EventsWindow> activeEventsForPlayer = new HashMap<Integer, EventsWindow>();
-	private final FastMap<Integer, EventsWindow> sendActiveEventsForPlayer = new FastMap<>();
+	private final Map<Integer, EventsWindow> sendActiveEventsForPlayer = new HashMap<>();
 	private long tStart = 0; // Start Time.
 	private long tEnd = 0; // End Time.
 
@@ -111,7 +109,7 @@ public class EventWindowService {
 				playerEventsWindowDAO.store(accountId, eventsWindow.getId(), new Timestamp(System.currentTimeMillis()), elapsed); // Temp for updating TiemStamp
 			}
 			log.info("Start counting id " + eventsWindow.getId() + " time " + eventsWindow.getRemainingTime() + " minute(s)");
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {
@@ -145,7 +143,7 @@ public class EventWindowService {
 				continue;
 			}
 			if (eventsWindow.getId() == eventId) {
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (player.isOnline()) {

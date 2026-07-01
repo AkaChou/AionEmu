@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.commands.player;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.configs.main.WeddingsConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -48,8 +52,8 @@ public class cmd_marry extends PlayerCommand {
             return;
         }
 
-        Player partner1 = World.getInstance().findPlayer(Util.convertName(params[0]));
-        Player partner2 = World.getInstance().findPlayer(Util.convertName(params[1]));
+        Player partner1 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
+        Player partner2 = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[1]));
         if (partner1 == null || partner2 == null) {
             PacketSendUtility.sendMessage(admin, "The specified player is not online.");
             return;
@@ -65,11 +69,11 @@ public class cmd_marry extends PlayerCommand {
 
         PacketSendUtility.sendMessage(admin, "Question sended.");
         PacketSendUtility.sendMessage(partner1, "You want marry on " + partner2.getName() + "?");
-        HTMLService.showHTML(partner1, HTMLCache.getInstance().getHTML("weddings.xhtml"));
+        HTMLService.showHTML(partner1, GameStaticDataServices.htmlCache().getHTML("weddings.xhtml"));
         PacketSendUtility.sendMessage(partner2, "You want marry on " + partner1.getName() + "?");
-        HTMLService.showHTML(partner2, HTMLCache.getInstance().getHTML("weddings.xhtml"));
+        HTMLService.showHTML(partner2, GameStaticDataServices.htmlCache().getHTML("weddings.xhtml"));
 
-        WeddingService.getInstance().registerOffer(partner1, partner2, admin);
+        GameFeatureServices.weddingService().registerOffer(partner1, partner2, admin);
     }
 
     @Override

@@ -16,18 +16,16 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_0x14F;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ACCOUNT_PROPERTIES;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CHARACTER_LIST;
+@Slf4j
 
 public class CM_CHARACTER_LIST extends AionClientPacket {
-	private static Logger log = LoggerFactory.getLogger(CM_CHARACTER_LIST.class);
 
 	private int playOk2;
 

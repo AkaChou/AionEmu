@@ -40,7 +40,7 @@ public class SPrison extends AdminCommand {
 		}
 
 		try {
-			Player playerToPrison = World.getInstance().findPlayer(Util.convertName(params[0]));
+			Player playerToPrison = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(Util.convertName(params[0]));
 			int delay = Integer.parseInt(params[1]);
 			
 			String reason = Util.convertName(params[2]);

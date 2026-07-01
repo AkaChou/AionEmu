@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -30,7 +32,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MAIL_SERVICE;
 import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author kosyachok
@@ -38,8 +41,8 @@ import javolution.util.FastMap;
  */
 public class Mailbox {
 
-	private Map<Integer, Letter> mails = new FastMap<Integer, Letter>().shared();
-	private Map<Integer, Letter> reserveMail = new FastMap<Integer, Letter>().shared();
+	private Map<Integer, Letter> mails = new LinkedHashMap<Integer, Letter>();
+	private Map<Integer, Letter> reserveMail = new LinkedHashMap<Integer, Letter>();
 	private Player owner;
 	public boolean isMailListUpdateRequired;
 
@@ -200,7 +203,7 @@ public class Mailbox {
 				} else
 					break;
 			}
-			MailService.getInstance().refreshMail(getOwner());
+			GameCoreGameplayServices.mailService().refreshMail(getOwner());
 		}
 	}
 

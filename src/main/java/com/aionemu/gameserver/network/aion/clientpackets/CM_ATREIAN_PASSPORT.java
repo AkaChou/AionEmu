@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -59,6 +61,6 @@ public class CM_ATREIAN_PASSPORT extends AionClientPacket {
 		if (player == null) {
 			return;
 		}
-		AtreianPassportService.getInstance().getReward(player, 8); // 8 = active PassportID (Todo Config ?)
+		GameEventBootstrapServices.atreianPassportService().getReward(player, 8); // 8 = active PassportID (Todo Config ?)
 	}
 }

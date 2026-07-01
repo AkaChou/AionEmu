@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.cradleOfEternity;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.ActionItemNpcAI2;
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834006: //Altar Of Earth.
 				//The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(834006);
@@ -61,7 +62,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834019: //Altar Of Earth.
 				//The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(834019);
@@ -73,7 +74,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834020: //Altar Of Earth.
 				//The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(834020);
@@ -85,7 +86,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834021: //Altar Of Earth.
 				//The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(834021);
@@ -97,7 +98,7 @@ public class Altar_Of_EarthAI2 extends ActionItemNpcAI2
 			case 834022: //Altar Of Earth.
 				//The Malachite of Earth emits a light and starts to float.
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_IDEternity_02_SYSTEM_MSG_37, 5000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						despawnNpc(834017);

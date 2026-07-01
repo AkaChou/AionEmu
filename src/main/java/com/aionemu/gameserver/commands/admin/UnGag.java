@@ -42,7 +42,7 @@ public class UnGag extends AdminCommand {
 		}
 
 		String name = Util.convertName(params[0]);
-		Player player = World.getInstance().findPlayer(name);
+		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(name);
 		if (player == null) {
 			PacketSendUtility.sendMessage(admin, "Player " + name + " was not found!");
 			PacketSendUtility.sendMessage(admin, "Syntax: //ungag <player>");

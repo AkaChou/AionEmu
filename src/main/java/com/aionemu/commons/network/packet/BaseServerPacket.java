@@ -2,6 +2,7 @@ package com.aionemu.commons.network.packet;
 
 import com.aionemu.commons.utils.PrintUtils;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * 服务器端数据包基类
@@ -42,6 +43,7 @@ public abstract class BaseServerPacket extends BasePacket {
      * @param buf 数据缓冲区 / Data buffer
      */
     public void setBuf(ByteBuffer buf) {
+        buf.order(ByteOrder.LITTLE_ENDIAN);
         this.buf = buf;
     }
 

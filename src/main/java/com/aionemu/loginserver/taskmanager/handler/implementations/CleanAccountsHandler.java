@@ -18,19 +18,17 @@
 
 package com.aionemu.loginserver.taskmanager.handler.implementations;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.dao.AccountDAO;
 import com.aionemu.loginserver.taskmanager.handler.TaskFromDBHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  *
  * @author nrg
  */
+@Slf4j
 public class CleanAccountsHandler extends TaskFromDBHandler {
 
-    private static Logger log = LoggerFactory.getLogger(CleanAccountsHandler.class);
     private int daysOfInactivity;
 
     @Override

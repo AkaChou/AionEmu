@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -42,10 +44,10 @@ public class CM_A_STATION extends AionClientPacket {
 		Player requested = getConnection().getActivePlayer();
 		switch (action) {
 		case 1:
-			AStationService.getInstance().handleMoveThere(requested);
+			GameFeatureServices.aStationService().handleMoveThere(requested);
 			break;
 		case 2:
-			AStationService.getInstance().handleMoveBack(requested);
+			GameFeatureServices.aStationService().handleMoveBack(requested);
 			break;
 		}
 	}

@@ -15,8 +15,12 @@
  */
 package com.aionemu.gameserver.services.teleport;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -78,15 +82,14 @@ import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.trade.PricesService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapType;
 import com.aionemu.gameserver.world.WorldPosition;
+@Slf4j
 
 public class TeleportService2 {
 
-	private static final Logger log = LoggerFactory.getLogger(TeleportService2.class);
 	private static final int TELEPORT_DEFAULT_DELAY = 2200;
 	private static final int BEAM_DEFAULT_DELAY = 3000;
 
@@ -202,7 +205,7 @@ public class TeleportService2 {
 		playerTransformation(player);
 		instanceTransformation(player);
 		archdaevaTransformation(player);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (player.getLifeStats().isAlreadyDead() || !player.isSpawned()) {
@@ -225,19 +228,19 @@ public class TeleportService2 {
 
 			Pet pet = player.getPet();
 			if (pet != null) {
-				World.getInstance().setPosition(pet, pos.getMapId(), player.getInstanceId(), pos.getX(), pos.getY(), pos.getZ(), pos.getHeading());
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(pet, pos.getMapId(), player.getInstanceId(), pos.getX(), pos.getY(), pos.getZ(), pos.getHeading());
 			}
 
 			// Summon.
 			Summon summon = player.getSummon();
 
 			if (summon != null) {
-				World.getInstance().setPosition(summon, pos.getMapId(), player.getInstanceId(), pos.getX(), pos.getY(), pos.getZ(), pos.getHeading());
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(summon, pos.getMapId(), player.getInstanceId(), pos.getX(), pos.getY(), pos.getZ(), pos.getHeading());
 			}
 			// Minion
 			Minion minion = player.getMinion();
 			if (minion != null) {
-				World.getInstance().setPosition(minion, pos.getMapId(), player.getInstanceId(), pos.getX(), pos.getY(), pos.getZ(), pos.getHeading());
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(minion, pos.getMapId(), player.getInstanceId(), pos.getX(), pos.getY(), pos.getZ(), pos.getHeading());
 			}
 
 			PacketSendUtility.sendPacket(player, new SM_STATS_INFO(player));
@@ -248,26 +251,26 @@ public class TeleportService2 {
 			PacketSendUtility.sendPacket(player, new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));
 			// Pet.
 			if (pet != null) {
-				World.getInstance().spawn(pet);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(pet);
 			}
 
 			// Summon.
 			if (summon != null) {
-				World.getInstance().spawn(summon);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(summon);
 			}
 
 			// Minion
 			if (minion != null) {
-				World.getInstance().spawn(minion);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(minion);
 			}
 
 			player.updateKnownlist();
 			player.getKnownList().clear();
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
-			DisputeLandService.getInstance().onLogin(player);
+			GameFeatureServices.disputeLandService().onLogin(player);
 			player.getEffectController().updatePlayerEffectIcons();
-			ProtectorConquerorService sgs = ProtectorConquerorService.getInstance();
+			ProtectorConquerorService sgs = GameFeatureServices.protectorConquerorService();
 			playerTransformation(player);
 			instanceTransformation(player);
 			archdaevaTransformation(player);
@@ -286,8 +289,8 @@ public class TeleportService2 {
 
 	public static void teleportDeadTo(Player player, int worldId, int instanceId, float x, float y, float z, byte heading) {
 		player.getController().onLeaveWorld();
-		World.getInstance().despawn(player);
-		World.getInstance().setPosition(player, worldId, instanceId, x, y, z, heading);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, instanceId, x, y, z, heading);
 		PacketSendUtility.sendPacket(player, new SM_CHANNEL_INFO(player.getPosition()));
 		PacketSendUtility.sendPacket(player, new SM_PLAYER_SPAWN(player));
 		player.setPortAnimation(4);
@@ -330,8 +333,8 @@ public class TeleportService2 {
 			return false;
 		}
 
-		if (DuelService.getInstance().isDueling(player.getObjectId())) {
-			DuelService.getInstance().loseDuel(player);
+		if (GameGameplayServices.duelService().isDueling(player.getObjectId())) {
+			GameGameplayServices.duelService().loseDuel(player);
 		}
 
 		if (player.getWorldId() != worldId) {
@@ -362,16 +365,16 @@ public class TeleportService2 {
 			Summon summon = player.getSummon();
 			Minion minion = player.getMinion();
 			
-			World.getInstance().despawn(player);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
 			
 			if (pet != null) {
-				World.getInstance().despawn(pet);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(pet);
 			}
 			if (summon != null) {
-				World.getInstance().despawn(summon);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(summon);
 			}
 			if (minion != null) {
-				World.getInstance().despawn(minion);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(minion);
 			}
 			
 			playerTransformation(player);
@@ -381,16 +384,16 @@ public class TeleportService2 {
 			
 			int currentWorldId = player.getWorldId();
 			boolean isInstance = DataManager.WORLD_MAPS_DATA.getTemplate(worldId).isInstance();
-			World.getInstance().setPosition(player, worldId, instanceId, x, y, z, heading);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, instanceId, x, y, z, heading);
 
 			if (pet != null) {
-				World.getInstance().setPosition(pet, worldId, instanceId, x, y, z, heading);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(pet, worldId, instanceId, x, y, z, heading);
 			}
 			if (summon != null) {
-				World.getInstance().setPosition(summon, worldId, instanceId, x, y, z, heading);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(summon, worldId, instanceId, x, y, z, heading);
 			}
 			if (minion != null) {
-				World.getInstance().setPosition(minion, worldId, instanceId, x, y, z, heading);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(minion, worldId, instanceId, x, y, z, heading);
 			}
 
 			player.setPortAnimation(animation.getEndAnimationId());
@@ -402,27 +405,27 @@ public class TeleportService2 {
 				player.getController().startProtectionActiveTask();
 				PacketSendUtility.sendPacket(player, new SM_MOTION(player.getObjectId(), player.getMotions().getActiveMotions()));
 				
-				World.getInstance().spawn(player);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(player);
 				
 				player.getEffectController().updatePlayerEffectIcons();
 				player.getController().updateZone();
 				player.getController().updateNearbyQuests();
-				DisputeLandService.getInstance().onLogin(player);
+				GameFeatureServices.disputeLandService().onLogin(player);
 				
 				playerTransformation(player);
 				instanceTransformation(player);
 				archdaevaTransformation(player);
 
 				if (pet != null) {
-					World.getInstance().spawn(pet);
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(pet);
 					player.setPortAnimation(4);
 				}
 				if (summon != null) {
-					World.getInstance().spawn(summon);
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(summon);
 					player.setPortAnimation(4);
 				}
 				if (minion != null) {
-					World.getInstance().spawn(minion);
+					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(minion);
 					player.setPortAnimation(4);
 				}
 
@@ -438,7 +441,7 @@ public class TeleportService2 {
 				instanceTransformation(player);
 				archdaevaTransformation(player);
 				if (player.isUseRobot() || player.getRobotId() != 0) {
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							PacketSendUtility.sendPacket(player, new SM_USE_ROBOT(player, getRobotInfo(player).getRobotId()));
@@ -476,7 +479,7 @@ public class TeleportService2 {
 			return;
 		}
 
-		Npc object = (Npc) World.getInstance().findVisibleObject(targetObjectId);
+		Npc object = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(targetObjectId);
 
 		if (player.isEnemy(object)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_CANNOT_MOVE_TO_AIRPORT_WRONG_NPC);
@@ -575,7 +578,7 @@ public class TeleportService2 {
 		if (useTeleport) {
 			teleportTo(player, worldId, x, y, z, h, TeleportAnimation.NO_ANIMATION);
 		} else {
-			World.getInstance().setPosition(player, worldId, 1, x, y, z, h);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, worldId, 1, x, y, z, h);
 		}
 	}
 
@@ -649,11 +652,11 @@ public class TeleportService2 {
 
 	public static void teleportWorldStartPoint(Player player, int worldId) {
 		player.getController().onLeaveWorld();
-		World.getInstance().despawn(player);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
 		WorldReviveStartPoints startPoint = getReviveWorldStartPoints(worldId, player.getRace(), player.getLevel());
 
 		if (startPoint != null) {
-			World.getInstance().setPosition(player, startPoint.getReviveWorld(), 0, startPoint.getX(), startPoint.getY(), startPoint.getZ(), (byte) startPoint.getH());
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, startPoint.getReviveWorld(), 0, startPoint.getX(), startPoint.getY(), startPoint.getZ(), (byte) startPoint.getH());
 		} else {
 			moveToBindLocation(player, false);
 		}
@@ -670,7 +673,7 @@ public class TeleportService2 {
 
 	public static void teleportInstanceStartPoint(Player player, int worldId) {
 		player.getController().onLeaveWorld();
-		World.getInstance().despawn(player);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
 		InstanceReviveStartPoints revivePoint = getReviveInstanceStartPoints(worldId);
 
 		if (revivePoint != null) {
@@ -690,8 +693,8 @@ public class TeleportService2 {
 	}
 
 	public static void changeChannel(Player player, int channel) {
-		World.getInstance().despawn(player);
-		World.getInstance().setPosition(player, player.getWorldId(), channel + 1, player.getX(), player.getY(), player.getZ(), player.getHeading());
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, player.getWorldId(), channel + 1, player.getX(), player.getY(), player.getZ(), player.getHeading());
 		player.getController().startProtectionActiveTask();
 		PacketSendUtility.sendPacket(player, new SM_CHANNEL_INFO(player.getPosition()));
 		PacketSendUtility.sendPacket(player, new SM_PLAYER_SPAWN(player));
@@ -705,17 +708,17 @@ public class TeleportService2 {
 			playerTransformation(player);
 			instanceTransformation(player);
 			archdaevaTransformation(player);
-			World.getInstance().despawn(player);
-			World.getInstance().setPosition(player, player.getWorldId(), player.getX(), player.getY(), player.getZ(), player.getHeading());
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, player.getWorldId(), player.getX(), player.getY(), player.getZ(), player.getHeading());
 			player.getController().startProtectionActiveTask();
 			player.A_STATION_TYPE = 0;
 			PacketSendUtility.sendPacket(player, new SM_A_STATION_MOVE(NetworkConfig.GAMESERVER_ID, serverId, player.getWorldId()));
 			PacketSendUtility.sendPacket(player, new SM_A_STATION(NetworkConfig.GAMESERVER_ID, serverId, false));
 			PacketSendUtility.sendPacket(player, new SM_PLAYER_SPAWN(player));
-			AStationService.getInstance().checkAStationMove(player, player.getPlayerAccount().getId(), true);
+			GameFeatureServices.aStationService().checkAStationMove(player, player.getPlayerAccount().getId(), true);
 		} else {
-			World.getInstance().despawn(player);
-			World.getInstance().setPosition(player, player.getWorldId(), player.getX(), player.getY(), player.getZ(), player.getHeading());
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(player);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().setPosition(player, player.getWorldId(), player.getX(), player.getY(), player.getZ(), player.getHeading());
 			player.getController().startProtectionActiveTask();
 			player.A_STATION_TYPE = 1;
 			PacketSendUtility.sendPacket(player, new SM_A_STATION_MOVE(serverId, NetworkConfig.GAMESERVER_ID, player.getWorldId()));
@@ -724,7 +727,7 @@ public class TeleportService2 {
 			playerTransformation(player);
 			instanceTransformation(player);
 			archdaevaTransformation(player);
-			AStationService.getInstance().checkAStationMove(player, player.getPlayerAccount().getId(), false);
+			GameFeatureServices.aStationService().checkAStationMove(player, player.getPlayerAccount().getId(), false);
 		}
 	}
 

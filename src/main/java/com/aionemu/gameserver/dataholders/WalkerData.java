@@ -16,47 +16,47 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.templates.walker.WalkerTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author KKnD, Rolandas
  */
 @XmlRootElement(name = "npc_walker")
 @XmlAccessorType(XmlAccessType.FIELD)
+@Slf4j
 public class WalkerData {
 
-	private static final Logger log = LoggerFactory.getLogger(WalkerData.class);
 
 	@XmlElement(name = "walker_template")
 	private List<WalkerTemplate> walkerlist;
 
 	@XmlTransient
-	private FastMap<String, WalkerTemplate> walkerlistData = new FastMap<String, WalkerTemplate>();
+	private Map<String, WalkerTemplate> walkerlistData = new LinkedHashMap<String, WalkerTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (WalkerTemplate route : walkerlist) {

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.model.Petition;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
@@ -44,12 +46,12 @@ public class SM_PETITION extends AionServerPacket {
 		} else {
 			writeC(0x01);
 			writeD(100);
-			writeH(PetitionService.getInstance().getWaitingPlayers(con.getActivePlayer().getObjectId()));
+			writeH(GameRuntimeServices.petitionService().getWaitingPlayers(con.getActivePlayer().getObjectId()));
 			writeS(Integer.toString(petition.getPetitionId()));
 			writeH(0x00);
 			writeC(50);
 			writeC(49);
-			writeH(PetitionService.getInstance().calculateWaitTime(petition.getPlayerObjId()));
+			writeH(GameRuntimeServices.petitionService().calculateWaitTime(petition.getPlayerObjId()));
 			writeD(0x00);
 		}
 	}

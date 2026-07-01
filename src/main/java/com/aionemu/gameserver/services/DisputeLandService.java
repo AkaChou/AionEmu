@@ -16,32 +16,33 @@
  */
 package com.aionemu.gameserver.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_DISPUTE_LAND;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneAttributes;
 
-import javolution.util.FastList;
-
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class DisputeLandService {
 	private static volatile ObjectProvider<DisputeLandService> instanceProvider;
 	private boolean active;
-	private FastList<Integer> worlds = new FastList<Integer>();
+	private List<Integer> worlds = new ArrayList<>();
 	private static final int duration = CustomConfig.DISPUTE_LAND_DURATION;
-	private static final Logger log = LoggerFactory.getLogger(DisputeLandService.class);
 
 	public DisputeLandService() {
 	}
@@ -61,11 +62,11 @@ public class DisputeLandService {
 	public void initDisputeLand() {
 		if (CustomConfig.DISPUTE_LAND_ENABLED) {
 			log.info("[DisputeLandService] is initialized...");
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (isActive()) {
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								setActive(false);
@@ -123,9 +124,9 @@ public class DisputeLandService {
 				continue;
 			}
 			if (active) {
-				World.getInstance().getWorldMap(world).setWorldOption(ZoneAttributes.PVP_ENABLED);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(world).setWorldOption(ZoneAttributes.PVP_ENABLED);
 			} else {
-				World.getInstance().getWorldMap(world).removeWorldOption(ZoneAttributes.PVP_ENABLED);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(world).removeWorldOption(ZoneAttributes.PVP_ENABLED);
 			}
 		}
 	}
@@ -135,7 +136,7 @@ public class DisputeLandService {
 	}
 
 	private void broadcast() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				broadcast(player);

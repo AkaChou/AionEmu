@@ -16,19 +16,17 @@
  */
 package com.aionemu.gameserver.dataholders.loadingutils;
 
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.ValidationEventHandler;
-import javax.xml.bind.ValidationEventLocator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import jakarta.xml.bind.ValidationEvent;
+import jakarta.xml.bind.ValidationEventHandler;
+import jakarta.xml.bind.ValidationEventLocator;
 
 /**
  * @author Rolandas
  */
+@Slf4j
 public class XmlValidationHandler implements ValidationEventHandler {
 
-	private static final Logger log = LoggerFactory.getLogger(XmlValidationHandler.class);
 
 	@Override
 	public boolean handleEvent(ValidationEvent event) {

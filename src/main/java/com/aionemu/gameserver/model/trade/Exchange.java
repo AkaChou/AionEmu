@@ -16,18 +16,19 @@
  */
 package com.aionemu.gameserver.model.trade;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-
-import javolution.util.FastList;
+import lombok.Getter;
 
 /**
  * @author ATracer
  */
+@Getter
 public class Exchange {
 
 	private Player activeplayer;
@@ -39,7 +40,7 @@ public class Exchange {
 	private long kinahCount;
 
 	private Map<Integer, ExchangeItem> items = new HashMap<Integer, ExchangeItem>();
-	private List<Item> itemsToUpdate = FastList.newInstance();
+	private List<Item> itemsToUpdate = new ArrayList<Item>();
 
 	public Exchange(Player activeplayer, Player targetPlayer) {
 		super();
@@ -51,22 +52,8 @@ public class Exchange {
 		confirmed = true;
 	}
 
-	/**
-	 * @return the confirmed
-	 */
-	public boolean isConfirmed() {
-		return confirmed;
-	}
-
 	public void lock() {
 		this.locked = true;
-	}
-
-	/**
-	 * @return the locked
-	 */
-	public boolean isLocked() {
-		return locked;
 	}
 
 	/**
@@ -83,43 +70,8 @@ public class Exchange {
 		this.kinahCount += countToAdd;
 	}
 
-	/**
-	 * @return the activeplayer
-	 */
-	public Player getActiveplayer() {
-		return activeplayer;
-	}
-
-	/**
-	 * @return the targetPlayer
-	 */
-	public Player getTargetPlayer() {
-		return targetPlayer;
-	}
-
-	/**
-	 * @return the kinahCount
-	 */
-	public long getKinahCount() {
-		return kinahCount;
-	}
-
-	/**
-	 * @return the items
-	 */
-	public Map<Integer, ExchangeItem> getItems() {
-		return items;
-	}
-
 	public boolean isExchangeListFull() {
 		return items.size() > 18;
-	}
-
-	/**
-	 * @return the itemsToUpdate
-	 */
-	public List<Item> getItemsToUpdate() {
-		return itemsToUpdate;
 	}
 
 	/**

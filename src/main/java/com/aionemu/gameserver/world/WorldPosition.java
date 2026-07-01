@@ -16,27 +16,23 @@
  */
 package com.aionemu.gameserver.world;
 
+
+import lombok.extern.slf4j.Slf4j;
 /**
  * @author Rinzler (Encom)
  */
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Position of object in the world.
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class WorldPosition {
 
 	public WorldPosition(int mapId) {
 		this.mapId = mapId;
 	}
 
-	/**
-	 * Logger
-	 */
-	private static final Logger log = LoggerFactory.getLogger(WorldPosition.class);
 
 	/**
 	 * Map id.

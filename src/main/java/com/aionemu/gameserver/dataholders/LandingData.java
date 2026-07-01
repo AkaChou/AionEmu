@@ -18,17 +18,18 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.landing.LandingLocation;
 import com.aionemu.gameserver.model.templates.landing.LandingTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "landing")
@@ -37,7 +38,7 @@ public class LandingData {
 	private List<LandingTemplate> landingTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, LandingLocation> landing = new FastMap<Integer, LandingLocation>();
+	private Map<Integer, LandingLocation> landing = new LinkedHashMap<Integer, LandingLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (LandingTemplate template : landingTemplates) {
@@ -49,7 +50,7 @@ public class LandingData {
 		return landing.size();
 	}
 
-	public FastMap<Integer, LandingLocation> getLandingLocations() {
+	public Map<Integer, LandingLocation> getLandingLocations() {
 		return landing;
 	}
 }

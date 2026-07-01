@@ -16,13 +16,14 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -32,18 +33,15 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_LEGIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ABYSS_RANKING_PLAYERS;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-
-import javolution.util.FastMap;
+@Slf4j
 
 public class AbyssRankingCache {
-	private static final Logger log = LoggerFactory.getLogger(AbyssRankingCache.class);
 	private static volatile ObjectProvider<AbyssRankingCache> instanceProvider;
 	private int lastUpdate;
-	private final FastMap<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new FastMap<Race, List<SM_ABYSS_RANKING_PLAYERS>>();
-	private final FastMap<Race, SM_ABYSS_RANKING_LEGIONS> legions = new FastMap<Race, SM_ABYSS_RANKING_LEGIONS>();
+	private final Map<Race, List<SM_ABYSS_RANKING_PLAYERS>> players = new HashMap<>();
+	private final Map<Race, SM_ABYSS_RANKING_LEGIONS> legions = new HashMap<>();
 
 	public void reloadRankings() {
 		log.info("Updating abyss ranking cache");
@@ -52,7 +50,7 @@ public class AbyssRankingCache {
 		renewPlayerRanking(Race.ASMODIANS);
 		renewPlayerRanking(Race.ELYOS);
 		renewLegionRanking();
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				player.resetAbyssRankListUpdated();
@@ -73,7 +71,7 @@ public class AbyssRankingCache {
 		for (AbyssRankingResult result : asmoRanking) {
 			newLegionRankingCache.put(Integer.valueOf(result.getLegionId()), result.getRankPos());
 		}
-		LegionService.getInstance().performRankingUpdate(newLegionRankingCache);
+		GameCoreGameplayServices.legionService().performRankingUpdate(newLegionRankingCache);
 	}
 
 	private void renewPlayerRanking(Race race) {

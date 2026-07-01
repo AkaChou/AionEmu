@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.dragonLordRefuge;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -37,7 +43,7 @@ public class Tiamat_Woman_FormAI2 extends AggressiveNpcAI2
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				startLifeTask();
@@ -51,13 +57,13 @@ public class Tiamat_Woman_FormAI2 extends AggressiveNpcAI2
 				sendMsg(1500616, getObjectId(), false, 21000);
 				//I... yes. We are grateful. I don't know what we'd have done without your help...
 				sendMsg(1500617, getObjectId(), false, 27000);
-				SkillEngine.getInstance().getSkill(getOwner(), 20917, 1, getOwner()).useNoAnimationSkill(); //Charge Siel's Relics.
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20917, 1, getOwner()).useNoAnimationSkill(); //Charge Siel's Relics.
 			}
 		}, 1000);
 	}
 	
 	private void startLifeTask() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				spawn(219359, 470.5909f, 515.02856f, 417.40436f, (byte) 119); //Calindi.
@@ -68,7 +74,7 @@ public class Tiamat_Woman_FormAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg(int msg, int Obj, boolean isShout, int time) {
-		NpcShoutsService.getInstance().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
+		GameFeatureServices.npcShoutsService().sendMsg(getPosition().getWorldMapInstance(), msg, Obj, isShout, 0, time);
 	}
 	
 	@Override

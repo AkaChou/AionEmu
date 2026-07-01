@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -28,14 +30,12 @@ import com.aionemu.gameserver.model.instance.InstanceScoreType;
 import com.aionemu.gameserver.model.instance.instancereward.DarkPoetaReward;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,26 +65,26 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 14400000; //...4Hrs
 	private List<Integer> movies = new ArrayList<Integer>();
-	private final FastList<Future<?>> darkPoetaTask = FastList.newInstance();
+	private final List<Future<?>> darkPoetaTask = new ArrayList<Future<?>>();
 	
 	public void onDropRegistered(Npc npc) {
-		Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+		Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 215281: //Calindi Flamelord.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053083, 1)); //Tempering Solution Chest.
 				    }
 				}
 			break;
 			case 215282: //Vanuka Infernus.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053290, 1)); //Vanuka's Fabled Accessory Box.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053290, 1)); //Vanuka's Fabled Accessory Box.
 				    }
 				}
 			break;
@@ -92,27 +92,27 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			case 215284: //Chramati Firetail.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053788, 1)); //Greater Stigma Support Bundle.
 				    }
 				}
 			break;
 			case 214864: //Noah's Furious Shade.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 122001039, 1)); //Noah's Tears.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 122001039, 1)); //Noah's Tears.
 				    }
 				}
 			break;
 			case 214904: //Brigade General Anuhart.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
 						switch (Rnd.get(1, 2)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 123000929, 1)); //Brigade General Anuhart's Leather Belt.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 123000929, 1)); //Brigade General Anuhart's Leather Belt.
 				            break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 123000930, 1)); //Brigade General Anuhart's Sash.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 123000930, 1)); //Brigade General Anuhart's Sash.
 							break;
 						}
 				    }
@@ -123,10 +123,10 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 				    if (player.isOnline()) {
 					    switch (Rnd.get(1, 2)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053287, 1)); //Dhatra's Fabled Earrings Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053287, 1)); //Dhatra's Fabled Earrings Box.
 				            break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053292, 1)); //Dhatra's Earrings Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053292, 1)); //Dhatra's Earrings Box.
 							break;
 						}
 				    }
@@ -139,10 +139,10 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 				    if (player.isOnline()) {
 					    switch (Rnd.get(1, 2)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053286, 1)); //Marabata's Fabled Ring Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053286, 1)); //Marabata's Fabled Ring Box.
 				            break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053291, 1)); //Marabata's Ring Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053291, 1)); //Marabata's Ring Box.
 							break;
 						}
 				    }
@@ -151,28 +151,28 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			case 215280: //Tahabata Pyrelord.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 170490001, 1)); //[Souvenir] Tahabata Statue.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190020175, 1)); //Tahabata Egg.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 170490001, 1)); //[Souvenir] Tahabata Statue.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190020175, 1)); //Tahabata Egg.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
 						switch (Rnd.get(1, 6)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188051398, 1)); //Tahabata's Eternal Weapon Chest.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051398, 1)); //Tahabata's Eternal Weapon Chest.
 				            break;
 							case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053276, 1)); //Anuhart's Fabled Pants Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053276, 1)); //Anuhart's Fabled Pants Box.
 				            break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053277, 1)); //Anuhart's Fabled Shoes Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053277, 1)); //Anuhart's Fabled Shoes Box.
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053278, 1)); //Anuhart's Fabled Gloves Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053278, 1)); //Anuhart's Fabled Gloves Box.
 							break;
 							case 5:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053279, 1)); //Anuhart's Fabled Chest Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053279, 1)); //Anuhart's Fabled Chest Box.
 							break;
 							case 6:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053280, 1)); //Anuhart's Fabled Shoulders Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053280, 1)); //Anuhart's Fabled Shoulders Box.
 							break;
 						}
 					}
@@ -182,27 +182,27 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			case 237373: //Inferno Demon.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053083, 1)); //Tempering Solution Chest.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053788, 1)); //Greater Stigma Support Bundle.
 						switch (Rnd.get(1, 3)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188054178, 1)); //Master Tahabata's Weapon Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054178, 1)); //Master Tahabata's Weapon Box.
 				            break;
 							case 2:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188054179, 1)); //Master Anuhart Elite's Weapon Box.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054179, 1)); //Master Anuhart Elite's Weapon Box.
 				            break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188054183, 1)); //Master Armor Treasure Box.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188054183, 1)); //Master Armor Treasure Box.
 							break;
 						}
 					}
 				}
 			break;
 			case 702658: //Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053579, 1)); //[Event] Abbey Bundle.
 		    break;
 			case 702659: //Noble Abbey Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188053580, 1)); //[Event] Noble Abbey Bundle.
 		    break;
 		}
 	}
@@ -460,7 +460,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 			    spawn(731666, 1179.0000f, 1223.0000f, 146.0000f, (byte) 0, 223);
 			break;
 			case 214904: //Brigade General Anuhart.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -527,7 +527,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void startInstanceTask() {
-		darkPoetaTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		darkPoetaTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -570,7 +570,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -616,10 +616,10 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
     }
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = darkPoetaTask.head(), end = darkPoetaTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : darkPoetaTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -675,7 +675,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	private void toScheduleMarbataController(final int npcId) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				Npc boss = null;
@@ -769,7 +769,7 @@ public class DarkPoetaInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

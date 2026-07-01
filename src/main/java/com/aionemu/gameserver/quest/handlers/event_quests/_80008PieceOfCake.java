@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.event_quests;
 
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
 import com.aionemu.gameserver.questEngine.model.QuestDialog;
@@ -75,7 +77,7 @@ public class _80008PieceOfCake extends QuestHandler {
 	public boolean onLvlUpEvent(QuestEnv env) {
 		Player player = env.getPlayer();
 		QuestState qs = player.getQuestStateList().getQuestState(questId);
-		if (!EventService.getInstance().checkQuestIsActive(questId) && qs != null)
+		if (!GameEventServices.eventService().checkQuestIsActive(questId) && qs != null)
 			QuestService.abandonQuest(player, questId);
 		return true;
 	}

@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.illuminaryObelisk;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -58,14 +64,14 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 					 * You have about 6 minutes to finish the boss, so all party members must be ready before activating the seal.
 					 */
 					//The Test Weapon Dynatoum's bomb timer has begun its countdown.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402143, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402143, 0);
 					//Test Weapon Dynatoum will go off in 5 minutes.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402144, 60000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402144, 60000);
 					//Test Weapon Dynatoum will go off in 1 minute.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402145, 300000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402145, 300000);
 					//Test Weapon Dynatoum has detonated.
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402146, 360000);
-					testDynatoumFormTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402146, 360000);
+					testDynatoumFormTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							AI2Actions.deleteOwner(Test_Weapon_DynatoumAI2.this);
@@ -94,7 +100,7 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -127,7 +133,7 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
@@ -212,7 +218,7 @@ public class Test_Weapon_DynatoumAI2 extends AggressiveNpcAI2
 	}
 	
 	private void boost() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 21671, 1, getOwner()).useNoAnimationSkill(); //Boost.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 21671, 1, getOwner()).useNoAnimationSkill(); //Boost.
 	}
 	
 	private void deleteNpcs(List<Npc> npcs) {

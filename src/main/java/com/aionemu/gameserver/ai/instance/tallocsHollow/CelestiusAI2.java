@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.tallocsHollow;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AIName;
@@ -60,7 +64,7 @@ public class CelestiusAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startHelpersCall() {
-		helpersTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		helpersTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead() && getLifeStats().getHpPercentage() < 90) {
@@ -68,7 +72,7 @@ public class CelestiusAI2 extends AggressiveNpcAI2
 					cancelHelpersTask();
 				} else {
 					deleteHelpers();
-					SkillEngine.getInstance().getSkill(getOwner(), 18981, 44, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 18981, 44, getOwner()).useNoAnimationSkill();
 					startCelestiusRushEvent();
 				}
 			}

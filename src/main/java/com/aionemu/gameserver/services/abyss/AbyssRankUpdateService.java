@@ -16,6 +16,14 @@
  */
 package com.aionemu.gameserver.services.abyss;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,12 +32,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TimerTask;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.RankingConfig;
 import com.aionemu.gameserver.dao.AbyssRankDAO;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
@@ -37,7 +42,6 @@ import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.AbyssRank;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.mail.SystemMailService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
@@ -45,12 +49,12 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class AbyssRankUpdateService {
 	private static volatile ObjectProvider<AbyssRankUpdateService> instanceProvider;
 	private Race rewardRace;
 
-	private static final Logger log = LoggerFactory.getLogger(AbyssRankUpdateService.class);
 
 	public AbyssRankUpdateService() {
 	}
@@ -74,7 +78,7 @@ public class AbyssRankUpdateService {
 			performUpdate();
 		}
 		log.info("Start <Abyss Ranking> update");
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			@Override
 			public void run() {
 				performUpdate();
@@ -89,7 +93,7 @@ public class AbyssRankUpdateService {
 			performUpdate();
 		}
 		log.info("Start <Abyss Ranking> update");
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(new TimerTask() {
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				performUpdate();
@@ -103,7 +107,7 @@ public class AbyssRankUpdateService {
 	public void performUpdate() {
 		log.info("Abyss Rank: executing rank update");
 		long startTime = System.currentTimeMillis();
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				AbyssPointsService.AbyssRankCheck(player);
@@ -119,7 +123,7 @@ public class AbyssRankUpdateService {
 	public void initRewardWeeklyManager() {
 		log.info("<Reward Weekly Manager>");
 		String weekly = "0 0 12 ? * MON *";
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				sendRewardWeekly();
 			}
@@ -127,45 +131,45 @@ public class AbyssRankUpdateService {
 	}
 
 	private void sendRewardWeekly() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				switch (player.getAbyssRank().getRank()) {
 				case SUPREME_COMMANDER:
 					final int reward1 = rewardRace == Race.ASMODIANS ? 10 : 1;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward1, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward1, player.getCommonData());
 					break;
 				case COMMANDER:
 					final int reward2 = rewardRace == Race.ASMODIANS ? 11 : 2;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward2, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward2, player.getCommonData());
 					break;
 				case GREAT_GENERAL:
 					final int reward3 = rewardRace == Race.ASMODIANS ? 12 : 3;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward3, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward3, player.getCommonData());
 					break;
 				case GENERAL:
 					final int reward4 = rewardRace == Race.ASMODIANS ? 13 : 4;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward4, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward4, player.getCommonData());
 					break;
 				case STAR5_OFFICER:
 					final int reward5 = rewardRace == Race.ASMODIANS ? 14 : 5;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward5, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward5, player.getCommonData());
 					break;
 				case STAR4_OFFICER:
 					final int reward6 = rewardRace == Race.ASMODIANS ? 15 : 6;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward6, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward6, player.getCommonData());
 					break;
 				case STAR3_OFFICER:
 					final int reward7 = rewardRace == Race.ASMODIANS ? 16 : 7;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward7, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward7, player.getCommonData());
 					break;
 				case STAR2_OFFICER:
 					final int reward8 = rewardRace == Race.ASMODIANS ? 17 : 8;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward8, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward8, player.getCommonData());
 					break;
 				case STAR1_OFFICER:
 					final int reward9 = rewardRace == Race.ASMODIANS ? 18 : 9;
-					SystemMailService.getInstance().sendTemplateRewardMail(reward9, player.getCommonData());
+					GameFeatureServices.systemMailService().sendTemplateRewardMail(reward9, player.getCommonData());
 					break;
 				}
 			}
@@ -173,10 +177,10 @@ public class AbyssRankUpdateService {
 	}
 
 	public void AbyssRankingCacheUpdate() {
-		ThreadPoolManager.getInstance().schedule(new TimerTask() {
+		GameThreadPoolServices.threadPoolManager().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				AbyssRankingCache.getInstance().reloadRankings();
+				GameCoreGameplayServices.abyssRankingCache().reloadRankings();
 			}
 		}, 3 * 1000);
 	}
@@ -239,7 +243,7 @@ public class AbyssRankUpdateService {
 
 	protected void updateRankTo(AbyssRankEnum newRank, int playerId) {
 		// check if rank is changed for online players
-		Player onlinePlayer = World.getInstance().findPlayer(playerId);
+		Player onlinePlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (onlinePlayer != null) {
 			AbyssRank abyssRank = onlinePlayer.getAbyssRank();
 			AbyssRankEnum currentRank = abyssRank.getRank();
@@ -254,7 +258,7 @@ public class AbyssRankUpdateService {
 
 	protected void updateGpRankTo(AbyssRankEnum newRank, int playerId) {
 		// check if rankGp is changed for online players
-		Player onlinePlayer = World.getInstance().findPlayer(playerId);
+		Player onlinePlayer = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
 		if (onlinePlayer != null) {
 			AbyssRank abyssRank = onlinePlayer.getAbyssRank();
 			AbyssRankEnum currentRank = abyssRank.getRank();

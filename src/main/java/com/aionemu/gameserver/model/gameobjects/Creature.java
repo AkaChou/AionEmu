@@ -16,8 +16,10 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AI2;
 import com.aionemu.gameserver.ai2.AI2Engine;
@@ -48,10 +50,11 @@ import com.aionemu.gameserver.world.MapRegion;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+@Slf4j
 
 public abstract class Creature extends VisibleObject {
-	private static final Logger log = LoggerFactory.getLogger(Creature.class);
 	protected AI2 ai2;
 	private boolean isDespawnDelayed = false;
 	private CreatureLifeStats<? extends Creature> lifeStats;
@@ -62,8 +65,8 @@ public abstract class Creature extends VisibleObject {
 	private int visualState = CreatureVisualState.VISIBLE.getId();
 	private int seeState = CreatureSeeState.NORMAL.getId();
 	private Skill castingSkill;
-	private FastMap<Integer, Long> skillCoolDowns;
-	private FastMap<Integer, Long> skillCoolDownsBase;
+	private Map<Integer, Long> skillCoolDowns;
+	private Map<Integer, Long> skillCoolDownsBase;
 	private ObserveController observeController;
 	private TransformModel transformModel;
 	private final AggroList aggroList;
@@ -158,7 +161,7 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	public AI2 getAi2() {
-		return ai2 != null ? ai2 : AI2Engine.getInstance().setupAI("dummy", this);
+		return ai2 != null ? ai2 : GameEngineServices.ai2Engine().setupAI("dummy", this);
 	}
 
 	public void setAi2(AI2 ai2) {
@@ -411,7 +414,7 @@ public abstract class Creature extends VisibleObject {
 	public final void addPacketBroadcastMask(BroadcastMode mode) {
 		packetBroadcastMask |= mode.mask();
 
-		PacketBroadcaster.getInstance().add(this);
+		GameEventServices.packetBroadcaster().add(this);
 
 		// Debug
 		if (log.isDebugEnabled()) {
@@ -636,7 +639,7 @@ public abstract class Creature extends VisibleObject {
 		}
 
 		if (skillCoolDowns == null) {
-			skillCoolDowns = new FastMap<Integer, Long>().shared();
+			skillCoolDowns = new LinkedHashMap<Integer, Long>();
 		}
 		skillCoolDowns.put(delayId, time);
 	}
@@ -644,7 +647,7 @@ public abstract class Creature extends VisibleObject {
 	/**
 	 * @return the skillCoolDowns
 	 */
-	public FastMap<Integer, Long> getSkillCoolDowns() {
+	public Map<Integer, Long> getSkillCoolDowns() {
 		return skillCoolDowns;
 	}
 
@@ -675,7 +678,7 @@ public abstract class Creature extends VisibleObject {
 		}
 
 		if (skillCoolDownsBase == null) {
-			skillCoolDownsBase = new FastMap<Integer, Long>().shared();
+			skillCoolDownsBase = new LinkedHashMap<Integer, Long>();
 		}
 		skillCoolDownsBase.put(delayId, baseTime);
 	}

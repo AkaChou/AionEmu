@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.ophidanBridge;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.GeneralNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -57,12 +61,12 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 			switch (getNpcId()) {
 				case 235759: //Fugitive Mazikin Leader.
 					//The fugitive will get away in 8 minutes!
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402860, 0);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402860, 0);
 					//The fugitive will get away in 4 minutes!
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402861, 240000);
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402861, 240000);
 					//The fugitive will get away in 1 minute!
-					NpcShoutsService.getInstance().sendMsg(getOwner(), 1402862, 420000);
-					mazikinTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1402862, 420000);
+					mazikinTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							AI2Actions.deleteOwner(Fugitive_MazikinAI2.this);
@@ -86,7 +90,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
         		getOwner().setState(1);
             	PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (!isAlreadyDead()) {
@@ -115,7 +119,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
 				getOwner().setState(1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (!isAlreadyDead()) {
@@ -134,7 +138,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
 				getOwner().setState(1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (!isAlreadyDead()) {
@@ -153,7 +157,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
 				getOwner().setState(1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (!isAlreadyDead()) {
@@ -172,7 +176,7 @@ public class Fugitive_MazikinAI2 extends GeneralNpcAI2
 				WalkManager.startWalking(this);
 				getOwner().setState(1);
 				PacketSendUtility.broadcastPacket(getOwner(), new SM_EMOTION(getOwner(), EmotionType.START_EMOTE2, 0, getObjectId()));
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (!isAlreadyDead()) {

@@ -8,11 +8,17 @@ import com.aionemu.loginserver.Shutdown;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class LoginShutdownServicesTest {
+
+    @AfterEach
+    void resetShutdownBridge() {
+        LoginShutdownServices.resetForTests();
+    }
 
     @Test
     void usesSpringProviderBeforeLocalFallback() {
@@ -24,6 +30,18 @@ class LoginShutdownServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void keepsResolvedSpringShutdownAfterBridgeIsDestroyed() {
+        RecordingShutdown shutdown = new RecordingShutdown();
+        LoginShutdownServices services = new LoginShutdownServices(provider(Shutdown.class, shutdown));
+
+        assertSame(shutdown, LoginShutdownServices.shutdown());
+
+        services.destroy();
+
+        assertSame(shutdown, LoginShutdownServices.shutdown());
     }
 
     @Test

@@ -16,7 +16,7 @@
  */
 package com.aionemu.gameserver.model.templates.abyss_op;
 
-import javax.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnum;
 
 /**
  * @author Rinzler (Encom)

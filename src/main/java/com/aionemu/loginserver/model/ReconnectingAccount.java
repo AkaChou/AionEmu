@@ -18,6 +18,8 @@
 
 package com.aionemu.loginserver.model;
 
+import lombok.Getter;
+
 /**
  * This object is storing Account and corresponding to it reconnectionKey for
  * client that will be reconnecting to LoginServer from GameServer using fast
@@ -25,6 +27,7 @@ package com.aionemu.loginserver.model;
  *
  * @author -Nemesiss-
  */
+@Getter
 public class ReconnectingAccount {
 
     /**
@@ -47,21 +50,4 @@ public class ReconnectingAccount {
         this.reconnectionKey = reconnectionKey;
     }
 
-    /**
-     * Return Account.
-     *
-     * @return account
-     */
-    public Account getAccount() {
-        return account;
-    }
-
-    /**
-     * Return reconnection key for this account
-     *
-     * @return reconnectionKey
-     */
-    public int getReconnectionKey() {
-        return reconnectionKey;
-    }
 }

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -26,25 +27,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -54,8 +57,8 @@ import com.aionemu.gameserver.model.templates.housing.LBox;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "lboxes")
+@Slf4j
 public class HouseScriptData {
-	private static final Logger log = LoggerFactory.getLogger(HouseScriptData.class);
 	private static Marshaller marshaller;
 
 	@XmlElement(name = "lbox", required = true)
@@ -111,24 +114,22 @@ public class HouseScriptData {
 		}
 	}
 
+	@Slf4j
 	public static class XmlFormatter {
-		private static final Logger log = LoggerFactory.getLogger(XmlFormatter.class);
 		private static final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		private static DocumentBuilder db;
 
-		@SuppressWarnings("restriction")
 		public static String format(String unformattedXml) {
 			try {
 				Document document = parseXmlFile(unformattedXml);
-				OutputFormat format = new OutputFormat(document);
-				format.setIndenting(true);
-				format.setIndent(2);
-				format.setEncoding("UTF-8");
 				Writer out = new StringWriter();
-				XMLSerializer serializer = new XMLSerializer(out, format);
-				serializer.serialize(document);
+				Transformer transformer = TransformerFactory.newInstance().newTransformer();
+				transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+				transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+				transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+				transformer.transform(new DOMSource(document), new StreamResult(out));
 				return out.toString();
-			} catch (IOException e) {
+			} catch (TransformerException e) {
 			}
 			return null;
 		}

@@ -18,11 +18,10 @@
 
 package com.aionemu.chatserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Arrays;
 
 import org.slf4j.LoggerFactory;
-
-import org.slf4j.Logger;
 
 import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.configs.Config;
@@ -37,10 +36,9 @@ import com.aionemu.chatserver.service.BroadcastService;
 /**
  * @author ATracer
  */
+@Slf4j
 public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
 
-    @SuppressWarnings("unused")
-    private static final Logger log = LoggerFactory.getLogger(CM_CHANNEL_MESSAGE.class);
     private int channelId;
     private byte[] content;
     private BroadcastService broadcastService;

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.worlds.cygnea;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.handler.CreatureEventHandler;
@@ -34,16 +36,16 @@ public class LightbinderAI2 extends AggressiveNpcAI2
 	@Override
     protected void handleCreatureMoved(Creature creature) {
         CreatureEventHandler.onCreatureSee(this, creature);
-    	if (creature instanceof Player) {
+	if (creature instanceof Player) {
 			final Player player = (Player) creature;
-    		if (!creature.getEffectController().hasAbnormalEffect(20664)) { //Conqueror's Passion.
+		if (!creature.getEffectController().hasAbnormalEffect(20664)) { //Conqueror's Passion.
 				if (player.getCommonData().getRace() == Race.ELYOS) {
-    		        SkillEngine.getInstance().getSkill(getOwner(), 20664, 1, (Player) creature).useNoAnimationSkill(); //Conqueror's Passion.
+		        GameEngineServices.skillEngine().getSkill(getOwner(), 20664, 1, (Player) creature).useNoAnimationSkill(); //Conqueror's Passion.
 				}
 			}
-    	}
+	}
     }
-	
+
 	@Override
 	protected void handleSpawned() {
 		super.handleSpawned();
@@ -60,8 +62,8 @@ public class LightbinderAI2 extends AggressiveNpcAI2
 			break;
 		}
 	}
-	
+
 	private void conquerorPassion() {
-		SkillEngine.getInstance().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 20665, 1, getOwner()).useNoAnimationSkill(); //Conqueror's Passion.
 	}
 }

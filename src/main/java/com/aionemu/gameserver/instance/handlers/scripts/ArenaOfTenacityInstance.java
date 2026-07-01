@@ -16,8 +16,12 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -35,11 +39,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastList;
 
 /****/
 /** Author (Encom)
@@ -52,8 +54,8 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 	private Map<Integer, StaticDoor> doors;
 	protected HallOfTenacityReward instanceReward;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> hotTask = FastList.newInstance();
-    
+    private final List<Future<?>> hotTask = new ArrayList<Future<?>>();
+
     protected HallOfTenacityPlayerReward getPlayerReward(Integer object) {
 		instanceReward.regPlayerReward(object);
 		return (HallOfTenacityPlayerReward) instanceReward.getPlayerReward(object);
@@ -67,18 +69,18 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         doors = instance.getDoors();
         startInstanceTask();
     }
-    
+
     @Override
     public void onEnterInstance(final Player player) {
         PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(11, player, 0, instanceReward));
-    	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, player, getTime(), instanceReward));
-    	Iterator<Player> iter = instance.getPlayersInside().iterator();
-    	while (iter.hasNext()) {
-    		PacketSendUtility.sendPacket(iter.next(), new SM_INSTANCE_SCORE(11, iter.next(), iter.next(), 0, instanceReward));
-    	}
+	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(4, player, getTime(), instanceReward));
+	Iterator<Player> iter = instance.getPlayersInside().iterator();
+	while (iter.hasNext()) {
+		PacketSendUtility.sendPacket(iter.next(), new SM_INSTANCE_SCORE(11, iter.next(), iter.next(), 0, instanceReward));
+	}
         //sendEnterPacket(player);
     }
-    
+
     @Override
     public boolean onReviveEvent(Player player) {
         PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_REBIRTH_MASSAGE_ME);
@@ -87,11 +89,11 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         instanceReward.portToArena(player);
         return true;
     }
-    
+
     @Override
     public boolean onDie(Player player, Creature lastAttacker) {
-    	HallOfTenacityPlayerReward ownerReward = instanceReward.getPlayerReward(player.getObjectId());
-    	sendPacket();
+	HallOfTenacityPlayerReward ownerReward = instanceReward.getPlayerReward(player.getObjectId());
+	sendPacket();
 		ownerReward.endBoostMoraleEffect(player);
 		ownerReward.applyBoostMoraleEffect(player);
         int points = 60;
@@ -105,33 +107,33 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         updateScore(player, player, -points, false);
         return true;
     }
-    
+
     protected void sendPacket() {
 		instanceReward.sendPacket();
 	}
-    
+
     protected void updateScore(Player player, Creature target, int points, boolean pvpKill) {
-    	//TODO
+	//TODO
     }
-    
+
     private void sendEnterPacket(final Player player) {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
+	instance.doOnAllPlayers(new Visitor<Player>() {
             @Override
             public void visit(Player player) {
-            	
+
             }
         });
     }
-    
+
     protected void startInstanceTask() {
-    	instanceTime = System.currentTimeMillis();
-    	instanceReward.setInstanceStartTime();
-    	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	instanceTime = System.currentTimeMillis();
+	instanceReward.setInstanceStartTime();
+	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!instanceReward.isRewarded()) {
-                	openDoors();
-                	instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
+	openDoors();
+	instanceReward.setInstanceScoreType(InstanceScoreType.START_PROGRESS);
 				    Iterator<Player> iter = instance.getPlayersInside().iterator();
 			    	while (iter.hasNext()) {
 			    		PacketSendUtility.sendPacket(iter.next(), new SM_INSTANCE_SCORE(5, iter.next(), iter.next(), getTime(), instanceReward));
@@ -140,16 +142,16 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 				}
             }
         }, 60000));
-    	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!instanceReward.isRewarded()) {
-                	stopInstance();
+	stopInstance();
 				}
             }
         }, 300000));
     }
-    
+
     protected void stopInstance() {
         stopInstanceTask();
         //hallOfTenacityReward.setWinner(race);
@@ -157,44 +159,44 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         reward();
         instanceReward.sendPacket(5, null);//TODO id
     }
-    
+
     protected void reward() {
-    	
+
     }
-    
+
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = hotTask.head(), end = hotTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : hotTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
-    
+
     protected void openDoors() {
         openDoor(157);
 		openDoor(7);
     }
-    
+
     protected void openDoor(int doorId) {
         StaticDoor door = doors.get(doorId);
         if (door != null) {
             door.setOpen(true);
         }
     }
-    
+
     private void startInstancePacket() {
-    	instance.doOnAllPlayers(new Visitor<Player>() {
+	instance.doOnAllPlayers(new Visitor<Player>() {
             @Override
             public void visit(Player player) {
-            	//TODO packets
-            	//PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), hallOfTenacityReward, instance.getPlayersInside(), true));
-            	//PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime(), hallOfTenacityReward, player.getObjectId(), 0, 0));
-            	//PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), hallOfTenacityReward, instance.getPlayersInside(), true));
-            	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(5, getTime(), instanceReward, player.getObjectId()));
+	//TODO packets
+	//PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), hallOfTenacityReward, instance.getPlayersInside(), true));
+	//PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(3, getTime(), hallOfTenacityReward, player.getObjectId(), 0, 0));
+	//PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(7, getTime(), hallOfTenacityReward, instance.getPlayersInside(), true));
+	PacketSendUtility.sendPacket(player, new SM_INSTANCE_SCORE(5, getTime(), instanceReward, player.getObjectId()));
             }
         });
     }
-    
+
     private int getTime() {
         long result = System.currentTimeMillis() - instanceTime;
         if (result < 60000) {
@@ -204,9 +206,9 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
         }
         return 0;
     }
-    
+
     protected void sendMsg(final int msg, final Race race, int time) {
-    	hotTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+	hotTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {

@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.services.item;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.Item;
@@ -31,14 +29,15 @@ import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Ranastic (Encom)
  */
+@Slf4j
 
 public class ItemUpgradeService {
-	private static final Logger log = LoggerFactory.getLogger(ItemUpgradeService.class);
 
 	public static boolean checkItemUpgrade(Player player, Item baseItem, int resultItemId) {
 		ItemUpgradeTemplate itemUpgardeTemplate = DataManager.ITEM_UPGRADE_DATA
@@ -47,7 +46,7 @@ public class ItemUpgradeService {
 			log.warn(resultItemId + " item's itemupgrade template is null");
 			return false;
 		}
-		FastMap<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
+		Map<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
 				.getResultItemMap(baseItem.getItemId());
 		if (!resultItemMap.containsKey(resultItemId)) {
 			AuditLogger.info(player,
@@ -92,7 +91,7 @@ public class ItemUpgradeService {
 	}
 
 	public static boolean decreaseMaterial(Player player, Item baseItem, int resultItemId) {
-		FastMap<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
+		Map<Integer, UpgradeResultItem> resultItemMap = DataManager.ITEM_UPGRADE_DATA
 				.getResultItemMap(baseItem.getItemId());
 		UpgradeResultItem resultItem = resultItemMap.get(resultItemId);
 		if (resultItem.getNeed_kinah() == null) {

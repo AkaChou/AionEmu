@@ -6,8 +6,7 @@ import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
 import com.aionemu.loginserver.Shutdown;
-import com.aionemu.loginserver.service.LoginShutdownRequest;
-import java.lang.reflect.Proxy;
+import com.aionemu.loginserver.service.LoginShutdownServices;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -21,7 +20,7 @@ class LoginTaskShutdownHandlerTest {
     void resetEmbeddedMode() {
         System.clearProperty(AionRuntimeMode.BOOT_EMBEDDED_PROPERTY);
         AionEmbeddedShutdownHandler.clear();
-        LoginShutdownRequest.setShutdownProvider(null);
+        LoginShutdownServices.resetForTests();
     }
 
     @Test
@@ -53,7 +52,7 @@ class LoginTaskShutdownHandlerTest {
     @Test
     void shutdownTaskUsesShutdownProviderOutsideBootEmbeddedMode() {
         List<String> events = new ArrayList<>();
-        LoginShutdownRequest.setShutdownProvider(provider(new RecordingShutdown(events)));
+        LoginShutdownServices.setShutdownProvider(provider(new RecordingShutdown(events)));
 
         ShutdownHandler handler = new ShutdownHandler();
         handler.setTaskId(3);
@@ -65,7 +64,7 @@ class LoginTaskShutdownHandlerTest {
     @Test
     void restartTaskUsesShutdownProviderOutsideBootEmbeddedMode() {
         List<String> events = new ArrayList<>();
-        LoginShutdownRequest.setShutdownProvider(provider(new RecordingShutdown(events)));
+        LoginShutdownServices.setShutdownProvider(provider(new RecordingShutdown(events)));
 
         RestartHandler handler = new RestartHandler();
         handler.setTaskId(4);
@@ -75,24 +74,22 @@ class LoginTaskShutdownHandlerTest {
     }
 
     private static ObjectProvider<Shutdown> provider(Shutdown shutdown) {
-        return ObjectProvider.class.cast(Proxy.newProxyInstance(
-            ObjectProvider.class.getClassLoader(),
-            new Class<?>[] { ObjectProvider.class },
-            (proxy, method, args) -> {
-                if (method.getDeclaringClass() == Object.class) {
-                    return switch (method.getName()) {
-                        case "toString" -> "shutdownProvider";
-                        case "hashCode" -> System.identityHashCode(proxy);
-                        case "equals" -> proxy == args[0];
-                        default -> null;
-                    };
-                }
-                if ("getIfAvailable".equals(method.getName()) || "getObject".equals(method.getName())) {
-                    return shutdown;
-                }
-                throw new UnsupportedOperationException(method.toString());
+        return new ObjectProvider<>() {
+            @Override
+            public Shutdown getObject(Object... args) {
+                return shutdown;
             }
-        ));
+
+            @Override
+            public Shutdown getIfAvailable() {
+                return shutdown;
+            }
+
+            @Override
+            public Shutdown getObject() {
+                return shutdown;
+            }
+        };
     }
 
     private static final class RecordingShutdown extends Shutdown {

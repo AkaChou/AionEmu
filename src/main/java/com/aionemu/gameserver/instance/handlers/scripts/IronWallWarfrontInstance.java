@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.manager.WalkManager;
 import com.aionemu.gameserver.configs.main.GroupConfig;
@@ -38,21 +42,18 @@ import com.aionemu.gameserver.model.instance.playerreward.IronWallWarfrontPlayer
 import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INSTANCE_SCORE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.player.PlayerReviveService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import javolution.util.FastList;
-import org.apache.commons.lang.mutable.MutableInt;
+import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     private float loosingGroupMultiplier = 1;
     private boolean isInstanceDestroyed = false;
     protected AtomicBoolean isInstanceStarted = new AtomicBoolean(false);
-    private final FastList<Future<?>> ironWallTask = FastList.newInstance();
+    private final List<Future<?>> ironWallTask = new ArrayList<Future<?>>();
     private static Race RaceKilledCommanderStatic = null;
     private static int ironWallBaseStatic = 0;
     private static IronWallWarfrontInstance instanceStatic = null;
@@ -235,21 +236,21 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     
     @Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
         int npcId = npc.getNpcId();
         switch (npcId) {
             case 233510: case 233511: case 233512: case 233530: case 233531: case 233532:
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000287, 5));
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000288, 5));
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000286, 5));
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 164000285, 5));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000287, 5));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000288, 5));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000286, 5));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 164000285, 5));
                 break;
             case 831328: case 831329:
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006996, 10));
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006997, 10));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006996, 10));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006997, 10));
                 break;
             case 831330:
-                dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000137, 1));
+                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000137, 1));
                 break;
         }
     }
@@ -257,7 +258,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     protected void startInstanceTask() {
         instanceTime = System.currentTimeMillis();
         ironWallWarfrontReward.setInstanceStartTime();
-        ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!ironWallWarfrontReward.isRewarded()) {
@@ -269,7 +270,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
                 }
             }
         }, 90000));
-        ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -281,7 +282,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
                 sp(702589, 426.4476f, 617.95264f, 214.52452f, (byte) 32, 0);
             }
         }, 600000));
-        ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -301,7 +302,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
                 sp(831978, 701.6543f, 643.7906f, 202.58696f, (byte) 84, 0);
             }
         }, 900000));
-        ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 sendPacket(false);
@@ -311,7 +312,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
                 spawn(801956, 744.06085f, 293.31564f, 233.70102f, (byte) 104);
             }
         }, 1800000));
-        ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!ironWallWarfrontReward.isRewarded()) {
@@ -447,14 +448,14 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
         for (Npc npc : instance.getNpcs()) {
             npc.getController().onDelete();
         }
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
                     for (Player player : instance.getPlayersInside()) {
                         onExitInstance(player);
                     }
-                    AutoGroupService.getInstance().unRegisterInstance(instanceId);
+                    GameCoreGameplayServices.autoGroupService().unRegisterInstance(instanceId);
                 }
             }
         }, 60000);
@@ -724,7 +725,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     }
     
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -738,7 +739,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     }
     
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -751,7 +752,7 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     }
     
     protected void sendMsgByRace(final int msg, final Race race, int time) {
-        ironWallTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        ironWallTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 instance.doOnAllPlayers(new Visitor<Player>() {
@@ -767,10 +768,10 @@ public class IronWallWarfrontInstance extends GeneralInstanceHandler {
     }
     
     private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = ironWallTask.head(), end = ironWallTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : ironWallTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
     

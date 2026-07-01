@@ -18,17 +18,18 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.towerofeternity.TowerOfEternityTemplate;
 import com.aionemu.gameserver.model.towerofeternity.TowerOfEternityLocation;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Wnkrz on 22/08/2017.
@@ -41,7 +42,7 @@ public class TowerOfEternityData {
 	private List<TowerOfEternityTemplate> towerOfEternityTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, TowerOfEternityLocation> towerOfEternity = new FastMap<Integer, TowerOfEternityLocation>();
+	private Map<Integer, TowerOfEternityLocation> towerOfEternity = new LinkedHashMap<Integer, TowerOfEternityLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (TowerOfEternityTemplate template : towerOfEternityTemplates) {
@@ -53,7 +54,7 @@ public class TowerOfEternityData {
 		return towerOfEternity.size();
 	}
 
-	public FastMap<Integer, TowerOfEternityLocation> getTowerOfEternityLocations() {
+	public Map<Integer, TowerOfEternityLocation> getTowerOfEternityLocations() {
 		return towerOfEternity;
 	}
 }

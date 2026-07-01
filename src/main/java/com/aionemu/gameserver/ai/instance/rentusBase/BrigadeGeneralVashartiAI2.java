@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.rentusBase;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -74,7 +80,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 				percents.remove(percent);
 				canThink = false;
 				cancelFlameBuffEvent();
-				SkillEngine.getInstance().getSkill(getOwner(), 20532, 60, getOwner()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 20532, 60, getOwner()).useNoAnimationSkill();
 				startAirEvent(this, percent);
 				break;
 			}
@@ -82,11 +88,11 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startAirEvent(final NpcAI2 ai, final int percent) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(getOwner(), 20534, 60, getOwner()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 20534, 60, getOwner()).useNoAnimationSkill();
 					int npcId1 = 0;
 					int npcId2 = 0;
 					switch (percent) {
@@ -114,13 +120,13 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 					spawn(npcId2, 188.16568f, 414.03534f, 260.75488f, (byte) 0);
 					spawn(npcId1, 188.33f, 414.61f, 260.61f, (byte) 244);
 					final Npc buffNpc = (Npc) spawn(283007, 188.33f, 414.61f, 260.61f, (byte) 0);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (!buffNpc.getLifeStats().isAlreadyDead()) {
 								startFlameSmashEvent(percent);
-								SkillEngine.getInstance().getSkill(buffNpc, 20538, 60, buffNpc).useNoAnimationSkill();
-								ThreadPoolManager.getInstance().schedule(new Runnable() {
+								GameEngineServices.skillEngine().getSkill(buffNpc, 20538, 60, buffNpc).useNoAnimationSkill();
+								GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 									@Override
 									public void run() {
 										buffNpc.getController().onDelete();
@@ -129,7 +135,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 							}
 						}
 					}, 1000);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							cancelFlameSmashTask();
@@ -164,7 +170,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startFlameSmashEvent(final int percent) {
-		flameSmashTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		flameSmashTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -279,12 +285,12 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		if (flameBuffTask != null && !flameBuffTask.isDone()) {
 			flameBuffTask.cancel(true);
 		} if (!isAlreadyDead()) {
-			SkillEngine.getInstance().getSkill(getOwner(), 20532, 60, getOwner()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 20532, 60, getOwner()).useNoAnimationSkill();
 		}
 	}
 	
 	private void startFlameBuffEvent() {
-		flameBuffTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		flameBuffTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -292,7 +298,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 				} else {
 					WorldMapInstance instance = getPosition().getWorldMapInstance();
 					if (instance != null) {
-						SkillEngine.getInstance().getSkill(getOwner(), Rnd.get(0, 1) == 0 ? 20530 : 20531, 60, getOwner()).useNoAnimationSkill();
+						GameEngineServices.skillEngine().getSkill(getOwner(), Rnd.get(0, 1) == 0 ? 20530 : 20531, 60, getOwner()).useNoAnimationSkill();
 						if (instance.getNpc(283000) == null && instance.getNpc(283001) == null) {
 							VisibleObject ice = spawn(283001, 205.280f, 410.53f, 261f, (byte) 56);
 							VisibleObject fire = spawn(283000, 171.330f, 417.57f, 261f, (byte) 116);
@@ -309,11 +315,11 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 	}
 	
 	private void useKissBuff(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (npc != null && !npc.getLifeStats().isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(npc, npc.getNpcId() == 283001 ? 19346 : 19345, 60, npc).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(npc, npc.getNpcId() == 283001 ? 19346 : 19345, 60, npc).useNoAnimationSkill();
 				}
 			}
 		}, 1000);
@@ -330,7 +336,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		cancelFlameBuffEvent();
 		cancelAirEvent();
 		super.handleSpawned();
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500405, getObjectId(), 0, 2000);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500405, getObjectId(), 0, 2000);
 		blueFlameSmashs.add(new Point3D(176.184f, 415.782f, 260.572f));
 		blueFlameSmashs.add(new Point3D(159.480f, 412.495f, 260.555f));
 		blueFlameSmashs.add(new Point3D(183.784f, 413.475f, 260.755f));
@@ -387,7 +393,7 @@ public class BrigadeGeneralVashartiAI2 extends AggressiveNpcAI2
 		cancelFlameBuffEvent();
 		cancelAirEvent();
 		cancelFlameSmashTask();
-		NpcShoutsService.getInstance().sendMsg(getOwner(), 1500410, getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), 1500410, getObjectId(), 0, 0);
 		super.handleDied();
 	}
 }

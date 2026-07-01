@@ -16,6 +16,18 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Minion;
 import com.aionemu.gameserver.model.gameobjects.Pet;
@@ -37,12 +49,9 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_WINDSTREAM_ANNOUNCE;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.AStationService;
-import com.aionemu.gameserver.services.AbyssLandingService;
-import com.aionemu.gameserver.services.BaseService;
 import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.TownService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.rift.RiftInformer;
@@ -87,24 +96,24 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		location = null;
 		template = null;
 		if (activePlayer.isSpawned()) {
-			World.getInstance().despawn(activePlayer);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(activePlayer);
 		}
-		World.getInstance().spawn(activePlayer);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(activePlayer);
 		activePlayer.getController().refreshZoneImpl();
 		if (activePlayer.isInSiegeWorld()) {
-			SiegeService.getInstance().onEnterSiegeWorld(activePlayer);
+			GameFeatureServices.siegeService().onEnterSiegeWorld(activePlayer);
 		}
 		activePlayer.getController().updateZone();
 		activePlayer.getController().updateNearbyQuests();
-		WeatherService.getInstance().loadWeather(activePlayer);
+		GameRuntimeServices.weatherService().loadWeather(activePlayer);
 		if (activePlayer.isOnAStation()) {
 			if (activePlayer.A_STATION_TYPE == 1) {
 				activePlayer.A_STATION_TYPE = 2;
 			} else if (activePlayer.A_STATION_TYPE == 2) {
-				AStationService.getInstance().handleMoveBack(activePlayer);
+				GameFeatureServices.aStationService().handleMoveBack(activePlayer);
 			}
 		}
-		QuestEngine.getInstance().onEnterWorld(new QuestEnv(null, activePlayer, 0, 0));
+		GameEngineServices.questEngine().onEnterWorld(new QuestEnv(null, activePlayer, 0, 0));
 		activePlayer.getController().onEnterWorld();
 		if (!WorldMapType.getWorld(activePlayer.getWorldId()).isPersonal()) {
 			sendPacket(new SM_SYSTEM_MESSAGE(1390122, activePlayer.getPosition().getInstanceId()));
@@ -112,42 +121,42 @@ public class CM_LEVEL_READY extends AionClientPacket {
 		// Rift
 		RiftInformer.sendRiftsInfo(activePlayer);
 		// Territory
-		TerritoryService.getInstance().onEnterWorld(activePlayer);
+		GameRuntimeServices.territoryService().onEnterWorld(activePlayer);
 		// Town 3.9
-		TownService.getInstance().onEnterWorld(activePlayer);
+		GameHousingServices.townService().onEnterWorld(activePlayer);
 		// Protector Conqueror
-		ProtectorConquerorService.getInstance().onEnterMap(activePlayer);
+		GameFeatureServices.protectorConquerorService().onEnterMap(activePlayer);
 		// Base 4.3
-		BaseService.getInstance().onEnterBaseWorld(activePlayer);
+		GameFeatureServices.baseService().onEnterBaseWorld(activePlayer);
 		// Shugo Imperial Tomb 4.3
 		ShugoImperialTombSpawnManager.sendImperialStatus(activePlayer);
 		// Abyss Landing 4.9.1
-		AbyssLandingService.getInstance().onEnterWorld(activePlayer);
+		GameLocationBootstrapServices.abyssLandingService().onEnterWorld(activePlayer);
 		// Tower Of Eternity 5.0
-		TowerOfEternityService.getInstance().onEnterTowerWorld(activePlayer);
+		GameLocationBootstrapServices.towerOfEternityService().onEnterTowerWorld(activePlayer);
 		// Outpost 5.8
-		OutpostService.getInstance().onEnterOutpostWorld(activePlayer);
+		GameLocationBootstrapServices.outpostService().onEnterOutpostWorld(activePlayer);
 		activePlayer.getEffectController().updatePlayerEffectIcons();
 		sendPacket(SM_CUBE_UPDATE.cubeSize(StorageType.CUBE, activePlayer));
 		TeleportService2.archdaevaTransformation(activePlayer);
 		TeleportService2.playerTransformation(activePlayer);
 		TeleportService2.instanceTransformation(activePlayer);
 		// BattleField Union 5.3
-		// BattlefieldUnionService.getInstance().onEnterWorld(activePlayer);
+		// GameCoreGameplayServices.battlefieldUnionService().onEnterWorld(activePlayer);
 		// Pet
 		Pet pet = activePlayer.getPet();
 		if (pet != null && !pet.isSpawned()) {
-			World.getInstance().spawn(pet);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(pet);
 		}
 		// Summon
 		Summon summon = activePlayer.getSummon();
 		if (summon != null && !summon.isSpawned()) {
-			World.getInstance().spawn(summon);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(summon);
 		}
 		// Minion
 		Minion minion = activePlayer.getMinion();
 		if (minion != null && !minion.isSpawned()) {
-			World.getInstance().spawn(minion);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().spawn(minion);
 		}
 
 		activePlayer.setPortAnimation(0x02);

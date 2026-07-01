@@ -16,6 +16,12 @@
  */
 package com.aionemu.gameserver.ai.instance.luckyDanuarReliquary;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -97,7 +103,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
     }
 	
 	private void startSkillTask() {
-		skillTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		skillTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
@@ -119,27 +125,27 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
         switch (Rnd.get(1, 2)) {
             case 1:
                 AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
-                SkillEngine.getInstance().getSkill(getOwner(), 21171, 60, getOwner()).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(getOwner(), 21171, 60, getOwner()).useNoAnimationSkill();
             break;
             case 2:
                 sendMsg(1500745);
                 AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
-                SkillEngine.getInstance().getSkill(getOwner(), 21229, 60, getOwner()).useNoAnimationSkill();
+                GameEngineServices.skillEngine().getSkill(getOwner(), 21229, 60, getOwner()).useNoAnimationSkill();
             break;
         }
     }
 	
 	private void Teleport() {
 		if (!isAlreadyDead()) {
-			SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 			sendMsg(1500750);
-		    ThreadPoolManager.getInstance().schedule(new Runnable() {
+		    GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				public void run() {
 					if (!isAlreadyDead()) {
                         spawn(284380, 244.12497f, 276.17401f, 242.625f, (byte) 0); //Modor's Bodyguard.
                         spawn(284381, 263.12497f, 276.17401f, 242.625f, (byte) 0); //Vengeful Reaper.
 						spawn(284382, 253.12497f, 277.17401f, 242.625f, (byte) 0); //Hoarfrost Acheron Drake.
-						World.getInstance().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 284.34036f, 262.9162f, 248.851f, (byte) 63);
 				        PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 					}
 				}
@@ -149,9 +155,9 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 	
     private void Teleport2() {
         AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
-        SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+        GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         sendMsg(1500741);
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			    float pos1[][] = {
@@ -164,16 +170,16 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
                     }
                 };
                 float pos[] = pos1[Rnd.get(0, 2)];
-                World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+                com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
     }
 	
 	private void Teleport3() {
-		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500741);
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run(){
                 float pos1[][] = {
@@ -190,7 +196,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
                     }
                 };
                 float pos[] = pos1[Rnd.get(0, 4)];
-                World.getInstance().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
+                com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), pos[0], pos[1], pos[2], (byte) pos[3]);
                 PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
             }
         }, 2000);
@@ -198,12 +204,12 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 	
 	private void Teleport4() {
 		AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
-		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
 		sendMsg(1500741);
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				World.getInstance().updatePosition(getOwner(), 256.4457f, 257.6867f, 242.30f, (byte) 115);
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(getOwner(), 256.4457f, 257.6867f, 242.30f, (byte) 115);
 				PacketSendUtility.broadcastPacketAndReceive(getOwner(), new SM_FORCED_MOVE(getOwner(), getOwner()));
 			}
 		}, 2000);
@@ -211,10 +217,10 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 	
 	private void Teleport5() {
 		AI2Actions.targetSelf(Cursed_Queen_ModorAI2.this);
-		SkillEngine.getInstance().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21165, 60, getOwner()).useNoAnimationSkill();
         EmoteManager.emoteStopAttacking(getOwner());
 		sendMsg(1500744);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			public void run() {
 				despawnNpcs(231304); //Cursed Queen Modor.
 				spawn(284383, 255.12497f, 293.17401f, 257.625f, (byte) 22);
@@ -251,7 +257,7 @@ public class Cursed_Queen_ModorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void sendMsg(int msg) {
-		NpcShoutsService.getInstance().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
+		GameFeatureServices.npcShoutsService().sendMsg(getOwner(), msg, getObjectId(), 0, 0);
 	}
 	
 	private void despawnNpcs(int npcId) {

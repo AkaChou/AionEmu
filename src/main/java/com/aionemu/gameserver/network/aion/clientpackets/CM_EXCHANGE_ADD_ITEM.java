@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
@@ -48,6 +50,6 @@ public class CM_EXCHANGE_ADD_ITEM extends AionClientPacket {
 	@Override
 	protected void runImpl() {
 		final Player activePlayer = getConnection().getActivePlayer();
-		ExchangeService.getInstance().addItem(activePlayer, itemObjId, itemCount);
+		GameRuntimeServices.exchangeService().addItem(activePlayer, itemObjId, itemCount);
 	}
 }

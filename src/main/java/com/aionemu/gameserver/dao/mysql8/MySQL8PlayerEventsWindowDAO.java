@@ -1,14 +1,12 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.PlayerEventsWindowDAO;
 import com.aionemu.gameserver.model.event_window.PlayerEventWindowEntry;
 import com.aionemu.gameserver.model.event_window.PlayerEventWindowList;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +15,9 @@ import java.util.List;
  * @author Ghostfur (Aion-Unique)
  * Updated for MySQL 8 - Fixed connection leaks
  */
+@Slf4j
 public class MySQL8PlayerEventsWindowDAO extends PlayerEventsWindowDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8PlayerEventsWindowDAO.class);
     
     private static final String SELECT_QUERY = "SELECT * FROM `player_events_window` WHERE `account_id`=?";
     private static final String INSERT_QUERY = "INSERT INTO `player_events_window` (`account_id`, `event_id`, `last_stamp`, `elapsed`) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE `event_id` = VALUES(`event_id`), `last_stamp` = VALUES(`last_stamp`)";

@@ -16,11 +16,13 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.ConquestService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class Conquest extends AdminCommand
 {
@@ -51,24 +53,24 @@ public class Conquest extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (ConquestService.getInstance().isConquestInProgress(conquestId)) {
+			if (GameLocationBootstrapServices.conquestService().isConquestInProgress(conquestId)) {
 				PacketSendUtility.sendMessage(player, "<Conquest> " + conquestId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Conquest> " + conquestId + " started!");
-				ConquestService.getInstance().startConquest(conquestId);
+				GameLocationBootstrapServices.conquestService().startConquest(conquestId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!ConquestService.getInstance().isConquestInProgress(conquestId)) {
+			if (!GameLocationBootstrapServices.conquestService().isConquestInProgress(conquestId)) {
 				PacketSendUtility.sendMessage(player, "<Conquest> " + conquestId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Conquest> " + conquestId + " stopped!");
-				ConquestService.getInstance().stopConquest(conquestId);
+				GameLocationBootstrapServices.conquestService().stopConquest(conquestId);
 			}
 		}
 	}
 	
 	protected boolean isValidConquestLocationId(Player player, int conquestId) {
-		if (!ConquestService.getInstance().getConquestLocations().keySet().contains(conquestId)) {
+		if (!GameLocationBootstrapServices.conquestService().getConquestLocations().keySet().contains(conquestId)) {
 			PacketSendUtility.sendMessage(player, "Id " + conquestId + " is invalid");
 			return false;
 		}

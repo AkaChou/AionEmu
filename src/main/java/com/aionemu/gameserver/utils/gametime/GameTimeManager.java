@@ -16,15 +16,14 @@
  */
 package com.aionemu.gameserver.utils.gametime;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.ServerVariablesDAO;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class GameTimeManager {
-	private static final Logger log = LoggerFactory.getLogger(GameTimeManager.class);
 	private static GameTime instance;
 	private static GameTimeUpdater updater;
 	private static boolean clockStarted = false;
@@ -43,7 +42,7 @@ public class GameTimeManager {
 			throw new IllegalStateException("Clock is already started");
 		}
 		updater = new GameTimeUpdater(getGameTime());
-		ThreadPoolManager.getInstance().scheduleAtFixedRate(updater, 0, 5000);
+		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(updater, 0, 5000);
 		clockStarted = true;
 	}
 
@@ -52,7 +51,7 @@ public class GameTimeManager {
 	}
 
 	public static void reloadTime(int time) {
-		ThreadPoolManager.getInstance().purge();
+		GameThreadPoolServices.threadPoolManager().purge();
 		instance = new GameTime(time);
 		clockStarted = false;
 		startClock();

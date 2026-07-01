@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.drakenspireDepths;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -55,7 +59,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 		if (isAggred.compareAndSet(false, true)) {
 			switch (getNpcId()) {
 				case 236227: //Lava Protector.
-					lavaProtectorTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					lavaProtectorTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							AI2Actions.deleteOwner(Lava_ProtectorAI2.this);
@@ -80,8 +84,8 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void shareSource() {
-	    SkillEngine.getInstance().getSkill(getOwner(), 20769, 1, getOwner()).useNoAnimationSkill(); //Lava Protector.
-		SkillEngine.getInstance().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
+	    GameEngineServices.skillEngine().getSkill(getOwner(), 20769, 1, getOwner()).useNoAnimationSkill(); //Lava Protector.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 21643, 1, getOwner()).useNoAnimationSkill(); //Share Source.
 	}
 	
 	private void checkPercentage(int hpPercentage) {
@@ -97,14 +101,14 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startMagmaGluttenTask() {
-		magmaGluttenTask = ThreadPoolManager.getInstance().scheduleAtFixedRate(new Runnable() {
+		magmaGluttenTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				if (isAlreadyDead()) {
 					cancelMagmaGluttenTask();
 					cancelLavaProtectorTask();
 				} else {
-					SkillEngine.getInstance().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
+					GameEngineServices.skillEngine().getSkill(getOwner(), 21645, 60, getOwner()).useNoAnimationSkill(); //Raging Hellfire.
 					List<Player> players = getLifedPlayers();
 					if (!players.isEmpty()) {
 						int size = players.size();
@@ -132,7 +136,7 @@ public class Lava_ProtectorAI2 extends AggressiveNpcAI2
 		final float y = player.getY();
 		final float z = player.getZ();
 		if (x > 0 && y > 0 && z > 0) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {

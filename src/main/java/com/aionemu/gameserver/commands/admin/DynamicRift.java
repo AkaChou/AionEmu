@@ -16,11 +16,13 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.DynamicRiftService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class DynamicRift extends AdminCommand
 {
@@ -51,24 +53,24 @@ public class DynamicRift extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (DynamicRiftService.getInstance().isDynamicRiftInProgress(dynamicRiftId)) {
+			if (GameLocationBootstrapServices.dynamicRiftService().isDynamicRiftInProgress(dynamicRiftId)) {
 				PacketSendUtility.sendMessage(player, "<Dynamic Rift> " + dynamicRiftId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Dynamic Rift> " + dynamicRiftId + " started!");
-				DynamicRiftService.getInstance().startDynamicRift(dynamicRiftId);
+				GameLocationBootstrapServices.dynamicRiftService().startDynamicRift(dynamicRiftId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!DynamicRiftService.getInstance().isDynamicRiftInProgress(dynamicRiftId)) {
+			if (!GameLocationBootstrapServices.dynamicRiftService().isDynamicRiftInProgress(dynamicRiftId)) {
 				PacketSendUtility.sendMessage(player, "<Dynamic Rift> " + dynamicRiftId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Dynamic Rift> " + dynamicRiftId + " stopped!");
-				DynamicRiftService.getInstance().stopDynamicRift(dynamicRiftId);
+				GameLocationBootstrapServices.dynamicRiftService().stopDynamicRift(dynamicRiftId);
 			}
 		}
 	}
 	
 	protected boolean isValidDynamicRiftLocationId(Player player, int dynamicRiftId) {
-		if (!DynamicRiftService.getInstance().getDynamicRiftLocations().keySet().contains(dynamicRiftId)) {
+		if (!GameLocationBootstrapServices.dynamicRiftService().getDynamicRiftLocations().keySet().contains(dynamicRiftId)) {
 			PacketSendUtility.sendMessage(player, "Id " + dynamicRiftId + " is invalid");
 			return false;
 		}

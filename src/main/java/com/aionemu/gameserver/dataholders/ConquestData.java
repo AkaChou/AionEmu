@@ -18,17 +18,18 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.conquest.ConquestLocation;
 import com.aionemu.gameserver.model.templates.conquest.ConquestTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class ConquestData {
 	private List<ConquestTemplate> conquestTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, ConquestLocation> conquest = new FastMap<Integer, ConquestLocation>();
+	private Map<Integer, ConquestLocation> conquest = new LinkedHashMap<Integer, ConquestLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ConquestTemplate template : conquestTemplates) {
@@ -53,7 +54,7 @@ public class ConquestData {
 		return conquest.size();
 	}
 
-	public FastMap<Integer, ConquestLocation> getConquestLocations() {
+	public Map<Integer, ConquestLocation> getConquestLocations() {
 		return conquest;
 	}
 }

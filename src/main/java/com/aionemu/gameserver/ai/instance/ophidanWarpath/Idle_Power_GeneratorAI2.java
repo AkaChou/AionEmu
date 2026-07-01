@@ -16,12 +16,13 @@
  */
 package com.aionemu.gameserver.ai.instance.ophidanWarpath;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -36,7 +37,7 @@ public class Idle_Power_GeneratorAI2 extends NpcAI2
 	protected void handleSpawned() {
 		switch (getNpcId()) {
 			case 806391: //North Power Generator.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						announceWarNeu01();
@@ -45,7 +46,7 @@ public class Idle_Power_GeneratorAI2 extends NpcAI2
 				}, 300000); //5 Minutes.
 			break;
 			case 806392: //South Power Generator.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				    @Override
 					public void run() {
 						announceWarNeu01();
@@ -58,7 +59,7 @@ public class Idle_Power_GeneratorAI2 extends NpcAI2
 	}
 	
 	private void announceWarNeu01() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_IDLDF5_Under_02_war_neu_01);

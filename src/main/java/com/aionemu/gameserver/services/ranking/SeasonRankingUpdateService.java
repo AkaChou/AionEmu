@@ -17,10 +17,11 @@
 package com.aionemu.gameserver.services.ranking;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -29,17 +30,15 @@ import com.aionemu.gameserver.model.ranking.SeasonRankingEnum;
 import com.aionemu.gameserver.model.ranking.SeasonRankingResult;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SEASON_RANKING;
 
-import javolution.util.FastMap;
-
 /**
  * Created by Wnkrz on 24/07/2017.
  */
 
+@Slf4j(topic = "com.aionemu.gameserver.services.ranking.SeasonRankingService")
 public class SeasonRankingUpdateService {
-	private static final Logger log = LoggerFactory.getLogger(SeasonRankingService.class);
 	private static volatile ObjectProvider<SeasonRankingUpdateService> instanceProvider;
 	private int lastUpdate;
-	private final FastMap<Integer, List<SM_SEASON_RANKING>> players = new FastMap<Integer, List<SM_SEASON_RANKING>>();
+	private final Map<Integer, List<SM_SEASON_RANKING>> players = new HashMap<>();
 
 	public void onStart() {
 		renewPlayerRanking(SeasonRankingEnum.HALL_OF_TENACITY.getId());

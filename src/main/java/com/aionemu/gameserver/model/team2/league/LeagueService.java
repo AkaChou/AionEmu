@@ -16,11 +16,11 @@
  */
 package com.aionemu.gameserver.model.team2.league;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.callbacks.util.GlobalCallbackHelper;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -33,12 +33,11 @@ import com.aionemu.gameserver.model.team2.league.events.LeagueLeftEvent;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUESTION_WINDOW;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.restrictions.RestrictionsManager;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.google.common.base.Preconditions;
+@Slf4j
 
 public class LeagueService {
-	private static final Logger log = LoggerFactory.getLogger(LeagueService.class);
 	private static final Map<Integer, League> leagues = new ConcurrentHashMap<Integer, League>();
 
 	static {
@@ -61,7 +60,7 @@ public class LeagueService {
 
 	public static final boolean canInvite(Player inviter, Player invited) {
 		if (inviter.isInInstance()) {
-			if (AutoGroupService.getInstance().isAutoInstance(inviter.getInstanceId())) {
+			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(inviter.getInstanceId())) {
 				// You cannot use invite, leave or kick commands related to your group or
 				// alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);
@@ -69,7 +68,7 @@ public class LeagueService {
 			}
 		}
 		if (invited.isInInstance()) {
-			if (AutoGroupService.getInstance().isAutoInstance(invited.getInstanceId())) {
+			if (GameCoreGameplayServices.autoGroupService().isAutoInstance(invited.getInstanceId())) {
 				// You cannot use invite, leave or kick commands related to your group or
 				// alliance in this region.
 				PacketSendUtility.sendPacket(inviter, SM_SYSTEM_MESSAGE.STR_MSG_INSTANCE_CANT_OPERATE_PARTY_COMMAND);

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.Iterator;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -63,7 +65,7 @@ public class RenameService {
 			DAOManager.getDAO(OldNamesDAO.class).insertNames(player.getObjectId(), player.getName(), newName);
 			player.getCommonData().setName(newName);
 		}
-		Iterator<Player> onlinePlayers = World.getInstance().getPlayersIterator();
+		Iterator<Player> onlinePlayers = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (onlinePlayers.hasNext()) {
 			Player p = onlinePlayers.next();
 			if (p != null && p.getClientConnection() != null) {
@@ -78,7 +80,7 @@ public class RenameService {
 		if (!player.isLegionMember()) {
 			return false;
 		}
-		if (!LegionService.getInstance().isValidName(name)) {
+		if (!GameCoreGameplayServices.legionService().isValidName(name)) {
 			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1400152));
 			return false;
 		}
@@ -100,7 +102,7 @@ public class RenameService {
 			AuditLogger.info(player, "Try rename legion without coupon.");
 			return false;
 		}
-		LegionService.getInstance().setLegionName(player.getLegion(), name, true);
+		GameCoreGameplayServices.legionService().setLegionName(player.getLegion(), name, true);
 		return true;
 	}
 }

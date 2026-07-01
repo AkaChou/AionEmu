@@ -43,7 +43,7 @@ public class ChatServerRuntime implements ChatServerDependencies {
     }
 
     public void start(String[] args) {
-        ChatServer.start(args, this);
+        ChatServerStartupSequence.start(this);
     }
 
     @Override

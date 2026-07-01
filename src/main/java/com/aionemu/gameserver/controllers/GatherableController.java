@@ -271,7 +271,7 @@ public class GatherableController extends VisibleObjectController<Gatherable> {
 		if (!getOwner().isInInstance()) {
 			RespawnService.scheduleRespawnTask(owner);
 		}
-		World.getInstance().despawn(owner);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().despawn(owner);
 	}
 
 	@Override

@@ -18,12 +18,10 @@
 
 package com.aionemu.chatserver.network.gameserver;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 import java.util.ArrayDeque;
 import java.util.Deque;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.chatserver.network.factories.GsPacketHandlerFactory;
 import com.aionemu.chatserver.service.ChatCoreServices;
@@ -34,9 +32,9 @@ import com.aionemu.commons.network.ConnectionTransport;
 /**
  * @author KID
  */
+@Slf4j
 public class GsConnection extends AConnection {
 
-    private static final Logger log = LoggerFactory.getLogger(GsConnection.class);
 
     public static enum State {
 

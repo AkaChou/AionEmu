@@ -49,7 +49,7 @@ public class TheHexwayEntranceAI2 extends NpcAI2
     }
 	
 	private void announceHexwayOpen() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(Player player) {
 				//The entrance to The Hexway has opened.

@@ -16,10 +16,12 @@
  */
 package com.aionemu.gameserver.services.item;
 
-import static com.aionemu.gameserver.services.item.ItemPacketService.sendStorageUpdatePacket;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import static com.aionemu.gameserver.services.item.ItemPacketService.sendStorageUpdatePacket;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -28,16 +30,15 @@ import com.aionemu.gameserver.model.items.storage.StorageType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_CUBE_UPDATE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.ExchangeService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 /**
  * @author ATracer
  */
+@Slf4j
 public class ItemSplitService {
 
-	private static final Logger log = LoggerFactory.getLogger(ItemSplitService.class);
 
 	/**
 	 * Move part of stack into different slot
@@ -92,7 +93,7 @@ public class ItemSplitService {
 				return;
 			}
 			if (sourceStorageType != destinationStorageType) {
-				LegionService.getInstance().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
+				GameCoreGameplayServices.legionService().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
 						destStorage);
 			}
 			Item newItem = ItemFactory.newItem(sourceItem.getItemTemplate().getTemplateId(), splitAmount);
@@ -108,7 +109,7 @@ public class ItemSplitService {
 			}
 		} else if (targetItem.getItemId() == sourceItem.getItemId()) {
 			if (sourceStorageType != destinationStorageType) {
-				LegionService.getInstance().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
+				GameCoreGameplayServices.legionService().addWHItemHistory(player, sourceItem.getItemId(), splitAmount, sourceStorage,
 						destStorage);
 			}
 			mergeStacks(sourceStorage, destStorage, sourceItem, targetItem, splitAmount);
@@ -136,7 +137,7 @@ public class ItemSplitService {
 		if (source.getKinah() < splitAmount) {
 			return;
 		}
-		if (ExchangeService.getInstance().isPlayerInExchange(player)) {
+		if (GameRuntimeServices.exchangeService().isPlayerInExchange(player)) {
 			return;
 		}
 		switch (source.getStorageType()) {

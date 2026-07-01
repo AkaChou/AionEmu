@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.utils.ThreadPoolManager;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -48,12 +50,76 @@ class GameCoreServicesRuntimeBridgeTest {
     }
 
     @Test
+    void staticDataServicesExposeHtmlCacheAccessor() {
+        DataManager dataManager = instance(DataManager.class);
+        HTMLCache htmlCache = instance(HTMLCache.class);
+        GameStaticDataServices staticDataServices = new GameStaticDataServices(
+                provider(DataManager.class, dataManager),
+                provider(HTMLCache.class, htmlCache),
+                provider(XmlDataLoader.class, instance(XmlDataLoader.class)));
+
+        try {
+            assertSame(dataManager, GameStaticDataServices.dataManager());
+            assertSame(htmlCache, GameStaticDataServices.htmlCache());
+        } finally {
+            staticDataServices.destroy();
+        }
+    }
+
+    @Test
     void runtimeBridgeDoesNotCallLegacySingletonsDirectly() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameCoreServicesRuntimeBridge.java"));
 
         assertFalse(source.contains("DataManager.getInstance()"));
         assertFalse(source.contains("ThreadPoolManager.getInstance()"));
         assertFalse(source.contains("HTMLCache.getInstance()"));
+    }
+
+    @Test
+    void coreThreadPoolFallbackUsesLifecycleBridgeInsteadOfLegacySingleton() throws IOException {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameCoreServiceFallbacks.java"));
+
+        assertFalse(source.contains("ThreadPoolManager.getInstance()"));
+        assertFalse(source.contains("ThreadPoolManagerFallback"));
+        assertFalse(source.contains("private static final ThreadPoolManager INSTANCE"));
+    }
+
+    @Test
+    void gameServerCodeUsesStaticDataBridgeInsteadOfDirectHtmlCacheSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("cache/HTMLCache.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameStaticDataServices.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameCoreServiceFallbacks.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("HTMLCache.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesStaticDataBridgeInsteadOfDirectDataManagerSingleton() throws IOException {
+        List<Path> sources;
+        try (var stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .filter(path -> !path.endsWith(Path.of("dataholders/DataManager.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameCoreServiceFallbacks.java")))
+                .filter(path -> !path.endsWith(Path.of("lifecycle/GameStaticDataServices.java")))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("DataManager.getInstance()"), source.toString());
+        }
     }
 
     private <T> T instance(Class<T> type) {

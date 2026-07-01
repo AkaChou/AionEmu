@@ -12,6 +12,8 @@
  */
 package com.aionemu.gameserver.quest.handlers.mission;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.handlers.QuestHandler;
@@ -60,7 +62,7 @@ public class _14020Orders_From_Eltnen extends QuestHandler {
             if (env.getDialogId() == QuestDialog.SELECT_NO_REWARD.id()) {
                 int[] ids = {14021, 14022, 14023, 14024, 14025};
                 for (int id: ids) {
-                    QuestEngine.getInstance().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
+                    GameEngineServices.questEngine().onEnterZoneMissionEnd(new QuestEnv(env.getVisibleObject(), env.getPlayer(), id, env.getDialogId()));
                 }
             }
             return sendQuestEndDialog(env);

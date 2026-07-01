@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
@@ -35,9 +33,9 @@ import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.world.World;
+@Slf4j(topic = "CHAT_LOG")
 
 public class CM_CHAT_MESSAGE_WHISPER extends AionClientPacket {
-	private static final Logger log = LoggerFactory.getLogger("CHAT_LOG");
 	private String name;
 	private String message;
 
@@ -56,7 +54,7 @@ public class CM_CHAT_MESSAGE_WHISPER extends AionClientPacket {
 		name = ChatUtil.getRealAdminName(name);
 		String formatname = Util.convertName(name);
 		Player sender = getConnection().getActivePlayer();
-		Player receiver = World.getInstance().findPlayer(formatname);
+		Player receiver = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(formatname);
 		if (LoggingConfig.LOG_CHAT)
 			log.info(
 					String.format("[MESSAGE] [%s] Whisper To: %s, Message: %s", sender.getName(), formatname, message));

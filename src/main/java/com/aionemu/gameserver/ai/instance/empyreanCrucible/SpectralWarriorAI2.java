@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.actions.NpcActions;
@@ -23,7 +25,6 @@ import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.instance.StageType;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -45,7 +46,7 @@ public class SpectralWarriorAI2 extends AggressiveNpcAI2
 	private void checkPercentage(int hpPercentage) {
 		if (hpPercentage <= 50 && isDone.compareAndSet(false, true)) {
 			getPosition().getWorldMapInstance().getInstanceHandler().onChangeStage(StageType.START_STAGE_6_ROUND_5);
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					resurrectAllies();
@@ -55,7 +56,7 @@ public class SpectralWarriorAI2 extends AggressiveNpcAI2
 	}
 	
 	private void resurrectAllies() {
-		for (VisibleObject obj : getKnownList().getKnownObjects().values()) {
+		for (VisibleObject obj : new java.util.ArrayList<>(getKnownList().getKnownObjects().values())) {
 			if (obj instanceof Npc) {
 				Npc npc = (Npc) obj;
 				if (npc == null || NpcActions.isAlreadyDead(npc))

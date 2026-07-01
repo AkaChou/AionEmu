@@ -18,17 +18,18 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.svs.SvsLocation;
 import com.aionemu.gameserver.model.templates.svs.SvsTemplate;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
@@ -41,7 +42,7 @@ public class SvsData {
 	private List<SvsTemplate> svsTemplates;
 
 	@XmlTransient
-	private FastMap<Integer, SvsLocation> svs = new FastMap<Integer, SvsLocation>();
+	private Map<Integer, SvsLocation> svs = new LinkedHashMap<Integer, SvsLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (SvsTemplate template : svsTemplates) {
@@ -53,7 +54,7 @@ public class SvsData {
 		return svs.size();
 	}
 
-	public FastMap<Integer, SvsLocation> getSvsLocations() {
+	public Map<Integer, SvsLocation> getSvsLocations() {
 		return svs;
 	}
 }

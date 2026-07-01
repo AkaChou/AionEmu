@@ -33,18 +33,19 @@ import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.QuestService;
 
-import gnu.trove.list.array.TIntArrayList;
-import javolution.util.FastMap;
+import com.aionemu.commons.utils.collections.IntArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class KillSpawned extends QuestHandler {
 	private final int questId;
 	private final Set<Integer> startNpcs = new HashSet<Integer>();
 	private final Set<Integer> endNpcs = new HashSet<Integer>();
-	private final FastMap<List<Integer>, SpawnedMonster> spawnedMonsters;
-	private TIntArrayList spawnerObjects;
+	private final Map<List<Integer>, SpawnedMonster> spawnedMonsters;
+	private IntArrayList spawnerObjects;
 
 	public KillSpawned(int questId, List<Integer> startNpcIds, List<Integer> endNpcIds,
-			FastMap<List<Integer>, SpawnedMonster> spawnedMonsters) {
+			Map<List<Integer>, SpawnedMonster> spawnedMonsters) {
 		super(questId);
 		this.questId = questId;
 		this.startNpcs.addAll(startNpcIds);
@@ -56,7 +57,7 @@ public class KillSpawned extends QuestHandler {
 			this.endNpcs.remove(0);
 		}
 		this.spawnedMonsters = spawnedMonsters;
-		this.spawnerObjects = new TIntArrayList();
+		this.spawnerObjects = new IntArrayList();
 		for (SpawnedMonster m : spawnedMonsters.values()) {
 			spawnerObjects.add(m.getSpawnerObject());
 		}

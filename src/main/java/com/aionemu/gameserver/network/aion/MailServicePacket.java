@@ -16,10 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Letter;
@@ -32,8 +30,8 @@ import com.aionemu.gameserver.network.aion.iteminfo.ItemInfoBlob;
  * @rework Ranastic
  *
  */
+@Slf4j
 public abstract class MailServicePacket extends AionServerPacket {
-	private static final Logger log = LoggerFactory.getLogger(MailServicePacket.class);
 	protected Player player;
 
 	public MailServicePacket(Player player) {

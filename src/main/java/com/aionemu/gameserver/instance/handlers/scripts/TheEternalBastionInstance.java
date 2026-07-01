@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIState;
 import com.aionemu.gameserver.ai2.AbstractAI;
@@ -37,17 +41,17 @@ import com.aionemu.gameserver.model.items.storage.Storage;
 import com.aionemu.gameserver.model.team2.group.PlayerGroupService;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastList;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
 
 /****/
@@ -71,7 +75,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	private int prepareTimerSeconds = 60000; //...1Min
 	//Duration Instance Time.
 	private int instanceTimerSeconds = 1800000; //...30Min
-	private final FastList<Future<?>> bastionTask = FastList.newInstance();
+	private final List<Future<?>> bastionTask = new ArrayList<Future<?>>();
 	
 	protected EternalBastionPlayerReward getPlayerReward(Integer object) {
 		return (EternalBastionPlayerReward) instanceReward.getPlayerReward(object);
@@ -93,7 +97,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
@@ -106,13 +110,13 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				    if (player.isOnline()) {
 					    switch (Rnd.get(1, 3)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052591, 1)); //Weapon Box Of The Iron Wall Fighter.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052591, 1)); //Weapon Box Of The Iron Wall Fighter.
 				            break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052592, 1)); //Armor Box Of The Iron Wall Fighter.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052592, 1)); //Armor Box Of The Iron Wall Fighter.
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052593, 1)); //Firm Equipment Support Box Of Iron Wall.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052593, 1)); //Firm Equipment Support Box Of Iron Wall.
 							break;
 						}
 				    }
@@ -123,23 +127,23 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 			case 801269:
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-					    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
+					    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188052582, 1)); //Dragon's Conquerer Mark Box.
 				    }
 				}
 			break;
 			case 831328: //Cannon Supplies Box.
 			case 831329: //Ammo Box.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006996, 10)); //Case Shot.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 182006997, 10)); //Armor-Piercing Shot.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006996, 10)); //Case Shot.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 182006997, 10)); //Armor-Piercing Shot.
 			break;
 			case 831330: //Siege Mine.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000137, 1)); //Mobile Turret Key.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000137, 1)); //Mobile Turret Key.
 			break;
 			case 802185: //The Eternal Bastion Opportunity Bundle.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000051, 30)); //Major Ancient Crown.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000052, 30)); //Greater Ancient Crown.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000236, 50)); //Blood Mark.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 186000237, 50)); //Ancient Coin.
 			break;
         }
     }
@@ -263,7 +267,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				despawnNpc(npc);
 			break;
 			case 231130: //Grand Commander Pashid.
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -326,7 +330,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
             case 209517: //Commander Granir.
 				despawnNpc(npc);
 				instanceReward.addPoints(-90000);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 					    instance.doOnAllPlayers(new Visitor<Player>() {
@@ -355,17 +359,17 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 		switch (npc.getNpcId()) {
 			case 701625: //Lysander's Siege Cannon.
 				despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21065, 60, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21065, 60, player).useNoAnimationSkill();
 			break;
 			case 701922: //Granir's Siege Cannon.
 				despawnNpc(npc);
-				SkillEngine.getInstance().getSkill(npc, 21066, 60, player).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(npc, 21066, 60, player).useNoAnimationSkill();
 			break;
 		}
 	}
 	
 	protected void startInstanceTask() {
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startAssaultPod1();
@@ -380,14 +384,14 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				}
             }
         }, 60000)); //1 Minute.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			    startAssaultPod2();
 				startRaidBastion1();
             }
         }, 120000)); //2 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			    //The Pashid Legion's 2nd Siege Troop is attacking the Bastion's gates.
@@ -397,7 +401,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				startRaidBastion2();
             }
         }, 300000)); //5 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 			    //The Pashid Legion's 3rd Siege Troop is attacking the Bastion's gates.
@@ -408,7 +412,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				startRaidBastion3();
             }
         }, 480000)); //8 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The Pashid Legion's Sheban Siege Troop is attacking the Bastion's gates.
@@ -417,7 +421,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				startRaidBastion4();
             }
         }, 660000)); //11 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//The Eternal Bastion defenders have withdrawn in preparation of Pashid's assault.
@@ -427,13 +431,13 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 				startRaidBastion6();
             }
         }, 840000)); //14 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startRaidBastion7();
             }
         }, 1020000)); //17 Minutes.
-		bastionTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		bastionTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//Grand Commander Pashid has arrived with the Guard to assault the fortress.
@@ -660,10 +664,10 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = bastionTask.head(), end = bastionTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : bastionTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -776,7 +780,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	
 	private void startPrepareTimer() {
 		if (timerPrepare == null) {
-			timerPrepare = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			timerPrepare = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					startMainInstanceTimer();
@@ -835,7 +839,7 @@ public class TheEternalBastionInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

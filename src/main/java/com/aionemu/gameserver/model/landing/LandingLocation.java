@@ -18,7 +18,9 @@ package com.aionemu.gameserver.model.landing;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -26,8 +28,6 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.landing.LandingTemplate;
 import com.aionemu.gameserver.services.abysslandingservice.Landing;
-
-import javolution.util.FastMap;
 
 public class LandingLocation {
 	protected int siege;
@@ -45,7 +45,7 @@ public class LandingLocation {
 	protected Race race;
 	protected LandingTemplate template;
 	protected Landing<LandingLocation> activeLanding;
-	protected FastMap<Integer, Player> players = new FastMap<Integer, Player>();
+	protected Map<Integer, Player> players = new HashMap<>();
 	private final List<VisibleObject> spawned = new ArrayList<VisibleObject>();
 	private PersistentState persistentState;
 
@@ -82,7 +82,7 @@ public class LandingLocation {
 		return spawned;
 	}
 
-	public FastMap<Integer, Player> getPlayers() {
+	public Map<Integer, Player> getPlayers() {
 		return players;
 	}
 

@@ -108,7 +108,7 @@ public class CM_SUMMON_MOVE extends AionClientPacket {
 			m.vehicleY = vehicleY;
 			m.vehicleZ = vehicleZ;
 		}
-		World.getInstance().updatePosition(summon, x, y, z, heading);
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(summon, x, y, z, heading);
 		if ((type & MovementMask.STARTMOVE) == MovementMask.STARTMOVE || type == 0) {
 			PacketSendUtility.broadcastPacket(summon, new SM_MOVE(summon));
 		}

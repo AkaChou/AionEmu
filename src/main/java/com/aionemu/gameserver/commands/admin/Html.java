@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
 import com.aionemu.gameserver.cache.HTMLCache;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.HTMLService;
@@ -39,12 +41,12 @@ public class Html extends AdminCommand {
 		}
 
 		if (params[0].equals("reload")) {
-			HTMLCache.getInstance().reload(true);
-			PacketSendUtility.sendMessage(player, HTMLCache.getInstance().toString());
+			GameStaticDataServices.htmlCache().reload(true);
+			PacketSendUtility.sendMessage(player, GameStaticDataServices.htmlCache().toString());
 		}
 		else if (params[0].equals("show"))
 			if (params.length >= 2)
-				HTMLService.showHTML(player, HTMLCache.getInstance().getHTML(params[1] + ".xhtml"));
+				HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML(params[1] + ".xhtml"));
 			else
 				PacketSendUtility.sendMessage(player, "Usage: //html show <filename>");
 	}

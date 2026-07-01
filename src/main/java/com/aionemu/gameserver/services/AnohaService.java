@@ -15,15 +15,18 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.AnohaSchedule;
 import com.aionemu.gameserver.configs.schedule.AnohaSchedule.Anoha;
@@ -47,27 +50,27 @@ import com.aionemu.gameserver.services.anohaservice.DanuarHero;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class AnohaService {
 	private static volatile ObjectProvider<AnohaService> instanceProvider;
 	private AnohaSchedule anohaSchedule;
 	private Map<Integer, AnohaLocation> anoha;
 	private static final int duration = CustomConfig.ANOHA_DURATION;
-	private static final Logger log = LoggerFactory.getLogger(AnohaService.class);
 
 	// Berserk Anoha 4.7
-	private FastMap<Integer, VisibleObject> adventSwordEffect = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> adventSwordEffect = new HashMap<>();
 
-	private final Map<Integer, BerserkAnoha<?>> activeAnoha = new FastMap<Integer, BerserkAnoha<?>>().shared();
+	private final Map<Integer, BerserkAnoha<?>> activeAnoha = new LinkedHashMap<Integer, BerserkAnoha<?>>();
 
 	public void initAnohaLocations() {
 		if (CustomConfig.ANOHA_ENABLED) {
@@ -88,7 +91,7 @@ public class AnohaService {
 			anohaSchedule = AnohaSchedule.load();
 			for (Anoha anoha : anohaSchedule.getAnohasList()) {
 				for (String berserkTime : anoha.getBerserkTimes()) {
-					CronService.getInstance().schedule(new AnohaStartRunnable(anoha.getId()), berserkTime);
+					GameCronServices.cronService().schedule(new AnohaStartRunnable(anoha.getId()), berserkTime);
 				}
 			}
 		}
@@ -104,7 +107,7 @@ public class AnohaService {
 			activeAnoha.put(id, danuarhero);
 		}
 		danuarhero.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopAnoha(id);
@@ -153,7 +156,7 @@ public class AnohaService {
 	public boolean berserkAnohaMsg1(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Named_Spawn_System, 0); // Berserk Anoha will return to Kaldor in 30 minutes.
@@ -168,7 +171,7 @@ public class AnohaService {
 	public boolean wealhtheowGuardianMsg1(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_01, 0); // Enraged Wealhtheow Guardian will appear in 5 minutes.
@@ -183,7 +186,7 @@ public class AnohaService {
 	public boolean wealhtheowGuardianMsg2(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_02, 0); // Enraged Wealhtheow Guardian will appear in 3 minutes.
@@ -198,7 +201,7 @@ public class AnohaService {
 	public boolean wealhtheowGuardianMsg3(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.playerSendPacketTime(player, SM_SYSTEM_MESSAGE.STR_MSG_LDF5_Fortress_Anoha_03, 0); // Enraged Wealhtheow Guardian will appear in 1 minute.
@@ -233,7 +236,7 @@ public class AnohaService {
             }
         };
         
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (player.isOnline() && player.isSpawned() && player.getLevel() <= 75) {
@@ -250,7 +253,7 @@ public class AnohaService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

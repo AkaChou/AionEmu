@@ -16,14 +16,16 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.dao.OutpostDAO;
 import com.aionemu.gameserver.dao.SiegeDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -39,17 +41,18 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by Wnkrz on 27/08/2017.
  */
+@Slf4j
 
 public class OutpostService {
 	private static volatile ObjectProvider<OutpostService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(OutpostService.class);
 
-	private final Map<Integer, Outpost<?>> active = new FastMap<Integer, Outpost<?>>().shared();
+	private final Map<Integer, Outpost<?>> active = new LinkedHashMap<Integer, Outpost<?>>();
 	private Map<Integer, OutpostLocation> outposts;
 
 	public void initOutpostLocations() {
@@ -68,7 +71,7 @@ public class OutpostService {
 		Race race = null;
 		log.info("[OutpostService] initializing <Outpost Reset>");
 		String weekly = "0 0 9 ? * WED *";
-		CronService.getInstance().schedule(new Runnable() {
+		GameCronServices.cronService().schedule(new Runnable() {
 			public void run() {
 				// Inggison.
 				capture(101, Race.NPC);
@@ -162,13 +165,13 @@ public class OutpostService {
 		} else {
 			sr = SiegeRace.BALAUR;
 		}
-		SiegeLocation loc = SiegeService.getInstance().getSiegeLocation(getOutpostLocation(id).getArtifactId());
-		SiegeService.getInstance().deSpawnNpcs(getOutpostLocation(id).getArtifactId());
+		SiegeLocation loc = GameFeatureServices.siegeService().getSiegeLocation(getOutpostLocation(id).getArtifactId());
+		GameFeatureServices.siegeService().deSpawnNpcs(getOutpostLocation(id).getArtifactId());
 		loc.setVulnerable(false);
 		loc.setUnderShield(false);
 		loc.setRace(sr);
 		loc.setLegionId(0);
-		SiegeService.getInstance().spawnNpcs(getOutpostLocation(id).getArtifactId(), sr, SiegeModType.SIEGE);
+		GameFeatureServices.siegeService().spawnNpcs(getOutpostLocation(id).getArtifactId(), sr, SiegeModType.SIEGE);
 		DAOManager.getDAO(SiegeDAO.class).updateSiegeLocation(loc);
 	}
 
@@ -192,7 +195,7 @@ public class OutpostService {
 	}
 
 	public void broadcastUpdate(final OutpostLocation outpostLocation) {
-		World.getInstance().getWorldMap(outpostLocation.getWorldId()).getMainWorldMapInstance()
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(outpostLocation.getWorldId()).getMainWorldMapInstance()
 				.doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {

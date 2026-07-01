@@ -10,12 +10,18 @@ import com.aionemu.loginserver.utils.FloodProtector;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 class LoginProtectionServicesTest {
+
+    @AfterEach
+    void resetProtectionBridge() {
+        LoginProtectionServices.resetForTests();
+    }
 
     @Test
     void usesSpringProvidersBeforeLocalFallbacks() {
@@ -38,6 +44,32 @@ class LoginProtectionServicesTest {
         } finally {
             services.destroy();
         }
+    }
+
+    @Test
+    void keepsResolvedSpringProtectionServicesAfterBridgeIsDestroyed() {
+        BannedMacManager bannedMacManager = instance(BannedMacManager.class);
+        LoginBannedIpService bannedIpService = new LoginBannedIpService();
+        BruteForceProtector bruteForceProtector = new BruteForceProtector();
+        FloodProtector floodProtector = new FloodProtector();
+        LoginProtectionServices services = new LoginProtectionServices(
+            provider(BannedMacManager.class, bannedMacManager),
+            provider(LoginBannedIpService.class, bannedIpService),
+            provider(BruteForceProtector.class, bruteForceProtector),
+            provider(FloodProtector.class, floodProtector)
+        );
+
+        assertSame(bannedMacManager, LoginProtectionServices.bannedMacManager());
+        assertSame(bannedIpService, LoginProtectionServices.bannedIpService());
+        assertSame(bruteForceProtector, LoginProtectionServices.bruteForceProtector());
+        assertSame(floodProtector, LoginProtectionServices.floodProtector());
+
+        services.destroy();
+
+        assertSame(bannedMacManager, LoginProtectionServices.bannedMacManager());
+        assertSame(bannedIpService, LoginProtectionServices.bannedIpService());
+        assertSame(bruteForceProtector, LoginProtectionServices.bruteForceProtector());
+        assertSame(floodProtector, LoginProtectionServices.floodProtector());
     }
 
     @Test

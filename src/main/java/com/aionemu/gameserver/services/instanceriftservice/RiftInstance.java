@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.services.instanceriftservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.aionemu.gameserver.model.instancerift.InstanceRiftLocation;
@@ -62,11 +64,11 @@ public abstract class RiftInstance<RL extends InstanceRiftLocation> {
 	}
 
 	protected void spawn(InstanceRiftStateType type) {
-		InstanceRiftService.getInstance().spawn(getInstanceRiftLocation(), type);
+		GameLocationBootstrapServices.instanceRiftService().spawn(getInstanceRiftLocation(), type);
 	}
 
 	protected void despawn() {
-		InstanceRiftService.getInstance().despawn(getInstanceRiftLocation());
+		GameLocationBootstrapServices.instanceRiftService().despawn(getInstanceRiftLocation());
 	}
 
 	public boolean isClosed() {

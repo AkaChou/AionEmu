@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.aturamSkyFortress;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -41,7 +45,7 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 	protected void handleCreatureAggro(Creature creature) {
 		super.handleCreatureAggro(creature);
 		if (isHome.compareAndSet(true, false)) {
-			SkillEngine.getInstance().getSkill(getOwner(), 19428, 1, getOwner()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 19428, 1, getOwner()).useNoAnimationSkill();
 			getPosition().getWorldMapInstance().getDoors().get(2).setOpen(true);
 			getPosition().getWorldMapInstance().getDoors().get(17).setOpen(true);
 			doSchedule();
@@ -56,12 +60,12 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 	
 	private void doSchedule() {
 		if (!isAlreadyDead()) {
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					if (!isAlreadyDead()) {
-						SkillEngine.getInstance().getSkill(getOwner(), 19425, 49, getOwner()).useNoAnimationSkill();
-						ThreadPoolManager.getInstance().schedule(new Runnable() {
+						GameEngineServices.skillEngine().getSkill(getOwner(), 19425, 49, getOwner()).useNoAnimationSkill();
+						GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 							@Override
 							public void run() {
 								if (!isAlreadyDead()) {
@@ -88,7 +92,7 @@ public class ExplosionShadowsAI2 extends AggressiveNpcAI2
 					player.getEffectController().removeEffect(19502);
 					player.getEffectController().removeEffect(21807);
 					player.getEffectController().removeEffect(21808);
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							if (npc != null && !npc.getLifeStats().isAlreadyDead()) {

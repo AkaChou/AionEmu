@@ -16,17 +16,18 @@
  */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
+import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.network.GameServerAuthFailure;
-import com.aionemu.gameserver.network.NetworkController;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
 import com.aionemu.gameserver.network.loginserver.LoginServerConnection.State;
 import com.aionemu.gameserver.network.loginserver.LsClientPacket;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_ACCOUNT_LIST;
 import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * This packet is response for SM_GS_AUTH its notify Gameserver if registration
@@ -73,8 +74,8 @@ public class CM_GS_AUTH_RESPONSE extends LsClientPacket {
 		 */
 		if (response == 0) {
 			getConnection().setState(State.AUTHED);
-			sendPacket(new SM_ACCOUNT_LIST(LoginServer.getInstance().getLoggedInAccounts()));
-			NetworkController.getInstance().setServerCount(serverCount);
+			sendPacket(new SM_ACCOUNT_LIST(com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().getLoggedInAccounts()));
+			GameServerNetworkServices.networkController().setServerCount(serverCount);
 		}
 
 		/**
@@ -92,7 +93,7 @@ public class CM_GS_AUTH_RESPONSE extends LsClientPacket {
 			/**
 			 * try again after 10s
 			 */
-			ThreadPoolManager.getInstance().schedule(new Runnable() {
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {

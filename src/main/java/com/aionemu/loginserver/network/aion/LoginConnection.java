@@ -18,15 +18,13 @@
 
 package com.aionemu.loginserver.network.aion;
 
+import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
 import javax.crypto.SecretKey;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.network.AConnection;
 import com.aionemu.commons.network.ConnectionTransport;
@@ -45,12 +43,9 @@ import com.aionemu.loginserver.network.ncrypt.KeyGen;
  *
  * @author -Nemesiss-
  */
+@Slf4j
 public class LoginConnection extends AConnection {
 
-    /**
-     * Logger for this class.
-     */
-    private static final Logger log = LoggerFactory.getLogger(LoginConnection.class);
     /**
      * PacketProcessor for executing packets.
      */

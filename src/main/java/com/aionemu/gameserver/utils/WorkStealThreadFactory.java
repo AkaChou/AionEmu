@@ -16,13 +16,12 @@
  */
 package com.aionemu.gameserver.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinPool;
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinPool.ForkJoinWorkerThreadFactory;
-import com.aionemu.commons.utils.internal.chmv8.ForkJoinWorkerThread;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.ForkJoinWorkerThread;
 
 public class WorkStealThreadFactory extends PriorityThreadFactory implements ForkJoinWorkerThreadFactory {
 	public WorkStealThreadFactory(String namePrefix) {
@@ -46,8 +45,8 @@ public class WorkStealThreadFactory extends PriorityThreadFactory implements For
 		return new WorkStealThread(pool);
 	}
 
+	@Slf4j
 	private static class WorkStealThread extends ForkJoinWorkerThread {
-		private static final Logger log = LoggerFactory.getLogger(WorkStealThread.class);
 
 		public WorkStealThread(ForkJoinPool pool) {
 			super(pool);

@@ -16,15 +16,17 @@
  */
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.ConquestSchedule;
 import com.aionemu.gameserver.configs.schedule.ConquestSchedule.Conquest;
@@ -43,23 +45,23 @@ import com.aionemu.gameserver.services.conquestservice.ConquestStartRunnable;
 import com.aionemu.gameserver.services.conquestservice.Offering;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j(topic = "com.aionemu.gameserver.services.ZorshivDredgionService")
 public class ConquestService {
 	private static volatile ObjectProvider<ConquestService> instanceProvider;
 	private ConquestSchedule conquestSchedule;
 	private Map<Integer, ConquestLocation> conquest;
 	private static final int duration = CustomConfig.CONQUEST_DURATION;
-	private final Map<Integer, ConquestOffering<?>> activeConquest = new FastMap<Integer, ConquestOffering<?>>()
-			.shared();
-	private static final Logger log = LoggerFactory.getLogger(ZorshivDredgionService.class);
+	private final Map<Integer, ConquestOffering<?>> activeConquest = new LinkedHashMap<Integer, ConquestOffering<?>>()
+			;
 
 	public void initConquestLocations() {
 		if (CustomConfig.CONQUEST_ENABLED) {
@@ -80,7 +82,7 @@ public class ConquestService {
 			conquestSchedule = ConquestSchedule.load();
 			for (Conquest conquest : conquestSchedule.getConquestsList()) {
 				for (String offeringTime : conquest.getOfferingTimes()) {
-					CronService.getInstance().schedule(new ConquestStartRunnable(conquest.getId()), offeringTime);
+					GameCronServices.cronService().schedule(new ConquestStartRunnable(conquest.getId()), offeringTime);
 				}
 			}
 		}
@@ -96,7 +98,7 @@ public class ConquestService {
 			activeConquest.put(id, offering);
 		}
 		offering.start();
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopConquest(id);
@@ -135,7 +137,7 @@ public class ConquestService {
 	public boolean conquestOfferingMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE00D",
@@ -151,7 +153,7 @@ public class ConquestService {
 	public boolean emperorVaultMsg(int id) {
 		switch (id) {
 		case 3:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE0BD", "Shugo Emperor's Vault is now open !!!");
@@ -166,7 +168,7 @@ public class ConquestService {
 	public boolean trillirunerkSafeMsg(int id) {
 		switch (id) {
 		case 4:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE11C", "Emperor Trillirunerk's Safe is now open !!!");
@@ -181,7 +183,7 @@ public class ConquestService {
 	public boolean smolderingFireTempleMsg(int id) {
 		switch (id) {
 		case 5:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE114", "Smoldering Fire Temple is now open !!!");
@@ -196,7 +198,7 @@ public class ConquestService {
 	public boolean kumukiCaveMsg(int id) {
 		switch (id) {
 		case 6:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE054", "Kumuki Cave is now open !!!");
@@ -211,7 +213,7 @@ public class ConquestService {
 	public boolean IDEventDefMsg(int id) {
 		switch (id) {
 		case 11:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE079", "IDEvent Def UnderPath is now open !!!");
@@ -226,7 +228,7 @@ public class ConquestService {
 	public boolean tiamarantaMsg(int id) {
 		switch (id) {
 		case 13:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					PacketSendUtility.sendSys3Message(player, "\uE04C", "Tiamaranta's Eye is now open !!!");
@@ -242,7 +244,7 @@ public class ConquestService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

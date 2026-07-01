@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.event.daevaDay;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -53,17 +55,17 @@ public class Daeva_Day_CakeAI2 extends NpcAI2
 				case 832181: //Daeva's Day Cake A.
 				    switch (Rnd.get(1, 3)) {
 						case 1:
-							SkillEngine.getInstance().applyEffectDirectly(20884, player, player, 14400000 * 1);
+							GameEngineServices.skillEngine().applyEffectDirectly(20884, player, player, 14400000 * 1);
 							effectController.removeEffect(20885);
 							effectController.removeEffect(20886);
 						break;
 						case 2:
-							SkillEngine.getInstance().applyEffectDirectly(20885, player, player, 14400000 * 1);
+							GameEngineServices.skillEngine().applyEffectDirectly(20885, player, player, 14400000 * 1);
 							effectController.removeEffect(20884);
 							effectController.removeEffect(20886);
 						break;
 						case 3:
-							SkillEngine.getInstance().applyEffectDirectly(20886, player, player, 14400000 * 1);
+							GameEngineServices.skillEngine().applyEffectDirectly(20886, player, player, 14400000 * 1);
 							effectController.removeEffect(20884);
 							effectController.removeEffect(20885);
 						break;

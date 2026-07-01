@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.ai.instance.empyreanCrucible;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
@@ -40,27 +44,27 @@ import java.util.List;
 public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 
 	private List<Integer> percents = new ArrayList<Integer>();
-	
+
 	@Override
 	public void handleAttack(Creature creature) {
 		super.handleAttack(creature);
 		checkPercentage(getLifeStats().getHpPercentage());
 	}
-	
+
 	private void startEvent(int percent) {
 		if (percent == 50 || percent == 25) {
-			SkillEngine.getInstance().getSkill(getOwner(), 19606, 46, getTarget()).useNoAnimationSkill();
+			GameEngineServices.skillEngine().getSkill(getOwner(), 19606, 46, getTarget()).useNoAnimationSkill();
 		} switch (percent) {
 			case 75:
-				SkillEngine.getInstance().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
+				GameEngineServices.skillEngine().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
 			break;
 			case 50:
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (!isAlreadyDead()) {
-							SkillEngine.getInstance().getSkill(getOwner(), 19609, 46, getOwner()).useNoAnimationSkill();	
-							ThreadPoolManager.getInstance().schedule(new Runnable() {
+							GameEngineServices.skillEngine().getSkill(getOwner(), 19609, 46, getOwner()).useNoAnimationSkill();
+							GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 								@Override
 								public void run() {
 									WorldPosition p = getPosition();
@@ -86,18 +90,18 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 			break;
 		}
 	}
-	
+
 	private void scheduleSkill(int delay) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isAlreadyDead()) {
-					SkillEngine.getInstance().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
+					GameEngineServices.skillEngine().getSkill(getOwner(), 19605, 46, getTargetPlayer()).useNoAnimationSkill();
 				}
 			}
 		}, delay);
 	}
-	
+
 	private Player getTargetPlayer() {
 		List<Player> players = new ArrayList<Player>();
 		for (Player player : getKnownList().getKnownPlayers().values()) {
@@ -107,7 +111,7 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 		}
 		return players.get(Rnd.get(players.size()));
 	}
-	
+
 	private void checkPercentage(int percentage) {
 		for (Integer percent : percents) {
 			if (percentage <= percent) {
@@ -121,13 +125,13 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 		percents.clear();
 		Collections.addAll(percents, new Integer[] {75, 50, 25});
 	}
-	
+
 	@Override
 	public void handleSpawned() {
 		super.handleSpawned();
 		addPercents();
 	}
-	
+
 	@Override
 	public void handleDespawned() {
 		percents.clear();
@@ -147,7 +151,7 @@ public class MagePreceptorAI2 extends AggressiveNpcAI2 {
 		despawnNpcs();
 		super.handleBackHome();
 	}
-	
+
 	private void despawnNpcs() {
 		despawnNpc(getPosition().getWorldMapInstance().getNpc(282364));
 		despawnNpc(getPosition().getWorldMapInstance().getNpc(282363));

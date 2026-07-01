@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.abyssalSplinter;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 
 import com.aionemu.commons.network.util.ThreadPoolManager;
@@ -36,7 +38,7 @@ public class Luminous_WaterwormAI2 extends AggressiveNpcAI2
     @Override
     protected void handleSpawned() {
         super.handleSpawned();
-        ThreadPoolManager.getInstance().schedule(new Runnable() {
+        GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 AI2Actions.targetCreature(Luminous_WaterwormAI2.this, getPosition().getWorldMapInstance().getNpc(216951)); //Pazuzu.

@@ -16,16 +16,16 @@
  */
 package com.aionemu.gameserver.utils.stats;
 
-import javax.xml.bind.annotation.XmlEnum;
+import jakarta.xml.bind.annotation.XmlEnum;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 @XmlEnum
+@Slf4j
 public enum AbyssRankEnum {
 	// Ap Rank 5.3
 	GRADE9_SOLDIER(1, 300, 90, 0, 0, 0, 1802431), GRADE8_SOLDIER(2, 414, 103, 1200, 0, 0, 1802433),
@@ -40,8 +40,6 @@ public enum AbyssRankEnum {
 	STAR5_OFFICER(14, 4446, 1511, 0, 5210, 100, 1802457), GENERAL(15, 4890, 1662, 0, 8335, 30, 1802459),
 	GREAT_GENERAL(16, 5378, 1828, 0, 10002, 10, 1802461), COMMANDER(17, 5916, 2011, 0, 11503, 3, 1802463),
 	SUPREME_COMMANDER(18, 7099, 2413, 0, 12437, 1, 1802465);
-
-	static Logger log = LoggerFactory.getLogger(AbyssRankEnum.class);
 
 	private int id;
 	private int pointsGained;

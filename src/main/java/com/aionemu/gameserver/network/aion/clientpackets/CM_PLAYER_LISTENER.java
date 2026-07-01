@@ -17,10 +17,10 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
-import com.aionemu.gameserver.services.reward.RewardService;
 
 /**
  * @author ginho1
@@ -49,7 +49,7 @@ public class CM_PLAYER_LISTENER extends AionClientPacket {
 		Player player = getConnection().getActivePlayer();
 
 		if (CustomConfig.ENABLE_REWARD_SERVICE) {
-			RewardService.getInstance().verify(player);
+			GameFeatureServices.rewardService().verify(player);
 		}
 	}
 }

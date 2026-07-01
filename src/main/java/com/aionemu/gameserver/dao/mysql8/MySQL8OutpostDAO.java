@@ -1,12 +1,10 @@
 package com.aionemu.gameserver.dao.mysql8;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.gameserver.dao.OutpostDAO;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.outpost.OutpostLocation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,9 +13,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * MySQL 8 implementation of OutpostDAO
  * Created by Wnkrz on 27/08/2017. Updated for MySQL 8.
  */
+@Slf4j
 public class MySQL8OutpostDAO extends OutpostDAO {
 
-    private static final Logger log = LoggerFactory.getLogger(MySQL8OutpostDAO.class);
 
     private static final String SELECT_QUERY = "SELECT `id`, `race` FROM `outpost_location` ORDER BY `id`";
     private static final String UPDATE_QUERY = "UPDATE `outpost_location` SET `race` = ? WHERE `id` = ?";

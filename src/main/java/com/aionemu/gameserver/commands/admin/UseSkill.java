@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -97,7 +99,7 @@ public class UseSkill extends AdminCommand {
 					return;
 				}
 				
-				SkillEngine.getInstance().applyEffectDirectly(skillId, admin, (Creature)target, (time*1000));
+				GameEngineServices.skillEngine().applyEffectDirectly(skillId, admin, (Creature)target, (time*1000));
 				
 				PacketSendUtility.sendMessage(admin, "SkillId:" + skillId+" was applied on target "+target.getName());
 			}
@@ -122,7 +124,7 @@ public class UseSkill extends AdminCommand {
 	}
 
 	private void useSkill(Player admin, Creature effector, Creature target, int skillId, int skillLevel) {
-		Skill skill = SkillEngine.getInstance().getSkill(effector, skillId, skillLevel, target);
+		Skill skill = GameEngineServices.skillEngine().getSkill(effector, skillId, skillLevel, target);
 		if (skill != null) {
 			skill.useNoAnimationSkill();
 		} 

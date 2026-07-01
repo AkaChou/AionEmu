@@ -18,21 +18,22 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author ATracer
  */
+@Slf4j
 @XmlRootElement(name = "npc_skill_templates")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class NpcSkillData {
@@ -41,14 +42,14 @@ public class NpcSkillData {
 	private List<NpcSkillTemplates> npcSkills;
 
 	/** A map containing all npc skill templates */
-	private TIntObjectHashMap<NpcSkillTemplates> npcSkillData = new TIntObjectHashMap<NpcSkillTemplates>();
+	private IntObjectHashMap<NpcSkillTemplates> npcSkillData = new IntObjectHashMap<NpcSkillTemplates>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (NpcSkillTemplates npcSkill : npcSkills) {
 			npcSkillData.put(npcSkill.getNpcId(), npcSkill);
 
 			if (npcSkill.getNpcSkills() == null) {
-				LoggerFactory.getLogger(NpcSkillData.class).error("NO SKILL");
+				log.error("NO SKILL");
 			}
 		}
 	}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
@@ -28,15 +30,15 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.util.Map;
 import java.util.Set;
@@ -57,11 +59,11 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	private Future<?> instanceTimer;
 	private Map<Integer, StaticDoor> doors;
 	protected boolean isInstanceDestroyed = false;
-	private FastMap<Integer, VisibleObject> objects = new FastMap<Integer, VisibleObject>();
+	private Map<Integer, VisibleObject> objects = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
@@ -70,28 +72,28 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			case 220540: //Typhon.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055414, 1)); //Cradle Of Eternity Illusion Godstone Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055415, 1)); //Cradle Of Eternity Enchant Supplement Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188055416, 1)); //Cradle Of Eternity Manastone Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100371, 1)); //Silver Starlight Particle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100372, 1)); //Gold Starlight Particle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188100373, 1)); //Ruby Starlight Particle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 188058413, 1)); //? ?  ??.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055414, 1)); //Cradle Of Eternity Illusion Godstone Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055415, 1)); //Cradle Of Eternity Enchant Supplement Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188055416, 1)); //Cradle Of Eternity Manastone Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100371, 1)); //Silver Starlight Particle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100372, 1)); //Gold Starlight Particle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188100373, 1)); //Ruby Starlight Particle.
 				    } switch (Rnd.get(1, 5)) {
 						case 1:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080005, 3)); //Lesser Minion Contract.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080005, 3)); //Lesser Minion Contract.
 						break;
 						case 2:
-				            dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080006, 3)); //Greater Minion Contract.
+				            dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080006, 3)); //Greater Minion Contract.
 						break;
 						case 3:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080007, 3)); //Major Minion Contract.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080007, 3)); //Major Minion Contract.
 						break;
 						case 4:
-						    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190080008, 3)); //Cute Minion Contract.
+						    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190080008, 3)); //Cute Minion Contract.
 						break;
 						case 5:
-					        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
+					        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 190200000, 50)); //Minium.
 					    break;
 					}
 				}
@@ -100,10 +102,10 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			case 220471: //Covetous Fallen Guardian.
 			case 220472: //Covetous Fallen Guardian.
 			case 220594: //Covetous Fallen Guardian.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000266, 1)); //Earthen Malachite.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000266, 1)); //Earthen Malachite.
 			break;
 			case 834091: //Box With Sun Seal.
-			    dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000267, 1)); //Sun Quartz.
+			    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000267, 1)); //Sun Quartz.
 			break;
         }
     }
@@ -126,7 +128,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 		super.onInstanceCreate(instance);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
-		    instanceTimer = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		    instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					deleteNpc(834123);
@@ -219,7 +221,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			case 703024: //Heavy Door Lever.
 			case 703025: //Heavy Door Lever.
 			    despawnNpc(npc);
-				ThreadPoolManager.getInstance().schedule(new Runnable() {
+				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						deleteNpc(703026);
@@ -232,7 +234,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 			break;
 			case 834007: //Altar Of Sun.
 			    if (player.getInventory().decreaseByItemId(185000267, 1)) { //Sun Quartz.
-					ThreadPoolManager.getInstance().schedule(new Runnable() {
+					GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 						@Override
 						public void run() {
 							deleteNpc(834007);
@@ -403,7 +405,7 @@ public class CradleOfEternityInstance extends GeneralInstanceHandler
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

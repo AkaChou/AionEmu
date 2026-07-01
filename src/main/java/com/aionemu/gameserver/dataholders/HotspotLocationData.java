@@ -18,15 +18,15 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.gameserver.model.templates.teleport.HotspotlocationTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Rinzler (Encom)
@@ -38,7 +38,7 @@ public class HotspotLocationData {
 	@XmlElement(name = "hotspot_template")
 	private List<HotspotlocationTemplate> hslist;
 
-	private TIntObjectHashMap<HotspotlocationTemplate> lochslistData = new TIntObjectHashMap<HotspotlocationTemplate>();
+	private IntObjectHashMap<HotspotlocationTemplate> lochslistData = new IntObjectHashMap<HotspotlocationTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (HotspotlocationTemplate loc : hslist) {

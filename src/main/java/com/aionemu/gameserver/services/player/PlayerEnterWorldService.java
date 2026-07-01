@@ -1,4 +1,30 @@
+
 package com.aionemu.gameserver.services.player;
+
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCreativityServices;
+
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+
+import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
+
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameEventServices;
+
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameHousingServices;
+
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -6,9 +32,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.versionning.Version;
@@ -94,17 +117,13 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_YOUTUBE_VIDEO;
 import com.aionemu.gameserver.questEngine.model.QuestState;
 import com.aionemu.gameserver.questEngine.model.QuestStatus;
 import com.aionemu.gameserver.services.AStationService;
-import com.aionemu.gameserver.services.AutoGroupService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ClassChangeService;
 import com.aionemu.gameserver.services.DisputeLandService;
 import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.EventService;
-import com.aionemu.gameserver.services.F2pService;
 import com.aionemu.gameserver.services.HTMLService;
-import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.KiskService;
-import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.PunishmentService;
@@ -114,13 +133,11 @@ import com.aionemu.gameserver.services.SkillLearnService;
 import com.aionemu.gameserver.services.StigmaService;
 import com.aionemu.gameserver.services.SurveyService;
 import com.aionemu.gameserver.services.VortexService;
-import com.aionemu.gameserver.services.WindyGorgeService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.abyss.AbyssSkillService;
 import com.aionemu.gameserver.services.craft.RelinquishCraftStatus;
 import com.aionemu.gameserver.services.events.ArcadeUpgradeService;
 import com.aionemu.gameserver.services.events.AtreianPassportService;
-import com.aionemu.gameserver.services.events.BoostEventService;
 import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.ShugoSweepService;
@@ -137,19 +154,16 @@ import com.aionemu.gameserver.skillengine.SkillEngine;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 import com.aionemu.gameserver.utils.collections.ListSplitter;
 import com.aionemu.gameserver.utils.rates.Rates;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-
-import javolution.util.FastList;
+@Slf4j(topic = "GAMECONNECTION_LOG")
 
 public final class PlayerEnterWorldService {
 
-	private static final Logger log = LoggerFactory.getLogger("GAMECONNECTION_LOG");
 	private static final String serverInfo;
 	private static final String alInfo;
 	private static final Set<Integer> pendingEnterWorld = new HashSet<Integer>();
@@ -217,15 +231,15 @@ public final class PlayerEnterWorldService {
 			pendingEnterWorld.add(objectId);
 		}
 		int delay = 0;
-		if (World.getInstance().findPlayer(objectId) != null) {
+		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId) != null) {
 			delay = 15000;
 			log.warn("Postponed enter world " + objectId);
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					Player player = World.getInstance().findPlayer(objectId);
+					Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId);
 					if (player != null) {
 						AuditLogger.info(player, "Duplicate player in world");
 						client.close(new SM_QUIT_RESPONSE(), false);
@@ -253,7 +267,7 @@ public final class PlayerEnterWorldService {
 		if (player != null && client.setActivePlayer(player)) {
 			player.setClientConnection(client);
 			log.info("[MAC_AUDIT] Player " + player.getName() + " (account " + account.getName() + ") has entered world with " + client.getMacAddress() + " MAC.");
-			World.getInstance().storeObject(player);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().storeObject(player);
 			StigmaService.onPlayerLogin(player);
 			if (playerAccData.getPlayerCommonData().getLastOnline() != null) {
 				long lastOnline = playerAccData.getPlayerCommonData().getLastOnline().getTime();
@@ -336,10 +350,10 @@ public final class PlayerEnterWorldService {
 			}
 			// Upgrade Arcade 4.7
 			if (EventsConfig.ENABLE_EVENT_ARCADE) {
-				ArcadeUpgradeService.getInstance().onEnterWorld(player);
+				GameFeatureServices.arcadeUpgradeService().onEnterWorld(player);
 			}
-			FastList<QuestState> questList = FastList.newInstance();
-			FastList<QuestState> completeQuestList = FastList.newInstance();
+			List<QuestState> questList = new ArrayList<QuestState>();
+			List<QuestState> completeQuestList = new ArrayList<QuestState>();
 			for (QuestState qs : player.getQuestStateList().getAllQuestState()) {
 				if (qs.getStatus() == QuestStatus.NONE && qs.getCompleteCount() == 0) {
 					continue;
@@ -377,13 +391,13 @@ public final class PlayerEnterWorldService {
 			if (houseBuddies != null) {
 				client.sendPacket(new SM_UI_SETTINGS(houseBuddies, 2));
 			}
-			CreativityEssenceService.getInstance().onLogin(player);
+			GameCreativityServices.creativityEssenceService().onLogin(player);
 			sendItemInfos(client, player);
 			if (!player.getEquipmentSettingList().getEquipmentSetting().isEmpty()) {
 				client.sendPacket(new SM_EQUIPMENT_SETTING(player.getEquipmentSettingList().getEquipmentSetting()));
 			}
 			if (AStationConfig.A_STATION_ENABLE) {
-				AStationService.getInstance().checkAuthorizationRequest(player);
+				GameFeatureServices.aStationService().checkAuthorizationRequest(player);
 			}
 			playerLoggedIn(player);
 			client.sendPacket(new SM_INSTANCE_INFO(player, false, player.getCurrentTeam()));
@@ -391,10 +405,10 @@ public final class PlayerEnterWorldService {
 			// SM_CHANNEL_INFO
 			client.sendPacket(new SM_CHANNEL_INFO(player.getPosition()));
 
-			KiskService.getInstance().onLogin(player);
+			GameFeatureServices.kiskService().onLogin(player);
 
 			// SM_TERRITORY_LIST
-			TerritoryService.getInstance().onEnterWorld(player);
+			GameRuntimeServices.territoryService().onEnterWorld(player);
 
 			// SM_YOUTUBE_VIDEO
 			client.sendPacket(new SM_YOUTUBE_VIDEO());
@@ -411,37 +425,37 @@ public final class PlayerEnterWorldService {
 			 */
 			TeleportService2.onLogOutOppositeMap(player);
 			// TeleportService2.sendSetBindPoint(player);
-			World.getInstance().preSpawn(player);
-			VortexService.getInstance().validateLoginZone(player);
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().preSpawn(player);
+			GameLocationBootstrapServices.vortexService().validateLoginZone(player);
 			client.sendPacket(new SM_PLAYER_SPAWN(player));
 			client.sendPacket(new SM_GAME_TIME());
-			ProtectorConquerorService.getInstance().onProtectorConquerorLogin(player);
+			GameFeatureServices.protectorConquerorService().onProtectorConquerorLogin(player);
 			// Legion Request 4.9.1
 			if (player.isLegionMember()) {
-				LegionService.getInstance().onLogin(player);
+				GameCoreGameplayServices.legionService().onLogin(player);
 				if (player.getLegionMember().isBrigadeGeneral() && !player.getLegion().getJoinRequestMap().isEmpty()) {
 					client.sendPacket(new SM_LEGION_REQUEST_LIST(player.getLegion().getJoinRequestMap().values()));
 				}
 			} else {
 				DAOManager.getDAO(PlayerDAO.class).getJoinRequestState(player);
-				LegionService.getInstance().handleJoinRequestGetAnswer(player);
+				GameCoreGameplayServices.legionService().handleJoinRequestGetAnswer(player);
 			}
 			client.sendPacket(new SM_TITLE_INFO(player));
 			client.sendPacket(new SM_EMOTION_LIST((byte) 0, player.getEmotions().getEmotions()));
-			SiegeService.getInstance().onPlayerLogin(player);
+			GameFeatureServices.siegeService().onPlayerLogin(player);
 
 			// SM_ATREIAN_PASSPORT
-			AtreianPassportService.getInstance().onLogin(player);
+			GameEventBootstrapServices.atreianPassportService().onLogin(player);
 
 			AbyssPointsService.AbyssRankCheck(player);
 			// TODO: Send Rift Announce Here
 			client.sendPacket(new SM_PRICES());
 
 			// DisputeLand
-			DisputeLandService.getInstance().onLogin(player);
+			GameFeatureServices.disputeLandService().onLogin(player);
 
 			// Event Window
-			EventWindowService.getInstance().onLogin(player);
+			GameEventBootstrapServices.eventWindowService().onLogin(player);
 
 			// Abyss Rank
 			client.sendPacket(new SM_ABYSS_RANK(player.getAbyssRank()));
@@ -511,33 +525,33 @@ public final class PlayerEnterWorldService {
 				serviceBuff = new ServiceBuff(2);
 				serviceBuff.applyEffect(player, 2);
 				// Homerun Energy.
-				SkillEngine.getInstance().applyEffectDirectly(323, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
                 // [Event] Stigma Preservation.
-				SkillEngine.getInstance().applyEffectDirectly(4714, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
 				// [Event] Accessory Ascension
-				SkillEngine.getInstance().applyEffectDirectly(4843, player, player, 0); 
+				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
 			}
 			// Service Security Buff.
 			if (player.getMembership() >= 1) {
 				serviceBuff = new ServiceBuff(220599);
 				serviceBuff.applyEffect(player, 220599);
 				// Homerun Energy.
-				SkillEngine.getInstance().applyEffectDirectly(323, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
                 // [Event] Stigma Preservation.
-				SkillEngine.getInstance().applyEffectDirectly(4714, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
 				// [Event] Accessory Ascension
-				SkillEngine.getInstance().applyEffectDirectly(4843, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
 			}
 			// Service Security Buff.
 			if (player.getMembership() >= 2) {
 				serviceBuff = new ServiceBuff(230599);
 				serviceBuff.applyEffect(player, 230599);
 				// Homerun Energy.
-				SkillEngine.getInstance().applyEffectDirectly(323, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(323, player, player, 0);
                 // [Event] Stigma Preservation.
-				SkillEngine.getInstance().applyEffectDirectly(4714, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4714, player, player, 0);
 				// [Event] Accessory Ascension
-				SkillEngine.getInstance().applyEffectDirectly(4843, player, player, 0);
+				GameEngineServices.skillEngine().applyEffectDirectly(4843, player, player, 0);
 			}
 			// PC Cafe Login Benefits.
 			if (player.getClientConnection().getAccount().getMembership() == 2 && player.getLevel() >= 66 && player.getLevel() <= 83) {
@@ -572,13 +586,13 @@ public final class PlayerEnterWorldService {
 			} else if (player.getRace() == Race.ASMODIANS) {
 				abyssDarkLogon(player);
 			}
-			BoostEventService.getInstance().sendPacket(player);
+			GameRuntimeServices.boostEventService().sendPacket(player);
 
 			if (CustomConfig.LOGIN_SERVER_INFO) {
 				LoginServerInfo(player); // Show LoginServerinfo + Chat
 			}
 			// GloryPointLoseMsg(player);
-			F2pService.getInstance().onEnterWorld(player);
+			GameFeatureServices.f2pService().onEnterWorld(player);
 			// Aura Of Growth.
 			// Players can gain additional XP from hunting, gathering or crafting by obtaining Growth Aura.
 			// Growth Aura can be obtained from hunting monsters, acquiring essence, and through login and quest rewards.
@@ -600,26 +614,26 @@ public final class PlayerEnterWorldService {
 			}
 			PlayerGroupService.onPlayerLogin(player);
 			// SM_PET
-			PetService.getInstance().onPlayerLogin(player);
+			GameFeatureServices.petService().onPlayerLogin(player);
 			// SM_Minions
-			MinionService.getInstance().onPlayerLogin(player);
-			WindyGorgeService.getInstance().onLogin(player);
-			MailService.getInstance().onPlayerLogin(player);
-			HousingService.getInstance().onPlayerLogin(player);
-			BrokerService.getInstance().onPlayerLogin(player);
+			GameEventBootstrapServices.minionService().onPlayerLogin(player);
+			GameFeatureServices.windyGorgeService().onLogin(player);
+			GameCoreGameplayServices.mailService().onPlayerLogin(player);
+			GameHousingServices.housingService().onPlayerLogin(player);
+			GameRuntimeServices.brokerService().onPlayerLogin(player);
 			sendMacroList(client, player);
 			client.sendPacket(new SM_FRIEND_STATUS((byte) 1));
 			client.sendPacket(new SM_RECIPE_LIST(player.getRecipeList().getRecipeList()));
-			PetitionService.getInstance().onPlayerLogin(player);
+			GameRuntimeServices.petitionService().onPlayerLogin(player);
 			if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
-				AutoGroupService.getInstance().onPlayerLogin(player);
+				GameCoreGameplayServices.autoGroupService().onPlayerLogin(player);
 			}
 			ClassChangeService.showClassChangeDialog(player);
-			// GMService.getInstance().onPlayerLogin(player); TODO Make Config File!!
+			// GameRuntimeServices.gmService().onPlayerLogin(player); TODO Make Config File!!
 			player.getLifeStats().updateCurrentStats();
 			player.getEquipment().checkRankLimitItems();
 			if (HTMLConfig.ENABLE_HTML_WELCOME) {
-				HTMLService.showHTML(player, HTMLCache.getInstance().getHTML("welcome.xhtml"));
+				HTMLService.showHTML(player, GameStaticDataServices.htmlCache().getHTML("welcome.xhtml"));
 			}
 			player.getNpcFactions().sendDailyQuest();
 			if (HTMLConfig.ENABLE_GUIDES) {
@@ -633,64 +647,64 @@ public final class PlayerEnterWorldService {
 				if (storage != null) {
 					for (Item item : storage.getItemsWithKinah()) {
 						if (item.getExpireTime() > 0) {
-							ExpireTimerTask.getInstance().addTask(item, player);
+							GameTaskManagerServices.expireTimerTask().addTask(item, player);
 						}
 					}
 				}
 			}
 			for (Item item : player.getEquipment().getEquippedItems()) {
 				if (item.getExpireTime() > 0) {
-					ExpireTimerTask.getInstance().addTask(item, player);
+					GameTaskManagerServices.expireTimerTask().addTask(item, player);
 				}
 			}
 			for (Motion motion : player.getMotions().getMotions().values()) {
 				if (motion.getExpireTime() != 0) {
-					ExpireTimerTask.getInstance().addTask(motion, player);
+					GameTaskManagerServices.expireTimerTask().addTask(motion, player);
 				}
 			}
 			for (Emotion emotion : player.getEmotions().getEmotions()) {
 				if (emotion.getExpireTime() != 0) {
-					ExpireTimerTask.getInstance().addTask(emotion, player);
+					GameTaskManagerServices.expireTimerTask().addTask(emotion, player);
 				}
 			}
 			for (Title title : player.getTitleList().getTitles()) {
 				if (title.getExpireTime() != 0) {
-					ExpireTimerTask.getInstance().addTask(title, player);
+					GameTaskManagerServices.expireTimerTask().addTask(title, player);
 				}
 			}
 			for (SkillSkin skillSkin : player.getSkillSkinList().getSkillSkins()) {
 				if (skillSkin.getExpireTime() != 0) {
-					ExpireTimerTask.getInstance().addTask(skillSkin, player);
+					GameTaskManagerServices.expireTimerTask().addTask(skillSkin, player);
 				}
 			}
 			if (player.getHouseRegistry() != null) {
 				for (HouseObject<?> obj : player.getHouseRegistry().getObjects()) {
 					if (obj.getPersistentState() != PersistentState.DELETED) {
 						if (obj.getObjectTemplate().getUseDays() > 0) {
-							ExpireTimerTask.getInstance().addTask(obj, player);
+							GameTaskManagerServices.expireTimerTask().addTask(obj, player);
 						}
 					}
 				}
 			}
-			player.getController().addTask(TaskId.PLAYER_UPDATE, ThreadPoolManager.getInstance().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000, PeriodicSaveConfig.PLAYER_GENERAL * 1000));
-			player.getController().addTask(TaskId.INVENTORY_UPDATE, ThreadPoolManager.getInstance().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000, PeriodicSaveConfig.PLAYER_ITEMS * 1000));
-			SurveyService.getInstance().showAvailable(player);
+			player.getController().addTask(TaskId.PLAYER_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new GeneralUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_GENERAL * 1000, PeriodicSaveConfig.PLAYER_GENERAL * 1000));
+			player.getController().addTask(TaskId.INVENTORY_UPDATE, GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new ItemUpdateTask(player.getObjectId()), PeriodicSaveConfig.PLAYER_ITEMS * 1000, PeriodicSaveConfig.PLAYER_ITEMS * 1000));
+			GameRuntimeServices.surveyService().showAvailable(player);
 			if (EventsConfig.ENABLE_EVENT_SERVICE) {
-				EventService.getInstance().onPlayerLogin(player);
+				GameEventServices.eventService().onPlayerLogin(player);
 			}
 			RelinquishCraftStatus.removeExcessCraftStatus(player, false);
-			PlayerTransferService.getInstance().onEnterWorld(player);
+			GameRuntimeServices.playerTransferService().onEnterWorld(player);
 			player.setPartnerId(DAOManager.getDAO(WeddingDAO.class).loadPartnerId(player));
 			EnchantService.GloryShieldSkill(player);
-			ShugoSweepService.getInstance().onLogin(player);
-			LunaShopService.getInstance().onLogin(player);
-			if (FFAService.getInstance().isInArena(player)) {
+			GameEventBootstrapServices.shugoSweepService().onLogin(player);
+			GameEventBootstrapServices.lunaShopService().onLogin(player);
+			if (GameFeatureServices.ffaService().isInArena(player)) {
 				TeleportService2.moveToBindLocation(player, true);
 			}
 			player.setBattleground(null);
 			player.getController().updateZone();
 			player.getController().updateNearbyQuests();
-			AtreianBestiaryService.getInstance().onLogin(player);
+			GameFeatureServices.atreianBestiaryService().onLogin(player);
 		} else {
 			log.info("[DEBUG] enter world" + objectId + ", Player: " + player);
 		}
@@ -701,7 +715,7 @@ public final class PlayerEnterWorldService {
 	 */
 	public static final void abyssLightLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player players) {
 					// Elyos Governor "Player Name" has graced Atreia.
@@ -713,7 +727,7 @@ public final class PlayerEnterWorldService {
 
 	public static final void abyssDarkLogon(final Player player) {
 		if (player.getAbyssRank().getRank().getId() == AbyssRankEnum.SUPREME_COMMANDER.getId()) {
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player players) {
 					// Asmodian Governor "Player Name" has graced Atreia.

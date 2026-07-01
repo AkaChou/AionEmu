@@ -18,17 +18,17 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.item.EnchantType;
 import com.aionemu.gameserver.model.templates.item.ItemEnchantTemplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 /**
  * @author Ranastic (Encom)
@@ -42,10 +42,10 @@ public class ItemEnchantData {
 	protected List<ItemEnchantTemplate> enchantTemplates;
 
 	@XmlTransient
-	private TIntObjectHashMap<ItemEnchantTemplate> enchants = new TIntObjectHashMap<ItemEnchantTemplate>();
+	private IntObjectHashMap<ItemEnchantTemplate> enchants = new IntObjectHashMap<ItemEnchantTemplate>();
 
 	@XmlTransient
-	private TIntObjectHashMap<ItemEnchantTemplate> authorizes = new TIntObjectHashMap<ItemEnchantTemplate>();
+	private IntObjectHashMap<ItemEnchantTemplate> authorizes = new IntObjectHashMap<ItemEnchantTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ItemEnchantTemplate it : enchantTemplates) {
@@ -53,7 +53,7 @@ public class ItemEnchantData {
 		}
 	}
 
-	private TIntObjectHashMap<ItemEnchantTemplate> getEnchantMap(EnchantType type) {
+	private IntObjectHashMap<ItemEnchantTemplate> getEnchantMap(EnchantType type) {
 		if (type == EnchantType.ENCHANT) {
 			return enchants;
 		}

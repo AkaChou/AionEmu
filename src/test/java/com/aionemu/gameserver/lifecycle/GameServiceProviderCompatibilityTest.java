@@ -10,6 +10,7 @@ import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.WorldMapsData;
 import com.aionemu.gameserver.ai2.AI2Engine;
 import com.aionemu.gameserver.cache.HTMLCache;
+import com.aionemu.gameserver.eventEngine.EventScheduler;
 import com.aionemu.gameserver.instance.InstanceEngine;
 import com.aionemu.gameserver.model.house.MaintenanceTask;
 import com.aionemu.gameserver.model.siege.Influence;
@@ -17,13 +18,20 @@ import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.services.AdminService;
 import com.aionemu.gameserver.services.AnnouncementService;
+import com.aionemu.gameserver.services.AbyssLandingService;
+import com.aionemu.gameserver.services.AgentService;
+import com.aionemu.gameserver.services.AnohaService;
 import com.aionemu.gameserver.services.AStationService;
 import com.aionemu.gameserver.services.AutoGroupService;
+import com.aionemu.gameserver.services.BaseService;
+import com.aionemu.gameserver.services.BeritraService;
 import com.aionemu.gameserver.services.BrokerService;
 import com.aionemu.gameserver.services.ChallengeTaskService;
+import com.aionemu.gameserver.services.ConquestService;
 import com.aionemu.gameserver.services.CuringZoneService;
 import com.aionemu.gameserver.services.DatabaseCleaningService;
 import com.aionemu.gameserver.services.DebugService;
+import com.aionemu.gameserver.services.DynamicRiftService;
 import com.aionemu.gameserver.services.EventService;
 import com.aionemu.gameserver.services.ExchangeService;
 import com.aionemu.gameserver.services.F2pService;
@@ -32,27 +40,40 @@ import com.aionemu.gameserver.services.GameTimeService;
 import com.aionemu.gameserver.services.FindGroupService;
 import com.aionemu.gameserver.services.HousingService;
 import com.aionemu.gameserver.services.HousingBidService;
+import com.aionemu.gameserver.services.IdianDepthsService;
+import com.aionemu.gameserver.services.InstanceRiftService;
+import com.aionemu.gameserver.services.IuService;
 import com.aionemu.gameserver.services.KiskService;
 import com.aionemu.gameserver.services.LegionService;
 import com.aionemu.gameserver.services.DuelService;
 import com.aionemu.gameserver.services.LifeStatsRestoreService;
 import com.aionemu.gameserver.services.LimitedItemTradeService;
+import com.aionemu.gameserver.services.MoltenusService;
 import com.aionemu.gameserver.services.MotionLoggingService;
+import com.aionemu.gameserver.services.NightmareCircusService;
+import com.aionemu.gameserver.services.OutpostService;
 import com.aionemu.gameserver.services.PeriodicSaveService;
 import com.aionemu.gameserver.services.PetitionService;
 import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.RepurchaseService;
+import com.aionemu.gameserver.services.RiftService;
+import com.aionemu.gameserver.services.RvrService;
 import com.aionemu.gameserver.services.SpringZoneService;
 import com.aionemu.gameserver.services.StaticDoorService;
+import com.aionemu.gameserver.services.SvsService;
 import com.aionemu.gameserver.services.SurveyService;
+import com.aionemu.gameserver.services.TowerOfEternityService;
 import com.aionemu.gameserver.services.TownService;
+import com.aionemu.gameserver.services.VortexService;
 import com.aionemu.gameserver.services.WebshopService;
+import com.aionemu.gameserver.services.ZorshivDredgionService;
 import com.aionemu.gameserver.services.AbyssLandingSpecialService;
 import com.aionemu.gameserver.services.DisputeLandService;
 import com.aionemu.gameserver.services.NpcShoutsService;
 import com.aionemu.gameserver.services.ProtectorConquerorService;
 import com.aionemu.gameserver.services.RoadService;
 import com.aionemu.gameserver.services.ShieldService;
+import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.services.WeatherService;
 import com.aionemu.gameserver.services.WeddingService;
 import com.aionemu.gameserver.services.WindyGorgeService;
@@ -93,6 +114,8 @@ import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
 import com.aionemu.gameserver.services.siegeservice.BattlefieldUnionService;
 import com.aionemu.gameserver.model.ingameshop.InGameShopEn;
+import com.aionemu.gameserver.network.NetworkController;
+import com.aionemu.gameserver.network.PacketLoggerService;
 import com.aionemu.gameserver.services.player.AtreianBestiaryService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativityEssenceService;
 import com.aionemu.gameserver.services.player.CreativityPanel.CreativitySkillService;
@@ -130,6 +153,7 @@ import com.aionemu.gameserver.taskmanager.tasks.PlayerMoveTaskManager;
 import com.aionemu.gameserver.taskmanager.tasks.TeamEffectUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TeamMoveUpdater;
 import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
+import com.aionemu.gameserver.utils.audit.GMService;
 import com.aionemu.gameserver.utils.chathandlers.ChatProcessor;
 import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.geo.nav.NavData;
@@ -140,7 +164,7 @@ import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 class GameServiceProviderCompatibilityTest {
 
@@ -207,6 +231,7 @@ class GameServiceProviderCompatibilityTest {
         ZoneService zoneService = instance(ZoneService.class);
         HotspotTeleportService hotspotTeleportService = instance(HotspotTeleportService.class);
         RoadService roadService = instance(RoadService.class);
+        TowerOfEternityService towerOfEternityService = instance(TowerOfEternityService.class);
         AStationService aStationService = instance(AStationService.class);
         F2pService f2pService = instance(F2pService.class);
         WindyGorgeService windyGorgeService = instance(WindyGorgeService.class);
@@ -256,6 +281,9 @@ class GameServiceProviderCompatibilityTest {
         LifeStatsRestoreService lifeStatsRestoreService = instance(LifeStatsRestoreService.class);
         SeasonRankingService seasonRankingService = instance(SeasonRankingService.class);
         RiftManager riftManager = instance(RiftManager.class);
+        NetworkController networkController = instance(NetworkController.class);
+        PacketLoggerService packetLoggerService = instance(PacketLoggerService.class);
+        GMService gmService = instance(GMService.class);
 
         try {
             GeoService.setInstanceProvider(provider(GeoService.class, geoService));
@@ -317,6 +345,7 @@ class GameServiceProviderCompatibilityTest {
             ZoneService.setInstanceProvider(provider(ZoneService.class, zoneService));
             HotspotTeleportService.setInstanceProvider(provider(HotspotTeleportService.class, hotspotTeleportService));
             RoadService.setInstanceProvider(provider(RoadService.class, roadService));
+            TowerOfEternityService.setInstanceProvider(provider(TowerOfEternityService.class, towerOfEternityService));
             AStationService.setInstanceProvider(provider(AStationService.class, aStationService));
             F2pService.setInstanceProvider(provider(F2pService.class, f2pService));
             WindyGorgeService.setInstanceProvider(provider(WindyGorgeService.class, windyGorgeService));
@@ -366,9 +395,14 @@ class GameServiceProviderCompatibilityTest {
             LifeStatsRestoreService.setInstanceProvider(provider(LifeStatsRestoreService.class, lifeStatsRestoreService));
             SeasonRankingService.setInstanceProvider(provider(SeasonRankingService.class, seasonRankingService));
             RiftManager.setInstanceProvider(provider(RiftManager.class, riftManager));
+            NetworkController.setInstanceProvider(provider(NetworkController.class, networkController));
+            PacketLoggerService.setInstanceProvider(provider(PacketLoggerService.class, packetLoggerService));
+            GMService.setInstanceProvider(provider(GMService.class, gmService));
 
             assertSame(geoService, GeoService.getInstance());
+            assertSame(geoService, GameWorldServices.geoService());
             assertSame(navService, NavService.getInstance());
+            assertSame(navService, GameWorldServices.navService());
             assertSame(dropRegistrationService, DropRegistrationService.getInstance());
             assertSame(landingUpdateService, LandingUpdateService.getInstance());
             assertSame(abyssLandingSpecialService, AbyssLandingSpecialService.getInstance());
@@ -377,6 +411,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(asyunatarService, AsyunatarService.getInstance());
             assertSame(shugoImperialTombSpawnManager, ShugoImperialTombSpawnManager.getInstance());
             assertSame(seasonRankingUpdateService, SeasonRankingUpdateService.getInstance());
+            assertSame(seasonRankingUpdateService, GameMaintenanceServices.seasonRankingUpdateService());
             assertSame(periodicSaveService, PeriodicSaveService.getInstance());
             assertSame(adminService, AdminService.getInstance());
             assertSame(playerTransferService, PlayerTransferService.getInstance());
@@ -393,6 +428,7 @@ class GameServiceProviderCompatibilityTest {
             assertSame(curingZoneService, CuringZoneService.getInstance());
             assertSame(springZoneService, SpringZoneService.getInstance());
             assertSame(boostEventService, BoostEventService.getInstance());
+            assertSame(boostEventService, GameRuntimeServices.boostEventService());
             assertSame(taskManagerFromDB, TaskManagerFromDB.getInstance());
             assertSame(limitedItemTradeService, LimitedItemTradeService.getInstance());
             assertSame(playerLimitService, PlayerLimitService.getInstance());
@@ -426,9 +462,12 @@ class GameServiceProviderCompatibilityTest {
             assertSame(zoneService, ZoneService.getInstance());
             assertSame(hotspotTeleportService, HotspotTeleportService.getInstance());
             assertSame(roadService, RoadService.getInstance());
+            assertSame(towerOfEternityService, GameLocationBootstrapServices.towerOfEternityService());
             assertSame(aStationService, AStationService.getInstance());
             assertSame(f2pService, F2pService.getInstance());
+            assertSame(f2pService, GameFeatureServices.f2pService());
             assertSame(windyGorgeService, WindyGorgeService.getInstance());
+            assertSame(windyGorgeService, GameFeatureServices.windyGorgeService());
             assertSame(motionLoggingService, MotionLoggingService.getInstance());
             assertSame(staticDoorService, StaticDoorService.getInstance());
             assertSame(kiskService, KiskService.getInstance());
@@ -436,11 +475,14 @@ class GameServiceProviderCompatibilityTest {
             assertSame(dropDistributionService, DropDistributionService.getInstance());
             assertSame(systemMailService, SystemMailService.getInstance());
             assertSame(bonusService, BonusService.getInstance());
+            assertSame(bonusService, GameFeatureServices.bonusService());
             assertSame(petService, PetService.getInstance());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
             assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
             assertSame(coalescenceService, CoalescenceService.getInstance());
+            assertSame(coalescenceService, GameFeatureServices.coalescenceService());
             assertSame(growthEnergy, GrowthEnergy.getInstance());
+            assertSame(growthEnergy, GameFeatureServices.growthEnergy());
             assertSame(expireTimerTask, ExpireTimerTask.getInstance());
             assertSame(teamEffectUpdater, TeamEffectUpdater.getInstance());
             assertSame(teamMoveUpdater, TeamMoveUpdater.getInstance());
@@ -459,22 +501,39 @@ class GameServiceProviderCompatibilityTest {
             assertSame(grandArenaTrainingCampService, GrandArenaTrainingCampService.getInstance());
             assertSame(idRunService, IDRunService.getInstance());
             assertSame(creativityEssenceService, CreativityEssenceService.getInstance());
+            assertSame(creativityEssenceService, GameCreativityServices.creativityEssenceService());
             assertSame(creativitySkillService, CreativitySkillService.getInstance());
+            assertSame(creativitySkillService, GameCreativityServices.creativitySkillService());
             assertSame(creativityStatsService, CreativityStatsService.getInstance());
+            assertSame(creativityStatsService, GameCreativityServices.creativityStatsService());
             assertSame(creativityTransfoService, CreativityTransfoService.getInstance());
+            assertSame(creativityTransfoService, GameCreativityServices.creativityTransfoService());
             assertSame(accuracy, Accuracy.getInstance());
+            assertSame(accuracy, GameCreativityServices.accuracy());
             assertSame(agility, Agility.getInstance());
+            assertSame(agility, GameCreativityServices.agility());
             assertSame(health, Health.getInstance());
+            assertSame(health, GameCreativityServices.health());
             assertSame(knowledge, Knowledge.getInstance());
+            assertSame(knowledge, GameCreativityServices.knowledge());
             assertSame(power, Power.getInstance());
+            assertSame(power, GameCreativityServices.power());
             assertSame(precision, Precision.getInstance());
+            assertSame(precision, GameCreativityServices.precision());
             assertSame(will, Will.getInstance());
+            assertSame(will, GameCreativityServices.will());
             assertSame(craftSkillUpdateService, CraftSkillUpdateService.getInstance());
             assertSame(relinquishCraftStatus, RelinquishCraftStatus.getInstance());
             assertSame(duelService, DuelService.getInstance());
             assertSame(lifeStatsRestoreService, LifeStatsRestoreService.getInstance());
             assertSame(seasonRankingService, SeasonRankingService.getInstance());
             assertSame(riftManager, RiftManager.getInstance());
+            assertSame(networkController, NetworkController.getInstance());
+            assertSame(networkController, GameServerNetworkServices.networkController());
+            assertSame(packetLoggerService, PacketLoggerService.getInstance());
+            assertSame(packetLoggerService, GameServerNetworkServices.packetLoggerService());
+            assertSame(gmService, GMService.getInstance());
+            assertSame(gmService, GameRuntimeServices.gmService());
         } finally {
             GeoService.setInstanceProvider(null);
             NavService.setInstanceProvider(null);
@@ -584,42 +643,66 @@ class GameServiceProviderCompatibilityTest {
             LifeStatsRestoreService.setInstanceProvider(null);
             SeasonRankingService.setInstanceProvider(null);
             RiftManager.setInstanceProvider(null);
+            NetworkController.setInstanceProvider(null);
+            PacketLoggerService.setInstanceProvider(null);
+            GMService.setInstanceProvider(null);
         }
     }
 
     @Test
     void gameFeatureServicesRegistersAndClearsPlayerActionProviders() throws Exception {
         BonusService bonusService = instance(BonusService.class);
+        NpcShoutsService npcShoutsService = instance(NpcShoutsService.class);
+        DredgionService2 dredgionService = instance(DredgionService2.class);
+        AsyunatarService asyunatarService = instance(AsyunatarService.class);
+        ShieldService shieldService = instance(ShieldService.class);
+        WeddingService weddingService = instance(WeddingService.class);
+        ProtectorConquerorService protectorConquerorService = instance(ProtectorConquerorService.class);
         PetService petService = instance(PetService.class);
         ArcadeUpgradeService arcadeUpgradeService = instance(ArcadeUpgradeService.class);
         AtreianBestiaryService atreianBestiaryService = instance(AtreianBestiaryService.class);
         CoalescenceService coalescenceService = instance(CoalescenceService.class);
         GrowthEnergy growthEnergy = instance(GrowthEnergy.class);
+        SiegeService siegeService = instance(SiegeService.class);
+        BaseService baseService = instance(BaseService.class);
+        DisputeLandService disputeLandService = instance(DisputeLandService.class);
+        BanditService banditService = instance(BanditService.class);
+        StaticDoorService staticDoorService = instance(StaticDoorService.class);
+        FFAService ffaService = instance(FFAService.class);
+        LadderService ladderService = instance(LadderService.class);
+        AStationService aStationService = instance(AStationService.class);
+        MotionLoggingService motionLoggingService = instance(MotionLoggingService.class);
+        KiskService kiskService = instance(KiskService.class);
+        RepurchaseService repurchaseService = instance(RepurchaseService.class);
+        DropDistributionService dropDistributionService = instance(DropDistributionService.class);
+        SystemMailService systemMailService = instance(SystemMailService.class);
 
         GameFeatureServices featureServices = new GameFeatureServices(
-                provider(DisputeLandService.class, instance(DisputeLandService.class)),
-                provider(DredgionService2.class, instance(DredgionService2.class)),
-                provider(AsyunatarService.class, instance(AsyunatarService.class)),
+                provider(DisputeLandService.class, disputeLandService),
+                provider(DredgionService2.class, dredgionService),
+                provider(AsyunatarService.class, asyunatarService),
                 provider(PlayerLimitService.class, instance(PlayerLimitService.class)),
-                provider(NpcShoutsService.class, instance(NpcShoutsService.class)),
-                provider(ShieldService.class, instance(ShieldService.class)),
+                provider(NpcShoutsService.class, npcShoutsService),
+                provider(ShieldService.class, shieldService),
                 provider(RewardService.class, instance(RewardService.class)),
-                provider(WeddingService.class, instance(WeddingService.class)),
+                provider(WeddingService.class, weddingService),
                 provider(VeteranRewardsService.class, instance(VeteranRewardsService.class)),
-                provider(ProtectorConquerorService.class, instance(ProtectorConquerorService.class)),
-                provider(FFAService.class, instance(FFAService.class)),
-                provider(LadderService.class, instance(LadderService.class)),
+                provider(ProtectorConquerorService.class, protectorConquerorService),
+                provider(FFAService.class, ffaService),
+                provider(LadderService.class, ladderService),
                 provider(BGService.class, instance(BGService.class)),
-                provider(BanditService.class, instance(BanditService.class)),
-                provider(AStationService.class, instance(AStationService.class)),
+                provider(BanditService.class, banditService),
+                provider(SiegeService.class, siegeService),
+                provider(BaseService.class, baseService),
+                provider(AStationService.class, aStationService),
                 provider(F2pService.class, instance(F2pService.class)),
                 provider(WindyGorgeService.class, instance(WindyGorgeService.class)),
-                provider(MotionLoggingService.class, instance(MotionLoggingService.class)),
-                provider(StaticDoorService.class, instance(StaticDoorService.class)),
-                provider(KiskService.class, instance(KiskService.class)),
-                provider(RepurchaseService.class, instance(RepurchaseService.class)),
-                provider(DropDistributionService.class, instance(DropDistributionService.class)),
-                provider(SystemMailService.class, instance(SystemMailService.class)),
+                provider(MotionLoggingService.class, motionLoggingService),
+                provider(StaticDoorService.class, staticDoorService),
+                provider(KiskService.class, kiskService),
+                provider(RepurchaseService.class, repurchaseService),
+                provider(DropDistributionService.class, dropDistributionService),
+                provider(SystemMailService.class, systemMailService),
                 provider(BonusService.class, bonusService),
                 provider(PetService.class, petService),
                 provider(ArcadeUpgradeService.class, arcadeUpgradeService),
@@ -628,10 +711,32 @@ class GameServiceProviderCompatibilityTest {
                 provider(GrowthEnergy.class, growthEnergy));
 
         try {
+            assertSame(npcShoutsService, GameFeatureServices.npcShoutsService());
+            assertSame(dredgionService, GameFeatureServices.dredgionService());
+            assertSame(asyunatarService, GameFeatureServices.asyunatarService());
+            assertSame(shieldService, GameFeatureServices.shieldService());
+            assertSame(weddingService, GameFeatureServices.weddingService());
+            assertSame(protectorConquerorService, GameFeatureServices.protectorConquerorService());
+            assertSame(disputeLandService, GameFeatureServices.disputeLandService());
+            assertSame(banditService, GameFeatureServices.banditService());
+            assertSame(staticDoorService, GameFeatureServices.staticDoorService());
+            assertSame(siegeService, GameFeatureServices.siegeService());
+            assertSame(baseService, GameFeatureServices.baseService());
+            assertSame(ffaService, GameFeatureServices.ffaService());
+            assertSame(ladderService, GameFeatureServices.ladderService());
+            assertSame(aStationService, GameFeatureServices.aStationService());
+            assertSame(motionLoggingService, GameFeatureServices.motionLoggingService());
+            assertSame(kiskService, GameFeatureServices.kiskService());
+            assertSame(repurchaseService, GameFeatureServices.repurchaseService());
+            assertSame(dropDistributionService, GameFeatureServices.dropDistributionService());
+            assertSame(systemMailService, GameFeatureServices.systemMailService());
             assertSame(bonusService, BonusService.getInstance());
             assertSame(petService, PetService.getInstance());
+            assertSame(petService, GameFeatureServices.petService());
             assertSame(arcadeUpgradeService, ArcadeUpgradeService.getInstance());
+            assertSame(arcadeUpgradeService, GameFeatureServices.arcadeUpgradeService());
             assertSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
+            assertSame(atreianBestiaryService, GameFeatureServices.atreianBestiaryService());
             assertSame(coalescenceService, CoalescenceService.getInstance());
             assertSame(growthEnergy, GrowthEnergy.getInstance());
 
@@ -644,6 +749,13 @@ class GameServiceProviderCompatibilityTest {
             assertNotSame(atreianBestiaryService, AtreianBestiaryService.getInstance());
             assertNotSame(coalescenceService, CoalescenceService.getInstance());
             assertNotSame(growthEnergy, GrowthEnergy.getInstance());
+            assertProviderCleared(SystemMailService.class);
+            assertProviderCleared(FFAService.class);
+            assertProviderCleared(LadderService.class);
+            assertProviderCleared(KiskService.class);
+            assertProviderCleared(DisputeLandService.class);
+            assertProviderCleared(BanditService.class);
+            assertProviderCleared(StaticDoorService.class);
         } finally {
             if (featureServices != null) {
                 featureServices.destroy();
@@ -654,6 +766,13 @@ class GameServiceProviderCompatibilityTest {
             AtreianBestiaryService.setInstanceProvider(null);
             CoalescenceService.setInstanceProvider(null);
             GrowthEnergy.setInstanceProvider(null);
+            SystemMailService.setInstanceProvider(null);
+            FFAService.setInstanceProvider(null);
+            LadderService.setInstanceProvider(null);
+            KiskService.setInstanceProvider(null);
+            DisputeLandService.setInstanceProvider(null);
+            BanditService.setInstanceProvider(null);
+            StaticDoorService.setInstanceProvider(null);
         }
     }
 
@@ -671,9 +790,13 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(expireTimerTask, ExpireTimerTask.getInstance());
+            assertSame(expireTimerTask, GameTaskManagerServices.expireTimerTask());
             assertSame(teamEffectUpdater, TeamEffectUpdater.getInstance());
+            assertSame(teamEffectUpdater, GameTaskManagerServices.teamEffectUpdater());
             assertSame(teamMoveUpdater, TeamMoveUpdater.getInstance());
+            assertSame(teamMoveUpdater, GameTaskManagerServices.teamMoveUpdater());
             assertSame(temporaryTradeTimeTask, TemporaryTradeTimeTask.getInstance());
+            assertSame(temporaryTradeTimeTask, GameTaskManagerServices.temporaryTradeTimeTask());
 
             taskManagerServices.destroy();
             taskManagerServices = null;
@@ -690,6 +813,82 @@ class GameServiceProviderCompatibilityTest {
             TeamEffectUpdater.setInstanceProvider(null);
             TeamMoveUpdater.setInstanceProvider(null);
             TemporaryTradeTimeTask.setInstanceProvider(null);
+        }
+    }
+
+    @Test
+    void gameEventServicesRegisterAndClearEventAccessors() throws Exception {
+        EventService eventService = instance(EventService.class);
+        PlayerEventService playerEventService = instance(PlayerEventService.class);
+        CrazyDaevaService crazyDaevaService = instance(CrazyDaevaService.class);
+        AbyssRankUpdateService abyssRankUpdateService = instance(AbyssRankUpdateService.class);
+        PacketBroadcaster packetBroadcaster = instance(PacketBroadcaster.class);
+        EventScheduler eventScheduler = instance(EventScheduler.class);
+        LunaShopService lunaShopService = instance(LunaShopService.class);
+        MinionService minionService = instance(MinionService.class);
+        ShugoSweepService shugoSweepService = instance(ShugoSweepService.class);
+        AtreianPassportService atreianPassportService = instance(AtreianPassportService.class);
+        EventWindowService eventWindowService = instance(EventWindowService.class);
+        GameEventServices eventServices = new GameEventServices(
+                provider(EventService.class, eventService),
+                provider(PlayerEventService.class, playerEventService),
+                provider(CrazyDaevaService.class, crazyDaevaService),
+                provider(AbyssRankUpdateService.class, abyssRankUpdateService),
+                provider(PacketBroadcaster.class, packetBroadcaster),
+                provider(EventScheduler.class, eventScheduler));
+        GameEventBootstrapServices eventBootstrapServices = new GameEventBootstrapServices(
+                provider(LunaShopService.class, lunaShopService),
+                provider(MinionService.class, minionService),
+                provider(ShugoSweepService.class, shugoSweepService),
+                provider(AtreianPassportService.class, atreianPassportService),
+                provider(EventWindowService.class, eventWindowService));
+
+        try {
+            assertSame(eventService, GameEventServices.eventService());
+            assertSame(playerEventService, GameEventServices.playerEventService());
+            assertSame(crazyDaevaService, GameEventServices.crazyDaevaService());
+            assertSame(abyssRankUpdateService, GameEventServices.abyssRankUpdateService());
+            assertSame(packetBroadcaster, GameEventServices.packetBroadcaster());
+            assertSame(eventScheduler, GameEventServices.eventScheduler());
+            assertSame(lunaShopService, GameEventBootstrapServices.lunaShopService());
+            assertSame(minionService, GameEventBootstrapServices.minionService());
+            assertSame(shugoSweepService, GameEventBootstrapServices.shugoSweepService());
+            assertSame(atreianPassportService, GameEventBootstrapServices.atreianPassportService());
+            assertSame(eventWindowService, GameEventBootstrapServices.eventWindowService());
+
+            eventServices.destroy();
+            eventServices = null;
+            eventBootstrapServices.destroy();
+            eventBootstrapServices = null;
+
+            assertProviderCleared(EventService.class);
+            assertProviderCleared(PlayerEventService.class);
+            assertProviderCleared(CrazyDaevaService.class);
+            assertProviderCleared(AbyssRankUpdateService.class);
+            assertProviderCleared(PacketBroadcaster.class);
+            assertProviderCleared(EventScheduler.class);
+            assertProviderCleared(MinionService.class);
+            assertProviderCleared(ShugoSweepService.class);
+            assertProviderCleared(AtreianPassportService.class);
+            assertProviderCleared(EventWindowService.class);
+        } finally {
+            if (eventServices != null) {
+                eventServices.destroy();
+            }
+            if (eventBootstrapServices != null) {
+                eventBootstrapServices.destroy();
+            }
+            EventService.setInstanceProvider(null);
+            PlayerEventService.setInstanceProvider(null);
+            CrazyDaevaService.setInstanceProvider(null);
+            AbyssRankUpdateService.setInstanceProvider(null);
+            PacketBroadcaster.setInstanceProvider(null);
+            EventScheduler.setInstanceProvider(null);
+            LunaShopService.setInstanceProvider(null);
+            MinionService.setInstanceProvider(null);
+            ShugoSweepService.setInstanceProvider(null);
+            AtreianPassportService.setInstanceProvider(null);
+            EventWindowService.setInstanceProvider(null);
         }
     }
 
@@ -774,7 +973,9 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(craftSkillUpdateService, CraftSkillUpdateService.getInstance());
+            assertSame(craftSkillUpdateService, GameCraftServices.craftSkillUpdateService());
             assertSame(relinquishCraftStatus, RelinquishCraftStatus.getInstance());
+            assertSame(relinquishCraftStatus, GameCraftServices.relinquishCraftStatus());
 
             craftServices.destroy();
             craftServices = null;
@@ -804,9 +1005,13 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(duelService, DuelService.getInstance());
+            assertSame(duelService, GameGameplayServices.duelService());
             assertSame(lifeStatsRestoreService, LifeStatsRestoreService.getInstance());
+            assertSame(lifeStatsRestoreService, GameGameplayServices.lifeStatsRestoreService());
             assertSame(seasonRankingService, SeasonRankingService.getInstance());
+            assertSame(seasonRankingService, GameGameplayServices.seasonRankingService());
             assertSame(riftManager, RiftManager.getInstance());
+            assertSame(riftManager, GameGameplayServices.riftManager());
 
             gameplayServices.destroy();
             gameplayServices = null;
@@ -850,14 +1055,22 @@ class GameServiceProviderCompatibilityTest {
 
         try {
             assertSame(dropService, DropService.getInstance());
+            assertSame(dropService, GameCoreGameplayServices.dropService());
             assertSame(mailService, MailService.getInstance());
+            assertSame(mailService, GameCoreGameplayServices.mailService());
             assertSame(pvpService, PvpService.getInstance());
+            assertSame(pvpService, GameCoreGameplayServices.pvpService());
             assertSame(autoGroupService, AutoGroupService.getInstance());
+            assertSame(autoGroupService, GameCoreGameplayServices.autoGroupService());
             assertSame(abyssRankingCache, AbyssRankingCache.getInstance());
+            assertSame(abyssRankingCache, GameCoreGameplayServices.abyssRankingCache());
             assertSame(legionService, LegionService.getInstance());
+            assertSame(legionService, GameCoreGameplayServices.legionService());
             assertSame(thievesGuildService, ThievesGuildService.getInstance());
             assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
+            assertSame(balaurAssaultService, GameCoreGameplayServices.balaurAssaultService());
             assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
+            assertSame(battlefieldUnionService, GameCoreGameplayServices.battlefieldUnionService());
 
             coreGameplayServices.destroy();
             coreGameplayServices = null;
@@ -888,6 +1101,92 @@ class GameServiceProviderCompatibilityTest {
     }
 
     @Test
+    void gameLocationBootstrapServicesRegistersAndClearsAbyssLandingProvider() {
+        VortexService vortexService = instance(VortexService.class);
+        BeritraService beritraService = instance(BeritraService.class);
+        AgentService agentService = instance(AgentService.class);
+        AnohaService anohaService = instance(AnohaService.class);
+        SvsService svsService = instance(SvsService.class);
+        RvrService rvrService = instance(RvrService.class);
+        IuService iuService = instance(IuService.class);
+        NightmareCircusService nightmareCircusService = instance(NightmareCircusService.class);
+        DynamicRiftService dynamicRiftService = instance(DynamicRiftService.class);
+        InstanceRiftService instanceRiftService = instance(InstanceRiftService.class);
+        OutpostService outpostService = instance(OutpostService.class);
+        ZorshivDredgionService zorshivDredgionService = instance(ZorshivDredgionService.class);
+        MoltenusService moltenusService = instance(MoltenusService.class);
+        RiftService riftService = instance(RiftService.class);
+        ConquestService conquestService = instance(ConquestService.class);
+        IdianDepthsService idianDepthsService = instance(IdianDepthsService.class);
+        AbyssLandingService abyssLandingService = instance(AbyssLandingService.class);
+        AbyssLandingSpecialService abyssLandingSpecialService = instance(AbyssLandingSpecialService.class);
+        GameLocationBootstrapServices locationServices = new GameLocationBootstrapServices(
+                provider(VortexService.class, vortexService),
+                provider(BeritraService.class, beritraService),
+                provider(AgentService.class, agentService),
+                provider(AnohaService.class, anohaService),
+                provider(SvsService.class, svsService),
+                provider(RvrService.class, rvrService),
+                provider(IuService.class, iuService),
+                provider(NightmareCircusService.class, nightmareCircusService),
+                provider(DynamicRiftService.class, dynamicRiftService),
+                provider(InstanceRiftService.class, instanceRiftService),
+                provider(SiegeService.class, instance(SiegeService.class)),
+                provider(BaseService.class, instance(BaseService.class)),
+                provider(OutpostService.class, outpostService),
+                provider(ZorshivDredgionService.class, zorshivDredgionService),
+                provider(MoltenusService.class, moltenusService),
+                provider(RiftService.class, riftService),
+                provider(ConquestService.class, conquestService),
+                provider(IdianDepthsService.class, idianDepthsService),
+                provider(TowerOfEternityService.class, instance(TowerOfEternityService.class)),
+                provider(AbyssLandingService.class, abyssLandingService),
+                provider(LandingUpdateService.class, instance(LandingUpdateService.class)),
+                provider(AbyssLandingSpecialService.class, abyssLandingSpecialService));
+
+        try {
+            assertSame(vortexService, GameLocationBootstrapServices.vortexService());
+            assertSame(beritraService, GameLocationBootstrapServices.beritraService());
+            assertSame(agentService, GameLocationBootstrapServices.agentService());
+            assertSame(anohaService, GameLocationBootstrapServices.anohaService());
+            assertSame(svsService, GameLocationBootstrapServices.svsService());
+            assertSame(rvrService, GameLocationBootstrapServices.rvrService());
+            assertSame(iuService, GameLocationBootstrapServices.iuService());
+            assertSame(nightmareCircusService, GameLocationBootstrapServices.nightmareCircusService());
+            assertSame(dynamicRiftService, GameLocationBootstrapServices.dynamicRiftService());
+            assertSame(instanceRiftService, GameLocationBootstrapServices.instanceRiftService());
+            assertSame(outpostService, GameLocationBootstrapServices.outpostService());
+            assertSame(zorshivDredgionService, GameLocationBootstrapServices.zorshivDredgionService());
+            assertSame(moltenusService, GameLocationBootstrapServices.moltenusService());
+            assertSame(riftService, GameLocationBootstrapServices.riftService());
+            assertSame(conquestService, GameLocationBootstrapServices.conquestService());
+            assertSame(idianDepthsService, GameLocationBootstrapServices.idianDepthsService());
+            assertSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
+            assertSame(abyssLandingSpecialService, GameLocationBootstrapServices.abyssLandingSpecialService());
+        } finally {
+            locationServices.destroy();
+            assertNotSame(vortexService, GameLocationBootstrapServices.vortexService());
+            assertNotSame(beritraService, GameLocationBootstrapServices.beritraService());
+            assertNotSame(agentService, GameLocationBootstrapServices.agentService());
+            assertNotSame(anohaService, GameLocationBootstrapServices.anohaService());
+            assertNotSame(svsService, GameLocationBootstrapServices.svsService());
+            assertNotSame(rvrService, GameLocationBootstrapServices.rvrService());
+            assertNotSame(iuService, GameLocationBootstrapServices.iuService());
+            assertNotSame(nightmareCircusService, GameLocationBootstrapServices.nightmareCircusService());
+            assertNotSame(dynamicRiftService, GameLocationBootstrapServices.dynamicRiftService());
+            assertNotSame(instanceRiftService, GameLocationBootstrapServices.instanceRiftService());
+            assertNotSame(outpostService, GameLocationBootstrapServices.outpostService());
+            assertNotSame(zorshivDredgionService, GameLocationBootstrapServices.zorshivDredgionService());
+            assertNotSame(moltenusService, GameLocationBootstrapServices.moltenusService());
+            assertNotSame(riftService, GameLocationBootstrapServices.riftService());
+            assertNotSame(conquestService, GameLocationBootstrapServices.conquestService());
+            assertNotSame(idianDepthsService, GameLocationBootstrapServices.idianDepthsService());
+            assertNotSame(abyssLandingService, GameLocationBootstrapServices.abyssLandingService());
+            assertNotSame(abyssLandingSpecialService, GameLocationBootstrapServices.abyssLandingSpecialService());
+        }
+    }
+
+    @Test
     void gameMovementLoopServicesRegistersAndClearsMovementLoopProviders() throws Exception {
         WorldMapsData oldWorldMapsData = DataManager.WORLD_MAPS_DATA;
         GameMovementLoopServices movementLoopServices = null;
@@ -904,9 +1203,13 @@ class GameServiceProviderCompatibilityTest {
                     provider(ZoneUpdateService.class, zoneUpdateService));
 
             assertSame(movementNotifyTask, MovementNotifyTask.getInstance());
+            assertSame(movementNotifyTask, GameMovementLoopServices.movementNotifyTask());
             assertSame(moveTaskManager, MoveTaskManager.getInstance());
+            assertSame(moveTaskManager, GameMovementLoopServices.moveTaskManager());
             assertSame(playerMoveTaskManager, PlayerMoveTaskManager.getInstance());
+            assertSame(playerMoveTaskManager, GameMovementLoopServices.playerMoveTaskManager());
             assertSame(zoneUpdateService, ZoneUpdateService.getInstance());
+            assertSame(zoneUpdateService, GameMovementLoopServices.zoneUpdateService());
 
             movementLoopServices.destroy();
             movementLoopServices = null;
@@ -924,6 +1227,148 @@ class GameServiceProviderCompatibilityTest {
             PlayerMoveTaskManager.setInstanceProvider(null);
             ZoneUpdateService.setInstanceProvider(null);
             DataManager.WORLD_MAPS_DATA = oldWorldMapsData;
+        }
+    }
+
+    @Test
+    void gameHousingServicesRegistersAndClearsHousingProvider() throws Exception {
+        HousingBidService housingBidService = instance(HousingBidService.class);
+        MaintenanceTask maintenanceTask = instance(MaintenanceTask.class);
+        TownService townService = instance(TownService.class);
+        HousingService housingService = instance(HousingService.class);
+        ChallengeTaskService challengeTaskService = instance(ChallengeTaskService.class);
+        GameHousingServices housingServices = new GameHousingServices(
+                provider(HousingBidService.class, housingBidService),
+                provider(MaintenanceTask.class, maintenanceTask),
+                provider(TownService.class, townService),
+                provider(HousingService.class, housingService),
+                provider(ChallengeTaskService.class, challengeTaskService));
+
+        try {
+            assertSame(housingBidService, GameHousingServices.housingBidService());
+            assertSame(maintenanceTask, GameHousingServices.maintenanceTask());
+            assertSame(townService, GameHousingServices.townService());
+            assertSame(housingService, GameHousingServices.housingService());
+            assertSame(challengeTaskService, GameHousingServices.challengeTaskService());
+        } finally {
+            housingServices.destroy();
+            assertProviderCleared(HousingBidService.class);
+            assertProviderCleared(MaintenanceTask.class);
+            assertProviderCleared(TownService.class);
+            assertProviderCleared(HousingService.class);
+            assertProviderCleared(ChallengeTaskService.class);
+        }
+    }
+
+    @Test
+    void gameRuntimeServicesRegistersAndClearsHighTrafficAccessors() throws Exception {
+        AdminService adminService = instance(AdminService.class);
+        PlayerTransferService playerTransferService = instance(PlayerTransferService.class);
+        TerritoryService territoryService = instance(TerritoryService.class);
+        WeatherService weatherService = instance(WeatherService.class);
+        BrokerService brokerService = instance(BrokerService.class);
+        Influence influence = instance(Influence.class);
+        ExchangeService exchangeService = instance(ExchangeService.class);
+        PetitionService petitionService = instance(PetitionService.class);
+        LimitedItemTradeService limitedItemTradeService = instance(LimitedItemTradeService.class);
+        SurveyService surveyService = instance(SurveyService.class);
+        GMService gmService = instance(GMService.class);
+        GameRuntimeServices runtimeServices = new GameRuntimeServices(
+                provider(PeriodicSaveService.class, instance(PeriodicSaveService.class)),
+                provider(AdminService.class, adminService),
+                provider(PlayerTransferService.class, playerTransferService),
+                provider(TerritoryService.class, territoryService),
+                provider(GameTimeService.class, instance(GameTimeService.class)),
+                provider(AnnouncementService.class, instance(AnnouncementService.class)),
+                provider(DebugService.class, instance(DebugService.class)),
+                provider(WeatherService.class, weatherService),
+                provider(BrokerService.class, brokerService),
+                provider(Influence.class, influence),
+                provider(ExchangeService.class, exchangeService),
+                provider(PetitionService.class, petitionService),
+                provider(FlyRingService.class, instance(FlyRingService.class)),
+                provider(CuringZoneService.class, instance(CuringZoneService.class)),
+                provider(SpringZoneService.class, instance(SpringZoneService.class)),
+                provider(BoostEventService.class, instance(BoostEventService.class)),
+                provider(TaskManagerFromDB.class, instance(TaskManagerFromDB.class)),
+                provider(LimitedItemTradeService.class, limitedItemTradeService),
+                provider(WebshopService.class, instance(WebshopService.class)),
+                provider(SurveyService.class, surveyService),
+                provider(FindGroupService.class, instance(FindGroupService.class)),
+                provider(InGameShopEn.class, instance(InGameShopEn.class)),
+                provider(GMService.class, gmService));
+
+        try {
+            assertSame(adminService, GameRuntimeServices.adminService());
+            assertSame(playerTransferService, GameRuntimeServices.playerTransferService());
+            assertSame(territoryService, GameRuntimeServices.territoryService());
+            assertSame(weatherService, GameRuntimeServices.weatherService());
+            assertSame(brokerService, GameRuntimeServices.brokerService());
+            assertSame(influence, GameRuntimeServices.influence());
+            assertSame(exchangeService, GameRuntimeServices.exchangeService());
+            assertSame(petitionService, GameRuntimeServices.petitionService());
+            assertSame(limitedItemTradeService, GameRuntimeServices.limitedItemTradeService());
+            assertSame(surveyService, GameRuntimeServices.surveyService());
+            assertSame(gmService, GameRuntimeServices.gmService());
+        } finally {
+            runtimeServices.destroy();
+            assertProviderCleared(AdminService.class);
+            assertProviderCleared(PlayerTransferService.class);
+            assertProviderCleared(TerritoryService.class);
+            assertProviderCleared(WeatherService.class);
+            assertProviderCleared(BrokerService.class);
+            assertProviderCleared(Influence.class);
+            assertProviderCleared(ExchangeService.class);
+            assertProviderCleared(PetitionService.class);
+            assertProviderCleared(LimitedItemTradeService.class);
+            assertProviderCleared(SurveyService.class);
+            assertProviderCleared(GMService.class);
+        }
+    }
+
+    @Test
+    void gameBattlefieldServicesRegistersAndClearsBattlefieldAccessors() throws Exception {
+        KamarBattlefieldService kamarBattlefieldService = instance(KamarBattlefieldService.class);
+        EngulfedOphidanBridgeService engulfedOphidanBridgeService = instance(EngulfedOphidanBridgeService.class);
+        SuspiciousOphidanBridgeService suspiciousOphidanBridgeService = instance(SuspiciousOphidanBridgeService.class);
+        IronWallWarfrontService ironWallWarfrontService = instance(IronWallWarfrontService.class);
+        IdgelDomeService idgelDomeService = instance(IdgelDomeService.class);
+        IdgelDomeLandmarkService idgelDomeLandmarkService = instance(IdgelDomeLandmarkService.class);
+        HallOfTenacityService hallOfTenacityService = instance(HallOfTenacityService.class);
+        GrandArenaTrainingCampService grandArenaTrainingCampService = instance(GrandArenaTrainingCampService.class);
+        IDRunService idRunService = instance(IDRunService.class);
+        GameBattlefieldServices battlefieldServices = new GameBattlefieldServices(
+                provider(KamarBattlefieldService.class, kamarBattlefieldService),
+                provider(EngulfedOphidanBridgeService.class, engulfedOphidanBridgeService),
+                provider(SuspiciousOphidanBridgeService.class, suspiciousOphidanBridgeService),
+                provider(IronWallWarfrontService.class, ironWallWarfrontService),
+                provider(IdgelDomeService.class, idgelDomeService),
+                provider(IdgelDomeLandmarkService.class, idgelDomeLandmarkService),
+                provider(HallOfTenacityService.class, hallOfTenacityService),
+                provider(GrandArenaTrainingCampService.class, grandArenaTrainingCampService),
+                provider(IDRunService.class, idRunService));
+
+        try {
+            assertSame(kamarBattlefieldService, GameBattlefieldServices.kamarBattlefieldService());
+            assertSame(engulfedOphidanBridgeService, GameBattlefieldServices.engulfedOphidanBridgeService());
+            assertSame(suspiciousOphidanBridgeService, GameBattlefieldServices.suspiciousOphidanBridgeService());
+            assertSame(ironWallWarfrontService, GameBattlefieldServices.ironWallWarfrontService());
+            assertSame(idgelDomeService, GameBattlefieldServices.idgelDomeService());
+            assertSame(idgelDomeLandmarkService, GameBattlefieldServices.idgelDomeLandmarkService());
+            assertSame(hallOfTenacityService, GameBattlefieldServices.hallOfTenacityService());
+            assertSame(grandArenaTrainingCampService, GameBattlefieldServices.grandArenaTrainingCampService());
+            assertSame(idRunService, GameBattlefieldServices.idRunService());
+        } finally {
+            battlefieldServices.destroy();
+            assertProviderCleared(KamarBattlefieldService.class);
+            assertProviderCleared(EngulfedOphidanBridgeService.class);
+            assertProviderCleared(SuspiciousOphidanBridgeService.class);
+            assertProviderCleared(IronWallWarfrontService.class);
+            assertProviderCleared(IdgelDomeService.class);
+            assertProviderCleared(IdgelDomeLandmarkService.class);
+            assertProviderCleared(HallOfTenacityService.class);
+            assertProviderCleared(GrandArenaTrainingCampService.class);
+            assertProviderCleared(IDRunService.class);
         }
     }
 
@@ -957,10 +1402,12 @@ class GameServiceProviderCompatibilityTest {
             assertSame(webshopService, WebshopService.getInstance());
             assertSame(thievesGuildService, ThievesGuildService.getInstance());
             assertSame(inGameShopEn, InGameShopEn.getInstance());
+            assertSame(inGameShopEn, GameRuntimeServices.inGameShopEn());
             assertSame(balaurAssaultService, BalaurAssaultService.getInstance());
             assertSame(housingService, HousingService.getInstance());
             assertSame(battlefieldUnionService, BattlefieldUnionService.getInstance());
             assertSame(findGroupService, FindGroupService.getInstance());
+            assertSame(findGroupService, GameRuntimeServices.findGroupService());
             assertSame(surveyService, SurveyService.getInstance());
         } finally {
             LegionService.setInstanceProvider(null);
@@ -994,7 +1441,7 @@ class GameServiceProviderCompatibilityTest {
 
     private static WorldMapsData worldMaps(int... mapIds) throws ReflectiveOperationException {
         List<WorldMapTemplate> templates = new java.util.ArrayList<>();
-        TIntObjectHashMap<WorldMapTemplate> index = new TIntObjectHashMap<>();
+        IntObjectHashMap<WorldMapTemplate> index = new IntObjectHashMap<>();
         for (int mapId : mapIds) {
             WorldMapTemplate template = new WorldMapTemplate();
             setField(template, "mapId", mapId);

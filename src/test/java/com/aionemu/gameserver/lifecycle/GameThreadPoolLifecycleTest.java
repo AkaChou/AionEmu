@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
 import org.springframework.beans.factory.ObjectProvider;
@@ -55,6 +57,84 @@ class GameThreadPoolLifecycleTest {
         assertFalse(cronRunnerSource.contains("ThreadPoolManager.getInstance()"));
         assertTrue(cronRunnerSource.contains("GameThreadPoolServices.threadPoolManager().execute(r)"));
         assertTrue(cronRunnerSource.contains("GameThreadPoolServices.threadPoolManager().executeLongRunning(r)"));
+    }
+
+    @Test
+    void gameThreadPoolBridgeUsesLocalFallbackInsteadOfDirectLegacySingleton() throws IOException {
+        String servicesSource = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameThreadPoolServices.java"));
+
+        assertFalse(servicesSource.contains("ThreadPoolManager.getInstance()"));
+        assertTrue(servicesSource.contains("fallbackThreadPoolManager()"));
+        assertTrue(servicesSource.contains("new ThreadPoolManager()"));
+    }
+
+    @Test
+    void gameServicesUseLifecycleSchedulerBridgesInsteadOfDirectSingletons() throws IOException {
+        List<Path> sources;
+        try (Stream<Path> stream = Stream.concat(
+            Files.walk(Path.of("src/main/java/com/aionemu/gameserver/services")),
+            Files.walk(Path.of("src/main/java/com/aionemu/gameserver/spawnengine"))
+        )) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("ThreadPoolManager.getInstance()"), source.toString());
+            assertFalse(content.contains("CronService.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
+    void gameAiUsesLifecycleSchedulerBridgeInsteadOfDirectThreadPoolSingleton() throws IOException {
+        List<Path> sources;
+        try (Stream<Path> stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver/ai"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("ThreadPoolManager.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
+    void gameInstancesUseLifecycleSchedulerBridgeInsteadOfDirectThreadPoolSingleton() throws IOException {
+        List<Path> sources;
+        try (Stream<Path> stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver/instance"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("ThreadPoolManager.getInstance()"), source.toString());
+        }
+    }
+
+    @Test
+    void gameServerCodeUsesLifecycleSchedulerBridgesInsteadOfDirectSingletons() throws IOException {
+        List<Path> sources;
+        try (Stream<Path> stream = Files.walk(Path.of("src/main/java/com/aionemu/gameserver"))) {
+            sources = stream
+                .filter(path -> path.toString().endsWith(".java"))
+                .toList();
+        }
+
+        for (Path source : sources) {
+            String content = Files.readString(source);
+
+            assertFalse(content.contains("ThreadPoolManager.getInstance()"), source.toString());
+            assertFalse(content.contains("CronService.getInstance()"), source.toString());
+        }
     }
 
     @Test

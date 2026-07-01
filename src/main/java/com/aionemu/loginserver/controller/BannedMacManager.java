@@ -20,8 +20,7 @@ package com.aionemu.loginserver.controller;
 
 import java.sql.Timestamp;
 import java.util.Map;
-
-import javolution.util.FastMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.dao.BannedMacDAO;
@@ -35,7 +34,7 @@ import com.aionemu.loginserver.model.base.BannedMacEntry;
 public class BannedMacManager {
 
     private BannedMacDAO dao = DAOManager.getDAO(BannedMacDAO.class);
-    private Map<String, BannedMacEntry> bannedList = new FastMap<String, BannedMacEntry>();
+    private Map<String, BannedMacEntry> bannedList = new ConcurrentHashMap<>();
 
     @Deprecated(since = "boot-migration")
     public static BannedMacManager getInstance() {

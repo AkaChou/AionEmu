@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.gameserver.dao.PlayerDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -30,7 +32,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.Util;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -158,15 +160,15 @@ public class SysMail extends AdminCommand {
 			if (letterType == LetterType.BLACKCLOUD)
 				MailFormatter.sendBlackCloudMail(recipient, item, count);
 			else
-				SystemMailService.getInstance().sendMail(sender, recipient, title, message, item, count, kinah, 1000, letterType);
+				GameFeatureServices.systemMailService().sendMail(sender, recipient, title, message, item, count, kinah, 1000, letterType);
 		}
 		else {
-			for (Player player : World.getInstance().getAllPlayers()) {
+			for (Player player : com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers()) {
 				if (recipientType.isAllowed(player.getRace())) {
 					if (letterType == LetterType.BLACKCLOUD)
 						MailFormatter.sendBlackCloudMail(player.getName(), item, count);
 					else
-						SystemMailService.getInstance().sendMail(sender, player.getName(), title, message, item, count, kinah, 1000, letterType);
+						GameFeatureServices.systemMailService().sendMail(sender, player.getName(), title, message, item, count, kinah, 1000, letterType);
 				}
 			}
 		}
@@ -237,14 +239,14 @@ public class SysMail extends AdminCommand {
 				shouldExpress = false;
 			}
 			else if (letterType == LetterType.EXPRESS) {
-				if (World.getInstance().findPlayer(recipient) == null) {
+				if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipient) == null) {
 					PacketSendUtility.sendMessage(admin, "This Recipient is offline.");
 					return null;
 				}
 				shouldExpress = true;
 			}
 			else { // Black cloud
-				shouldExpress = World.getInstance().findPlayer(recipient) != null;
+				shouldExpress = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipient) != null;
 			}
 		} else {
 			shouldExpress = letterType != LetterType.NORMAL;

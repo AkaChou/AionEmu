@@ -16,13 +16,15 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.services.ZorshivDredgionService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 public class ZorshivDredgion extends AdminCommand
 {
@@ -53,30 +55,30 @@ public class ZorshivDredgion extends AdminCommand
 			showHelp(player);
 			return;
 		} if (COMMAND_START.equalsIgnoreCase(params[0])) {
-			if (ZorshivDredgionService.getInstance().isZorshivDredgionInProgress(zorshivDredgionId)) {
+			if (GameLocationBootstrapServices.zorshivDredgionService().isZorshivDredgionInProgress(zorshivDredgionId)) {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " is already start");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " started!");
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
 						PacketSendUtility.sendSys3Message(player, "\uE050", "The <Zorshiv Dredgion> to lands at levinshor !!!");
 					}
 				});
-				ZorshivDredgionService.getInstance().startZorshivDredgion(zorshivDredgionId);
+				GameLocationBootstrapServices.zorshivDredgionService().startZorshivDredgion(zorshivDredgionId);
 			}
 		} else if (COMMAND_STOP.equalsIgnoreCase(params[0])) {
-			if (!ZorshivDredgionService.getInstance().isZorshivDredgionInProgress(zorshivDredgionId)) {
+			if (!GameLocationBootstrapServices.zorshivDredgionService().isZorshivDredgionInProgress(zorshivDredgionId)) {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " is not start!");
 			} else {
 				PacketSendUtility.sendMessage(player, "<Zorshiv Dredgion> " + zorshivDredgionId + " stopped!");
-				ZorshivDredgionService.getInstance().stopZorshivDredgion(zorshivDredgionId);
+				GameLocationBootstrapServices.zorshivDredgionService().stopZorshivDredgion(zorshivDredgionId);
 			}
 		}
 	}
 	
 	protected boolean isValidZorshivDredgionLocationId(Player player, int zorshivDredgionId) {
-		if (!ZorshivDredgionService.getInstance().getZorshivDredgionLocations().keySet().contains(zorshivDredgionId)) {
+		if (!GameLocationBootstrapServices.zorshivDredgionService().getZorshivDredgionLocations().keySet().contains(zorshivDredgionId)) {
 			PacketSendUtility.sendMessage(player, "Id " + zorshivDredgionId + " is invalid");
 			return false;
 		}

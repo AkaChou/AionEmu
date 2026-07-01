@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.event;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai2.AI2Actions;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
@@ -27,7 +29,6 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.concurrent.Future;
@@ -69,20 +70,20 @@ public class Suspicious_BoxAI2 extends NpcAI2
 				PacketSendUtility.npcSendPacketTime(getOwner(), SM_SYSTEM_MESSAGE.STR_MSG_TREASUREBOX_DESPAWN_ONE, 0);
 			} else if (MathUtil.isIn3dRange(getOwner(), creature, 10)) {
 				if (startedEvent.compareAndSet(false, true)) {
-					suspiciousChestTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 						public void run() {
 						    eventChestStart();
 						}
 					}, 1000);
-					suspiciousChestTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 						public void run() {
 						    getOwner().setNpcType(NpcType.ATTACKABLE);
 							PacketSendUtility.sendPacket(player, new SM_CUSTOM_SETTINGS(getOwner().getObjectId(), 0, NpcType.ATTACKABLE.getId(), 0));
 						}
 					}, 3000);
-					suspiciousChestTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+					suspiciousChestTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					    @Override
 					    public void run() {
 							eventChestFail();

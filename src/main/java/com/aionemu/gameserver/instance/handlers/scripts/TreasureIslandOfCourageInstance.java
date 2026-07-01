@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -59,7 +63,7 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 		super.onInstanceCreate(instance);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
-			instanceTimer = ThreadPoolManager.getInstance().schedule(new Runnable() {
+			instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 				@Override
 				public void run() {
@@ -86,25 +90,25 @@ public class TreasureIslandOfCourageInstance extends GeneralInstanceHandler {
 		switch (npc.getNpcId()) {
 			case 835544: // Ancient Hero's Shoe
 			case 835592:
-				SkillEngine.getInstance().applyEffectDirectly(11277, player, player, 4000 * 1);
+				GameEngineServices.skillEngine().applyEffectDirectly(11277, player, player, 4000 * 1);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;
 			case 835545: // Ancient Hero's Shield
 			case 835593:
-				SkillEngine.getInstance().applyEffectDirectly(11278, player, player, 4000 * 1);
+				GameEngineServices.skillEngine().applyEffectDirectly(11278, player, player, 4000 * 1);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;
 			case 835546: // Ancient Hero's Trap
 			case 835594:
-				SkillEngine.getInstance().applyEffectDirectly(11279, player, player, 4000 * 1);
+				GameEngineServices.skillEngine().applyEffectDirectly(11279, player, player, 4000 * 1);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;
 			case 835547: // Ancient Hero's Hook
 			case 835794:
-				SkillEngine.getInstance().applyEffectDirectly(11280, player, player, 4000 * 1);
+				GameEngineServices.skillEngine().applyEffectDirectly(11280, player, player, 4000 * 1);
 				ItemService.addItem(player, 190100295, 1); // Unicorn
 				ItemService.addItem(player, 169300017, 1); // Hero`s Might
 				break;

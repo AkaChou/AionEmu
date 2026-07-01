@@ -16,11 +16,14 @@
  */
 package com.aionemu.gameserver.services.zorshivdredgionservice;
 
+import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Map;
 
 import com.aionemu.gameserver.model.zorshivdredgion.ZorshivDredgionLocation;
 import com.aionemu.gameserver.services.ZorshivDredgionService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * @author Rinzler (Encom)
@@ -36,35 +39,35 @@ public class DredgionStartRunnable implements Runnable {
 	@Override
 	public void run() {
 		// Invasion Portal.
-		ZorshivDredgionService.getInstance().adventPortalSP(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameLocationBootstrapServices.zorshivDredgionService().adventPortalSP(id);
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Invasion Lazer.
-				ZorshivDredgionService.getInstance().adventDirectingSP(id);
+				GameLocationBootstrapServices.zorshivDredgionService().adventDirectingSP(id);
 			}
 		}, 180000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				// Invasion Black Sky.
-				ZorshivDredgionService.getInstance().adventControlSP(id);
+				GameLocationBootstrapServices.zorshivDredgionService().adventControlSP(id);
 			}
 		}, 300000);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				Map<Integer, ZorshivDredgionLocation> locations = ZorshivDredgionService.getInstance()
+				Map<Integer, ZorshivDredgionLocation> locations = GameLocationBootstrapServices.zorshivDredgionService()
 						.getZorshivDredgionLocations();
 				for (ZorshivDredgionLocation loc : locations.values()) {
 					if (loc.getId() == id) {
 						// Invasion Light Blue.
-						ZorshivDredgionService.getInstance().adventEffectSP(id);
+						GameLocationBootstrapServices.zorshivDredgionService().adventEffectSP(id);
 						// The Balaur Dredgion has appeared at levinshor.
-						ZorshivDredgionService.getInstance().levinshorMsg(id);
+						GameLocationBootstrapServices.zorshivDredgionService().levinshorMsg(id);
 						// The Balaur Dredgion has appeared at inggison.
-						ZorshivDredgionService.getInstance().inggisonMsg(id);
-						ZorshivDredgionService.getInstance().startZorshivDredgion(loc.getId());
+						GameLocationBootstrapServices.zorshivDredgionService().inggisonMsg(id);
+						GameLocationBootstrapServices.zorshivDredgionService().startZorshivDredgion(loc.getId());
 					}
 				}
 			}

@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts.steelRake;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.instance.handlers.GeneralInstanceHandler;
 import com.aionemu.gameserver.instance.handlers.InstanceID;
@@ -24,13 +26,13 @@ import com.aionemu.gameserver.model.drop.DropItem;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.knownlist.Visitor;
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.util.Set;
 
@@ -45,42 +47,42 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
         switch (npcId) {
 			case 215056: //Warden Tantaka.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000049, 1)); //Engine Room Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000049, 1)); //Engine Room Key.
 					}
 				}
 			break;
 			case 215057: //Kedomke The Drinker.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000054, 1)); //Mercenary Quarters Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000054, 1)); //Mercenary Quarters Key.
 					}
 				}
 			break;
 			case 215058: //Timid Alakin.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000055, 1)); //The Brig Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000055, 1)); //The Brig Key.
 					}
 				}
 			break;
 			case 215062: //Sweeper Nunukin.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000042, 1)); //Sailor Waiting Room Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000042, 1)); //Sailor Waiting Room Key.
 					}
 				}
 			break;
 			case 215063: //Bhagwaninerk.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000043, 1)); //Starboard Deck Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000043, 1)); //Starboard Deck Key.
 					}
 				}
 			break;
@@ -88,31 +90,31 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			case 215065: //Discemer Werikiki.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000046, 1)); //Grogget's Safe Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000046, 1)); //Grogget's Safe Key.
 					}
 				}
 			break;
 			case 215066: //Technician Binukin.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000050, 1)); //Generator Room Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000050, 1)); //Generator Room Key.
 					}
 				}
 			break;
 			case 215067: //Largimark The Smoker.
-				dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 185000052, 1)); //Largimark's Flint.
+				dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 185000052, 1)); //Largimark's Flint.
 			break;
 			case 215069: //Chief Mate Menekiki.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000053, 1)); //Weapon Military Supply Base Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000053, 1)); //Weapon Military Supply Base Key.
 					}
 				}
 			break;
 			case 215070: //Chief Gunner Koakoa.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000074, 1)); //Gun Repair Deck Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000074, 1)); //Gun Repair Deck Key.
 					}
 				}
 			break;
@@ -121,10 +123,10 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
                     if (player.isOnline()) {
 						switch (Rnd.get(1, 2)) {
 							case 1:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000044, 1)); //Tavern Key 2nd Floor.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000044, 1)); //Tavern Key 2nd Floor.
 							break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000045, 1)); //Loot Depository Key.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000045, 1)); //Loot Depository Key.
 							break;
 						}
 					}
@@ -133,37 +135,37 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			case 215401: //Sturdy Bubukin.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000048, 1)); //Menagerie Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000048, 1)); //Menagerie Key.
 					}
 				}
 			break;
 			case 215411: //Zerkin The One-Eyed.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000073, 1)); //Large Gun Deck Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000073, 1)); //Large Gun Deck Key.
 					}
 				}
 			break;
 			case 215412: //Tamer Anikiki.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 182209084, 1)); //Taming A Manduri.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 182209099, 1)); //Taming A Manduri.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 182209084, 1)); //Taming A Manduri.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 182209099, 1)); //Taming A Manduri.
 					}
 				}
 			break;
 			case 215080: //Engineer Lahulahu.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000051, 1)); //Anchor Point Key.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000051, 1)); //Anchor Point Key.
 					}
 				}
 			break;
 			case 215081: //Brass-Eye Grogget.
 			    for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 188051416, 1)); //Grogget's Fabled Weapon Chest.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188053787, 1)); //Stigma Support Bundle.
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 188051416, 1)); //Grogget's Fabled Weapon Chest.
 					}
 				}
 			break;
@@ -171,48 +173,48 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 			case 700554: //Pirate Ship Treasure Box.
 				switch (Rnd.get(1, 2)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050007, 1)); //Glossy Idian: Physical Attack
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050007, 1)); //Glossy Idian: Physical Attack
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050008, 1)); //Glossy Idian: Magical Attack.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050008, 1)); //Glossy Idian: Magical Attack.
 					break;
 				}
 			break;
 			case 700555: //Captain Treasure Box.
 				switch (Rnd.get(1, 6)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050017, 2)); //Blue Idian: Physical Attack.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050017, 2)); //Blue Idian: Physical Attack.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050018, 2)); //Blue Idian: Magical Attack.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050018, 2)); //Blue Idian: Magical Attack.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050019, 2)); //Blue Idian: Physical Defense.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050019, 2)); //Blue Idian: Physical Defense.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050020, 2)); //Blue Idian: Magical Defense.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050020, 2)); //Blue Idian: Magical Defense.
 					break;
 					case 5:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050021, 2)); //Blue Idian: Assistance.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050021, 2)); //Blue Idian: Assistance.
 					break;
 					case 6:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050022, 2)); //Blue Idian: Resistance.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050022, 2)); //Blue Idian: Resistance.
 					break;
 				}
 			break;
 			case 215421: //Treasure Box.
 				switch (Rnd.get(1, 4)) {
 					case 1:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050059, 2)); //Sparkling Idian: Physical Attack.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050059, 2)); //Sparkling Idian: Physical Attack.
 					break;
 					case 2:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050060, 2)); //Sparkling Idian: Magical Attack.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050060, 2)); //Sparkling Idian: Magical Attack.
 					break;
 					case 3:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050061, 2)); //Sparkling Idian: Physical Defense.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050061, 2)); //Sparkling Idian: Physical Defense.
 					break;
 					case 4:
-				        dropItems.add(DropRegistrationService.getInstance().regDropItem(1, 0, npcId, 166050062, 2)); //Sparkling Idian: Magical Defense.
+				        dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(1, 0, npcId, 166050062, 2)); //Sparkling Idian: Magical Defense.
 					break;
 				}
 			break;
@@ -340,7 +342,7 @@ public class SteelRakeInstance extends GeneralInstanceHandler {
 	}
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

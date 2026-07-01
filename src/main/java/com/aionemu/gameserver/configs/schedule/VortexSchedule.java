@@ -16,16 +16,15 @@
  */
 package com.aionemu.gameserver.configs.schedule;
 
-import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-import org.apache.commons.io.FileUtils;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import com.aionemu.commons.utils.xml.JAXBUtil;
 import com.aionemu.gameserver.configs.Config;
@@ -51,7 +50,7 @@ public class VortexSchedule {
 	public static VortexSchedule load() {
 		VortexSchedule vs;
 		try {
-				String xml = FileUtils.readFileToString(Config.configFile("schedule/vortex_schedule.xml"));
+			String xml = Files.readString(Config.configFile("schedule/vortex_schedule.xml").toPath(), StandardCharsets.UTF_8);
 			vs = (VortexSchedule) JAXBUtil.deserialize(xml, VortexSchedule.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to initialize vortex", e);

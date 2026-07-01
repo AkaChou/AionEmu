@@ -18,16 +18,16 @@ package com.aionemu.gameserver.dataholders;
 
 import java.util.List;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.item.ItemCustomSetTeamplate;
 
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "item_custom_sets")
@@ -36,7 +36,7 @@ public class ItemCustomSetData {
 	protected List<ItemCustomSetTeamplate> customTemplates;
 
 	@XmlTransient
-	private TIntObjectHashMap<ItemCustomSetTeamplate> custom = new TIntObjectHashMap<ItemCustomSetTeamplate>();
+	private IntObjectHashMap<ItemCustomSetTeamplate> custom = new IntObjectHashMap<ItemCustomSetTeamplate>();
 
 	public ItemCustomSetTeamplate getCustomTemplate(int id) {
 		return custom.get(id);
@@ -48,7 +48,7 @@ public class ItemCustomSetData {
 		}
 	}
 
-	private TIntObjectHashMap<ItemCustomSetTeamplate> getCustomMap() {
+	private IntObjectHashMap<ItemCustomSetTeamplate> getCustomMap() {
 		return custom;
 	}
 

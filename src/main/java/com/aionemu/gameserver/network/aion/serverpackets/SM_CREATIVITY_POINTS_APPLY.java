@@ -16,8 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
@@ -26,9 +25,8 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
  * @author Falke_34
  * @Rework Xnemonix
  */
+@Slf4j
 public class SM_CREATIVITY_POINTS_APPLY extends AionServerPacket {
-
-	Logger log = LoggerFactory.getLogger(SM_CREATIVITY_POINTS_APPLY.class);
 
 	private int type;
 	private int size;

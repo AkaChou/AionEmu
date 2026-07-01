@@ -16,8 +16,10 @@
  */
 package com.aionemu.gameserver.instance.handlers.scripts;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +49,7 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.utils3d.Point3D;
 import com.aionemu.gameserver.network.aion.serverpackets.*;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
-import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
@@ -84,19 +86,19 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	private Future<?> trialsOfEternityTaskA8;
 	private List<Integer> movies = new ArrayList<Integer>();
 	private List<Npc> ScatteredEnergyBook = new ArrayList<Npc>();
-	private final FastList<Future<?>> trialsOfEternityTask = FastList.newInstance();
-	private FastMap<Integer, VisibleObject> trialsShield = new FastMap<Integer, VisibleObject>();
+	private final List<Future<?>> trialsOfEternityTask = new ArrayList<Future<?>>();
+	private Map<Integer, VisibleObject> trialsShield = new LinkedHashMap<Integer, VisibleObject>();
 	
 	@Override
     public void onDropRegistered(Npc npc) {
-        Set<DropItem> dropItems = DropRegistrationService.getInstance().getCurrentDropMap().get(npc.getObjectId());
+        Set<DropItem> dropItems = GameWorldServices.dropRegistrationService().getCurrentDropMap().get(npc.getObjectId());
 		int npcId = npc.getNpcId();
 		int index = dropItems.size() + 1;
 		switch (npcId) {
 			case 246410: //Essence Guardian Fleshgolem.
 				for (Player player: instance.getPlayersInside()) {
 				    if (player.isOnline()) {
-						dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000297, 1));
+						dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000297, 1));
 				    }
 				}
 		    break;
@@ -105,16 +107,16 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				    if (player.isOnline()) {
 						switch (Rnd.get(1, 4)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000298, 1));
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000298, 1));
 				            break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000299, 1));
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000299, 1));
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000300, 1));
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000300, 1));
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 185000301, 1));
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 185000301, 1));
 							break;
 						}
 				    }
@@ -126,22 +128,22 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				    if (player.isOnline()) {
 						switch (Rnd.get(1, 6)) {
 				            case 1:
-				                dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 110000064, 1)); //   ??.
+				                dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 110000064, 1)); //   ??.
 				            break;
 							case 2:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 111000105, 1)); //   .
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 111000105, 1)); //   .
 							break;
 							case 3:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 112000066, 1)); //   .
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 112000066, 1)); //   .
 							break;
 							case 4:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 113000069, 1)); //   ?.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 113000069, 1)); //   ?.
 							break;
 							case 5:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 114000107, 1)); //   .
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 114000107, 1)); //   .
 							break;
 							case 6:
-							    dropItems.add(DropRegistrationService.getInstance().regDropItem(index++, player.getObjectId(), npcId, 125005216, 1)); //   ?.
+							    dropItems.add(GameWorldServices.dropRegistrationService().regDropItem(index++, player.getObjectId(), npcId, 125005216, 1)); //   ?.
 							break;
 						}
 				    }
@@ -203,7 +205,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		sendPacket(player, "UI_Gauge_01", 0 + 1);
 		if (instanceTimer == null) {
 			startTime = System.currentTimeMillis();
-		    instanceTimer = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		    instanceTimer = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 				@Override
 				public void run() {
 					deleteNpc(700998);
@@ -217,7 +219,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 			spawnRace = player.getRace();
 			SpawnTrialsOfEternityRace();
 		}
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				fallingRock();
@@ -257,7 +259,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	private void startTrialsOfEternityTimer() {
 		//The book was destroyed.
 		this.sendMessage(1404208, 10 * 60 * 1000);
-		fakeBook2Task = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		fakeBook2Task = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Fake Book.
@@ -383,7 +385,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	//============================//
 	protected void startInstanceTask() {
     	instanceTime = System.currentTimeMillis();
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				//Prepare for combat! Enemies approaching!
@@ -393,7 +395,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sp(246724, 238.52361f, 1004.6866f, 707.12933f, (byte) 0, 1016, 6000, 0, null);
             }
         }, 60000)); //...1Min
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startTrialsOfEternityA1();
@@ -412,7 +414,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				});
             }
         }, 90000)); //...1-30Min
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startTrialsOfEternityA2();
@@ -424,7 +426,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 180000)); //...3Min
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startTrialsOfEternityA3();
@@ -436,7 +438,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 300000)); //...5Min
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startTrialsOfEternityA4();
@@ -448,7 +450,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 420000)); //...7Min
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startTrialsOfEternityA5();
@@ -460,7 +462,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 540000)); //...9Min
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startTrialsOfEternityA6();
@@ -472,7 +474,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 660000)); //...11Min
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startTrialsOfEternityA7();
@@ -484,7 +486,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 780000)); //...13Min
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				startTrialsOfEternityA8();
@@ -496,7 +498,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 				sendMsgByRace(1402833, Race.PC_ALL, 30000);
             }
         }, 900000)); //...15Min
-		trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {
@@ -626,7 +628,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	
 	private void rushTrialsOfEternity(final Npc npc) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				if (!isInstanceDestroyed) {
@@ -643,7 +645,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	
 	private void startTrialsOfEternityA1() {
-		trialsOfEternityTaskA1 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTaskA1 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Portal Left.
@@ -658,7 +660,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA2() {
-		trialsOfEternityTaskA2 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTaskA2 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Portal Left.
@@ -673,7 +675,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA3() {
-		trialsOfEternityTaskA3 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTaskA3 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Portal Left.
@@ -692,7 +694,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA4() {
-		trialsOfEternityTaskA4 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTaskA4 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Portal Left.
@@ -707,7 +709,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA5() {
-		trialsOfEternityTaskA5 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTaskA5 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Portal Left.
@@ -724,7 +726,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA6() {
-		trialsOfEternityTaskA6 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTaskA6 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Portal Left.
@@ -741,7 +743,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA7() {
-		trialsOfEternityTaskA7 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTaskA7 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Portal Left.
@@ -760,7 +762,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 		}, 1000);
 	}
 	private void startTrialsOfEternityA8() {
-		trialsOfEternityTaskA8 = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		trialsOfEternityTaskA8 = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				//Portal Left.
@@ -811,10 +813,10 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
 	}
 	
 	private void stopInstanceTask() {
-        for (FastList.Node<Future<?>> n = trialsOfEternityTask.head(), end = trialsOfEternityTask.tail(); (n = n.getNext()) != end; ) {
-            if (n.getValue() != null) {
-                n.getValue().cancel(true);
-            }
+        for (Future<?> task : trialsOfEternityTask) {
+			if (task != null) {
+				task.cancel(true);
+			}
         }
     }
 	
@@ -827,7 +829,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int entityId, final int time, final int msg, final Race race) {
-        trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -841,7 +843,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
     }
 	
     protected void sp(final int npcId, final float x, final float y, final float z, final byte h, final int time, final String walkerId) {
-        trialsOfEternityTask.add(ThreadPoolManager.getInstance().schedule(new Runnable() {
+        trialsOfEternityTask.add(GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
             @Override
             public void run() {
                 if (!isInstanceDestroyed) {
@@ -866,7 +868,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
         if (delay == 0) {
             this.sendMsg(msgId);
         } else {
-            ThreadPoolManager.getInstance().schedule(new Runnable() {
+            GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
                 public void run() {
                     sendMsg(msgId);
                 }
@@ -875,7 +877,7 @@ public class TrialsOfEternityInstance extends GeneralInstanceHandler
     }
 	
 	protected void sendMsgByRace(final int msg, final Race race, int time) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				instance.doOnAllPlayers(new Visitor<Player>() {

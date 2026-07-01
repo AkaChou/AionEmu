@@ -16,15 +16,18 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.schedule.SvsSchedule;
 import com.aionemu.gameserver.configs.schedule.SvsSchedule.Svs;
@@ -44,25 +47,25 @@ import com.aionemu.gameserver.services.svsservice.Panesterra;
 import com.aionemu.gameserver.services.svsservice.SvsStartRunnable;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import javolution.util.FastMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 
 public class SvsService {
 	private static volatile ObjectProvider<SvsService> instanceProvider;
 	private SvsSchedule svsSchedule;
 	private Map<Integer, SvsLocation> svs;
-	private static Logger log = LoggerFactory.getLogger(SvsService.class);
 	private static final int duration = CustomConfig.SVS_DURATION;
 	// Transidium Annex 4.7
-	private FastMap<Integer, VisibleObject> advanceCorridor = new FastMap<Integer, VisibleObject>();
-	private final Map<Integer, Panesterra<?>> activeSvs = new FastMap<Integer, Panesterra<?>>().shared();
+	private Map<Integer, VisibleObject> advanceCorridor = new HashMap<>();
+	private final Map<Integer, Panesterra<?>> activeSvs = new LinkedHashMap<Integer, Panesterra<?>>();
 
 	public void initSvsLocations() {
 		if (CustomConfig.SVS_ENABLED) {
@@ -83,7 +86,7 @@ public class SvsService {
 			svsSchedule = SvsSchedule.load();
 			for (Svs svs : svsSchedule.getSvssList()) {
 				for (String svsTime : svs.getSvsTimes()) {
-					CronService.getInstance().schedule(new SvsStartRunnable(svs.getId()), svsTime);
+					GameCronServices.cronService().schedule(new SvsStartRunnable(svs.getId()), svsTime);
 				}
 			}
 		}
@@ -100,7 +103,7 @@ public class SvsService {
 		}
 		gate.start();
 		advanceCorridorCountdownMsg(id);
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				stopSvs(id);
@@ -143,7 +146,7 @@ public class SvsService {
 	public boolean advanceCorridorCountdownMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// An Advance Corridor to a Rift Portal battle has appeared.
@@ -174,7 +177,7 @@ public class SvsService {
 	public boolean distinguishedServiceMsg(int id) {
 		switch (id) {
 		case 1:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// The Distinguished Service Siege Portal leading to Panesterra opened.
@@ -204,7 +207,7 @@ public class SvsService {
 	public boolean transidiumAnnexMsg(int id) {
 		switch (id) {
 		case 5:
-			World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+			com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 				@Override
 				public void visit(Player player) {
 					// Loading the Advance Corridor Shield... Please wait.
@@ -257,7 +260,7 @@ public class SvsService {
 		if (loc.getSpawned() == null) {
 			return;
 		}
-		for (VisibleObject obj : loc.getSpawned()) {
+		for (VisibleObject obj : new ArrayList<VisibleObject>(loc.getSpawned())) {
 			Npc spawned = (Npc) obj;
 			spawned.setDespawnDelayed(true);
 			if (spawned.getAggroList().getList().isEmpty()) {

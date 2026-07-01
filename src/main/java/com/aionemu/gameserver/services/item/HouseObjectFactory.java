@@ -15,9 +15,9 @@
  */
 package com.aionemu.gameserver.services.item;
 
-import java.time.ZonedDateTime;
+import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
-import org.apache.commons.lang.IncompleteArgumentException;
+import java.time.ZonedDateTime;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.ChairObject;
@@ -77,14 +77,14 @@ public final class HouseObjectFactory {
 
 	public static HouseObject<?> createNew(House house, ItemTemplate itemTemplate) {
 		if (itemTemplate.getActions() == null) {
-			throw new IncompleteArgumentException("template actions null");
+			throw new IllegalArgumentException("template actions null");
 		}
 		SummonHouseObjectAction action = itemTemplate.getActions().getHouseObjectAction();
 		if (action == null) {
-			throw new IncompleteArgumentException("template actions miss SummonHouseObjectAction");
+			throw new IllegalArgumentException("template actions miss SummonHouseObjectAction");
 		}
 		int objectTemplateId = action.getTemplateId();
-		HouseObject<?> obj = createNew(house, IDFactory.getInstance().nextId(), objectTemplateId);
+		HouseObject<?> obj = createNew(house, GameWorldBootstrapServices.idFactory().nextId(), objectTemplateId);
 		if (obj.getObjectTemplate().getUseDays() > 0) {
 			ZonedDateTime now = ZonedDateTime.now();
 			ZonedDateTime expireDate = now.plusDays(obj.getObjectTemplate().getUseDays());

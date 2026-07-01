@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.network.chatserver;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.network.NettyClient;
@@ -29,10 +30,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_PLAYER_AUTH;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_PLAYER_LOGOUT;
 import com.aionemu.gameserver.network.factories.CsPacketHandlerFactory;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
+@Slf4j
 
 public class ChatServer {
-	private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
 	private static volatile ObjectProvider<ChatServer> instanceProvider;
 	private volatile ChatServerConnection chatServer;
 	private volatile NettyClient nettyClient;
@@ -79,7 +79,7 @@ public class ChatServer {
 		if (serverShutdown || !connectionTaskQueued.compareAndSet(false, true)) {
 			return;
 		}
-		connectionTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		connectionTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				connectionTaskQueued.set(false);

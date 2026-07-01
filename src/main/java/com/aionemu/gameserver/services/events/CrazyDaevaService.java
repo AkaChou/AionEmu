@@ -16,11 +16,14 @@
  */
 package com.aionemu.gameserver.services.events;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
+import com.aionemu.gameserver.lifecycle.GameCronServices;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.services.CronService;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.EventsConfig;
 import com.aionemu.gameserver.model.TeleportAnimation;
@@ -31,24 +34,23 @@ import com.aionemu.gameserver.services.PvpService;
 import com.aionemu.gameserver.services.abyss.AbyssPointsService;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * @author Rinzler (Encom)
  */
+@Slf4j
 public class CrazyDaevaService {
 
 	private static volatile ObjectProvider<CrazyDaevaService> instanceProvider;
-	private static final Logger log = LoggerFactory.getLogger(CrazyDaevaService.class);
 	int crazyCount = 0;
 
 	// calculate time
 	public void startTimer() {
 		String[] times = EventsConfig.CRAZY_TIMES.split("\\|");
 		for (String cron : times) {
-			CronService.getInstance().schedule(new Runnable() {
+			GameCronServices.cronService().schedule(new Runnable() {
 				@Override
 				public void run() {
 					checkStart();
@@ -68,7 +70,7 @@ public class CrazyDaevaService {
 
 	// start choose rnd
 	public void startChoose() {
-		World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+		com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 			@Override
 			public void visit(final Player player) {
 				int rnd = 0;
@@ -82,7 +84,7 @@ public class CrazyDaevaService {
 						PacketSendUtility.sendYellowMessageOnCenter(player, "CRAZY DAEVA " + player.getName() + "");
 						log.info("System choose " + player.getName() + ".");
 						player.setInCrazy(true);
-						PvpService.getInstance().doReward(player);
+						GameCoreGameplayServices.pvpService().doReward(player);
 					}
 				}
 				log.info("Player " + player.getName() + " got random " + rnd + "");
@@ -127,7 +129,7 @@ public class CrazyDaevaService {
 			if (killer.getRace().getRaceId() != victim.getRace().getRaceId()) {
 				final String spreeEnder = isPvPDeath ? ((Player) killer).getName() : "Killer";
 				AbyssPointsService.addAp((Player) killer, 5000);
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(final Player player) {
 						PacketSendUtility.sendYellowMessageOnCenter(player,
@@ -141,11 +143,11 @@ public class CrazyDaevaService {
 
 	// end event clear all and reward
 	public void clearCrazy() {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {
-				World.getInstance().doOnAllPlayers(new Visitor<Player>() {
+				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(final Player player) {
 						if (player.isInCrazy()) {

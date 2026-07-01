@@ -20,13 +20,23 @@ import com.aionemu.gameserver.network.aion.AionClientPacket;
 import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.network.aion.AionPacketHandler;
 import com.aionemu.gameserver.network.aion.clientpackets.*;
+import org.springframework.beans.factory.ObjectProvider;
 
 public class AionPacketHandlerFactory {
 
+	private static volatile ObjectProvider<AionPacketHandlerFactory> instanceProvider;
 	private AionPacketHandler handler;
 
 	public static AionPacketHandlerFactory getInstance() {
-		return SingletonHolder.instance;
+		ObjectProvider<AionPacketHandlerFactory> provider = instanceProvider;
+		if (provider == null) {
+			return SingletonHolder.instance;
+		}
+		return provider.getIfAvailable(() -> SingletonHolder.instance);
+	}
+
+	public static void setInstanceProvider(ObjectProvider<AionPacketHandlerFactory> provider) {
+		instanceProvider = provider;
 	}
 
 	public AionPacketHandlerFactory() {// 5.5 opcodes (-1 || +3)

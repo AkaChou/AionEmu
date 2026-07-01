@@ -16,12 +16,14 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
+import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
+import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -40,16 +42,15 @@ import com.aionemu.gameserver.restrictions.RestrictionsManager;
 import com.aionemu.gameserver.services.item.ItemFactory;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
-import com.aionemu.gameserver.taskmanager.tasks.TemporaryTradeTimeTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 /**
  * @author ATracer
  */
+@Slf4j(topic = "EXCHANGE_LOG")
 public class ExchangeService {
 
-	private static final Logger log = LoggerFactory.getLogger("EXCHANGE_LOG");
 
 	private Map<Integer, Exchange> exchanges = new HashMap<Integer, Exchange>();
 
@@ -174,7 +175,7 @@ public class ExchangeService {
 		if (partner == null) {
 			return;
 		}
-		if (!TemporaryTradeTimeTask.getInstance().canTrade(item, partner.getObjectId())) {
+		if (!GameTaskManagerServices.temporaryTradeTimeTask().canTrade(item, partner.getObjectId())) {
 			if (!item.isTradeable(activePlayer)) {
 				return;
 			}
@@ -201,7 +202,7 @@ public class ExchangeService {
 		if (currentExchange.isExchangeListFull()) {
 			return;
 		}
-		if (!AdminService.getInstance().canOperate(activePlayer, partner, item, "trade")) {
+		if (!GameRuntimeServices.adminService().canOperate(activePlayer, partner, item, "trade")) {
 			return;
 		}
 		ExchangeItem exchangeItem = currentExchange.getItems().get(item.getObjectId());

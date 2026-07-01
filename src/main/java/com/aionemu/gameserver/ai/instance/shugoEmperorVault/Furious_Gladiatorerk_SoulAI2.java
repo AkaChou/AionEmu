@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.shugoEmperorVault;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.controllers.effect.PlayerEffectController;
@@ -46,14 +48,14 @@ public class Furious_Gladiatorerk_SoulAI2 extends NpcAI2
 				    if (player.getCommonData().getRace() == Race.ELYOS) {
 				        effectController.removeEffect(21829);
 				        effectController.removeEffect(21831);
-						SkillEngine.getInstance().applyEffectDirectly(21830, player, player, 1200000 * 1); //Furious Gladiatorerk's Soul.
+						GameEngineServices.skillEngine().applyEffectDirectly(21830, player, player, 1200000 * 1); //Furious Gladiatorerk's Soul.
 					}
 			    break;
 				case 833495: //Furious Gladiatorerk's Soul.
 				    if (player.getCommonData().getRace() == Race.ASMODIANS) {
 						effectController.removeEffect(21832);
 				        effectController.removeEffect(21834);
-					    SkillEngine.getInstance().applyEffectDirectly(21833, player, player, 1200000 * 1); //Furious Gladiatorerk's Soul.
+					    GameEngineServices.skillEngine().applyEffectDirectly(21833, player, player, 1200000 * 1); //Furious Gladiatorerk's Soul.
 					}
 			    break;
 			}

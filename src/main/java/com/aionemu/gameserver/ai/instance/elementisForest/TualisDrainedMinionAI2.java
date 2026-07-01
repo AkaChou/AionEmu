@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.elementisForest;
 
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -37,7 +39,7 @@ public class TualisDrainedMinionAI2 extends AggressiveNpcAI2 {
 	}
 
 	private void startLifeTask() {
-		lifeTask = ThreadPoolManager.getInstance().schedule(new Runnable() {
+		lifeTask = GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 
 			@Override
 			public void run() {

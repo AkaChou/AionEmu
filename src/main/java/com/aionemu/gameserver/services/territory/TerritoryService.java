@@ -16,9 +16,13 @@
  */
 package com.aionemu.gameserver.services.territory;
 
+import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -36,17 +40,15 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.WorldPosition;
 
-import javolution.util.FastMap;
-
 public class TerritoryService {
 	private static volatile ObjectProvider<TerritoryService> instanceProvider;
 	private TerritoryBuff territoryBuff;
-	private FastMap<Integer, TerritoryBuff> buffs = new FastMap<Integer, TerritoryBuff>();
+	private Map<Integer, TerritoryBuff> buffs = new HashMap<>();
 	private TreeMap<Integer, LegionTerritory> territories = new TreeMap<Integer, LegionTerritory>();
 	private TreeMap<Integer, TreeMap<Integer, WorldPosition>> teleporters = new TreeMap<Integer, TreeMap<Integer, WorldPosition>>();
 
 	public void initTerritory() {
-		LegionService ls = LegionService.getInstance();
+		LegionService ls = GameCoreGameplayServices.legionService();
 		Collection<Legion> legions = new ArrayList<Legion>();
 		int counter = 0;
 		for (int i = 1; i <= 6; i++) {
@@ -108,7 +110,7 @@ public class TerritoryService {
 
 	public void scanForIntruders(Player player) {
 		Collection<Player> players = new ArrayList<Player>();
-		Iterator<Player> playerIt = World.getInstance().getPlayersIterator();
+		Iterator<Player> playerIt = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getPlayersIterator();
 		while (playerIt.hasNext()) {
 			Player enemy = playerIt.next();
 			if (player.getWorldId() == enemy.getWorldId() && player.getRace() != enemy.getRace()) {
@@ -152,7 +154,7 @@ public class TerritoryService {
 	}
 
 	public void broadcastTerritoryList(TreeMap<Integer, LegionTerritory> terr) {
-		Collection<Player> players = World.getInstance().getAllPlayers();
+		Collection<Player> players = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getAllPlayers();
 		for (Player player : players) {
 			if (!player.isOnline()) {
 				return;

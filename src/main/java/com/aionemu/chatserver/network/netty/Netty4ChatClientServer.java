@@ -1,5 +1,6 @@
 package com.aionemu.chatserver.network.netty;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.chatserver.common.netty.ByteBufPacketReader;
 import com.aionemu.chatserver.network.aion.ClientPacketHandler;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
@@ -17,12 +18,9 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import java.net.InetSocketAddress;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+@Slf4j
 final class Netty4ChatClientServer {
 
-    private static final Logger log = LoggerFactory.getLogger(Netty4ChatClientServer.class);
     private static final int MAX_PACKET_LENGTH = 8192 * 2;
 
     private final InetSocketAddress address;

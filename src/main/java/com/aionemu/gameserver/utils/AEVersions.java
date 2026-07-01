@@ -16,9 +16,7 @@
  */
 package com.aionemu.gameserver.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.AEInfos;
 import com.aionemu.commons.versionning.Version;
 import com.aionemu.gameserver.GameServer;
@@ -26,9 +24,9 @@ import com.aionemu.gameserver.GameServer;
 /**
  * @author lord_rex
  */
+@Slf4j
 public class AEVersions {
 
-	private static final Logger log = LoggerFactory.getLogger(AEVersions.class);
 	private static final Version commons = new Version(AEInfos.class);
 	private static final Version gameserver = new Version(GameServer.class);
 

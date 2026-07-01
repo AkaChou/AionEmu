@@ -16,6 +16,10 @@
  */
 package com.aionemu.gameserver.model.team2.common.legacy;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.actions.PlayerMode;
@@ -24,9 +28,9 @@ import com.aionemu.gameserver.model.gameobjects.player.InRoll;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.services.drop.DropDistributionService;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ATracer, xTz
@@ -43,7 +47,7 @@ public class LootGroupRules {
 	private int misc;
 	private int nrMisc;
 	private int nrRoundRobin;
-	private FastList<DropItem> itemsToBeDistributed = new FastList<DropItem>();
+	private List<DropItem> itemsToBeDistributed = new ArrayList<DropItem>();
 
 	public LootGroupRules() {
 		lootRule = LootRuleType.ROUNDROBIN;
@@ -164,7 +168,7 @@ public class LootGroupRules {
 	}
 
 	public void setPlayersInRoll(final Collection<Player> players, int time, final int index, final int npcId) {
-		ThreadPoolManager.getInstance().schedule(new Runnable() {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
 				for (Player player : players) {
@@ -173,13 +177,13 @@ public class LootGroupRules {
 						switch (inRoll.getRollType()) {
 						case 2:
 							if (inRoll.getIndex() == index && inRoll.getNpcId() == npcId) {
-								DropDistributionService.getInstance().handleRoll(player, 0, inRoll.getItemId(),
+								GameFeatureServices.dropDistributionService().handleRoll(player, 0, inRoll.getItemId(),
 										inRoll.getNpcId(), inRoll.getIndex());
 							}
 							break;
 						case 3:
 							if (inRoll.getIndex() == index && inRoll.getNpcId() == npcId) {
-								DropDistributionService.getInstance().handleBid(player, 0, inRoll.getItemId(),
+								GameFeatureServices.dropDistributionService().handleBid(player, 0, inRoll.getItemId(),
 										inRoll.getNpcId(), inRoll.getIndex());
 							}
 							break;
@@ -220,7 +224,7 @@ public class LootGroupRules {
 		itemsToBeDistributed.remove(dropItem);
 	}
 
-	public FastList<DropItem> getItemsToBeDistributed() {
+	public List<DropItem> getItemsToBeDistributed() {
 		return itemsToBeDistributed;
 	}
 }

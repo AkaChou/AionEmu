@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.ai.instance.fissureOfOblivion.shadowOfOblivion;
 
+import com.aionemu.gameserver.lifecycle.GameEngineServices;
+
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AI2Actions;
@@ -61,7 +63,7 @@ public class Shadow_Of_Oblivion_72AI2 extends AggressiveNpcAI2
 	}
 	
 	private void ShadowOfOblivionType() {
-		SkillEngine.getInstance().getSkill(getOwner(), 18277, 60, getOwner()).useNoAnimationSkill(); //Oblivion.
+		GameEngineServices.skillEngine().getSkill(getOwner(), 18277, 60, getOwner()).useNoAnimationSkill(); //Oblivion.
 		switch (Rnd.get(1, 4)) {
 			case 1:
 				spawn(244737, getOwner().getX(), getOwner().getY(), getOwner().getZ(), (byte) getOwner().getHeading());
