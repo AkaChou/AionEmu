@@ -663,7 +663,7 @@ public class Base<BL extends BaseLocation> {
 	protected void despawn(int baseLocationId) {
 		setFlag(null);
 		Collection<BaseNpc> baseNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalBaseNpcs(baseLocationId);
-		for (BaseNpc npc : baseNpcs) {
+		for (BaseNpc npc : new ArrayList<BaseNpc>(baseNpcs)) {
 			npc.getController().onDelete();
 		}
 		if (startAssault != null) {
@@ -676,7 +676,7 @@ public class Base<BL extends BaseLocation> {
 	}
 
 	protected void despawnAttackers() {
-		for (Npc attacker : getAttackers()) {
+		for (Npc attacker : new ArrayList<Npc>(getAttackers())) {
 			attacker.getController().onDelete();
 		}
 		getAttackers().clear();

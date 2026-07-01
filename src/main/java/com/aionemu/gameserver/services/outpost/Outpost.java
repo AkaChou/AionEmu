@@ -122,7 +122,7 @@ public class Outpost<OL extends OutpostLocation> {
 	protected void despawn(int outpostLocationId) {
 		setFlag(null);
 		Collection<OutpostNpc> outpostNpcs = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getLocalOutpostNpcs(outpostLocationId);
-		for (OutpostNpc npc : outpostNpcs) {
+		for (OutpostNpc npc : new ArrayList<OutpostNpc>(outpostNpcs)) {
 			npc.getController().onDelete();
 		}
 	}
@@ -187,7 +187,7 @@ public class Outpost<OL extends OutpostLocation> {
 	}
 
 	protected void despawnAttackers() {
-		for (Npc attacker : getAttackers()) {
+		for (Npc attacker : new ArrayList<Npc>(getAttackers())) {
 			attacker.getController().onDelete();
 		}
 		getAttackers().clear();
