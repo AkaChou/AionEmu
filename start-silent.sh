@@ -27,6 +27,8 @@ JAR_FILE="${AION_JAR_FILE:-$ROOT_DIR/target/AionEmu.jar}"
 LOG_DIR="${AION_LOG_DIR:-$AION_HOME/log}"
 LOG_FILE="${AION_LOG_FILE:-$LOG_DIR/aionemu.log}"
 PID_FILE="${AION_PID_FILE:-$LOG_DIR/aionemu.pid}"
+RESOURCE_AION_DIR="$ROOT_DIR/src/main/resources/aion"
+RESOURCE_LOGBACK="$ROOT_DIR/src/main/resources/logback-spring.xml"
 
 if [ -f "$PID_FILE" ]; then
   OLD_PID="$(cat "$PID_FILE")"
@@ -49,6 +51,18 @@ if [ "$CLEAN_AION" = "true" ]; then
 fi
 
 mkdir -p "$LOG_DIR"
+if [ -d "$RESOURCE_AION_DIR" ]; then
+  while IFS= read -r -d '' source_file; do
+    target_file="$AION_HOME/${source_file#"$RESOURCE_AION_DIR/"}"
+    if [ ! -e "$target_file" ]; then
+      mkdir -p "$(dirname "$target_file")"
+      cp "$source_file" "$target_file"
+    fi
+  done < <(find "$RESOURCE_AION_DIR" -type f -print0)
+fi
+if [ -f "$RESOURCE_LOGBACK" ] && [ ! -e "$LOG_DIR/logback-spring.xml" ]; then
+  cp "$RESOURCE_LOGBACK" "$LOG_DIR/logback-spring.xml"
+fi
 
 AION_HEAP_OPTS="${AION_HEAP_OPTS:--Xms2g -Xmx8g}"
 AION_GC_OPTS="${AION_GC_OPTS:--XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:InitiatingHeapOccupancyPercent=30 -XX:+ParallelRefProcEnabled -XX:+UseStringDeduplication}"

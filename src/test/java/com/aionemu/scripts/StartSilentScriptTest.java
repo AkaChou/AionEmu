@@ -54,6 +54,29 @@ class StartSilentScriptTest {
     }
 
     @Test
+    void startSilentCopiesMissingRuntimeResourcesWithoutOverwritingExistingFiles() throws Exception {
+        Path root = prepareRuntimeRoot();
+        Path sourceGameConfig = root.resolve("src/main/resources/aion/game/config/main/gameserver.properties");
+        Path sourceLoginConfig = root.resolve("src/main/resources/aion/login/config/network/database.properties");
+        Path sourceLogback = root.resolve("src/main/resources/logback-spring.xml");
+        Files.createDirectories(sourceGameConfig.getParent());
+        Files.createDirectories(sourceLoginConfig.getParent());
+        Files.writeString(sourceGameConfig, "default-game");
+        Files.writeString(sourceLoginConfig, "default-login");
+        Files.writeString(sourceLogback, "default-logback");
+        Path runtimeGameConfig = root.resolve("aion/game/config/main/gameserver.properties");
+        Files.createDirectories(runtimeGameConfig.getParent());
+        Files.writeString(runtimeGameConfig, "custom-game");
+
+        ProcessResult result = runScript(root, "start-silent.sh", root.resolve("java-args.txt"));
+
+        assertEquals(0, result.exitCode(), result.output());
+        assertEquals("custom-game", Files.readString(runtimeGameConfig));
+        assertEquals("default-login", Files.readString(root.resolve("aion/login/config/network/database.properties")));
+        assertEquals("default-logback", Files.readString(root.resolve("aion/log/logback-spring.xml")));
+    }
+
+    @Test
     void stopSilentUsesAionLogPidByDefault() throws Exception {
         Path root = prepareRuntimeRoot();
         Path pidFile = root.resolve("aion/log/aionemu.pid");
