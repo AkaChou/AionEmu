@@ -14,5 +14,6 @@ class MavenPackageRuntimeResourcesTest {
 
         assertTrue(!pom.contains("<id>copy-runtime-aion-resources</id>"));
         assertTrue(!pom.contains("<id>copy-runtime-logback</id>"));
+        assertTrue(pom.contains("<exclude>aion/**</exclude>"));
     }
 }

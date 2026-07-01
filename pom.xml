@@ -274,6 +274,9 @@
                 <version>3.5.0</version>
                 <configuration>
                     <forceCreation>true</forceCreation>
+                    <excludes>
+                        <exclude>aion/**</exclude>
+                    </excludes>
                     <archive>
                         <manifestEntries>
                             <Build-Jdk-Spec>25</Build-Jdk-Spec>
