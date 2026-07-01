@@ -25,7 +25,7 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 
 	@Override
 	public void start(int totalSections) {
-		if (!enabled) {
+		if (!progressEnabled()) {
 			return;
 		}
 		out.println(SECTION_SEPARATOR);
@@ -40,11 +40,17 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 
 	@Override
 	public void sectionProgress(int sectionIndex, int totalSections, String sectionName, int currentEntries, int totalEntries) {
+		if (!progressEnabled()) {
+			return;
+		}
 		progressRenderer.progress(sectionName, currentEntries, totalEntries);
 	}
 
 	@Override
 	public void sectionFinished(int sectionIndex, int totalSections, String sectionName, int totalEntries) {
+		if (!progressEnabled()) {
+			return;
+		}
 		progressRenderer.finished(sectionName, totalEntries);
 	}
 
@@ -59,6 +65,13 @@ final class ConsoleStaticDataProgressReporter implements StaticDataProgressRepor
 
 	@Override
 	public void failed() {
+		if (!progressEnabled()) {
+			return;
+		}
 		progressRenderer.clearLine();
+	}
+
+	private boolean progressEnabled() {
+		return enabled && GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE;
 	}
 }

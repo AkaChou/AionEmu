@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,6 +16,7 @@ import java.util.Map;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
+import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.StaticData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -61,6 +64,42 @@ class XmlDataLoaderTest {
 		assertEquals(2, counts.get("ItemData"));
 		assertEquals(3, counts.get("NpcDropData"));
 		assertEquals(1, counts.get("GlobalDropData"));
+	}
+
+	@Test
+	void loadSectionEntryCountsSkipsXmlScanByDefault() throws Exception {
+		Path staticData = tempDir.resolve("static_data.xml");
+		Files.writeString(staticData, "<not xml", StandardCharsets.UTF_8);
+
+		boolean previous = GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE;
+		GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
+		try {
+			Map<String, Integer> counts = new XmlDataLoader().loadSectionEntryCounts(staticData.toFile());
+
+			assertEquals(XmlDataLoader.staticDataSectionCount(), counts.size());
+			assertFalse(Files.exists(tempDir.resolve("static_data.counts")));
+		} finally {
+			GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = previous;
+		}
+	}
+
+	@Test
+	void consoleReporterOnlyPrintsElapsedTimeWhenEntryCountsAreDisabled() {
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		boolean previous = GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE;
+		GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
+		try {
+			StaticDataProgressReporter reporter = new ConsoleStaticDataProgressReporter(new PrintStream(output), true);
+
+			reporter.start(10);
+			reporter.sectionProgress(1, 10, "ItemData", 1, 1);
+			reporter.sectionFinished(1, 10, "ItemData", 1);
+			reporter.finish(10, 1234);
+
+			assertEquals("Loaded static data in 1234 ms%n".formatted(), output.toString());
+		} finally {
+			GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = previous;
+		}
 	}
 
 	@Test

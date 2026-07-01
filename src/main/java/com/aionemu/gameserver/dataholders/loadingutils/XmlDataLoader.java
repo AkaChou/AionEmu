@@ -16,13 +16,26 @@
  */
 package com.aionemu.gameserver.dataholders.loadingutils;
 
+import com.aionemu.gameserver.configs.Config;
+import com.aionemu.gameserver.configs.main.GSConfig;
+import com.aionemu.gameserver.dataholders.StaticData;
+import com.aionemu.gameserver.utils.ThreadPoolManager;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlElement;
 import lombok.extern.slf4j.Slf4j;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
+import org.springframework.beans.factory.ObjectProvider;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.XMLConstants;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,25 +43,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
-
-import javax.xml.XMLConstants;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.transform.sax.SAXSource;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
-import jakarta.xml.bind.annotation.XmlElement;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
-import org.springframework.beans.factory.ObjectProvider;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import com.aionemu.gameserver.configs.Config;
-import com.aionemu.gameserver.dataholders.StaticData;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 /**
  * This class is responsible for loading xml files. It uses JAXB to do the
@@ -238,6 +232,9 @@ public class XmlDataLoader {
 	 * Cache is rebuilt only when the XML cache file is newer than the counts file.
 	 */
 	Map<String, Integer> loadSectionEntryCounts(File cachedXml) throws Exception {
+		if (!GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE) {
+			return defaultSectionEntryCounts();
+		}
 		File countsFile = new File(cachedXml.getParentFile(), "static_data.counts");
 		if (countsFile.exists() && countsFile.lastModified() >= cachedXml.lastModified()) {
 			return loadCountsFile(countsFile);
@@ -267,6 +264,14 @@ public class XmlDataLoader {
 		} catch (IOException e) {
 			log.warn("Could not save section counts cache: {}", countsFile.getPath(), e);
 		}
+	}
+
+	private static Map<String, Integer> defaultSectionEntryCounts() {
+		Map<String, Integer> counts = new HashMap<>();
+		for (String sectionName : staticDataSectionNamesByXmlElement().values()) {
+			counts.put(sectionName, 1);
+		}
+		return counts;
 	}
 
 	private static Map<String, String> staticDataSectionNamesByXmlElement() {
