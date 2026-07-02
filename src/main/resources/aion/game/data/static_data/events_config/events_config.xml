@@ -3194,7 +3194,7 @@
 			</spawns>
 		</event>
 		<event name="Prestige Pack Inventory" start="2020-01-01T00:00:00+00:00" end="2050-12-31T00:00:00+00:00">
-			<inventory_drop startlevel="10" interval="20" maxCountOfDay="20" cleanTime="9">186000344</inventory_drop>
+			<inventory_drop startlevel="10" interval="30" count="10000" maxCountOfDay="50000" cleanTime="9">186000344</inventory_drop>
 		</event>
 		<event name="Prestige Pack Event" start="2020-01-01T00:00:00+00:00" end="2050-12-31T00:00:00+00:00">
 			<quests>
