@@ -164,4 +164,9 @@ public class PremiumRates extends Rates {
 	public float getGpPlayerGainRate() {
 		return RateConfig.PREMIUM_GP_PLAYER_GAIN_RATE;
 	}
+
+	@Override
+	public float getPetFeedingRate() {
+		return RateConfig.PREMIUM_PET_FEEDING_RATE;
+	}
 }

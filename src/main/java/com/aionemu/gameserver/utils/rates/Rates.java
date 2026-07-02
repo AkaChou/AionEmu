@@ -75,6 +75,8 @@ public abstract class Rates {
 
 	public abstract float getGlobalDropRate();
 
+	public abstract float getPetFeedingRate();
+
 	public static Rates getRatesFor(byte membership) {
 		switch (membership) {
 		case 0:

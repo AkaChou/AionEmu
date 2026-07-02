@@ -203,6 +203,14 @@ public class RateConfig {
 	@Property(key = "gameserver.rate.vip.book", defaultValue = "3")
 	public static float VIP_BOOK_RATE;
 
+	// Pet Feeding Rates
+	@Property(key = "gameserver.rate.regular.pet.feeding", defaultValue = "1")
+	public static float PET_FEEDING_RATE;
+	@Property(key = "gameserver.rate.premium.pet.feeding", defaultValue = "2")
+	public static float PREMIUM_PET_FEEDING_RATE;
+	@Property(key = "gameserver.rate.vip.pet.feeding", defaultValue = "3")
+	public static float VIP_PET_FEEDING_RATE;
+
     // Normal monsters HP and Power rate multipliers
     @Property(key = "gameserver.rate.normal.mobs.rate.hp", defaultValue = "1.0")
     public static float NORMAL_MOBS_RATE_HP;

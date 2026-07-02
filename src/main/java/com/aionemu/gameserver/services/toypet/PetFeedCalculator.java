@@ -148,6 +148,11 @@ public final class PetFeedCalculator {
 	}
 
 	public static void updatePetFeedProgress(PetFeedProgress progress, int itemLevel, int maxFeedCount) {
+		updatePetFeedProgress(progress, itemLevel, maxFeedCount, 1);
+	}
+
+	public static void updatePetFeedProgress(PetFeedProgress progress, int itemLevel, int maxFeedCount, float feedingRate) {
+		float rate = Math.max(0, feedingRate);
 		PetHungryLevel currHungryLevel = progress.getHungryLevel();
 		if (progress.isLovedFeeded()) { // loved food
 			if (progress.getLovedFoodRemaining() == 0) {
@@ -160,10 +165,11 @@ public final class PetFeedCalculator {
 
 		int oldPoints = progress.getTotalPoints();
 		boolean needSwitch = false;
+		float regularCount = progress.getRegularCount() * rate;
 
-		if ((currHungryLevel == PetHungryLevel.HUNGRY && progress.getRegularCount() > maxFeedCount * 0.5f)
-				|| (currHungryLevel == PetHungryLevel.CONTENT && progress.getRegularCount() > maxFeedCount * 0.8f)
-				|| (currHungryLevel == PetHungryLevel.SEMIFULL && progress.getRegularCount() > maxFeedCount * 1.05)) {
+		if ((currHungryLevel == PetHungryLevel.HUNGRY && regularCount > maxFeedCount * 0.5f)
+				|| (currHungryLevel == PetHungryLevel.CONTENT && regularCount > maxFeedCount * 0.8f)
+				|| (currHungryLevel == PetHungryLevel.SEMIFULL && regularCount > maxFeedCount * 1.05)) {
 			// forcefully switch level
 			needSwitch = true;
 		} else {
@@ -173,15 +179,15 @@ public final class PetFeedCalculator {
 			}
 			byte pointLevel = itemLevels[(int) (finalLevel / 5)];
 			byte pointsEarned = (byte) (Math.max(0, pointLevel - 5) / 5 * 8);
-			int feedProgress = progress.getTotalPoints() + pointsEarned;
+			int feedProgress = progress.getTotalPoints() + Math.round(pointsEarned * rate);
 			progress.setTotalPoints(feedProgress);
 		}
 
 		if (needSwitch) {
 			// just a prevention to not switch level
 			PetHungryLevel nextLevel = progress.getHungryLevel().getNextValue();
-			if (nextLevel == PetHungryLevel.CONTENT && progress.getRegularCount() <= 0.487f * maxFeedCount
-					|| nextLevel == PetHungryLevel.SEMIFULL && progress.getRegularCount() <= 0.78f * maxFeedCount) {
+			if (nextLevel == PetHungryLevel.CONTENT && regularCount <= 0.487f * maxFeedCount
+					|| nextLevel == PetHungryLevel.SEMIFULL && regularCount <= 0.78f * maxFeedCount) {
 				progress.setTotalPoints(oldPoints);
 			} else {
 				progress.setHungryLevel(nextLevel);

@@ -164,4 +164,9 @@ public class VipRates extends Rates {
 	public float getGpPlayerGainRate() {
 		return RateConfig.VIP_GP_PLAYER_GAIN_RATE;
 	}
+
+	@Override
+	public float getPetFeedingRate() {
+		return RateConfig.VIP_PET_FEEDING_RATE;
+	}
 }

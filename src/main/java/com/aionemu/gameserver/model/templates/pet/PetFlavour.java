@@ -83,6 +83,11 @@ public class PetFlavour {
 	 */
 	public PetFeedResult processFeedResult(PetFeedProgress progress, FoodType foodType, int itemLevel,
 			int playerLevel) {
+		return processFeedResult(progress, foodType, itemLevel, playerLevel, 1);
+	}
+
+	public PetFeedResult processFeedResult(PetFeedProgress progress, FoodType foodType, int itemLevel,
+			int playerLevel, float feedingRate) {
 		PetRewards rewardGroup = null;
 		for (PetRewards rewards : getFood()) {
 			if (rewards.getType() == foodType) {
@@ -100,7 +105,7 @@ public class PetFlavour {
 			maxFeedCount = fullCount;
 		}
 
-		PetFeedCalculator.updatePetFeedProgress(progress, itemLevel, maxFeedCount);
+		PetFeedCalculator.updatePetFeedProgress(progress, itemLevel, maxFeedCount, feedingRate);
 		if (progress.getHungryLevel() != PetHungryLevel.FULL)
 			return null;
 

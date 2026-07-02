@@ -130,7 +130,7 @@ public class PetService {
 			if (foodType != null) {
 				player.getInventory().decreaseItemCount(item, 1, ItemUpdateType.DEC_PET_FOOD);
 				reward = flavour.processFeedResult(progress, foodType, item.getItemTemplate().getLevel(),
-						player.getCommonData().getLevel());
+						player.getCommonData().getLevel(), player.getRates().getPetFeedingRate());
 				if (progress.getHungryLevel() == PetHungryLevel.FULL && reward != null) {
 					PacketSendUtility.sendPacket(player, new SM_PET(2, action, item.getObjectId(), 0, pet));
 				} else {

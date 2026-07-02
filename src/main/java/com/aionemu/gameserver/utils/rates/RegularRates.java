@@ -164,4 +164,9 @@ public class RegularRates extends Rates {
 	public float getGpPlayerGainRate() {
 		return RateConfig.GP_PLAYER_GAIN_RATE;
 	}
+
+	@Override
+	public float getPetFeedingRate() {
+		return RateConfig.PET_FEEDING_RATE;
+	}
 }
