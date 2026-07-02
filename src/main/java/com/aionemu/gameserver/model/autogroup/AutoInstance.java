@@ -19,9 +19,9 @@ package com.aionemu.gameserver.model.autogroup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.commons.taskmanager.AbstractLockManager;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -36,7 +36,7 @@ public abstract class AutoInstance extends AbstractLockManager implements AutoIn
 	public long startInstanceTime;
 	public WorldMapInstance instance;
 	public AutoGroupType agt;
-	public Map<Integer, AGPlayer> players = new HashMap<Integer, AGPlayer>();
+	public Map<Integer, AGPlayer> players = new ConcurrentHashMap<Integer, AGPlayer>();
 
 	protected boolean decrease(Player player, int itemId, long count) {
 		long i = 0;

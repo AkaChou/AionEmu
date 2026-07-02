@@ -28,6 +28,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -69,18 +70,16 @@ import com.aionemu.gameserver.world.WorldMap;
 import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldMapInstanceFactory;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.LinkedHashMap;
 import java.util.Map;
 @Slf4j
 
 public class AutoGroupService {
 
 	private static volatile ObjectProvider<AutoGroupService> instanceProvider;
-	private Map<Integer, LookingForParty> searchers = new LinkedHashMap<Integer, LookingForParty>();
-	private Map<Integer, AutoInstance> autoInstances = new LinkedHashMap<Integer, AutoInstance>();
-	private Collection<Integer> penaltys = new ArrayList<Integer>();
+	private Map<Integer, LookingForParty> searchers = new ConcurrentHashMap<Integer, LookingForParty>();
+	private Map<Integer, AutoInstance> autoInstances = new ConcurrentHashMap<Integer, AutoInstance>();
+	private Collection<Integer> penaltys = ConcurrentHashMap.newKeySet();
 	private Lock lock = new ReentrantLock();
 
 	public AutoGroupService() {

@@ -46,7 +46,7 @@ public class AggroInfo {
 	/**
 	 * @param damage
 	 */
-	public void addDamage(int damage) {
+	public synchronized void addDamage(int damage) {
 		this.damage += damage;
 		if (this.damage < 0) {
 			this.damage = 0;
@@ -56,7 +56,7 @@ public class AggroInfo {
 	/**
 	 * @param damage
 	 */
-	public void addHate(int damage) {
+	public synchronized void addHate(int damage) {
 		this.hate += damage;
 		if (this.hate < 1) {
 			this.hate = 1;
@@ -66,28 +66,28 @@ public class AggroInfo {
 	/**
 	 * @return hate
 	 */
-	public int getHate() {
+	public synchronized int getHate() {
 		return this.hate;
 	}
 
 	/**
 	 * @param hate
 	 */
-	public void setHate(int hate) {
+	public synchronized void setHate(int hate) {
 		this.hate = hate;
 	}
 
 	/**
 	 * @return damage
 	 */
-	public int getDamage() {
+	public synchronized int getDamage() {
 		return this.damage;
 	}
 
 	/**
 	 * @param damage
 	 */
-	public void setDamage(int damage) {
+	public synchronized void setDamage(int damage) {
 		this.damage = damage;
 	}
 }

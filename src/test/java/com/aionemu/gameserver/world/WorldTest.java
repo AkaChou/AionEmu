@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.siege.SiegeNpc;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import java.util.ArrayList;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -32,6 +35,27 @@ class WorldTest {
 			}
 		});
 		assertTrue(allNpcs.isEmpty());
+	}
+
+	@Test
+	void getLocalSiegeNpcsReturnsSnapshotSafeForRemovalDuringIteration() throws ReflectiveOperationException {
+		World world = objenesis.newInstance(World.class);
+		Collection<SiegeNpc> localNpcs = new ArrayList<SiegeNpc>();
+		localNpcs.add(objenesis.newInstance(SiegeNpc.class));
+		localNpcs.add(objenesis.newInstance(SiegeNpc.class));
+		localNpcs.add(objenesis.newInstance(SiegeNpc.class));
+		IntObjectHashMap<Collection<SiegeNpc>> localSiegeNpcs = new IntObjectHashMap<Collection<SiegeNpc>>();
+		localSiegeNpcs.put(1, localNpcs);
+		setField(world, "localSiegeNpcs", localSiegeNpcs);
+
+		Collection<SiegeNpc> snapshot = world.getLocalSiegeNpcs(1);
+
+		assertDoesNotThrow(() -> {
+			for (SiegeNpc npc : snapshot) {
+				localNpcs.remove(npc);
+			}
+		});
+		assertTrue(localNpcs.isEmpty());
 	}
 
 	private static void setField(Object target, String fieldName, Object value) throws ReflectiveOperationException {

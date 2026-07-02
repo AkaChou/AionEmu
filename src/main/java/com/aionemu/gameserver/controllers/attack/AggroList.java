@@ -18,9 +18,11 @@ package com.aionemu.gameserver.controllers.attack;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.commons.callbacks.Callback;
 import com.aionemu.commons.callbacks.CallbackResult;
@@ -38,9 +40,6 @@ import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author ATracer, KKnD
  */
@@ -48,7 +47,7 @@ import java.util.Map;
 public class AggroList {
 
 	protected final Creature owner;
-	private Map<Integer, AggroInfo> aggroList = new LinkedHashMap<Integer, AggroInfo>();
+	private Map<Integer, AggroInfo> aggroList = new ConcurrentHashMap<Integer, AggroInfo>();
 
 	public AggroList(Creature owner) {
 		this.owner = owner;
@@ -67,12 +66,14 @@ public class AggroList {
 			return;
 		}
 		AggroInfo ai = getAggroInfo(attacker);
-		ai.addDamage(damage);
 		/**
 		 * For now we add hate equal to each damage received Additionally there will be
 		 * broadcast of extra hate
 		 */
-		ai.addHate(damage);
+		synchronized (ai) {
+			ai.addDamage(damage);
+			ai.addHate(damage);
+		}
 		// TODO move out to controller
 		owner.getAi2().onCreatureEvent(AIEventType.ATTACK, attacker);
 	}
@@ -96,7 +97,9 @@ public class AggroList {
 
 	protected void addHateValue(final Creature creature, int hate) {
 		AggroInfo ai = getAggroInfo(creature);
-		ai.addHate(hate);
+		synchronized (ai) {
+			ai.addHate(hate);
+		}
 		// TODO move out to controller
 		if (creature instanceof Player && owner instanceof Npc) {
 			for (Player player : owner.getKnownList().getKnownPlayers().values()) {
@@ -276,7 +279,10 @@ public class AggroList {
 		AggroInfo ai = aggroList.get(creature.getObjectId());
 		if (ai == null) {
 			ai = new AggroInfo(creature);
-			aggroList.put(creature.getObjectId(), ai);
+			AggroInfo existing = aggroList.putIfAbsent(creature.getObjectId(), ai);
+			if (existing != null) {
+				ai = existing;
+			}
 		}
 		return ai;
 	}
@@ -293,7 +299,7 @@ public class AggroList {
 	 * @return aggro list
 	 */
 	public Collection<AggroInfo> getList() {
-		return aggroList.values();
+		return new ArrayList<AggroInfo>(aggroList.values());
 	}
 
 	/**

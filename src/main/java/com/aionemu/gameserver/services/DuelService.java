@@ -42,8 +42,8 @@ import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 
 public class DuelService {
@@ -65,8 +65,8 @@ public class DuelService {
 	}
 
 	public DuelService() {
-		this.duels = new LinkedHashMap<Integer, Integer>();
-		timeOutTask = new LinkedHashMap<Integer, Future<?>>();
+		this.duels = new ConcurrentHashMap<Integer, Integer>();
+		timeOutTask = new ConcurrentHashMap<Integer, Future<?>>();
 	}
 
 	public void onDuelRequest(Player requester, Player responder) {

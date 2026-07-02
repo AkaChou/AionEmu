@@ -105,46 +105,34 @@ public class World {
 		}
 		if (object instanceof SiegeNpc) {
 			SiegeNpc siegeNpc = (SiegeNpc) object;
-			Collection<SiegeNpc> npcs = localSiegeNpcs.get(siegeNpc.getSiegeId());
-			if (npcs == null) {
-				synchronized (localSiegeNpcs) {
-					if (localSiegeNpcs.containsKey(siegeNpc.getSiegeId())) {
-						npcs = localSiegeNpcs.get(siegeNpc.getSiegeId());
-					} else {
-						npcs = new ArrayList<SiegeNpc>();
-						localSiegeNpcs.put(siegeNpc.getSiegeId(), npcs);
-					}
+			synchronized (localSiegeNpcs) {
+				Collection<SiegeNpc> npcs = localSiegeNpcs.get(siegeNpc.getSiegeId());
+				if (npcs == null) {
+					npcs = new ArrayList<SiegeNpc>();
+					localSiegeNpcs.put(siegeNpc.getSiegeId(), npcs);
 				}
+				npcs.add(siegeNpc);
 			}
-			npcs.add(siegeNpc);
 		} else if (object instanceof BaseNpc) {
 			BaseNpc baseNpc = (BaseNpc) object;
-			Collection<BaseNpc> npcs = localBaseNpcs.get(baseNpc.getBaseId());
-			if (npcs == null) {
-				synchronized (localBaseNpcs) {
-					if (localBaseNpcs.containsKey(baseNpc.getBaseId())) {
-						npcs = localBaseNpcs.get(baseNpc.getBaseId());
-					} else {
-						npcs = new ArrayList<BaseNpc>();
-						localBaseNpcs.put(baseNpc.getBaseId(), npcs);
-					}
+			synchronized (localBaseNpcs) {
+				Collection<BaseNpc> npcs = localBaseNpcs.get(baseNpc.getBaseId());
+				if (npcs == null) {
+					npcs = new ArrayList<BaseNpc>();
+					localBaseNpcs.put(baseNpc.getBaseId(), npcs);
 				}
+				npcs.add(baseNpc);
 			}
-			npcs.add(baseNpc);
 		} else if (object instanceof OutpostNpc) {
 			OutpostNpc outpostNpc = (OutpostNpc) object;
-			Collection<OutpostNpc> npcs = localOutpostNpcs.get(outpostNpc.getOutpostId());
-			if (npcs == null) {
-				synchronized (localOutpostNpcs) {
-					if (localOutpostNpcs.containsKey(outpostNpc.getOutpostId())) {
-						npcs = localOutpostNpcs.get(outpostNpc.getOutpostId());
-					} else {
-						npcs = new ArrayList<OutpostNpc>();
-						localOutpostNpcs.put(outpostNpc.getOutpostId(), npcs);
-					}
+			synchronized (localOutpostNpcs) {
+				Collection<OutpostNpc> npcs = localOutpostNpcs.get(outpostNpc.getOutpostId());
+				if (npcs == null) {
+					npcs = new ArrayList<OutpostNpc>();
+					localOutpostNpcs.put(outpostNpc.getOutpostId(), npcs);
 				}
+				npcs.add(outpostNpc);
 			}
-			npcs.add(outpostNpc);
 		}
 		if (object instanceof Npc) {
 			allNpcs.put(object.getObjectId(), (Npc) object);
@@ -159,21 +147,27 @@ public class World {
 		allObjects.remove(object.getObjectId());
 		if (object instanceof SiegeNpc) {
 			SiegeNpc siegeNpc = (SiegeNpc) object;
-			Collection<SiegeNpc> locSpawn = localSiegeNpcs.get(siegeNpc.getSiegeId());
-			if (!GenericValidator.isBlankOrNull(locSpawn)) {
-				locSpawn.remove(siegeNpc);
+			synchronized (localSiegeNpcs) {
+				Collection<SiegeNpc> locSpawn = localSiegeNpcs.get(siegeNpc.getSiegeId());
+				if (!GenericValidator.isBlankOrNull(locSpawn)) {
+					locSpawn.remove(siegeNpc);
+				}
 			}
 		} else if (object instanceof BaseNpc) {
 			BaseNpc baseNpc = (BaseNpc) object;
-			Collection<BaseNpc> locSpawn = localBaseNpcs.get(baseNpc.getBaseId());
-			if (!GenericValidator.isBlankOrNull(locSpawn)) {
-				locSpawn.remove(baseNpc);
+			synchronized (localBaseNpcs) {
+				Collection<BaseNpc> locSpawn = localBaseNpcs.get(baseNpc.getBaseId());
+				if (!GenericValidator.isBlankOrNull(locSpawn)) {
+					locSpawn.remove(baseNpc);
+				}
 			}
 		} else if (object instanceof OutpostNpc) {
 			OutpostNpc outpostNpc = (OutpostNpc) object;
-			Collection<OutpostNpc> locSpawn = localOutpostNpcs.get(outpostNpc.getOutpostId());
-			if (!GenericValidator.isBlankOrNull(locSpawn)) {
-				locSpawn.remove(outpostNpc);
+			synchronized (localOutpostNpcs) {
+				Collection<OutpostNpc> locSpawn = localOutpostNpcs.get(outpostNpc.getOutpostId());
+				if (!GenericValidator.isBlankOrNull(locSpawn)) {
+					locSpawn.remove(outpostNpc);
+				}
 			}
 		}
 		if (object instanceof Npc) {
@@ -192,18 +186,24 @@ public class World {
 	}
 
 	public Collection<SiegeNpc> getLocalSiegeNpcs(int locationId) {
-		Collection<SiegeNpc> result = localSiegeNpcs.get(locationId);
-		return result != null ? result : Collections.<SiegeNpc>emptySet();
+		synchronized (localSiegeNpcs) {
+			Collection<SiegeNpc> result = localSiegeNpcs.get(locationId);
+			return result != null ? new ArrayList<SiegeNpc>(result) : Collections.<SiegeNpc>emptySet();
+		}
 	}
 
 	public Collection<BaseNpc> getLocalBaseNpcs(int locationId) {
-		Collection<BaseNpc> result = localBaseNpcs.get(locationId);
-		return result != null ? result : Collections.<BaseNpc>emptySet();
+		synchronized (localBaseNpcs) {
+			Collection<BaseNpc> result = localBaseNpcs.get(locationId);
+			return result != null ? new ArrayList<BaseNpc>(result) : Collections.<BaseNpc>emptySet();
+		}
 	}
 
 	public Collection<OutpostNpc> getLocalOutpostNpcs(int locationId) {
-		Collection<OutpostNpc> result = localOutpostNpcs.get(locationId);
-		return result != null ? result : Collections.<OutpostNpc>emptySet();
+		synchronized (localOutpostNpcs) {
+			Collection<OutpostNpc> result = localOutpostNpcs.get(locationId);
+			return result != null ? new ArrayList<OutpostNpc>(result) : Collections.<OutpostNpc>emptySet();
+		}
 	}
 
 	public Collection<Npc> getNpcs() {
