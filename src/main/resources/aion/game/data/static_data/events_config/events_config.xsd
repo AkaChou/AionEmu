@@ -18,13 +18,13 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:complexType name="EventTemplate">
-		<xs:all>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="event_drops" type="EventDrops" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="quests" type="EventQuestList" minOccurs="0"/>
 			<xs:element name="spawns" type="SpawnsData2" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="inventory_drop" type="InventoryDrop" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="inventory_drop" type="InventoryDrop" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="surveys" type="SurveyList" minOccurs="0" maxOccurs="1"/>
-		</xs:all>
+		</xs:choice>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="start" type="xs:dateTime" use="required"/>
 		<xs:attribute name="end" type="xs:dateTime" use="required"/>

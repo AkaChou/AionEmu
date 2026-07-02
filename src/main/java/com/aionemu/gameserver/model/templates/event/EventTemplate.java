@@ -64,7 +64,7 @@ public class EventTemplate {
 	protected SpawnsData2 spawns;
 
 	@XmlElement(name = "inventory_drop", required = false)
-	protected InventoryDrop inventoryDrop;
+	protected List<InventoryDrop> inventoryDrops;
 
 	@XmlList
 	@XmlElement(name = "surveys", required = false)
@@ -88,7 +88,7 @@ public class EventTemplate {
 	protected List<VisibleObject> spawnedObjects;
 
 	@XmlTransient
-	private Future<?> invDropTask = null;
+	private List<Future<?>> invDropTasks = null;
 
 	public String getName() {
 		return name;
@@ -168,21 +168,13 @@ public class EventTemplate {
 			DataManager.SPAWNS_DATA2.afterUnmarshal(null, null);
 			DataManager.SPAWNS_DATA2.clearTemplates();
 		}
-		if (inventoryDrop != null) {
-			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(EventTemplate.this::dropInventoryItem);
-				}
-			}, inventoryDrop.getInterval() * 60000, inventoryDrop.getInterval() * 60000);
-		}
-		if (getInventoryDrop() != null) {
-			invDropTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(EventTemplate.this::dropLimitedInventoryItem);
-				}
-			}, getInventoryDrop().getInterval() * 60000, getInventoryDrop().getInterval() * 60000);
+		if (inventoryDrops != null) {
+			invDropTasks = new ArrayList<>();
+			for (InventoryDrop inventoryDrop : inventoryDrops) {
+				invDropTasks.add(GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(
+					() -> com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(player -> dropInventoryItem(player, inventoryDrop)),
+					inventoryDrop.getInterval() * 60000, inventoryDrop.getInterval() * 60000));
+			}
 		}
 		if (surveys != null) {
 			for (String survey : surveys) {
@@ -195,19 +187,20 @@ public class EventTemplate {
 		isStarted = true;
 	}
 
-	private void dropInventoryItem(Player player) {
-		if (player.getCommonData().getLevel() >= inventoryDrop.getStartLevel()) {
-			ItemService.dropItemToInventory(player, inventoryDrop.getDropItem(), inventoryDrop.getCount());
+	private void dropInventoryItem(Player player, InventoryDrop inventoryDrop) {
+		int level = player.getCommonData().getLevel();
+		if (level < inventoryDrop.getStartLevel() || inventoryDrop.getEndLevel() > 0 && level > inventoryDrop.getEndLevel()) {
+			return;
 		}
-	}
-
-	private void dropLimitedInventoryItem(Player player) {
-		int itemId = getInventoryDrop().getDropItem();
-		if (player.getCommonData().getLevel() >= getInventoryDrop().getStartLevel()
-				&& player.getCommonData().getLevel() <= getInventoryDrop().getEndLevel()
-				&& player.getItemMaxThisCount(itemId) < getInventoryDrop().getMaxCountOfDay()) {
-			ItemService.dropItemToInventory(player, getInventoryDrop().getDropItem(), getInventoryDrop().getCount());
+		int itemId = inventoryDrop.getDropItem();
+		if (inventoryDrop.getMaxCountOfDay() > 0) {
+			if (player.getItemMaxThisCount(itemId) >= inventoryDrop.getMaxCountOfDay()) {
+				return;
+			}
+			ItemService.dropItemToInventory(player, itemId, inventoryDrop.getCount());
 			player.addItemMaxCountOfDay(itemId, player.getItemMaxThisCount(itemId) + 1);
+		} else {
+			ItemService.dropItemToInventory(player, itemId, inventoryDrop.getCount());
 		}
 	}
 
@@ -226,9 +219,11 @@ public class EventTemplate {
 			spawnedObjects.clear();
 			spawnedObjects = null;
 		}
-		if (invDropTask != null) {
-			invDropTask.cancel(false);
-			invDropTask = null;
+		if (invDropTasks != null) {
+			for (Future<?> invDropTask : invDropTasks) {
+				invDropTask.cancel(false);
+			}
+			invDropTasks = null;
 		}
 		if (surveys != null) {
 			for (String survey : surveys) {
@@ -256,6 +251,6 @@ public class EventTemplate {
 	}
 
 	public InventoryDrop getInventoryDrop() {
-		return inventoryDrop;
+		return inventoryDrops == null || inventoryDrops.isEmpty() ? null : inventoryDrops.get(0);
 	}
 }
