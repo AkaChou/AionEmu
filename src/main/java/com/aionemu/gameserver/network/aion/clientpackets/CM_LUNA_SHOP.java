@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 import com.aionemu.gameserver.model.ChatType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -26,6 +28,7 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_MESSAGE;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
+@Slf4j
 public class CM_LUNA_SHOP extends AionClientPacket {
 
 	private int actionId;
@@ -150,7 +153,7 @@ public class CM_LUNA_SHOP extends AionClientPacket {
 			GameEventBootstrapServices.lunaShopService().diceGameReward(player);
 			break;
 		default:
-			System.out.println("UNKOWN ACTION-ID: " + actionId);
+			log.warn("Unknown Luna shop action. playerId={} actionId={}", player.getObjectId(), actionId);
 			break;
 		}
 	}

@@ -355,9 +355,9 @@ public class PlayerGameStats extends CreatureGameStats<Player> {
 						if (mainHandWeapon != null && offHandWeapon != null
 								&& offHandWeapon.getItemTemplate().getArmorType() != ArmorType.SHIELD) {
 							base = mainHandWeapon.getItemTemplate().getWeaponStats().getAttackRange();
-							log.info("[Error] PlayerGameStats] mainHandWeapon ["
-									+ mainHandWeapon.getItemTemplate().getItemType() + "] offHandWeapon ["
-									+ offHandWeapon.getItemTemplate().getItemType() + "]");
+							log.info("Unexpected dual weapon combination. playerId={} mainHandType={} offHandType={}",
+									owner.getObjectId(), mainHandWeapon.getItemTemplate().getItemType(),
+									offHandWeapon.getItemTemplate().getItemType());
 						}
 					}
 				}

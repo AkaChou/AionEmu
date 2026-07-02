@@ -125,7 +125,7 @@ public class AionPacketHandler {
 				PckBuffer.put(tmpBuffer.get());
 			} while (tmpBuffer.remaining() > 0);
 		} catch (Exception e) {
-			// e.printStackTrace();
+			log.warn("Could not copy packet buffer", e);
 		}
 		PckBuffer.position(0);
 		return PckBuffer;

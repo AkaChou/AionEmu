@@ -1,7 +1,6 @@
 package com.aionemu.gameserver.dataholders;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.Config;
@@ -18,8 +17,8 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Slf4j
 public final class DataManager {
-    static Logger log = LoggerFactory.getLogger(DataManager.class);
     private static volatile ObjectProvider<DataManager> instanceProvider;
     private static final AtomicBoolean CONSTRUCTED = new AtomicBoolean(false);
     public static NpcData NPC_DATA;

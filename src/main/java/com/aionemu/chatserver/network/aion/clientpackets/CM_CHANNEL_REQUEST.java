@@ -18,9 +18,6 @@
 
 package com.aionemu.chatserver.network.aion.clientpackets;
 
-import lombok.extern.slf4j.Slf4j;
-import java.io.UnsupportedEncodingException;
-
 import com.aionemu.chatserver.common.netty.PacketReader;
 import com.aionemu.chatserver.configs.Config;
 import com.aionemu.chatserver.model.ChatClient;
@@ -29,6 +26,9 @@ import com.aionemu.chatserver.network.aion.AbstractClientPacket;
 import com.aionemu.chatserver.network.aion.serverpackets.SM_CHANNEL_RESPONSE;
 import com.aionemu.chatserver.network.netty.handler.ClientChannelHandler;
 import com.aionemu.chatserver.service.ChatService;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author ATracer
@@ -68,7 +68,7 @@ public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
                 log.info("Channel requested " + new String(channelIdentifier, "UTF-16le"));
             }
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("Could not decode channel request identifier", e);
         }
         ChatClient chatClient = clientChannelHandler.getChatClient();
         Channel channel = chatService.registerPlayerWithChannel(chatClient, channelIndex, channelIdentifier);

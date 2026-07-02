@@ -16,11 +16,12 @@
  */
 package com.aionemu.gameserver.model.utils3d;
 
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author M@xx
  */
+@Slf4j
 public class Plane3D {
 
 	private static final double[] column = new double[] { 1, 1, 1 };
@@ -89,8 +90,7 @@ public class Plane3D {
 			result.y = la.y + (lb.y - la.y) * formula[0];
 			result.z = la.z + (lb.z - la.z) * formula[0];
 		} catch (RuntimeException e) {
-			LoggerFactory.getLogger(getClass()).debug(m1 + "(determinant: " + m1.determinant() + ") * [ " + v1[0] + ","
-					+ v1[1] + "," + v1[0] + " ]: " + e.getMessage(), e);
+			log.debug("{} determinant={} vector=[{}, {}, {}]", m1, m1.determinant(), v1[0], v1[1], v1[2], e);
 		}
 		return result;
 	}

@@ -25,10 +25,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.aionemu.gameserver.configs.Config;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class is responsible for loading data from static .txt files.<br>
@@ -42,10 +42,8 @@ import com.aionemu.gameserver.configs.Config;
  * 
  * @author Luno
  */
+@Slf4j
 abstract class DataLoader {
-
-	/** The logger used for <tt>DataLoader</tt> and its subclasses */
-	protected Logger log = LoggerFactory.getLogger(getClass().getName());
 
 	/** Relative path to directory containing .txt files with static data */
 	private static final String PATH = "./data/static_data/";

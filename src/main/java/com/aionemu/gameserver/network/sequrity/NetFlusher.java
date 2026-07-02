@@ -16,12 +16,14 @@
  */
 package com.aionemu.gameserver.network.sequrity;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
  * @author NB4L1
  */
+@Slf4j
 public final class NetFlusher {
 	private static final Timer _timer = new Timer(NetFlusher.class.getName(), true);
 
@@ -32,7 +34,7 @@ public final class NetFlusher {
 				try {
 					runnable.run();
 				} catch (RuntimeException e) {
-					e.printStackTrace();
+					log.error("Net flusher task failed", e);
 				}
 			}
 		}, interval, interval);

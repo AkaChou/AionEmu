@@ -19,8 +19,7 @@ package com.aionemu.gameserver.network.loginserver.clientpackets;
 import com.aionemu.gameserver.lifecycle.GameServerNetworkServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.network.GameServerAuthFailure;
 import com.aionemu.gameserver.network.loginserver.LoginServer;
@@ -35,16 +34,12 @@ import com.aionemu.gameserver.network.loginserver.serverpackets.SM_GS_AUTH;
  * 
  * @author -Nemesiss-
  */
+@Slf4j
 public class CM_GS_AUTH_RESPONSE extends LsClientPacket {
 
 	public CM_GS_AUTH_RESPONSE(int opCode) {
 		super(opCode);
 	}
-
-	/**
-	 * Logger for this class.
-	 */
-	protected static final Logger log = LoggerFactory.getLogger(CM_GS_AUTH_RESPONSE.class);
 
 	/**
 	 * Response: 0=Authed,1=NotAuthed,2=AlreadyRegistered

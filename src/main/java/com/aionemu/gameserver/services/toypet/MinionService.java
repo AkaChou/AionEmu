@@ -463,7 +463,7 @@ public class MinionService {
 
 	public void activateMinionFunction(Player player) {
 		long leftTime = System.currentTimeMillis() + (30 * 24 * 60 * 60 * 1000);
-		System.out.println("Int Timestamp : " + new Timestamp(leftTime));
+		log.debug("Activate minion function. playerId={} expiresAt={}", player.getObjectId(), new Timestamp(leftTime));
 		if (player.getInventory().tryDecreaseKinah(25000000)) {
 			player.getCommonData().setMinionFunctionTime(new Timestamp(leftTime));
 			PacketSendUtility.sendPacket(player, new SM_MINIONS(9, leftTime));
@@ -481,13 +481,15 @@ public class MinionService {
 		minions.getCommonData().getDopingBag().setItem(itemId, targetSlot);
 
 		if (minions.getCommonData().getDopingBag().getFoodItem() != 0) {
-			System.out.println("Minion Bag food:" + minions.getCommonData().getDopingBag().getFoodItem());
+			log.debug("Minion bag food. playerId={} minionId={} itemId={}", player.getObjectId(), minionObjectId,
+					minions.getCommonData().getDopingBag().getFoodItem());
 		}
 		if (minions.getCommonData().getDopingBag().getDrinkItem() != 0) {
-			System.out.println("Minion Bag drink:" + minions.getCommonData().getDopingBag().getDrinkItem());
+			log.debug("Minion bag drink. playerId={} minionId={} itemId={}", player.getObjectId(), minionObjectId,
+					minions.getCommonData().getDopingBag().getDrinkItem());
 		}
 		for (int a : minions.getCommonData().getDopingBag().getScrollsUsed()) {
-			System.out.println("Minion Bag scroll:" + a);
+			log.debug("Minion bag scroll. playerId={} minionId={} itemId={}", player.getObjectId(), minionObjectId, a);
 		}
 		DAOManager.getDAO(PlayerMinionsDAO.class).saveDopingBag(player, minions.getCommonData(), minions.getCommonData().getDopingBag());
 		PacketSendUtility.broadcastPacket(player, new SM_MINIONS(8, 0, minionObjectId, itemId, targetSlot, 0), true);

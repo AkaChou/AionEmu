@@ -18,7 +18,6 @@ package com.aionemu.gameserver.geoEngine.scene;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.aionemu.gameserver.geoEngine.bounding.BoundingVolume;
 import com.aionemu.gameserver.geoEngine.collision.Collidable;
@@ -27,6 +26,8 @@ import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.math.Matrix3f;
 import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <code>Node</code> defines an internal node of a scene graph. The internal
@@ -38,9 +39,9 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
  * @author Gregg Patton
  * @author Joshua Slack
  */
+@Slf4j
 public class Node extends Spatial implements Cloneable {
 
-	private static final Logger logger = Logger.getLogger(Node.class.getName());
 	/**
 	 * This node's children.
 	 */
@@ -225,7 +226,7 @@ public class Node extends Spatial implements Cloneable {
 		for (int i = children.size() - 1; i >= 0; i--) {
 			detachChildAt(i);
 		}
-		logger.info("All children removed.");
+		log.info("All children removed.");
 	}
 
 	public int getChildIndex(Spatial sp) {

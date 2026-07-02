@@ -3,10 +3,10 @@
  */
 package com.aionemu.gameserver.geoEngine.math;
 
-import java.util.logging.Logger;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Plane implements Cloneable {
-	private static final Logger logger = Logger.getLogger(Plane.class.getName());
 	protected Vector3f normal;
 	protected float constant;
 
@@ -16,7 +16,7 @@ public class Plane implements Cloneable {
 
 	public Plane(Vector3f normal, float constant) {
 		if (normal == null) {
-			logger.warning("Normal was null, created default normal.");
+			log.warn("Normal was null, created default normal.");
 			normal = new Vector3f();
 		}
 		this.normal = normal;
@@ -25,7 +25,7 @@ public class Plane implements Cloneable {
 
 	public void setNormal(Vector3f normal) {
 		if (normal == null) {
-			logger.warning("Normal was null, created default normal.");
+			log.warn("Normal was null, created default normal.");
 			normal = new Vector3f();
 		}
 		this.normal.set(normal);
@@ -33,7 +33,7 @@ public class Plane implements Cloneable {
 
 	public void setNormal(float x, float y, float z) {
 		if (this.normal == null) {
-			logger.warning("Normal was null, created default normal.");
+			log.warn("Normal was null, created default normal.");
 			this.normal = new Vector3f();
 		}
 		this.normal.set(x, y, z);

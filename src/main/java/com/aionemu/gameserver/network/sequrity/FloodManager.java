@@ -23,12 +23,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author NB4L1
  */
+@Slf4j
 public final class FloodManager {
 	public static enum ErrorMode {
 		INVALID_OPCODE, BUFFER_UNDER_FLOW, BUFFER_OVER_FLOW, FAILED_READING, FAILED_RUNNING;
@@ -78,7 +78,7 @@ public final class FloodManager {
 				_lastTick = currentTick;
 				Arrays.fill(_ticks, (short) 0);
 			} else if (_lastTick > currentTick) {
-				log.warn("The current tick (" + currentTick + ") is smaller than the last (" + _lastTick + ")!",
+				log.warn("Current flood tick {} is smaller than last tick {}", currentTick, _lastTick,
 						new IllegalStateException());
 				_lastTick = currentTick;
 			} else
@@ -126,8 +126,6 @@ public final class FloodManager {
 			return r2;
 		}
 	}
-
-	public final Logger log = LoggerFactory.getLogger(FloodManager.class);
 
 	private static final long ZERO = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1);
 

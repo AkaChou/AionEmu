@@ -19,8 +19,7 @@ package com.aionemu.gameserver.configs;
 import java.io.File;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.configs.CommonsConfig;
 import com.aionemu.commons.configs.DatabaseConfig;
@@ -72,8 +71,8 @@ import com.aionemu.gameserver.configs.main.WorldConfig;
 import com.aionemu.gameserver.configs.network.IPConfig;
 import com.aionemu.gameserver.configs.network.NetworkConfig;
 
+@Slf4j
 public class Config {
-	protected static final Logger log = LoggerFactory.getLogger(Config.class);
 	private static volatile Properties bootOverrides = new Properties();
 
 	private static String configDir() {

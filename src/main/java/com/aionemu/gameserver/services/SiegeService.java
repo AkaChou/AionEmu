@@ -134,7 +134,7 @@ public class SiegeService {
 		if (!SiegeConfig.SIEGE_ENABLED) {
 			return;
 		}
-		GameServer.log.info("[SiegeService] is initialized...");
+		log.info("[SiegeService] is initialized...");
 
 		for (Integer i : getSiegeLocations().keySet()) {
 			deSpawnNpcs(i);

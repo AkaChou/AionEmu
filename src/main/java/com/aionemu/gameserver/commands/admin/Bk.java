@@ -16,7 +16,8 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
-import ch.qos.logback.classic.Logger;
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.commons.database.DB;
 import com.aionemu.commons.database.DatabaseFactory;
 import com.aionemu.commons.database.IUStH;
@@ -27,7 +28,6 @@ import com.aionemu.gameserver.utils.ChatUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.AdminCommand;
 import com.aionemu.gameserver.world.WorldMapType;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,10 +39,10 @@ import java.util.ArrayList;
  * @author Mrakobes
  * @modified antness
  */
+@Slf4j
 public class Bk extends AdminCommand {
 
 	ArrayList<Bookmark> bookmarks = new ArrayList<Bookmark>();
-	private static final Logger log = (Logger) LoggerFactory.getLogger(Bk.class);
 	private String bookmark_name = "";
 
 	public Bk() {

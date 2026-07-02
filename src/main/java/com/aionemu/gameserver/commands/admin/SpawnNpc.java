@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -29,6 +30,7 @@ import java.io.IOException;
 /**
  * @author Luno
  */
+@Slf4j
 public class SpawnNpc extends AdminCommand {
 
 	public SpawnNpc() {
@@ -72,7 +74,7 @@ public class SpawnNpc extends AdminCommand {
 				DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
 			}
 			catch (IOException e) {
-				e.printStackTrace();
+				log.error("Could not save spawn {}", visibleObject.getObjectId(), e);
 				PacketSendUtility.sendMessage(admin, "Could not save spawn");
 			}
 		}

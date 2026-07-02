@@ -38,8 +38,6 @@ public class GameServerNetworkLifecycle {
         long transportTime = networkGateway.currentTimeMillis() - transportStart;
         log.info("Netty server transport started in {} ms", transportTime);
 
-        System.out.println("");
-
         connectPeer("Login Server", loginServer);
 
         if (networkGateway.isChatServerEnabled()) {

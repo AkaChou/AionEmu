@@ -20,8 +20,7 @@ package com.aionemu.loginserver.configs;
 
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.configs.CommonsConfig;
 import com.aionemu.commons.configs.DatabaseConfig;
@@ -33,12 +32,9 @@ import com.aionemu.commons.utils.PropertiesUtils;
  * @author -Nemesiss-
  * @author SoulKeeper
  */
+@Slf4j
 public class Config {
 
-    /**
-     * Logger for this class.
-     */
-    protected static final Logger log = LoggerFactory.getLogger(Config.class);
     private static volatile Properties bootOverrides = new Properties();
     @Property(key = "accounts.charset", defaultValue = "ISO8859_2")
     public static String ACCOUNT_CHARSET;

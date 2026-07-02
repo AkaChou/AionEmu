@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.world.zone.scripts;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.controllers.observer.CollisionDieActor;
 import com.aionemu.gameserver.geoEngine.GeoWorldLoader;
 import com.aionemu.gameserver.geoEngine.math.Matrix3f;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.nio.BufferUnderflowException;
 
 @ZoneNameAnnotation("CORE_400010000")
+@Slf4j
 public class AbyssCore implements ZoneHandler
 {
 	Map<Integer, CollisionDieActor> observed = new LinkedHashMap<Integer, CollisionDieActor>();
@@ -47,7 +49,7 @@ public class AbyssCore implements ZoneHandler
 			geometry.updateModelBound();
 		}
 		catch (IOException e) {
-			//e.printStackTrace();
+			log.error("Failed to load abyss core geometry", e);
 		}
 		catch (BufferUnderflowException ei){
 			

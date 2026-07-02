@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -36,6 +37,7 @@ import java.util.List;
  * @author KID
  * @modified Rolandas
  */
+@Slf4j
 public class SpawnUpdate extends AdminCommand {
 
 	public SpawnUpdate() {
@@ -70,7 +72,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					e.printStackTrace();
+					log.error("Could not save x update for spawn {}", npc.getObjectId(), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -90,7 +92,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					e.printStackTrace();
+					log.error("Could not save y update for spawn {}", npc.getObjectId(), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -110,7 +112,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					e.printStackTrace();
+					log.error("Could not save z update for spawn {}", npc.getObjectId(), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -136,7 +138,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					e.printStackTrace();
+					log.error("Could not save heading update for spawn {}", npc.getObjectId(), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -157,7 +159,7 @@ public class SpawnUpdate extends AdminCommand {
 					PacketSendUtility.sendMessage(admin, "updated npcs coordinates to " + admin.getX() + ", " + admin.getY() + ", " + admin.getZ() + ".");
 				}
 				catch (IOException e) {
-					e.printStackTrace();
+					log.error("Could not save coordinate update for spawn {}", npc.getObjectId(), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 				return;
@@ -198,7 +200,7 @@ public class SpawnUpdate extends AdminCommand {
 					DataManager.SPAWNS_DATA2.saveSpawn(admin, npc, false);
 				}
 				catch (IOException e) {
-					e.printStackTrace();
+					log.error("Could not save walker update for spawn {}", npc.getObjectId(), e);
 					PacketSendUtility.sendMessage(admin, "Could not save spawn");
 				}
 			}

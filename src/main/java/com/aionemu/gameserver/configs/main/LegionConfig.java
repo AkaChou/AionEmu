@@ -18,13 +18,12 @@ package com.aionemu.gameserver.configs.main;
 
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.configuration.Property;
 
+@Slf4j
 public class LegionConfig {
-	protected static final Logger log = LoggerFactory.getLogger(LegionConfig.class);
 	@Property(key = "gameserver.legion.pattern", defaultValue = "[a-zA-Z ]{2,32}")
 	public static Pattern LEGION_NAME_PATTERN;
 	@Property(key = "gameserver.legion.self.intro.pattern", defaultValue = ".{1,32}")

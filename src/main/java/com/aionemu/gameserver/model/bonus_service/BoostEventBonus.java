@@ -24,8 +24,7 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 
 public class BoostEventBonus implements StatOwner {
 	/*
-	 * private static final Logger log =
-	 * LoggerFactory.getLogger(BoostEventBonus.class); private List<IStatFunction>
+	 * private List<IStatFunction>
 	 * functions = new ArrayList<IStatFunction>(); private BoostEvents
 	 * boostBonusattr;
 	 * 

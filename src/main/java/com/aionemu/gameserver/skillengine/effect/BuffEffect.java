@@ -97,7 +97,7 @@ public abstract class BuffEffect extends EffectTemplate {
 
 		for (Change changeItem : change) {
 			if (changeItem.getStat() == null) {
-				log.warn("Skill stat has wrong name for skillid: " + skillId);
+				log.warn("Skill stat has wrong name for skillId {}", skillId);
 				continue;
 			}
 

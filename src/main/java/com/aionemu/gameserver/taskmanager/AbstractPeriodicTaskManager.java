@@ -18,8 +18,8 @@ package com.aionemu.gameserver.taskmanager;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.taskmanager.AbstractLockManager;
 import com.aionemu.commons.utils.Rnd;
@@ -30,9 +30,8 @@ import com.aionemu.gameserver.GameServer.StartupHook;
  * @author lord_rex and MrPoke based on l2j-free engines. This can be used for
  *         periodic calls.
  */
+@Slf4j(access = AccessLevel.PROTECTED)
 public abstract class AbstractPeriodicTaskManager extends AbstractLockManager implements Runnable, StartupHook {
-
-	protected static final Logger log = LoggerFactory.getLogger(AbstractPeriodicTaskManager.class);
 
 	private final int period;
 
@@ -41,7 +40,7 @@ public abstract class AbstractPeriodicTaskManager extends AbstractLockManager im
 
 		GameServer.addStartupHook(this);
 
-		log.info(getClass().getSimpleName() + ": Initialized.");
+		log.info("{} initialized", getClass().getSimpleName());
 	}
 
 	@Override

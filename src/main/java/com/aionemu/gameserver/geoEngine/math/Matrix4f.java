@@ -4,12 +4,13 @@
 package com.aionemu.gameserver.geoEngine.math;
 
 import java.nio.FloatBuffer;
-import java.util.logging.Logger;
 
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public final class Matrix4f implements Cloneable {
-	private static final Logger logger = Logger.getLogger(Matrix4f.class.getName());
 	public float m00;
 	public float m01;
 	public float m02;
@@ -195,7 +196,7 @@ public final class Matrix4f implements Cloneable {
 			}
 		}
 		}
-		logger.warning("Invalid matrix index.");
+		log.warn("Invalid matrix index.");
 		throw new IllegalArgumentException("Invalid indices into matrix.");
 	}
 
@@ -237,7 +238,7 @@ public final class Matrix4f implements Cloneable {
 			break;
 		}
 		default: {
-			logger.warning("Invalid column index.");
+			log.warn("Invalid column index.");
 			throw new IllegalArgumentException("Invalid column index. " + i);
 		}
 		}
@@ -246,7 +247,7 @@ public final class Matrix4f implements Cloneable {
 
 	public void setColumn(int i, float[] column) {
 		if (column == null) {
-			logger.warning("Column is null. Ignoring.");
+			log.warn("Column is null. Ignoring.");
 			return;
 		}
 		switch (i) {
@@ -279,7 +280,7 @@ public final class Matrix4f implements Cloneable {
 			break;
 		}
 		default: {
-			logger.warning("Invalid column index.");
+			log.warn("Invalid column index.");
 			throw new IllegalArgumentException("Invalid column index. " + i);
 		}
 		}
@@ -368,7 +369,7 @@ public final class Matrix4f implements Cloneable {
 			}
 		}
 		}
-		logger.warning("Invalid matrix index.");
+		log.warn("Invalid matrix index.");
 		throw new IllegalArgumentException("Invalid indices into matrix.");
 	}
 
@@ -805,7 +806,7 @@ public final class Matrix4f implements Cloneable {
 
 	public Vector3f multAcross(Vector3f vec, Vector3f store) {
 		if (null == vec) {
-			logger.info("Source vector is null, null result returned.");
+			log.info("Source vector is null, null result returned.");
 			return null;
 		}
 		if (store == null) {
@@ -822,7 +823,7 @@ public final class Matrix4f implements Cloneable {
 
 	public float[] mult(float[] vec4f) {
 		if (null == vec4f || vec4f.length != 4) {
-			logger.warning("invalid array given, must be nonnull and length 4");
+			log.warn("invalid array given, must be nonnull and length 4");
 			return null;
 		}
 		float x = vec4f[0];
@@ -838,7 +839,7 @@ public final class Matrix4f implements Cloneable {
 
 	public float[] multAcross(float[] vec4f) {
 		if (null == vec4f || vec4f.length != 4) {
-			logger.warning("invalid array given, must be nonnull and length 4");
+			log.warn("invalid array given, must be nonnull and length 4");
 			return null;
 		}
 		float x = vec4f[0];

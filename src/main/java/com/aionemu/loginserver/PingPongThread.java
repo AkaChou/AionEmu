@@ -18,15 +18,15 @@
 
 package com.aionemu.loginserver;
 
-import lombok.extern.slf4j.Slf4j;
-import java.io.IOException;
-
+import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.loginserver.configs.Config;
-import com.aionemu.loginserver.network.gameserver.GsConnection;
-import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PING;
 import com.aionemu.loginserver.configs.SvStatsConfig;
 import com.aionemu.loginserver.dao.SvStatsDAO;
-import com.aionemu.commons.database.dao.DAOManager;
+import com.aionemu.loginserver.network.gameserver.GsConnection;
+import com.aionemu.loginserver.network.gameserver.serverpackets.SM_PING;
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 
 /**
  * @author KID
@@ -54,7 +54,9 @@ public class PingPongThread implements Runnable {
             try {
                 Thread.sleep(Config.PINGPONG_DELAY);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                log.warn("Ping-pong thread interrupted", e);
+                Thread.currentThread().interrupt();
+                return;
             }
 
             if (!uptime || validateResponse()) {
@@ -98,7 +100,7 @@ public class PingPongThread implements Runnable {
                     try {
                         new ProcessBuilder("taskkill", "/pid", String.valueOf(serverPID), "/f").start();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        log.error("Failed to kill gameserver process {}", serverPID, e);
                     }
                 }
             }

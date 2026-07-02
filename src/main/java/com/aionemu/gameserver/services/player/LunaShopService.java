@@ -284,7 +284,8 @@ public class LunaShopService {
 			for (LunaComponent lc : recipe.getLunaComponent()) {
 				for (LunaComponentElement a : lc.getComponents()) {
 					if (!player.getInventory().decreaseByItemId(a.getItemid(), a.getQuantity())) {
-						System.out.println("!!! Possible item hack CHEATER(?) !!!");
+						log.warn("Possible Luna craft item mismatch. playerId={} recipeId={} itemId={} quantity={}",
+								player.getObjectId(), recipeId, a.getItemid(), a.getQuantity());
 						PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(2, item, 1));
 						PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(3, product_id, quantity, false));
 						return;
@@ -298,7 +299,8 @@ public class LunaShopService {
 			for (LunaComponent lc : recipe.getLunaComponent()) {
 				for (LunaComponentElement a : lc.getComponents()) {
 					if (!player.getInventory().decreaseByItemId(a.getItemid(), a.getQuantity())) {
-						System.out.println("!!! Possible item hack CHEATER(?) !!!");
+						log.warn("Possible Luna craft item mismatch. playerId={} recipeId={} itemId={} quantity={}",
+								player.getObjectId(), recipeId, a.getItemid(), a.getQuantity());
 						PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(2, item, 1));
 						PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP(3, product_id, quantity, false));
 						return;
@@ -643,9 +645,8 @@ public class LunaShopService {
 			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(5));
 			PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(4));
 		}
-		System.out.println("Random: " + random);
-		System.out.println("Try: " + player.getLunaDiceGameTry());
-		System.out.println("Consum: " + player.getLunaConsumePoint());
+		log.debug("Luna dice result. playerId={} random={} tries={} consumed={}", player.getObjectId(), random,
+				player.getLunaDiceGameTry(), player.getLunaConsumePoint());
 	}
 
 	public void diceGameReward(Player player) { // TODO

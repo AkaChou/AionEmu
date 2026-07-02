@@ -1,5 +1,7 @@
 package com.aionemu.gameserver.network.aion.gmhandler;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -12,12 +14,13 @@ import java.util.Collection;
  * @author Waii
  * new adaptation made by Dezalmado
  */
+@Slf4j
 public final class CmdSetInventoryGrowth extends AbstractGMHandler {
 
     public CmdSetInventoryGrowth(Player admin, String params) {
         super(admin, params);
         if (this.admin == null) {
-            System.err.println("CmdSetInventoryGrowth: Admin player is null. Cannot execute command.");
+            log.warn("Cannot execute CmdSetInventoryGrowth because admin player is null. params={}", params);
             return;
         }
 

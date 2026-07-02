@@ -1,7 +1,6 @@
 package com.aionemu.commons.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 /**
  * 系统属性工具类，提供对系统属性的安全访问和类型转换功能
@@ -9,7 +8,6 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public final class SystemPropertyUtil {
-   private static boolean initializedLogger = true;
    private static boolean loggedException;
    private static final Pattern INTEGER_PATTERN = Pattern.compile("-?[0-9]+");
 
@@ -162,21 +160,11 @@ public final class SystemPropertyUtil {
    }
 
    private static void log(String msg) {
-      if (initializedLogger) {
-         log.warn(msg);
-      } else {
-         java.util.logging.Logger.getLogger(SystemPropertyUtil.class.getName()).log(Level.WARNING, msg);
-      }
-
+      log.warn(msg);
    }
 
    private static void log(String msg, Exception e) {
-      if (initializedLogger) {
-         log.warn(msg, e);
-      } else {
-         java.util.logging.Logger.getLogger(SystemPropertyUtil.class.getName()).log(Level.WARNING, msg, e);
-      }
-
+      log.warn(msg, e);
    }
 
    private SystemPropertyUtil() {

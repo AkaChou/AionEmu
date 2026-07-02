@@ -88,7 +88,7 @@ public abstract class AbstractIterativePeriodicTaskManager<T> extends AbstractPe
 			try {
 				callTask(task);
 			} catch (RuntimeException e) {
-				log.warn("", e);
+				log.warn("Periodic task {} failed in {}", task, getClass().getSimpleName(), e);
 			} finally {
 				RunnableStatsManager.handleStats(task.getClass(), getCalledMethodName(), System.nanoTime() - begin);
 			}

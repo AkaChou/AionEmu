@@ -27,9 +27,6 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
@@ -52,8 +49,11 @@ import com.aionemu.gameserver.skillengine.model.SpellStatus;
 import com.aionemu.gameserver.skillengine.model.TransformType;
 import com.aionemu.gameserver.utils.stats.StatFunctions;
 
+import lombok.extern.slf4j.Slf4j;
+
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Effect")
+@Slf4j
 public abstract class EffectTemplate {
 
 	protected ActionModifiers modifiers;
@@ -111,7 +111,6 @@ public abstract class EffectTemplate {
 	@XmlTransient
 	protected EffectType effectType = null;
 	@XmlTransient
-	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * @return the value
@@ -697,9 +696,7 @@ public abstract class EffectTemplate {
 					.valueOf(this.getClass().getName().replaceAll("com.aionemu.gameserver.skillengine.effect.", "")
 							.replaceAll("Effect", "").toUpperCase());
 		} catch (Exception e) {
-			log.info("missing effectype for "
-					+ this.getClass().getName().replaceAll("com.aionemu.gameserver.skillengine.effect.", "")
-							.replaceAll("Effect", "").toUpperCase());
+			log.info("Missing effect type for {}", this.getClass().getName());
 		}
 		this.effectType = temp;
 	}

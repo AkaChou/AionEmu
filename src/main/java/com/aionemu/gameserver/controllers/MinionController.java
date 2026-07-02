@@ -15,6 +15,8 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.controllers.movement.MinionMoveController;
@@ -30,6 +32,7 @@ import com.aionemu.gameserver.world.World;
 /**
  * @author ATracer, Improved by Neon
  */
+@Slf4j
 public class MinionController extends VisibleObjectController<Minion> {
 
     private static final int FOLLOW_RANGE = 5;
@@ -127,7 +130,8 @@ public class MinionController extends VisibleObjectController<Minion> {
                 }
 
             } catch (Exception e) {
-                System.err.println("MinionFollowTask error: " + e.getMessage());
+                log.error("Minion follow task failed. playerId={} minionId={}", player == null ? 0 : player.getObjectId(),
+                        getOwner() == null ? 0 : getOwner().getObjectId(), e);
             }
         }
     }
@@ -168,7 +172,8 @@ public class MinionController extends VisibleObjectController<Minion> {
                 }
 
             } catch (Exception e) {
-                System.err.println("MinionTeleportTask error: " + e.getMessage());
+                log.error("Minion teleport task failed. playerId={} minionId={}",
+                        player == null ? 0 : player.getObjectId(), getOwner() == null ? 0 : getOwner().getObjectId(), e);
             }
         }
     }

@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -53,8 +51,11 @@ import java.util.Map;
  */
 @Slf4j
 public class PlayerTransferService {
-	private final Logger textLog = LoggerFactory.getLogger("PLAYERTRANSFER");
 	private static volatile ObjectProvider<PlayerTransferService> instanceProvider;
+
+	@Slf4j(topic = "PLAYERTRANSFER")
+	private static class TransferLog {
+	}
 
 	public static PlayerTransferService getInstance() {
 		ObjectProvider<PlayerTransferService> provider = instanceProvider;
@@ -83,7 +84,7 @@ public class PlayerTransferService {
 				rsList.add(Integer.parseInt(skillId));
 			}
 		}
-		log.info("PlayerTransferService loaded. With " + rsList.size() + " restricted skills.");
+		log.info("PlayerTransferService loaded with {} restricted skills", rsList.size());
 	}
 
 	private String ptsnameitem = "ptsnameitem";
@@ -168,7 +169,7 @@ public class PlayerTransferService {
 		tp.taskId = taskId;
 		transfers.put(taskId, tp);
 
-		textLog.info("taskId:" + taskId + "; [StartTransfer]");
+		TransferLog.log.info("taskId:{}; [StartTransfer]", taskId);
 		com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.CHARACTER_INFORMATION, tp));
 	}
 
@@ -184,8 +185,8 @@ public class PlayerTransferService {
 				return;
 			}
 
-			log.info("Name is already in use `" + name + "`");
-			textLog.info("taskId:" + taskId + "; [CloneCharacter:!isFreeName]");
+			log.info("Name is already in use: {}", name);
+			TransferLog.log.info("taskId:{}; [CloneCharacter:!isFreeName]", taskId);
 			String newName = name + PlayerTransferConfig.NAME_PREFIX;
 
 			int i = 0;
@@ -202,17 +203,17 @@ public class PlayerTransferService {
 
 		CMT_CHARACTER_INFORMATION acp = new CMT_CHARACTER_INFORMATION(0, State.CONNECTED);
 		acp.setBuffer(ByteBuffer.wrap(db).order(ByteOrder.LITTLE_ENDIAN));
-		Player cha = acp.readInfo(name, targetAccountId, account, rsList, textLog);
+		Player cha = acp.readInfo(name, targetAccountId, account, rsList, TransferLog.log);
 
 		if (cha == null) { // something went wrong!
-			log.error("clone failed #" + taskId + " `" + name + "`");
+			log.error("Player transfer clone failed. taskId={} name={}", taskId, name);
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.ERROR, taskId,
 					"unexpected sql error while creating a clone"));
 		} else {
 			DAOManager.getDAO(PlayerDAO.class).setPlayerLastTransferTime(cha.getObjectId(), System.currentTimeMillis());
 			com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_PTRANSFER_CONTROL(SM_PTRANSFER_CONTROL.OK, taskId));
-			log.info("clone successful #" + taskId + " `" + name + "`");
-			textLog.info("taskId:" + taskId + "; [CloneCharacter:Done]");
+			log.info("Player transfer clone successful. taskId={} name={}", taskId, name);
+			TransferLog.log.info("taskId:{}; [CloneCharacter:Done]", taskId);
 		}
 	}
 
@@ -221,7 +222,7 @@ public class PlayerTransferService {
 	 */
 	public void onOk(int taskId) {
 		TransferablePlayer tplayer = this.transfers.remove(taskId);
-		textLog.info("taskId:" + taskId + "; [TransferComplete]");
+		TransferLog.log.info("taskId:{}; [TransferComplete]", taskId);
 		PlayerService.deletePlayerFromDB(tplayer.playerId);
 	}
 
@@ -230,6 +231,6 @@ public class PlayerTransferService {
 	 */
 	public void onError(int taskId, String reason) {
 		this.transfers.remove(taskId);
-		textLog.info("taskId:" + taskId + "; [Error. Transfer failed] " + reason);
+		TransferLog.log.info("taskId:{}; [Error. Transfer failed] {}", taskId, reason);
 	}
 }

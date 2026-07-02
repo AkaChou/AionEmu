@@ -23,10 +23,12 @@ import java.io.UnsupportedEncodingException;
 import com.aionemu.chatserver.model.ChatClient;
 import com.aionemu.chatserver.model.channel.Channel;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author ATracer
  */
+@Slf4j
 public class Message {
 
     @Getter
@@ -50,7 +52,7 @@ public class Message {
         try {
             this.text = str.getBytes("utf-16le");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("Failed to encode chat message text", e);
         }
     }
 

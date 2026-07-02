@@ -182,7 +182,8 @@ public final class ThreadPoolManager {
 
             success |= awaitTermination(10000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.warn("Interrupted while shutting down thread pools", e);
+            Thread.currentThread().interrupt();
         }
 
         log.info("\t... success: " + success + " in " + (System.currentTimeMillis() - begin) + " msec.");

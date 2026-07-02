@@ -144,9 +144,9 @@ public class DropLists {
 			FileOutputStream out = new FileOutputStream(file);
 			StreamResult xmlResult = new StreamResult(out);
 			transFormer.transform(domSource, xmlResult);
-			System.out.println(file.getAbsolutePath());
+			log.info("Wrote drop list XML to {}", file.getAbsolutePath());
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to write drop list XML", e);
 		} finally {
 		}
 	}

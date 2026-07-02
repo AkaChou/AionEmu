@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.network.loginserver.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 
 import com.aionemu.gameserver.configs.network.NetworkConfig;
@@ -25,6 +26,7 @@ import com.aionemu.gameserver.services.transfers.PlayerTransferService;
 /**
  * @author KID
  */
+@Slf4j
 public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
 	public CM_PTRANSFER_RESPONSE(int opCode) {
 		super(opCode);
@@ -61,12 +63,8 @@ public class CM_PTRANSFER_RESPONSE extends LsClientPacket {
 		case 23: {
 			byte serverId = readSC();
 			if (NetworkConfig.GAMESERVER_ID != serverId) {
-				try {
-					throw new Exception("Requesting player transfer for server id " + serverId + " but this is "
-							+ NetworkConfig.GAMESERVER_ID + " omgshit!");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				log.error("Requesting player transfer for server id {} but this is {}", serverId,
+						NetworkConfig.GAMESERVER_ID);
 			} else {
 				byte targetServerId = readSC();
 				int account = readD();

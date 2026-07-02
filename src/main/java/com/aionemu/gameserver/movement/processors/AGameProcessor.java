@@ -8,15 +8,14 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
 import com.aionemu.commons.utils.concurrent.RunnableWrapper;
 import com.aionemu.gameserver.configs.main.ThreadConfig;
 
+@Slf4j
 public class AGameProcessor {
-	protected static final Logger Log = LoggerFactory.getLogger(AGameProcessor.class);
 	private ScheduledThreadPoolExecutor _processorPool;
 
 	protected AGameProcessor(int threadsCount) {
@@ -33,7 +32,7 @@ public class AGameProcessor {
 		r = new RunnableTaskWrapper((Runnable) r);
 		long validated = Math.max(0L, Math.min(Integer.MAX_VALUE, delay));
 		if (validated < delay) {
-			Log.warn(
+			log.warn(
 					"Determine attempt to post scheduled task with delay {}, but maximal is {}. Delay will be trimmed to maximal",
 					(Object) delay, (Object) validated);
 		}
@@ -45,7 +44,7 @@ public class AGameProcessor {
 		r = new RunnableTaskWrapper((Runnable) r);
 		long validated = Math.max(0L, Math.min(Integer.MAX_VALUE, delay));
 		if (validated < delay) {
-			Log.warn(
+			log.warn(
 					"Determine attempt to post scheduled task with delay {}, but maximal is {}. Delay will be trimmed to maximal",
 					(Object) delay, (Object) validated);
 		}
@@ -57,7 +56,7 @@ public class AGameProcessor {
 		r = new RunnableTaskWrapper((Runnable) r);
 		long validated = Math.max(0L, Math.min(Integer.MAX_VALUE, delay));
 		if (validated < delay) {
-			Log.warn(
+			log.warn(
 					"Determine attempt to post scheduled task with delay {}, but maximal is {}. Action will not be triggered",
 					(Object) delay, (Object) validated);
 			return false;

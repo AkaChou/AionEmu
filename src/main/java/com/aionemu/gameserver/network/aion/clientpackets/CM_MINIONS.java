@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author Falke_34, FrozenKiller Reworked by G-Robson26
  */
+@Slf4j
 public class CM_MINIONS extends AionClientPacket {
 
 	private int actionId;
@@ -95,7 +98,7 @@ public class CM_MINIONS extends AionClientPacket {
 			break;
 		case 9: // TODO (MinionFunction Scrolls etc)
 			subSwitch = readD(); // 0, 1
-			System.out.println("SubSwitch: " + subSwitch);
+			log.debug("CM_MINIONS function subSwitch={}", subSwitch);
 			switch (subSwitch) {
 			case 0: {
 				functId = readD();
@@ -104,43 +107,38 @@ public class CM_MINIONS extends AionClientPacket {
 					minionObjectId = readD();
 					dopingItemId = readD();
 					targetSlot = readD();
-					System.out.println("subSwitch: " + subSwitch + " functId: " + functId + " minionObjectId :"
-							+ minionObjectId + "\ndopingItemId :" + dopingItemId + " dopingItemId :" + dopingItemId
-							+ "\ntargetSlot :" + targetSlot + " targetSlot2 :" + destinationSlot + " unk :" + unk);
+					log.debug("CM_MINIONS add item. subSwitch={} functionId={} minionObjectId={} itemId={} targetSlot={}",
+							subSwitch, functId, minionObjectId, dopingItemId, targetSlot);
 					break;
 				}
 				case 1: {
 					minionObjectId = readD();
 					targetSlot = readD();
 					unk = readD();
-					System.out.println("subSwitch: " + subSwitch + " functId: " + functId + " minionObjectId :"
-							+ minionObjectId + "\ndopingItemId :" + dopingItemId + " dopingItemId :" + dopingItemId
-							+ "\ntargetSlot :" + targetSlot + " targetSlot2 :" + destinationSlot + " unk :" + unk);
+					log.debug("CM_MINIONS function. subSwitch={} functionId={} minionObjectId={} targetSlot={} unk={}",
+							subSwitch, functId, minionObjectId, targetSlot, unk);
 					break;
 				}
 				case 2: {
 					minionObjectId = readD();
 					targetSlot = readD();
 					destinationSlot = readD();
-					System.out.println("subSwitch: " + subSwitch + " functId: " + functId + " minionObjectId :"
-							+ minionObjectId + "\ndopingItemId :" + dopingItemId + " dopingItemId :" + dopingItemId
-							+ "\ntargetSlot :" + targetSlot + " targetSlot2 :" + destinationSlot + " unk :" + unk);
+					log.debug("CM_MINIONS move item. subSwitch={} functionId={} minionObjectId={} targetSlot={} destinationSlot={}",
+							subSwitch, functId, minionObjectId, targetSlot, destinationSlot);
 					break;
 				}
 				case 3: {// BUFF ON
 					minionObjectId = readD();
 					dopingItemId = readD();
 					targetSlot = readD();
-					System.out.println("subSwitch: " + subSwitch + " functId: " + functId + " minionObjectId :"
-							+ minionObjectId + "\ndopingItemId :" + dopingItemId + " dopingItemId :" + dopingItemId
-							+ "\ntargetSlot :" + targetSlot + " targetSlot2 :" + destinationSlot + " unk :" + unk);
+					log.debug("CM_MINIONS buff. subSwitch={} functionId={} minionObjectId={} itemId={} targetSlot={}",
+							subSwitch, functId, minionObjectId, dopingItemId, targetSlot);
 					break;
 				}
 				case 4: {
 					minionObjectId = readD();
-					System.out.println("subSwitch: " + subSwitch + " functId: " + functId + " minionObjectId :"
-							+ minionObjectId + "\ndopingItemId :" + dopingItemId + " dopingItemId :" + dopingItemId
-							+ "\ntargetSlot :" + targetSlot + " targetSlot2 :" + destinationSlot + " unk :" + unk);
+					log.debug("CM_MINIONS function. subSwitch={} functionId={} minionObjectId={}", subSwitch, functId,
+							minionObjectId);
 					break;
 				}
 				}
@@ -222,18 +220,21 @@ public class CM_MINIONS extends AionClientPacket {
 			case 0: {
 				switch (functId) {
 				case 0: { // Add Item
-					System.out.println("ITEM_ADD");
+					log.debug("CM_MINIONS handle add item. playerId={} minionObjectId={} itemId={} targetSlot={}",
+							player.getObjectId(), minionObjectId, dopingItemId, targetSlot);
 					GameEventBootstrapServices.minionService().addMinionFunctionItems(player, functId, minionObjectId, dopingItemId,
 							targetSlot, destinationSlot); // Scrolls etc
 					break;
 				}
 				case 2: {
-					System.out.println("XD");
+					log.debug("CM_MINIONS relocate doping. playerId={} minionObjectId={} targetSlot={} destinationSlot={}",
+							player.getObjectId(), minionObjectId, targetSlot, destinationSlot);
 					GameEventBootstrapServices.minionService().relocateDoping(player, minionObjectId, targetSlot, destinationSlot);
 					break;
 				}
 				case 3: {
-					System.out.println("BUFF_ON");
+					log.debug("CM_MINIONS buff on. playerId={} minionObjectId={} itemId={} targetSlot={}",
+							player.getObjectId(), minionObjectId, dopingItemId, targetSlot);
 					GameEventBootstrapServices.minionService().buffPlayer(player, minionObjectId, dopingItemId, targetSlot); // Buff
 					break;
 				}
@@ -241,7 +242,7 @@ public class CM_MINIONS extends AionClientPacket {
 				break;
 			}
 			case 1: {
-				System.out.println("AUTOLOOT_ACTIVATION_DEACTIVATION");
+				log.debug("CM_MINIONS autoloot toggle. playerId={} minionObjectId={}", player.getObjectId(), minionObjectId);
 				GameEventBootstrapServices.minionService().activateLoot(player, true);
 				break;
 			}

@@ -20,17 +20,15 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.utils.concurrent.RunnableStatsManager;
 
 /**
  * @author lord_rex and MrPoke based on l2j-free engines.
  */
+@Slf4j
 public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodicTaskManager {
-
-	protected static final Logger log = LoggerFactory.getLogger(AbstractFIFOPeriodicTaskManager.class);
 
 	private final Set<T> queue = new LinkedHashSet<T>();
 
@@ -66,7 +64,7 @@ public abstract class AbstractFIFOPeriodicTaskManager<T> extends AbstractPeriodi
 			try {
 				callTask(task);
 			} catch (RuntimeException e) {
-				log.warn("", e);
+				log.warn("Periodic task {} failed in {}", task, getClass().getSimpleName(), e);
 			} finally {
 				RunnableStatsManager.handleStats(task.getClass(), getCalledMethodName(), System.nanoTime() - begin);
 			}

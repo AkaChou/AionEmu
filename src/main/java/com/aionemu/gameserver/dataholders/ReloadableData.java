@@ -33,19 +33,19 @@ import javax.xml.validation.SchemaFactory;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
+import lombok.AccessLevel;
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author ViAl
  */
+@Slf4j(access = AccessLevel.PROTECTED)
 public abstract class ReloadableData {
-
-	protected static final Logger log = LoggerFactory.getLogger(ReloadableData.class);
 
 	public abstract void reload(Player admin);
 

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.utils.chathandlers;
 
+import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Modifier;
 
 import com.aionemu.commons.scripting.classlistener.ClassListener;
@@ -26,6 +27,7 @@ import com.aionemu.commons.utils.ClassUtils;
  * 
  * @author Aquanox
  */
+@Slf4j
 public class ChatCommandsLoader implements ClassListener {
 
 	private ChatProcessor processor;
@@ -45,7 +47,7 @@ public class ChatCommandsLoader implements ClassListener {
 				try {
 					processor.registerCommand((ChatCommand) tmp.getDeclaredConstructor().newInstance());
 				} catch (ReflectiveOperationException e) {
-					e.printStackTrace();
+					log.error("Failed to register chat command {}", tmp.getName(), e);
 				}
 			}
 		}

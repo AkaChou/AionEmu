@@ -26,8 +26,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.utils.Rnd;
 
@@ -36,12 +35,9 @@ import com.aionemu.commons.utils.Rnd;
  *
  * @author -Nemesiss-
  */
+@Slf4j
 public class KeyGen {
 
-    /**
-     * Logger for this class.
-     */
-    protected static final Logger log = LoggerFactory.getLogger(KeyGen.class);
     /**
      * Key generator for blowfish
      */

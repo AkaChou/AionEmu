@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -23,6 +25,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 /**
  * @author xavier
  */
+@Slf4j
 public class SM_UPDATE_NOTE extends AionServerPacket {
 
 	private int targetObjId;
@@ -41,6 +44,6 @@ public class SM_UPDATE_NOTE extends AionServerPacket {
 		writeD(targetObjId);
 		writeS(note);
 		PacketSendUtility.sendPacket(con.getActivePlayer(), new SM_SYSTEM_MESSAGE(1390124, note));
-		System.out.print("work");
+		log.debug("Updated note. targetObjId={} noteLength={}", targetObjId, note == null ? 0 : note.length());
 	}
 }

@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.services;
 
+import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,6 +34,7 @@ import com.aionemu.gameserver.world.World;
 /**
  * @author synchro2
  */
+@Slf4j
 public class WeddingService {
 	private static volatile ObjectProvider<WeddingService> instanceProvider;
 
@@ -125,7 +127,7 @@ public class WeddingService {
 					}
 				}
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
+				log.error("Invalid wedding suit configuration: {}", WeddingsConfig.WEDDINGS_SUITS, e);
 			} finally {
 				if (!success1 || !success2) {
 					PacketSendUtility.sendMessage(player, "One of players not have required suit.");

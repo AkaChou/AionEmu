@@ -18,6 +18,7 @@
 
 package com.aionemu.chatserver.network.aion.clientpackets;
 
+import lombok.extern.slf4j.Slf4j;
 import java.io.UnsupportedEncodingException;
 
 import com.aionemu.chatserver.common.netty.PacketReader;
@@ -28,6 +29,7 @@ import com.aionemu.chatserver.service.ChatService;
 /**
  * @author ATracer
  */
+@Slf4j
 public class CM_PLAYER_AUTH extends AbstractClientPacket {
 
     private ChatService chatService;
@@ -69,7 +71,7 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
             String after = realid.split("@")[1];
             identifier = after.getBytes("UTF-16le");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("Could not decode player auth identifier for player {}", playerId, e);
         }
     }
 
@@ -78,7 +80,7 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
         try {
             chatService.registerPlayerConnection(playerId, token, identifier, clientChannelHandler, realName);
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("Could not register chat connection for player {}", playerId, e);
         }
     }
 }

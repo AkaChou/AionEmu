@@ -3,7 +3,6 @@
  * 
  * Could not load the following classes:
  *  org.slf4j.Logger
- *  org.slf4j.LoggerFactory
  */
 package com.aionemu.gameserver.controllers.movement;
 
@@ -40,8 +39,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.collections.LastUsedCache;
 import com.aionemu.gameserver.world.World;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.aionemu.gameserver.movement.Global;
 import com.aionemu.gameserver.movement.processors.movement.motor.FollowMotor;
 @Slf4j

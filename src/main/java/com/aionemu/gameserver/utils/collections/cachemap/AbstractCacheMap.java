@@ -21,7 +21,7 @@ import java.lang.ref.ReferenceQueue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Base class for {@link WeakCacheMap} and {@link SoftCacheMap}
@@ -30,9 +30,8 @@ import org.slf4j.Logger;
  * @param <K>
  * @param <V>
  */
+@Slf4j
 abstract class AbstractCacheMap<K, V> implements CacheMap<K, V> {
-
-	private final Logger log;
 
 	protected final String cacheName;
 	protected final String valueName;
@@ -46,10 +45,9 @@ abstract class AbstractCacheMap<K, V> implements CacheMap<K, V> {
 	 * @param cacheName
 	 * @param valueName
 	 */
-	AbstractCacheMap(String cacheName, String valueName, Logger log) {
+	AbstractCacheMap(String cacheName, String valueName) {
 		this.cacheName = "#CACHE  [" + cacheName + "]#  ";
 		this.valueName = valueName;
-		this.log = log;
 	}
 
 	/** {@inheritDoc} */
@@ -65,7 +63,7 @@ abstract class AbstractCacheMap<K, V> implements CacheMap<K, V> {
 		cacheMap.put(key, entry);
 
 		if (log.isDebugEnabled()) {
-			log.debug(cacheName + " : added " + valueName + " for key: " + key);
+			log.debug("{} : added {} for key: {}", cacheName, valueName, key);
 		}
 	}
 
@@ -82,7 +80,7 @@ abstract class AbstractCacheMap<K, V> implements CacheMap<K, V> {
 		V res = reference.get();
 
 		if (res != null && log.isDebugEnabled()) {
-			log.debug(cacheName + " : obtained " + valueName + " for key: " + key);
+			log.debug("{} : obtained {} for key: {}", cacheName, valueName, key);
 		}
 		return res;
 	}

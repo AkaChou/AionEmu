@@ -7,12 +7,12 @@
  */
 package com.aionemu.gameserver.geoEngine.math;
 
-import java.util.logging.Logger;
-
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public final class Vector3f implements Cloneable, Reusable {
-	private static final Logger logger = Logger.getLogger(Vector3f.class.getName());
 	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
 
 		public Object create() {
@@ -65,7 +65,7 @@ public final class Vector3f implements Cloneable, Reusable {
 
 	public Vector3f add(Vector3f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		return new Vector3f(this.x + vec.x, this.y + vec.y, this.z + vec.z);
@@ -80,7 +80,7 @@ public final class Vector3f implements Cloneable, Reusable {
 
 	public Vector3f addLocal(Vector3f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		this.x += vec.x;
@@ -116,7 +116,7 @@ public final class Vector3f implements Cloneable, Reusable {
 
 	public float dot(Vector3f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, 0 returned.");
+			log.warn("Provided vector is null, 0 returned.");
 			return 0.0f;
 		}
 		return this.x * vec.x + this.y * vec.y + this.z * vec.z;
@@ -202,7 +202,7 @@ public final class Vector3f implements Cloneable, Reusable {
 
 	public Vector3f multLocal(Vector3f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		this.x *= vec.x;
@@ -220,7 +220,7 @@ public final class Vector3f implements Cloneable, Reusable {
 
 	public Vector3f mult(Vector3f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		return this.mult(vec, null);
@@ -228,7 +228,7 @@ public final class Vector3f implements Cloneable, Reusable {
 
 	public Vector3f mult(Vector3f vec, Vector3f store) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		if (store == null) {
@@ -278,7 +278,7 @@ public final class Vector3f implements Cloneable, Reusable {
 
 	public Vector3f subtractLocal(Vector3f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		this.x -= vec.x;

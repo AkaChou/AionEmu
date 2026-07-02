@@ -20,13 +20,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.stats.container.StatEnum;
 
+@Slf4j
 public class StatCapUtil {
-	protected static final Logger log = LoggerFactory.getLogger(StatCapUtil.class);
 	static final int LOWER_CAP = Short.MIN_VALUE;
 	static final int UPPER_CAP = Short.MAX_VALUE;
 

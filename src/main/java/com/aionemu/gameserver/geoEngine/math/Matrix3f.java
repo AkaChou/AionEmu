@@ -8,13 +8,14 @@
 package com.aionemu.gameserver.geoEngine.math;
 
 import java.nio.FloatBuffer;
-import java.util.logging.Logger;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public final class Matrix3f implements Cloneable, Reusable {
-	private static final Logger logger = Logger.getLogger(Matrix3f.class.getName());
 	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
 
 		public Object create() {
@@ -122,7 +123,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 			}
 		}
 		}
-		logger.warning("Invalid matrix index.");
+		log.warn("Invalid matrix index.");
 		throw new IllegalArgumentException("Invalid indices into matrix.");
 	}
 
@@ -204,7 +205,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 			break;
 		}
 		default: {
-			logger.warning("Invalid column index.");
+			log.warn("Invalid column index.");
 			throw new IllegalArgumentException("Invalid column index. " + i);
 		}
 		}
@@ -239,7 +240,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 			break;
 		}
 		default: {
-			logger.warning("Invalid row index.");
+			log.warn("Invalid row index.");
 			throw new IllegalArgumentException("Invalid row index. " + i);
 		}
 		}
@@ -270,7 +271,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 
 	public Matrix3f setColumn(int i, Vector3f column) {
 		if (column == null) {
-			logger.warning("Column is null. Ignoring.");
+			log.warn("Column is null. Ignoring.");
 			return this;
 		}
 		switch (i) {
@@ -293,7 +294,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 			break;
 		}
 		default: {
-			logger.warning("Invalid column index.");
+			log.warn("Invalid column index.");
 			throw new IllegalArgumentException("Invalid column index. " + i);
 		}
 		}
@@ -302,7 +303,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 
 	public Matrix3f setRow(int i, Vector3f row) {
 		if (row == null) {
-			logger.warning("Row is null. Ignoring.");
+			log.warn("Row is null. Ignoring.");
 			return this;
 		}
 		switch (i) {
@@ -325,7 +326,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 			break;
 		}
 		default: {
-			logger.warning("Invalid row index.");
+			log.warn("Invalid row index.");
 			throw new IllegalArgumentException("Invalid row index. " + i);
 		}
 		}
@@ -383,7 +384,7 @@ public final class Matrix3f implements Cloneable, Reusable {
 			}
 		}
 		}
-		logger.warning("Invalid matrix index.");
+		log.warn("Invalid matrix index.");
 		throw new IllegalArgumentException("Invalid indices into matrix.");
 	}
 

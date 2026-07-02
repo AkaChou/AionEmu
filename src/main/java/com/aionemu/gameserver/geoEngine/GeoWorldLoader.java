@@ -219,7 +219,7 @@ public class GeoWorldLoader {
 							try {
 								nodeClone = node.clone();
 							} catch (CloneNotSupportedException e) {
-								e.printStackTrace();
+								log.error("Failed to clone door geometry {}", name, e);
 							}
 							createDoors(nodeClone, worldId, matrix3f, loc, scale);
 							map.attachChild(nodeClone);
@@ -239,7 +239,7 @@ public class GeoWorldLoader {
 						}
 					}
 				} catch (Throwable t) {
-					System.out.println(t);
+					log.error("Failed to load geo node {} for world {}", name, worldId, t);
 				}
 			}
 		}
@@ -252,7 +252,7 @@ public class GeoWorldLoader {
 		try {
 			nodeClone = node.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			log.error("Failed to clone geometry node {}", node.getName(), e);
 		}
 		nodeClone.setTransform(matrix, location, scale);
 		nodeClone.updateModelBound();

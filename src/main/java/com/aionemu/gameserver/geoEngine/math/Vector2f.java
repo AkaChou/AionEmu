@@ -6,10 +6,11 @@ package com.aionemu.gameserver.geoEngine.math;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.logging.Logger;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public final class Vector2f implements Cloneable {
-	private static final Logger logger = Logger.getLogger(Vector2f.class.getName());
 	public static final Vector2f ZERO = new Vector2f(0.0f, 0.0f);
 	public static final Vector2f UNIT_XY = new Vector2f(1.0f, 1.0f);
 	public float x;
@@ -44,7 +45,7 @@ public final class Vector2f implements Cloneable {
 
 	public Vector2f add(Vector2f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		return new Vector2f(this.x + vec.x, this.y + vec.y);
@@ -52,7 +53,7 @@ public final class Vector2f implements Cloneable {
 
 	public Vector2f addLocal(Vector2f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		this.x += vec.x;
@@ -68,7 +69,7 @@ public final class Vector2f implements Cloneable {
 
 	public Vector2f add(Vector2f vec, Vector2f result) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		if (result == null) {
@@ -81,7 +82,7 @@ public final class Vector2f implements Cloneable {
 
 	public float dot(Vector2f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, 0 returned.");
+			log.warn("Provided vector is null, 0 returned.");
 			return 0.0f;
 		}
 		return this.x * vec.x + this.y * vec.y;
@@ -153,7 +154,7 @@ public final class Vector2f implements Cloneable {
 
 	public Vector2f multLocal(Vector2f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		this.x *= vec.x;
@@ -209,7 +210,7 @@ public final class Vector2f implements Cloneable {
 
 	public Vector2f subtractLocal(Vector2f vec) {
 		if (null == vec) {
-			logger.warning("Provided vector is null, null returned.");
+			log.warn("Provided vector is null, null returned.");
 			return null;
 		}
 		this.x -= vec.x;

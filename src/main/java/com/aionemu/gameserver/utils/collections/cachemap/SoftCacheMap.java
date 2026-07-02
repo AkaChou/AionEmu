@@ -55,7 +55,7 @@ class SoftCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 	}
 
 	SoftCacheMap(String cacheName, String valueName) {
-		super(cacheName, valueName, log);
+		super(cacheName, valueName);
 	}
 
 	@Override
@@ -65,7 +65,7 @@ class SoftCacheMap<K, V> extends AbstractCacheMap<K, V> implements CacheMap<K, V
 		while ((en = (SoftEntry) refQueue.poll()) != null) {
 			K key = en.getKey();
 			if (log.isDebugEnabled()) {
-				log.debug(cacheName + " : cleaned up " + valueName + " for key: " + key);
+				log.debug("{} : cleaned up {} for key: {}", cacheName, valueName, key);
 			}
 			cacheMap.remove(key);
 		}

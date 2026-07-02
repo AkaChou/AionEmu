@@ -5,8 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 数据库操作工具类
@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
  * 所有数据库操作都通过DatabaseFactory获取连接，并确保正确关闭资源。
  * All database operations obtain connections through DatabaseFactory and ensure proper resource cleanup.
  */
+@Slf4j
 public final class DB {
-    protected static final Logger log = LoggerFactory.getLogger(DB.class);
 
     private DB() {
     }
@@ -62,9 +62,9 @@ public final class DB {
             return true;
         } catch (Exception var17) {
             if (errMsg == null) {
-                log.warn("Error executing select query " + var17, var17);
+                log.warn("Error executing select query: {}", query, var17);
             } else {
-                log.warn(errMsg + " " + var17, var17);
+                log.warn("{} query={}", errMsg, query, var17);
             }
             return false;
         } finally {
@@ -76,7 +76,7 @@ public final class DB {
                     stmt.close();
                 }
             } catch (Exception var16) {
-                log.warn("Failed to close DB connection " + var16, var16);
+                log.warn("Failed to close DB connection", var16);
             }
         }
     }
@@ -118,9 +118,9 @@ public final class DB {
             return true;
         } catch (Exception var17) {
             if (errMsg == null) {
-                log.warn("Error calling stored procedure " + var17, var17);
+                log.warn("Error calling stored procedure: {}", query, var17);
             } else {
-                log.warn(errMsg + " " + var17, var17);
+                log.warn("{} query={}", errMsg, query, var17);
             }
             return false;
         } finally {
@@ -132,7 +132,7 @@ public final class DB {
                     stmt.close();
                 }
             } catch (Exception var16) {
-                log.warn("Failed to close DB connection " + var16, var16);
+                log.warn("Failed to close DB connection", var16);
             }
         }
     }
@@ -196,9 +196,9 @@ public final class DB {
             return true;
         } catch (Exception var16) {
             if (errMsg == null) {
-                log.warn("Failed to execute IU query " + var16, var16);
+                log.warn("Failed to execute insert/update query: {}", query, var16);
             } else {
-                log.warn(errMsg + " " + var16, var16);
+                log.warn("{} query={}", errMsg, query, var16);
             }
             return false;
         } finally {
@@ -210,7 +210,7 @@ public final class DB {
                     stmt.close();
                 }
             } catch (Exception var15) {
-                log.warn("Failed to close DB connection " + var15, var15);
+                log.warn("Failed to close DB connection", var15);
             }
         }
     }
@@ -255,7 +255,7 @@ public final class DB {
             c = DatabaseFactory.getConnection();
             ps = c.prepareStatement(sql, resultSetType, resultSetConcurrency);
         } catch (Exception var8) {
-            log.error("Can't create PreparedStatement for query: " + sql, var8);
+            log.error("Can't create PreparedStatement for query: {}", sql, var8);
             if (c != null) {
                 try {
                     c.close();

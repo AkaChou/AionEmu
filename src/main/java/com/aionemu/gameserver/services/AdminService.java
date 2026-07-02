@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.Config;
@@ -39,8 +37,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 @Slf4j
 public class AdminService {
 	private static volatile ObjectProvider<AdminService> instanceProvider;
-	private static final Logger itemLog = LoggerFactory.getLogger("GMITEMRESTRICTION");
 	private List<Integer> list;
+
+	@Slf4j(topic = "GMITEMRESTRICTION")
+	private static class ItemRestrictionLog {
+	}
 
 	public static AdminService getInstance() {
 		ObjectProvider<AdminService> provider = instanceProvider;
@@ -80,18 +81,18 @@ public class AdminService {
 				list.add(Integer.parseInt(pt));
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.error("Failed to load item restriction list", e);
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					log.warn("Failed to close item restriction list", e);
 				}
 			}
 		}
 
-		log.info("AdminService loaded " + list.size() + " operational items.");
+		log.info("AdminService loaded {} operational items", list.size());
 	}
 
 	public boolean canOperate(Player player, Player target, Item item, String type) {
@@ -112,7 +113,7 @@ public class AdminService {
 			if (target != null) {
 				str += "|target=" + target.getName() + "|" + target.getObjectId();
 			}
-			itemLog.info(str);
+			ItemRestrictionLog.log.info(str);
 			if (!value) {
 				PacketSendUtility.sendMessage(player, "You cannot use " + type + " with this item.");
 			}

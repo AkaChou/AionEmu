@@ -37,8 +37,9 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.logging.slf4j.LogbackConfiguration;
@@ -132,9 +133,9 @@ import ch.qos.logback.core.joran.spi.JoranException;
  *
  * @author (Encom)
  */
+@Slf4j
 public class GameServer {
 
-	public static final Logger log = LoggerFactory.getLogger(GameServer.class);
 	public static HashSet<String> npcs_count = new HashSet<String>();
 	private static int ELYOS_COUNT = 0;
 	private static int ASMOS_COUNT = 0;
@@ -165,7 +166,7 @@ public class GameServer {
 		}
 		File backupDir = new File("./log/backup/");
 		if (!backupDir.exists() && !backupDir.mkdirs()) {
-			System.err.println("Could not create backup directory");
+			log.error("Could not create backup directory: {}", backupDir.getAbsolutePath());
 		}
 		
 		File logDir = new File("./log/");
@@ -193,18 +194,18 @@ public class GameServer {
 						
 						zos.closeEntry();
 					} catch (IOException e) {
-						System.err.println("Failed to backup log file: " + logFile.getName());
+						log.error("Failed to backup log file {}", logFile.getName(), e);
 					}
 					
 					if (!logFile.delete()) {
-						System.err.println("Could not delete log file: " + logFile.getName());
+						log.error("Could not delete log file {}", logFile.getName());
 					}
 				}
 				
-				System.out.println("Successfully backed up " + logFiles.length + " log files to " + outFilename);
+				log.info("Successfully backed up {} log files to {}", logFiles.length, outFilename);
 				
 			} catch (IOException e) {
-				System.err.println("Error during log backup: " + e.getMessage());
+				log.error("Error during log backup to {}", outFilename, e);
 			}
 		}
 		

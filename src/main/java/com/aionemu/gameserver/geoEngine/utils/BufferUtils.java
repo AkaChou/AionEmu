@@ -31,6 +31,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.aionemu.gameserver.geoEngine.math.Vector2f;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <code>BufferUtils</code> is a helper class for generating nio buffers from
  * jME data classes such as Vectors and ColorRGBA.
@@ -38,6 +40,7 @@ import com.aionemu.gameserver.geoEngine.math.Vector3f;
  * @author Joshua Slack
  * @version $Id: BufferUtils.java,v 1.16 2007/10/29 16:56:18 nca Exp $
  */
+@Slf4j
 public final class BufferUtils {
 
 	//// -- TEMP DATA OBJECTS -- ////
@@ -815,7 +818,7 @@ public final class BufferUtils {
 				.append(iBufsM / 1024).append("kb  s: ").append(sBufsM / 1024).append("kb  d: ").append(dBufsM / 1024)
 				.append("kb)").append("\n");
 		if (printStout) {
-			System.out.println(store.toString());
+			log.info("{}", store);
 		}
 	}
 }

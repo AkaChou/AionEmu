@@ -21,6 +21,8 @@ import java.util.List;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlElement;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.gameserver.skillengine.model.DispelType;
 import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
@@ -28,6 +30,7 @@ import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 /**
  * @author ATracer
  */
+@Slf4j
 public class DispelEffect extends EffectTemplate {
 
 	@XmlElement(type = Integer.class)
@@ -80,7 +83,7 @@ public class DispelEffect extends EffectTemplate {
 				try {
 					temp = EffectType.valueOf(type);
 				} catch (Exception e) {
-					log.error("wrong effecttype in dispeleffect " + type);
+					log.error("Wrong effect type in dispel effect: {}", type, e);
 				}
 				if (temp != null) {
 					effect.getEffected().getEffectController().removeEffectByEffectType(temp);

@@ -9,10 +9,13 @@ import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import javax.tools.ToolProvider;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 资源定位器类，用于定位类文件和资源的物理位置
  * Resource locator class for locating physical locations of class files and resources
  */
+@Slf4j
 public final class Locator {
     /**
      * 私有构造函数，防止实例化
@@ -154,7 +157,7 @@ public final class Locator {
      */
     public static File getToolsJar() {
         if (ToolProvider.getSystemJavaCompiler() == null) {
-            System.out.println("Unable to locate the system Java compiler. Run this application with a JDK, not a JRE.");
+            log.warn("Unable to locate the system Java compiler. Run this application with a JDK, not a JRE.");
         }
         return null;
     }

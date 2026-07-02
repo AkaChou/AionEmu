@@ -21,9 +21,7 @@ package com.aionemu.chatserver.configs;
 import java.net.InetSocketAddress;
 import java.util.Properties;
 
-import org.slf4j.LoggerFactory;
-
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.commons.configs.CommonsConfig;
 import com.aionemu.commons.configuration.ConfigurableProcessor;
@@ -33,9 +31,9 @@ import com.aionemu.commons.utils.PropertiesUtils;
 /**
  * @author ATracer
  */
+@Slf4j
 public class Config {
 
-    protected static final Logger log = LoggerFactory.getLogger(Config.class);
     private static volatile Properties bootOverrides = new Properties();
     /**
      * Chat Server address

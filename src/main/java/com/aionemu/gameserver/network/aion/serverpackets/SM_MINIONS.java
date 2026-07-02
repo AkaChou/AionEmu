@@ -18,6 +18,8 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.Collection;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.aionemu.gameserver.model.gameobjects.player.MinionCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.network.aion.AionConnection;
@@ -26,6 +28,7 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 /**
  * @author Falke_34, FrozenKiller Reworked by G-Robson26
  */
+@Slf4j
 public class SM_MINIONS extends AionServerPacket {
 	private int action;
 	@SuppressWarnings("unused")
@@ -236,14 +239,14 @@ public class SM_MINIONS extends AionServerPacket {
 		}
 		case 8: {
 			writeH(subSwitch);
-			System.out.println("SM subSwitch: " + subSwitch);
+			log.debug("SM_MINIONS subSwitch={}", subSwitch);
 			switch (subSwitch) {
 			case 0: { // Add item
 				writeD(minionObjectId);
 				writeD(ItemId);
 				writeD(slot);
-				System.out.println("SM minion minionObjectId: " + minionObjectId + " ItemId: " + ItemId + " slot: "
-						+ slot + " slot2: " + slot2);
+				log.debug("SM_MINIONS add item. minionObjectId={} itemId={} slot={} slot2={}", minionObjectId, ItemId,
+						slot, slot2);
 				break;
 			}
 			case 1: {// Auto Loot
@@ -258,16 +261,16 @@ public class SM_MINIONS extends AionServerPacket {
 			case 256: {
 				writeD(minionObjectId);
 				writeD(slot);
-				System.out.println("SM minion minionObjectId: " + minionObjectId + " ItemId: " + ItemId + " slot: "
-						+ slot + " slot2: " + slot2);
+				log.debug("SM_MINIONS function. minionObjectId={} itemId={} slot={} slot2={}", minionObjectId, ItemId,
+						slot, slot2);
 				break;
 			}
 			case 512: {
 				writeD(minionObjectId);
 				writeD(slot);
 				writeD(slot2);
-				System.out.println("SM minion minionObjectId: " + minionObjectId + " ItemId: " + ItemId + " slot: "
-						+ slot + " slot2: " + slot2);
+				log.debug("SM_MINIONS move item. minionObjectId={} itemId={} slot={} slot2={}", minionObjectId, ItemId,
+						slot, slot2);
 				break;
 			}
 			case 768: {// BUFF

@@ -83,7 +83,7 @@ public class FixNpc extends AdminCommand
                 			try {
                 				DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
                 			} catch (IOException e) {
-                				e.printStackTrace();
+								log.error("Could not save fixed spawn {}", visibleObject.getObjectId(), e);
                 				PacketSendUtility.sendMessage(admin, "Could not save spawn");
                 			}
                         }
@@ -168,7 +168,7 @@ public class FixNpc extends AdminCommand
                         	try {
                         		DataManager.SPAWNS_DATA2.saveSpawn(admin, visibleObject, false);
                         	} catch (IOException e) {
-                        		e.printStackTrace();
+								log.error("Could not save fixed spawn {}", visibleObject.getObjectId(), e);
                         		PacketSendUtility.sendMessage(admin, "Could not save spawn");
                         	}
                             ++spawned;

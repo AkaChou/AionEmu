@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -30,6 +31,7 @@ import java.io.IOException;
 /**
  * @author Luno
  */
+@Slf4j
 public class Delete extends AdminCommand {
 
 	public Delete() {
@@ -59,7 +61,7 @@ public class Delete extends AdminCommand {
 			DataManager.SPAWNS_DATA2.saveSpawn(player, npc, true);
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			log.error("Could not remove spawn {}", npc.getObjectId(), e);
 			PacketSendUtility.sendMessage(player, "Could not remove spawn");
 			return;
 		}

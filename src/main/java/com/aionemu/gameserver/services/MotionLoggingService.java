@@ -303,9 +303,9 @@ public class MotionLoggingService {
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
 			marshaller.marshal(templates, new FileOutputStream(Config.dataFile(file)));
 		} catch (JAXBException e) {
-			e.printStackTrace();
+			log.error("Failed to marshal motion data to {}", file, e);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			log.error("Motion data output file not found: {}", file, e);
 		}
 	}
 

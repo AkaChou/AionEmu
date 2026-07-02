@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.AccessLevel;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.configs.main.SecurityConfig;
 import com.aionemu.gameserver.model.SkillElement;
@@ -43,8 +43,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+@Slf4j(access = AccessLevel.PROTECTED)
 public abstract class CreatureGameStats<T extends Creature> {
-	protected static final Logger log = LoggerFactory.getLogger(CreatureGameStats.class);
 	private static final int ATTACK_MAX_COUNTER = Integer.MAX_VALUE;
 	private long lastGeoUpdate = 0;
 	private Map<StatEnum, TreeSet<IStatFunction>> stats;

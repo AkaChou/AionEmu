@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.geoEngine.bounding;
 
 import java.nio.FloatBuffer;
-import java.util.logging.Logger;
 
 import com.aionemu.gameserver.geoEngine.collision.Collidable;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResult;
@@ -31,6 +30,8 @@ import com.aionemu.gameserver.geoEngine.math.Triangle;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <code>BoundingSphere</code> defines a sphere that defines a container for a
  * group of vertices of a particular piece of geometry. This sphere defines a
@@ -43,9 +44,9 @@ import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
  * @author Mark Powell
  * @version $Id: BoundingSphere.java,v 1.59 2007/08/17 10:34:26 rherlitz Exp $
  */
+@Slf4j
 public class BoundingSphere extends BoundingVolume {
 
-	private static final Logger logger = Logger.getLogger(BoundingSphere.class.getName());
 	float radius;
 	private static final float RADIUS_EPSILON = 1f + 0.00001f;
 
@@ -315,7 +316,7 @@ public class BoundingSphere extends BoundingVolume {
 	 * @param points the list of points to contain.
 	 */
 	public void averagePoints(Vector3f[] points) {
-		logger.info("Bounding Sphere calculated using average points.");
+		log.info("Bounding Sphere calculated using average points.");
 		center = points[0];
 
 		for (int i = 1; i < points.length; i++) {

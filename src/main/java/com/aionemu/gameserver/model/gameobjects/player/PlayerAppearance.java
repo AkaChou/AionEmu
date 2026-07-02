@@ -16,10 +16,13 @@
  */
 package com.aionemu.gameserver.model.gameobjects.player;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author SoulKeeper, srx47, alexa026
  */
 
+@Slf4j
 public class PlayerAppearance implements Cloneable {
 	/**
 	 * Player's face
@@ -1165,7 +1168,7 @@ public class PlayerAppearance implements Cloneable {
 		try {
 			newObject = super.clone();
 		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
+			log.error("Failed to clone player appearance", e);
 		}
 		return newObject;
 	}

@@ -151,7 +151,8 @@ public final class ThreadPoolManager {
 			scheduledPool.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
 			success |= awaitTermination(10000);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			log.warn("Interrupted while shutting down thread pools", e);
+			Thread.currentThread().interrupt();
 		}
 		log.info("\t... success: " + success + " in " + (System.currentTimeMillis() - begin) + " msec.");
 		log.info("\t... " + getTaskCount(scheduledPool) + " scheduled tasks left.");

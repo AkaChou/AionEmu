@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.utils.captcha;
 
+import lombok.extern.slf4j.Slf4j;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -26,6 +27,7 @@ import java.nio.ByteBuffer;
 /**
  * @author Cura
  */
+@Slf4j
 public class CAPTCHAUtil {
 
 	private final static int DEFAULT_WORD_LENGTH = 6;
@@ -88,7 +90,7 @@ public class CAPTCHAUtil {
 			// resource dispose
 			g2.dispose();
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("Failed to create CAPTCHA image", e);
 			bImg = null;
 		}
 		return bImg;

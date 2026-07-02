@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.skillengine.effect;
 
+import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.concurrent.Future;
@@ -33,6 +34,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AbstractOverTimeEffect")
+@Slf4j
 public abstract class AbstractOverTimeEffect extends EffectTemplate {
 
 	@XmlAttribute(required = true)
@@ -75,8 +77,7 @@ public abstract class AbstractOverTimeEffect extends EffectTemplate {
 			}, checktime, checktime);
 			effect.setPeriodicTask(task, position);
 		} catch (Exception e) {
-			log.warn("Exception in skillId: " + effect.getSkillId());
-			e.printStackTrace();
+			log.warn("Exception in skillId: {}", effect.getSkillId(), e);
 		}
 	}
 

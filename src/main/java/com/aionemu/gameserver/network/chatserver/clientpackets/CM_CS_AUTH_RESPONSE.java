@@ -18,8 +18,7 @@ package com.aionemu.gameserver.network.chatserver.clientpackets;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.network.GameServerAuthFailure;
 import com.aionemu.gameserver.network.chatserver.ChatServerConnection.State;
@@ -27,8 +26,8 @@ import com.aionemu.gameserver.network.chatserver.CsClientPacket;
 import com.aionemu.gameserver.network.chatserver.serverpackets.SM_CS_AUTH;
 import com.aionemu.gameserver.services.ChatService;
 
+@Slf4j
 public class CM_CS_AUTH_RESPONSE extends CsClientPacket {
-	protected static final Logger log = LoggerFactory.getLogger(CM_CS_AUTH_RESPONSE.class);
 	private int response;
 	private byte[] ip;
 	private int port;
@@ -48,8 +47,8 @@ public class CM_CS_AUTH_RESPONSE extends CsClientPacket {
 	protected void runImpl() {
 		switch (response) {
 		case 0: // Authed
-			log.info("GameServer authed successfully IP : " + (ip[0] & 0xFF) + "." + (ip[1] & 0xFF) + "."
-					+ (ip[2] & 0xFF) + "." + (ip[3] & 0xFF) + " Port: " + port);
+			log.info("GameServer authed successfully at {}.{}.{}.{}:{}", ip[0] & 0xFF, ip[1] & 0xFF, ip[2] & 0xFF,
+					ip[3] & 0xFF, port);
 			getConnection().setState(State.AUTHED);
 			ChatService.setIp(ip);
 			ChatService.setPort(port);

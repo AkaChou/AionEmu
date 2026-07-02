@@ -8,8 +8,6 @@ import com.aionemu.gameserver.network.aion.AionConnection.State;
 import com.aionemu.gameserver.services.TradeService;
 
 public class CM_SELL_TERMINATED_ITEMS extends AionClientPacket {
-	// private static final Logger log =
-	// LoggerFactory.getLogger(CM_SELL_TERMINATED_ITEMS.class);
 	private int size;
 	private int itemObjectId;
 
