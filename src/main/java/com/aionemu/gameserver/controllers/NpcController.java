@@ -579,7 +579,7 @@ public class NpcController extends CreatureController<Npc> {
 	 */
 	public Future<?> scheduleRespawn() {
 		if (!getOwner().getSpawn().isNoRespawn()) {
-			RespawnService.scheduleRespawnTask(getOwner());
+			return RespawnService.scheduleRespawnTask(getOwner());
 		}
 		return null;
 	}

@@ -41,6 +41,23 @@ class NettyConnectionHandlerTest {
     }
 
     @Test
+    void waitsForIncompleteUnsignedFrames() {
+        Holder holder = new Holder();
+        EmbeddedChannel channel = channel(holder, 65536, 16);
+
+        ByteBuf partialFrame = Unpooled.buffer();
+        partialFrame.writeShortLE(0x8430);
+        partialFrame.writeZero(49);
+        channel.writeInbound(partialFrame);
+
+        assertEquals(0, holder.connection.received.size());
+        assertEquals(0, holder.connection.disconnects);
+        assertEquals(51, holder.connection.readBuffer.position());
+
+        channel.finishAndReleaseAll();
+    }
+
+    @Test
     void flushesQueuedFrames() {
         Holder holder = new Holder();
         EmbeddedChannel channel = channel(holder);
@@ -70,8 +87,12 @@ class NettyConnectionHandlerTest {
     }
 
     private static EmbeddedChannel channel(Holder holder) {
+        return channel(holder, 16, 16);
+    }
+
+    private static EmbeddedChannel channel(Holder holder, int readBufferSize, int writeBufferSize) {
         NettyConnectionHandler handler = new NettyConnectionHandler(transport -> {
-            holder.connection = new TestConnection(transport);
+            holder.connection = new TestConnection(transport, readBufferSize, writeBufferSize);
             return holder.connection;
         }, Runnable::run);
         EmbeddedChannel channel = new EmbeddedChannel(handler);
@@ -100,7 +121,11 @@ class NettyConnectionHandlerTest {
         private int disconnects;
 
         private TestConnection(ConnectionTransport transport) {
-            super(transport, 16, 16);
+            this(transport, 16, 16);
+        }
+
+        private TestConnection(ConnectionTransport transport, int readBufferSize, int writeBufferSize) {
+            super(transport, readBufferSize, writeBufferSize);
         }
 
         private void enqueue(byte[] payload) {

@@ -155,7 +155,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         ByteBuffer readBuffer = connection.readBuffer;
         readBuffer.flip();
         try {
-            while (readBuffer.remaining() > 2 && readBuffer.remaining() >= readBuffer.getShort(readBuffer.position())) {
+            while (readBuffer.remaining() >= Short.BYTES && readBuffer.remaining() >= frameSize(readBuffer)) {
                 if (!parse(readBuffer)) {
                     return false;
                 }
@@ -170,16 +170,21 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
         }
     }
 
+    private int frameSize(ByteBuffer buffer) {
+        return Short.toUnsignedInt(buffer.getShort(buffer.position()));
+    }
+
     private boolean parse(ByteBuffer buffer) {
-        short size = 0;
+        int size = 0;
         try {
-            size = buffer.getShort();
-            if (size > 1) {
-                size -= 2;
+            size = Short.toUnsignedInt(buffer.getShort());
+            if (size < Short.BYTES) {
+                return false;
             }
-            ByteBuffer packetBuffer = (ByteBuffer) buffer.slice().limit(size);
+            int payloadSize = size - Short.BYTES;
+            ByteBuffer packetBuffer = (ByteBuffer) buffer.slice().limit(payloadSize);
             packetBuffer.order(ByteOrder.LITTLE_ENDIAN);
-            buffer.position(buffer.position() + size);
+            buffer.position(buffer.position() + payloadSize);
             return connection.processData(packetBuffer);
         } catch (IllegalArgumentException e) {
             log.warn("Error parsing input from client - account: {} packet size: {} real size: {}", connection, size, buffer.remaining(), e);
