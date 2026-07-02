@@ -37,6 +37,8 @@ public class CM_AETHERFORGING extends AionClientPacket {
 	private int targetObjId;
 	private int materialsCount;
 	private int craftType;
+	private int craftCount = 1;
+	private boolean componentsOk = true;
 
 	public CM_AETHERFORGING(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -55,6 +57,8 @@ public class CM_AETHERFORGING extends AionClientPacket {
 			craftType = readC();
 			break;
 		case 1:
+			craftCount = 0;
+			componentsOk = true;
 			targetTemplateId = readD();
 			recipeId = readD();
 			targetObjId = readD();
@@ -63,7 +67,12 @@ public class CM_AETHERFORGING extends AionClientPacket {
 			for (int i = 0; i < materialsCount; i++) {
 				itemID = readD();
 				itemCount = readQ();
-				CraftService.checkComponents(player, recipeId, itemID, materialsCount);
+				int materialCraftCount = CraftService.checkComponents(player, recipeId, itemID, itemCount);
+				if (materialCraftCount < 1) {
+					componentsOk = false;
+				} else {
+					craftCount = craftCount == 0 ? materialCraftCount : Math.min(craftCount, materialCraftCount);
+				}
 			}
 			break;
 		}
@@ -84,7 +93,10 @@ public class CM_AETHERFORGING extends AionClientPacket {
 			PacketSendUtility.sendPacket(player, new SM_AETHERFORGING_PLAYER(player, actionId));
 			break;
 		case 1:
-			CraftService.startAetherforging(player, recipeId, craftType);
+			if (!componentsOk || craftCount < 1) {
+				return;
+			}
+			CraftService.startAetherforging(player, recipeId, craftType, craftCount);
 			PacketSendUtility.sendPacket(player, new SM_AETHERFORGING_PLAYER(player, actionId));
 			break;
 		}

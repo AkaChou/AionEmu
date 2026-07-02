@@ -21,12 +21,6 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.controllers.observer.ItemUseObserver;
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -144,10 +138,12 @@ public class CraftService {
 	}
 
 	public static void startAetherforging(final Player player, int recipeId, int craftType) {
+		startAetherforging(player, recipeId, craftType, 1);
+	}
+
+	public static void startAetherforging(final Player player, int recipeId, int craftType, int craftCount) {
 		final RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
-		int skillLvl = 0;
-		int skillId = recipeTemplate.getSkillid();
-		final ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(recipeTemplate.getProductid());
+		final int productCount = Math.max(1, craftCount);
 		PacketSendUtility.broadcastPacket(player, new SM_AETHERFORGING_ANIMATION(player, recipeTemplate.getId(), 3000, 0), true);
 		final ItemUseObserver observer = new ItemUseObserver() {
 			@Override
@@ -162,8 +158,7 @@ public class CraftService {
 			@Override
 			public void run() {
 				int xpReward = (int) ((2 * (recipeTemplate.getSkillpoint() + 100) * (recipeTemplate.getSkillpoint() + 100) + 60));
-				int gainedCraftExp = (int) RewardType.CRAFTING.calcReward(player, xpReward);
-				ItemService.addItem(player, recipeTemplate.getProductid(), recipeTemplate.getQuantity(), new ItemUpdatePredicate(ItemAddType.AETHERFORGING, ItemUpdateType.INC_ITEM_COLLECT));
+				ItemService.addItem(player, recipeTemplate.getProductid(), (long) recipeTemplate.getQuantity() * productCount, new ItemUpdatePredicate(ItemAddType.AETHERFORGING, ItemUpdateType.INC_ITEM_COLLECT));
 				if (Rnd.get(1, 10) == 10 && player.getSkillList().getSkillLevel(40011) != 300) {
 					player.getObserveController().removeObserver(observer);
 					player.getCommonData().addExp(xpReward, RewardType.CRAFTING);
@@ -176,27 +171,44 @@ public class CraftService {
 		}, 3000));
 	}
 
-	@SuppressWarnings("rawtypes")
 	public static void checkComponents(Player player, int recipeId, int itemId, int materialsCount) {
 		RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
 		if (recipeTemplate.getComponent() != null) {
-			HashMap<Integer, Integer> hm = new HashMap<Integer, Integer>();
 			for (Component a : recipeTemplate.getComponent()) {
 				for (ComponentElement b : a.getComponents()) {
 					if (b.getItemid().equals(itemId)) {
-						hm.put(itemId, b.getQuantity());
+						player.getInventory().decreaseByItemId(itemId, b.getQuantity());
+						return;
 					}
 				}
 			}
-			Set<Entry<Integer, Integer>> set = hm.entrySet();
-			Iterator<Entry<Integer, Integer>> i = set.iterator();
-			while (i.hasNext()) {
-				Map.Entry me = (Map.Entry) i.next();
-				if (!player.getInventory().decreaseByItemId((Integer) me.getKey(), (Integer) me.getValue())) {
-					return;
+		}
+	}
+
+	public static int checkComponents(Player player, int recipeId, int itemId, long requestedCount) {
+		RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
+		if (recipeTemplate.getComponent() != null) {
+			for (Component a : recipeTemplate.getComponent()) {
+				for (ComponentElement b : a.getComponents()) {
+					if (b.getItemid().equals(itemId)) {
+						int craftCount = getCraftCount(b.getQuantity(), requestedCount);
+						if (craftCount > 0 && player.getInventory().decreaseByItemId(itemId, (long) b.getQuantity() * craftCount)) {
+							return craftCount;
+						}
+						return 0;
+					}
 				}
 			}
 		}
+		return 0;
+	}
+
+	static int getCraftCount(int requiredQuantity, long requestedQuantity) {
+		if (requiredQuantity < 1 || requestedQuantity < requiredQuantity) {
+			return 0;
+		}
+		long count = requestedQuantity / requiredQuantity;
+		return count > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) count;
 	}
 
 	private static int getBonusReqItem(int skillId) {
