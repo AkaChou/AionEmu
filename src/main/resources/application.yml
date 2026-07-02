@@ -5,8 +5,6 @@ spring:
 
 aion:
   game:
-    network:
-      external-ip:
     startup:
       progress:
         enabled: true

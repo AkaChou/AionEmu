@@ -74,6 +74,9 @@ import com.aionemu.gameserver.configs.network.NetworkConfig;
 @Slf4j
 public class Config {
 	private static volatile Properties bootOverrides = new Properties();
+	private static final String NETWORK_ADDRESS_KEY = "gameserver.network.address";
+	private static final String LOGIN_ADDRESS_KEY = "gameserver.network.login.address";
+	private static final String IPCONFIG_DEFAULT_KEY = "gameserver.network.ipconfig.default";
 
 	private static String configDir() {
 		return System.getProperty("aion.game.config.dir", "./config");
@@ -138,6 +141,46 @@ public class Config {
 		PropertiesUtils.overrideProperties(targetProperties, bootOverrides);
 	}
 
+	private static Properties[] withNetworkAddressOverrides(Properties[] networkProps) {
+		String networkAddress = findProperty(networkProps, NETWORK_ADDRESS_KEY);
+		if (networkAddress == null || networkAddress.isBlank()) {
+			return networkProps;
+		}
+		networkAddress = networkAddress.trim();
+		Properties override = new Properties();
+		override.setProperty(NETWORK_ADDRESS_KEY, networkAddress);
+		override.setProperty(LOGIN_ADDRESS_KEY, replaceLoginAddressHost(findProperty(networkProps, LOGIN_ADDRESS_KEY), networkAddress));
+		override.setProperty(IPCONFIG_DEFAULT_KEY, networkAddress);
+		Properties bootOverride = new Properties();
+		bootOverride.putAll(bootOverrides);
+		bootOverride.putAll(override);
+		setBootOverrides(bootOverride);
+		Properties[] result = new Properties[networkProps.length + 1];
+		result[0] = override;
+		System.arraycopy(networkProps, 0, result, 1, networkProps.length);
+		return result;
+	}
+
+	private static String findProperty(Properties[] properties, String key) {
+		for (Properties property : properties) {
+			if (property.containsKey(key)) {
+				return property.getProperty(key);
+			}
+		}
+		return null;
+	}
+
+	private static String replaceLoginAddressHost(String loginAddress, String host) {
+		if (loginAddress == null || loginAddress.isBlank()) {
+			return host + ":9014";
+		}
+		int portSeparator = loginAddress.lastIndexOf(':');
+		if (portSeparator < 0 || portSeparator == loginAddress.length() - 1) {
+			return host;
+		}
+		return host + loginAddress.substring(portSeparator);
+	}
+
 	public static void load() {
 		try {
 			Properties myProps = null;
@@ -200,6 +243,7 @@ public class Config {
 			String network = configDir() + "/network";
 			Properties[] networkProps = PropertiesUtils.loadAllFromDirectory(network);
 			overrideRuntimeProperties(networkProps, myProps);
+			networkProps = withNetworkAddressOverrides(networkProps);
 			ConfigurableProcessor.process(DatabaseConfig.class, networkProps);
 			ConfigurableProcessor.process(NetworkConfig.class, networkProps);
 		} catch (Exception e) {

@@ -17,7 +17,9 @@
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -42,25 +44,27 @@ public class ShugoSweepRewardData {
 
 	@XmlTransient
 	protected List<ShugoSweepReward> ShugoSweepRewardList = new ArrayList<ShugoSweepReward>();
+	@XmlTransient
+	private Map<Long, ShugoSweepReward> rewardsByBoardAndNum = new HashMap<Long, ShugoSweepReward>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (ShugoSweepReward reward : ShugoSweepRewardData) {
 			ShugoSweepRewardList.add(reward);
+			rewardsByBoardAndNum.putIfAbsent(rewardKey(reward.getBoardId(), reward.getRewardNum()), reward);
 		}
 		ShugoSweepRewardData.clear();
 		ShugoSweepRewardData = null;
 	}
 
 	public ShugoSweepReward getRewardBoard(int boardId, int rewardNum) {
-		for (ShugoSweepReward reward : ShugoSweepRewardList) {
-			if (reward.getBoardId() == boardId && reward.getRewardNum() == rewardNum) {
-				return reward;
-			}
-		}
-		return null;
+		return rewardsByBoardAndNum.get(rewardKey(boardId, rewardNum));
 	}
 
 	public int size() {
 		return ShugoSweepRewardList.size();
+	}
+
+	private static long rewardKey(int boardId, int rewardNum) {
+		return ((long) boardId << 32) ^ (rewardNum & 0xffffffffL);
 	}
 }

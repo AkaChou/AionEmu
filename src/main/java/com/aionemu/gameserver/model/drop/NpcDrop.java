@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.model.drop;
 
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -33,11 +34,13 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 
 @XmlRootElement(name = "npc_drop")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "npcDrop", propOrder = { "dropGroup" })
+@XmlType(name = "npcDrop", propOrder = { "dropGroup", "commonDropGroup" })
 public class NpcDrop implements DropCalculator {
 
 	@XmlElement(name = "drop_group")
 	protected List<DropGroup> dropGroup;
+	@XmlElement(name = "common_drop_group")
+	protected List<CommonDropGroup> commonDropGroup;
 	@XmlAttribute(name = "npc_id", required = true)
 	protected int npcId;
 
@@ -46,6 +49,25 @@ public class NpcDrop implements DropCalculator {
 			return Collections.emptyList();
 		}
 		return this.dropGroup;
+	}
+
+	public List<String> getCommonDropGroupNames() {
+		if (commonDropGroup == null) {
+			return Collections.emptyList();
+		}
+		return commonDropGroup.stream()
+			.map(CommonDropGroup::getName)
+			.toList();
+	}
+
+	public void addDropGroups(List<DropGroup> groups) {
+		if (groups.isEmpty()) {
+			return;
+		}
+		if (dropGroup == null) {
+			dropGroup = new ArrayList<>();
+		}
+		dropGroup.addAll(groups);
 	}
 
 	/**
@@ -67,5 +89,15 @@ public class NpcDrop implements DropCalculator {
 			}
 		}
 		return index;
+	}
+
+	@XmlAccessorType(XmlAccessType.FIELD)
+	public static class CommonDropGroup {
+		@XmlAttribute(name = "name", required = true)
+		protected String name;
+
+		public String getName() {
+			return name;
+		}
 	}
 }

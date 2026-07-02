@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.dataholders;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -28,6 +27,7 @@ import jakarta.xml.bind.annotation.XmlTransient;
 import jakarta.xml.bind.annotation.XmlType;
 
 import com.aionemu.gameserver.model.templates.item.AssemblyItem;
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "item" })
@@ -38,24 +38,22 @@ public class AssemblyItemsData {
 	protected List<AssemblyItem> item;
 
 	@XmlTransient
-	private List<AssemblyItem> items = new ArrayList<AssemblyItem>();
+	private IntObjectHashMap<AssemblyItem> itemsById = new IntObjectHashMap<AssemblyItem>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+		itemsById.clear();
 		for (AssemblyItem template : item) {
-			items.add(template);
+			itemsById.put(template.getId(), template);
 		}
+		item.clear();
+		item = null;
 	}
 
 	public int size() {
-		return items.size();
+		return itemsById.size();
 	}
 
 	public AssemblyItem getAssemblyItem(int itemId) {
-		for (AssemblyItem assemblyItem : items) {
-			if (assemblyItem.getId() == itemId) {
-				return assemblyItem;
-			}
-		}
-		return null;
+		return itemsById.get(itemId);
 	}
 }

@@ -16,6 +16,7 @@
 package com.aionemu.gameserver.model.drop;
 
 import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -62,6 +63,15 @@ public class DropGroup implements DropCalculator {
 			return "";
 		}
 		return group_name;
+	}
+
+	public DropGroup copy() {
+		DropGroup copy = new DropGroup();
+		copy.drop = drop == null ? null : new ArrayList<>(drop);
+		copy.race = race;
+		copy.useCategory = useCategory;
+		copy.group_name = group_name;
+		return copy;
 	}
 
 	@Override

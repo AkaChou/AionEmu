@@ -38,10 +38,18 @@ public class ChallengeData {
 
 	@XmlTransient
 	protected Map<Integer, ChallengeTaskTemplate> tasksById = new HashMap<Integer, ChallengeTaskTemplate>();
+	@XmlTransient
+	private Map<Integer, ChallengeTaskTemplate> tasksByQuestId = new HashMap<Integer, ChallengeTaskTemplate>();
+	@XmlTransient
+	private Map<Integer, ChallengeQuestTemplate> questsById = new HashMap<Integer, ChallengeQuestTemplate>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (ChallengeTaskTemplate t : task) {
 			tasksById.put(t.getId(), t);
+			for (ChallengeQuestTemplate q : t.getQuests()) {
+				tasksByQuestId.put(q.getId(), t);
+				questsById.put(q.getId(), q);
+			}
 		}
 		task.clear();
 		task = null;
@@ -56,25 +64,11 @@ public class ChallengeData {
 	}
 
 	public ChallengeTaskTemplate getTaskByQuestId(int questId) {
-		for (ChallengeTaskTemplate ct : tasksById.values()) {
-			for (ChallengeQuestTemplate cq : ct.getQuests()) {
-				if (cq.getId() == questId) {
-					return ct;
-				}
-			}
-		}
-		return null;
+		return tasksByQuestId.get(questId);
 	}
 
 	public ChallengeQuestTemplate getQuestByQuestId(int questId) {
-		for (ChallengeTaskTemplate ct : tasksById.values()) {
-			for (ChallengeQuestTemplate cq : ct.getQuests()) {
-				if (cq.getId() == questId) {
-					return cq;
-				}
-			}
-		}
-		return null;
+		return questsById.get(questId);
 	}
 
 	public int size() {

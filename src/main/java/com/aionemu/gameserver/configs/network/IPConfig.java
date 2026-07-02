@@ -38,7 +38,6 @@ import com.aionemu.gameserver.configs.Config;
  */
 @Slf4j
 public class IPConfig {
-
 	/**
 	 * Location of config file
 	 */
@@ -56,6 +55,7 @@ public class IPConfig {
 	 */
 	public static void load() {
 		try {
+			ranges.clear();
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 			parser.parse(Config.configFile("network/ipconfig.xml"), new DefaultHandler() {
 
@@ -64,10 +64,11 @@ public class IPConfig {
 						throws SAXException {
 
 					if (qName.equals("ipconfig")) {
-						String defaultAddressValue = Config.bootOverride("gameserver.network.ipconfig.default");
-						if (defaultAddressValue == null || defaultAddressValue.isBlank()) {
-							defaultAddressValue = attributes.getValue("default");
-						}
+						String defaultAddressValue = firstNonBlank(
+							Config.bootOverride("gameserver.network.address"),
+							Config.bootOverride("gameserver.network.ipconfig.default"),
+							attributes.getValue("default")
+						);
 						try {
 							defaultAddress = InetAddress.getByName(defaultAddressValue).getAddress();
 						} catch (UnknownHostException e) {
@@ -87,6 +88,15 @@ public class IPConfig {
 			log.error("Critical error while parsing ipConfig", e);
 			throw new Error("Can't load ipConfig", e);
 		}
+	}
+
+	private static String firstNonBlank(String... values) {
+		for (String value : values) {
+			if (value != null && !value.isBlank()) {
+				return value.trim();
+			}
+		}
+		return null;
 	}
 
 	/**

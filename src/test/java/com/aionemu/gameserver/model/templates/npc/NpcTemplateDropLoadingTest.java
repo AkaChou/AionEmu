@@ -9,7 +9,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.dataholders.NpcDropData;
@@ -32,8 +31,8 @@ class NpcTemplateDropLoadingTest {
 	}
 
 	@Test
-	void getNpcDropLoadsDropFromLazyDataWithoutStoringItOnTemplate() throws Exception {
-		Files.writeString(tempDir.resolve("drops.xml"), """
+	void getNpcDropReadsFromStaticDropDataWithoutStoringItOnTemplate() throws Exception {
+		Files.writeString(tempDir.resolve("npc_drops_part_001.xml"), """
 			<npc_drops>
 				<npc_drop npc_id="100">
 					<drop_group name="base">
@@ -42,7 +41,7 @@ class NpcTemplateDropLoadingTest {
 				</npc_drop>
 			</npc_drops>
 			""", StandardCharsets.UTF_8);
-		DataManager.NPC_DROP_DATA = NpcDropData.loadLazy(tempDir.toFile(), 10, TimeUnit.MINUTES.toMillis(5), () -> 1_000L);
+		DataManager.NPC_DROP_DATA = NpcDropData.loadEager(tempDir.toFile());
 		NpcTemplate template = template(100);
 
 		NpcDrop first = template.getNpcDrop();

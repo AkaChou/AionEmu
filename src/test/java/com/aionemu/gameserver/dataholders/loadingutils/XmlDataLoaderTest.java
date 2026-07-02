@@ -159,11 +159,11 @@ class XmlDataLoaderTest {
 	}
 
 	@Test
-	void mainStaticDataDoesNotImportNpcDropsIntoSharedCache() throws Exception {
+	void mainStaticDataImportsNpcDropsIntoSharedCache() throws Exception {
 		String staticData = Files.readString(Path.of("src/main/resources/aion/game/data/static_data/static_data.xml"), StandardCharsets.UTF_8);
 
-		assertTrue(!staticData.contains("<npc_drops>"));
-		assertTrue(!staticData.contains("file=\"npc_drops\""));
+		assertTrue(staticData.contains("<npc_drops>"));
+		assertTrue(staticData.contains("file=\"npc_drops/"));
 		assertTrue(!staticData.contains("<item_templates>"));
 		assertTrue(!staticData.contains("file=\"items/item\""));
 	}

@@ -17,7 +17,9 @@
 package com.aionemu.gameserver.dataholders;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -40,19 +42,25 @@ public class InstanceExitData {
 
 	@XmlTransient
 	protected List<InstanceExit> instanceExits = new ArrayList<InstanceExit>();
+	@XmlTransient
+	private Map<Integer, List<InstanceExit>> exitsByWorldId = new HashMap<Integer, List<InstanceExit>>();
 
 	void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
 		for (InstanceExit exit : instanceExit) {
 			instanceExits.add(exit);
+			exitsByWorldId.computeIfAbsent(exit.getInstanceId(), k -> new ArrayList<InstanceExit>()).add(exit);
 		}
 		instanceExit.clear();
 		instanceExit = null;
 	}
 
 	public InstanceExit getInstanceExit(int worldId, Race race) {
-		for (InstanceExit exit : instanceExits) {
-			if (exit.getInstanceId() == worldId
-					&& (race.equals(exit.getRace()) || exit.getRace().equals(Race.PC_ALL))) {
+		List<InstanceExit> exits = exitsByWorldId.get(worldId);
+		if (exits == null) {
+			return null;
+		}
+		for (InstanceExit exit : exits) {
+			if (race.equals(exit.getRace()) || exit.getRace().equals(Race.PC_ALL)) {
 				return exit;
 			}
 		}

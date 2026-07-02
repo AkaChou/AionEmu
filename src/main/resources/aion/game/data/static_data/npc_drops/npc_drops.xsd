@@ -3,17 +3,28 @@
         <xs:include schemaLocation="../import.xsd"/>
         <xs:include schemaLocation="../global_types.xsd"/>
         <xs:element name="npc_drops" type="npcDrops"/>
+        <xs:element name="common_drop_groups" type="commonDropGroups"/>
         <xs:complexType name="npcDrops">
                 <xs:sequence>
                         <xs:element ref="import" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="group" type="dropGroup" minOccurs="0" maxOccurs="unbounded"/>
                         <xs:element name="npc_drop" type="npcDrop" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
         </xs:complexType>
-        <xs:complexType name="npcDrop">
+        <xs:complexType name="commonDropGroups">
                 <xs:sequence>
-                        <xs:element name="drop_group" type="dropGroup" minOccurs="0" maxOccurs="unbounded"/>
+                        <xs:element name="group" type="dropGroup" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
+        </xs:complexType>
+        <xs:complexType name="npcDrop">
+                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                        <xs:element name="drop_group" type="dropGroup"/>
+                        <xs:element name="common_drop_group" type="commonDropGroup"/>
+                </xs:choice>
                 <xs:attribute name="npc_id" type="xs:int" use="required"/>
+        </xs:complexType>
+        <xs:complexType name="commonDropGroup">
+                <xs:attribute name="name" type="xs:string" use="required"/>
         </xs:complexType>
         <xs:complexType name="dropGroup">
                 <xs:sequence>

@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.dataholders;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.xml.bind.Unmarshaller;
@@ -26,6 +25,7 @@ import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlTransient;
 
+import com.aionemu.commons.utils.collections.IntObjectHashMap;
 import com.aionemu.gameserver.model.templates.item.ItemSkillEnhance;
 
 /**
@@ -39,26 +39,22 @@ public class ItemSkillEnhanceData {
 	protected List<ItemSkillEnhance> skillEnhances;
 
 	@XmlTransient
-	protected List<ItemSkillEnhance> enhanceSkillList = new ArrayList<ItemSkillEnhance>();
+	protected IntObjectHashMap<ItemSkillEnhance> enhanceSkillsById = new IntObjectHashMap<ItemSkillEnhance>();
 
 	public ItemSkillEnhance getSkillEnhance(int id) {
-		for (ItemSkillEnhance enhance : enhanceSkillList) {
-			if (enhance.getId() == id) {
-				return enhance;
-			}
-		}
-		return null;
+		return enhanceSkillsById.get(id);
 	}
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
+		enhanceSkillsById.clear();
 		for (ItemSkillEnhance enhance : skillEnhances) {
-			enhanceSkillList.add(enhance);
+			enhanceSkillsById.put(enhance.getId(), enhance);
 		}
 		skillEnhances.clear();
 		skillEnhances = null;
 	}
 
 	public int size() {
-		return enhanceSkillList.size();
+		return enhanceSkillsById.size();
 	}
 }

@@ -24,7 +24,6 @@ import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.configs.Config;
-import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.*;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlValidationHandler;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -49,7 +48,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.apache.commons.io.filefilter.FileFilterUtils.*;
 
@@ -147,13 +145,7 @@ public class Reload extends AdminCommand {
 			PacketSendUtility.sendMessage(admin, "Configs successfully reloaded!");
 		}
 		else if (params[0].equals("drop")) {
-			if (DataManager.NPC_DROP_DATA == null || !DataManager.NPC_DROP_DATA.isLazy()) {
-				DataManager.NPC_DROP_DATA = NpcDropData.loadLazy(Config.dataFile("./data/static_data/npc_drops"),
-					GSConfig.NPC_DROP_CACHE_MAX_ENTRIES,
-					TimeUnit.MINUTES.toMillis(GSConfig.NPC_DROP_CACHE_EXPIRE_AFTER_ACCESS_MINUTES));
-			} else {
-				DataManager.NPC_DROP_DATA.reload();
-			}
+			DataManager.NPC_DROP_DATA = NpcDropData.loadEager(Config.dataFile("./data/static_data/npc_drops"));
 			PacketSendUtility.sendMessage(admin, "NpcDrops successfully reloaded!");
 		}
 		else if (params[0].equals("gameshop")) {

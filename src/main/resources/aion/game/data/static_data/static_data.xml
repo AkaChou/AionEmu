@@ -137,6 +137,27 @@
 	<import file="locations/windstreams/windstreams.xml"/>
 	<import file="cosmetic_items/cosmetic_items.xml"/>
 	<import file="npc_shouts/npc_shouts.xml"/>
+	<npc_drops>
+		<import file="npc_drops/common_drop_groups.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_001.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_002.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_003.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_004.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_005.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_006.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_007.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_008.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_009.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_010.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_011.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_012.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_013.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_014.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_015.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_016.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_017.xml" skipRoot="true"/>
+		<import file="npc_drops/npc_drops_part_018.xml" skipRoot="true"/>
+	</npc_drops>
 	<import file="auto_group/auto_group.xml"/>
 	<events_config>
 		<import file="events_config/events_config.xml" skipRoot="true"/>

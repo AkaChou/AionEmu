@@ -16,7 +16,10 @@
  */
 package com.aionemu.gameserver.dataholders;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -27,9 +30,6 @@ import jakarta.xml.bind.annotation.XmlTransient;
 
 import com.aionemu.gameserver.model.templates.vortex.VortexTemplate;
 import com.aionemu.gameserver.model.vortex.VortexLocation;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author Source
@@ -42,10 +42,14 @@ public class VortexData {
 	private List<VortexTemplate> vortexTemplates;
 	@XmlTransient
 	private Map<Integer, VortexLocation> vortex = new LinkedHashMap<Integer, VortexLocation>();
+	@XmlTransient
+	private Map<Integer, VortexLocation> vortexByInvasionWorldId = new HashMap<Integer, VortexLocation>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		for (VortexTemplate template : vortexTemplates) {
-			vortex.put(template.getId(), new VortexLocation(template));
+			VortexLocation location = new VortexLocation(template);
+			vortex.put(template.getId(), location);
+			vortexByInvasionWorldId.putIfAbsent(location.getInvasionWorldId(), location);
 		}
 	}
 
@@ -54,12 +58,7 @@ public class VortexData {
 	}
 
 	public VortexLocation getVortexLocation(int invasionWorldId) {
-		for (VortexLocation loc : vortex.values()) {
-			if (loc.getInvasionWorldId() == invasionWorldId) {
-				return loc;
-			}
-		}
-		return null;
+		return vortexByInvasionWorldId.get(invasionWorldId);
 	}
 
 	public Map<Integer, VortexLocation> getVortexLocations() {

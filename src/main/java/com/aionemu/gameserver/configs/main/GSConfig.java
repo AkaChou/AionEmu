@@ -58,10 +58,6 @@ public class GSConfig {
 	public static int RATIO_HIGH_PLAYER_COUNT_DISABLING;
 	@Property(key = "gameserver.abyssranking.small.cache", defaultValue = "false")
 	public static boolean ABYSSRANKING_SMALL_CACHE;
-	@Property(key = "gameserver.npc_drops.cache.max_entries", defaultValue = "2000")
-	public static int NPC_DROP_CACHE_MAX_ENTRIES = 2000;
-	@Property(key = "gameserver.npc_drops.cache.expire_after_access_minutes", defaultValue = "60")
-	public static int NPC_DROP_CACHE_EXPIRE_AFTER_ACCESS_MINUTES = 60;
 	@Property(key = "gameserver.character.reentry.time", defaultValue = "20")
 	public static int CHARACTER_REENTRY_TIME;
 	@Property(key = "gameserver.master.server.enable", defaultValue = "false")

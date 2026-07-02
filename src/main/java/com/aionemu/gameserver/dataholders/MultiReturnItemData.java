@@ -43,11 +43,15 @@ public class MultiReturnItemData {
 
 	@XmlTransient
 	private IntObjectHashMap<List<MultiReturnLocationList>> ItemLocationList = new IntObjectHashMap<>();
+	@XmlTransient
+	private IntObjectHashMap<MultiReturn> itemsById = new IntObjectHashMap<>();
 
 	void afterUnmarshal(Unmarshaller u, Object parent) {
 		ItemLocationList.clear();
+		itemsById.clear();
 		for (MultiReturn template : ItemList) {
 			ItemLocationList.put(template.getId(), template.getMultiReturnList());
+			itemsById.put(template.getId(), template);
 		}
 	}
 
@@ -56,12 +60,7 @@ public class MultiReturnItemData {
 	}
 
 	public MultiReturn getMultiReturnById(int id) {
-		for (MultiReturn template : ItemList) {
-			if (template.getId() == id) {
-				return template;
-			}
-		}
-		return null;
+		return itemsById.get(id);
 	}
 
 	public List<MultiReturn> getMultiReturns() {

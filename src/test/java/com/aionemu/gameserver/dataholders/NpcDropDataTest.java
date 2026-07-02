@@ -1,15 +1,15 @@
 package com.aionemu.gameserver.dataholders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.io.StringReader;
+import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.attribute.FileTime;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 import jakarta.xml.bind.JAXBContext;
 
@@ -25,11 +25,35 @@ class NpcDropDataTest {
 	Path tempDir;
 
 	@Test
-	void lazyLoaderIndexesNpcIdsWithoutCachingDrops() throws Exception {
-		writeDrops("poeta.xml", """
+	void eagerLoaderExpandsCommonDropGroupsFromSharedDefinitions() throws Exception {
+		writeDrops("common_drop_groups.xml", """
+			<common_drop_groups>
+				<group name="COMMON_A" use_category="false">
+					<drop item_id="222" min_amount="1" max_amount="1" chance="100"/>
+				</group>
+			</common_drop_groups>
+			""");
+		writeDrops("npc_drops_part_001.xml", """
 			<npc_drops>
 				<npc_drop npc_id="100">
-					<drop_group name="base" use_category="false">
+					<drop_group name="base">
+						<drop item_id="111" min_amount="1" max_amount="1" chance="100"/>
+					</drop_group>
+					<common_drop_group name="COMMON_A"/>
+				</npc_drop>
+			</npc_drops>
+			""");
+		NpcDropData data = NpcDropData.loadEager(tempDir.toFile());
+
+		assertEquals(List.of(111, 222), itemIds(data.getDrop(100)));
+	}
+
+	@Test
+	void eagerLoaderIndexesNpcIdsForLookup() throws Exception {
+		writeDrops("npc_drops_part_001.xml", """
+			<npc_drops>
+				<npc_drop npc_id="100">
+					<drop_group name="base">
 						<drop item_id="111" min_amount="1" max_amount="1" chance="100"/>
 					</drop_group>
 				</npc_drop>
@@ -40,43 +64,17 @@ class NpcDropDataTest {
 				</npc_drop>
 			</npc_drops>
 			""");
-		MutableClock clock = new MutableClock(1_000);
-		NpcDropData data = NpcDropData.loadLazy(tempDir.toFile(), 10, TimeUnit.MINUTES.toMillis(5), clock::millis);
+		NpcDropData data = NpcDropData.loadEager(tempDir.toFile());
 
 		assertEquals(2, data.size());
-		assertEquals(0, data.cachedDropCount());
-
-		NpcDrop drop = data.getDrop(100);
-
-		assertEquals(100, drop.getNpcId());
-		assertEquals(1, data.cachedDropCount());
-		assertEquals(List.of(111), itemIds(drop));
+		assertEquals(100, data.getDrop(100).getNpcId());
+		assertEquals(List.of(111), itemIds(data.getDrop(100)));
+		assertSame(data.getDrop(100), indexedDrops(data).get(100));
 	}
 
 	@Test
-	void lazyLoaderReusesFreshNpcDropIndexCache() throws Exception {
-		Path dropsFile = writeDrops("poeta.xml", """
-			<npc_drops>
-				<npc_drop npc_id="100">
-					<drop_group name="base">
-						<drop item_id="111" min_amount="1" max_amount="1" chance="100"/>
-					</drop_group>
-				</npc_drop>
-			</npc_drops>
-			""");
-		NpcDropData.loadLazy(tempDir.toFile(), 10, TimeUnit.MINUTES.toMillis(5), () -> 1_000L);
-		Path indexCache = tempDir.resolve(".npc_drop_index.properties");
-		Files.writeString(dropsFile, "<not xml", StandardCharsets.UTF_8);
-		Files.setLastModifiedTime(dropsFile, FileTime.fromMillis(Files.getLastModifiedTime(indexCache).toMillis() - 1_000));
-
-		NpcDropData data = NpcDropData.loadLazy(tempDir.toFile(), 10, TimeUnit.MINUTES.toMillis(5), () -> 1_000L);
-
-		assertEquals(1, data.size());
-	}
-
-	@Test
-	void lazyLoaderCreatesJaxbContextWhenThreadContextClassLoaderCannotSeeJaxbRuntime() throws Exception {
-		writeDrops("poeta.xml", """
+	void eagerLoaderCreatesJaxbContextWhenThreadContextClassLoaderCannotSeeJaxbRuntime() throws Exception {
+		writeDrops("npc_drops_part_001.xml", """
 			<npc_drops>
 				<npc_drop npc_id="100">
 					<drop_group name="base">
@@ -89,7 +87,7 @@ class NpcDropDataTest {
 		ClassLoader originalClassLoader = thread.getContextClassLoader();
 		thread.setContextClassLoader(ClassLoader.getPlatformClassLoader());
 		try {
-			NpcDropData data = NpcDropData.loadLazy(tempDir.toFile(), 10, TimeUnit.MINUTES.toMillis(5), () -> 1_000L);
+			NpcDropData data = NpcDropData.loadEager(tempDir.toFile());
 
 			assertEquals(100, data.getDrop(100).getNpcId());
 		} finally {
@@ -98,7 +96,7 @@ class NpcDropDataTest {
 	}
 
 	@Test
-	void eagerJaxbLoadingStillIgnoresLazyRuntimeFields() throws Exception {
+	void eagerJaxbLoadingBuildsNpcIdLookupMap() throws Exception {
 		NpcDropData data = (NpcDropData) JAXBContext.newInstance(NpcDropData.class)
 			.createUnmarshaller()
 			.unmarshal(new StringReader("""
@@ -113,11 +111,33 @@ class NpcDropDataTest {
 
 		assertEquals(1, data.size());
 		assertEquals(List.of(111), itemIds(data.getDrop(100)));
+		assertSame(data.getDrop(100), indexedDrops(data).get(100));
+	}
+
+	@Test
+	void eagerJaxbLoadingExpandsCommonDropGroups() throws Exception {
+		NpcDropData data = (NpcDropData) JAXBContext.newInstance(NpcDropData.class)
+			.createUnmarshaller()
+			.unmarshal(new StringReader("""
+				<npc_drops>
+					<group name="COMMON_A" use_category="false">
+						<drop item_id="222" min_amount="1" max_amount="1" chance="100"/>
+					</group>
+					<npc_drop npc_id="100">
+						<drop_group name="base">
+							<drop item_id="111" min_amount="1" max_amount="1" chance="100"/>
+						</drop_group>
+						<common_drop_group name="COMMON_A"/>
+					</npc_drop>
+				</npc_drops>
+				"""));
+
+		assertEquals(List.of(111, 222), itemIds(data.getDrop(100)));
 	}
 
 	@Test
 	void duplicateNpcDropsAreMergedWithLaterItemsReplacingEarlierDuplicates() throws Exception {
-		writeDrops("a.xml", """
+		writeDrops("npc_drops_part_001.xml", """
 			<npc_drops>
 				<npc_drop npc_id="100">
 					<drop_group name="base" use_category="false">
@@ -127,7 +147,7 @@ class NpcDropDataTest {
 				</npc_drop>
 			</npc_drops>
 			""");
-		writeDrops("b.xml", """
+		writeDrops("npc_drops_part_002.xml", """
 			<npc_drops>
 				<npc_drop npc_id="100">
 					<drop_group name="base" use_category="false">
@@ -140,7 +160,7 @@ class NpcDropDataTest {
 				</npc_drop>
 			</npc_drops>
 			""");
-		NpcDropData data = NpcDropData.loadLazy(tempDir.toFile(), 10, TimeUnit.MINUTES.toMillis(5), () -> 1_000L);
+		NpcDropData data = NpcDropData.loadEager(tempDir.toFile());
 
 		NpcDrop drop = data.getDrop(100);
 
@@ -148,40 +168,6 @@ class NpcDropDataTest {
 		Drop replacement = drop.getDropGroup().get(0).getDrop().get(1);
 		assertEquals(9, replacement.getMinAmount());
 		assertEquals(90, replacement.getChance());
-	}
-
-	@Test
-	void cacheEvictsByCapacityAndExpireAfterAccess() throws Exception {
-		writeDrops("drops.xml", """
-			<npc_drops>
-				<npc_drop npc_id="100">
-					<drop_group name="base">
-						<drop item_id="111" min_amount="1" max_amount="1" chance="100"/>
-					</drop_group>
-				</npc_drop>
-				<npc_drop npc_id="200">
-					<drop_group name="base">
-						<drop item_id="222" min_amount="1" max_amount="1" chance="100"/>
-					</drop_group>
-				</npc_drop>
-			</npc_drops>
-			""");
-		MutableClock clock = new MutableClock(1_000);
-		NpcDropData data = NpcDropData.loadLazy(tempDir.toFile(), 1, 500, clock::millis);
-
-		NpcDrop first = data.getDrop(100);
-		data.getDrop(200);
-		NpcDrop reloadedAfterCapacityEviction = data.getDrop(100);
-
-		assertNotSame(first, reloadedAfterCapacityEviction);
-		assertEquals(1, data.cachedDropCount());
-
-		clock.advance(501);
-		data.cleanupExpiredDrops();
-		assertEquals(0, data.cachedDropCount());
-
-		NpcDrop reloadedAfterTtlEviction = data.getDrop(100);
-		assertNotSame(reloadedAfterCapacityEviction, reloadedAfterTtlEviction);
 	}
 
 	private Path writeDrops(String fileName, String xml) throws Exception {
@@ -198,19 +184,10 @@ class NpcDropDataTest {
 			.toList();
 	}
 
-	private static final class MutableClock {
-		private long millis;
-
-		private MutableClock(long millis) {
-			this.millis = millis;
-		}
-
-		private long millis() {
-			return millis;
-		}
-
-		private void advance(long millis) {
-			this.millis += millis;
-		}
+	@SuppressWarnings("unchecked")
+	private static Map<Integer, NpcDrop> indexedDrops(NpcDropData data) throws Exception {
+		Field field = NpcDropData.class.getDeclaredField("dropsByNpcId");
+		field.setAccessible(true);
+		return (Map<Integer, NpcDrop>) field.get(data);
 	}
 }

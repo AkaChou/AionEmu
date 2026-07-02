@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.dataholders;
 
-import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,30 +24,22 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.function.LongSupplier;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import jakarta.xml.bind.annotation.XmlType;
 import jakarta.xml.bind.annotation.XmlTransient;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamReader;
 
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropGroup;
@@ -60,64 +51,44 @@ import com.aionemu.gameserver.model.drop.NpcDrop;
  */
 @XmlRootElement(name = "npc_drops")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "npcDropData", propOrder = { "npcDrop" })
-@Slf4j
+@XmlType(name = "npcDropData", propOrder = { "commonDropGroupDefinitions", "npcDrop" })
 public class NpcDropData {
 
-	private static final int DEFAULT_CACHE_MAX_ENTRIES = 2000;
-	private static final long DEFAULT_CACHE_EXPIRE_AFTER_ACCESS_MILLIS = TimeUnit.MINUTES.toMillis(60);
-	private static final String INDEX_CACHE_FILE = ".npc_drop_index.properties";
+	private static final String COMMON_DROP_GROUPS_FILE = "common_drop_groups.xml";
 
+	@XmlElement(name = "group")
+	protected List<DropGroup> commonDropGroupDefinitions;
 	@XmlElement(name = "npc_drop")
 	protected List<NpcDrop> npcDrop;
 	@XmlTransient
-	private File npcDropsDirectory;
-	@XmlTransient
-	private int maxCachedDrops;
-	@XmlTransient
-	private long expireAfterAccessMillis;
-	@XmlTransient
-	private LongSupplier currentTimeMillis;
-	@XmlTransient
 	private JAXBContext npcDropContext;
 	@XmlTransient
-	private Map<Integer, List<File>> indexedDropFiles;
+	private Map<String, DropGroup> commonDropGroups;
 	@XmlTransient
-	private LinkedHashMap<Integer, CacheEntry> cachedDrops;
+	private Map<Integer, NpcDrop> dropsByNpcId = Collections.emptyMap();
 
 	public NpcDropData() {
 	}
 
-	public static NpcDropData loadLazy(File npcDropsDirectory) {
-		return loadLazy(npcDropsDirectory, DEFAULT_CACHE_MAX_ENTRIES, DEFAULT_CACHE_EXPIRE_AFTER_ACCESS_MILLIS, System::currentTimeMillis);
-	}
-
-	public static NpcDropData loadLazy(File npcDropsDirectory, int maxCachedDrops, long expireAfterAccessMillis) {
-		return loadLazy(npcDropsDirectory, maxCachedDrops, expireAfterAccessMillis, System::currentTimeMillis);
-	}
-
-	public static NpcDropData loadLazy(File npcDropsDirectory, int maxCachedDrops, long expireAfterAccessMillis, LongSupplier currentTimeMillis) {
-		return new NpcDropData(npcDropsDirectory, maxCachedDrops, expireAfterAccessMillis, currentTimeMillis);
-	}
-
-	private NpcDropData(File npcDropsDirectory, int maxCachedDrops, long expireAfterAccessMillis, LongSupplier currentTimeMillis) {
-		this.npcDropsDirectory = npcDropsDirectory;
-		this.maxCachedDrops = Math.max(0, maxCachedDrops);
-		this.expireAfterAccessMillis = expireAfterAccessMillis;
-		this.currentTimeMillis = currentTimeMillis;
-		this.npcDropContext = createNpcDropContext();
-		this.cachedDrops = new LinkedHashMap<>(64, 0.75f, true);
-		this.indexedDropFiles = indexDropFiles(npcDropsDirectory);
-		log.info("Indexed {} lazy NPC drop templates from {}", indexedDropFiles.size(), npcDropsDirectory.getPath());
+	public static NpcDropData loadEager(File npcDropsDirectory) {
+		if (npcDropsDirectory == null || !npcDropsDirectory.isDirectory()) {
+			throw new IllegalStateException("NPC drop directory not found: " + npcDropsDirectory);
+		}
+		NpcDropData data = new NpcDropData();
+		data.npcDropContext = createNpcDropContext();
+		data.commonDropGroups = loadCommonDropGroups(npcDropsDirectory);
+		data.npcDrop = mergeDrops(listXmlFiles(npcDropsDirectory.toPath()).stream()
+			.filter(file -> file.getName().startsWith("npc_drops_part_") && !file.getName().equals("npc_drops_part_old.xml"))
+			.flatMap(file -> data.loadDropsFromFile(file).stream())
+			.collect(Collectors.toList()));
+		data.rebuildDropIndex();
+		return data;
 	}
 
 	/**
 	 * @return the npcDrop
 	 */
 	public List<NpcDrop> getNpcDrop() {
-		if (isLazy()) {
-			return Collections.emptyList();
-		}
 		return npcDrop == null ? Collections.emptyList() : npcDrop;
 	}
 
@@ -126,114 +97,64 @@ public class NpcDropData {
 	 */
 	public void setNpcDrop(List<NpcDrop> npcDrop) {
 		this.npcDrop = npcDrop;
+		rebuildDropIndex();
+	}
+
+	@SuppressWarnings("unused")
+	private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+		commonDropGroups = commonDropGroups(commonDropGroupDefinitions);
+		if (!commonDropGroups.isEmpty()) {
+			for (NpcDrop drop : getNpcDrop()) {
+				expandCommonDropGroups(drop);
+			}
+		}
+		npcDrop = mergeDrops(getNpcDrop());
+		rebuildDropIndex();
 	}
 
 	public int size() {
-		return isLazy() ? indexedDropFiles.size() : getNpcDrop().size();
+		return getNpcDrop().size();
 	}
 
 	public synchronized NpcDrop getDrop(int npcId) {
-		if (!isLazy()) {
-			return getNpcDrop().stream()
-				.filter(drop -> drop.getNpcId() == npcId)
-				.findFirst()
-				.orElse(null);
+		if (dropsByNpcId == null || dropsByNpcId.isEmpty() && !getNpcDrop().isEmpty()) {
+			rebuildDropIndex();
 		}
-		long now = currentTimeMillis.getAsLong();
-		cleanupExpiredDrops(now);
-		CacheEntry cached = cachedDrops.get(npcId);
-		if (cached != null) {
-			cached.lastAccessMillis = now;
-			return cached.drop;
-		}
-		List<File> files = indexedDropFiles.get(npcId);
-		if (files == null) {
-			return null;
-		}
-		NpcDrop loaded = loadDrop(npcId, files);
-		if (loaded != null && maxCachedDrops > 0) {
-			cachedDrops.put(npcId, new CacheEntry(loaded, now));
-			evictOversizedCache();
-		}
-		return loaded;
+		return dropsByNpcId.get(npcId);
 	}
 
-	public synchronized void cleanupExpiredDrops() {
-		if (isLazy()) {
-			cleanupExpiredDrops(currentTimeMillis.getAsLong());
-		}
-	}
-
-	public synchronized void reload() {
-		if (!isLazy()) {
-			return;
-		}
-		indexedDropFiles = indexDropFiles(npcDropsDirectory);
-		cachedDrops.clear();
-		log.info("Reloaded {} lazy NPC drop templates from {}", indexedDropFiles.size(), npcDropsDirectory.getPath());
-	}
-
-	public synchronized int cachedDropCount() {
-		return isLazy() ? cachedDrops.size() : getNpcDrop().size();
-	}
-
-	public boolean isLazy() {
-		return indexedDropFiles != null;
-	}
-
-	private void cleanupExpiredDrops(long now) {
-		if (expireAfterAccessMillis < 0) {
-			return;
-		}
-		for (Iterator<Map.Entry<Integer, CacheEntry>> iterator = cachedDrops.entrySet().iterator(); iterator.hasNext();) {
-			Map.Entry<Integer, CacheEntry> entry = iterator.next();
-			if (now - entry.getValue().lastAccessMillis >= expireAfterAccessMillis) {
-				iterator.remove();
-			}
-		}
-	}
-
-	private void evictOversizedCache() {
-		while (cachedDrops.size() > maxCachedDrops) {
-			Iterator<Integer> iterator = cachedDrops.keySet().iterator();
-			if (!iterator.hasNext()) {
-				return;
-			}
-			iterator.next();
-			iterator.remove();
-		}
-	}
-
-	private NpcDrop loadDrop(int npcId, List<File> files) {
-		NpcDrop mergedDrop = null;
-		for (File file : files) {
-			for (NpcDrop drop : loadDropsFromFile(npcId, file)) {
-				mergedDrop = mergeDrop(mergedDrop, drop);
-			}
-		}
-		return mergedDrop;
-	}
-
-	private List<NpcDrop> loadDropsFromFile(int npcId, File file) {
-		List<NpcDrop> drops = new ArrayList<>();
-		XMLInputFactory inputFactory = newXmlInputFactory();
+	private List<NpcDrop> loadDropsFromFile(File file) {
 		try (FileInputStream stream = new FileInputStream(file)) {
-			XMLStreamReader reader = inputFactory.createXMLStreamReader(stream);
-			try {
-				while (reader.hasNext()) {
-					if (reader.next() == XMLStreamConstants.START_ELEMENT && "npc_drop".equals(reader.getLocalName())
-						&& npcId == Integer.parseInt(reader.getAttributeValue(null, "npc_id"))) {
-						JAXBElement<NpcDrop> element = npcDropContext.createUnmarshaller().unmarshal(reader, NpcDrop.class);
-						drops.add(element.getValue());
-					}
-				}
-			} finally {
-				reader.close();
+			NpcDropData data = (NpcDropData) npcDropContext.createUnmarshaller().unmarshal(stream);
+			List<NpcDrop> drops = data.getNpcDrop();
+			for (NpcDrop drop : drops) {
+				expandCommonDropGroups(drop);
 			}
+			return drops;
 		} catch (Exception e) {
-			throw new IllegalStateException("Failed to lazy load npc_drop " + npcId + " from " + file.getPath(), e);
+			throw new IllegalStateException("Failed to eager load npc_drops from " + file.getPath(), e);
 		}
-		return drops;
+	}
+
+	private void rebuildDropIndex() {
+		Map<Integer, NpcDrop> index = new HashMap<>();
+		for (NpcDrop drop : getNpcDrop()) {
+			index.put(drop.getNpcId(), drop);
+		}
+		dropsByNpcId = Collections.unmodifiableMap(index);
+	}
+
+	private void expandCommonDropGroups(NpcDrop drop) {
+		List<DropGroup> groups = drop.getCommonDropGroupNames().stream()
+			.map(name -> {
+				DropGroup group = commonDropGroups.get(name);
+				if (group == null) {
+					throw new IllegalStateException("Unknown common_drop_group: " + name);
+				}
+				return group.copy();
+			})
+			.toList();
+		drop.addDropGroups(groups);
 	}
 
 	private static NpcDrop mergeDrop(NpcDrop currentDrop, NpcDrop drop) {
@@ -244,6 +165,10 @@ public class NpcDropData {
 		List<DropGroup> newGroups = drop.getDropGroup();
 		if (currentGroups.isEmpty() && !newGroups.isEmpty()) {
 			return drop;
+		}
+		Map<String, DropGroup> currentGroupsByName = new HashMap<>();
+		for (DropGroup currentGroup : currentGroups) {
+			currentGroupsByName.put(currentGroup.getGroupName(), currentGroup);
 		}
 		Set<Integer> newItemIds = newGroups.stream()
 			.map(DropGroup::getDrop)
@@ -259,19 +184,15 @@ public class NpcDropData {
 		}
 		List<DropGroup> groupsToAdd = new ArrayList<>();
 		for (DropGroup newGroup : newGroups) {
-			boolean added = false;
-			for (DropGroup currentGroup : currentGroups) {
-				if (currentGroup.getGroupName().equals(newGroup.getGroupName())) {
-					List<Drop> currentDrops = currentGroup.getDrop();
-					List<Drop> newDrops = newGroup.getDrop();
-					if (currentDrops != null && newDrops != null) {
-						currentDrops.addAll(newDrops);
-					}
-					added = true;
-				}
-			}
-			if (!added) {
+			DropGroup currentGroup = currentGroupsByName.get(newGroup.getGroupName());
+			if (currentGroup == null) {
 				groupsToAdd.add(newGroup);
+				continue;
+			}
+			List<Drop> currentDrops = currentGroup.getDrop();
+			List<Drop> newDrops = newGroup.getDrop();
+			if (currentDrops != null && newDrops != null) {
+				currentDrops.addAll(newDrops);
 			}
 		}
 		if (!groupsToAdd.isEmpty()) {
@@ -280,23 +201,15 @@ public class NpcDropData {
 		return currentDrop;
 	}
 
-	private static Map<Integer, List<File>> indexDropFiles(File npcDropsDirectory) {
-		if (npcDropsDirectory == null || !npcDropsDirectory.isDirectory()) {
-			throw new IllegalStateException("NPC drop directory not found: " + npcDropsDirectory);
+	private static List<NpcDrop> mergeDrops(List<NpcDrop> drops) {
+		if (drops.isEmpty()) {
+			return drops;
 		}
-		List<File> files = listXmlFiles(npcDropsDirectory.toPath());
-		File indexCache = new File(npcDropsDirectory, INDEX_CACHE_FILE);
-		Map<Integer, List<File>> cachedIndex = loadIndexCache(indexCache, npcDropsDirectory.toPath(), files);
-		if (cachedIndex != null) {
-			return cachedIndex;
+		Map<Integer, NpcDrop> mergedDrops = new LinkedHashMap<>();
+		for (NpcDrop drop : drops) {
+			mergedDrops.merge(drop.getNpcId(), drop, NpcDropData::mergeDrop);
 		}
-		Map<Integer, List<File>> index = new HashMap<>();
-		for (File file : files) {
-			indexFile(file, index);
-		}
-		Map<Integer, List<File>> immutableIndex = immutableIndex(index);
-		saveIndexCache(indexCache, npcDropsDirectory.toPath(), immutableIndex);
-		return immutableIndex;
+		return new ArrayList<>(mergedDrops.values());
 	}
 
 	private static List<File> listXmlFiles(Path root) {
@@ -322,84 +235,6 @@ public class NpcDropData {
 		}
 	}
 
-	private static Map<Integer, List<File>> loadIndexCache(File indexCache, Path root, List<File> files) {
-		if (!indexCache.isFile() || files.stream().anyMatch(file -> file.lastModified() > indexCache.lastModified())) {
-			return null;
-		}
-		Properties props = new Properties();
-		try (var reader = Files.newBufferedReader(indexCache.toPath())) {
-			props.load(reader);
-			Map<Integer, List<File>> index = new HashMap<>();
-			for (String npcId : props.stringPropertyNames()) {
-				List<File> dropFiles = List.of(props.getProperty(npcId).split(Pattern.quote(File.pathSeparator))).stream()
-					.filter(path -> !path.isBlank())
-					.map(path -> root.resolve(path).toFile())
-					.toList();
-				if (!dropFiles.isEmpty() && dropFiles.stream().allMatch(File::isFile)) {
-					index.put(Integer.valueOf(npcId), dropFiles);
-				}
-			}
-			return immutableIndex(index);
-		} catch (Exception e) {
-			log.warn("Could not load NPC drop index cache: {}", indexCache.getPath(), e);
-			return null;
-		}
-	}
-
-	private static void saveIndexCache(File indexCache, Path root, Map<Integer, List<File>> index) {
-		Properties props = new Properties();
-		index.forEach((npcId, files) -> props.setProperty(npcId.toString(), files.stream()
-			.map(file -> root.relativize(file.toPath()).toString())
-			.collect(Collectors.joining(File.pathSeparator))));
-		try (var writer = Files.newBufferedWriter(indexCache.toPath())) {
-			props.store(writer, "npc_drops lazy index");
-		} catch (IOException e) {
-			log.warn("Could not save NPC drop index cache: {}", indexCache.getPath(), e);
-		}
-	}
-
-	private static Map<Integer, List<File>> immutableIndex(Map<Integer, List<File>> index) {
-		Map<Integer, List<File>> immutableIndex = new HashMap<>();
-		index.forEach((npcId, files) -> immutableIndex.put(npcId, Collections.unmodifiableList(files)));
-		return Collections.unmodifiableMap(immutableIndex);
-	}
-
-	private static void indexFile(File file, Map<Integer, List<File>> index) {
-		XMLInputFactory inputFactory = newXmlInputFactory();
-		try (FileInputStream stream = new FileInputStream(file)) {
-			XMLStreamReader reader = inputFactory.createXMLStreamReader(stream);
-			try {
-				while (reader.hasNext()) {
-					if (reader.next() == XMLStreamConstants.START_ELEMENT && "npc_drop".equals(reader.getLocalName())) {
-						int npcId = Integer.parseInt(reader.getAttributeValue(null, "npc_id"));
-						List<File> files = index.computeIfAbsent(npcId, ignored -> new ArrayList<>());
-						if (files.isEmpty() || !files.get(files.size() - 1).equals(file)) {
-							files.add(file);
-						}
-					}
-				}
-			} finally {
-				reader.close();
-			}
-		} catch (Exception e) {
-			throw new IllegalStateException("Failed to index NPC drops from " + file.getPath(), e);
-		}
-	}
-
-	private static XMLInputFactory newXmlInputFactory() {
-		XMLInputFactory inputFactory = XMLInputFactory.newFactory();
-		disableXmlInputProperty(inputFactory, XMLInputFactory.SUPPORT_DTD);
-		disableXmlInputProperty(inputFactory, "javax.xml.stream.isSupportingExternalEntities");
-		return inputFactory;
-	}
-
-	private static void disableXmlInputProperty(XMLInputFactory inputFactory, String property) {
-		try {
-			inputFactory.setProperty(property, false);
-		} catch (IllegalArgumentException ignored) {
-		}
-	}
-
 	private static JAXBContext createNpcDropContext() {
 		Thread thread = Thread.currentThread();
 		ClassLoader originalClassLoader = thread.getContextClassLoader();
@@ -408,7 +243,7 @@ public class NpcDropData {
 			if (npcDropClassLoader != null) {
 				thread.setContextClassLoader(npcDropClassLoader);
 			}
-			return JAXBContext.newInstance(NpcDrop.class);
+			return JAXBContext.newInstance(NpcDropData.class);
 		} catch (JAXBException e) {
 			throw new IllegalStateException("Failed to create NPC drop JAXB context", e);
 		} finally {
@@ -416,13 +251,40 @@ public class NpcDropData {
 		}
 	}
 
-	private static final class CacheEntry {
-		private final NpcDrop drop;
-		private long lastAccessMillis;
+	private static Map<String, DropGroup> loadCommonDropGroups(File npcDropsDirectory) {
+		File file = new File(npcDropsDirectory, COMMON_DROP_GROUPS_FILE);
+		if (!file.isFile()) {
+			return Collections.emptyMap();
+		}
+		try (FileInputStream stream = new FileInputStream(file)) {
+			CommonDropGroups data = (CommonDropGroups) JAXBContext.newInstance(CommonDropGroups.class)
+				.createUnmarshaller()
+				.unmarshal(stream);
+			return commonDropGroups(data.getGroups());
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load common drop groups from " + file.getPath(), e);
+		}
+	}
 
-		private CacheEntry(NpcDrop drop, long lastAccessMillis) {
-			this.drop = drop;
-			this.lastAccessMillis = lastAccessMillis;
+	private static Map<String, DropGroup> commonDropGroups(List<DropGroup> definitions) {
+		if (definitions == null || definitions.isEmpty()) {
+			return Collections.emptyMap();
+		}
+		Map<String, DropGroup> groups = new HashMap<>();
+		for (DropGroup group : definitions) {
+			groups.put(group.getGroupName(), group);
+		}
+		return groups;
+	}
+
+	@XmlRootElement(name = "common_drop_groups")
+	@XmlAccessorType(XmlAccessType.FIELD)
+	private static class CommonDropGroups {
+		@XmlElement(name = "group")
+		private List<DropGroup> groups;
+
+		private List<DropGroup> getGroups() {
+			return groups == null ? Collections.emptyList() : groups;
 		}
 	}
 }

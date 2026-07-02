@@ -3,8 +3,6 @@ package com.aionemu.gameserver.dataholders;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.gameserver.configs.Config;
-import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.loadingutils.XmlDataLoader;
 import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 import com.aionemu.gameserver.model.templates.mail.Mails;
@@ -265,9 +263,7 @@ public final class DataManager {
             HOUSE_SCRIPT_DATA = data.houseScriptData;
             SYSTEM_MAIL_TEMPLATES = data.systemMailTemplates;
             ITEM_DATA.cleanup();
-            NPC_DROP_DATA = NpcDropData.loadLazy(Config.dataFile("./data/static_data/npc_drops"),
-                GSConfig.NPC_DROP_CACHE_MAX_ENTRIES,
-                TimeUnit.MINUTES.toMillis(GSConfig.NPC_DROP_CACHE_EXPIRE_AFTER_ACCESS_MINUTES));
+            NPC_DROP_DATA = data.npcDropData;
             CHALLENGE_DATA = data.challengeData;
             TOWN_SPAWNS_DATA = data.townSpawnsData;
             CHARGE_SKILL_DATA = data.chargeSkillData;
