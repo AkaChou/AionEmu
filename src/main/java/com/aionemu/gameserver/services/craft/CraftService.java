@@ -109,6 +109,10 @@ public class CraftService {
 	}
 
 	public static void startCrafting(Player player, int recipeId, int targetObjId, int craftType) {
+		startCrafting(player, recipeId, targetObjId, craftType, 1);
+	}
+
+	public static void startCrafting(Player player, int recipeId, int targetObjId, int craftType, int craftCount) {
 		RecipeTemplate recipeTemplate = DataManager.RECIPE_DATA.getRecipeTemplateById(recipeId);
 		int skillId = recipeTemplate.getSkillid();
 		VisibleObject target = player.getKnownList().getObject(targetObjId);
@@ -117,10 +121,10 @@ public class CraftService {
 			player.getCommonData().addDp(-recipeTemplate.getDp());
 		}
 		if (skillId == 40009) {
-			player.setCraftingTask(new MorphingTask(player, (StaticObject) target, recipeTemplate));
+			player.setCraftingTask(new MorphingTask(player, (StaticObject) target, recipeTemplate, craftCount));
 		} else {
 			int skillLvlDiff = player.getSkillList().getSkillLevel(skillId) - recipeTemplate.getSkillpoint();
-			player.setCraftingTask(new CraftingTask(player, (StaticObject) target, recipeTemplate, skillLvlDiff, craftType == 1 ? 15 : 0));
+			player.setCraftingTask(new CraftingTask(player, (StaticObject) target, recipeTemplate, skillLvlDiff, craftType == 1 ? 15 : 0, craftCount));
 		}
 		player.getCraftingTask().start();
 	}

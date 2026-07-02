@@ -34,6 +34,8 @@ public class CM_CRAFT extends AionClientPacket {
 	private int targetObjId;
 	private int materialsCount;
 	private int craftType;
+	private int craftCount = 1;
+	private boolean componentsOk = true;
 
 	public CM_CRAFT(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -49,10 +51,17 @@ public class CM_CRAFT extends AionClientPacket {
 		materialsCount = readH();
 		craftType = readC();
 		if (craftType == 0) {
+			craftCount = 0;
+			componentsOk = true;
 			for (int i = 0; i < materialsCount; i++) {
 				itemID = readD();
 				itemCount = readQ();
-				CraftService.checkComponents(player, recipeId, itemID, materialsCount);
+				int materialCraftCount = CraftService.checkComponents(player, recipeId, itemID, itemCount);
+				if (materialCraftCount < 1) {
+					componentsOk = false;
+				} else {
+					craftCount = craftCount == 0 ? materialCraftCount : Math.min(craftCount, materialCraftCount);
+				}
 			}
 		}
 	}
@@ -73,6 +82,9 @@ public class CM_CRAFT extends AionClientPacket {
 				return;
 			}
 		}
-		CraftService.startCrafting(player, recipeId, targetObjId, craftType);
+		if (craftType == 0 && (!componentsOk || craftCount < 1)) {
+			return;
+		}
+		CraftService.startCrafting(player, recipeId, targetObjId, craftType, craftCount);
 	}
 }

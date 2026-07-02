@@ -30,7 +30,11 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class MorphingTask extends CraftingTask {
 
 	public MorphingTask(Player requestor, StaticObject responder, RecipeTemplate recipeTemplates) {
-		super(requestor, responder, recipeTemplates, 0, 0);
+		this(requestor, responder, recipeTemplates, 1);
+	}
+
+	public MorphingTask(Player requestor, StaticObject responder, RecipeTemplate recipeTemplates, int craftCount) {
+		super(requestor, responder, recipeTemplates, 0, 0, craftCount);
 		this.maxSuccessValue = 100;
 		this.maxFailureValue = 100;
 	}
@@ -69,7 +73,21 @@ public class MorphingTask extends CraftingTask {
 		PacketSendUtility.sendPacket(requestor,
 				new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplate, 0, 0, 5));
 		CraftService.finishCrafting(requestor, recipeTemplate, critCount, 0);
-		return true;
+		return finishCraftAttempt();
+	}
+
+	@Override
+	protected void startNextCraft() {
+		currentSuccessValue = 0;
+		currentFailureValue = 0;
+		PacketSendUtility.sendPacket(requestor,
+				new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplate, maxSuccessValue, maxFailureValue, 0));
+		PacketSendUtility.sendPacket(requestor,
+				new SM_CRAFT_UPDATE(recipeTemplate.getSkillid(), itemTemplate, 0, 0, 1));
+		PacketSendUtility.broadcastPacket(requestor,
+				new SM_CRAFT_ANIMATION(requestor.getObjectId(), 0, recipeTemplate.getSkillid(), 0), true);
+		PacketSendUtility.broadcastPacket(requestor,
+				new SM_CRAFT_ANIMATION(requestor.getObjectId(), 0, recipeTemplate.getSkillid(), 1), true);
 	}
 
 	@Override
