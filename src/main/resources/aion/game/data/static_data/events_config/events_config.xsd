@@ -51,6 +51,7 @@
 			<xs:extension base="itemId">
 				<xs:attribute name="startlevel" type="xs:int"/>
 				<xs:attribute name="interval" type="xs:int" use="required"/>
+				<xs:attribute name="count" type="xs:long"/>
                 <xs:attribute name="endlevel" type="xs:int"/>
 				<xs:attribute name="maxCountOfDay" type="xs:int"/>
 				<xs:attribute name="cleanTime" type="xs:int"/>

@@ -197,7 +197,7 @@ public class EventTemplate {
 
 	private void dropInventoryItem(Player player) {
 		if (player.getCommonData().getLevel() >= inventoryDrop.getStartLevel()) {
-			ItemService.dropItemToInventory(player, inventoryDrop.getDropItem());
+			ItemService.dropItemToInventory(player, inventoryDrop.getDropItem(), inventoryDrop.getCount());
 		}
 	}
 
@@ -206,7 +206,7 @@ public class EventTemplate {
 		if (player.getCommonData().getLevel() >= getInventoryDrop().getStartLevel()
 				&& player.getCommonData().getLevel() <= getInventoryDrop().getEndLevel()
 				&& player.getItemMaxThisCount(itemId) < getInventoryDrop().getMaxCountOfDay()) {
-			ItemService.dropItemToInventory(player, getInventoryDrop().getDropItem());
+			ItemService.dropItemToInventory(player, getInventoryDrop().getDropItem(), getInventoryDrop().getCount());
 			player.addItemMaxCountOfDay(itemId, player.getItemMaxThisCount(itemId) + 1);
 		}
 	}

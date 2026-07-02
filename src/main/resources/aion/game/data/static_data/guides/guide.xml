@@ -25,11 +25,7 @@
 		<survey itemId="190100233" count="1"/>
 		<survey itemId="190100142" count="1"/>
 		<survey itemId="190100220" count="1"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
     </guide>
     <guide title="adventurers_guide15_asmo" level="15" race="ASMODIANS" rewardCount="1">
         <message>
@@ -89,11 +85,7 @@
 		<survey itemId="188053758" count="1"/>
 		<survey itemId="188053759" count="1"/>
 		<survey itemId="188053760" count="1"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
     </guide>
     <guide title="adventurers_guide25_asmo" level="25" race="ASMODIANS" rewardCount="1">
         <message>
@@ -161,11 +153,7 @@
 		<survey itemId="102100395" count="1"/>
 		<survey itemId="188058917" count="10"/>
 		<survey itemId="188055485" count="999"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
     </guide>
     <guide title="adventurers_guide35_asmo" level="35" race="ASMODIANS" rewardCount="1">
         <message>
@@ -234,11 +222,7 @@
 		<survey itemId="102100537" count="1"/>
 		<survey itemId="115000895" count="1"/>
 		<survey itemId="188058917" count="20"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
     </guide>
 	<guide title="adventurers_guide45_asmo" level="45" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -302,11 +286,7 @@
 		<survey itemId="102100532" count="1"/>
 		<survey itemId="188058917" count="40"/>
 		<survey itemId="188055485" count="999"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
 	</guide>
     <guide title="adventurers_guide55_asmo" level="55" race="ASMODIANS" rewardCount="1">
         <message>
@@ -392,11 +372,7 @@
 		</message>
 		<select>Faith and arms!</select>
 		<survey itemId="186000236" count="250"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
     </guide>
 	<guide title="adventurers_guide65_asmo" level="65" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -467,11 +443,7 @@
 		</message>
 		<select>Thank you ArchDaeva!</select>
 		<survey itemId="188058917" count="500"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
 	</guide>
 	<guide title="adventurers_guide72_asmo" level="72" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -562,11 +534,7 @@
 		<survey itemId="101901251" count="1"/>
 		<survey itemId="102001374" count="1"/>
 		<survey itemId="102101189" count="1"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
 	</guide>
 	<guide title="adventurers_guide83_asmo" level="83" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -622,11 +590,7 @@
 		<survey itemId="190100233" count="1"/>
 		<survey itemId="190100142" count="1"/>
 		<survey itemId="190100220" count="1"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
     </guide>
     <guide title="adventurers_guide15_ely" level="15" race="ELYOS" rewardCount="1">
         <message>
@@ -686,11 +650,7 @@
 		<survey itemId="188053758" count="1"/>
 		<survey itemId="188053759" count="1"/>
 		<survey itemId="188053760" count="1"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
     </guide>
 	<guide title="adventurers_guide25_ely" level="25" race="ELYOS" rewardCount="1">
 		<message>
@@ -758,11 +718,7 @@
 		<survey itemId="102100395" count="1"/>
 		<survey itemId="188058917" count="10"/>
 		<survey itemId="188055485" count="999"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
 	</guide>
     <guide title="adventurers_guide35_ely" level="35" race="ELYOS" rewardCount="1">
         <message>
@@ -849,11 +805,7 @@
 		<survey itemId="102100535" count="1"/>
 		<survey itemId="115000893" count="1"/>
 		<survey itemId="188058917" count="15"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
 	</guide>
 	<guide title="adventurers_guide45_ely" level="45" race="ELYOS" rewardCount="1">
 		<message>
@@ -917,11 +869,7 @@
 		<survey itemId="102100531" count="1"/>
 		<survey itemId="188058917" count="20"/>
 		<survey itemId="188055485" count="999"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
 	</guide>
     <guide title="adventurers_guide55_ely" level="55" race="ELYOS" rewardCount="1">
         <message>
@@ -1005,11 +953,7 @@
 		</message>
 		<select>Kaldor... Levinshor, eh...?</select>
 		<survey itemId="186000236" count="250"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
 	</guide>
 	<guide title="adventurers_guide65_ely" level="65" race="ELYOS" rewardCount="1">
 		<message>
@@ -1080,11 +1024,7 @@
 		</message>
 		<select>Thank you ArchDaeva!</select>
 		<survey itemId="188058917" count="500"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
 	</guide>
 	<guide title="adventurers_guide72_ely" level="72" race="ELYOS" rewardCount="1">
 		<message>
@@ -1175,11 +1115,7 @@
 		<survey itemId="101901251" count="1"/>
 		<survey itemId="102001374" count="1"/>
 		<survey itemId="102101189" count="1"/>
-		<survey itemId="166030005" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
-		<survey itemId="166060001" count="99"/>
+		<survey itemId="186000317" count="999"/>
 	</guide>
 	<guide title="adventurers_guide83_asmo" level="83" race="ASMODIANS" rewardCount="1">
 		<message>

@@ -324,6 +324,10 @@ public class ItemService {
 	}
 
 	public static boolean dropItemToInventory(Player player, int itemId) {
+		return dropItemToInventory(player, itemId, 1);
+	}
+
+	public static boolean dropItemToInventory(Player player, int itemId, long count) {
 		if (player == null || !player.isOnline()) {
 			return false;
 		}
@@ -342,7 +346,7 @@ public class ItemService {
 				return false;
 			}
 		}
-		return addItem(player, itemId, 1) == 0;
+		return addItem(player, itemId, count) == 0;
 	}
 
 	public static Item newItem(int itemId, long count, String crafterName, int ownerId, long tempItemTime,

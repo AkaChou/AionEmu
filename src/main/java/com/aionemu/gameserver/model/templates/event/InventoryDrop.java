@@ -43,6 +43,9 @@ public class InventoryDrop {
 	@XmlAttribute(name = "interval", required = true)
 	private int interval;
 
+	@XmlAttribute(name = "count", required = false)
+	private long count = 1;
+
 	@XmlAttribute(name = "maxCountOfDay", required = false)
 	private int maxCountOfDay;
 
@@ -70,6 +73,10 @@ public class InventoryDrop {
 
 	public int getInterval() {
 		return interval;
+	}
+
+	public long getCount() {
+		return count;
 	}
 
 	public int getMaxCountOfDay() {
