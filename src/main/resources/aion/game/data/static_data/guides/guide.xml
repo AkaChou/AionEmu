@@ -25,6 +25,11 @@
 		<survey itemId="190100233" count="1"/>
 		<survey itemId="190100142" count="1"/>
 		<survey itemId="190100220" count="1"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
     </guide>
     <guide title="adventurers_guide15_asmo" level="15" race="ASMODIANS" rewardCount="1">
         <message>
@@ -84,6 +89,11 @@
 		<survey itemId="188053758" count="1"/>
 		<survey itemId="188053759" count="1"/>
 		<survey itemId="188053760" count="1"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
     </guide>
     <guide title="adventurers_guide25_asmo" level="25" race="ASMODIANS" rewardCount="1">
         <message>
@@ -149,6 +159,13 @@
 		<survey itemId="101900398" count="1"/>
 		<survey itemId="102000426" count="1"/>
 		<survey itemId="102100395" count="1"/>
+		<survey itemId="188058917" count="10"/>
+		<survey itemId="188055485" count="999"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
     </guide>
     <guide title="adventurers_guide35_asmo" level="35" race="ASMODIANS" rewardCount="1">
         <message>
@@ -216,6 +233,12 @@
 		<survey itemId="102000624" count="1"/>
 		<survey itemId="102100537" count="1"/>
 		<survey itemId="115000895" count="1"/>
+		<survey itemId="188058917" count="20"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
     </guide>
 	<guide title="adventurers_guide45_asmo" level="45" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -277,19 +300,26 @@
 		<survey itemId="102000617" count="1"/>
 		<survey itemId="101900585" count="1"/>
 		<survey itemId="102100532" count="1"/>
+		<survey itemId="188058917" count="40"/>
+		<survey itemId="188055485" count="999"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
 	</guide>
     <guide title="adventurers_guide55_asmo" level="55" race="ASMODIANS" rewardCount="1">
         <message>
 			<![CDATA[<font size ="6" color="FFB732">Adventurer's Guide"</font>
 			<BR><BR>
 			I see Balaurea has been treating you well, my friend!
-			I have not seen Gelkmaros myself just yet, but my network of 
-			contacts has provided me with more than enough information 
+			I have not seen Gelkmaros myself just yet, but my network of
+			contacts has provided me with more than enough information
 			to help you along your path.
 			<Br><Br><Br><Br>
 			Taloc is, by all accounts, the greatest Elim that ever existed.
-			He towers above the tallest building, such is the power of the 
-			Aether tangled in his mighty roots. 
+			He towers above the tallest building, such is the power of the
+			Aether tangled in his mighty roots.
 			But the Aether has also corrupted the creatures within Taloc.
 			They have been driven insane by their lust for Taloc's sap,
 			and the great Elim is now in desperate need of help.
@@ -362,6 +392,11 @@
 		</message>
 		<select>Faith and arms!</select>
 		<survey itemId="186000236" count="250"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
     </guide>
 	<guide title="adventurers_guide65_asmo" level="65" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -406,6 +441,7 @@
 		<survey itemId="102101039" count="1"/>
 		<survey itemId="115001734" count="1"/>
 		<survey itemId="115001735" count="1"/>
+		<survey itemId="188058917" count="50"/>
 	</guide>
 	<guide title="adventurers_guide68_asmo" level="68" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -421,6 +457,21 @@
 		</message>
 		<select>Thank you ArchDaeva!</select>
 		<survey itemId="188100335" count="2000"/>
+	</guide>
+	<guide title="adventurers_guide70_asmo" level="70" race="ASMODIANS" rewardCount="1">
+		<message>
+			<![CDATA[<font size ="6" color="FFB732">Adventurer's Guide"</font>
+			<BR><BR>
+			Congratulations!
+			<br><br>]]>
+		</message>
+		<select>Thank you ArchDaeva!</select>
+		<survey itemId="188058917" count="500"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
 	</guide>
 	<guide title="adventurers_guide72_asmo" level="72" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -511,6 +562,11 @@
 		<survey itemId="101901251" count="1"/>
 		<survey itemId="102001374" count="1"/>
 		<survey itemId="102101189" count="1"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
 	</guide>
 	<guide title="adventurers_guide83_asmo" level="83" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -540,7 +596,7 @@
 		<survey itemId="102001375" count="1"/>
 		<survey itemId="102101190" count="1"/>
 	</guide>
-	
+
 	<!-- Elyos -->
     <guide title="adventurers_guide10_ely" level="10" race="ELYOS" rewardCount="2">
         <message>
@@ -566,6 +622,11 @@
 		<survey itemId="190100233" count="1"/>
 		<survey itemId="190100142" count="1"/>
 		<survey itemId="190100220" count="1"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
     </guide>
     <guide title="adventurers_guide15_ely" level="15" race="ELYOS" rewardCount="1">
         <message>
@@ -625,6 +686,11 @@
 		<survey itemId="188053758" count="1"/>
 		<survey itemId="188053759" count="1"/>
 		<survey itemId="188053760" count="1"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
     </guide>
 	<guide title="adventurers_guide25_ely" level="25" race="ELYOS" rewardCount="1">
 		<message>
@@ -690,6 +756,13 @@
 		<survey itemId="101900398" count="1"/>
 		<survey itemId="102000426" count="1"/>
 		<survey itemId="102100395" count="1"/>
+		<survey itemId="188058917" count="10"/>
+		<survey itemId="188055485" count="999"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
 	</guide>
     <guide title="adventurers_guide35_ely" level="35" race="ELYOS" rewardCount="1">
         <message>
@@ -775,6 +848,12 @@
 		<survey itemId="102000622" count="1"/>
 		<survey itemId="102100535" count="1"/>
 		<survey itemId="115000893" count="1"/>
+		<survey itemId="188058917" count="15"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
 	</guide>
 	<guide title="adventurers_guide45_ely" level="45" race="ELYOS" rewardCount="1">
 		<message>
@@ -836,6 +915,13 @@
 		<survey itemId="102000614" count="1"/>
 		<survey itemId="101900582" count="1"/>
 		<survey itemId="102100531" count="1"/>
+		<survey itemId="188058917" count="20"/>
+		<survey itemId="188055485" count="999"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
 	</guide>
     <guide title="adventurers_guide55_ely" level="55" race="ELYOS" rewardCount="1">
         <message>
@@ -919,6 +1005,11 @@
 		</message>
 		<select>Kaldor... Levinshor, eh...?</select>
 		<survey itemId="186000236" count="250"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
 	</guide>
 	<guide title="adventurers_guide65_ely" level="65" race="ELYOS" rewardCount="1">
 		<message>
@@ -963,6 +1054,7 @@
 		<survey itemId="102101039" count="1"/>
 		<survey itemId="115001734" count="1"/>
 		<survey itemId="115001735" count="1"/>
+		<survey itemId="188058917" count="500"/>
 	</guide>
 	<guide title="adventurers_guide68_ely" level="68" race="ELYOS" rewardCount="1">
 		<message>
@@ -978,6 +1070,21 @@
 		</message>
 		<select>Thank you ArchDaeva!</select>
 		<survey itemId="188100335" count="2000"/>
+	</guide>
+	<guide title="adventurers_guide70_ely" level="70" race="ELYOS" rewardCount="1">
+		<message>
+			<![CDATA[<font size ="6" color="FFB732">Adventurer's Guide"</font>
+			<BR><BR>
+			Congratulations!
+			<br><br>]]>
+		</message>
+		<select>Thank you ArchDaeva!</select>
+		<survey itemId="188058917" count="500"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
 	</guide>
 	<guide title="adventurers_guide72_ely" level="72" race="ELYOS" rewardCount="1">
 		<message>
@@ -1068,6 +1175,11 @@
 		<survey itemId="101901251" count="1"/>
 		<survey itemId="102001374" count="1"/>
 		<survey itemId="102101189" count="1"/>
+		<survey itemId="166030005" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
+		<survey itemId="166060001" count="99"/>
 	</guide>
 	<guide title="adventurers_guide83_asmo" level="83" race="ASMODIANS" rewardCount="1">
 		<message>
@@ -1097,7 +1209,7 @@
 		<survey itemId="102001375" count="1"/>
 		<survey itemId="102101190" count="1"/>
 	</guide>
-	
+
 	<!-- Guide Base -->
 	<guide title="adventurers_base1" level="1" race="PC_ALL" rewardCount="1">
 		<message>
@@ -1198,7 +1310,7 @@
 		<survey itemId="186000223" count="8"/> <!-- Honorable Mithril Medal -->
 		<survey itemId="186000242" count="8"/> <!-- Ceramium Medal -->
 	</guide>
-	
+
 	<!-- VIP Benefits -->
 	<guide title="VIP_Benefits" level="1" race="PC_ALL" rewardCount="1">
 		<message>
@@ -1224,7 +1336,7 @@
 		<survey itemId="152150005" count="2"/> <!-- Luna’s Light -->
 		<survey itemId="152150006" count="2"/> <!-- Luna’s Blessing -->
 	</guide>
-	
+
 	<!-- ArchDaeva Benefits -->
 	<guide title="ArchDaeva_Benefits" level="1" race="PC_ALL" rewardCount="1">
 		<message>
@@ -1249,7 +1361,7 @@
 		<survey itemId="188055186" count="1"/> <!-- Archdaeva's Remodeled Danuar Armor Box -->
 		<survey itemId="188055187" count="1"/> <!-- Archdaeva's Remodeled Danuar Weapon Box -->
 	</guide>
-	
+
 	<!-- Berserk Anoha -->
 	<guide title="Berserk_Anoha" level="1" race="PC_ALL" rewardCount="1">
 		<message>
@@ -1273,7 +1385,7 @@
 		<survey itemId="188054637" count="1"/> <!-- [Event] Commander Weapon Box -->
 		<survey itemId="188054638" count="1"/> <!-- [Event] Commander Armor Box -->
 	</guide>
-	
+
 	<!-- Conquest Offering -->
 	<guide title="Conquest_Offering" level="1" race="PC_ALL" rewardCount="1">
 		<message>
@@ -1309,7 +1421,7 @@
 		<survey itemId="188053690" count="1"/> <!-- Inggison Greater Conqueror's Mark Box -->
 		<survey itemId="188053693" count="1"/> <!-- Gelkmaros Greater Conqueror's Mark Box -->
 	</guide>
-	
+
 	<!-- Agent Fight -->
 	<guide title="Agent_Fight" level="1" race="PC_ALL" rewardCount="1">
 		<message>
@@ -1326,7 +1438,7 @@
 			- The central garrison is going to be automatically captured.
 			<Br><Br><Br><Br>
 			REWARDS:
-			Among rewards for helping your Governor are Honour Points and parts of the Ascended Agent's Set. 
+			Among rewards for helping your Governor are Honour Points and parts of the Ascended Agent's Set.
 			<Br><Br><Br><Br>
 			LOOT:
 			- Killing your opposite faction's Governor rewards you with Honour Points.
@@ -1352,7 +1464,7 @@
 		<survey itemId="188054250" count="1"/> <!-- [Event] Delegate's Leather Armor Box -->
 		<survey itemId="188054251" count="1"/> <!-- [Event] Delegate's Cloth Armor Box -->
 	</guide>
-	
+
 	<!-- Brigade General's Urgent Order [RVR 4.9.1] -->
 	<guide title="Rvr_Guide" level="1" race="PC_ALL" rewardCount="1">
 		<message>
@@ -1376,7 +1488,7 @@
 		<survey itemId="188100298" count="1"/> <!-- Legion Medal Left Piece -->
 		<survey itemId="188100299" count="1"/> <!-- Legion Medal Right Piece -->
 	</guide>
-	
+
 	<!-- http://event2.ncsoft.jp/1.0/aion/1503awake/ -->
 	<guide title="Event_Awake_10" level="1" race="PC_ALL" rewardCount="1">
 		<message>
@@ -1410,7 +1522,7 @@
 		<survey itemId="160010356" count="1"/> <!-- Violet Seed Of Transformation -->
 		<survey itemId="160010357" count="1"/> <!-- Violet Seed Of Transformation -->
 	</guide>
-	
+
 	<!-- Zorshiv Dredgion Guide -->
 	<guide title="Dredgion_Guide" level="1" race="PC_ALL" rewardCount="1">
 		<message>
