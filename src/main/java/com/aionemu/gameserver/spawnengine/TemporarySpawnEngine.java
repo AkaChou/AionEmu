@@ -48,20 +48,31 @@ public class TemporarySpawnEngine {
 		for (SpawnGroup2 spawn : temporarySpawns) {
 			for (SpawnTemplate template : spawn.getSpawnTemplates()) {
 				if (template.getTemporarySpawn().canDespawn()) {
-					VisibleObject object = template.getVisibleObject();
-					if (object == null) {
+					List<VisibleObject> objects = template.getVisibleObjects();
+					if (objects == null || objects.isEmpty()) {
+						VisibleObject object = template.getVisibleObject();
+						if (object != null) {
+							objects = new ArrayList<>();
+							objects.add(object);
+						}
+					}
+					if (objects == null) {
 						continue;
 					}
-					if (object instanceof Npc) {
-						Npc npc = (Npc) object;
-						if (!npc.getLifeStats().isAlreadyDead() && template.hasPool()) {
-							spawn.setTemplateUse(npc.getInstanceId(), template, false);
+					for (VisibleObject object : new ArrayList<>(objects)) {
+						if (object instanceof Npc) {
+							Npc npc = (Npc) object;
+							if (!npc.getLifeStats().isAlreadyDead() && template.hasPool()) {
+								spawn.setTemplateUse(npc.getInstanceId(), template, false);
+							}
+							npc.getController().cancelTask(TaskId.RESPAWN);
 						}
-						npc.getController().cancelTask(TaskId.RESPAWN);
+						if (object.isSpawned()) {
+							object.getController().onDelete();
+						}
 					}
-					if (object.isSpawned()) {
-						object.getController().onDelete();
-					}
+					objects.clear();
+					template.setVisibleObject(null);
 				}
 			}
 		}
@@ -99,9 +110,9 @@ public class TemporarySpawnEngine {
 	 * @param spawnTemplate
 	 */
 	public static void addSpawnGroup(SpawnGroup2 spawn, int instanceId) {
-		temporarySpawns.add(spawn);
 		HashSet<Integer> instances = tempSpawnInstanceMap.get(spawn);
 		if (instances == null) {
+			temporarySpawns.add(spawn);
 			instances = new HashSet<Integer>();
 			tempSpawnInstanceMap.put(spawn, instances);
 		}

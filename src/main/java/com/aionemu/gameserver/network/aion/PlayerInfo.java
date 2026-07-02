@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.network.aion;
 
 import lombok.extern.slf4j.Slf4j;
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.aionemu.gameserver.model.account.PlayerAccountData;
@@ -132,7 +133,8 @@ public abstract class PlayerInfo extends AionServerPacket {
 			writeB(new byte[86]);
 		}
 		writeH(accPlData.isLegionMember() ? 0x01 : 0x00);
-		writeD((int) pbd.getLastOnline().getTime());
+		Timestamp lastOnline = pbd.getLastOnline();
+		writeD(lastOnline == null ? 0 : (int) lastOnline.getTime());
 		int itemsDataSize = 0;
 		List<Item> items = accPlData.getEquipment();
 		for (Item item : items) {
