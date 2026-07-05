@@ -19,6 +19,7 @@ package com.aionemu.gameserver;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemCategory;
+import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.chathandlers.PlayerCommand;
@@ -42,20 +43,18 @@ public class cmd_enchant extends PlayerCommand {
             onFail(player, "Fail");
             return;
         }
-        if(enchant <= 15){
+        int maxEnchant = EnchantService.getMaxEquipmentEnchantLevel();
+        if(enchant <= maxEnchant){
             enchant(player, enchant);
         } else{
-            PacketSendUtility.sendMessage(player, "You cannot enchant higher than +15!");
+            PacketSendUtility.sendMessage(player, "You cannot enchant higher than +" + maxEnchant + "!");
         }
     }
 
 	private void enchant(Player player, int enchant) {
 		for (Item targetItem : player.getEquipment().getEquippedItemsWithoutStigma()) {
 			if (isUpgradeble(targetItem)) {
-				int enchantLevel = 15, maxEnchant = targetItem.getItemTemplate().getMaxEnchantLevel();
-				if (maxEnchant > 0 && enchantLevel > maxEnchant) {
-					enchantLevel = maxEnchant;
-				}
+				int enchantLevel = EnchantService.capEquipmentEnchantLevel(enchant);
 
 				targetItem.setEnchantLevel(enchantLevel);
 
@@ -81,7 +80,7 @@ public class cmd_enchant extends PlayerCommand {
 		if (item.getItemTemplate().getCategory() == ItemCategory.STIGMA) {
 			return false;
 		}
-		if (item.getEnchantLevel() == 15) {
+		if (item.getEnchantLevel() >= EnchantService.getMaxEquipmentEnchantLevel()) {
 			return false;
 		}
 		if (item.getItemTemplate().isArmor()) {

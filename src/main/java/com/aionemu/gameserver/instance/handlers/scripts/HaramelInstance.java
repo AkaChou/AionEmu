@@ -97,13 +97,15 @@ public class HaramelInstance extends GeneralInstanceHandler
 			break;
 			case 216922: //Hamerun The Bleeder.
                 despawnNpc(npc);
-			    sendMovie(player, 457);
+				sendMovie(player, 457);
 				//Hamerun has dropped a treasure chest.
 				sendMsgByRace(1400713, Race.PC_ALL, 0);
 				////sendMsg("[SUCCES]: You have finished <Haramel>");
 			    spawn(700829, 224.137f, 268.608f, 144.898f, (byte) 90); //Ancient Treasure Box.
 				spawn(700852, 223.93062f, 337.5487f, 142.43079f, (byte) 90); //Opened Dimensional Gate.
-			    ItemService.addItem(player, 188900008, 1); //Secret Remedy Of Growth II.
+				if (player != null) {
+					ItemService.addItem(player, 188900008, 1); //Secret Remedy Of Growth II.
+				}
 			break;
         }
     }
@@ -114,12 +116,14 @@ public class HaramelInstance extends GeneralInstanceHandler
 		}
 	}
 	
-	private void sendMovie(Player player, int movie) {
-        if (!movies.contains(movie)) {
-             movies.add(movie);
-             PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
-        }
-    }
+	private boolean sendMovie(Player player, int movie) {
+		if (player == null || movies.contains(movie)) {
+			return false;
+		}
+		movies.add(movie);
+		PacketSendUtility.sendPacket(player, new SM_PLAY_MOVIE(0, movie));
+		return true;
+	}
 	
 	private void sendMsg(final String str) {
 		instance.doOnAllPlayers(new Visitor<Player>() {

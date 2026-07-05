@@ -70,22 +70,23 @@ public class ManaStoneInfoBlobEntry extends ItemBlobEntry {
 		writeB(buf, new byte[36]);
 		writeAmplification(buf);
 		writeB(buf, new byte[11]);
-		writeEnhance(buf);
+		writeSkillBoost(buf);
 		writeD(buf, item.isLunaReskin() ? 1 : 0);
 		writeC(buf, item.getReductionLevel());
 	}
 
 	private void writeAmplification(ByteBuffer buf) {
-		Item item = this.ownerItem;
-		writeC(buf, item.isAmplified() ? 1 : 0);
-		writeD(buf, item.getAmplificationSkill());
+		// The 5.8 client renders unresolved inherent item skill ids as "(null)".
+		writeC(buf, 0);
+		writeD(buf, 0);
 	}
 
-	private void writeEnhance(ByteBuffer buf) {
+	private void writeSkillBoost(ByteBuffer buf) {
 		Item item = this.ownerItem;
-		writeC(buf, item.isEnhance() ? 1 : 0);
-		writeD(buf, item.getEnhanceSkillId());
-		writeD(buf, item.getEnhanceEnchantLevel());
+		boolean hasSkillBoost = item.isEnhance() && item.getEnhanceSkillId() > 0 && item.getEnhanceEnchantLevel() > 0;
+		writeC(buf, hasSkillBoost ? 1 : 0);
+		writeD(buf, hasSkillBoost ? item.getEnhanceSkillId() : 0);
+		writeD(buf, hasSkillBoost ? item.getEnhanceEnchantLevel() : 0);
 	}
 
 	private void writePlumeBonusStat(ByteBuffer buf) {

@@ -29,6 +29,8 @@ import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.configs.main.LoggingConfig;
 import com.aionemu.gameserver.dao.ItemStoneListDAO;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.ItemSkillEnhanceData;
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -45,6 +47,7 @@ import com.aionemu.gameserver.model.templates.item.ItemSkillEnhance;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.quest.QuestItems;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemAddType;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
 import com.aionemu.gameserver.taskmanager.tasks.ExpireTimerTask;
@@ -69,6 +72,17 @@ public class ItemService {
 		if (itemList != null && itemList.size() > 0) {
 			DAOManager.getDAO(ItemStoneListDAO.class).load(itemList);
 		}
+	}
+
+	public static boolean ensureSkillEnhance(Player player, Collection<Item> items) {
+		if (items == null || items.isEmpty()) {
+			return false;
+		}
+		boolean changed = false;
+		for (Item item : items) {
+			changed |= ensureSkillEnhance(item, DataManager.ITEM_SKILL_ENHANCE_DATA, player.getPlayerClass());
+		}
+		return changed;
 	}
 
 	public static long addItem(Player player, int itemId, long count) {
@@ -152,8 +166,6 @@ public class ItemService {
 		Storage inventory = player.getInventory();
 		ItemCustomSetTeamplate itemCustomSet = DataManager.ITEM_CUSTOM_SET_DATA
 				.getCustomTemplate(itemTemplate.getItemCustomSet());
-		ItemSkillEnhance itemSkillEnhance = DataManager.ITEM_SKILL_ENHANCE_DATA
-				.getSkillEnhance(itemTemplate.getSkillEnhance());
 		while (!inventory.isFull(itemTemplate.getExtraInventoryId()) && count > 0) {
 			Item newItem = ItemFactory.newItem(itemTemplate.getTemplateId());
 			if (newItem.getExpireTime() != 0) {
@@ -175,16 +187,34 @@ public class ItemService {
 				enchant(player, itemCustomSet.getCustomEnchantValue(), newItem);
 			}
 			if (itemTemplate.getSkillEnhance() != 0) {
-				int skillId = RndArray.get(itemSkillEnhance.getSkillId());
-				newItem.setEnhanceSkillId(skillId);
-				newItem.setEnhanceEnchantLevel(1);
-				newItem.setIsEnhance(true);
+				ensureSkillEnhance(newItem, DataManager.ITEM_SKILL_ENHANCE_DATA, player.getPlayerClass());
 			}
 			predicate.changeItem(newItem);
 			inventory.add(newItem);
 			count--;
 		}
 		return count;
+	}
+
+	static boolean ensureSkillEnhance(Item item, ItemSkillEnhanceData data, PlayerClass playerClass) {
+		if (item == null || data == null || item.getItemTemplate() == null || item.getItemTemplate().getSkillEnhance() == 0) {
+			return false;
+		}
+		ItemSkillEnhance itemSkillEnhance = data.getSkillEnhance(item.getItemTemplate().getSkillEnhance(), playerClass);
+		if (itemSkillEnhance == null || itemSkillEnhance.getSkillId().isEmpty()) {
+			return false;
+		}
+		if (item.isEnhance() && item.getEnhanceEnchantLevel() != 0
+				&& itemSkillEnhance.getSkillId().contains(item.getEnhanceSkillId())) {
+			return false;
+		}
+		item.setEnhanceSkillId(RndArray.get(itemSkillEnhance.getSkillId()));
+		item.setEnhanceEnchantLevel(1);
+		item.setIsEnhance(true);
+		if (item.getPersistentState() != PersistentState.NEW) {
+			item.setPersistentState(PersistentState.UPDATE_REQUIRED);
+		}
+		return true;
 	}
 
 	public static void chargeItem(Player player, Item item, int level) {
@@ -463,7 +493,7 @@ public class ItemService {
 		if (item.getItemTemplate().getMaxAuthorize()!=0)
 			item.setAuthorize(enchant);
 		else if (item.getItemTemplate().getMaxEnchantLevel()!=0)
-			item.setEnchantLevel(enchant);
+			item.setEnchantLevel(EnchantService.capEquipmentEnchantLevel(enchant));
 		if (item.isEquipped()) {
 			player.getGameStats().updateStatsVisually();
 		}

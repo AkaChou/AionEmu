@@ -50,7 +50,7 @@ public class AssemblyItemAction extends AbstractItemAction {
 			return false;
 		}
 		for (Integer itemId : assemblyItem.getParts()) {
-			if (player.getInventory().getFirstItemByItemId(itemId) == null) {
+			if (getAssemblyCount(getAvailablePartsCount(player, parentItem, itemId), assemblyItem.getPartsNum()) < 1) {
 				return false;
 			}
 		}
@@ -85,37 +85,78 @@ public class AssemblyItemAction extends AbstractItemAction {
 				player.getObserveController().removeObserver(observer);
 				player.getController().cancelTask(TaskId.ITEM_USE);
 				AssemblyItem assemblyItem = getAssemblyItem();
-				int itemType = 0;
+				long assemblyCount = getAvailableAssemblyCount(player, parentItem, assemblyItem);
+				if (assemblyCount < 1) {
+					return;
+				}
+				long requiredPartsCount = getRequiredPartsCount(assemblyItem.getPartsNum(), assemblyCount);
 				for (Integer itemId : assemblyItem.getParts()) {
-					if (!player.getInventory().decreaseByItemId(itemId, assemblyItem.getPartsNum())) {
+					if (!decreaseParts(player, parentItem, itemId, requiredPartsCount)) {
 						return;
 					}
-					player.getInventory().decreaseByItemId(itemId, 1);
-					PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
-							parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, 1, 0), true);
-					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401122));
-					if (assemblyItem.getProcAssembly() != 0) {
+				}
+				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(),
+						parentItem.getObjectId(), parentItem.getItemTemplate().getTemplateId(), 0, 1, 0), true);
+				PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1401122));
+
+				long normalCount = assemblyCount;
+				long procCount = 0;
+				if (assemblyItem.getProcAssembly() != 0) {
+					normalCount = 0;
+					for (long i = 0; i < assemblyCount; i++) {
 						if (Rnd.get(1, 100) < 15) {
-							itemType = 2;
+							procCount++;
 						} else {
-							itemType = 1;
+							normalCount++;
 						}
-					} else {
-						itemType = 1;
 					}
 				}
-				switch (itemType) {
-				case 0:
-					break;
-				case 1:
-					ItemService.addItem(player, assemblyItem.getId(), 1);
-					break;
-				case 2:
-					ItemService.addItem(player, assemblyItem.getProcAssembly(), 1);
-					break;
+				if (normalCount > 0) {
+					ItemService.addItem(player, assemblyItem.getId(), normalCount);
+				}
+				if (procCount > 0) {
+					ItemService.addItem(player, assemblyItem.getProcAssembly(), procCount);
 				}
 			}
 		}, 3000));
+	}
+
+	private long getAvailableAssemblyCount(Player player, Item parentItem, AssemblyItem assemblyItem) {
+		long assemblyCount = Long.MAX_VALUE;
+		for (Integer itemId : assemblyItem.getParts()) {
+			long availableCount = getAvailablePartsCount(player, parentItem, itemId);
+			assemblyCount = Math.min(assemblyCount, getAssemblyCount(availableCount, assemblyItem.getPartsNum()));
+		}
+		return assemblyCount == Long.MAX_VALUE ? 0 : assemblyCount;
+	}
+
+	private long getAvailablePartsCount(Player player, Item parentItem, int itemId) {
+		return parentItem.getItemId() == itemId ? parentItem.getItemCount() : player.getInventory().getItemCountByItemId(itemId);
+	}
+
+	private boolean decreaseParts(Player player, Item parentItem, int itemId, long count) {
+		if (parentItem.getItemId() == itemId) {
+			return player.getInventory().decreaseByObjectId(parentItem.getObjectId(), count);
+		}
+		return player.getInventory().decreaseByItemId(itemId, count);
+	}
+
+	static long getAssemblyCount(long availableCount, int partsNum) {
+		if (availableCount < 1) {
+			return 0;
+		}
+		return availableCount / getEffectivePartsNum(partsNum);
+	}
+
+	static long getRequiredPartsCount(int partsNum, long assemblyCount) {
+		if (assemblyCount < 1) {
+			return 0;
+		}
+		return getEffectivePartsNum(partsNum) * assemblyCount;
+	}
+
+	private static int getEffectivePartsNum(int partsNum) {
+		return partsNum > 0 ? partsNum : 1;
 	}
 
 	public AssemblyItem getAssemblyItem() {

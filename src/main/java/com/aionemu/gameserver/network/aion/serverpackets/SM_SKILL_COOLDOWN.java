@@ -17,41 +17,77 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.skill.PlayerSkillEntry;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
+import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 public class SM_SKILL_COOLDOWN extends AionServerPacket {
-	private Map<Integer, Long> cooldowns;
+	private final List<Cooldown> cooldowns = new ArrayList<>();
+	private final boolean isSkillRemove;
 
 	public SM_SKILL_COOLDOWN(Map<Integer, Long> cooldowns) {
-		this.cooldowns = cooldowns;
+		this(cooldowns, true);
+	}
+
+	public SM_SKILL_COOLDOWN(Map<Integer, Long> cooldowns, boolean isSkillRemove) {
+		this.isSkillRemove = isSkillRemove;
+		for (Map.Entry<Integer, Long> entry : cooldowns.entrySet()) {
+			for (int skillId : DataManager.SKILL_DATA.getSkillsForDelayId(entry.getKey())) {
+				this.cooldowns.add(new Cooldown(skillId, entry.getValue()));
+			}
+		}
+		sortByAnimationDuration();
+	}
+
+	public SM_SKILL_COOLDOWN(Player player, Map<Integer, Long> cooldowns, boolean isSkillRemove) {
+		this.isSkillRemove = isSkillRemove;
+		for (PlayerSkillEntry skill : player.getSkillList().getAllSkills()) {
+			SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skill.getSkillId());
+			Long reuseTime = cooldowns.get(skillTemplate.getDelayId());
+			if (reuseTime != null) {
+				this.cooldowns.add(new Cooldown(skill.getSkillId(), reuseTime));
+			}
+		}
+		sortByAnimationDuration();
 	}
 
 	@Override
 	protected void writeImpl(AionConnection con) {
-		writeH(calculateSize());
-		writeC(1);
-		long currentTime = System.currentTimeMillis();
-		for (Map.Entry<Integer, Long> entry : cooldowns.entrySet()) {
-			int left = (int) ((entry.getValue() - currentTime) / 1000);
-			ArrayList<Integer> skillsWithCooldown = DataManager.SKILL_DATA.getSkillsForDelayId(entry.getKey());
-			for (int index = 0; index < skillsWithCooldown.size(); index++) {
-				int skillId = skillsWithCooldown.get(index);
-				writeH(skillId);
-				writeD(left > 0 ? left : 0);
-				writeD(DataManager.SKILL_DATA.getSkillTemplate(skillId).getCooldown());
-			}
+		writeH(cooldowns.size());
+		writeC(isSkillRemove ? 1 : 0);
+		for (Cooldown cooldown : cooldowns) {
+			writeH(cooldown.skillId);
+			writeD(cooldown.getRemainingMillis());
+			writeD(isSkillRemove ? 0 : cooldown.getAnimationDurationMillis());
 		}
 	}
 
-	private int calculateSize() {
-		int size = 0;
-		for (Map.Entry<Integer, Long> entry : cooldowns.entrySet()) {
-			size += DataManager.SKILL_DATA.getSkillsForDelayId(entry.getKey()).size();
+	private void sortByAnimationDuration() {
+		cooldowns.sort(Comparator.comparingInt(Cooldown::getAnimationDurationMillis));
+	}
+
+	private static class Cooldown {
+		private final int skillId;
+		private final long reuseTime;
+
+		private Cooldown(int skillId, long reuseTime) {
+			this.skillId = skillId;
+			this.reuseTime = reuseTime;
 		}
-		return size;
+
+		private int getRemainingMillis() {
+			return (int) Math.max(0, reuseTime - System.currentTimeMillis());
+		}
+
+		private int getAnimationDurationMillis() {
+			return DataManager.SKILL_DATA.getSkillTemplate(skillId).getCooldown() * 100;
+		}
 	}
 }

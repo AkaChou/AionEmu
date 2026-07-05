@@ -77,6 +77,36 @@ class StartSilentScriptTest {
     }
 
     @Test
+    void refreshAionOverwritesRuntimeResourcesButKeepsConfigFiles() throws Exception {
+        Path root = prepareRuntimeRoot();
+        Files.copy(Path.of("refresh-aion.sh"), root.resolve("refresh-aion.sh"));
+        Path sourceConfig = root.resolve("src/main/resources/aion/game/config/main/gameserver.properties");
+        Path sourceData = root.resolve("src/main/resources/aion/game/data/static_data/example.xml");
+        Path sourceLogback = root.resolve("src/main/resources/logback-spring.xml");
+        Files.createDirectories(sourceConfig.getParent());
+        Files.createDirectories(sourceData.getParent());
+        Files.writeString(sourceConfig, "default-config");
+        Files.writeString(sourceData, "default-data");
+        Files.writeString(sourceLogback, "default-logback");
+        Path runtimeConfig = root.resolve("aion/game/config/main/gameserver.properties");
+        Path runtimeData = root.resolve("aion/game/data/static_data/example.xml");
+        Path runtimeLogback = root.resolve("aion/log/logback-spring.xml");
+        Files.createDirectories(runtimeConfig.getParent());
+        Files.createDirectories(runtimeData.getParent());
+        Files.createDirectories(runtimeLogback.getParent());
+        Files.writeString(runtimeConfig, "custom-config");
+        Files.writeString(runtimeData, "old-data");
+        Files.writeString(runtimeLogback, "custom-logback");
+
+        ProcessResult result = runScript(root, "refresh-aion.sh", root.resolve("java-args.txt"));
+
+        assertEquals(0, result.exitCode(), result.output());
+        assertEquals("custom-config", Files.readString(runtimeConfig));
+        assertEquals("default-data", Files.readString(runtimeData));
+        assertEquals("custom-logback", Files.readString(runtimeLogback));
+    }
+
+    @Test
     void stopSilentUsesAionLogPidByDefault() throws Exception {
         Path root = prepareRuntimeRoot();
         Path pidFile = root.resolve("aion/log/aionemu.pid");

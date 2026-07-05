@@ -23,6 +23,10 @@ public class EnchantsConfig {
 	public static float SOCKET_MANASTONE;
 	@Property(key = "gameserver.enchant.item", defaultValue = "50")
 	public static float ENCHANT_ITEM;
+	@Property(key = "gameserver.enchant.item.kinah", defaultValue = "-1")
+	public static int ENCHANT_ITEM_KINAH;
+	@Property(key = "gameserver.enchant.equipment.max.level", defaultValue = "30")
+	public static int MAX_EQUIPMENT_ENCHANT_LEVEL;
 	@Property(key = "gameserver.enchant.plume", defaultValue = "50")
 	public static float ENCHANT_PLUME;
 	@Property(key = "gameserver.enchant.bracelet", defaultValue = "50")

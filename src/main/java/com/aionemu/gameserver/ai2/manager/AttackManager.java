@@ -167,17 +167,15 @@ public class AttackManager {
 
 		double distanceToHome = npc.getDistanceToSpawnLocation();
 		int chaseHome = npc.isBoss() ? 350 : npc.getPosition().getWorldMapInstance().getTemplate().getAiInfo().getChaseHome();
-//        if (distanceToHome > chaseHome) { //Leashes like this don't exist on retail (with very few exceptions)
-//            return true;
-//        }
-		// 如果NPC离家太远且长时间没有攻击
-		// start thinking about home after 100 meters and no attack for 10 seconds (only for default monsters)
-		if (chaseHome <= 200 || distanceToHome > chaseHome) { // TODO: Check Client and use chase_user_by_trace value
-			if ((npc.getGameStats().getLastAttackTimeDelta() > 10 && npc.getGameStats().getLastAttackedTimeDelta() > 10)
-				/*|| (distanceToHome > chaseHome / 2 && npc.getGameStats().getLastAttackedTimeDelta() > 10)*/) {
-				return true;
-			}
+		return shouldGiveUpByHomeDistance(distanceToHome, chaseHome, npc.getGameStats().getLastAttackTimeDelta(),
+			npc.getGameStats().getLastAttackedTimeDelta());
+	}
+
+	static boolean shouldGiveUpByHomeDistance(double distanceToHome, int chaseHome, int lastAttackTimeDelta,
+			int lastAttackedTimeDelta) {
+		if (distanceToHome > chaseHome) {
+			return true;
 		}
-		return false;
+		return chaseHome <= 200 && lastAttackTimeDelta > 10 && lastAttackedTimeDelta > 10;
 	}
 }

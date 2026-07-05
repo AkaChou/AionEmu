@@ -69,9 +69,7 @@
     <item_skill_enhance id="63" player_class="CHANTER" skill_id="1768 1769 1700 1580 1858 4012 4685"/>
     <item_skill_enhance id="64" player_class="ASSASSIN" skill_id="3223 3365 3427 3435 3348 3182 3417"/>
 	<item_skill_enhance id="64" player_class="RANGER" skill_id="1102 826 1135 1010 838 1118 1075"/>
-	<item_skill_enhance id="65" player_class="SORCERER" skill_id="1396 1259 1526 1250 1385 1533"/>
-	<item_skill_enhance id="65" player_class="SPIRIT_MASTER" skill_id="1155 3740 3603 3614 1447 3742 3834"/>
-	<item_skill_enhance id="65" player_class="SONGWEAVER" skill_id="4408 4264 4253 4300 4221 4234 4552"/>
+	<item_skill_enhance id="65" skill_id="1396 1259 1526 1250 1385 1533 1155 3740 3603 3614 4668 1447 3742 3834 4408 4264 4253 4300 4221 4234 4552"/>
 	<item_skill_enhance id="66" player_class="ASSASSIN" skill_id="3223 3365 3427 3435 3348 3182 3417"/>
 	<item_skill_enhance id="67" player_class="ASSASSIN" skill_id="3223 3365 3427 3435 3348 3182 3417"/>
 	<item_skill_enhance id="67" player_class="GLADIATOR" skill_id="739 720 2864 707 2877 710"/>

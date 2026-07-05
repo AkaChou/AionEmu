@@ -67,6 +67,14 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 
 public class EnchantService {
 
+	public static int getMaxEquipmentEnchantLevel() {
+		return EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL > 0 ? EnchantsConfig.MAX_EQUIPMENT_ENCHANT_LEVEL : 30;
+	}
+
+	public static int capEquipmentEnchantLevel(int enchantLevel) {
+		return Math.min(enchantLevel, getMaxEquipmentEnchantLevel());
+	}
+
 	public static boolean breakItem(Player player, Item targetItem) {
 		Storage inventory = player.getInventory();
 		int kinah = 22600;
@@ -392,6 +400,7 @@ public class EnchantService {
 				currentEnchant -= 1;
 			}
 		}
+		currentEnchant = capEquipmentEnchantLevel(currentEnchant);
 		targetItem.setEnchantLevel(currentEnchant);
 
 		/**
@@ -555,6 +564,9 @@ public class EnchantService {
 	}
 
 	public static int EnchantKinah(Item item) {
+		if (EnchantsConfig.ENCHANT_ITEM_KINAH >= 0) {
+			return EnchantsConfig.ENCHANT_ITEM_KINAH;
+		}
 		// Price Ver 5.6
 		if (item.getItemTemplate().getItemQuality() == ItemQuality.EPIC) {
 			switch (item.getEnchantLevel()) {

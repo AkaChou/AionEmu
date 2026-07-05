@@ -1,8 +1,10 @@
 package com.aionemu.gameserver.controllers.effect;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 
@@ -49,6 +51,33 @@ class EffectControllerTest {
 		assertNull(controller.abnormalEffect("old"));
 		assertSame(unrelatedEffect, controller.abnormalEffect("unrelated"));
 		assertSame(replacementEffect, controller.abnormalEffect("replacement"));
+	}
+
+	@Test
+	void replacingAbnormalEffectWithSameStackEndsExistingEffect() {
+		TestEffectController controller = new TestEffectController();
+		TestEffect oldEffect = abnormalEffect(controller, "same", 10, 1, 1);
+		TestEffect replacementEffect = abnormalEffect(controller, "same", 11, 2, 1);
+
+		controller.addEffect(oldEffect);
+		controller.addEffect(replacementEffect);
+
+		assertTrue(oldEffect.ended());
+		assertSame(replacementEffect, controller.abnormalEffect("same"));
+	}
+
+	@Test
+	void clearingStaleEffectDoesNotRemoveReplacementWithSameStack() {
+		TestEffectController controller = new TestEffectController();
+		TestEffect staleEffect = abnormalEffect(controller, "same", 10, 1, 1);
+		TestEffect replacementEffect = abnormalEffect(controller, "same", 11, 2, 1);
+
+		controller.addEffect(staleEffect);
+		controller.addEffect(replacementEffect);
+		staleEffect.clearFromController();
+
+		assertFalse(replacementEffect.ended());
+		assertSame(replacementEffect, controller.abnormalEffect("same"));
 	}
 
 	@Test
@@ -195,6 +224,7 @@ class EffectControllerTest {
 	private static final class TestEffect extends Effect {
 
 		private final TestEffectController controller;
+		private boolean ended;
 
 		private TestEffect(TestEffectController controller, SkillTemplate skillTemplate) {
 			super(null, null, skillTemplate, 1, 0);
@@ -203,7 +233,8 @@ class EffectControllerTest {
 
 		@Override
 		public synchronized void endEffect() {
-			controller.clearEffect(this);
+			ended = true;
+			clearFromController();
 		}
 
 		@Override
@@ -213,6 +244,14 @@ class EffectControllerTest {
 		@Override
 		public int removePower(int power) {
 			return 0;
+		}
+
+		private boolean ended() {
+			return ended;
+		}
+
+		private void clearFromController() {
+			controller.clearEffect(this);
 		}
 	}
 

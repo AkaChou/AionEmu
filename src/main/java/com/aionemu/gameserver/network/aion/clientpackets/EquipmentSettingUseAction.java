@@ -1,5 +1,6 @@
 package com.aionemu.gameserver.network.aion.clientpackets;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +41,19 @@ class EquipmentSettingUseAction {
 		Map<Integer, Long> requestedWeaponSlots = getRequestedWeaponSlots(actions);
 		boolean switchedHands = shouldSwitchHands(actions, target);
 		boolean changed = false;
+		List<EquipmentSettingUseAction> appliedActions = new ArrayList<EquipmentSettingUseAction>();
 		if (switchedHands) {
 			changed = target.switchHands();
 			if (!changed) {
 				return false;
 			}
+		} else {
+			changed |= applyInventoryWeaponEquips(actions, target, appliedActions);
+			changed |= applyRequestedWeaponUnequips(actions, target, requestedWeaponSlots, appliedActions);
 		}
 		for (EquipmentSettingUseAction action : actions) {
-			if (action.action == ACTION_SWITCH_HANDS || switchedHands && action.isHandledByHandSwitch(target, requestedWeaponSlots)) {
+			if (action.action == ACTION_SWITCH_HANDS || appliedActions.contains(action)
+					|| switchedHands && action.isHandledByHandSwitch(target, requestedWeaponSlots)) {
 				continue;
 			}
 			changed |= action.apply(target);
@@ -67,12 +73,60 @@ class EquipmentSettingUseAction {
 	}
 
 	private static boolean shouldSwitchHands(List<EquipmentSettingUseAction> actions, EquipmentSettingUseTarget target) {
+		boolean requestedSwitch = false;
+		boolean hasSwitchableWeaponEquip = false;
 		for (EquipmentSettingUseAction action : actions) {
-			if (action.action == ACTION_SWITCH_HANDS || action.isEquipFromOppositeWeaponHand(target)) {
-				return true;
+			if (action.action == ACTION_SWITCH_HANDS) {
+				requestedSwitch = true;
+			}
+			if (action.isEquipFromOppositeWeaponHand(target)) {
+				hasSwitchableWeaponEquip = true;
 			}
 		}
-		return false;
+		return (requestedSwitch || hasSwitchableWeaponEquip) && canSwitchHandsForWeaponActions(actions, target);
+	}
+
+	private static boolean canSwitchHandsForWeaponActions(List<EquipmentSettingUseAction> actions, EquipmentSettingUseTarget target) {
+		for (EquipmentSettingUseAction action : actions) {
+			if (action.action != ACTION_EQUIP || !isWeaponSlot(action.slot)) {
+				continue;
+			}
+			long currentSlot = target.getEquippedSlot(action.itemObjectId);
+			if (currentSlot == 0 || (switchWeaponHands(currentSlot) & action.slot) != action.slot) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static boolean applyInventoryWeaponEquips(List<EquipmentSettingUseAction> actions, EquipmentSettingUseTarget target,
+			List<EquipmentSettingUseAction> appliedActions) {
+		boolean changed = false;
+		for (EquipmentSettingUseAction action : actions) {
+			if (action.action == ACTION_EQUIP && isWeaponSlot(action.slot) && target.getEquippedSlot(action.itemObjectId) == 0) {
+				changed |= action.apply(target);
+				appliedActions.add(action);
+			}
+		}
+		return changed;
+	}
+
+	private static boolean applyRequestedWeaponUnequips(List<EquipmentSettingUseAction> actions, EquipmentSettingUseTarget target,
+			Map<Integer, Long> requestedWeaponSlots, List<EquipmentSettingUseAction> appliedActions) {
+		boolean changed = false;
+		for (EquipmentSettingUseAction action : actions) {
+			if (action.action != ACTION_UNEQUIP || !isWeaponSlot(action.slot) || !requestedWeaponSlots.containsKey(action.itemObjectId)
+					|| appliedActions.contains(action)) {
+				continue;
+			}
+			long currentSlot = target.getEquippedSlot(action.itemObjectId);
+			long requestedSlot = requestedWeaponSlots.get(action.itemObjectId);
+			if (currentSlot != 0 && (currentSlot & requestedSlot) != requestedSlot) {
+				changed |= action.apply(target);
+				appliedActions.add(action);
+			}
+		}
+		return changed;
 	}
 
 	private boolean isEquipFromOppositeWeaponHand(EquipmentSettingUseTarget target) {

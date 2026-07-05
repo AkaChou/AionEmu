@@ -1,27 +1,27 @@
 
 package com.aionemu.gameserver.services;
 
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.gameserver.dao.RewardServiceDAO;
+import com.aionemu.gameserver.model.gameobjects.LetterType;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.rewards.RewardEntryItem;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
-import com.aionemu.gameserver.services.item.ItemService;
-import com.aionemu.gameserver.utils.PacketSendUtility;
-import com.aionemu.gameserver.world.World;
+import com.aionemu.gameserver.services.mail.SystemMailService;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 public class WebshopService {
+	private static final String SHOP_MAIL_SENDER = "Aion Shop";
+	private static final String SHOP_MAIL_TITLE = "Shop Purchase";
+	private static final String SHOP_MAIL_MESSAGE = "Your shop purchase has arrived.";
 	private static volatile ObjectProvider<WebshopService> instanceProvider;
 
 	public WebshopService() {
@@ -47,31 +47,33 @@ public class WebshopService {
 				com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player pl) {
-						List<RewardEntryItem> liste = DAOManager.getDAO(RewardServiceDAO.class)
-								.getAvailable(pl.getObjectId());
+						RewardServiceDAO rewardDao = DAOManager.getDAO(RewardServiceDAO.class);
+						List<RewardEntryItem> liste = rewardDao.getAvailable(pl.getObjectId());
 						if (liste.isEmpty()) {
 							return;
 						} else {
-							int i = 0;
 							for (RewardEntryItem item : liste) {
-								if (pl.getInventory().isFull()) {
-									PacketSendUtility.sendPacket(pl, SM_SYSTEM_MESSAGE.STR_MSG_FULL_INVENTORY);
-									return;
-								} else {
-									if (DAOManager.getDAO(RewardServiceDAO.class).setUpdate(item.unique)) {
-										if (ItemService.addItem(pl, item.id, item.count) != 0) {
-											DAOManager.getDAO(RewardServiceDAO.class).setUpdateDown(item.unique);
-										} else {
-											i++;
-										}
-									}
-								}
+								deliverRewardMail(pl.getName(), item, rewardDao, GameFeatureServices.systemMailService());
 							}
 						}
 					}
 				});
 			}
 		}, 5 * 1000, 5 * 1000);
+	}
+
+	static boolean deliverRewardMail(String recipientName, RewardEntryItem item, RewardServiceDAO rewardDao,
+			SystemMailService mailService) {
+		if (!rewardDao.setUpdate(item.unique)) {
+			return false;
+		}
+		boolean delivered = mailService.sendMail(SHOP_MAIL_SENDER, recipientName, SHOP_MAIL_TITLE, SHOP_MAIL_MESSAGE,
+				item.id, item.count, 0, 0, LetterType.EXPRESS);
+		if (!delivered) {
+			rewardDao.setUpdateDown(item.unique);
+			return false;
+		}
+		return true;
 	}
 
 	@SuppressWarnings("synthetic-access")

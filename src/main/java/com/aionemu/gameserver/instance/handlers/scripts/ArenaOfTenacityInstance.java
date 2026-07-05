@@ -116,6 +116,15 @@ public class ArenaOfTenacityInstance extends GeneralInstanceHandler {
 	//TODO
     }
 
+	@Override
+	public void onLeaveInstance(Player player) {
+		HallOfTenacityPlayerReward playerReward = instanceReward.getPlayerReward(player.getObjectId());
+		if (playerReward != null) {
+			playerReward.endBoostMoraleEffect(player);
+			instanceReward.removePlayerReward(playerReward);
+		}
+	}
+
     private void sendEnterPacket(final Player player) {
 	instance.doOnAllPlayers(new Visitor<Player>() {
             @Override

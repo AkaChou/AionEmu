@@ -342,7 +342,7 @@ public final class PlayerEnterWorldService {
 			}
 			// SM_SKILL_COOLDOWN
 			if (player.getSkillCoolDowns() != null) {
-				client.sendPacket(new SM_SKILL_COOLDOWN(player.getSkillCoolDowns()));
+				client.sendPacket(new SM_SKILL_COOLDOWN(player, player.getSkillCoolDowns(), false));
 			}
 			// SM_ITEM_COOLDOWN
 			if (player.getItemCoolDowns() != null) {

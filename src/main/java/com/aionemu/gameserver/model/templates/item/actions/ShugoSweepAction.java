@@ -39,7 +39,7 @@ public class ShugoSweepAction extends AbstractItemAction {
 	protected int type;
 
 	@XmlAttribute(name = "count")
-	protected boolean count;
+	protected int count;
 
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
@@ -56,18 +56,26 @@ public class ShugoSweepAction extends AbstractItemAction {
 	public void act(Player player, Item parentItem, Item targetItem) {
 		if (player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1)) {
 			if (type == 1) {
-				getCommonData(player).setResetBoard(getCommonData(player).getResetBoard() + 1);
-				player.sendMessage("You have received one Reset Board");
+				getCommonData(player).setResetBoard(addConfiguredCount(getCommonData(player).getResetBoard()));
+				player.sendMessage("You have received " + getConfiguredCount() + " Reset Board");
 			}
 			if (type == 2) {
-				getCommonData(player).setGoldenDice(getCommonData(player).getGoldenDice() + 1);
-				player.sendMessage("You have received one Golden Dice");
+				getCommonData(player).setGoldenDice(addConfiguredCount(getCommonData(player).getGoldenDice()));
+				player.sendMessage("You have received " + getConfiguredCount() + " Golden Dice");
 			}
 			PacketSendUtility.sendPacket(player,
 					new SM_SHUGO_SWEEP(getPlayerSweep(player).getBoardId(), getPlayerSweep(player).getStep(),
 							getPlayerSweep(player).getFreeDice(), getCommonData(player).getGoldenDice(),
 							getCommonData(player).getResetBoard(), 0));
 		}
+	}
+
+	int addConfiguredCount(int currentCount) {
+		return currentCount + getConfiguredCount();
+	}
+
+	private int getConfiguredCount() {
+		return count > 0 ? count : 1;
 	}
 
 	public PlayerCommonData getCommonData(Player player) {

@@ -71,6 +71,7 @@ public class SM_CASTSPELL extends AionServerPacket {
 		case 0:
 		case 3:
 		case 4:
+		case 87:
 			writeD(targetObjectId);
 			break;
 		case 1:

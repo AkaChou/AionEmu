@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.dataholders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.StringReader;
 import java.lang.reflect.Field;
@@ -9,6 +10,7 @@ import java.util.Map;
 import jakarta.xml.bind.JAXBContext;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
+import com.aionemu.gameserver.model.PlayerClass;
 import com.aionemu.gameserver.model.Race;
 import org.junit.jupiter.api.Test;
 
@@ -57,6 +59,21 @@ class DataholderLookupIndexTest {
 
 		assertEquals(200, data.getSkillEnhance(200).getId());
 		assertEquals(2, intMapSize(data, "enhanceSkillsById"));
+	}
+
+	@Test
+	void itemSkillEnhanceLookupUsesClassWhenIdsRepeat() throws Exception {
+		ItemSkillEnhanceData data = unmarshal(ItemSkillEnhanceData.class, """
+			<item_skill_enhances>
+				<item_skill_enhance id="100" player_class="TEMPLAR" skill_id="3116"/>
+				<item_skill_enhance id="100" player_class="CLERIC" skill_id="4037"/>
+				<item_skill_enhance id="200" player_class="ALL" skill_id="784"/>
+			</item_skill_enhances>
+			""");
+
+		assertEquals(4037, data.getSkillEnhance(100, PlayerClass.CLERIC).getSkillId().get(0));
+		assertEquals(784, data.getSkillEnhance(200, PlayerClass.RANGER).getSkillId().get(0));
+		assertNull(data.getSkillEnhance(100, PlayerClass.RANGER));
 	}
 
 	@Test

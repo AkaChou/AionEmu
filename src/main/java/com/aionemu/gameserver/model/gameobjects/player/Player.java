@@ -125,7 +125,6 @@ import com.aionemu.gameserver.services.conquerors.Conqueror;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.bg.Battleground;
 import com.aionemu.gameserver.services.events.thievesguildservice.ThievesStatusList;
-import com.aionemu.gameserver.services.instance.InstanceService;
 import com.aionemu.gameserver.services.protectors.Protector;
 import com.aionemu.gameserver.skillengine.condition.ChainCondition;
 import com.aionemu.gameserver.skillengine.effect.AbnormalState;
@@ -1477,7 +1476,17 @@ public class Player extends Creature {
 
 	@Override
 	public boolean isAggroFrom(Npc npc) {
-		return (isAggroIconTo(npc) && (npc.getTribe().isGuard() || npc.getObjectTemplate().getAbyssNpcType() != AbyssNpcType.NONE || (npc.isInInstance() && InstanceService.isAggro(npc.getWorldId())) || npc.getLevel() + AIConfig.AGGRO_LEVEL_IMMUNE > getLevel()));
+		if (!isAggroIconTo(npc)) {
+			return false;
+		}
+		if (npc.getTribe().isGuard() || npc.getObjectTemplate().getAbyssNpcType() != AbyssNpcType.NONE) {
+			return true;
+		}
+		return isWithinAggroLevelRange(npc.getLevel(), getLevel());
+	}
+
+	static boolean isWithinAggroLevelRange(int npcLevel, int playerLevel) {
+		return playerLevel < npcLevel + AIConfig.AGGRO_LEVEL_IMMUNE;
 	}
 
 	/**

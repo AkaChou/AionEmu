@@ -61,7 +61,8 @@ public class SkillCooltimeResetEffect extends EffectTemplate {
 		}
 		if (effected instanceof Player) {
 			if (resetSkillCoolDowns.size() > 0) {
-				PacketSendUtility.sendPacket((Player) effected, new SM_SKILL_COOLDOWN(resetSkillCoolDowns));
+				Player player = (Player) effected;
+				PacketSendUtility.sendPacket(player, new SM_SKILL_COOLDOWN(player, resetSkillCoolDowns, false));
 			}
 		}
 	}

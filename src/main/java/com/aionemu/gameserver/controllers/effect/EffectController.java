@@ -179,6 +179,10 @@ public class EffectController {
 				}
 				checkEffectCooldownId(nextEffect);
 			}
+			Effect existingEffect = mapToUpdate.get(nextEffect.getStack());
+			if (existingEffect != null && existingEffect != nextEffect) {
+				existingEffect.endEffect();
+			}
 			mapToUpdate.put(nextEffect.getStack(), nextEffect);
 		} finally {
 			lock.unlock();
@@ -341,7 +345,7 @@ public class EffectController {
 	 */
 	public void clearEffect(Effect effect) {
 		Map<String, Effect> mapForEffect = getMapForEffect(effect);
-		mapForEffect.remove(effect.getStack());
+		mapForEffect.remove(effect.getStack(), effect);
 		broadCastEffects();
 	}
 

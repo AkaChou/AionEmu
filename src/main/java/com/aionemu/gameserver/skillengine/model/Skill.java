@@ -1187,6 +1187,8 @@ public class Skill {
 		if (skillMethod == SkillMethod.CAST) {
 			switch (targetType) {
 			case 0: // PlayerObjectId as Target
+			case 4:
+			case 87:
 				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL(effector.getObjectId(), skillTemplate.getSkillId(), skillLevel, targetType, targetObjId, this.duration, skillskinId));
 				if (effector instanceof Npc && firstTarget instanceof Player) {
 					NpcAI2 ai = (NpcAI2) effector.getAi2();
@@ -1449,12 +1451,17 @@ public class Skill {
 				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus, dashStatus, skillskinId));
 				break;
 
+			case 4:
+			case 87:
+				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
+				break;
+
 			case 3: // Target not in sight?
 				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus, dashStatus, skillskinId));
 				break;
 
 			case 1: // XYZ as Target
-				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus, dashStatus, skillskinId, targetType));
+				PacketSendUtility.broadcastPacketAndReceive(effector, new SM_CASTSPELL_RESULT(this, effects, serverTime, chainSuccess, spellStatus, dashStatus, targetType, skillskinId));
 				break;
 			}
 		} else if (skillMethod == SkillMethod.ITEM) {

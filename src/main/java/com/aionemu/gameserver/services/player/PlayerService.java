@@ -191,6 +191,9 @@ public class PlayerService {
 		player.setVars(DAOManager.getDAO(PlayerVarsDAO.class).load(player.getObjectId()));
 		Equipment equipment = DAOManager.getDAO(InventoryDAO.class).loadEquipment(player);
 		ItemService.loadItemStones(equipment.getEquippedItemsWithoutStigma());
+		if (ItemService.ensureSkillEnhance(player, equipment.getEquippedItemsWithoutStigma())) {
+			equipment.setPersistentState(PersistentState.UPDATE_REQUIRED);
+		}
 		equipment.setOwner(player);
 		player.setEquipment(equipment);
 		player.setEffectController(new PlayerEffectController(player));
@@ -207,12 +210,18 @@ public class PlayerService {
 		player.setStorage(accWarehouse, StorageType.ACCOUNT_WAREHOUSE);
 		Storage inventory = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId, StorageType.CUBE);
 		ItemService.loadItemStones(inventory.getItems());
+		if (ItemService.ensureSkillEnhance(player, inventory.getItems())) {
+			inventory.setPersistentState(PersistentState.UPDATE_REQUIRED);
+		}
 		player.setStorage(inventory, StorageType.CUBE);
 
 		for (int petBagId = StorageType.PET_BAG_MIN; petBagId <= StorageType.PET_BAG_MAX; petBagId++) {
 			Storage petBag = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId,
 					StorageType.getStorageTypeById(petBagId));
 			ItemService.loadItemStones(petBag.getItems());
+			if (ItemService.ensureSkillEnhance(player, petBag.getItems())) {
+				petBag.setPersistentState(PersistentState.UPDATE_REQUIRED);
+			}
 			player.setStorage(petBag, StorageType.getStorageTypeById(petBagId));
 		}
 
@@ -222,6 +231,9 @@ public class PlayerService {
 				Storage cabinet = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId,
 						StorageType.getStorageTypeById(houseWhId));
 				ItemService.loadItemStones(cabinet.getItems());
+				if (ItemService.ensureSkillEnhance(player, cabinet.getItems())) {
+					cabinet.setPersistentState(PersistentState.UPDATE_REQUIRED);
+				}
 				player.setStorage(cabinet, StorageType.getStorageTypeById(houseWhId));
 			}
 		}
@@ -229,6 +241,9 @@ public class PlayerService {
 		Storage warehouse = DAOManager.getDAO(InventoryDAO.class).loadStorage(playerObjId,
 				StorageType.REGULAR_WAREHOUSE);
 		ItemService.loadItemStones(warehouse.getItems());
+		if (ItemService.ensureSkillEnhance(player, warehouse.getItems())) {
+			warehouse.setPersistentState(PersistentState.UPDATE_REQUIRED);
+		}
 
 		player.setStorage(warehouse, StorageType.REGULAR_WAREHOUSE);
 

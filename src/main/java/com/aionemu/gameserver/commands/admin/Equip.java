@@ -34,6 +34,7 @@ import com.aionemu.gameserver.model.templates.item.ItemType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
+import com.aionemu.gameserver.services.EnchantService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemSocketService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
@@ -234,8 +235,8 @@ public class Equip extends AdminCommand {
 			if (isUpgradable(targetItem)) {
 				if (targetItem.getEnchantLevel() == enchant) {
 					continue;
-				} if (enchant > 25) {
-					enchant = 25;
+				} if (enchant > EnchantService.getMaxEquipmentEnchantLevel()) {
+					enchant = EnchantService.getMaxEquipmentEnchantLevel();
 				} if (enchant < 0) {
 					enchant = 0;
 				}
