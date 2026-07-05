@@ -2,7 +2,10 @@ package com.aionemu.gameserver.world.container;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.aionemu.gameserver.model.gameobjects.AionObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -14,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.objenesis.ObjenesisStd;
+
+import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
 
 class PlayerContainerTest {
 
@@ -59,6 +64,34 @@ class PlayerContainerTest {
 		assertTrue(players.getAllPlayers().isEmpty());
 	}
 
+	@Test
+	void duplicateNameDoesNotLeavePlayerIndexedById() {
+		PlayerContainer players = new PlayerContainer();
+		Player existing = player(1, "same-name");
+		Player duplicateName = player(2, "same-name");
+		players.add(existing);
+
+		assertThrows(DuplicateAionObjectException.class, () -> players.add(duplicateName));
+
+		assertSame(existing, players.get(1));
+		assertSame(existing, players.get("same-name"));
+		assertNull(players.get(2));
+	}
+
+	@Test
+	void duplicateIdDoesNotReplaceExistingPlayer() {
+		PlayerContainer players = new PlayerContainer();
+		Player existing = player(1, "existing");
+		Player duplicateId = player(1, "other");
+		players.add(existing);
+
+		assertThrows(DuplicateAionObjectException.class, () -> players.add(duplicateId));
+
+		assertSame(existing, players.get(1));
+		assertSame(existing, players.get("existing"));
+		assertNull(players.get("other"));
+	}
+
 	private PlayerContainer playerContainerWithThreePlayers() {
 		PlayerContainer players = new PlayerContainer();
 		players.add(player(1));
@@ -68,13 +101,17 @@ class PlayerContainerTest {
 	}
 
 	private Player player(int objectId) {
+		return player(objectId, "player-" + objectId);
+	}
+
+	private Player player(int objectId, String name) {
 		try {
 			Player player = objenesis.newInstance(Player.class);
 			Field objectIdField = AionObject.class.getDeclaredField("objectId");
 			objectIdField.setAccessible(true);
 			objectIdField.set(player, objectId);
 			PlayerCommonData commonData = new PlayerCommonData(objectId);
-			commonData.setName("player-" + objectId);
+			commonData.setName(name);
 			Field commonDataField = Player.class.getDeclaredField("playerCommonData");
 			commonDataField.setAccessible(true);
 			commonDataField.set(player, commonData);

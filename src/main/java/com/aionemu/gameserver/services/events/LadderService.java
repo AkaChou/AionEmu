@@ -62,8 +62,8 @@ import java.util.Map;
 @Slf4j
 public class LadderService {
 	private static volatile ObjectProvider<LadderService> instanceProvider;
-	private List<AionObject> eventQueueList = new ArrayList<AionObject>();
-	private List<AionObject> normalQueueList = new ArrayList<AionObject>();
+	private List<AionObject> eventQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
+	private List<AionObject> normalQueueList = Collections.synchronizedList(new ArrayList<AionObject>());
 	private Map<Integer, Battleground> bgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Battleground>());
 	private Map<Integer, Event> normalBgMap = Collections.synchronizedMap(new LinkedHashMap<Integer, Event>());
 	private Battleground eventBg = null;
@@ -225,7 +225,7 @@ public class LadderService {
 
 	public int getEventQueuePlayers() {
 		int players = 0;
-		for (AionObject ao : eventQueueList) {
+		for (AionObject ao : queueSnapshot(eventQueueList)) {
 			if (ao instanceof Player) {
 				players++;
 			} else if (ao instanceof PlayerGroup) {
@@ -330,7 +330,7 @@ public class LadderService {
 	private void HandleNormalQueue(BattlegroundEvent event) {
 		List<List<Player>> validGroups = new ArrayList<List<Player>>();
 		List<Integer> validParticipants = new ArrayList<Integer>();
-		for (AionObject ao : normalQueueList) {
+		for (AionObject ao : queueSnapshot(normalQueueList)) {
 			if (ao == null) {
 				continue;
 			}
@@ -465,7 +465,7 @@ public class LadderService {
 	private void HandleEventQueue() {
 		List<List<Player>> validGroups = new ArrayList<List<Player>>();
 		List<Integer> validParticipants = new ArrayList<Integer>();
-		for (AionObject ao : eventQueueList) {
+		for (AionObject ao : queueSnapshot(eventQueueList)) {
 			if (ao != null && ao instanceof Player) {
 				Player pl = (Player) ao;
 				PacketSendUtility.sendPacket(pl, new SM_AUTO_GROUP(2, 300350000, 0));
@@ -662,11 +662,25 @@ public class LadderService {
 	}
 
 	public Map<Integer, Battleground> getBattlegrounds() {
-		return bgMap;
+		synchronized (bgMap) {
+			return Collections.unmodifiableMap(new LinkedHashMap<Integer, Battleground>(bgMap));
+		}
+	}
+
+	private List<Battleground> battlegroundsSnapshot() {
+		synchronized (bgMap) {
+			return new ArrayList<Battleground>(bgMap.values());
+		}
+	}
+
+	private List<AionObject> queueSnapshot(List<AionObject> queue) {
+		synchronized (queue) {
+			return new ArrayList<AionObject>(queue);
+		}
 	}
 
 	public Battleground getActiveBattleground(Player player) {
-		for (Battleground bg : getBattlegrounds().values()) {
+		for (Battleground bg : battlegroundsSnapshot()) {
 			if (bg.getSecondsLeft() > 1) {
 				if (bg.getLeavers().containsKey(player.getObjectId())) {
 					return bg;

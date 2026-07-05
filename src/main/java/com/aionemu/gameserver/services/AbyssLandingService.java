@@ -22,6 +22,8 @@ import com.aionemu.gameserver.lifecycle.GameLocationBootstrapServices;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -53,14 +55,12 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 @Slf4j
 
 public class AbyssLandingService {
 	private static volatile ObjectProvider<AbyssLandingService> instanceProvider;
 	private static Map<Integer, LandingLocation> abyssLanding;
-	private final Map<Integer, Landing<?>> activeLanding = new LinkedHashMap<Integer, Landing<?>>();
+	private final ConcurrentMap<Integer, Landing<?>> activeLanding = new ConcurrentHashMap<Integer, Landing<?>>();
 	private final int questRate = AbyssLandingConfig.ABYSS_LANDING_QUEST_RATE;
 
 	public void initLandingLocations() {
@@ -73,25 +73,15 @@ public class AbyssLandingService {
 	}
 
 	public void startLanding(final int id) {
-		final Landing<?> land;
-		synchronized (this) {
-			if (activeLanding.containsKey(id)) {
-				return;
-			}
-			land = new AbyssLanding(abyssLanding.get(id));
-			activeLanding.put(id, land);
+		Landing<?> land = new AbyssLanding(abyssLanding.get(id));
+		if (activeLanding.putIfAbsent(id, land) != null) {
+			return;
 		}
 		land.start(getLandingLocation(id).getLevel());
 	}
 
 	public void stopLanding(int id) {
-		if (!activeLanding.containsKey(id)) {
-			return;
-		}
-		Landing<?> landing;
-		synchronized (this) {
-			landing = activeLanding.remove(id);
-		}
+		Landing<?> landing = activeLanding.remove(id);
 		if (landing == null) {
 			return;
 		}

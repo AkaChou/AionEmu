@@ -10,16 +10,24 @@ import java.nio.charset.StandardCharsets;
 
 import com.aionemu.gameserver.configs.main.GSConfig;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ConsoleStaticDataProgressReporterTest {
 
 	private final PrintStream originalOut = System.out;
 
+	@BeforeEach
+	void enableProgressEntryCounts() {
+		GSConfig.STARTUP_PROGRESS_ENABLE = true;
+		GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = true;
+	}
+
 	@AfterEach
 	void restoreOutputAndProperties() {
 		System.setOut(originalOut);
 		GSConfig.STARTUP_PROGRESS_ENABLE = true;
+		GSConfig.STATIC_DATA_PROGRESS_ENTRY_COUNTS_ENABLE = false;
 	}
 
 	@Test
@@ -88,7 +96,7 @@ class ConsoleStaticDataProgressReporterTest {
 	}
 
 	@Test
-	void currentConsoleReporterWritesProgressByDefaultInIdeStyleConsoles() {
+	void currentConsoleReporterWritesProgressWhenEntryCountsAreEnabled() {
 		ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(bytes, true, StandardCharsets.UTF_8));
 

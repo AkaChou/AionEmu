@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -45,10 +48,6 @@ import com.aionemu.gameserver.world.exceptions.WorldMapNotExistException;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.LinkedHashMap;
-import java.util.Map;
 @Slf4j
 
 public class World {
@@ -97,12 +96,49 @@ public class World {
 			log.warn("Not putting object with null position!!! " + object.getObjectTemplate().getTemplateId());
 			return;
 		}
-		if (allObjects.put(object.getObjectId(), object) != null) {
-			throw new DuplicateAionObjectException();
+		boolean objectStored = false;
+		boolean playerStored = false;
+		boolean localObjectStored = false;
+		boolean npcStored = false;
+		try {
+			addVisibleObject(object);
+			objectStored = true;
+			if (object instanceof Player) {
+				allPlayers.add((Player) object);
+				playerStored = true;
+			}
+			localObjectStored = addLocalObject(object);
+			if (object instanceof Npc) {
+				allNpcs.put(object.getObjectId(), (Npc) object);
+				npcStored = true;
+			}
+		} catch (RuntimeException | Error e) {
+			if (npcStored) {
+				allNpcs.remove(object.getObjectId());
+			}
+			if (localObjectStored) {
+				removeLocalObject(object);
+			}
+			if (playerStored) {
+				allPlayers.remove((Player) object);
+			}
+			if (objectStored) {
+				allObjects.remove(object.getObjectId());
+			}
+			throw e;
 		}
-		if (object instanceof Player) {
-			allPlayers.add((Player) object);
+	}
+
+	private void addVisibleObject(VisibleObject object) {
+		synchronized (allObjects) {
+			if (allObjects.containsKey(object.getObjectId())) {
+				throw new DuplicateAionObjectException();
+			}
+			allObjects.put(object.getObjectId(), object);
 		}
+	}
+
+	private boolean addLocalObject(VisibleObject object) {
 		if (object instanceof SiegeNpc) {
 			SiegeNpc siegeNpc = (SiegeNpc) object;
 			synchronized (localSiegeNpcs) {
@@ -113,6 +149,7 @@ public class World {
 				}
 				npcs.add(siegeNpc);
 			}
+			return true;
 		} else if (object instanceof BaseNpc) {
 			BaseNpc baseNpc = (BaseNpc) object;
 			synchronized (localBaseNpcs) {
@@ -123,6 +160,7 @@ public class World {
 				}
 				npcs.add(baseNpc);
 			}
+			return true;
 		} else if (object instanceof OutpostNpc) {
 			OutpostNpc outpostNpc = (OutpostNpc) object;
 			synchronized (localOutpostNpcs) {
@@ -133,10 +171,9 @@ public class World {
 				}
 				npcs.add(outpostNpc);
 			}
+			return true;
 		}
-		if (object instanceof Npc) {
-			allNpcs.put(object.getObjectId(), (Npc) object);
-		}
+		return false;
 	}
 
 	/**
@@ -145,6 +182,16 @@ public class World {
 	 */
 	public void removeObject(VisibleObject object) {
 		allObjects.remove(object.getObjectId());
+		removeLocalObject(object);
+		if (object instanceof Npc) {
+			allNpcs.remove(object.getObjectId());
+		}
+		if (object instanceof Player) {
+			allPlayers.remove((Player) object);
+		}
+	}
+
+	private void removeLocalObject(VisibleObject object) {
 		if (object instanceof SiegeNpc) {
 			SiegeNpc siegeNpc = (SiegeNpc) object;
 			synchronized (localSiegeNpcs) {
@@ -169,12 +216,6 @@ public class World {
 					locSpawn.remove(outpostNpc);
 				}
 			}
-		}
-		if (object instanceof Npc) {
-			allNpcs.remove(object.getObjectId());
-		}
-		if (object instanceof Player) {
-			allPlayers.remove((Player) object);
 		}
 	}
 

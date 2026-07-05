@@ -3,6 +3,7 @@ package com.aionemu.gameserver.world.geo;
 import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,16 +17,15 @@ import com.aionemu.gameserver.geoEngine.scene.Geometry;
 import com.aionemu.gameserver.geoEngine.scene.Mesh;
 import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.templates.world.WorldMapTemplate;
 import com.aionemu.gameserver.utils.ConsoleProgressLineRenderer;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
 @Slf4j
 
 public class RealGeoData implements GeoData {
     private final IntObjectHashMap<GeoMap> geoMaps = new IntObjectHashMap<>();
-    private final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     @Override
     public void loadGeoMaps() {
@@ -33,14 +33,6 @@ public class RealGeoData implements GeoData {
         loadWorldMaps(models);
         prebuildCollisionDataAsync(models);
         models.clear();
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(60, TimeUnit.SECONDS)) {
-                executorService.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executorService.shutdownNow();
-        }
         log.info("Geodata: {} geo maps loaded!", geoMaps.size());
     }
 
@@ -78,11 +70,14 @@ public class RealGeoData implements GeoData {
         }
 
         try {
-            List<Future<Void>> futures = executorService.invokeAll(tasks);
+            List<Future<Void>> futures = GameThreadPoolServices.threadPoolManager().getForkingPool().invokeAll(tasks);
             for (Future<Void> future : futures) {
                 future.get();
             }
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException e) {
+            log.error("Error during geo map loading", e);
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
             log.error("Error during geo map loading", e);
         }
 
@@ -101,14 +96,18 @@ public class RealGeoData implements GeoData {
         }
     }
 
-    // ponytail: 碰撞树后台并行预构建（借鉴 aion-server GeoWorldLoader:46），不阻塞启动；Mesh.collideWith 有懒加载兜底，此步仅为消除运行时首次碰撞的构建卡顿
+    // 碰撞树后台预构建；Mesh.collideWith 有懒加载兜底，此步仅为降低运行时首次碰撞卡顿。
     private void prebuildCollisionDataAsync(Map<String, Spatial> models) {
-        Set<Mesh> meshes = ConcurrentHashMap.newKeySet();
+        Set<Mesh> meshes = new HashSet<>();
         for (Spatial s : models.values()) {
             collectMeshes(s, meshes);
         }
-        ThreadPoolManager.getInstance().submitLongRunning(
-            () -> meshes.parallelStream().forEach(Mesh::createCollisionData));
+        List<Mesh> meshSnapshot = new ArrayList<>(meshes);
+        GameThreadPoolServices.threadPoolManager().submitLongRunning(() -> {
+            for (Mesh mesh : meshSnapshot) {
+                mesh.createCollisionData();
+            }
+        });
     }
 
     private void collectMeshes(Spatial s, Set<Mesh> out) {

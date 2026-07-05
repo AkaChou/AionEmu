@@ -41,11 +41,11 @@ import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HouseController extends VisibleObjectController<House> {
-	Map<Integer, ActionObserver> observed = new LinkedHashMap<Integer, ActionObserver>();
+	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
 
 	@Override
 	public void see(VisibleObject object) {

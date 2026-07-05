@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -50,9 +52,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -62,8 +61,7 @@ public class ZorshivDredgionService {
 	private DredgionSchedule dredgionSchedule;
 	private Map<Integer, ZorshivDredgionLocation> zorshivDredgion;
 	private static final int duration = CustomConfig.ZORSHIV_DREDGION_DURATION;
-	private final Map<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new LinkedHashMap<Integer, ZorshivDredgion<?>>()
-			;
+	private final ConcurrentMap<Integer, ZorshivDredgion<?>> activeZorshivDredgion = new ConcurrentHashMap<Integer, ZorshivDredgion<?>>();
 
 	// Inggison Invasion
 	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
@@ -97,13 +95,9 @@ public class ZorshivDredgionService {
 	}
 
 	public void startZorshivDredgion(final int id) {
-		final ZorshivDredgion<?> zorshiv;
-		synchronized (this) {
-			if (activeZorshivDredgion.containsKey(id)) {
-				return;
-			}
-			zorshiv = new Zorshiv(zorshivDredgion.get(id));
-			activeZorshivDredgion.put(id, zorshiv);
+		ZorshivDredgion<?> zorshiv = new Zorshiv(zorshivDredgion.get(id));
+		if (activeZorshivDredgion.putIfAbsent(id, zorshiv) != null) {
+			return;
 		}
 		zorshiv.start();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -115,13 +109,7 @@ public class ZorshivDredgionService {
 	}
 
 	public void stopZorshivDredgion(int id) {
-		if (!isZorshivDredgionInProgress(id)) {
-			return;
-		}
-		ZorshivDredgion<?> zorshiv;
-		synchronized (this) {
-			zorshiv = activeZorshivDredgion.remove(id);
-		}
+		ZorshivDredgion<?> zorshiv = activeZorshivDredgion.remove(id);
 		if (zorshiv == null || zorshiv.isPeace()) {
 			return;
 		}

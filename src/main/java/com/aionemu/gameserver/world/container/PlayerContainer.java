@@ -19,7 +19,6 @@ package com.aionemu.gameserver.world.container;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,24 +41,23 @@ public class PlayerContainer implements Iterable<Player> {
 	/**
 	 * Map<ObjectId,Player>
 	 */
-	private final Map<Integer, Player> playersById = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
+	private final Map<Integer, Player> playersById = new LinkedHashMap<Integer, Player>();
 	/**
 	 * Map<Name,Player>
 	 */
-	private final Map<String, Player> playersByName = Collections.synchronizedMap(new LinkedHashMap<String, Player>());
+	private final Map<String, Player> playersByName = new LinkedHashMap<String, Player>();
 
 	/**
 	 * Add Player to this Container.
 	 * 
 	 * @param player
 	 */
-	public void add(Player player) {
-		if (playersById.put(player.getObjectId(), player) != null) {
+	public synchronized void add(Player player) {
+		if (playersById.containsKey(player.getObjectId()) || playersByName.containsKey(player.getName())) {
 			throw new DuplicateAionObjectException();
 		}
-		if (playersByName.put(player.getName(), player) != null) {
-			throw new DuplicateAionObjectException();
-		}
+		playersById.put(player.getObjectId(), player);
+		playersByName.put(player.getName(), player);
 	}
 
 	/**
@@ -67,7 +65,7 @@ public class PlayerContainer implements Iterable<Player> {
 	 * 
 	 * @param player
 	 */
-	public void remove(Player player) {
+	public synchronized void remove(Player player) {
 		playersById.remove(player.getObjectId());
 		playersByName.remove(player.getName());
 	}
@@ -79,7 +77,7 @@ public class PlayerContainer implements Iterable<Player> {
 	 * @return Player with given ojectId or null if Player with given objectId is
 	 *         not logged.
 	 */
-	public Player get(int objectId) {
+	public synchronized Player get(int objectId) {
 		return playersById.get(objectId);
 	}
 
@@ -90,7 +88,7 @@ public class PlayerContainer implements Iterable<Player> {
 	 * @return Player with given name or null if Player with given name is not
 	 *         logged.
 	 */
-	public Player get(String name) {
+	public synchronized Player get(String name) {
 		return playersByName.get(name);
 	}
 
@@ -119,9 +117,7 @@ public class PlayerContainer implements Iterable<Player> {
 		return playersSnapshot();
 	}
 
-	private List<Player> playersSnapshot() {
-		synchronized (playersById) {
-			return new ArrayList<Player>(playersById.values());
-		}
+	private synchronized List<Player> playersSnapshot() {
+		return new ArrayList<Player>(playersById.values());
 	}
 }

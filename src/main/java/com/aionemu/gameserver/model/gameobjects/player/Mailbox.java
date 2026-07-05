@@ -21,6 +21,7 @@ import com.aionemu.gameserver.lifecycle.GameCoreGameplayServices;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -33,7 +34,6 @@ import com.aionemu.gameserver.services.mail.MailService;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author kosyachok
@@ -196,14 +196,19 @@ public class Mailbox {
 
 	public void uploadReserveLetters() {
 		if (reserveMail.size() > 0 && haveFreeSlots()) {
-			for (Letter letter : reserveMail.values()) {
+			boolean promoted = false;
+			for (Iterator<Letter> iterator = reserveMail.values().iterator(); iterator.hasNext();) {
+				Letter letter = iterator.next();
 				if (haveFreeSlots()) {
 					mails.put(letter.getObjectId(), letter);
-					reserveMail.remove(letter.getObjectId());
+					iterator.remove();
+					promoted = true;
 				} else
 					break;
 			}
-			GameCoreGameplayServices.mailService().refreshMail(getOwner());
+			if (promoted && getOwner() != null) {
+				GameCoreGameplayServices.mailService().refreshMail(getOwner());
+			}
 		}
 	}
 

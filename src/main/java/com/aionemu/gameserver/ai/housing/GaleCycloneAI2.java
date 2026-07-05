@@ -24,8 +24,9 @@ import com.aionemu.gameserver.controllers.observer.GaleCycloneObserver;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.skillengine.SkillEngine;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /****/
 /** Author (Encom)
@@ -35,7 +36,7 @@ import java.util.Map;
 public class GaleCycloneAI2 extends NpcAI2
 {
     private boolean blocked;
-	private Map<Integer, GaleCycloneObserver> observed = new LinkedHashMap<Integer, GaleCycloneObserver>();
+	private Map<Integer, GaleCycloneObserver> observed = new ConcurrentHashMap<Integer, GaleCycloneObserver>();
     
 	@Override
 	protected void handleCreatureSee(Creature creature) {
@@ -84,9 +85,11 @@ public class GaleCycloneAI2 extends NpcAI2
 	
 	private void clear() {
 		blocked = true;
-		for (Integer obj: observed.keySet()) {
-			Player player = getKnownList().getKnownPlayers().get(obj);
-			GaleCycloneObserver observer = observed.remove(obj);
+		for (Iterator<Map.Entry<Integer, GaleCycloneObserver>> iterator = observed.entrySet().iterator(); iterator.hasNext();) {
+			Map.Entry<Integer, GaleCycloneObserver> entry = iterator.next();
+			Player player = getKnownList().getKnownPlayers().get(entry.getKey());
+			GaleCycloneObserver observer = entry.getValue();
+			iterator.remove();
 			if (player != null) {
 				player.getObserveController().removeObserver(observer);
 			}

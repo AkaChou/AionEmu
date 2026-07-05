@@ -16,8 +16,6 @@
  */
 package com.aionemu.gameserver.spawnengine;
 
-import java.util.HashSet;
-
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
@@ -26,12 +24,16 @@ import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
 import com.aionemu.gameserver.model.templates.spawns.TemporarySpawn;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TemporarySpawnEngine {
 
+	private static final Object temporarySpawnLock = new Object();
 	private static final List<SpawnGroup2> temporarySpawns = new ArrayList<SpawnGroup2>();
 	private static final Map<SpawnGroup2, HashSet<Integer>> tempSpawnInstanceMap = new LinkedHashMap<SpawnGroup2, HashSet<Integer>>();
 
@@ -45,7 +47,7 @@ public class TemporarySpawnEngine {
 	}
 
 	private static void despawn() {
-		for (SpawnGroup2 spawn : temporarySpawns) {
+		for (SpawnGroup2 spawn : temporarySpawnsSnapshot()) {
 			for (SpawnTemplate template : spawn.getSpawnTemplates()) {
 				if (template.getTemporarySpawn().canDespawn()) {
 					List<VisibleObject> objects = template.getVisibleObjects();
@@ -79,8 +81,8 @@ public class TemporarySpawnEngine {
 	}
 
 	private static void spawn(boolean startCheck) {
-		for (SpawnGroup2 spawn : temporarySpawns) {
-			HashSet<Integer> instances = tempSpawnInstanceMap.get(spawn);
+		for (SpawnGroup2 spawn : temporarySpawnsSnapshot()) {
+			Set<Integer> instances = instancesSnapshot(spawn);
 			if (spawn.hasPool()) {
 				TemporarySpawn temporarySpawn = spawn.geTemporarySpawn();
 				if (temporarySpawn.canSpawn()
@@ -110,12 +112,30 @@ public class TemporarySpawnEngine {
 	 * @param spawnTemplate
 	 */
 	public static void addSpawnGroup(SpawnGroup2 spawn, int instanceId) {
-		HashSet<Integer> instances = tempSpawnInstanceMap.get(spawn);
-		if (instances == null) {
-			temporarySpawns.add(spawn);
-			instances = new HashSet<Integer>();
-			tempSpawnInstanceMap.put(spawn, instances);
+		synchronized (temporarySpawnLock) {
+			HashSet<Integer> instances = tempSpawnInstanceMap.get(spawn);
+			if (instances == null) {
+				temporarySpawns.add(spawn);
+				instances = new HashSet<Integer>();
+				tempSpawnInstanceMap.put(spawn, instances);
+			}
+			instances.add(instanceId);
 		}
-		instances.add(instanceId);
+	}
+
+	private static List<SpawnGroup2> temporarySpawnsSnapshot() {
+		synchronized (temporarySpawnLock) {
+			return new ArrayList<SpawnGroup2>(temporarySpawns);
+		}
+	}
+
+	private static Set<Integer> instancesSnapshot(SpawnGroup2 spawn) {
+		synchronized (temporarySpawnLock) {
+			HashSet<Integer> instances = tempSpawnInstanceMap.get(spawn);
+			if (instances == null) {
+				return Collections.emptySet();
+			}
+			return new HashSet<Integer>(instances);
+		}
 	}
 }

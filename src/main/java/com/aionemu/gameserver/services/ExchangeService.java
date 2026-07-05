@@ -20,9 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameRuntimeServices;
 import com.aionemu.gameserver.lifecycle.GameTaskManagerServices;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -52,7 +52,7 @@ import com.aionemu.gameserver.utils.audit.AuditLogger;
 public class ExchangeService {
 
 
-	private Map<Integer, Exchange> exchanges = new HashMap<Integer, Exchange>();
+	private ConcurrentMap<Integer, Exchange> exchanges = new ConcurrentHashMap<Integer, Exchange>();
 
 	private ExchangePeriodicTaskManager saveManager;
 
@@ -86,11 +86,12 @@ public class ExchangeService {
 		if (!validateParticipants(player1, player2)) {
 			return;
 		}
-		player1.setTrading(true);
-		player2.setTrading(true);
-
-		exchanges.put(player1.getObjectId(), new Exchange(player1, player2));
-		exchanges.put(player2.getObjectId(), new Exchange(player2, player1));
+		synchronized (exchanges) {
+			player1.setTrading(true);
+			player2.setTrading(true);
+			exchanges.put(player1.getObjectId(), new Exchange(player1, player2));
+			exchanges.put(player2.getObjectId(), new Exchange(player2, player1));
+		}
 
 		PacketSendUtility.sendPacket(player2, new SM_EXCHANGE_REQUEST(player1.getName()));
 		PacketSendUtility.sendPacket(player1, new SM_EXCHANGE_REQUEST(player2.getName()));
@@ -105,7 +106,7 @@ public class ExchangeService {
 	}
 
 	private Player getCurrentParter(Player player) {
-		Exchange exchange = exchanges.get(player.getObjectId());
+		Exchange exchange = getCurrentExchange(player);
 		return exchange != null ? exchange.getTargetPlayer() : null;
 	}
 
@@ -114,7 +115,9 @@ public class ExchangeService {
 	 * @return Exchange
 	 */
 	private Exchange getCurrentExchange(Player player) {
-		return exchanges.get(player.getObjectId());
+		synchronized (exchanges) {
+			return exchanges.get(player.getObjectId());
+		}
 	}
 
 	/**
@@ -322,14 +325,16 @@ public class ExchangeService {
 	 * @param currentPartner
 	 */
 	private void cleanupExchanges(Player activePlayer, Player currentPartner) {
-		if (activePlayer != null) {
-			exchanges.remove(activePlayer.getObjectId());
-			activePlayer.setTrading(false);
-		}
+		synchronized (exchanges) {
+			if (activePlayer != null) {
+				exchanges.remove(activePlayer.getObjectId());
+				activePlayer.setTrading(false);
+			}
 
-		if (currentPartner != null) {
-			exchanges.remove(currentPartner.getObjectId());
-			currentPartner.setTrading(false);
+			if (currentPartner != null) {
+				exchanges.remove(currentPartner.getObjectId());
+				currentPartner.setTrading(false);
+			}
 		}
 	}
 

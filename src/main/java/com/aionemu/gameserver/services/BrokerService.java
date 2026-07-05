@@ -29,6 +29,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.ObjectProvider;
@@ -63,9 +65,6 @@ import com.aionemu.gameserver.taskmanager.AbstractFIFOPeriodicTaskManager;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author kosyachok
  * @author ATracer
@@ -74,10 +73,10 @@ import java.util.Map;
 @Slf4j(topic = "EXCHANGE_LOG")
 public class BrokerService {
 
-	private Map<Integer, BrokerItem> elyosBrokerItems = new LinkedHashMap<Integer, BrokerItem>();
-	private Map<Integer, BrokerItem> elyosSettledItems = new LinkedHashMap<Integer, BrokerItem>();
-	private Map<Integer, BrokerItem> asmodianBrokerItems = new LinkedHashMap<Integer, BrokerItem>();
-	private Map<Integer, BrokerItem> asmodianSettledItems = new LinkedHashMap<Integer, BrokerItem>();
+	private ConcurrentMap<Integer, BrokerItem> elyosBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
+	private ConcurrentMap<Integer, BrokerItem> elyosSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
+	private ConcurrentMap<Integer, BrokerItem> asmodianBrokerItems = new ConcurrentHashMap<Integer, BrokerItem>();
+	private ConcurrentMap<Integer, BrokerItem> asmodianSettledItems = new ConcurrentHashMap<Integer, BrokerItem>();
 	private final int DELAY_BROKER_SAVE = (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000) >= 6000
 			? (BrokerConfig.SAVE_MANAGER_INTERVAL * 1000)
 			: 6000;
@@ -85,7 +84,7 @@ public class BrokerService {
 			? (BrokerConfig.CHECK_EXPIRED_ITEMS_INTERVAL * 1000)
 			: 60000;
 	private BrokerPeriodicTaskManager saveManager;
-	private Map<Integer, BrokerPlayerCache> playerBrokerCache = new LinkedHashMap<Integer, BrokerPlayerCache>();
+	private ConcurrentMap<Integer, BrokerPlayerCache> playerBrokerCache = new ConcurrentHashMap<Integer, BrokerPlayerCache>();
 	private static volatile ObjectProvider<BrokerService> instanceProvider;
 
 	public static final BrokerService getInstance() {
@@ -953,12 +952,7 @@ public class BrokerService {
 	 * @return
 	 */
 	private BrokerPlayerCache getPlayerCache(Player player) {
-		BrokerPlayerCache cacheEntry = playerBrokerCache.get(player.getObjectId());
-		if (cacheEntry == null) {
-			cacheEntry = new BrokerPlayerCache();
-			playerBrokerCache.put(player.getObjectId(), cacheEntry);
-		}
-		return cacheEntry;
+		return playerBrokerCache.computeIfAbsent(player.getObjectId(), playerId -> new BrokerPlayerCache());
 	}
 
 	public void removePlayerCache(Player player) {

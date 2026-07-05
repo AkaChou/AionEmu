@@ -25,36 +25,44 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import org.springframework.beans.factory.ObjectProvider;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Source
  */
 public class PlayerLimitService {
 
-	private static Map<Integer, Long> sellLimit = new LinkedHashMap<Integer, Long>();
+	private static ConcurrentMap<Integer, Long> sellLimit = new ConcurrentHashMap<Integer, Long>();
 	private static volatile ObjectProvider<PlayerLimitService> instanceProvider;
 
 	public static boolean updateSellLimit(Player player, long reward) {
 		if (!CustomConfig.LIMITS_ENABLED) {
 			return true;
 		}
-		int accoutnId = player.getPlayerAccount().getId();
-		Long limit = sellLimit.get(accoutnId);
-		if (limit == null) {
-			limit = SellLimit.getSellLimit(player.getPlayerAccount().getMaxPlayerLevel()) * CustomConfig.LIMITS_RATE;
-			sellLimit.put(accoutnId, limit);
-		}
+		int accountId = player.getPlayerAccount().getId();
+		AtomicBoolean allowed = new AtomicBoolean();
+		AtomicLong remaining = new AtomicLong();
+		sellLimit.compute(accountId, (id, currentLimit) -> {
+			long limit = currentLimit == null ? SellLimit.getSellLimit(player.getPlayerAccount().getMaxPlayerLevel()) * CustomConfig.LIMITS_RATE : currentLimit;
+			if (limit < reward) {
+				allowed.set(false);
+				remaining.set(limit);
+				return limit;
+			}
+			long updatedLimit = limit - reward;
+			allowed.set(true);
+			remaining.set(updatedLimit);
+			return updatedLimit;
+		});
 
-		if (limit < reward) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DAY_CANNOT_SELL_NPC(limit));
+		if (!allowed.get()) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_DAY_CANNOT_SELL_NPC(remaining.get()));
 			return false;
-		} else {
-			limit -= reward;
-			sellLimit.put(accoutnId, limit);
-			return true;
 		}
+		return true;
 	}
 
 	public void scheduleUpdate() {

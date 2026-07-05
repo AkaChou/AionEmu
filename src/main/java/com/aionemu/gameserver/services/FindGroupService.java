@@ -133,21 +133,21 @@ public class FindGroupService {
 		case ELYOS:
 			switch (action) {
 			case 0x00:
-				return elyosRecruitFindGroups.values();
+				return new ArrayList<FindGroup>(elyosRecruitFindGroups.values());
 			case 0x04:
-				return elyosApplyFindGroups.values();
+				return new ArrayList<FindGroup>(elyosApplyFindGroups.values());
 			case 0xA:
-				return Collections.EMPTY_LIST;
+				return Collections.emptyList();
 			}
 			break;
 		case ASMODIANS:
 			switch (action) {
 			case 0x00:
-				return asmodianRecruitFindGroups.values();
+				return new ArrayList<FindGroup>(asmodianRecruitFindGroups.values());
 			case 0x04:
-				return asmodianApplyFindGroups.values();
+				return new ArrayList<FindGroup>(asmodianApplyFindGroups.values());
 			case 0xA:
-				return Collections.EMPTY_LIST;
+				return Collections.emptyList();
 			}
 			break;
 		}
@@ -211,7 +211,7 @@ public class FindGroupService {
 	}
 
 	private void cleanMap(Map<Integer, FindGroup> map, Race race, int action) {
-		for (FindGroup group : map.values()) {
+		for (FindGroup group : new ArrayList<FindGroup>(map.values())) {
 			if (group.getLastUpdate() + 60 * 60 < System.currentTimeMillis() / 1000) {
 				removeFindGroup(race, action, group.getObjectId());
 			}

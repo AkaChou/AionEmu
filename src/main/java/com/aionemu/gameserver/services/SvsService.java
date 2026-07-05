@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -50,9 +52,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -65,7 +64,7 @@ public class SvsService {
 	private static final int duration = CustomConfig.SVS_DURATION;
 	// Transidium Annex 4.7
 	private Map<Integer, VisibleObject> advanceCorridor = new HashMap<>();
-	private final Map<Integer, Panesterra<?>> activeSvs = new LinkedHashMap<Integer, Panesterra<?>>();
+	private final ConcurrentMap<Integer, Panesterra<?>> activeSvs = new ConcurrentHashMap<Integer, Panesterra<?>>();
 
 	public void initSvsLocations() {
 		if (CustomConfig.SVS_ENABLED) {
@@ -93,13 +92,9 @@ public class SvsService {
 	}
 
 	public void startSvs(final int id) {
-		final Panesterra<?> gate;
-		synchronized (this) {
-			if (activeSvs.containsKey(id)) {
-				return;
-			}
-			gate = new Gate(svs.get(id));
-			activeSvs.put(id, gate);
+		Panesterra<?> gate = new Gate(svs.get(id));
+		if (activeSvs.putIfAbsent(id, gate) != null) {
+			return;
 		}
 		gate.start();
 		advanceCorridorCountdownMsg(id);
@@ -112,13 +107,7 @@ public class SvsService {
 	}
 
 	public void stopSvs(int id) {
-		if (!isSvsInProgress(id)) {
-			return;
-		}
-		Panesterra<?> gate;
-		synchronized (this) {
-			gate = activeSvs.remove(id);
-		}
+		Panesterra<?> gate = activeSvs.remove(id);
 		if (gate == null || gate.isFinished()) {
 			return;
 		}

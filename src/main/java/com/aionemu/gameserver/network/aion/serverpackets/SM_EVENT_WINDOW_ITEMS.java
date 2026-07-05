@@ -18,6 +18,7 @@ package com.aionemu.gameserver.network.aion.serverpackets;
 import lombok.extern.slf4j.Slf4j;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -32,7 +33,7 @@ public class SM_EVENT_WINDOW_ITEMS extends AionServerPacket {
 	private Collection<EventsWindow> active_events_packet;
 
 	public SM_EVENT_WINDOW_ITEMS(Collection<EventsWindow> active_events_packet) {
-		this.active_events_packet = active_events_packet;
+		this.active_events_packet = new ArrayList<EventsWindow>(active_events_packet);
 	}
 
 	@Override

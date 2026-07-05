@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.model.autogroup;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.aionemu.commons.taskmanager.AbstractLockManager;
@@ -37,9 +38,10 @@ public class LookingForParty extends AbstractLockManager {
 	public int unregisterInstance(int instanceMaskId) {
 		super.writeLock();
 		try {
-			for (SearchInstance si : searchInstances) {
+			for (Iterator<SearchInstance> iterator = searchInstances.iterator(); iterator.hasNext();) {
+				SearchInstance si = iterator.next();
 				if (si.getInstanceMaskId() == instanceMaskId) {
-					searchInstances.remove(si);
+					iterator.remove();
 					return searchInstances.size();
 				}
 			}
@@ -50,11 +52,12 @@ public class LookingForParty extends AbstractLockManager {
 	}
 
 	public List<SearchInstance> getSearchInstances() {
-		List<SearchInstance> tempList = new ArrayList<SearchInstance>();
-		for (SearchInstance si : searchInstances) {
-			tempList.add(si);
+		super.readLock();
+		try {
+			return new ArrayList<SearchInstance>(searchInstances);
+		} finally {
+			super.readUnlock();
 		}
-		return tempList;
 	}
 
 	public void addInstanceMaskId(int instanceMaskId, EntryRequestType ert) {
@@ -82,12 +85,17 @@ public class LookingForParty extends AbstractLockManager {
 	}
 
 	public boolean isRegistredInstance(int instanceMaskId) {
-		for (SearchInstance si : searchInstances) {
-			if (si.getInstanceMaskId() == instanceMaskId) {
-				return true;
+		super.readLock();
+		try {
+			for (SearchInstance si : searchInstances) {
+				if (si.getInstanceMaskId() == instanceMaskId) {
+					return true;
+				}
 			}
+			return false;
+		} finally {
+			super.readUnlock();
 		}
-		return false;
 	}
 
 	public Player getPlayer() {

@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -46,9 +48,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -58,7 +57,7 @@ public class DynamicRiftService {
 	private static volatile ObjectProvider<DynamicRiftService> instanceProvider;
 	private Map<Integer, DynamicRiftLocation> dynamicRift;
 	private static final int duration = CustomConfig.DYNAMIC_RIFT_DURATION;
-	private final Map<Integer, DynamicRift<?>> activeDynamicRift = new LinkedHashMap<Integer, DynamicRift<?>>();
+	private final ConcurrentMap<Integer, DynamicRift<?>> activeDynamicRift = new ConcurrentHashMap<Integer, DynamicRift<?>>();
 
 	public void initDynamicRiftLocations() {
 		if (CustomConfig.DYNAMIC_RIFT_ENABLED) {
@@ -124,13 +123,9 @@ public class DynamicRiftService {
 	}
 
 	public void startDynamicRift(final int id) {
-		final DynamicRift<?> portal;
-		synchronized (this) {
-			if (activeDynamicRift.containsKey(id)) {
-				return;
-			}
-			portal = new Portal(dynamicRift.get(id));
-			activeDynamicRift.put(id, portal);
+		DynamicRift<?> portal = new Portal(dynamicRift.get(id));
+		if (activeDynamicRift.putIfAbsent(id, portal) != null) {
+			return;
 		}
 		portal.start();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -142,13 +137,7 @@ public class DynamicRiftService {
 	}
 
 	public void stopDynamicRift(int id) {
-		if (!isDynamicRiftInProgress(id)) {
-			return;
-		}
-		DynamicRift<?> portal;
-		synchronized (this) {
-			portal = activeDynamicRift.remove(id);
-		}
+		DynamicRift<?> portal = activeDynamicRift.remove(id);
 		if (portal == null || portal.isClosed()) {
 			return;
 		}

@@ -1,25 +1,23 @@
 package com.aionemu.gameserver.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentMap;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.dataholders.EventsWindowData;
 import com.aionemu.gameserver.services.events.EventWindowService;
 import com.aionemu.gameserver.services.events.FFAService;
 import com.aionemu.gameserver.services.events.bg.DeathmatchBg;
+import com.aionemu.gameserver.services.drop.DropRegistrationService;
+import com.aionemu.gameserver.services.siegeservice.BalaurAssaultService;
 
 class ServiceMapImplementationTest {
-
-	@AfterEach
-	void clearStaticData() {
-		DataManager.EVENTS_WINDOW = null;
-	}
 
 	@Test
 	void shieldServiceStoresRegisteredShieldsInJdkMaps() throws Exception {
@@ -30,10 +28,8 @@ class ServiceMapImplementationTest {
 	}
 
 	@Test
-	void eventWindowServiceStoresPendingEventsInJdkMap() throws Exception {
-		DataManager.EVENTS_WINDOW = new EventsWindowData();
-
-		assertHashMap(new EventWindowService(), "sendActiveEventsForPlayer");
+	void eventWindowServiceDoesNotStorePlayerPendingEventsInServiceState() {
+		assertThrows(NoSuchFieldException.class, () -> findField(EventWindowService.class, "sendActiveEventsForPlayer"));
 	}
 
 	@Test
@@ -42,11 +38,60 @@ class ServiceMapImplementationTest {
 		assertHashMap(new FFAService(), "previousLocations");
 	}
 
+	@Test
+	void timedActivityServicesStoreActiveIndexesInConcurrentMaps() {
+		assertAll(
+			() -> assertConcurrentMap(InstanceRiftService.class, "activeInstanceRift"),
+			() -> assertConcurrentMap(AbyssLandingService.class, "activeLanding"),
+			() -> assertConcurrentMap(AbyssLandingSpecialService.class, "activeSpecialLanding"),
+			() -> assertConcurrentMap(IuService.class, "activeConcert"),
+			() -> assertConcurrentMap(SvsService.class, "activeSvs"),
+			() -> assertConcurrentMap(ConquestService.class, "activeConquest"),
+			() -> assertConcurrentMap(VortexService.class, "activeInvasions"),
+			() -> assertConcurrentMap(BeritraService.class, "activeInvasions"),
+			() -> assertConcurrentMap(RvrService.class, "activeRvr"),
+			() -> assertConcurrentMap(TowerOfEternityService.class, "activeTowerOfEternity"),
+			() -> assertConcurrentMap(DynamicRiftService.class, "activeDynamicRift"),
+			() -> assertConcurrentMap(MoltenusService.class, "activeMoltenus"),
+			() -> assertConcurrentMap(ZorshivDredgionService.class, "activeZorshivDredgion"),
+			() -> assertConcurrentMap(IdianDepthsService.class, "activeIdianDepths"),
+			() -> assertConcurrentMap(NightmareCircusService.class, "activeNightmareCircus"),
+			() -> assertConcurrentMap(AgentService.class, "activeFights"),
+			() -> assertConcurrentMap(AnohaService.class, "activeAnoha"),
+			() -> assertConcurrentMap(BalaurAssaultService.class, "fortressAssaults"));
+	}
+
+	@Test
+	void dropRegistrationIndexesUseConcurrentMapsForLootThreads() {
+		assertAll(
+			() -> assertConcurrentMap(DropRegistrationService.class, "currentDropMap"),
+			() -> assertConcurrentMap(DropRegistrationService.class, "dropRegistrationMap"));
+	}
+
+	@Test
+	void playerInteractionServicesUseConcurrentMapsForRuntimeState() throws Exception {
+		assertConcurrentMap(WeddingService.class, "weddings");
+	}
+
+	@Test
+	void brokerServiceUsesConcurrentMapsForRuntimeIndexes() {
+		assertAll(
+			() -> assertConcurrentMap(BrokerService.class, "elyosBrokerItems"),
+			() -> assertConcurrentMap(BrokerService.class, "elyosSettledItems"),
+			() -> assertConcurrentMap(BrokerService.class, "asmodianBrokerItems"),
+			() -> assertConcurrentMap(BrokerService.class, "asmodianSettledItems"),
+			() -> assertConcurrentMap(BrokerService.class, "playerBrokerCache"));
+	}
+
 	private void assertHashMap(Object target, String fieldName) throws Exception {
 		Field field = findField(target.getClass(), fieldName);
 		field.setAccessible(true);
 
 		assertEquals(HashMap.class, field.get(target).getClass());
+	}
+
+	private void assertConcurrentMap(Class<?> type, String fieldName) throws Exception {
+		assertTrue(ConcurrentMap.class.isAssignableFrom(findField(type, fieldName).getType()));
 	}
 
 	private Field findField(Class<?> type, String fieldName) throws NoSuchFieldException {

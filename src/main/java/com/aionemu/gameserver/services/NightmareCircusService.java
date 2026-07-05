@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -48,9 +50,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -61,8 +60,7 @@ public class NightmareCircusService {
 	private CircusSchedule circusSchedule;
 	private Map<Integer, NightmareCircusLocation> nightmareCircus;
 	private static final int duration = CustomConfig.NIGHTMARE_CIRCUS_DURATION;
-	private final Map<Integer, CircusInstance<?>> activeNightmareCircus = new LinkedHashMap<Integer, CircusInstance<?>>()
-			;
+	private final ConcurrentMap<Integer, CircusInstance<?>> activeNightmareCircus = new ConcurrentHashMap<Integer, CircusInstance<?>>();
 
 	public void initCircusLocations() {
 		if (CustomConfig.NIGHTMARE_CIRCUS_ENABLE) {
@@ -90,13 +88,9 @@ public class NightmareCircusService {
 	}
 
 	public void startNightmareCircus(final int id) {
-		final CircusInstance<?> nightmare;
-		synchronized (this) {
-			if (activeNightmareCircus.containsKey(id)) {
-				return;
-			}
-			nightmare = new Nightmare(nightmareCircus.get(id));
-			activeNightmareCircus.put(id, nightmare);
+		final CircusInstance<?> nightmare = new Nightmare(nightmareCircus.get(id));
+		if (activeNightmareCircus.putIfAbsent(id, nightmare) != null) {
+			return;
 		}
 		nightmare.start();
 		dreamFaerieMsg(id);
@@ -109,13 +103,7 @@ public class NightmareCircusService {
 	}
 
 	public void stopNightmareCircus(int id) {
-		if (!isNightmareCircusInProgress(id)) {
-			return;
-		}
-		CircusInstance<?> nightmare;
-		synchronized (this) {
-			nightmare = activeNightmareCircus.remove(id);
-		}
+		CircusInstance<?> nightmare = activeNightmareCircus.remove(id);
 		if (nightmare == null || nightmare.isClosed()) {
 			return;
 		}

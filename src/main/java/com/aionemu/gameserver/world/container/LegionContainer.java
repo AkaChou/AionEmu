@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.world.container;
 
 import java.util.Iterator;
-import java.util.Collections;
 
 import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.world.exceptions.DuplicateAionObjectException;
@@ -28,56 +27,52 @@ import java.util.List;
 import java.util.Map;
 
 public class LegionContainer implements Iterable<Legion> {
-	private final Map<Integer, Legion> legionsById = Collections.synchronizedMap(new LinkedHashMap<Integer, Legion>());
-	private final Map<String, Legion> legionsByName = Collections.synchronizedMap(new LinkedHashMap<String, Legion>());
+	private final Map<Integer, Legion> legionsById = new LinkedHashMap<Integer, Legion>();
+	private final Map<String, Legion> legionsByName = new LinkedHashMap<String, Legion>();
 
-	public void add(Legion legion) {
+	public synchronized void add(Legion legion) {
 		if (legion == null || legion.getLegionName() == null) {
 			return;
 		}
-		if (legionsById.put(legion.getLegionId(), legion) != null) {
+		String legionName = legion.getLegionName().toLowerCase();
+		if (legionsById.containsKey(legion.getLegionId()) || legionsByName.containsKey(legionName)) {
 			throw new DuplicateAionObjectException();
 		}
-		if (legionsByName.put(legion.getLegionName().toLowerCase(), legion) != null) {
-			throw new DuplicateAionObjectException();
-		}
+		legionsById.put(legion.getLegionId(), legion);
+		legionsByName.put(legionName, legion);
 	}
 
-	public void remove(Legion legion) {
+	public synchronized void remove(Legion legion) {
 		legionsById.remove(legion.getLegionId());
 		legionsByName.remove(legion.getLegionName().toLowerCase());
 	}
 
-	public Legion get(int legionId) {
+	public synchronized Legion get(int legionId) {
 		return legionsById.get(legionId);
 	}
 
-	public Legion get(String name) {
+	public synchronized Legion get(String name) {
 		return legionsByName.get(name.toLowerCase());
 	}
 
-	public List<Legion> getAllLegions() {
-		synchronized (legionsByName) {
-			return new ArrayList<Legion>(legionsByName.values());
-		}
+	public synchronized List<Legion> getAllLegions() {
+		return new ArrayList<Legion>(legionsByName.values());
 	}
 
-	public boolean contains(int legionId) {
+	public synchronized boolean contains(int legionId) {
 		return legionsById.containsKey(legionId);
 	}
 
-	public boolean contains(String name) {
+	public synchronized boolean contains(String name) {
 		return legionsByName.containsKey(name.toLowerCase());
 	}
 
 	@Override
-	public Iterator<Legion> iterator() {
-		synchronized (legionsById) {
-			return new ArrayList<Legion>(legionsById.values()).iterator();
-		}
+	public synchronized Iterator<Legion> iterator() {
+		return new ArrayList<Legion>(legionsById.values()).iterator();
 	}
 
-	public void clear() {
+	public synchronized void clear() {
 		legionsById.clear();
 		legionsByName.clear();
 	}

@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -50,9 +52,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -74,8 +73,7 @@ public class BeritraService {
 	private Map<Integer, VisibleObject> adventEreshControl = new HashMap<>();
 	private Map<Integer, VisibleObject> adventEreshDirecting = new HashMap<>();
 
-	private final Map<Integer, BeritraInvasion<?>> activeInvasions = new LinkedHashMap<Integer, BeritraInvasion<?>>()
-			;
+	private final ConcurrentMap<Integer, BeritraInvasion<?>> activeInvasions = new ConcurrentHashMap<Integer, BeritraInvasion<?>>();
 
 	public void initBeritraLocations() {
 		if (CustomConfig.BERITRA_ENABLED) {
@@ -102,13 +100,9 @@ public class BeritraService {
 	}
 
 	public void startBeritraInvasion(final int id) {
-		final BeritraInvasion<?> invade;
-		synchronized (this) {
-			if (activeInvasions.containsKey(id)) {
-				return;
-			}
-			invade = new Invade(beritra.get(id));
-			activeInvasions.put(id, invade);
+		BeritraInvasion<?> invade = new Invade(beritra.get(id));
+		if (activeInvasions.putIfAbsent(id, invade) != null) {
+			return;
 		}
 		invade.start();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -120,13 +114,7 @@ public class BeritraService {
 	}
 
 	public void stopBeritraInvasion(int id) {
-		if (!isInvasionInProgress(id)) {
-			return;
-		}
-		BeritraInvasion<?> invade;
-		synchronized (this) {
-			invade = activeInvasions.remove(id);
-		}
+		BeritraInvasion<?> invade = activeInvasions.remove(id);
 		if (invade == null || invade.isFinished()) {
 			return;
 		}

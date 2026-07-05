@@ -1,15 +1,13 @@
 package com.aionemu.commons.utils.concurrent;
 
 import lombok.extern.slf4j.Slf4j;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 /**
  * 线程池拒绝策略处理器（Thread Pool Rejected Execution Handler）
  * 
- * 当线程池无法接受新任务时，根据当前线程优先级决定执行方式：
- * - 高优先级线程(>5)创建新线程执行
- * - 低优先级线程直接在当前线程执行
+ * 当线程池无法接受新任务时，在调用线程中执行任务以形成背压。
+ * When the pool cannot accept a task, run it in the calling thread to apply backpressure.
  */
 @Slf4j
 public final class AionRejectedExecutionHandler implements RejectedExecutionHandler {
@@ -24,22 +22,9 @@ public final class AionRejectedExecutionHandler implements RejectedExecutionHand
         // 检查线程池是否已关闭（Check if executor is shutdown）
         if (!executor.isShutdown()) {
             // 记录拒绝警告（Log rejection warning）
-            log.warn("Task {} rejected from {}", r, executor, new RejectedExecutionException());
+            log.warn("Task {} rejected from {}", r, executor);
             
-            /*
-             * 根据当前线程优先级选择执行方式：
-             * - 优先级>5：创建新线程执行
-             * - 优先级≤5：直接在当前线程执行
-             * 
-             * Execution strategy based on current thread priority:
-             * - Priority >5: Execute in new thread
-             * - Priority ≤5: Execute in current thread
-             */
-            if (Thread.currentThread().getPriority() > 5) {
-                new Thread(r).start();
-            } else {
-                r.run();
-            }
+            r.run();
         }
     }
 }

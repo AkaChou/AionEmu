@@ -57,15 +57,7 @@ public class PrivateStore {
 	 * @param item
 	 */
 	public void removeItem(int itemObjId) {
-		if (items.containsKey(itemObjId)) {
-			LinkedHashMap<Integer, TradePSItem> newItems = new LinkedHashMap<Integer, TradePSItem>();
-			for (int itemObjIds : items.keySet()) {
-				if (itemObjId != itemObjIds) {
-					newItems.put(itemObjIds, items.get(itemObjIds));
-				}
-			}
-			this.items = newItems;
-		}
+		items.remove(itemObjId);
 	}
 
 	/**

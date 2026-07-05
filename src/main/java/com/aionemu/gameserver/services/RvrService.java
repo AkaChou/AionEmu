@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -51,9 +53,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -65,7 +64,7 @@ public class RvrService {
 	private static final int duration = CustomConfig.RVR_DURATION;
 
 	// Brigade General's Urgent Order 4.9.1
-	private final Map<Integer, Rvrlf3df3<?>> activeRvr = new LinkedHashMap<Integer, Rvrlf3df3<?>>();
+	private final ConcurrentMap<Integer, Rvrlf3df3<?>> activeRvr = new ConcurrentHashMap<Integer, Rvrlf3df3<?>>();
 	// Heavy Tetran/Kenovikan 5.6
 	private Map<Integer, VisibleObject> adventPortal = new HashMap<>();
 	private Map<Integer, VisibleObject> adventEffect = new HashMap<>();
@@ -98,35 +97,25 @@ public class RvrService {
 
 	public void startRvr(final int id) {
 		if (CustomConfig.RVR_ENABLED) {
-		final Rvrlf3df3<?> directPortal;
-		synchronized (this) {
-			if (activeRvr.containsKey(id)) {
+			Rvrlf3df3<?> directPortal = new DirectPortal(rvr.get(id));
+			if (activeRvr.putIfAbsent(id, directPortal) != null) {
 				return;
 			}
-			directPortal = new DirectPortal(rvr.get(id));
-			activeRvr.put(id, directPortal);
+			directPortal.start();
+			rvrCountdownMsg(id);
+			LF6RvrCountdownMsg(id);
+			DF6RvrCountdownMsg(id);
+			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+				@Override
+				public void run() {
+					stopRvr(id);
+				}
+			}, duration * 3600 * 1000);
 		}
-		directPortal.start();
-		rvrCountdownMsg(id);
-		LF6RvrCountdownMsg(id);
-		DF6RvrCountdownMsg(id);
-		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-			@Override
-			public void run() {
-				stopRvr(id);
-			}
-		}, duration * 3600 * 1000);
-        }
 	}
 
 	public void stopRvr(int id) {
-		if (!isRvrInProgress(id)) {
-			return;
-		}
-		Rvrlf3df3<?> directPortal;
-		synchronized (this) {
-			directPortal = activeRvr.remove(id);
-		}
+		Rvrlf3df3<?> directPortal = activeRvr.remove(id);
 		if (directPortal == null || directPortal.isFinished()) {
 			return;
 		}

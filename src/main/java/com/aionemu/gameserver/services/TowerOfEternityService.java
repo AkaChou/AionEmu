@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -49,9 +51,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * Created by Wnkrz on 22/08/2017.
  */
@@ -61,8 +60,7 @@ public class TowerOfEternityService {
 	private static volatile ObjectProvider<TowerOfEternityService> instanceProvider;
 	private Map<Integer, TowerOfEternityLocation> towerOfEternity;
 	private static final int duration = CustomConfig.TOWER_OF_ETERNITY_DURATION;
-	private final Map<Integer, TowerOfEternity<?>> activeTowerOfEternity = new LinkedHashMap<Integer, TowerOfEternity<?>>()
-			;
+	private final ConcurrentMap<Integer, TowerOfEternity<?>> activeTowerOfEternity = new ConcurrentHashMap<Integer, TowerOfEternity<?>>();
 
 	public void initTowerOfEternityLocation() {
 		if (CustomConfig.TOWER_OF_ETERNITY_ENABLED) {
@@ -123,13 +121,9 @@ public class TowerOfEternityService {
 	}
 
 	public void startTowerOfEternity(final int id) {
-		final TowerOfEternity<?> tower;
-		synchronized (this) {
-			if (activeTowerOfEternity.containsKey(id)) {
-				return;
-			}
-			tower = new Tower(towerOfEternity.get(id));
-			activeTowerOfEternity.put(id, tower);
+		TowerOfEternity<?> tower = new Tower(towerOfEternity.get(id));
+		if (activeTowerOfEternity.putIfAbsent(id, tower) != null) {
+			return;
 		}
 		tower.start();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -141,13 +135,7 @@ public class TowerOfEternityService {
 	}
 
 	public void stopTowerOfEternity(int id) {
-		if (!isTowerOfEternityInProgress(id)) {
-			return;
-		}
-		TowerOfEternity<?> tower;
-		synchronized (this) {
-			tower = activeTowerOfEternity.remove(id);
-		}
+		TowerOfEternity<?> tower = activeTowerOfEternity.remove(id);
 		if (tower == null || tower.isClosed()) {
 			return;
 		}

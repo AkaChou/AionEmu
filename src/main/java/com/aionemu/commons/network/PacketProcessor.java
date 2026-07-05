@@ -3,12 +3,14 @@ package com.aionemu.commons.network;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.network.packet.BaseClientPacket;
 import com.aionemu.commons.services.ServiceContext;
+import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -83,6 +85,7 @@ public class PacketProcessor<T extends AConnection> {
      */
     private final Executor executor;
     private final String serviceContext;
+    private final ThreadFactory threadFactory;
 
     /**
      * 构造函数,使用默认执行器
@@ -103,6 +106,11 @@ public class PacketProcessor<T extends AConnection> {
      * @param executor 数据包执行器 / Packet executor
      */
     public PacketProcessor(int minThreads, int maxThreads, int threadSpawnThreshold, int threadKillThreshold, Executor executor) {
+        this(minThreads, maxThreads, threadSpawnThreshold, threadKillThreshold, executor,
+                new PriorityThreadFactory("PacketProcessor", Thread.NORM_PRIORITY));
+    }
+
+    PacketProcessor(int minThreads, int maxThreads, int threadSpawnThreshold, int threadKillThreshold, Executor executor, ThreadFactory threadFactory) {
         this.lock = new ReentrantLock();
         this.notEmpty = this.lock.newCondition();
         this.packets = new LinkedList<BaseClientPacket<T>>();
@@ -118,6 +126,7 @@ public class PacketProcessor<T extends AConnection> {
         this.threadSpawnThreshold = threadSpawnThreshold;
         this.threadKillThreshold = threadKillThreshold;
         this.executor = executor;
+        this.threadFactory = Preconditions.checkNotNull(threadFactory, "Thread Factory must not be null");
         this.serviceContext = ServiceContext.current();
         
         if (minThreads != maxThreads) {
@@ -134,7 +143,8 @@ public class PacketProcessor<T extends AConnection> {
      * Start checker thread
      */
     private void startCheckerThread() {
-        new Thread(ServiceContext.wrap(new CheckerTask(), serviceContext), "PacketProcessor:Checker").start();
+        Thread checkerThread = newManagedThread(new CheckerTask(), "PacketProcessor:Checker");
+        checkerThread.start();
     }
 
     /**
@@ -150,10 +160,16 @@ public class PacketProcessor<T extends AConnection> {
         
         String name = "PacketProcessor:" + this.threads.size();
         log.debug("Creating new PacketProcessor Thread: " + name);
-        Thread t = new Thread(ServiceContext.wrap(new PacketProcessorTask(), serviceContext), name);
+        Thread t = newManagedThread(new PacketProcessorTask(), name);
         this.threads.add(t);
         t.start();
         return true;
+    }
+
+    private Thread newManagedThread(Runnable task, String name) {
+        Thread thread = threadFactory.newThread(ServiceContext.wrap(task, serviceContext));
+        thread.setName(name);
+        return thread;
     }
 
     /**
@@ -190,10 +206,10 @@ public class PacketProcessor<T extends AConnection> {
      *
      * @return 可用的数据包 / Available packet
      */
-    private BaseClientPacket<T> getFirstAviable() {
+    private BaseClientPacket<T> getFirstAviable() throws InterruptedException {
         while (true) {
             if (this.packets.isEmpty()) {
-                this.notEmpty.awaitUninterruptibly();
+                this.notEmpty.await();
             } else {
                 ListIterator<BaseClientPacket<T>> it = this.packets.listIterator();
                 
@@ -205,7 +221,7 @@ public class PacketProcessor<T extends AConnection> {
                     }
                 }
                 
-                this.notEmpty.awaitUninterruptibly();
+                this.notEmpty.await();
             }
         }
     }
@@ -224,22 +240,30 @@ public class PacketProcessor<T extends AConnection> {
 
         @Override
         public void run() {
-            try {
-                Thread.sleep(sleepTime);
-            } catch (InterruptedException e) {
-                // Ignore interruption
-            }
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
 
-            int packetsToExecute = packets.size();
-            if (packetsToExecute < lastSize && packetsToExecute < threadKillThreshold) {
-                killThread();
-            } else if (packetsToExecute > lastSize && packetsToExecute > threadSpawnThreshold 
-                    && !newThread() && packetsToExecute >= threadSpawnThreshold * 3) {
-                log.info("Lag detected! [" + packetsToExecute + " client packets are waiting for execution]. "
-                        + "Consider increasing PacketProcessor maxThreads or hardware upgrade.");
-            }
+                lock.lock();
+                try {
+                    int packetsToExecute = packets.size();
+                    if (packetsToExecute < lastSize && packetsToExecute < threadKillThreshold) {
+                        killThread();
+                    } else if (packetsToExecute > lastSize && packetsToExecute > threadSpawnThreshold
+                            && !newThread() && packetsToExecute >= threadSpawnThreshold * 3) {
+                        log.info("Lag detected! [" + packetsToExecute + " client packets are waiting for execution]. "
+                                + "Consider increasing PacketProcessor maxThreads or hardware upgrade.");
+                    }
 
-            lastSize = packetsToExecute;
+                    lastSize = packetsToExecute;
+                } finally {
+                    lock.unlock();
+                }
+            }
         }
     }
 
@@ -264,6 +288,9 @@ public class PacketProcessor<T extends AConnection> {
                     }
 
                     packet = getFirstAviable();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
                 } finally {
                     lock.unlock();
                 }

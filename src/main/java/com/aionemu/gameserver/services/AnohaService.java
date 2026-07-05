@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -53,9 +55,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -70,7 +69,7 @@ public class AnohaService {
 	// Berserk Anoha 4.7
 	private Map<Integer, VisibleObject> adventSwordEffect = new HashMap<>();
 
-	private final Map<Integer, BerserkAnoha<?>> activeAnoha = new LinkedHashMap<Integer, BerserkAnoha<?>>();
+	private final ConcurrentMap<Integer, BerserkAnoha<?>> activeAnoha = new ConcurrentHashMap<Integer, BerserkAnoha<?>>();
 
 	public void initAnohaLocations() {
 		if (CustomConfig.ANOHA_ENABLED) {
@@ -98,13 +97,9 @@ public class AnohaService {
 	}
 
 	public void startAnoha(final int id) {
-		final BerserkAnoha<?> danuarhero;
-		synchronized (this) {
-			if (activeAnoha.containsKey(id)) {
-				return;
-			}
-			danuarhero = new DanuarHero(anoha.get(id));
-			activeAnoha.put(id, danuarhero);
+		final BerserkAnoha<?> danuarhero = new DanuarHero(anoha.get(id));
+		if (activeAnoha.putIfAbsent(id, danuarhero) != null) {
+			return;
 		}
 		danuarhero.start();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -116,13 +111,7 @@ public class AnohaService {
 	}
 
 	public void stopAnoha(int id) {
-		if (!isAnohaInProgress(id)) {
-			return;
-		}
-		BerserkAnoha<?> danuarhero;
-		synchronized (this) {
-			danuarhero = activeAnoha.remove(id);
-		}
+		BerserkAnoha<?> danuarhero = activeAnoha.remove(id);
 		if (danuarhero == null || danuarhero.isFinished()) {
 			return;
 		}

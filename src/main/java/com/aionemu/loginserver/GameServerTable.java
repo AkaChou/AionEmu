@@ -90,31 +90,33 @@ public class GameServerTable {
             return GsAuthResponse.NOT_AUTHED;
         }
 
-        /**
-         * Check if this GameServer is not already registered.
-         */
-        if (gsi.getConnection() != null) {
-            return GsAuthResponse.ALREADY_REGISTERED;
+        synchronized (gsi) {
+            /**
+             * Check if this GameServer is not already registered.
+             */
+            if (gsi.getConnection() != null) {
+                return GsAuthResponse.ALREADY_REGISTERED;
+            }
+
+            /**
+             * Check if password and ip are ok.
+             */
+            if (!gsi.getPassword().equals(password) || !NetworkUtils.checkIPMatching(gsi.getIp(), gsConnection.getIP())) {
+
+                log.info(gsi.getPassword() + " " + password);
+                log.info(gsConnection + " wrong ip or password!");
+                return GsAuthResponse.NOT_AUTHED;
+            }
+
+            gsi.setDefaultAddress(defaultAddress);
+            gsi.setIpRanges(ipRanges);
+            gsi.setPort(port);
+            gsi.setMaxPlayers(maxPlayers);
+            gsi.setConnection(gsConnection);
+
+            gsConnection.setGameServerInfo(gsi);
+            return GsAuthResponse.AUTHED;
         }
-
-        /**
-         * Check if password and ip are ok.
-         */
-        if (!gsi.getPassword().equals(password) || !NetworkUtils.checkIPMatching(gsi.getIp(), gsConnection.getIP())) {
-
-            log.info(gsi.getPassword() + " " + password);
-            log.info(gsConnection + " wrong ip or password!");
-            return GsAuthResponse.NOT_AUTHED;
-        }
-
-        gsi.setDefaultAddress(defaultAddress);
-        gsi.setIpRanges(ipRanges);
-        gsi.setPort(port);
-        gsi.setMaxPlayers(maxPlayers);
-        gsi.setConnection(gsConnection);
-
-        gsConnection.setGameServerInfo(gsi);
-        return GsAuthResponse.AUTHED;
     }
 
     /**

@@ -21,15 +21,15 @@ import com.aionemu.gameserver.model.flyring.FlyRing;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author xavier
  */
 public class FlyRingController extends VisibleObjectController<FlyRing> {
 
-	Map<Integer, FlyRingObserver> observed = new LinkedHashMap<Integer, FlyRingObserver>();
+	Map<Integer, FlyRingObserver> observed = new ConcurrentHashMap<Integer, FlyRingObserver>();
 
 	@Override
 	public void see(VisibleObject object) {

@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -50,14 +52,12 @@ import com.aionemu.gameserver.utils.idfactory.IDFactory;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 @Slf4j(topic = "SIEGE_LOG")
 
 public class BalaurAssaultService {
 	private static final BalaurAssaultService instance = new BalaurAssaultService();
 	private static volatile ObjectProvider<BalaurAssaultService> instanceProvider;
-	private final Map<Integer, FortressAssault> fortressAssaults = new LinkedHashMap<Integer, FortressAssault>();
+	private final ConcurrentMap<Integer, FortressAssault> fortressAssaults = new ConcurrentHashMap<Integer, FortressAssault>();
 
 	public static BalaurAssaultService getInstance() {
 		ObjectProvider<BalaurAssaultService> provider = instanceProvider;
@@ -216,9 +216,10 @@ public class BalaurAssaultService {
 
 	public void onSiegeFinish(Siege<?> siege) {
 		int locId = siege.getSiegeLocationId();
-		if (fortressAssaults.containsKey(locId)) {
+		FortressAssault assault = fortressAssaults.remove(locId);
+		if (assault != null) {
 			Boolean bossIsKilled = siege.isBossKilled();
-			fortressAssaults.get(locId).finishAssault(bossIsKilled);
+			assault.finishAssault(bossIsKilled);
 			if (bossIsKilled && siege.getSiegeLocation().getRace().equals(SiegeRace.BALAUR)) {
 				log.info("[RVR/SIEGE] > [FORTRESS:" + siege.getSiegeLocationId()
 						+ "] has been captured by Balaur Assault!");
@@ -343,7 +344,6 @@ public class BalaurAssaultService {
 					}
 				});
 			}
-			fortressAssaults.remove(locId);
 		}
 	}
 
@@ -383,8 +383,16 @@ public class BalaurAssaultService {
 	private void newAssault(Siege<?> siege, int delay) {
 		if (siege instanceof FortressSiege) {
 			FortressAssault assault = new FortressAssault((FortressSiege) siege);
-			assault.startAssault(delay);
-			fortressAssaults.put(siege.getSiegeLocationId(), assault);
+			int locationId = siege.getSiegeLocationId();
+			if (fortressAssaults.putIfAbsent(locationId, assault) != null) {
+				return;
+			}
+			try {
+				assault.startAssault(delay);
+			} catch (RuntimeException e) {
+				fortressAssaults.remove(locationId, assault);
+				throw e;
+			}
 		} else if (siege instanceof ArtifactSiege) {
 			ArtifactAssault assault = new ArtifactAssault((ArtifactSiege) siege);
 			assault.startAssault(delay);

@@ -19,8 +19,11 @@ package com.aionemu.gameserver.services.siegeservice;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.aionemu.commons.utils.GenericValidator;
@@ -31,9 +34,6 @@ import com.aionemu.gameserver.model.team.legion.Legion;
 import com.aionemu.gameserver.world.World;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	private final AtomicLong totalDamage = new AtomicLong();
@@ -65,15 +65,12 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	}
 
 	protected <K> void addToCounter(K key, int value, Map<K, AtomicLong> counterMap) {
-		AtomicLong counter = counterMap.get(key);
-		if (counter == null) {
-			synchronized (this) {
-				if (counterMap.containsKey(key)) {
-					counter = counterMap.get(key);
-				} else {
-					counter = new AtomicLong();
-					counterMap.put(key, counter);
-				}
+		AtomicLong counter;
+		synchronized (counterMap) {
+			counter = counterMap.get(key);
+			if (counter == null) {
+				counter = new AtomicLong();
+				counterMap.put(key, counter);
 			}
 		}
 		counter.addAndGet(value);
@@ -92,10 +89,13 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 	}
 
 	protected <K> Map<K, Long> getOrderedCounterMap(Map<K, AtomicLong> unorderedMap) {
-		if (GenericValidator.isBlankOrNull(unorderedMap)) {
-			return Collections.emptyMap();
+		LinkedList<Map.Entry<K, AtomicLong>> tempList;
+		synchronized (unorderedMap) {
+			if (GenericValidator.isBlankOrNull(unorderedMap)) {
+				return Collections.emptyMap();
+			}
+			tempList = Lists.newLinkedList(unorderedMap.entrySet());
 		}
-		LinkedList<Map.Entry<K, AtomicLong>> tempList = Lists.newLinkedList(unorderedMap.entrySet());
 		Collections.sort(tempList, new Comparator<Map.Entry<K, AtomicLong>>() {
 			@Override
 			public int compare(Map.Entry<K, AtomicLong> o1, Map.Entry<K, AtomicLong> o2) {
@@ -122,7 +122,7 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 
 	public Integer getWinnerLegionId() {
 		Map<Player, AtomicLong> teamDamageMap = new HashMap<Player, AtomicLong>();
-		for (Integer id : playerDamageCounter.keySet()) {
+		for (Integer id : getCounterKeys(playerDamageCounter)) {
 			Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(id);
 			if (player != null && player.getCurrentTeam() != null) {
 				Player teamLeader = player.getCurrentTeam().getLeaderObject();
@@ -141,5 +141,11 @@ public class SiegeRaceCounter implements Comparable<SiegeRaceCounter> {
 		Player topTeamLeader = getOrderedCounterMap(teamDamageMap).keySet().iterator().next();
 		Legion legion = topTeamLeader.getLegion();
 		return legion != null ? legion.getLegionId() : null;
+	}
+
+	private <K> Set<K> getCounterKeys(Map<K, AtomicLong> counterMap) {
+		synchronized (counterMap) {
+			return new HashSet<K>(counterMap.keySet());
+		}
 	}
 }

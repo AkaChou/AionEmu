@@ -54,7 +54,7 @@ public final class ScheduledFutureWrapper implements ScheduledFuture<Object> {
      * @return 是否取消成功 Whether cancelled successfully
      */
     public boolean cancel(boolean mayInterruptIfRunning) {
-        return this.future.cancel(false);
+        return this.future.cancel(mayInterruptIfRunning);
     }
 
     /**

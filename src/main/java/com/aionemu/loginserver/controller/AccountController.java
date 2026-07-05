@@ -19,8 +19,10 @@
 package com.aionemu.loginserver.controller;
 
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.commons.database.dao.DAOManager;
 import com.aionemu.commons.utils.NetworkUtils;
@@ -57,16 +59,16 @@ public class AccountController {
      * Map with accounts that are active on LoginServer or joined GameServer and
      * are not authenticated yet.
      */
-    private static final Map<Integer, LoginConnection> accountsOnLS = new HashMap<Integer, LoginConnection>();
+    private static final Map<Integer, LoginConnection> accountsOnLS = new ConcurrentHashMap<Integer, LoginConnection>();
     /**
      * Map with accounts that are reconnecting to LoginServer ie was joined
      * GameServer.
      */
-    private static final Map<Integer, ReconnectingAccount> reconnectingAccounts = new HashMap<Integer, ReconnectingAccount>();
+    private static final Map<Integer, ReconnectingAccount> reconnectingAccounts = new ConcurrentHashMap<Integer, ReconnectingAccount>();
     /**
      * Map with characters count on each gameserver and accounts
      */
-    private static final Map<Integer, Map<Integer, Integer>> accountsGSCharacterCounts = new HashMap<Integer, Map<Integer, Integer>>();
+    private static final Map<Integer, Map<Integer, Integer>> accountsGSCharacterCounts = new ConcurrentHashMap<Integer, Map<Integer, Integer>>();
 
     /**
      * Removes account from list of connections
@@ -342,15 +344,8 @@ public class AccountController {
      */
     public static synchronized void loadGSCharactersCount(int accountId) {
         GsConnection gsc = null;
-        Map<Integer, Integer> accountCharacterCount = null;
-
-        if (accountsGSCharacterCounts.containsKey(accountId)) {
-            accountsGSCharacterCounts.remove(accountId);
-        }
-
-        accountsGSCharacterCounts.put(accountId, new HashMap<Integer, Integer>());
-
-        accountCharacterCount = accountsGSCharacterCounts.get(accountId);
+        Map<Integer, Integer> accountCharacterCount = new ConcurrentHashMap<Integer, Integer>();
+        accountsGSCharacterCounts.put(accountId, accountCharacterCount);
 
         for (GameServerInfo gsi : GameServerTable.getGameServers()) {
             gsc = gsi.getConnection();
@@ -389,8 +384,9 @@ public class AccountController {
      * @param accountId
      */
     public static void sendServerListFor(int accountId) {
-        if (accountsOnLS.containsKey(accountId)) {
-            accountsOnLS.get(accountId).sendPacket(new SM_SERVER_LIST());
+        LoginConnection connection = accountsOnLS.get(accountId);
+        if (connection != null) {
+            connection.sendPacket(new SM_SERVER_LIST());
         }
     }
 
@@ -399,7 +395,8 @@ public class AccountController {
      * @return
      */
     public static Map<Integer, Integer> getGSCharacterCountsFor(int accountId) {
-        return accountsGSCharacterCounts.get(accountId);
+        Map<Integer, Integer> characterCount = accountsGSCharacterCounts.get(accountId);
+        return characterCount == null ? null : Collections.unmodifiableMap(new HashMap<Integer, Integer>(characterCount));
     }
 
     /**
@@ -408,10 +405,8 @@ public class AccountController {
      * @param characterCount
      */
     public static synchronized void addGSCharacterCountFor(int accountId, int gsid, int characterCount) {
-        if (!accountsGSCharacterCounts.containsKey(accountId)) {
-            accountsGSCharacterCounts.put(accountId, new HashMap<Integer, Integer>());
-        }
-
-        accountsGSCharacterCounts.get(accountId).put(gsid, characterCount);
+        accountsGSCharacterCounts
+            .computeIfAbsent(accountId, id -> new ConcurrentHashMap<Integer, Integer>())
+            .put(gsid, characterCount);
     }
 }

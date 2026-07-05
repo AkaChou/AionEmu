@@ -21,6 +21,8 @@ import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -45,11 +47,7 @@ public class EventWindowService {
 
 	private static volatile ObjectProvider<EventWindowService> instanceProvider;
 	private Map<Integer, EventsWindow> allEvents = DataManager.EVENTS_WINDOW.getAllEvents();
-	private HashMap<Integer, EventsWindow> activeEvents = new HashMap<Integer, EventsWindow>();
-	private HashMap<Integer, EventsWindow> activeEventsForPlayer = new HashMap<Integer, EventsWindow>();
-	private final Map<Integer, EventsWindow> sendActiveEventsForPlayer = new HashMap<>();
-	private long tStart = 0; // Start Time.
-	private long tEnd = 0; // End Time.
+	private ConcurrentMap<Integer, EventsWindow> activeEvents = new ConcurrentHashMap<Integer, EventsWindow>();
 
 	/**
 	 * initialize all events
@@ -69,8 +67,9 @@ public class EventWindowService {
 	 */
 	public Map<Integer, EventsWindow> getActiveEvents(Player player) {
 		ZonedDateTime now = ZonedDateTime.now();
+		Map<Integer, EventsWindow> activeEventsForPlayer = new HashMap<Integer, EventsWindow>();
 		for (EventsWindow eventsWindow : allEvents.values()) {
-			if (activeEvents.containsValue(eventsWindow.getId())) {
+			if (activeEvents.containsKey(eventsWindow.getId())) {
 				continue;
 			}
 			if (!eventsWindow.getPeriodStart().isBefore(now) || !eventsWindow.getPeriodEnd().isAfter(now)) {
@@ -90,7 +89,8 @@ public class EventWindowService {
 		if (player == null) {
 			return;
 		}
-		getActiveEvents(player);
+		Map<Integer, EventsWindow> activeEventsForPlayer = getActiveEvents(player);
+		final Map<Integer, EventsWindow> sendActiveEventsForPlayer = new ConcurrentHashMap<Integer, EventsWindow>();
 		final int accountId = player.getPlayerAccount().getId();
 		final PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		ZonedDateTime now = ZonedDateTime.now();
@@ -122,7 +122,7 @@ public class EventWindowService {
 						ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
 						PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
 						ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
-						restartTimer(player, eventsWindow.getId());
+						restartTimer(player, eventsWindow.getId(), sendActiveEventsForPlayer);
 						PacketSendUtility.sendPacket(player, new SM_EVENT_WINDOW_ITEMS(sendActiveEventsForPlayer.values()));
 					}
 				}
@@ -133,6 +133,10 @@ public class EventWindowService {
 	}
 
 	public void restartTimer(final Player player, final int eventId) {
+		restartTimer(player, eventId, new ConcurrentHashMap<Integer, EventsWindow>(getActiveEvents(player)));
+	}
+
+	private void restartTimer(final Player player, final int eventId, final Map<Integer, EventsWindow> sendActiveEventsForPlayer) {
 		final int accountId = player.getPlayerAccount().getId();
 		final PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
 		final int recivedCount = playerEventsWindowDAO.getRewardRecivedCount(accountId, eventId);
@@ -155,7 +159,7 @@ public class EventWindowService {
 							ItemTemplate itemTemplate = DataManager.ITEM_DATA.getItemTemplate(eventsWindow.getItemId());
 							PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GET_HCOIN_07(itemTemplate.getNameId()));
 							ItemService.addItem(player, eventsWindow.getItemId(), eventsWindow.getCount());
-							restartTimer(player, eventId);
+							restartTimer(player, eventId, sendActiveEventsForPlayer);
 						}
 					}
 				}, eventsWindow.getRemainingTime() * 60000);
@@ -169,17 +173,16 @@ public class EventWindowService {
 	public void onLogout(Player player) {
 		int accountId = player.getPlayerAccount().getId();
 		PlayerEventsWindowDAO playerEventsWindowDAO = DAOManager.getDAO(PlayerEventsWindowDAO.class);
+		Map<Integer, EventsWindow> activeEventsForPlayer = getActiveEvents(player);
 		for (final EventsWindow eventsWindow : activeEventsForPlayer.values()) {
 			if (playerEventsWindowDAO.getEventsWindow(accountId).contains(eventsWindow.getId()) && player.isOnline()) {
-				tStart = (playerEventsWindowDAO.getLastStamp(accountId, eventsWindow.getId()).getTime() / 1000);
-				tEnd = (System.currentTimeMillis() / 1000);
+				long tStart = (playerEventsWindowDAO.getLastStamp(accountId, eventsWindow.getId()).getTime() / 1000);
+				long tEnd = (System.currentTimeMillis() / 1000);
 				int d2 = playerEventsWindowDAO.getElapsed(accountId, eventsWindow.getId());
 				int time = (int) (((tEnd - tStart) / 60) + d2);
 				playerEventsWindowDAO.updateElapsed(accountId, eventsWindow.getId(), time);
 			}
 		}
-		activeEventsForPlayer.clear();
-		sendActiveEventsForPlayer.clear();
 	}
 
 	private static class SingletonHolder {

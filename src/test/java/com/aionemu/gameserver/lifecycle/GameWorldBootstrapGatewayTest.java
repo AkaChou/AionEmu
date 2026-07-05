@@ -1,8 +1,10 @@
 package com.aionemu.gameserver.lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -11,30 +13,29 @@ class GameWorldBootstrapGatewayTest {
 
 	@Test
 	void bootstrapReportsProgressForWorldStartupSteps() {
-		List<String> events = new ArrayList<>();
+		List<String> events = Collections.synchronizedList(new ArrayList<>());
 		GameWorldBootstrapGateway gateway = new RecordingGameWorldBootstrapGateway(events, new RecordingStartupProgressReporter(events));
 
 		gateway.bootstrap();
 
-		assertEquals(List.of(
-			"progress:start:game world",
-			"progress:started:IDFactory",
-			"load:IDFactory",
-			"progress:finished:IDFactory",
-			"progress:started:Zone",
-			"load:Zone",
-			"progress:finished:Zone",
-			"progress:started:Hotspot Teleport",
-			"load:Hotspot Teleport",
-			"progress:finished:Hotspot Teleport",
-			"progress:started:Road",
-			"load:Road",
-			"progress:finished:Road",
-			"progress:started:World",
-			"load:World",
-			"progress:finished:World",
-			"progress:finish:game world"
-		), events);
+		assertEquals("progress:start:game world", events.getFirst());
+		assertEquals("progress:finish:game world", events.getLast());
+		assertEquals(17, events.size());
+		assertStepReported(events, "IDFactory");
+		assertStepReported(events, "Zone");
+		assertStepReported(events, "Hotspot Teleport");
+		assertStepReported(events, "Road");
+		assertStepReported(events, "World");
+	}
+
+	private void assertStepReported(List<String> events, String stepName) {
+		int started = events.indexOf("progress:started:" + stepName);
+		int loaded = events.indexOf("load:" + stepName);
+		int finished = events.indexOf("progress:finished:" + stepName);
+
+		assertTrue(started > 0, stepName);
+		assertTrue(loaded > started, stepName);
+		assertTrue(finished > loaded, stepName);
 	}
 
 	private static final class RecordingGameWorldBootstrapGateway extends GameWorldBootstrapGateway {

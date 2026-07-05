@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -49,9 +51,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  *         http://aion.power.plaync.com/wiki/%EB%B6%84%EB%85%B8%EC%9D%98+%ED%8C%8C%ED%8E%B8+%EB%A9%94%EB%85%B8%ED%8B%B0%EC%98%A4%EC%8A%A4
@@ -63,7 +62,7 @@ public class MoltenusService {
 	private MoltenusSchedule moltenusSchedule;
 	private Map<Integer, MoltenusLocation> moltenus;
 	private static final int duration = CustomConfig.MOLTENUS_DURATION;
-	private final Map<Integer, MoltenusFight<?>> activeMoltenus = new LinkedHashMap<Integer, MoltenusFight<?>>();
+	private final ConcurrentMap<Integer, MoltenusFight<?>> activeMoltenus = new ConcurrentHashMap<Integer, MoltenusFight<?>>();
 
 	public void initMoltenusLocations() {
 		if (CustomConfig.MOLTENUS_ENABLED) {
@@ -92,13 +91,9 @@ public class MoltenusService {
 	}
 
 	public void startMoltenus(final int id) {
-		final MoltenusFight<?> boss;
-		synchronized (this) {
-			if (activeMoltenus.containsKey(id)) {
-				return;
-			}
-			boss = new Boss(moltenus.get(id));
-			activeMoltenus.put(id, boss);
+		MoltenusFight<?> boss = new Boss(moltenus.get(id));
+		if (activeMoltenus.putIfAbsent(id, boss) != null) {
+			return;
 		}
 		boss.start();
 		moltenusMsg(id);
@@ -111,13 +106,7 @@ public class MoltenusService {
 	}
 
 	public void stopMoltenus(int id) {
-		if (!isMoltenusInProgress(id)) {
-			return;
-		}
-		MoltenusFight<?> boss;
-		synchronized (this) {
-			boss = activeMoltenus.remove(id);
-		}
+		MoltenusFight<?> boss = activeMoltenus.remove(id);
 		if (boss == null || boss.isFinished()) {
 			return;
 		}

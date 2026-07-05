@@ -3,13 +3,13 @@
  */
 package com.aionemu.gameserver.movement.utils.threading;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CancellationToken {
-	private AtomicBoolean _isCancelled;
-	private BlockingQueue<Runnable> _cancelActions = new SynchronousQueue<Runnable>();
+	private final AtomicBoolean _isCancelled;
+	private final Queue<Runnable> _cancelActions = new ConcurrentLinkedQueue<Runnable>();
 
 	public CancellationToken() {
 		this._isCancelled = new AtomicBoolean(false);
@@ -17,7 +17,7 @@ public class CancellationToken {
 
 	public void cancel() throws InterruptedException {
 		if (this._isCancelled.compareAndSet(false, true)) {
-			Runnable run = null;
+			Runnable run;
 			while ((run = (Runnable) this._cancelActions.poll()) != null) {
 				run.run();
 			}
@@ -26,7 +26,10 @@ public class CancellationToken {
 
 	public void addAction(Runnable runnable) throws InterruptedException {
 		if (!this._isCancelled.get()) {
-			this._cancelActions.put(runnable);
+			this._cancelActions.add(runnable);
+			if (this._isCancelled.get() && this._cancelActions.remove(runnable)) {
+				runnable.run();
+			}
 		}
 	}
 

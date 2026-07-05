@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -49,9 +51,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -62,7 +61,7 @@ public class AgentService {
 	private AgentSchedule agentSchedule;
 	private Map<Integer, AgentLocation> agent;
 	private static final int duration = CustomConfig.AGENT_DURATION;
-	private final Map<Integer, AgentFight<?>> activeFights = new LinkedHashMap<Integer, AgentFight<?>>();
+	private final ConcurrentMap<Integer, AgentFight<?>> activeFights = new ConcurrentHashMap<Integer, AgentFight<?>>();
 
 	public void initAgentLocations() {
 		if (CustomConfig.AGENT_ENABLED) {
@@ -90,13 +89,9 @@ public class AgentService {
 	}
 
 	public void startAgentFight(final int id) {
-		final AgentFight<?> fight;
-		synchronized (this) {
-			if (activeFights.containsKey(id)) {
-				return;
-			}
-			fight = new Fight(agent.get(id));
-			activeFights.put(id, fight);
+		final AgentFight<?> fight = new Fight(agent.get(id));
+		if (activeFights.putIfAbsent(id, fight) != null) {
+			return;
 		}
 		fight.start();
 		empyreanLordCountdownMsg(id);
@@ -109,13 +104,7 @@ public class AgentService {
 	}
 
 	public void stopAgentFight(int id) {
-		if (!isFightInProgress(id)) {
-			return;
-		}
-		AgentFight<?> fight;
-		synchronized (this) {
-			fight = activeFights.remove(id);
-		}
+		AgentFight<?> fight = activeFights.remove(id);
 		if (fight == null || fight.isFinished()) {
 			return;
 		}

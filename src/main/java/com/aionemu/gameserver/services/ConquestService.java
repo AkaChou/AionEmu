@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -48,9 +50,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -60,8 +59,7 @@ public class ConquestService {
 	private ConquestSchedule conquestSchedule;
 	private Map<Integer, ConquestLocation> conquest;
 	private static final int duration = CustomConfig.CONQUEST_DURATION;
-	private final Map<Integer, ConquestOffering<?>> activeConquest = new LinkedHashMap<Integer, ConquestOffering<?>>()
-			;
+	private final ConcurrentMap<Integer, ConquestOffering<?>> activeConquest = new ConcurrentHashMap<Integer, ConquestOffering<?>>();
 
 	public void initConquestLocations() {
 		if (CustomConfig.CONQUEST_ENABLED) {
@@ -89,13 +87,9 @@ public class ConquestService {
 	}
 
 	public void startConquest(final int id) {
-		final ConquestOffering<?> offering;
-		synchronized (this) {
-			if (activeConquest.containsKey(id)) {
-				return;
-			}
-			offering = new Offering(conquest.get(id));
-			activeConquest.put(id, offering);
+		ConquestOffering<?> offering = new Offering(conquest.get(id));
+		if (activeConquest.putIfAbsent(id, offering) != null) {
+			return;
 		}
 		offering.start();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -107,13 +101,7 @@ public class ConquestService {
 	}
 
 	public void stopConquest(int id) {
-		if (!isConquestInProgress(id)) {
-			return;
-		}
-		ConquestOffering<?> offering;
-		synchronized (this) {
-			offering = activeConquest.remove(id);
-		}
+		ConquestOffering<?> offering = activeConquest.remove(id);
 		if (offering == null || offering.isFinished()) {
 			return;
 		}

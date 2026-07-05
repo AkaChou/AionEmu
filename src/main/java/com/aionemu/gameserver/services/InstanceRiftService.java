@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -48,9 +50,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -61,7 +60,7 @@ public class InstanceRiftService {
 	private InstanceSchedule instanceSchedule;
 	private Map<Integer, InstanceRiftLocation> instanceRift;
 	private static final int duration = CustomConfig.INSTANCE_RIFT_DURATION;
-	private final Map<Integer, RiftInstance<?>> activeInstanceRift = new LinkedHashMap<Integer, RiftInstance<?>>();
+	private final ConcurrentMap<Integer, RiftInstance<?>> activeInstanceRift = new ConcurrentHashMap<Integer, RiftInstance<?>>();
 
 	public void initInstanceLocations() {
 		if (CustomConfig.INSTANCE_RIFT_ENABLED) {
@@ -89,13 +88,9 @@ public class InstanceRiftService {
 	}
 
 	public void startInstanceRift(final int id) {
-		final RiftInstance<?> rift;
-		synchronized (this) {
-			if (activeInstanceRift.containsKey(id)) {
-				return;
-			}
-			rift = new Rift(instanceRift.get(id));
-			activeInstanceRift.put(id, rift);
+		RiftInstance<?> rift = new Rift(instanceRift.get(id));
+		if (activeInstanceRift.putIfAbsent(id, rift) != null) {
+			return;
 		}
 		rift.start();
 		instanceRiftMsg(id);
@@ -108,13 +103,7 @@ public class InstanceRiftService {
 	}
 
 	public void stopInstanceRift(int id) {
-		if (!isInstanceRiftInProgress(id)) {
-			return;
-		}
-		RiftInstance<?> rift;
-		synchronized (this) {
-			rift = activeInstanceRift.remove(id);
-		}
+		RiftInstance<?> rift = activeInstanceRift.remove(id);
 		if (rift == null || rift.isClosed()) {
 			return;
 		}

@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -54,17 +56,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 @Slf4j
 public class VortexService {
 	private static volatile ObjectProvider<VortexService> instanceProvider;
 	private VortexSchedule vortexSchedule;
 	private Map<Integer, VortexLocation> vortex;
 	private static final int duration = CustomConfig.VORTEX_DURATION;
-	private final Map<Integer, DimensionalVortex<?>> activeInvasions = new LinkedHashMap<Integer, DimensionalVortex<?>>()
-			;
+	private final ConcurrentMap<Integer, DimensionalVortex<?>> activeInvasions = new ConcurrentHashMap<Integer, DimensionalVortex<?>>();
 
 	public void initVortexLocations() {
 		if (CustomConfig.VORTEX_ENABLED) {
@@ -91,13 +89,9 @@ public class VortexService {
 	}
 
 	public void startInvasion(final int id) {
-		final DimensionalVortex<?> invasion;
-		synchronized (this) {
-			if (activeInvasions.containsKey(id)) {
-				return;
-			}
-			invasion = new Invasion(vortex.get(id));
-			activeInvasions.put(id, invasion);
+		DimensionalVortex<?> invasion = new Invasion(vortex.get(id));
+		if (activeInvasions.putIfAbsent(id, invasion) != null) {
+			return;
 		}
 		invasion.start();
 		theobomosVortexMsg(id);
@@ -114,13 +108,7 @@ public class VortexService {
 	}
 
 	public void stopInvasion(int id) {
-		if (!isInvasionInProgress(id)) {
-			return;
-		}
-		DimensionalVortex<?> invasion;
-		synchronized (this) {
-			invasion = activeInvasions.remove(id);
-		}
+		DimensionalVortex<?> invasion = activeInvasions.remove(id);
 		if (invasion == null || invasion.isFinished()) {
 			return;
 		}

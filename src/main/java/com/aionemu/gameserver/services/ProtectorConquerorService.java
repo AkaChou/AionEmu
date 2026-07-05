@@ -21,7 +21,9 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -41,7 +43,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
@@ -49,13 +50,13 @@ import lombok.extern.slf4j.Slf4j;
 public class ProtectorConquerorService {
 	private static volatile ObjectProvider<ProtectorConquerorService> instanceProvider;
 
-	private Map<Integer, Protector> protectors = new LinkedHashMap<Integer, Protector>();
-	private Map<Integer, Conqueror> conquerors = new LinkedHashMap<Integer, Conqueror>();
+	private Map<Integer, Protector> protectors = new ConcurrentHashMap<Integer, Protector>();
+	private Map<Integer, Conqueror> conquerors = new ConcurrentHashMap<Integer, Conqueror>();
 
-	private Map<Integer, Map<Integer, Player>> worldConqueror = new LinkedHashMap<Integer, Map<Integer, Player>>();
-	private Map<Integer, Map<Integer, Player>> worldProtectors = new LinkedHashMap<Integer, Map<Integer, Player>>();
+	private Map<Integer, Map<Integer, Player>> worldConqueror = new ConcurrentHashMap<Integer, Map<Integer, Player>>();
+	private Map<Integer, Map<Integer, Player>> worldProtectors = new ConcurrentHashMap<Integer, Map<Integer, Player>>();
 
-	private static final Map<Integer, WorldType> handledWorlds = new LinkedHashMap<Integer, WorldType>();
+	private static final Map<Integer, WorldType> handledWorlds = new ConcurrentHashMap<Integer, WorldType>();
 	private int refresh = CustomConfig.PROTECTOR_CONQUEROR_REFRESH;
 	private int levelDiff = CustomConfig.PROTECTOR_CONQUEROR_LEVEL_DIFF;
 	private ProtectorBuffs protectorBuff;
@@ -80,61 +81,57 @@ public class ProtectorConquerorService {
 			WorldType type = worldType > 0 ? worldType > 1 ? WorldType.ASMODIANS : WorldType.ELYOS : WorldType.USEALL;
 			handledWorlds.put(worldId, type);
 		}
-		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				for (Protector info : protectors.values()) {
-					if (info.victims > 0 && !isEnemyWorld(info.getOwner())) {
-						info.victims -= CustomConfig.PROTECTOR_CONQUEROR_DECREASE;
-						int newRank = getRanks(info.victims);
-						if (info.getRank() != newRank) {
-							info.setRank(newRank);
-							PacketSendUtility.sendPacket(info.getOwner(),
-									new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
-						}
-						if (info.victims < 1) {
-							info.victims = 0;
-							protectors.remove(info.getOwner().getObjectId());
-						}
-					}
+			GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+				@Override
+				public void run() {
+					decayProtectorConquerorRanks();
 				}
-				for (Conqueror info : conquerors.values()) {
-					if (info.victims > 0 && !isEnemyWorld(info.getOwner())) {
-						info.victims -= CustomConfig.PROTECTOR_CONQUEROR_DECREASE;
-						int newRank = getRanks(info.victims);
-						if (info.getRank() != newRank) {
-							info.setRank(newRank);
-							PacketSendUtility.sendPacket(info.getOwner(),
-									new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
-						}
-						if (info.victims < 1) {
-							info.victims = 0;
-							conquerors.remove(info.getOwner().getObjectId());
-						}
-					}
+			}, refresh * 60000, refresh * 60000);
+		}
+
+	void decayProtectorConquerorRanks() {
+		for (Iterator<Map.Entry<Integer, Protector>> iterator = protectors.entrySet().iterator(); iterator.hasNext();) {
+			Protector info = iterator.next().getValue();
+			if (info.victims > 0 && !isEnemyWorld(info.getOwner())) {
+				info.victims -= CustomConfig.PROTECTOR_CONQUEROR_DECREASE;
+				int newRank = getRanks(info.victims);
+				if (info.getRank() != newRank) {
+					info.setRank(newRank);
+					PacketSendUtility.sendPacket(info.getOwner(), new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
+				}
+				if (info.victims < 1) {
+					info.victims = 0;
+					iterator.remove();
 				}
 			}
-		}, refresh * 60000, refresh * 60000);
+		}
+		for (Iterator<Map.Entry<Integer, Conqueror>> iterator = conquerors.entrySet().iterator(); iterator.hasNext();) {
+			Conqueror info = iterator.next().getValue();
+			if (info.victims > 0 && !isEnemyWorld(info.getOwner())) {
+				info.victims -= CustomConfig.PROTECTOR_CONQUEROR_DECREASE;
+				int newRank = getRanks(info.victims);
+				if (info.getRank() != newRank) {
+					info.setRank(newRank);
+					PacketSendUtility.sendPacket(info.getOwner(), new SM_CONQUEROR_PROTECTOR(true, info.getRank()));
+				}
+				if (info.victims < 1) {
+					info.victims = 0;
+					iterator.remove();
+				}
+			}
+		}
 	}
 
 	public Map<Integer, Player> getWorldProtector(int worldId) {
-		if (worldProtectors.containsKey(worldId)) {
-			return worldProtectors.get(worldId);
-		} else {
-			Map<Integer, Player> protectors = new LinkedHashMap<Integer, Player>();
-			worldProtectors.put(worldId, protectors);
-			return protectors;
-		}
+		return worldProtectors.computeIfAbsent(worldId, id -> new ConcurrentHashMap<Integer, Player>());
 	}
 
 	public Map<Integer, Player> getWorldConqueror(int worldId) {
-		if (worldConqueror.containsKey(worldId)) {
-			return worldConqueror.get(worldId);
-		} else {
-			Map<Integer, Player> killers = new LinkedHashMap<Integer, Player>();
-			worldConqueror.put(worldId, killers);
-			return killers;
-		}
+		return worldConqueror.computeIfAbsent(worldId, id -> new ConcurrentHashMap<Integer, Player>());
+	}
+
+	private List<Player> playersSnapshot(Map<Integer, Player> players) {
+		return new ArrayList<Player>(players.values());
 	}
 
 	public void onProtectorConquerorLogin(Player player) {
@@ -194,7 +191,7 @@ public class ProtectorConquerorService {
 						@Override
 						public void visit(Player victim) {
 							if (!player.getRace().equals(victim.getRace())) {
-								PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(world.values()));
+								PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(playersSnapshot(world)));
 							}
 						}
 					});
@@ -224,13 +221,13 @@ public class ProtectorConquerorService {
 						@Override
 						public void visit(Player victim) {
 							if (!player.getRace().equals(victim.getRace())) {
-								PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(world.values()));
+								PacketSendUtility.sendPacket(victim, new SM_CONQUEROR_PROTECTOR(playersSnapshot(world)));
 							}
 						}
 					});
 		} else {
-			PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(getWorldProtector(worldId).values()));
-			PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(getWorldConqueror(worldId).values()));
+			PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(playersSnapshot(getWorldProtector(worldId))));
+			PacketSendUtility.sendPacket(player, new SM_CONQUEROR_PROTECTOR(playersSnapshot(getWorldConqueror(worldId))));
 		}
 		player.clearKnownlist();
 		PacketSendUtility.broadcastPacketAndReceive(player, new SM_PLAYER_INFO(player, false));
@@ -246,7 +243,7 @@ public class ProtectorConquerorService {
 			Protector info = player.getProtectorInfo();
 			List<Player> kill = new ArrayList<Player>();
 			Map<Integer, Player> guards = getWorldProtector(worldId);
-			kill.addAll(guards.values());
+			kill.addAll(playersSnapshot(guards));
 			guards.remove(player.getObjectId());
 			if (info.getRank() > 0) {
 				info.setRank(0);
@@ -262,7 +259,7 @@ public class ProtectorConquerorService {
 			Conqueror info = player.getConquerorInfo();
 			List<Player> kill = new ArrayList<Player>();
 			Map<Integer, Player> killers = getWorldConqueror(worldId);
-			kill.addAll(killers.values());
+			kill.addAll(playersSnapshot(killers));
 			killers.remove(player.getObjectId());
 			if (info.getRank() > 0) {
 				info.setRank(0);
@@ -280,10 +277,10 @@ public class ProtectorConquerorService {
 	public void updateIcons(Player player) {
 		if (!isEnemyWorld(player)) {
 			PacketSendUtility.sendPacket(player,
-					new SM_CONQUEROR_PROTECTOR(getWorldProtector(player.getWorldId()).values()));
+					new SM_CONQUEROR_PROTECTOR(playersSnapshot(getWorldProtector(player.getWorldId()))));
 		} else if (isEnemyWorld(player)) {
 			PacketSendUtility.sendPacket(player,
-					new SM_CONQUEROR_PROTECTOR(getWorldConqueror(player.getWorldId()).values()));
+					new SM_CONQUEROR_PROTECTOR(playersSnapshot(getWorldConqueror(player.getWorldId()))));
 		}
 	}
 
@@ -315,7 +312,7 @@ public class ProtectorConquerorService {
 								public void visit(Player observed) {
 									if (!killer.getRace().equals(observed.getRace())) {
 										PacketSendUtility.sendPacket(observed,
-												new SM_CONQUEROR_PROTECTOR(guards.values()));
+												new SM_CONQUEROR_PROTECTOR(playersSnapshot(guards)));
 									}
 								}
 							});
@@ -351,7 +348,7 @@ public class ProtectorConquerorService {
 								public void visit(Player observed) {
 									if (!killer.getRace().equals(observed.getRace())) {
 										PacketSendUtility.sendPacket(observed,
-												new SM_CONQUEROR_PROTECTOR(killers.values()));
+												new SM_CONQUEROR_PROTECTOR(playersSnapshot(killers)));
 									}
 								}
 							});

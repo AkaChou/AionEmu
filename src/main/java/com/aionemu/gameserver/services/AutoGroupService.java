@@ -834,14 +834,15 @@ public class AutoGroupService {
 	}
 
 	public void unRegisterInstance(byte instanceMaskId) {
-		for (LookingForParty lfp : searchers.values()) {
+		for (Map.Entry<Integer, LookingForParty> entry : searchers.entrySet()) {
+			LookingForParty lfp = entry.getValue();
 			if (lfp.isRegistredInstance(instanceMaskId)) {
 				if (lfp.getPlayer() != null) {
 					getInstance().unregisterLooking(lfp.getPlayer(), instanceMaskId);
 				} else {
 					getInstance().unRegisterSearchInstance(null, lfp.getSearchInstance(instanceMaskId));
 					if (lfp.unregisterInstance(instanceMaskId) == 0) {
-						searchers.values().remove(lfp);
+						searchers.remove(entry.getKey(), lfp);
 					}
 				}
 			}

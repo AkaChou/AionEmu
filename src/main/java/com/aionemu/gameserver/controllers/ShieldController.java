@@ -28,11 +28,11 @@ import com.aionemu.gameserver.services.ShieldService;
 import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.World;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ShieldController extends VisibleObjectController<Shield> {
-	Map<Integer, ActionObserver> observed = new LinkedHashMap<Integer, ActionObserver>();
+	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
 
 	@Override
 	public void see(VisibleObject object) {

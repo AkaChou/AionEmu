@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -45,9 +47,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -57,7 +56,7 @@ public class IdianDepthsService {
 	private static volatile ObjectProvider<IdianDepthsService> instanceProvider;
 	private Map<Integer, IdianDepthsLocation> idianDepths;
 	private static final int duration = CustomConfig.IDIAN_DEPTHS_DURATION;
-	private final Map<Integer, IdianDepths<?>> activeIdianDepths = new LinkedHashMap<Integer, IdianDepths<?>>();
+	private final ConcurrentMap<Integer, IdianDepths<?>> activeIdianDepths = new ConcurrentHashMap<Integer, IdianDepths<?>>();
 
 	public void initIdianDepthsLocations() {
 		if (CustomConfig.IDIAN_DEPTHS_ENABLED) {
@@ -94,13 +93,9 @@ public class IdianDepthsService {
 	}
 
 	public void startIdianDepths(final int id) {
-		final IdianDepths<?> idian;
-		synchronized (this) {
-			if (activeIdianDepths.containsKey(id)) {
-				return;
-			}
-			idian = new Idian(idianDepths.get(id));
-			activeIdianDepths.put(id, idian);
+		final IdianDepths<?> idian = new Idian(idianDepths.get(id));
+		if (activeIdianDepths.putIfAbsent(id, idian) != null) {
+			return;
 		}
 		idian.start();
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
@@ -112,13 +107,7 @@ public class IdianDepthsService {
 	}
 
 	public void stopIdianDepths(int id) {
-		if (!isIdianDepthsInProgress(id)) {
-			return;
-		}
-		IdianDepths<?> idian;
-		synchronized (this) {
-			idian = activeIdianDepths.remove(id);
-		}
+		IdianDepths<?> idian = activeIdianDepths.remove(id);
 		if (idian == null || idian.isClosed()) {
 			return;
 		}

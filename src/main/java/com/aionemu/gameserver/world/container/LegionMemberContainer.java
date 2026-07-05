@@ -40,7 +40,7 @@ public class LegionMemberContainer {
 	 *
 	 * @param legionMember
 	 */
-	public void addMember(LegionMember legionMember) {
+	public synchronized void addMember(LegionMember legionMember) {
 		if (!legionMemberById.containsKey(legionMember.getObjectId())) {
 			legionMemberById.put(legionMember.getObjectId(), legionMember);
 		}
@@ -51,7 +51,7 @@ public class LegionMemberContainer {
 	 *
 	 * @param memberObjId
 	 */
-	public LegionMember getMember(int memberObjId) {
+	public synchronized LegionMember getMember(int memberObjId) {
 		return legionMemberById.get(memberObjId);
 	}
 
@@ -60,7 +60,7 @@ public class LegionMemberContainer {
 	 *
 	 * @param legionMember
 	 */
-	public void addMemberEx(LegionMemberEx legionMember) {
+	public synchronized void addMemberEx(LegionMemberEx legionMember) {
 		if (legionMemberExById.containsKey(legionMember.getObjectId())
 				|| legionMemberExByName.containsKey(legionMember.getName()))
 			throw new DuplicateAionObjectException();
@@ -73,7 +73,7 @@ public class LegionMemberContainer {
 	 *
 	 * @param memberObjId
 	 */
-	public LegionMemberEx getMemberEx(int memberObjId) {
+	public synchronized LegionMemberEx getMemberEx(int memberObjId) {
 		return legionMemberExById.get(memberObjId);
 	}
 
@@ -82,7 +82,7 @@ public class LegionMemberContainer {
 	 *
 	 * @param memberName
 	 */
-	public LegionMemberEx getMemberEx(String memberName) {
+	public synchronized LegionMemberEx getMemberEx(String memberName) {
 		return legionMemberExByName.get(memberName);
 	}
 
@@ -91,7 +91,7 @@ public class LegionMemberContainer {
 	 *
 	 * @param legionMember
 	 */
-	public void remove(LegionMemberEx legionMember) {
+	public synchronized void remove(LegionMemberEx legionMember) {
 		legionMemberById.remove(legionMember.getObjectId());
 		legionMemberExById.remove(legionMember.getObjectId());
 		legionMemberExByName.remove(legionMember.getName());
@@ -103,7 +103,7 @@ public class LegionMemberContainer {
 	 * @param memberObjId
 	 * @return true or false
 	 */
-	public boolean contains(int memberObjId) {
+	public synchronized boolean contains(int memberObjId) {
 		return legionMemberById.containsKey(memberObjId);
 	}
 
@@ -113,7 +113,7 @@ public class LegionMemberContainer {
 	 * @param memberObjId
 	 * @return true or false
 	 */
-	public boolean containsEx(int memberObjId) {
+	public synchronized boolean containsEx(int memberObjId) {
 		return legionMemberExById.containsKey(memberObjId);
 	}
 
@@ -123,11 +123,11 @@ public class LegionMemberContainer {
 	 * @param memberName
 	 * @return true or false
 	 */
-	public boolean containsEx(String memberName) {
+	public synchronized boolean containsEx(String memberName) {
 		return legionMemberExByName.containsKey(memberName);
 	}
 
-	public void clear() {
+	public synchronized void clear() {
 		legionMemberById.clear();
 		legionMemberExById.clear();
 		legionMemberExByName.clear();

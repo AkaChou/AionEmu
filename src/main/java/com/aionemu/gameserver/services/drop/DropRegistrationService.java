@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -69,16 +71,13 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.DropRewardEnum;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 @Slf4j
 public class DropRegistrationService {
 	private static volatile ObjectProvider<DropRegistrationService> instanceProvider;
 
-	private Map<Integer, Set<DropItem>> currentDropMap = new LinkedHashMap<Integer, Set<DropItem>>();
-	private Map<Integer, DropNpc> dropRegistrationMap = new LinkedHashMap<Integer, DropNpc>();
-	private List<Integer> noReductionMaps;
+	private ConcurrentMap<Integer, Set<DropItem>> currentDropMap = new ConcurrentHashMap<Integer, Set<DropItem>>();
+	private ConcurrentMap<Integer, DropNpc> dropRegistrationMap = new ConcurrentHashMap<Integer, DropNpc>();
+	private Set<Integer> noReductionMaps;
 
 	public void registerDrop(Npc npc, Player player, Collection<Player> groupMembers) {
 		registerDrop(npc, player, player.getLevel(), groupMembers);
@@ -86,7 +85,7 @@ public class DropRegistrationService {
 
 	public DropRegistrationService() {
 		init();
-		noReductionMaps = new ArrayList<Integer>();
+		noReductionMaps = new HashSet<Integer>();
 		for (String zone : DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES.split(",")) {
 			noReductionMaps.add(Integer.parseInt(zone));
 		}
@@ -172,8 +171,9 @@ public class DropRegistrationService {
 			List<Integer> singlePlayer = new ArrayList<Integer>();
 			singlePlayer.add(player.getObjectId());
 			dropPlayers.add(player);
-			dropRegistrationMap.put(npcObjId, new DropNpc(npcObjId));
-			dropRegistrationMap.get(npcObjId).setPlayersObjectId(singlePlayer);
+			DropNpc dropNpc = new DropNpc(npcObjId);
+			dropRegistrationMap.put(npcObjId, dropNpc);
+			dropNpc.setPlayersObjectId(singlePlayer);
 		}
 		float boostDropRate = npc.getGameStats().getStat(StatEnum.BOOST_DROP_RATE, 100).getCurrent() / 100f;
 		boostDropRate += genesis.getGameStats().getStat(StatEnum.DR_BOOST, 100).getCurrent() / 100f;

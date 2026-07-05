@@ -113,6 +113,8 @@ public class SM_EMOTION extends AionServerPacket {
 		case PET_EMOTION_2:
 		case PET_EMOTION_3:
 		case PET_EMOTION_4:
+		case GLIDING:
+		case GLIDING_END:
 			break;
 		case DIE:
 		case START_LOOT:

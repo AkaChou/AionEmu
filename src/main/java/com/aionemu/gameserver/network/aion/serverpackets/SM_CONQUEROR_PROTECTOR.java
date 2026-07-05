@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.network.aion.serverpackets;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -34,7 +35,7 @@ public class SM_CONQUEROR_PROTECTOR extends AionServerPacket {
 
 	public SM_CONQUEROR_PROTECTOR(Collection<Player> players) {
 		this.type = 4;
-		this.players = players;
+		this.players = new ArrayList<Player>(players);
 	}
 
 	@Override

@@ -21,6 +21,8 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -77,7 +79,7 @@ public class DatabaseCleaningService {
 
 	private boolean allWorkersReady() {
 		for (Worker w : workers) {
-			if (!w._READY) {
+			if (!w.ready.get()) {
 				return false;
 			}
 		}
@@ -87,7 +89,7 @@ public class DatabaseCleaningService {
 	private int currentlyDeletedChars() {
 		int deletedChars = 0;
 		for (Worker w : workers) {
-			deletedChars += w.deletedChars;
+			deletedChars += w.deletedChars.get();
 		}
 		return deletedChars;
 	}
@@ -130,9 +132,9 @@ public class DatabaseCleaningService {
 
 	private class Worker implements Runnable {
 
-		private List<Integer> ids = new ArrayList<Integer>();
-		private int deletedChars = 0;
-		private boolean _READY = false;
+		private final List<Integer> ids = new ArrayList<Integer>();
+		private final AtomicInteger deletedChars = new AtomicInteger();
+		private final AtomicBoolean ready = new AtomicBoolean();
 
 		private Worker() {
 		}
@@ -140,9 +142,9 @@ public class DatabaseCleaningService {
 		public void run() {
 			for (int id : ids) {
 				PlayerService.deletePlayerFromDB(id);
-				deletedChars += 1;
+				deletedChars.incrementAndGet();
 			}
-			_READY = true;
+			ready.set(true);
 		}
 	}
 }

@@ -28,8 +28,8 @@ import com.aionemu.gameserver.services.SiegeService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Shields have material ID 11 in geo.
@@ -38,7 +38,7 @@ import java.util.Map;
  */
 public class SiegeShield implements ZoneHandler {
 
-	Map<Integer, IActor> observed = new LinkedHashMap<Integer, IActor>();
+	Map<Integer, IActor> observed = new ConcurrentHashMap<Integer, IActor>();
 	private Spatial geometry;
 	private int siegeLocationId;
 	private boolean isEnabled = false;

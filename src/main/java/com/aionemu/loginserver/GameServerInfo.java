@@ -18,9 +18,9 @@
 
 package com.aionemu.loginserver;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.commons.network.IPRange;
 import com.aionemu.loginserver.model.Account;
@@ -51,27 +51,27 @@ public class GameServerInfo {
     /**
      * Default server address, usually internet address
      */
-    private byte[] defaultAddress;
+    private volatile byte[] defaultAddress;
     /**
      * Mapping of ip ranges, usually used for local area connections
      */
-    private List<IPRange> ipRanges;
+    private volatile List<IPRange> ipRanges;
     /**
      * Port on with this GameServer is accepting clients.
      */
-    private int port;
+    private volatile int port;
     /**
      * gsConnection - if GameServer is connected to LoginServer.
      */
-    private GsConnection gscHandler;
+    private volatile GsConnection gscHandler;
     /**
      * Max players count that may play on this GameServer.
      */
-    private int maxPlayers;
+    private volatile int maxPlayers;
     /**
      * Map<AccId,Account> of accounts logged in on this GameServer.
      */
-    private final Map<Integer, Account> accountsOnGameServer = new HashMap<Integer, Account>();
+    private final Map<Integer, Account> accountsOnGameServer = new ConcurrentHashMap<Integer, Account>();
 
     /**
      * Constructor.

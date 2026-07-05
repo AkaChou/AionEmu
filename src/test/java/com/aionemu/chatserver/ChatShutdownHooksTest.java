@@ -26,7 +26,7 @@ class ChatShutdownHooksTest {
         assertFalse(bridgeSource.contains("ShutdownHook.getInstance("));
         assertFalse(configurationSource.contains("ShutdownHook.getInstance("));
         assertTrue(bridgeSource.contains("ChatShutdownHooks.shutdownHook(this)"));
-        assertTrue(configurationSource.contains("return new ShutdownHook(processBridge, restartService, gameServerService);"));
+        assertTrue(configurationSource.contains("return new ShutdownHook(processBridge, restartServiceProvider, gameServerServiceProvider);"));
         assertTrue(ShutdownHook.class.getMethod("getInstance").isAnnotationPresent(Deprecated.class));
     }
 }

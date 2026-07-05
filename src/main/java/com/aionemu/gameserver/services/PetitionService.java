@@ -17,12 +17,13 @@
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -42,7 +43,7 @@ public class PetitionService {
 
 	private static volatile ObjectProvider<PetitionService> instanceProvider;
 
-	private static SortedMap<Integer, Petition> registeredPetitions = new TreeMap<Integer, Petition>();
+	private static SortedMap<Integer, Petition> registeredPetitions = new ConcurrentSkipListMap<Integer, Petition>();
 
 	public static final PetitionService getInstance() {
 		ObjectProvider<PetitionService> provider = instanceProvider;
@@ -66,7 +67,7 @@ public class PetitionService {
 	}
 
 	public Collection<Petition> getRegisteredPetitions() {
-		return registeredPetitions.values();
+		return new ArrayList<Petition>(registeredPetitions.values());
 	}
 
 	public void deletePetition(int playerObjId) {

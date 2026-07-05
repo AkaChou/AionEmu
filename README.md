@@ -14,7 +14,8 @@ The project is now organized as a single Maven build, targets Java 25 bytecode, 
 - Manage login, game, and chat startup through Spring Boot lifecycle wiring.
 - Preserve compatibility with legacy configuration, static data, database schemas, and client protocols.
 - Run callback weaving during the build to reduce runtime `-javaagent` requirements.
-- Continue improving startup logs, static-data progress output, test coverage, and local runtime stability.
+- Keep local runtime state under `aion/` so generated logs, copied data, and local configuration stay separate from source defaults.
+- Continue improving startup logs, static-data progress output, startup time, test coverage, and local runtime stability.
 
 ## Build
 
@@ -31,9 +32,51 @@ mvn test
 mvn -DskipTests package
 ```
 
+The repository also includes a packaging helper that sets Maven memory defaults and writes `target/AionEmu.jar`:
+
+```bash
+./maven-package.sh
+```
+
+Run `./maven-package.sh test` if you want the helper to execute a different Maven goal.
+
+## Quick Start
+
+```bash
+./maven-package.sh
+./start-silent.sh
+tail -f aion/log/aionemu.log
+```
+
+Stop the background process with:
+
+```bash
+./stop-silent.sh
+```
+
+`start-silent.sh` starts `target/AionEmu.jar`, writes logs and the pid file under `aion/log/`, and copies missing runtime resources from `src/main/resources/aion` into `aion/`. Existing files are kept by default. Use `./start-silent.sh -c` only when you intentionally want to delete and recreate the local `aion/` runtime directory before startup.
+
+Common runtime overrides:
+
+```bash
+AION_HOME=/path/to/runtime ./start-silent.sh
+AION_HEAP_OPTS="-Xms2g -Xmx10g" ./start-silent.sh
+AION_JVM_OPTS="..." ./start-silent.sh
+```
+
 ## Runtime Notes
 
-The default configuration lives in `src/main/resources/application.yml`. Game and login services are enabled by default, while chat is disabled by default. Legacy configuration and data are still organized through the project `config`, `data`, and `sql` directories, then bridged into the Spring Boot environment during startup.
+The Spring Boot defaults live in `src/main/resources/application.yml`. Game, login, and chat services are enabled by default, and the transport mode defaults to Netty.
+
+Legacy-style server configuration and data defaults live under `src/main/resources/aion`. At runtime the server resolves paths from `aion.home`, which defaults to the repository-local `aion/` directory in the helper scripts. This lets local config changes, logs, generated files, and copied static data stay outside the source resource tree.
+
+Use this command when source runtime resources changed and you want to refresh the local `aion/` copy without overwriting local config:
+
+```bash
+./refresh-aion.sh
+```
+
+`refresh-aion.sh` overwrites non-config runtime files, preserves existing `*/config/**` files, and keeps an existing `aion/log/logback-spring.xml`.
 
 NPC navigation still requires separate geodata/navmesh resources. The original resource notes are preserved below.
 

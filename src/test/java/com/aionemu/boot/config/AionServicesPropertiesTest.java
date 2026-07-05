@@ -35,12 +35,12 @@ class AionServicesPropertiesTest {
     }
 
     @Test
-    void applicationDefaultsKeepChatOptional() throws IOException {
+    void applicationDefaultsEnableConfiguredChatService() throws IOException {
         AionServicesProperties properties = bindFromYaml("application.yml");
 
         assertTrue(properties.getLogin().isEnabled());
         assertTrue(properties.getGame().isEnabled());
-        assertFalse(properties.getChat().isEnabled());
+        assertTrue(properties.getChat().isEnabled());
         assertSame(TransportMode.NETTY, properties.getTransport().getMode());
     }
 

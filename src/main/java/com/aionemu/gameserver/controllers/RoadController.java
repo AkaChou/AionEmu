@@ -21,15 +21,15 @@ import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.road.Road;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author SheppeR
  */
 public class RoadController extends VisibleObjectController<Road> {
 
-	Map<Integer, RoadObserver> observed = new LinkedHashMap<Integer, RoadObserver>();
+	Map<Integer, RoadObserver> observed = new ConcurrentHashMap<Integer, RoadObserver>();
 
 	@Override
 	public void see(VisibleObject object) {

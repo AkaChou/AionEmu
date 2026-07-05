@@ -117,34 +117,44 @@ public class SpawnsData2 {
 	private IntObjectHashMap<List<SpawnGroup2>> outpostSpawnMaps = new IntObjectHashMap<List<SpawnGroup2>>();
 	private IntObjectHashMap<Spawn> customs = new IntObjectHashMap<Spawn>();
 
+	private Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> spawnIndexForWorld(int mapId) {
+		Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> worldSpawns = allSpawnMaps.get(mapId);
+		if (worldSpawns == null) {
+			worldSpawns = new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>();
+			allSpawnMaps.put(mapId, worldSpawns);
+		}
+		return worldSpawns;
+	}
+
+	private List<SpawnGroup2> spawnGroupsFor(IntObjectHashMap<List<SpawnGroup2>> spawnMaps, int id) {
+		List<SpawnGroup2> spawnGroups = spawnMaps.get(id);
+		if (spawnGroups == null) {
+			spawnGroups = new ArrayList<SpawnGroup2>();
+			spawnMaps.put(id, spawnGroups);
+		}
+		return spawnGroups;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void afterUnmarshal(Unmarshaller u, Object parent) {
 		if (templates != null) {
 			for (SpawnMap spawnMap : templates) {
 				int mapId = spawnMap.getMapId();
-				if (!allSpawnMaps.containsKey(mapId)) {
-					allSpawnMaps.put(mapId, new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
-				}
+				Map<Integer, SimpleEntry<SpawnGroup2, Spawn>> worldSpawns = spawnIndexForWorld(mapId);
 				for (Spawn spawn : spawnMap.getSpawns()) {
 					if (spawn.isCustom()) {
-						if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-							allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+						if (worldSpawns.containsKey(spawn.getNpcId())) {
+							worldSpawns.remove(spawn.getNpcId());
 						}
 						customs.put(spawn.getNpcId(), spawn);
 					} else if (customs.containsKey(spawn.getNpcId())) {
 						continue;
 					}
-					allSpawnMaps.get(mapId).put(spawn.getNpcId(),
-							new SimpleEntry(new SpawnGroup2(mapId, spawn), spawn));
-				}
-				if (!allSpawnMaps.containsKey(mapId)) {
-					allSpawnMaps.put(mapId, new LinkedHashMap<Integer, SimpleEntry<SpawnGroup2, Spawn>>());
+					worldSpawns.put(spawn.getNpcId(), new SimpleEntry(new SpawnGroup2(mapId, spawn), spawn));
 				}
 				for (SiegeSpawn SiegeSpawn : spawnMap.getSiegeSpawns()) {
 					int siegeId = SiegeSpawn.getSiegeId();
-					if (!siegeSpawnMaps.containsKey(siegeId)) {
-						siegeSpawnMaps.put(siegeId, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> siegeSpawnGroups = spawnGroupsFor(siegeSpawnMaps, siegeId);
 					for (SiegeSpawn.SiegeRaceTemplate race : SiegeSpawn.getSiegeRaceTemplates()) {
 						for (SiegeSpawn.SiegeRaceTemplate.SiegeModTemplate mod : race.getSiegeModTemplates()) {
 							if (mod == null || mod.getSpawns() == null) {
@@ -152,8 +162,8 @@ public class SpawnsData2 {
 							}
 							for (Spawn spawn : mod.getSpawns()) {
 								if (spawn.isCustom()) {
-									if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-										allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+									if (worldSpawns.containsKey(spawn.getNpcId())) {
+										worldSpawns.remove(spawn.getNpcId());
 									}
 									customs.put(spawn.getNpcId(), spawn);
 								} else if (customs.containsKey(spawn.getNpcId())) {
@@ -161,17 +171,16 @@ public class SpawnsData2 {
 								}
 								SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, siegeId, race.getSiegeRace(),
 										mod.getSiegeModType());
-								allSpawnMaps.get(mapId).put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
-								siegeSpawnMaps.get(siegeId).add(spawnGroup);
+								worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+								siegeSpawnGroups.add(spawnGroup);
 							}
 						}
 					}
 				}
 				for (LegionDominionSpawn LegionDominionSpawn : spawnMap.getLegionDominionSpawns()) {
 					int legionDominionId = LegionDominionSpawn.getLegionDominionId();
-					if (!legionDominionSpawnMaps.containsKey(legionDominionId)) {
-						legionDominionSpawnMaps.put(legionDominionId, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> legionDominionSpawnGroups = spawnGroupsFor(legionDominionSpawnMaps,
+							legionDominionId);
 					for (LegionDominionSpawn.LegionDominionRaceTemplate race : LegionDominionSpawn
 							.getLegionDominionRaceTemplates()) {
 						for (LegionDominionSpawn.LegionDominionRaceTemplate.LegionDominionModTemplate mod : race
@@ -181,8 +190,8 @@ public class SpawnsData2 {
 							}
 							for (Spawn spawn : mod.getSpawns()) {
 								if (spawn.isCustom()) {
-									if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-										allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+									if (worldSpawns.containsKey(spawn.getNpcId())) {
+										worldSpawns.remove(spawn.getNpcId());
 									}
 									customs.put(spawn.getNpcId(), spawn);
 								} else if (customs.containsKey(spawn.getNpcId())) {
@@ -190,43 +199,39 @@ public class SpawnsData2 {
 								}
 								SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, legionDominionId,
 										race.getLegionDominionRace(), mod.getLegionDominionModType());
-								allSpawnMaps.get(mapId).put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
-								legionDominionSpawnMaps.get(legionDominionId).add(spawnGroup);
+								worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+								legionDominionSpawnGroups.add(spawnGroup);
 							}
 						}
 					}
 				}
 				for (BaseSpawn BaseSpawn : spawnMap.getBaseSpawns()) {
 					int baseId = BaseSpawn.getId();
-					if (!baseSpawnMaps.containsKey(baseId)) {
-						baseSpawnMaps.put(baseId, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> baseSpawnGroups = spawnGroupsFor(baseSpawnMaps, baseId);
 					for (BaseSpawn.SimpleRaceTemplate simpleRace : BaseSpawn.getBaseRaceTemplates()) {
 						for (Spawn spawn : simpleRace.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, baseId, simpleRace.getBaseRace());
-							allSpawnMaps.get(mapId).put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
-							baseSpawnMaps.get(baseId).add(spawnGroup);
+							worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+							baseSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (OutpostSpawn OutpostSpawn : spawnMap.getOutpostSpawns()) {
 					int outpostId = OutpostSpawn.getId();
-					if (!outpostSpawnMaps.containsKey(outpostId)) {
-						outpostSpawnMaps.put(outpostId, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> outpostSpawnGroups = spawnGroupsFor(outpostSpawnMaps, outpostId);
 					for (OutpostSpawn.SimpleRaceTemplate simpleRace : OutpostSpawn.getOutpostRaceTemplates()) {
 						for (Spawn spawn : simpleRace.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
@@ -234,265 +239,241 @@ public class SpawnsData2 {
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, outpostId, simpleRace.getBaseRace(),
 									0);
-							allSpawnMaps.get(mapId).put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
-							outpostSpawnMaps.get(outpostId).add(spawnGroup);
+							worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+							outpostSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (RiftSpawn rift : spawnMap.getRiftSpawns()) {
 					int id = rift.getId();
-					if (!riftSpawnMaps.containsKey(id)) {
-						riftSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> riftSpawnGroups = spawnGroupsFor(riftSpawnMaps, id);
 					for (Spawn spawn : rift.getSpawns()) {
 						if (spawn.isCustom()) {
-							if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-								allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+							if (worldSpawns.containsKey(spawn.getNpcId())) {
+								worldSpawns.remove(spawn.getNpcId());
 							}
 							customs.put(spawn.getNpcId(), spawn);
 						} else if (customs.containsKey(spawn.getNpcId())) {
 							continue;
 						}
 						SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id);
-						allSpawnMaps.get(mapId).put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
-						riftSpawnMaps.get(id).add(spawnGroup);
+						worldSpawns.put(spawn.getNpcId(), new SimpleEntry(spawnGroup, spawn));
+						riftSpawnGroups.add(spawnGroup);
 					}
 				}
 				for (VortexSpawn VortexSpawn : spawnMap.getVortexSpawns()) {
 					int id = VortexSpawn.getId();
-					if (!vortexSpawnMaps.containsKey(id)) {
-						vortexSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> vortexSpawnGroups = spawnGroupsFor(vortexSpawnMaps, id);
 					for (VortexSpawn.VortexStateTemplate type : VortexSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getStateType());
-							vortexSpawnMaps.get(id).add(spawnGroup);
+							vortexSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (BeritraSpawn BeritraSpawn : spawnMap.getBeritraSpawns()) {
 					int id = BeritraSpawn.getId();
-					if (!beritraSpawnMaps.containsKey(id)) {
-						beritraSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> beritraSpawnGroups = spawnGroupsFor(beritraSpawnMaps, id);
 					for (BeritraSpawn.BeritraStateTemplate type : BeritraSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getBeritraType());
-							beritraSpawnMaps.get(id).add(spawnGroup);
+							beritraSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (AgentSpawn AgentSpawn : spawnMap.getAgentSpawns()) {
 					int id = AgentSpawn.getId();
-					if (!agentSpawnMaps.containsKey(id)) {
-						agentSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> agentSpawnGroups = spawnGroupsFor(agentSpawnMaps, id);
 					for (AgentSpawn.AgentStateTemplate type : AgentSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getAgentType());
-							agentSpawnMaps.get(id).add(spawnGroup);
+							agentSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (AnohaSpawn AnohaSpawn : spawnMap.getAnohaSpawns()) {
 					int id = AnohaSpawn.getId();
-					if (!anohaSpawnMaps.containsKey(id)) {
-						anohaSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> anohaSpawnGroups = spawnGroupsFor(anohaSpawnMaps, id);
 					for (AnohaSpawn.AnohaStateTemplate type : AnohaSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getAnohaType());
-							anohaSpawnMaps.get(id).add(spawnGroup);
+							anohaSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (ConquestSpawn ConquestSpawn : spawnMap.getConquestSpawns()) {
 					int id = ConquestSpawn.getId();
-					if (!conquestSpawnMaps.containsKey(id)) {
-						conquestSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> conquestSpawnGroups = spawnGroupsFor(conquestSpawnMaps, id);
 					for (ConquestSpawn.ConquestStateTemplate type : ConquestSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getConquestType());
-							conquestSpawnMaps.get(id).add(spawnGroup);
+							conquestSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (SvsSpawn SvsSpawn : spawnMap.getSvsSpawns()) {
 					int id = SvsSpawn.getId();
-					if (!svsSpawnMaps.containsKey(id)) {
-						svsSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> svsSpawnGroups = spawnGroupsFor(svsSpawnMaps, id);
 					for (SvsSpawn.SvsStateTemplate type : SvsSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getSvsType());
-							svsSpawnMaps.get(id).add(spawnGroup);
+							svsSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (RvrSpawn RvrSpawn : spawnMap.getRvrSpawns()) {
 					int id = RvrSpawn.getId();
-					if (!rvrSpawnMaps.containsKey(id)) {
-						rvrSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> rvrSpawnGroups = spawnGroupsFor(rvrSpawnMaps, id);
 					for (RvrSpawn.RvrStateTemplate type : RvrSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getRvrType());
-							rvrSpawnMaps.get(id).add(spawnGroup);
+							rvrSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (IuSpawn IuSpawn : spawnMap.getIuSpawns()) {
 					int id = IuSpawn.getId();
-					if (!iuSpawnMaps.containsKey(id)) {
-						iuSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> iuSpawnGroups = spawnGroupsFor(iuSpawnMaps, id);
 					for (IuSpawn.IuStateTemplate type : IuSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getIuType());
-							iuSpawnMaps.get(id).add(spawnGroup);
+							iuSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (DynamicRiftSpawn DynamicRiftSpawn : spawnMap.getDynamicRiftSpawns()) {
 					int id = DynamicRiftSpawn.getId();
-					if (!dynamicRiftSpawnMaps.containsKey(id)) {
-						dynamicRiftSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> dynamicRiftSpawnGroups = spawnGroupsFor(dynamicRiftSpawnMaps, id);
 					for (DynamicRiftSpawn.DynamicRiftStateTemplate type : DynamicRiftSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getDynamicRiftType());
-							dynamicRiftSpawnMaps.get(id).add(spawnGroup);
+							dynamicRiftSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (InstanceRiftSpawn InstanceRiftSpawn : spawnMap.getInstanceRiftSpawns()) {
 					int id = InstanceRiftSpawn.getId();
-					if (!instanceRiftSpawnMaps.containsKey(id)) {
-						instanceRiftSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> instanceRiftSpawnGroups = spawnGroupsFor(instanceRiftSpawnMaps, id);
 					for (InstanceRiftSpawn.InstanceRiftStateTemplate type : InstanceRiftSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getInstanceRiftType());
-							instanceRiftSpawnMaps.get(id).add(spawnGroup);
+							instanceRiftSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (NightmareCircusSpawn NightmareCircusSpawn : spawnMap.getNightmareCircusSpawns()) {
 					int id = NightmareCircusSpawn.getId();
-					if (!nightmareCircusSpawnMaps.containsKey(id)) {
-						nightmareCircusSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> nightmareCircusSpawnGroups = spawnGroupsFor(nightmareCircusSpawnMaps, id);
 					for (NightmareCircusSpawn.NightmareCircusStateTemplate type : NightmareCircusSpawn
 							.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
@@ -500,46 +481,42 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getNightmareCircusType());
-							nightmareCircusSpawnMaps.get(id).add(spawnGroup);
+							nightmareCircusSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (IdianDepthsSpawn IdianDepthsSpawn : spawnMap.getIdianDepthsSpawns()) {
 					int id = IdianDepthsSpawn.getId();
-					if (!idianDepthsSpawnMaps.containsKey(id)) {
-						idianDepthsSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> idianDepthsSpawnGroups = spawnGroupsFor(idianDepthsSpawnMaps, id);
 					for (IdianDepthsSpawn.IdianDepthsStateTemplate type : IdianDepthsSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getIdianDepthsType());
-							idianDepthsSpawnMaps.get(id).add(spawnGroup);
+							idianDepthsSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (ZorshivDredgionSpawn ZorshivDredgionSpawn : spawnMap.getZorshivDredgionSpawns()) {
 					int id = ZorshivDredgionSpawn.getId();
-					if (!zorshivDredgionSpawnMaps.containsKey(id)) {
-						zorshivDredgionSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> zorshivDredgionSpawnGroups = spawnGroupsFor(zorshivDredgionSpawnMaps, id);
 					for (ZorshivDredgionSpawn.ZorshivDredgionStateTemplate type : ZorshivDredgionSpawn
 							.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
@@ -547,92 +524,84 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getZorshivDredgionType());
-							zorshivDredgionSpawnMaps.get(id).add(spawnGroup);
+							zorshivDredgionSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (MoltenusSpawn MoltenusSpawn : spawnMap.getMoltenusSpawns()) {
 					int id = MoltenusSpawn.getId();
-					if (!moltenusSpawnMaps.containsKey(id)) {
-						moltenusSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> moltenusSpawnGroups = spawnGroupsFor(moltenusSpawnMaps, id);
 					for (MoltenusSpawn.MoltenusStateTemplate type : MoltenusSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getMoltenusType());
-							moltenusSpawnMaps.get(id).add(spawnGroup);
+							moltenusSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (LandingSpawn LandingSpawn : spawnMap.getLandingSpawns()) {
 					int id = LandingSpawn.getId();
-					if (!landingSpawnMaps.containsKey(id)) {
-						landingSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> landingSpawnGroups = spawnGroupsFor(landingSpawnMaps, id);
 					for (LandingSpawn.LandingStateTemplate type : LandingSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getLandingType());
-							landingSpawnMaps.get(id).add(spawnGroup);
+							landingSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (LandingSpecialSpawn LandingSpecialSpawn : spawnMap.getLandingSpecialSpawns()) {
 					int id = LandingSpecialSpawn.getId();
-					if (!landingSpecialSpawnMaps.containsKey(id)) {
-						landingSpecialSpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> landingSpecialSpawnGroups = spawnGroupsFor(landingSpecialSpawnMaps, id);
 					for (LandingSpecialSpawn.LandingSpStateTemplate type : LandingSpecialSpawn.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
 							continue;
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getLandingSpecialType());
-							landingSpecialSpawnMaps.get(id).add(spawnGroup);
+							landingSpecialSpawnGroups.add(spawnGroup);
 						}
 					}
 				}
 				for (TowerOfEternitySpawn TowerOfEternitySpawn : spawnMap.getTowerOfEternitySpawns()) {
 					int id = TowerOfEternitySpawn.getId();
-					if (!towerOfEternitySpawnMaps.containsKey(id)) {
-						towerOfEternitySpawnMaps.put(id, new ArrayList<SpawnGroup2>());
-					}
+					List<SpawnGroup2> towerOfEternitySpawnGroups = spawnGroupsFor(towerOfEternitySpawnMaps, id);
 					for (TowerOfEternitySpawn.TowerOfEternityStateTemplate type : TowerOfEternitySpawn
 							.getSiegeModTemplates()) {
 						if (type == null || type.getSpawns() == null) {
@@ -640,15 +609,15 @@ public class SpawnsData2 {
 						}
 						for (Spawn spawn : type.getSpawns()) {
 							if (spawn.isCustom()) {
-								if (allSpawnMaps.get(mapId).containsKey(spawn.getNpcId())) {
-									allSpawnMaps.get(mapId).remove(spawn.getNpcId());
+								if (worldSpawns.containsKey(spawn.getNpcId())) {
+									worldSpawns.remove(spawn.getNpcId());
 								}
 								customs.put(spawn.getNpcId(), spawn);
 							} else if (customs.containsKey(spawn.getNpcId())) {
 								continue;
 							}
 							SpawnGroup2 spawnGroup = new SpawnGroup2(mapId, spawn, id, type.getTowerOfEternityType());
-							towerOfEternitySpawnMaps.get(id).add(spawnGroup);
+							towerOfEternitySpawnGroups.add(spawnGroup);
 						}
 					}
 				}

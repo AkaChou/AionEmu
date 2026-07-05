@@ -22,6 +22,8 @@ import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 import com.aionemu.gameserver.lifecycle.GameCronServices;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -41,9 +43,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * Created by Wnkrz on 27/08/2017.
  */
@@ -52,7 +51,7 @@ import java.util.Map;
 public class OutpostService {
 	private static volatile ObjectProvider<OutpostService> instanceProvider;
 
-	private final Map<Integer, Outpost<?>> active = new LinkedHashMap<Integer, Outpost<?>>();
+	private final ConcurrentMap<Integer, Outpost<?>> active = new ConcurrentHashMap<Integer, Outpost<?>>();
 	private Map<Integer, OutpostLocation> outposts;
 
 	public void initOutpostLocations() {
@@ -116,26 +115,15 @@ public class OutpostService {
 	}
 
 	public void start(final int id) {
-		final Outpost<?> outpost;
-		synchronized (this) {
-			if (active.containsKey(id)) {
-				return;
-			}
-			outpost = new Outpost<>(getOutpostLocation(id));
-			active.put(id, outpost);
+		Outpost<?> outpost = new Outpost<>(getOutpostLocation(id));
+		if (active.putIfAbsent(id, outpost) != null) {
+			return;
 		}
 		outpost.start();
 	}
 
 	public void stop(int id) {
-		if (!isActive(id)) {
-			log.info("Trying to stop not active outpost:" + id);
-			return;
-		}
-		Outpost<?> outpost;
-		synchronized (this) {
-			outpost = active.remove(id);
-		}
+		Outpost<?> outpost = active.remove(id);
 		if (outpost == null || outpost.isFinished()) {
 			log.info("Trying to stop null or finished outpost:" + id);
 			return;
@@ -145,14 +133,16 @@ public class OutpostService {
 	}
 
 	public void capture(int id, Race race) {
-		if (!isActive(id)) {
+		Outpost<?> outpost = getActiveOutpost(id);
+		if (outpost == null) {
 			log.info("Detecting not active outpost capture.");
 			return;
 		}
-		getActiveOutpost(id).setRace(race);
+		OutpostLocation outpostLocation = getOutpostLocation(id);
+		outpost.setRace(race);
 		stop(id);
-		broadcastUpdate(getOutpostLocation(id));
-		getDAO().updateLocation(getOutpostLocation(getActiveOutpost(id).getId()));
+		broadcastUpdate(outpostLocation);
+		getDAO().updateLocation(outpostLocation);
 	}
 
 	public void captureArtifact(int id, Race race) {
@@ -185,8 +175,11 @@ public class OutpostService {
 
 	public void onEnterOutpostWorld(Player player) {
 		for (OutpostLocation outpostLocation : getOutpostLocations().values()) {
-			if (outpostLocation.getWorldId() == player.getWorldId() && isActive(outpostLocation.getId())) {
+			if (outpostLocation.getWorldId() == player.getWorldId()) {
 				Outpost<?> outpost = getActiveOutpost(outpostLocation.getId());
+				if (outpost == null) {
+					continue;
+				}
 				PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, outpost.getFlag()));
 				player.getController().updateZone();
 				player.getController().updateNearbyQuests();
@@ -199,12 +192,13 @@ public class OutpostService {
 				.doOnAllPlayers(new Visitor<Player>() {
 					@Override
 					public void visit(Player player) {
-						if (isActive(outpostLocation.getId())) {
-							Outpost<?> outpost = getActiveOutpost(outpostLocation.getId());
-							PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, outpost.getFlag()));
-							player.getController().updateZone();
-							player.getController().updateNearbyQuests();
+						Outpost<?> outpost = getActiveOutpost(outpostLocation.getId());
+						if (outpost == null) {
+							return;
 						}
+						PacketSendUtility.sendPacket(player, new SM_FLAG_INFO(1, outpost.getFlag()));
+						player.getController().updateZone();
+						player.getController().updateNearbyQuests();
 					}
 				});
 	}

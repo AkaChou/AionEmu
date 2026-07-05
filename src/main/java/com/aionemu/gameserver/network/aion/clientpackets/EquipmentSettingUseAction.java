@@ -92,7 +92,10 @@ class EquipmentSettingUseAction {
 				continue;
 			}
 			long currentSlot = target.getEquippedSlot(action.itemObjectId);
-			if (currentSlot == 0 || (switchWeaponHands(currentSlot) & action.slot) != action.slot) {
+			if (currentSlot == 0) {
+				continue;
+			}
+			if ((switchWeaponHands(currentSlot) & action.slot) != action.slot) {
 				return false;
 			}
 		}

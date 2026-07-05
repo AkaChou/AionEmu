@@ -17,8 +17,8 @@
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -37,7 +37,7 @@ import com.aionemu.gameserver.world.WorldType;
 
 public class AStationService {
 	private static volatile ObjectProvider<AStationService> instanceProvider;
-	private Map<Integer, Player> accountsOnAStation = new HashMap<Integer, Player>(1);
+	private ConcurrentMap<Integer, Player> accountsOnAStation = new ConcurrentHashMap<Integer, Player>(1);
 
 	public static AStationService getInstance() {
 		ObjectProvider<AStationService> provider = instanceProvider;
@@ -79,18 +79,20 @@ public class AStationService {
 			PacketSendUtility.sendYellowMessage(player, "You joined the standard server!");
 			aStationBonus(player, true);
 		} else {
-			if (accountsOnAStation.containsKey(accId)) {
-				accountsOnAStation.remove(accId);
+			Player previousPlayer = accountsOnAStation.putIfAbsent(accId, player);
+			if (previousPlayer != null) {
+				accountsOnAStation.remove(accId, previousPlayer);
 				handleMoveBack(player);
-				PacketSendUtility.sendYellowMessage(player,
-						"You got teleported back to the normal server because you tried to enter the fast track server twice!");
+				player.setOnAStation(false);
+				if (previousPlayer == player) {
+					PacketSendUtility.sendYellowMessage(player,
+							"You got teleported back to the normal server because you tried to enter the fast track server twice!");
+				} else {
+					PacketSendUtility.sendYellowMessage(player,
+							"You got teleported back to the normal server because something went wrong!");
+				}
+				return;
 			}
-			if (accountsOnAStation.containsKey(accId) && !accountsOnAStation.containsValue(player)) {
-				handleMoveBack(player);
-				PacketSendUtility.sendYellowMessage(player,
-						"You got teleported back to the normal server because something went wrong!");
-			}
-			accountsOnAStation.put(accId, player);
 			player.setOnAStation(true);
 			PacketSendUtility.sendYellowMessage(player, "You joined the fast track server!");
 			aStationBonus(player, false);

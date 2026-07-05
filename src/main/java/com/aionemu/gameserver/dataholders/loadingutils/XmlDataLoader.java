@@ -20,7 +20,7 @@ import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.dataholders.ItemData;
 import com.aionemu.gameserver.dataholders.StaticData;
-import com.aionemu.gameserver.utils.ThreadPoolManager;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -228,7 +228,7 @@ public class XmlDataLoader {
 	}
 
 	Future<?> submitValidationTask(Runnable task) {
-		return ThreadPoolManager.getInstance().submitLongRunning(task);
+		return GameThreadPoolServices.threadPoolManager().submitLongRunning(task);
 	}
 
 	private void validateCache(File cachedXml) {

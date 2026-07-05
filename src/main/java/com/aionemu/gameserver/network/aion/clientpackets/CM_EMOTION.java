@@ -80,6 +80,8 @@ public class CM_EMOTION extends AionClientPacket {
 		case WINDSTREAM_STRAFE:
 		case START_SOAR_SPEED:
 		case END_SOAR_SPEED:
+		case GLIDING:
+		case GLIDING_END:
 			break;
 		case EMOTE:
 			emotion = readH();

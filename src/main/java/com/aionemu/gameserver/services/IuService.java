@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -44,9 +46,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Rinzler (Encom)
  */
@@ -56,7 +55,7 @@ public class IuService {
 	private static volatile ObjectProvider<IuService> instanceProvider;
 	private Map<Integer, IuLocation> iu;
 	private static final int duration = CustomConfig.IU_DURATION;
-	private final Map<Integer, Iu<?>> activeConcert = new LinkedHashMap<Integer, Iu<?>>();
+	private final ConcurrentMap<Integer, Iu<?>> activeConcert = new ConcurrentHashMap<Integer, Iu<?>>();
 
 	public void initConcertLocations() {
 		if (CustomConfig.IU_ENABLED) {
@@ -94,13 +93,9 @@ public class IuService {
 	}
 
 	public void startConcert(final int id) {
-		final Iu<?> circusBound;
-		synchronized (this) {
-			if (activeConcert.containsKey(id)) {
-				return;
-			}
-			circusBound = new CircusBound(iu.get(id));
-			activeConcert.put(id, circusBound);
+		Iu<?> circusBound = new CircusBound(iu.get(id));
+		if (activeConcert.putIfAbsent(id, circusBound) != null) {
+			return;
 		}
 		circusBound.start();
 		lPCHCountdownMsg(id);
@@ -113,13 +108,7 @@ public class IuService {
 	}
 
 	public void stopConcert(int id) {
-		if (!isConcertInProgress(id)) {
-			return;
-		}
-		Iu<?> circusBound;
-		synchronized (this) {
-			circusBound = activeConcert.remove(id);
-		}
+		Iu<?> circusBound = activeConcert.remove(id);
 		if (circusBound == null || circusBound.isFinished()) {
 			return;
 		}

@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 
 import org.quartz.JobDetail;
@@ -83,8 +85,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 @Slf4j(topic = "SIEGE_LOG")
 
 public class SiegeService {
@@ -92,7 +92,7 @@ public class SiegeService {
 	private static final String SIEGE_LOCATION_STATUS_BROADCAST_SCHEDULE = "0 0 * ? * *";
 	private static volatile ObjectProvider<SiegeService> instanceProvider;
 	private static final SiegeService instance = new SiegeService();
-	private final Map<Integer, Siege<?>> activeSieges = new LinkedHashMap<Integer, Siege<?>>();
+	private final ConcurrentMap<Integer, Siege<?>> activeSieges = new ConcurrentHashMap<Integer, Siege<?>>();
 	private SiegeSchedule siegeSchedule;
 	private Map<Integer, ArtifactLocation> artifacts;
 	private Map<Integer, FortressLocation> fortresses;
@@ -188,13 +188,9 @@ public class SiegeService {
 	}
 
 	public void startSiege(final int siegeLocationId) {
-		Siege<?> siege;
-		synchronized (this) {
-			if (activeSieges.containsKey(siegeLocationId)) {
-				return;
-			}
-			siege = newSiege(siegeLocationId);
-			activeSieges.put(siegeLocationId, siege);
+		Siege<?> siege = newSiege(siegeLocationId);
+		if (activeSieges.putIfAbsent(siegeLocationId, siege) != null) {
+			return;
 		}
 		siege.startSiege();
 		if (siege.isEndless()) {
@@ -210,15 +206,12 @@ public class SiegeService {
 
 	public void stopSiege(int siegeLocationId) {
 		log.debug("Stopping siege of siege location: " + siegeLocationId);
-		if (!isSiegeInProgress(siegeLocationId)) {
+		Siege<?> siege = activeSieges.remove(siegeLocationId);
+		if (siege == null) {
 			log.debug("Siege of siege location " + siegeLocationId + " is not in progress, it was captured earlier?");
 			return;
 		}
-		Siege<?> siege;
-		synchronized (this) {
-			siege = activeSieges.remove(siegeLocationId);
-		}
-		if (siege == null || siege.isFinished()) {
+		if (siege.isFinished()) {
 			return;
 		}
 		siege.stopSiege();

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,11 @@ class SiegeServiceTest {
 		if (worldBootstrapServices != null) {
 			worldBootstrapServices.destroy();
 		}
+	}
+
+	@Test
+	void activeSiegeIndexIsSafeForCronAndThreadPoolThreads() throws Exception {
+		assertTrue(ConcurrentMap.class.isAssignableFrom(SiegeService.class.getDeclaredField("activeSieges").getType()));
 	}
 
 	@Test

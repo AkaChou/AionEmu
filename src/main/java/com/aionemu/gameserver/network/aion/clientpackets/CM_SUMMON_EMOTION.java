@@ -68,6 +68,18 @@ public class CM_SUMMON_EMOTION extends AionClientPacket {
 			summon.unsetState(CreatureState.WEAPON_EQUIPPED);
 			PacketSendUtility.broadcastPacket(summon, new SM_EMOTION(summon, emotionType));
 			break;
+		case GLIDING:
+			if (!summon.isInState(CreatureState.GLIDING)) {
+				summon.setState(CreatureState.GLIDING);
+				PacketSendUtility.broadcastPacket(summon, new SM_EMOTION(summon, emotionType));
+			}
+			break;
+		case GLIDING_END:
+			if (summon.isInState(CreatureState.GLIDING)) {
+				summon.unsetState(CreatureState.GLIDING);
+				PacketSendUtility.broadcastPacket(summon, new SM_EMOTION(summon, emotionType));
+			}
+			break;
 		}
 	}
 }

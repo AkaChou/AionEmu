@@ -22,7 +22,9 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.utils.Rnd;
@@ -60,7 +62,6 @@ import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -72,7 +73,7 @@ import java.util.Map;
 @Slf4j
 public abstract class CreatureController<T extends Creature> extends VisibleObjectController<Creature> {
 
-	private Map<Integer, Future<?>> tasks = new LinkedHashMap<Integer, Future<?>>();
+	private final Map<Integer, Future<?>> tasks = new ConcurrentHashMap<Integer, Future<?>>();
 	private float healingSkillBoost = 1.0f;
 	private int SimpleAttackType;
 
@@ -430,13 +431,24 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	 * Cancel all tasks associated with this controller (when deleting object)
 	 */
 	public void cancelAllTasks() {
-		for (int i : tasks.keySet()) {
-			Future<?> task = tasks.get(i);
-			if (task != null && i != TaskId.RESPAWN.ordinal()) {
-				task.cancel(false);
+		while (hasCancellableTasks()) {
+			for (Map.Entry<Integer, Future<?>> entry : new ArrayList<Map.Entry<Integer, Future<?>>>(tasks.entrySet())) {
+				int i = entry.getKey();
+				Future<?> task = entry.getValue();
+				if (task != null && i != TaskId.RESPAWN.ordinal() && tasks.remove(i, task)) {
+					task.cancel(false);
+				}
 			}
 		}
-		tasks.clear();
+	}
+
+	private boolean hasCancellableTasks() {
+		for (Integer taskId : tasks.keySet()) {
+			if (taskId != TaskId.RESPAWN.ordinal()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

@@ -19,6 +19,8 @@ package com.aionemu.gameserver.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -38,15 +40,11 @@ import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice
 import com.aionemu.gameserver.services.abysslandingservice.landingspecialservice.SpecialLanding;
 import com.aionemu.gameserver.spawnengine.SpawnEngine;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 @Slf4j(topic = "com.aionemu.gameserver.services.AbyssLandingService")
 public class AbyssLandingSpecialService {
 	private static volatile ObjectProvider<AbyssLandingSpecialService> instanceProvider;
 	private static Map<Integer, LandingSpecialLocation> abyssSpecialLanding;
-	private final Map<Integer, SpecialLanding<?>> activeSpecialLanding = new LinkedHashMap<Integer, SpecialLanding<?>>()
-			;
+	private final ConcurrentMap<Integer, SpecialLanding<?>> activeSpecialLanding = new ConcurrentHashMap<Integer, SpecialLanding<?>>();
 
 	public void initLandingSpecialLocations() {
 		abyssSpecialLanding = DataManager.LANDING_SPECIAL_LOCATION_DATA.getLandingSpecialLocations();
@@ -61,25 +59,15 @@ public class AbyssLandingSpecialService {
 	}
 
 	public void startLanding(final int id) {
-		final SpecialLanding<?> land;
-		synchronized (this) {
-			if (activeSpecialLanding.containsKey(id)) {
-				return;
-			}
-			land = new SPLanding(abyssSpecialLanding.get(id));
-			activeSpecialLanding.put(id, land);
+		SpecialLanding<?> land = new SPLanding(abyssSpecialLanding.get(id));
+		if (activeSpecialLanding.putIfAbsent(id, land) != null) {
+			return;
 		}
 		land.start();
 	}
 
 	public void stopLanding(int id) {
-		if (!activeSpecialLanding.containsKey(id)) {
-			return;
-		}
-		SpecialLanding<?> landing;
-		synchronized (this) {
-			landing = activeSpecialLanding.remove(id);
-		}
+		SpecialLanding<?> landing = activeSpecialLanding.remove(id);
 		if (landing == null) {
 			return;
 		}

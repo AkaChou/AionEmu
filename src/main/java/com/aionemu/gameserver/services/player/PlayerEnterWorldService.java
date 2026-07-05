@@ -28,9 +28,9 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -166,7 +166,7 @@ public final class PlayerEnterWorldService {
 
 	private static final String serverInfo;
 	private static final String alInfo;
-	private static final Set<Integer> pendingEnterWorld = new HashSet<Integer>();
+	private static final Set<Integer> pendingEnterWorld = ConcurrentHashMap.newKeySet();
 	private static ServiceBuff serviceBuff;
 	private static PlayersBonus playersBonus;
 	static ScheduledFuture<?> adv = null;
@@ -223,12 +223,9 @@ public final class PlayerEnterWorldService {
 	}
 
 	private static final void validateAndEnterWorld(final int objectId, final AionConnection client) {
-		synchronized (pendingEnterWorld) {
-			if (pendingEnterWorld.contains(objectId)) {
-				log.warn("Skipping enter world " + objectId);
-				return;
-			}
-			pendingEnterWorld.add(objectId);
+		if (!pendingEnterWorld.add(objectId)) {
+			log.warn("Skipping enter world " + objectId);
+			return;
 		}
 		int delay = 0;
 		if (com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(objectId) != null) {
@@ -249,9 +246,7 @@ public final class PlayerEnterWorldService {
 				} catch (Throwable ex) {
 					log.error("Error during enter world " + objectId, ex);
 				} finally {
-					synchronized (pendingEnterWorld) {
-						pendingEnterWorld.remove(objectId);
-					}
+					pendingEnterWorld.remove(objectId);
 				}
 			}
 		}, delay);

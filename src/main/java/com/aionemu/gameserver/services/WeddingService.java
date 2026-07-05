@@ -17,9 +17,10 @@
 package com.aionemu.gameserver.services;
 
 import lombok.extern.slf4j.Slf4j;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -38,7 +39,7 @@ import com.aionemu.gameserver.world.World;
 public class WeddingService {
 	private static volatile ObjectProvider<WeddingService> instanceProvider;
 
-	private Map<Integer, Wedding> weddings = new HashMap<Integer, Wedding>();
+	private final ConcurrentMap<Integer, Wedding> weddings = new ConcurrentHashMap<Integer, Wedding>();
 
 	public static final WeddingService getInstance() {
 		ObjectProvider<WeddingService> provider = instanceProvider;
@@ -53,12 +54,17 @@ public class WeddingService {
 	}
 
 	public void registerOffer(Player partner1, Player partner2, Player priest) {
-		if (!canRegister(partner1, partner2)) {
-			PacketSendUtility.sendMessage(priest, "One of players already married.");
-			return;
+		boolean registered;
+		synchronized (weddings) {
+			registered = canRegister(partner1, partner2);
+			if (registered) {
+				weddings.put(partner1.getObjectId(), new Wedding(partner1, partner2, priest));
+				weddings.put(partner2.getObjectId(), new Wedding(partner2, partner1, priest));
+			}
 		}
-		weddings.put(partner1.getObjectId(), new Wedding(partner1, partner2, priest));
-		weddings.put(partner2.getObjectId(), new Wedding(partner2, partner1, priest));
+		if (!registered) {
+			PacketSendUtility.sendMessage(priest, "One of players already married.");
+		}
 	}
 
 	private boolean canRegister(Player partner1, Player partner2) {
@@ -202,8 +208,10 @@ public class WeddingService {
 	}
 
 	private void cleanWedding(Player player, Player partner) {
-		weddings.remove(player.getObjectId());
-		weddings.remove(partner.getObjectId());
+		synchronized (weddings) {
+			weddings.remove(player.getObjectId());
+			weddings.remove(partner.getObjectId());
+		}
 	}
 
 	public Wedding getWedding(Player player) {

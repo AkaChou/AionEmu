@@ -39,6 +39,7 @@ import com.aionemu.gameserver.model.team2.group.PlayerGroup;
 import com.aionemu.gameserver.questEngine.QuestEngine;
 import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.world.knownlist.Visitor;
 
 /**
  * @author ATracer, KKnD
@@ -102,11 +103,14 @@ public class AggroList {
 		}
 		// TODO move out to controller
 		if (creature instanceof Player && owner instanceof Npc) {
-			for (Player player : owner.getKnownList().getKnownPlayers().values()) {
-				if (MathUtil.isIn3dRange(owner, player, 50)) {
-					GameEngineServices.questEngine().onAddAggroList(new QuestEnv(owner, player, 0, 0));
+			owner.getKnownList().doOnAllPlayers(new Visitor<Player>() {
+				@Override
+				public void visit(Player player) {
+					if (MathUtil.isIn3dRange(owner, player, 50)) {
+						GameEngineServices.questEngine().onAddAggroList(new QuestEnv(owner, player, 0, 0));
+					}
 				}
-			}
+			});
 		}
 		owner.getAi2().onCreatureEvent(AIEventType.ATTACK, creature);
 	}

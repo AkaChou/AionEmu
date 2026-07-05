@@ -16,10 +16,12 @@ package com.aionemu.gameserver.world.geo.nav;
 
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.scene.NavGeometry;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.world.geo.nav.NavService.NavPathway;
 
 /**
@@ -276,7 +278,7 @@ class NavHelper {
 	 * This list is used to determine if a Nav Mesh node has already been explored after it's been
 	 * removed from the heap.
 	 */
-	private HashMap<NavGeometry, NavHeapNode> list;
+	private Map<NavGeometry, NavHeapNode> list;
 	
 	/**
 	 * A simple array that is treated as the underlying structure of a heap. The {@link NavHelper} class maintains
@@ -310,7 +312,7 @@ class NavHelper {
 	NavHelper(NavGeometry startTile, NavGeometry endTile, float x1, float y1, float z1, float x2, float y2, float z2) {
 		assert startTile != null;
 		heap = new NavHeapNode[100];
-		list = new HashMap<NavGeometry, NavHeapNode>();
+		list = new ConcurrentHashMap<NavGeometry, NavHeapNode>();
 		this.endTile = endTile;
 		this.x1 = x1; this.y1 = y1; this.z1 = z1;
 		this.x2 = x2; this.y2 = y2; this.z2 = z2;
@@ -329,23 +331,19 @@ class NavHelper {
 	}
 	
 	/**
-	 * Creates a new thread that iterates through {@link #list} and nulls all
+	 * Schedules a cleanup task that iterates through {@link #list} and nulls all
 	 * {@link NavHeapNode#parent} references to prevent memory leaks. The list is then
-	 * {@link HashMap#clear() cleared}.
-	 * <p>
-	 * The thread's name is set to "NavHelper GC".
+	 * {@link Map#clear() cleared}.
 	 */
 	public void destroy() {
-		Thread gc = new Thread() {
+		GameThreadPoolServices.threadPoolManager().executeLongRunning(new Runnable() {
 			public void run() {
-				for (NavGeometry key : list.keySet()) {
-					list.get(key).parent = null;
+				for (NavHeapNode node : list.values()) {
+					node.parent = null;
 				}
 				list.clear();
 			}
-		};
-		gc.setName("NavHelper GC");
-		gc.start();
+		});
 	}
 	
 	/**

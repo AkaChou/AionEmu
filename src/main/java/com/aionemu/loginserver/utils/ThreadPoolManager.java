@@ -20,6 +20,7 @@ package com.aionemu.loginserver.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.commons.utils.concurrent.AionRejectedExecutionHandler;
+import com.aionemu.commons.utils.concurrent.PriorityThreadFactory;
 import com.aionemu.commons.utils.concurrent.RunnableWrapper;
 import com.aionemu.commons.utils.concurrent.ScheduledFutureWrapper;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public final class ThreadPoolManager {
 
     public static final long MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING = 5000;
     private static final long MAX_DELAY = TimeUnit.NANOSECONDS.toMillis(Long.MAX_VALUE - System.nanoTime()) / 2;
+    private static final int LONG_RUNNING_QUEUE_CAPACITY = 100000;
     private final ScheduledThreadPoolExecutor scheduledPool;
     private final ThreadPoolExecutor instantPool;
     private final ThreadPoolExecutor longRunningPool;
@@ -51,7 +53,10 @@ public final class ThreadPoolManager {
         instantPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
         instantPool.prestartAllCoreThreads();
 
-        longRunningPool = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60L, TimeUnit.SECONDS, new SynchronousQueue<Runnable>());
+        int longRunningPoolSize = longRunningPoolSize();
+        longRunningPool = new ThreadPoolExecutor(longRunningPoolSize, longRunningPoolSize, 0, TimeUnit.SECONDS,
+                new ArrayBlockingQueue<Runnable>(LONG_RUNNING_QUEUE_CAPACITY),
+                new PriorityThreadFactory("LongRunningPool", Thread.NORM_PRIORITY));
         longRunningPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
         longRunningPool.prestartAllCoreThreads();
 
@@ -67,6 +72,10 @@ public final class ThreadPoolManager {
 
     private long validate(long delay) {
         return Math.max(0, Math.min(MAX_DELAY, delay));
+    }
+
+    private int longRunningPoolSize() {
+        return Math.max(2, Runtime.getRuntime().availableProcessors());
     }
 
     private static final class ThreadPoolRunnableWrapper extends RunnableWrapper {

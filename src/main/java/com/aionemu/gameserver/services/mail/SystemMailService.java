@@ -110,15 +110,8 @@ public class SystemMailService {
 			return false;
 		}
 		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
-		if (recipient != null) {
-			if (recipient.getMailbox() != null && !(recipient.getMailbox().size() < 200)) {
-				// log.info("[SYSMAILSERVICE] > [SenderName: " + sender + "] [RecipientName: " +
-				// recipientCommonData.getName() + "] ITEM RETURN"
-				// + attachedItemObjId + " ITEM COUNT " + attachedItemCount + " KINAH COUNT " +
-				// attachedKinahCount + " MAILBOX FULL ");
-				return false;
-			}
-		} else if (recipientCommonData.getMailboxLetters() > 199) {
+		Mailbox recipientMailbox = getLoadedMailbox(recipient);
+		if (isMailboxFull(recipientMailbox, recipientCommonData, 200)) {
 			return false;
 		}
 		Item attachedItem = null;
@@ -154,10 +147,10 @@ public class SystemMailService {
 				return false;
 			}
 		}
-		if (recipient != null) {
-			Mailbox recipientMailbox = recipient.getMailbox();
+		recipientMailbox = getLoadedMailbox(recipient);
+		if (recipientMailbox != null) {
 			recipientMailbox.putLetterToMailbox(newLetter);
-			PacketSendUtility.sendPacket(recipient, new SM_MAIL_SERVICE(recipient.getMailbox()));
+			PacketSendUtility.sendPacket(recipient, new SM_MAIL_SERVICE(recipientMailbox));
 			recipientMailbox.isMailListUpdateRequired = true;
 			if (recipientMailbox.mailBoxState != 0) {
 				boolean isPostman = (recipientMailbox.mailBoxState
@@ -170,9 +163,8 @@ public class SystemMailService {
 				PacketSendUtility.sendPacket(recipient, SM_SYSTEM_MESSAGE.STR_POSTMAN_NOTIFY);
 			}
 		}
-		if (!recipientCommonData.isOnline()) {
-			recipientCommonData.setMailboxLetters(recipientCommonData.getMailboxLetters() + 1);
-			DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(recipientCommonData);
+		if (!recipientCommonData.isOnline() || (recipient != null && recipientMailbox == null)) {
+			updateMailboxCounter(recipientCommonData, recipient, recipientMailbox);
 		}
 		return true;
 	}
@@ -194,11 +186,8 @@ public class SystemMailService {
 			return false;
 		}
 		Player recipient = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(recipientCommonData.getPlayerObjId());
-		if (recipient != null) {
-			if (recipient.getMailbox() != null && !(recipient.getMailbox().size() < 200)) {
-				return false;
-			}
-		} else if (recipientCommonData.getMailboxLetters() > 199) {
+		Mailbox recipientMailbox = getLoadedMailbox(recipient);
+		if (isMailboxFull(recipientMailbox, recipientCommonData, 200)) {
 			return false;
 		}
 		Player onlineRecipient = null;
@@ -222,22 +211,39 @@ public class SystemMailService {
 				return false;
 			}
 		}
-		if (onlineRecipient != null) {
-			Mailbox recipientMailbox = onlineRecipient.getMailbox();
+		recipientMailbox = getLoadedMailbox(onlineRecipient);
+		if (recipientMailbox != null) {
 			recipientMailbox.putLetterToMailbox(newLetter);
 			PacketSendUtility.sendPacket(onlineRecipient,
-					new SM_MAIL_SERVICE(onlineRecipient, onlineRecipient.getMailbox().getLetters()));
-			PacketSendUtility.sendPacket(onlineRecipient, new SM_MAIL_SERVICE(onlineRecipient.getMailbox()));
+					new SM_MAIL_SERVICE(onlineRecipient, recipientMailbox.getLetters()));
+			PacketSendUtility.sendPacket(onlineRecipient, new SM_MAIL_SERVICE(recipientMailbox));
 			// Express mail has arrived.
 			if (type == LetterType.EXPRESS || type == LetterType.BLACKCLOUD) {
-				PacketSendUtility.sendPacket(recipient, SM_SYSTEM_MESSAGE.STR_POSTMAN_NOTIFY);
+				PacketSendUtility.sendPacket(onlineRecipient, SM_SYSTEM_MESSAGE.STR_POSTMAN_NOTIFY);
 			}
 		}
-		if (!recipientCommonData.isOnline()) {
-			recipientCommonData.setMailboxLetters(recipientCommonData.getMailboxLetters() + 1);
-			DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(recipientCommonData);
+		if (!recipientCommonData.isOnline() || (onlineRecipient != null && recipientMailbox == null)) {
+			updateMailboxCounter(recipientCommonData, onlineRecipient, recipientMailbox);
 		}
 		return true;
+	}
+
+	private Mailbox getLoadedMailbox(Player recipient) {
+		return recipient == null ? null : recipient.getMailbox();
+	}
+
+	private boolean isMailboxFull(Mailbox recipientMailbox, PlayerCommonData recipientCommonData, int limit) {
+		return recipientMailbox != null ? recipientMailbox.size() >= limit : recipientCommonData.getMailboxLetters() >= limit;
+	}
+
+	private void updateMailboxCounter(PlayerCommonData recipientCommonData, Player recipient, Mailbox recipientMailbox) {
+		PlayerCommonData counterData = recipientMailbox == null && recipient != null && recipient.getCommonData() != null
+				? recipient.getCommonData() : recipientCommonData;
+		counterData.setMailboxLetters(counterData.getMailboxLetters() + 1);
+		DAOManager.getDAO(MailDAO.class).updateOfflineMailCounter(counterData);
+		if (counterData != recipientCommonData) {
+			recipientCommonData.setMailboxLetters(counterData.getMailboxLetters());
+		}
 	}
 
 	public static void sendTemplateRewardMail(final int templateId, final PlayerCommonData playerData) {

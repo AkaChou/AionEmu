@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -40,6 +39,7 @@ import com.aionemu.gameserver.configs.main.ThreadConfig;
 public final class ThreadPoolManager {
 	public static final long MAXIMUM_RUNTIME_IN_MILLISEC_WITHOUT_WARNING = 5000;
 	private static final long MAX_DELAY = TimeUnit.NANOSECONDS.toMillis(Long.MAX_VALUE - System.nanoTime()) / 2;
+	private static final int LONG_RUNNING_QUEUE_CAPACITY = 100000;
 	private static volatile ObjectProvider<ThreadPoolManager> instanceProvider;
 	private final ScheduledThreadPoolExecutor scheduledPool;
 	private final ThreadPoolExecutor instantPool;
@@ -58,25 +58,30 @@ public final class ThreadPoolManager {
 				Math.max(1, ThreadConfig.EXTRA_THREAD_PER_CORE) * Runtime.getRuntime().availableProcessors());
 		scheduledPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
 		scheduledPool.prestartAllCoreThreads();
-		longRunningPool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+		int longRunningPoolSize = longRunningPoolSize();
+		longRunningPool = new ThreadPoolExecutor(longRunningPoolSize, longRunningPoolSize, 0, TimeUnit.SECONDS,
+				new ArrayBlockingQueue<Runnable>(LONG_RUNNING_QUEUE_CAPACITY),
+				new PriorityThreadFactory("LongRunningPool", Thread.NORM_PRIORITY));
 		longRunningPool.setRejectedExecutionHandler(new AionRejectedExecutionHandler());
 		longRunningPool.prestartAllCoreThreads();
 		WorkStealThreadFactory forkJoinThreadFactory = new WorkStealThreadFactory("ForkJoinPool");
 		workStealingPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(), forkJoinThreadFactory,
 				new ThreadUncaughtExceptionHandler(), true);
 		forkJoinThreadFactory.setDefaultPool(workStealingPool);
-		Thread maintainThread = new Thread(new Runnable() {
+		scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				purge();
 			}
-		}, "ThreadPool Purge Task");
-		maintainThread.setDaemon(true);
-		scheduleAtFixedRate(maintainThread, 1000000, 1000000);
+		}, 1000000, 1000000);
 	}
 
 	private long validate(long delay) {
 		return Math.max(0, Math.min(MAX_DELAY, delay));
+	}
+
+	private int longRunningPoolSize() {
+		return Math.max(2, Runtime.getRuntime().availableProcessors());
 	}
 
 	private static final class ThreadPoolRunnableWrapper extends RunnableWrapper {

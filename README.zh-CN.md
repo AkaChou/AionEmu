@@ -14,7 +14,8 @@ AionEmu 是一个面向 Aion 5.8 的社区服务端项目。本仓库在原 Aion
 - 通过 Spring Boot lifecycle 管理 login、game、chat 服务启动顺序。
 - 保留并兼容 legacy 配置、静态数据、数据库 schema 和客户端协议。
 - 在构建阶段执行 callback weaving，减少运行时 `-javaagent` 依赖。
-- 持续改进启动日志、静态数据加载进度、测试覆盖和本地运行稳定性。
+- 将本地运行状态集中在 `aion/` 下，避免日志、复制后的数据和本地配置混入源码默认资源。
+- 持续改进启动日志、静态数据加载进度、启动速度、测试覆盖和本地运行稳定性。
 
 ## 构建
 
@@ -31,9 +32,55 @@ mvn test
 mvn -DskipTests package
 ```
 
+仓库也提供了打包脚本，会设置 Maven 默认内存参数并生成 `target/AionEmu.jar`：
+
+```bash
+./maven-package.sh
+```
+
+如果需要执行其它 Maven 目标，可以把目标传给脚本，例如：
+
+```bash
+./maven-package.sh test
+```
+
+## 快速启动
+
+```bash
+./maven-package.sh
+./start-silent.sh
+tail -f aion/log/aionemu.log
+```
+
+停止后台进程：
+
+```bash
+./stop-silent.sh
+```
+
+`start-silent.sh` 会启动 `target/AionEmu.jar`，把日志和 pid 文件写到 `aion/log/`，并把 `src/main/resources/aion` 中缺失的运行资源复制到 `aion/`。默认不会覆盖已有文件。只有在明确要删除并重建本地 `aion/` 运行目录时，才使用 `./start-silent.sh -c`。
+
+常见运行参数覆盖：
+
+```bash
+AION_HOME=/path/to/runtime ./start-silent.sh
+AION_HEAP_OPTS="-Xms2g -Xmx10g" ./start-silent.sh
+AION_JVM_OPTS="..." ./start-silent.sh
+```
+
 ## 运行说明
 
-默认配置位于 `src/main/resources/application.yml`，其中 game 和 login 默认启用，chat 默认关闭。legacy 配置和数据仍按项目内的 `config`、`data`、`sql` 目录组织，并由启动桥接逻辑接入 Spring Boot 环境。
+Spring Boot 默认配置位于 `src/main/resources/application.yml`。game、login、chat 默认都启用，transport mode 默认使用 Netty。
+
+legacy 风格的服务端配置和数据默认资源位于 `src/main/resources/aion`。运行时路径由 `aion.home` 解析；在仓库自带脚本中，默认指向仓库内的 `aion/` 目录。这样本地配置改动、日志、生成文件和复制后的静态数据都会留在源码资源目录之外。
+
+当源码中的运行资源发生变化，并且需要刷新本地 `aion/` 副本但保留本地配置时，使用：
+
+```bash
+./refresh-aion.sh
+```
+
+`refresh-aion.sh` 会覆盖非配置运行文件，保留已有的 `*/config/**` 文件，并保留已有的 `aion/log/logback-spring.xml`。
 
 NPC 导航仍需要单独准备 geodata/navmesh 资源。相关说明保留在下方原项目介绍中。
 

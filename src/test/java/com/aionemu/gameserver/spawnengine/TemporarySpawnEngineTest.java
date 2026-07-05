@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.spawnengine;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
@@ -57,6 +58,18 @@ class TemporarySpawnEngineTest {
 		assertEquals(2, ((Set<?>) field("tempSpawnInstanceMap", Map.class).get(spawn)).size());
 	}
 
+	@Test
+	void despawnUsesSnapshotWhenTemporarySpawnsAreRegisteredDuringCallbacks() throws Exception {
+		SpawnGroup2 spawn = new SpawnGroup2(1, 1);
+		SpawnGroup2 lateSpawn = new SpawnGroup2(2, 1);
+		TestSpawnTemplate template = new TestSpawnTemplate(spawn, new RegisteringTemporarySpawn(lateSpawn));
+		spawn.addSpawnTemplate(template);
+		TemporarySpawnEngine.addSpawnGroup(spawn, 1);
+
+		assertDoesNotThrow(TemporarySpawnEngineTest::despawn);
+		assertEquals(2, field("temporarySpawns", List.class).size());
+	}
+
 	private static void despawn() throws ReflectiveOperationException {
 		Method method = TemporarySpawnEngine.class.getDeclaredMethod("despawn");
 		method.setAccessible(true);
@@ -74,10 +87,15 @@ class TemporarySpawnEngineTest {
 	}
 
 	private static final class TestSpawnTemplate extends SpawnTemplate {
-		private final TemporarySpawn temporarySpawn = new TestTemporarySpawn();
+		private final TemporarySpawn temporarySpawn;
 
 		private TestSpawnTemplate(SpawnGroup2 spawnGroup) {
+			this(spawnGroup, new TestTemporarySpawn());
+		}
+
+		private TestSpawnTemplate(SpawnGroup2 spawnGroup, TemporarySpawn temporarySpawn) {
 			super(spawnGroup, 0, 0, 0, (byte) 0, 0, null, 0, 0);
+			this.temporarySpawn = temporarySpawn;
 		}
 
 		@Override
@@ -89,6 +107,25 @@ class TemporarySpawnEngineTest {
 	private static final class TestTemporarySpawn extends TemporarySpawn {
 		@Override
 		public boolean canDespawn() {
+			return true;
+		}
+
+		@Override
+		public boolean canSpawn() {
+			return false;
+		}
+	}
+
+	private static final class RegisteringTemporarySpawn extends TemporarySpawn {
+		private final SpawnGroup2 lateSpawn;
+
+		private RegisteringTemporarySpawn(SpawnGroup2 lateSpawn) {
+			this.lateSpawn = lateSpawn;
+		}
+
+		@Override
+		public boolean canDespawn() {
+			TemporarySpawnEngine.addSpawnGroup(lateSpawn, 1);
 			return true;
 		}
 

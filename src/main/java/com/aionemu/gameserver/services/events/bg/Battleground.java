@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 
 import com.aionemu.commons.database.dao.DAOManager;
@@ -116,10 +116,10 @@ public abstract class Battleground {
 	protected boolean shouldDisband = true;
 	protected boolean teamBased = false;
 	protected Map<Integer, WorldPosition> previousLocations = new HashMap<Integer, WorldPosition>();
-	protected List<Player> _players = Collections.synchronizedList(new ArrayList<Player>());
-	protected List<PlayerGroup> _groups = Collections.synchronizedList(new ArrayList<PlayerGroup>());
-	protected List<PlayerAlliance> _alliances = Collections.synchronizedList(new ArrayList<PlayerAlliance>());
-	protected List<Player> _spectators = Collections.synchronizedList(new ArrayList<Player>());
+	protected List<Player> _players = new CopyOnWriteArrayList<Player>();
+	protected List<PlayerGroup> _groups = new CopyOnWriteArrayList<PlayerGroup>();
+	protected List<PlayerAlliance> _alliances = new CopyOnWriteArrayList<PlayerAlliance>();
+	protected List<Player> _spectators = new CopyOnWriteArrayList<Player>();
 	protected Map<Integer, AionObject> _leavers = Collections.synchronizedMap(new LinkedHashMap<Integer, AionObject>());
 
 	public abstract void createMatch(List<Integer> players);
@@ -469,8 +469,8 @@ public abstract class Battleground {
 	}
 
 	protected void specAnnounce(String msg) {
-		for (Iterator<Player> it = getSpectators().iterator(); it.hasNext();) {
-			PacketSendUtility.sendSys3Message(it.next(), "BG", msg);
+		for (Player spectator : getSpectators()) {
+			PacketSendUtility.sendSys3Message(spectator, "BG", msg);
 		}
 	}
 
@@ -478,8 +478,8 @@ public abstract class Battleground {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				for (Iterator<Player> it = getSpectators().iterator(); it.hasNext();) {
-					PacketSendUtility.sendSys3Message(it.next(), "BG", msg);
+				for (Player spectator : getSpectators()) {
+					PacketSendUtility.sendSys3Message(spectator, "BG", msg);
 				}
 			}
 		}, delay);
@@ -913,14 +913,11 @@ public abstract class Battleground {
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 			@Override
 			public void run() {
-				List<Player> spectators = getSpectators();
-				synchronized (spectators) {
-					for (Iterator<Player> it = spectators.iterator(); it.hasNext();) {
-						Player pl = it.next();
-						onSpectatorLeave(pl, true);
-						it.remove();
-					}
+				List<Player> spectators = new ArrayList<Player>(getSpectators());
+				for (Player pl : spectators) {
+					onSpectatorLeave(pl, true);
 				}
+				getSpectators().removeAll(spectators);
 			}
 		}, 5000);
 		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {

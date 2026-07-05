@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
 import com.aionemu.gameserver.configs.main.WorldConfig;
@@ -53,10 +55,6 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneName;
 
 import com.aionemu.commons.utils.collections.IntObjectHashMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * World map instance object.
@@ -89,7 +87,7 @@ public abstract class WorldMapInstance {
 	 */
 	private final Map<Integer, Player> worldMapPlayers = Collections.synchronizedMap(new LinkedHashMap<Integer, Player>());
 
-	private final Set<Integer> registeredObjects = Collections.newSetFromMap(new LinkedHashMap<Integer, Boolean>());
+	private final Set<Integer> registeredObjects = ConcurrentHashMap.newKeySet();
 
 	private PlayerGroup registeredGroup = null;
 
@@ -194,26 +192,69 @@ public abstract class WorldMapInstance {
 	 * @param object
 	 */
 	public void addObject(VisibleObject object) {
-		if (worldMapObjects.put(object.getObjectId(), object) != null) {
-			throw new DuplicateAionObjectException("Object with templateId "
-					+ String.valueOf(object.getObjectTemplate().getTemplateId()) + " already spawned in the instance "
-					+ String.valueOf(this.getMapId()) + " " + String.valueOf(this.getInstanceId()));
+		boolean objectStored = false;
+		boolean playerStored = false;
+		List<Integer> addedQuestIds = Collections.emptyList();
+		try {
+			addVisibleObject(object);
+			objectStored = true;
+			addedQuestIds = addQuestIds(object);
+			if (object instanceof Player) {
+				if (this.getParent().isPossibleFly()) {
+					((Player) object).setInsideZoneType(ZoneType.FLY);
+				}
+				worldMapPlayers.put(object.getObjectId(), (Player) object);
+				playerStored = true;
+			}
+		} catch (RuntimeException | Error e) {
+			if (playerStored) {
+				worldMapPlayers.remove(object.getObjectId());
+			}
+			removeQuestIds(addedQuestIds);
+			if (objectStored) {
+				worldMapObjects.remove(object.getObjectId());
+			}
+			throw e;
 		}
-		if (object instanceof Npc) {
-			QuestNpc data = GameEngineServices.questEngine().getQuestNpc(((Npc) object).getNpcId());
-			if (data != null) {
-				for (int id : data.getOnQuestStart()) {
-					if (!questIds.contains(id)) {
-						questIds.add(id);
-					}
+	}
+
+	private void addVisibleObject(VisibleObject object) {
+		synchronized (worldMapObjects) {
+			if (worldMapObjects.containsKey(object.getObjectId())) {
+				throw new DuplicateAionObjectException("Object with templateId "
+						+ String.valueOf(object.getObjectTemplate().getTemplateId()) + " already spawned in the instance "
+						+ String.valueOf(this.getMapId()) + " " + String.valueOf(this.getInstanceId()));
+			}
+			worldMapObjects.put(object.getObjectId(), object);
+		}
+	}
+
+	private List<Integer> addQuestIds(VisibleObject object) {
+		if (!(object instanceof Npc)) {
+			return Collections.emptyList();
+		}
+		QuestNpc data = GameEngineServices.questEngine().getQuestNpc(((Npc) object).getNpcId());
+		if (data == null) {
+			return Collections.emptyList();
+		}
+		List<Integer> addedQuestIds = new ArrayList<Integer>();
+		synchronized (questIds) {
+			for (int id : data.getOnQuestStart()) {
+				if (!questIds.contains(id)) {
+					questIds.add(id);
+					addedQuestIds.add(id);
 				}
 			}
 		}
-		if (object instanceof Player) {
-			if (this.getParent().isPossibleFly()) {
-				((Player) object).setInsideZoneType(ZoneType.FLY);
-			}
-			worldMapPlayers.put(object.getObjectId(), (Player) object);
+		return addedQuestIds;
+	}
+
+	private void removeQuestIds(List<Integer> addedQuestIds) {
+		if (addedQuestIds.isEmpty()) {
+			return;
+		}
+		synchronized (questIds) {
+			questIds.removeAll(addedQuestIds);
 		}
 	}
 
@@ -434,7 +475,9 @@ public abstract class WorldMapInstance {
 	}
 
 	public List<Integer> getQuestIds() {
-		return questIds;
+		synchronized (questIds) {
+			return Collections.unmodifiableList(new ArrayList<Integer>(questIds));
+		}
 	}
 
 	public final InstanceHandler getInstanceHandler() {

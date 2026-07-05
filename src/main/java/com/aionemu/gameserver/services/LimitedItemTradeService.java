@@ -30,7 +30,7 @@ import com.aionemu.gameserver.model.limiteditems.LimitedTradeNpc;
 import com.aionemu.gameserver.model.templates.goods.GoodsList;
 import com.aionemu.gameserver.model.templates.tradelist.TradeListTemplate.TradeTab;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,7 +39,7 @@ public class LimitedItemTradeService {
 	private static volatile ObjectProvider<LimitedItemTradeService> instanceProvider;
 	private GoodsListData goodsListData = DataManager.GOODSLIST_DATA;
 	private TradeListData tradeListData = DataManager.TRADE_LIST_DATA;
-	private Map<Integer, LimitedTradeNpc> limitedTradeNpcs = new LinkedHashMap<Integer, LimitedTradeNpc>();
+	private Map<Integer, LimitedTradeNpc> limitedTradeNpcs = new HashMap<Integer, LimitedTradeNpc>();
 
 	public void start() {
 		for (int npcId : tradeListData.getTradeListTemplate().keys()) {
@@ -52,10 +52,11 @@ public class LimitedItemTradeService {
 				if (limitedItems.isEmpty()) {
 					continue;
 				}
-				if (!limitedTradeNpcs.containsKey(npcId)) {
-					limitedTradeNpcs.putIfAbsent(npcId, new LimitedTradeNpc(limitedItems));
+				LimitedTradeNpc limitedTradeNpc = limitedTradeNpcs.get(npcId);
+				if (limitedTradeNpc == null) {
+					limitedTradeNpcs.put(npcId, new LimitedTradeNpc(limitedItems));
 				} else {
-					limitedTradeNpcs.get(npcId).putLimitedItems(limitedItems);
+					limitedTradeNpc.putLimitedItems(limitedItems);
 				}
 			}
 		}

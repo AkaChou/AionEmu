@@ -21,9 +21,10 @@ import com.aionemu.gameserver.lifecycle.GameStaticDataServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -50,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SurveyService {
 
 	private static volatile ObjectProvider<SurveyService> instanceProvider;
-	private Map<Integer, SurveyItem> activeItems;
+	private ConcurrentMap<Integer, SurveyItem> activeItems;
 	private final String htmlTemplate;
 
 	public boolean isActive(Player player, int survId) {
@@ -62,7 +63,7 @@ public class SurveyService {
 	}
 
 	public SurveyService() {
-		activeItems = new HashMap<Integer, SurveyItem>();
+		activeItems = new ConcurrentHashMap<Integer, SurveyItem>();
 		this.htmlTemplate = GameStaticDataServices.htmlCache().getHTML("surveyTemplate.xhtml");
 		GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new TaskUpdate(), 2000,
 				SecurityConfig.SURVEY_DELAY * 60000);

@@ -17,6 +17,8 @@
 package com.aionemu.gameserver.services;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -28,21 +30,18 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.teleport.TeleportService2;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 public class KiskService {
 	private static volatile ObjectProvider<KiskService> instanceProvider;
-	private final Map<Integer, Kisk> boundButOfflinePlayer = new LinkedHashMap<Integer, Kisk>();
-	private final Map<Integer, Kisk> ownerPlayer = new LinkedHashMap<Integer, Kisk>();
+	private final ConcurrentMap<Integer, Kisk> boundButOfflinePlayer = new ConcurrentHashMap<Integer, Kisk>();
+	private final ConcurrentMap<Integer, Kisk> ownerPlayer = new ConcurrentHashMap<Integer, Kisk>();
 
 	public void removeKisk(Kisk kisk) {
 		for (int memberId : kisk.getCurrentMemberIds()) {
 			boundButOfflinePlayer.remove(memberId);
 		}
-		for (Integer obj : ownerPlayer.keySet()) {
-			if (ownerPlayer.get(obj).equals(kisk)) {
-				ownerPlayer.remove(obj);
+		for (Map.Entry<Integer, Kisk> entry : ownerPlayer.entrySet()) {
+			if (entry.getValue().equals(kisk)) {
+				ownerPlayer.remove(entry.getKey(), kisk);
 				break;
 			}
 		}

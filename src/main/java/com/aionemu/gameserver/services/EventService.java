@@ -274,7 +274,7 @@ public class EventService {
 
 	public EventType getEventType() {
 		if (EventsConfig.ENABLE_EVENT_SERVICE) {
-			for (EventTemplate et : activeEvents) {
+			for (EventTemplate et : activeEventsSnapshot()) {
 				String theme = et.getTheme();
 				if (theme != null) {
 					EventType type = EventType.getEventType(theme);
@@ -288,6 +288,12 @@ public class EventService {
 	}
 
 	public List<EventTemplate> getActiveEvents() {
-		return activeEvents;
+		return activeEventsSnapshot();
+	}
+
+	private List<EventTemplate> activeEventsSnapshot() {
+		synchronized (activeEvents) {
+			return new ArrayList<EventTemplate>(activeEvents);
+		}
 	}
 }
