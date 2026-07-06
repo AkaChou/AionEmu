@@ -18,6 +18,7 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
 
     private final NettyConnectionFactory connectionFactory;
     private final Executor disconnectionExecutor;
+    private final String serviceContext;
     private final AtomicBoolean disconnectNotified = new AtomicBoolean(false);
 
     private ChannelHandlerContext context;
@@ -28,24 +29,31 @@ public class NettyConnectionHandler extends ChannelInboundHandlerAdapter impleme
     }
 
     public NettyConnectionHandler(NettyConnectionFactory connectionFactory, Executor disconnectionExecutor) {
+        this(connectionFactory, disconnectionExecutor, ServiceContext.current());
+    }
+
+    NettyConnectionHandler(NettyConnectionFactory connectionFactory, Executor disconnectionExecutor, String serviceContext) {
         this.connectionFactory = connectionFactory;
         this.disconnectionExecutor = disconnectionExecutor;
+        this.serviceContext = serviceContext;
     }
 
     @Override
     public void channelActive(ChannelHandlerContext context) throws IOException {
         this.context = context;
-        this.connection = connectionFactory.create(this);
-        if (this.connection == null) {
-            context.close();
-            return;
-        }
-        runInConnectionContext(new Runnable() {
-            @Override
-            public void run() {
-                connection.initialized();
+        try (ServiceContext.Scope ignored = ServiceContext.use(serviceContext)) {
+            this.connection = connectionFactory.create(this);
+            if (this.connection == null) {
+                context.close();
+                return;
             }
-        });
+            runInConnectionContext(new Runnable() {
+                @Override
+                public void run() {
+                    connection.initialized();
+                }
+            });
+        }
     }
 
     @Override

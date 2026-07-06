@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.aionemu.commons.services.ServiceContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -84,6 +85,29 @@ class NettyConnectionHandlerTest {
         channel.close().syncUninterruptibly();
 
         assertEquals(1, holder.connection.disconnects);
+    }
+
+    @Test
+    void channelActiveCreatesConnectionWithHandlerServiceContext() {
+        Holder holder = new Holder();
+        NettyConnectionHandler handler;
+        try (ServiceContext.Scope ignored = ServiceContext.use("login")) {
+            handler = new NettyConnectionHandler(transport -> {
+                holder.connection = new TestConnection(transport);
+                return holder.connection;
+            }, Runnable::run);
+        }
+
+        EmbeddedChannel channel;
+        try (ServiceContext.Scope ignored = ServiceContext.use("game")) {
+            channel = new EmbeddedChannel(handler);
+            if (holder.connection == null) {
+                channel.pipeline().fireChannelActive();
+            }
+        }
+
+        assertEquals("login", holder.connection.getServiceContext());
+        channel.finishAndReleaseAll();
     }
 
     private static EmbeddedChannel channel(Holder holder) {

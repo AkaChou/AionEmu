@@ -159,7 +159,8 @@ public class ThreadPoolManager implements Executor {
             if (delay < 0) {
                 delay = 0;
             }
-            return (ListenableFuture<T>) JdkFutureAdapters.listenInPoolThread(scheduledThreadPool.schedule(r, delay, TimeUnit.MILLISECONDS));
+            Runnable wrapped = new RunnableWrapper(r);
+            return (ListenableFuture<T>) JdkFutureAdapters.listenInPoolThread(scheduledThreadPool.schedule(wrapped, delay, TimeUnit.MILLISECONDS));
         } catch (RejectedExecutionException e) {
             return null; /* shutdown, ignore */
         }
@@ -184,7 +185,8 @@ public class ThreadPoolManager implements Executor {
             if (initial < 0) {
                 initial = 0;
             }
-            return (ListenableFuture<T>) JdkFutureAdapters.listenInPoolThread(scheduledThreadPool.scheduleAtFixedRate(r, initial, delay, TimeUnit.MILLISECONDS));
+            Runnable wrapped = new RunnableWrapper(r);
+            return (ListenableFuture<T>) JdkFutureAdapters.listenInPoolThread(scheduledThreadPool.scheduleAtFixedRate(wrapped, initial, delay, TimeUnit.MILLISECONDS));
         } catch (RejectedExecutionException e) {
             return null;
         }

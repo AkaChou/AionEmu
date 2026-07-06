@@ -1,5 +1,6 @@
 package com.aionemu.commons.network;
 
+import com.aionemu.commons.services.ServiceContext;
 import lombok.extern.slf4j.Slf4j;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -44,6 +45,7 @@ public class NettyClient implements ServerTransport {
         }
 
         eventLoops = NettyEventLoopProvider.acquire();
+        String serviceContext = ServiceContext.current();
         try {
             ChannelFuture connectFuture = new Bootstrap()
                 .group(eventLoops.workerGroup())
@@ -55,9 +57,9 @@ public class NettyClient implements ServerTransport {
                     protected void initChannel(SocketChannel channel) {
                         channels.add(channel);
                         if (disconnectionExecutor == null) {
-                            channel.pipeline().addLast(new NettyConnectionHandler(connectionFactory));
+                            channel.pipeline().addLast(new NettyConnectionHandler(connectionFactory, CommonsNetworkThreadPoolServices.threadPoolManager(), serviceContext));
                         } else {
-                            channel.pipeline().addLast(new NettyConnectionHandler(connectionFactory, disconnectionExecutor));
+                            channel.pipeline().addLast(new NettyConnectionHandler(connectionFactory, disconnectionExecutor, serviceContext));
                         }
                     }
                 })
