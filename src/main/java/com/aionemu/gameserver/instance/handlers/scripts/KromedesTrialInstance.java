@@ -371,108 +371,30 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
 	
 	@Override
     public void onDie(Npc npc) {
-		Player player = npc.getAggroList().getMostPlayerDamage();
+		Player player = getDeathRewardPlayer(npc);
 		switch (npc.getObjectTemplate().getTemplateId()) {
 			case 700835: //Sealed Stone Door.
 			    despawnNpc(npc);
 			break;
 			case 216981: //Manor Guard Captain.
-				switch (player.getPlayerClass()) {
-				    case TEMPLAR:
-				    case GLADIATOR:
-				        spawn(211861, 740.83966f, 535.38837f, 199.12067f, (byte) 89); //Treasure Box Kromede Trial (Gladiator-Templar).
-				    break;
-				    case RANGER:
-				    case ASSASSIN:
-				    case GUNSLINGER:
-				        spawn(212338, 740.83966f, 535.38837f, 199.12067f, (byte) 89); //Treasure Box Kromede Trial (Assassin-Ranger-Gunslinger).
-				    break;
-				    case SORCERER:
-				    case SONGWEAVER:
-                    case SPIRIT_MASTER:
-				        spawn(212333, 740.83966f, 535.38837f, 199.12067f, (byte) 89); //Treasure Box Kromede Trial (Sorcerer-SpiritMaster-Songweaver).
-				    break;
-				    case CLERIC:
-                    case CHANTER:
-					case AETHERTECH:
-				        spawn(212335, 740.83966f, 535.38837f, 199.12067f, (byte) 89); //Treasure Box Kromede Trial (Cleric-Chanter-Aethertech).
-				    break;
-				}
+				spawnClassTreasure(player, 740.83966f, 535.38837f, 199.12067f, (byte) 89);
             break;
 			case 216982: //Hamam The Torturer.
 				//sendMsg("<Wounded Hamam> appear");
 				spawn(217004, 651.186f, 767.856f, 215.584f, (byte) 59); //Wounded Hamam.
-				switch (player.getPlayerClass()) {
-				    case TEMPLAR:
-				    case GLADIATOR:
-				        spawn(211861, 757.48157f, 617.7071f, 197.17694f, (byte) 108); //Treasure Box Kromede Trial (Gladiator-Templar).
-				    break;	
-				    case RANGER:
-				    case ASSASSIN:
-				    case GUNSLINGER:
-				        spawn(212338, 757.48157f, 617.7071f, 197.17694f, (byte) 108); //Treasure Box Kromede Trial (Assassin-Ranger-Gunslinger).
-				    break;
-				    case SORCERER:
-				    case SONGWEAVER:
-                    case SPIRIT_MASTER:
-				        spawn(212333, 757.48157f, 617.7071f, 197.17694f, (byte) 108); //Treasure Box Kromede Trial (Sorcerer-SpiritMaster-Songweaver).
-				    break;
-				    case CLERIC:
-                    case CHANTER:
-					case AETHERTECH:
-				        spawn(212335, 757.48157f, 617.7071f, 197.17694f, (byte) 108); //Treasure Box Kromede Trial (Cleric-Chanter-Aethertech).
-				    break;
-				}
+				spawnClassTreasure(player, 757.48157f, 617.7071f, 197.17694f, (byte) 108);
             break;
 			case 216999: //Jesse.
 				announceKaligaTreasury();
-				removeSilverBladeRotan(player);
-				switch (player.getPlayerClass()) {
-				    case TEMPLAR:
-				    case GLADIATOR:
-				        spawn(211861, 581.11005f, 775.1529f, 215.53482f, (byte) 112); //Treasure Box Kromede Trial (Gladiator-Templar).
-				    break;	
-				    case RANGER:
-				    case ASSASSIN:
-				    case GUNSLINGER:
-				        spawn(212338, 581.11005f, 775.1529f, 215.53482f, (byte) 112); //Treasure Box Kromede Trial (Assassin-Ranger-Gunslinger).
-				    break;
-				    case SORCERER:
-				    case SONGWEAVER:
-                    case SPIRIT_MASTER:
-				        spawn(212333, 581.11005f, 775.1529f, 215.53482f, (byte) 112); //Treasure Box Kromede Trial (Sorcerer-SpiritMaster-Songweaver).
-				    break;
-				    case CLERIC:
-                    case CHANTER:
-					case AETHERTECH:
-				        spawn(212335, 581.11005f, 775.1529f, 215.53482f, (byte) 112); //Treasure Box Kromede Trial (Cleric-Chanter-Aethertech).
-				    break;
+				if (player != null) {
+					removeSilverBladeRotan(player);
 				}
+				spawnClassTreasure(player, 581.11005f, 775.1529f, 215.53482f, (byte) 112);
             break;
 			case 217000: //Lady Angerr.
 			    //sendMsg("<Distraught Lady Angerr> appear");
 				spawn(217001, 650.679f, 774.197f, 215.584f, (byte) 60); //Distraught Lady Angerr.
-				switch (player.getPlayerClass()) {
-				    case TEMPLAR:
-				    case GLADIATOR:
-				        spawn(211861, 512.89886f, 570.039f, 216.89487f, (byte) 31); //Treasure Box Kromede Trial (Gladiator-Templar).
-				    break;	
-				    case RANGER:
-				    case ASSASSIN:
-				    case GUNSLINGER:
-				        spawn(212338, 512.89886f, 570.039f, 216.89487f, (byte) 31); //Treasure Box Kromede Trial (Assassin-Ranger-Gunslinger).
-				    break;
-				    case SORCERER:
-				    case SONGWEAVER:
-                    case SPIRIT_MASTER:
-				        spawn(212333, 512.89886f, 570.039f, 216.89487f, (byte) 31); //Treasure Box Kromede Trial (Sorcerer-SpiritMaster-Songweaver).
-				    break;
-				    case CLERIC:
-                    case CHANTER:
-					case AETHERTECH:
-				        spawn(212335, 512.89886f, 570.039f, 216.89487f, (byte) 31); //Treasure Box Kromede Trial (Cleric-Chanter-Aethertech).
-				    break;
-				}
+				spawnClassTreasure(player, 512.89886f, 570.039f, 216.89487f, (byte) 31);
             break;
 			case 217002: //Justicetaker Wyr.
 			    //sendMsg("<Injured Justicetaker Wyr> appear");
@@ -480,12 +402,50 @@ public class KromedesTrialInstance extends GeneralInstanceHandler
             break;
 			case 217005: //Shadow Judge Kaliga.
 			case 217006: //Kaliga The Unjust.
-			    sendMovie(player, 455);
-				////sendMsg("[SUCCES]: You have finished <Kromede's Trial>");
-				ItemService.addItem(player, 188900010, 1); //Secret Remedy Of Growth IV.
+				if (player != null) {
+					sendMovie(player, 455);
+					////sendMsg("[SUCCES]: You have finished <Kromede's Trial>");
+					ItemService.addItem(player, 188900010, 1); //Secret Remedy Of Growth IV.
+				}
             break;
         }
     }
+
+	private Player getDeathRewardPlayer(Npc npc) {
+		Player player = npc.getAggroList().getMostPlayerDamage();
+		if (player != null || instance == null) {
+			return player;
+		}
+		List<Player> players = instance.getPlayersInside();
+		return players.size() == 1 ? players.get(0) : null;
+	}
+
+	private void spawnClassTreasure(Player player, float x, float y, float z, byte heading) {
+		if (player == null) {
+			return;
+		}
+		switch (player.getPlayerClass()) {
+			case TEMPLAR:
+			case GLADIATOR:
+				spawn(211861, x, y, z, heading); //Treasure Box Kromede Trial (Gladiator-Templar).
+			break;
+			case RANGER:
+			case ASSASSIN:
+			case GUNSLINGER:
+				spawn(212338, x, y, z, heading); //Treasure Box Kromede Trial (Assassin-Ranger-Gunslinger).
+			break;
+			case SORCERER:
+			case SONGWEAVER:
+			case SPIRIT_MASTER:
+				spawn(212333, x, y, z, heading); //Treasure Box Kromede Trial (Sorcerer-SpiritMaster-Songweaver).
+			break;
+			case CLERIC:
+			case CHANTER:
+			case AETHERTECH:
+				spawn(212335, x, y, z, heading); //Treasure Box Kromede Trial (Cleric-Chanter-Aethertech).
+			break;
+		}
+	}
 	
 	private void announceKaligaTreasury() {
 		instance.doOnAllPlayers(new Visitor<Player>() {
