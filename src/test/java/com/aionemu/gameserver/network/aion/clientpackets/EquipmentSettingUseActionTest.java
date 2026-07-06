@@ -55,8 +55,10 @@ class EquipmentSettingUseActionTest {
 	}
 
 	@Test
-	void weaponSetSwapSwitchesHandsWithoutUnequippingPreviousWeapons() {
+	void weaponSetSwapRebuildsTargetWeaponsAfterUnequippingCurrentWeapons() {
 		FakeTarget target = new FakeTarget();
+		target.strictInventory = true;
+		target.twoHandItemIds.add(128523);
 		target.equippedSlots.put(128523, ItemSlot.MAIN_OR_SUB.getSlotIdMask());
 		target.equippedSlots.put(127229, ItemSlot.MAIN_OFF_HAND.getSlotIdMask());
 		target.equippedSlots.put(127185, ItemSlot.SUB_OFF_HAND.getSlotIdMask());
@@ -64,20 +66,30 @@ class EquipmentSettingUseActionTest {
 		boolean changed = EquipmentSettingUseAction.applyAll(Arrays.asList(
 				new EquipmentSettingUseAction(0, ItemSlot.MAIN_HAND.getSlotIdMask(), 127229),
 				new EquipmentSettingUseAction(0, ItemSlot.SUB_HAND.getSlotIdMask(), 127185),
+				new EquipmentSettingUseAction(0, ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), 128523),
+				new EquipmentSettingUseAction(0, ItemSlot.SUB_OFF_HAND.getSlotIdMask(), 128523),
 				new EquipmentSettingUseAction(1, ItemSlot.MAIN_HAND.getSlotIdMask(), 128523)), target);
 
 		assertTrue(changed);
+		assertEquals(Arrays.asList(
+				operation("unequip", 128523, ItemSlot.MAIN_OR_SUB),
+				operation("unequip", 127229, ItemSlot.MAIN_OFF_HAND),
+				operation("unequip", 127185, ItemSlot.SUB_OFF_HAND),
+				operation("equip", 128523, ItemSlot.MAIN_OR_SUB),
+				"switch",
+				operation("equip", 127229, ItemSlot.MAIN_HAND),
+				operation("equip", 127185, ItemSlot.SUB_HAND)), target.operations);
 		assertEquals(1, target.switchHands);
-		assertEquals(0, target.unEquip);
-		assertEquals(0, target.equip);
 		assertEquals(ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask(), target.equippedSlots.get(128523).longValue());
 		assertEquals(ItemSlot.MAIN_HAND.getSlotIdMask(), target.equippedSlots.get(127229).longValue());
 		assertEquals(ItemSlot.SUB_HAND.getSlotIdMask(), target.equippedSlots.get(127185).longValue());
 	}
 
 	@Test
-	void weaponSetSwapIgnoresUnequipWhenItemAlreadyReachedRequestedOffHandSlot() {
+	void weaponSetSwapReusesMovedTwoHandWeaponAsRequestedOffHandWeapon() {
 		FakeTarget target = new FakeTarget();
+		target.strictInventory = true;
+		target.twoHandItemIds.add(128523);
 		target.equippedSlots.put(128523, ItemSlot.MAIN_OR_SUB.getSlotIdMask());
 		target.equippedSlots.put(127229, ItemSlot.MAIN_OFF_HAND.getSlotIdMask());
 		target.equippedSlots.put(127185, ItemSlot.SUB_OFF_HAND.getSlotIdMask());
@@ -90,16 +102,22 @@ class EquipmentSettingUseActionTest {
 				new EquipmentSettingUseAction(1, ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), 128523)), target);
 
 		assertTrue(changed);
+		assertEquals(Arrays.asList(
+				operation("unequip", 128523, ItemSlot.MAIN_OR_SUB),
+				operation("unequip", 127229, ItemSlot.MAIN_OFF_HAND),
+				operation("unequip", 127185, ItemSlot.SUB_OFF_HAND),
+				operation("equip", 128523, ItemSlot.MAIN_OR_SUB),
+				"switch",
+				operation("equip", 127229, ItemSlot.MAIN_HAND),
+				operation("equip", 127185, ItemSlot.SUB_HAND)), target.operations);
 		assertEquals(1, target.switchHands);
-		assertEquals(0, target.unEquip);
-		assertEquals(0, target.equip);
 		assertEquals(ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask(), target.equippedSlots.get(128523).longValue());
 		assertEquals(ItemSlot.MAIN_HAND.getSlotIdMask(), target.equippedSlots.get(127229).longValue());
 		assertEquals(ItemSlot.SUB_HAND.getSlotIdMask(), target.equippedSlots.get(127185).longValue());
 	}
 
 	@Test
-	void mixedWeaponSetSwapReusesFirstMainHandAsSecondOffHandWithoutWholeHandSwitch() {
+	void mixedWeaponSetSwapStagesRequestedOffHandWeaponsBeforeSwitching() {
 		FakeTarget target = new FakeTarget();
 		target.strictInventory = true;
 		target.equippedSlots.put(1001, ItemSlot.MAIN_HAND.getSlotIdMask());
@@ -113,14 +131,15 @@ class EquipmentSettingUseActionTest {
 				new EquipmentSettingUseAction(0, ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), 3001)), target);
 
 		assertTrue(changed);
-		assertEquals(0, target.switchHands);
+		assertEquals(1, target.switchHands);
 		assertEquals(Arrays.asList(
-				operation("equip", 3001, ItemSlot.MAIN_OFF_HAND),
 				operation("unequip", 1001, ItemSlot.MAIN_HAND),
-				operation("equip", 1001, ItemSlot.SUB_OFF_HAND)), target.operations);
+				operation("equip", 1001, ItemSlot.SUB_HAND),
+				operation("equip", 3001, ItemSlot.MAIN_HAND),
+				"switch"), target.operations);
 		assertEquals(ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), target.equippedSlots.get(3001).longValue());
 		assertEquals(ItemSlot.SUB_OFF_HAND.getSlotIdMask(), target.equippedSlots.get(1001).longValue());
-		assertEquals(ItemSlot.SUB_HAND.getSlotIdMask(), target.equippedSlots.get(2001).longValue());
+		assertFalse(target.equippedSlots.containsKey(2001));
 	}
 
 	@Test
@@ -139,8 +158,10 @@ class EquipmentSettingUseActionTest {
 		assertTrue(changed);
 		assertEquals(0, target.switchHands);
 		assertEquals(Arrays.asList(
-				operation("equip", 3001, ItemSlot.MAIN_HAND),
-				operation("equip", 1001, ItemSlot.SUB_HAND)), target.operations);
+				operation("unequip", 2001, ItemSlot.SUB_HAND),
+				operation("unequip", 1001, ItemSlot.MAIN_HAND),
+				operation("equip", 1001, ItemSlot.SUB_HAND),
+				operation("equip", 3001, ItemSlot.MAIN_HAND)), target.operations);
 		assertEquals(ItemSlot.MAIN_HAND.getSlotIdMask(), target.equippedSlots.get(3001).longValue());
 		assertEquals(ItemSlot.SUB_HAND.getSlotIdMask(), target.equippedSlots.get(1001).longValue());
 		assertFalse(target.equippedSlots.containsKey(2001));
@@ -168,6 +189,10 @@ class EquipmentSettingUseActionTest {
 
 		assertTrue(changed);
 		assertEquals(Arrays.asList(
+				operation("unequip", 1001, ItemSlot.MAIN_OR_SUB),
+				operation("unequip", 2001, ItemSlot.MAIN_OFF_HAND),
+				operation("unequip", 2002, ItemSlot.SUB_OFF_HAND),
+				operation("equip", 1001, ItemSlot.MAIN_OR_SUB),
 				"switch",
 				operation("equip", 3001, ItemSlot.MAIN_OR_SUB)), target.operations);
 		assertEquals(1, target.switchHands);
@@ -175,6 +200,102 @@ class EquipmentSettingUseActionTest {
 		assertEquals(ItemSlot.MAIN_OR_SUB.getSlotIdMask(), target.equippedSlots.get(3001).longValue());
 		assertFalse(target.equippedSlots.containsKey(2001));
 		assertFalse(target.equippedSlots.containsKey(2002));
+	}
+
+	@Test
+	void twoHandMainBowWithDualOffHandWeaponsSwitchesToNewBowAndSingleOffHandWeapon() {
+		FakeTarget target = new FakeTarget();
+		target.strictInventory = true;
+		target.twoHandItemIds.add(1001);
+		target.twoHandItemIds.add(3001);
+		target.equippedSlots.put(1001, ItemSlot.MAIN_OR_SUB.getSlotIdMask());
+		target.equippedSlots.put(2001, ItemSlot.MAIN_OFF_HAND.getSlotIdMask());
+		target.equippedSlots.put(2002, ItemSlot.SUB_OFF_HAND.getSlotIdMask());
+		target.inventoryItemIds.add(3001);
+
+		boolean changed = EquipmentSettingUseAction.applyAll(Arrays.asList(
+				new EquipmentSettingUseAction(2, 0, 0),
+				new EquipmentSettingUseAction(0, ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), 2001),
+				new EquipmentSettingUseAction(1, ItemSlot.MAIN_HAND.getSlotIdMask(), 1001),
+				new EquipmentSettingUseAction(1, ItemSlot.SUB_OFF_HAND.getSlotIdMask(), 2002),
+				new EquipmentSettingUseAction(0, ItemSlot.MAIN_HAND.getSlotIdMask(), 3001),
+				new EquipmentSettingUseAction(0, ItemSlot.SUB_HAND.getSlotIdMask(), 3001)), target);
+
+		assertTrue(changed);
+		assertEquals(Arrays.asList(
+				operation("unequip", 1001, ItemSlot.MAIN_OR_SUB),
+				operation("unequip", 2002, ItemSlot.SUB_OFF_HAND),
+				operation("unequip", 2001, ItemSlot.MAIN_OFF_HAND),
+				operation("equip", 2001, ItemSlot.MAIN_HAND),
+				"switch",
+				operation("equip", 3001, ItemSlot.MAIN_OR_SUB)), target.operations);
+		assertEquals(1, target.switchHands);
+		assertEquals(ItemSlot.MAIN_OR_SUB.getSlotIdMask(), target.equippedSlots.get(3001).longValue());
+		assertEquals(ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), target.equippedSlots.get(2001).longValue());
+		assertFalse(target.equippedSlots.containsKey(1001));
+		assertFalse(target.equippedSlots.containsKey(2002));
+	}
+
+	@Test
+	void reverseWeaponSetSwapUsesRequestedHandSwitchEvenWhenDualWeaponsSwapSidesWithinOffHandSet() {
+		FakeTarget target = new FakeTarget();
+		target.strictInventory = true;
+		target.twoHandItemIds.add(1001);
+		target.equippedSlots.put(2001, ItemSlot.MAIN_HAND.getSlotIdMask());
+		target.equippedSlots.put(2002, ItemSlot.SUB_HAND.getSlotIdMask());
+		target.equippedSlots.put(1001, ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask());
+
+		boolean changed = EquipmentSettingUseAction.applyAll(Arrays.asList(
+				new EquipmentSettingUseAction(2, 0, 0),
+				new EquipmentSettingUseAction(0, ItemSlot.MAIN_HAND.getSlotIdMask(), 1001),
+				new EquipmentSettingUseAction(0, ItemSlot.SUB_HAND.getSlotIdMask(), 1001),
+				new EquipmentSettingUseAction(0, ItemSlot.SUB_OFF_HAND.getSlotIdMask(), 2001),
+				new EquipmentSettingUseAction(0, ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), 2002)), target);
+
+		assertTrue(changed);
+		assertEquals(Arrays.asList(
+				operation("unequip", 1001, ItemSlot.MAIN_OFF_OR_SUB_OFF),
+				operation("unequip", 2001, ItemSlot.MAIN_HAND),
+				operation("unequip", 2002, ItemSlot.SUB_HAND),
+				operation("equip", 2001, ItemSlot.SUB_HAND),
+				operation("equip", 2002, ItemSlot.MAIN_HAND),
+				"switch",
+				operation("equip", 1001, ItemSlot.MAIN_OR_SUB)), target.operations);
+		assertEquals(1, target.switchHands);
+		assertEquals(ItemSlot.MAIN_OR_SUB.getSlotIdMask(), target.equippedSlots.get(1001).longValue());
+		assertEquals(ItemSlot.SUB_OFF_HAND.getSlotIdMask(), target.equippedSlots.get(2001).longValue());
+		assertEquals(ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), target.equippedSlots.get(2002).longValue());
+	}
+
+	@Test
+	void weaponSetSwitchRebuildsWeaponsWhenLeftAndRightHandsCrossBetweenSets() {
+		FakeTarget target = new FakeTarget();
+		target.strictInventory = true;
+		target.twoHandItemIds.add(1001);
+		target.equippedSlots.put(2002, ItemSlot.MAIN_HAND.getSlotIdMask());
+		target.equippedSlots.put(2001, ItemSlot.SUB_HAND.getSlotIdMask());
+		target.equippedSlots.put(1001, ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask());
+
+		boolean changed = EquipmentSettingUseAction.applyAll(Arrays.asList(
+				new EquipmentSettingUseAction(2, 0, 0),
+				new EquipmentSettingUseAction(0, ItemSlot.MAIN_HAND.getSlotIdMask(), 1001),
+				new EquipmentSettingUseAction(0, ItemSlot.SUB_HAND.getSlotIdMask(), 1001),
+				new EquipmentSettingUseAction(0, ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), 2001),
+				new EquipmentSettingUseAction(0, ItemSlot.SUB_OFF_HAND.getSlotIdMask(), 2002)), target);
+
+		assertTrue(changed);
+		assertEquals(Arrays.asList(
+				operation("unequip", 1001, ItemSlot.MAIN_OFF_OR_SUB_OFF),
+				operation("unequip", 2001, ItemSlot.SUB_HAND),
+				operation("unequip", 2002, ItemSlot.MAIN_HAND),
+				operation("equip", 2001, ItemSlot.MAIN_HAND),
+				operation("equip", 2002, ItemSlot.SUB_HAND),
+				"switch",
+				operation("equip", 1001, ItemSlot.MAIN_OR_SUB)), target.operations);
+		assertEquals(1, target.switchHands);
+		assertEquals(ItemSlot.MAIN_OR_SUB.getSlotIdMask(), target.equippedSlots.get(1001).longValue());
+		assertEquals(ItemSlot.MAIN_OFF_HAND.getSlotIdMask(), target.equippedSlots.get(2001).longValue());
+		assertEquals(ItemSlot.SUB_OFF_HAND.getSlotIdMask(), target.equippedSlots.get(2002).longValue());
 	}
 
 	@Test
@@ -200,7 +321,7 @@ class EquipmentSettingUseActionTest {
 				new EquipmentSettingUseAction(0, ItemSlot.HELMET.getSlotIdMask(), 3001)), target);
 
 		assertFalse(changed);
-		assertEquals(1, target.switchHands);
+		assertEquals(0, target.switchHands);
 		assertEquals(0, target.equip);
 		assertEquals(0, target.unEquip);
 	}
@@ -257,6 +378,11 @@ class EquipmentSettingUseActionTest {
 				}
 			}
 			return true;
+		}
+
+		@Override
+		public boolean canSwitchHands() {
+			return switchHandsResult;
 		}
 
 		@Override

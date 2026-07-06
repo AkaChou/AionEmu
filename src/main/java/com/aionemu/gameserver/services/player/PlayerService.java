@@ -268,7 +268,7 @@ public class PlayerService {
 		DAOManager.getDAO(CraftCooldownsDAO.class).loadCraftCooldowns(player);
 		DAOManager.getDAO(PlayerLunaShopDAO.class).load(player);
 		if (player.getCommonData().getBonusTitleId() > 0) {
-			TitleChangeListener.onBonusTitleChange(player.getGameStats(), player.getCommonData().getTitleId(), true);
+			TitleChangeListener.onBonusTitleChange(player.getGameStats(), player.getCommonData().getBonusTitleId(), true);
 		}
 		DAOManager.getDAO(PlayerLifeStatsDAO.class).loadPlayerLifeStat(player);
 		DAOManager.getDAO(PlayerEmotionListDAO.class).loadEmotions(player);

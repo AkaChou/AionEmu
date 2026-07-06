@@ -17,18 +17,27 @@
 package com.aionemu.gameserver.ai2.follow;
 
 import java.util.concurrent.Future;
+import java.util.function.IntUnaryOperator;
 
 import com.aionemu.gameserver.ai2.event.AIEventType;
+import com.aionemu.gameserver.controllers.SiegeWeaponController;
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.summons.SummonMode;
 import com.aionemu.gameserver.model.summons.UnsummonType;
+import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplate;
+import com.aionemu.gameserver.model.templates.npcskill.NpcSkillTemplates;
 import com.aionemu.gameserver.services.summons.SummonsService;
+import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import com.aionemu.gameserver.utils.MathUtil;
 
 public class FollowSummonTaskAI implements Runnable {
+
+	private static final float DEFAULT_TARGET_RANGE = 2f;
+	private static final float SKILL_RANGE_PADDING = 2f;
 
 	private Creature target;
 	private Summon summon;
@@ -75,7 +84,47 @@ public class FollowSummonTaskAI implements Runnable {
 	}
 
 	private boolean isInTargetRange() {
-		return MathUtil.isIn3dRange(target, summon, 2);
+		return MathUtil.isIn3dRange(target, summon, targetRange());
+	}
+
+	private float targetRange() {
+		if (summon.getController() instanceof SiegeWeaponController controller) {
+			return targetRangeFor(!master.equals(target), controller.getNpcSkillTemplates(), FollowSummonTaskAI::skillFirstTargetRange);
+		}
+		return DEFAULT_TARGET_RANGE;
+	}
+
+	static float targetRangeFor(boolean attackTarget, NpcSkillTemplates npcSkillTemplates, IntUnaryOperator skillRangeProvider) {
+		if (!attackTarget) {
+			return DEFAULT_TARGET_RANGE;
+		}
+		return siegeWeaponTargetRange(npcSkillTemplates, skillRangeProvider);
+	}
+
+	static float siegeWeaponTargetRange(NpcSkillTemplates npcSkillTemplates, IntUnaryOperator skillRangeProvider) {
+		if (npcSkillTemplates == null || npcSkillTemplates.getNpcSkills() == null || npcSkillTemplates.getNpcSkills().isEmpty()) {
+			return DEFAULT_TARGET_RANGE;
+		}
+		NpcSkillTemplate npcSkill = npcSkillTemplates.getNpcSkills().get(0);
+		if (npcSkill == null) {
+			return DEFAULT_TARGET_RANGE;
+		}
+		int skillRange = skillRangeProvider.applyAsInt(npcSkill.getSkillid());
+		if (skillRange <= 0) {
+			return DEFAULT_TARGET_RANGE;
+		}
+		return Math.max(DEFAULT_TARGET_RANGE, skillRange + SKILL_RANGE_PADDING);
+	}
+
+	private static int skillFirstTargetRange(int skillId) {
+		if (DataManager.SKILL_DATA == null) {
+			return 0;
+		}
+		SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skillId);
+		if (skillTemplate == null || skillTemplate.getProperties() == null) {
+			return 0;
+		}
+		return skillTemplate.getProperties().getFirstTargetRange();
 	}
 
 	private boolean isInMasterRange() {

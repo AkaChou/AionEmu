@@ -48,6 +48,7 @@ import com.aionemu.gameserver.model.items.ItemSlot;
 import com.aionemu.gameserver.model.stats.listeners.ItemEquipmentListener;
 import com.aionemu.gameserver.model.templates.item.ArmorType;
 import com.aionemu.gameserver.model.templates.item.ItemCategory;
+import com.aionemu.gameserver.model.templates.item.ItemQuality;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.model.templates.item.ItemUseLimits;
 import com.aionemu.gameserver.model.templates.item.WeaponType;
@@ -140,16 +141,8 @@ public class Equipment {
 			default:
 				break;
 			}
-			long itemSlotMask = 0;
-			switch (item.getEquipmentType()) {
-			case STIGMA:
-			case ESTIMA:
-				itemSlotMask = slot;
-				break;
-			default:
-				itemSlotMask = itemTemplate.getItemSlot();
-				break;
-			}
+			long itemSlotMask = itemSlotMaskForEquip(item, item.getEquipmentSlot());
+			long itemSlotToEquipMask = itemSlotMask;
 			ItemSlot[] possibleSlots = ItemSlot.getSlotsFor(itemSlotMask);
 			for (int i = 0; i < possibleSlots.length; i++) {
 				ItemSlot possibleSlot = possibleSlots[i];
@@ -167,13 +160,13 @@ public class Equipment {
 				if (itemSlotMask != 0) {
 					return null;
 				}
-				itemSlotToEquip = itemTemplate.getItemSlot();
+				itemSlotToEquip = itemSlotToEquipMask;
 			}
 			if (!StigmaService.notifyEquipAction(owner, item, slot)) {
 				return null;
 			}
 			if (itemSlotToEquip == 0) {
-				itemSlotToEquip = possibleSlots[0].getSlotIdMask();
+				itemSlotToEquip = shouldReplaceLowestScoredItem(possibleSlots) ? occupiedSlotWithLowestEquipmentScore(possibleSlots, equipment) : possibleSlots[0].getSlotIdMask();
 			}
 		}
 		if (itemSlotToEquip == 0) {
@@ -184,6 +177,75 @@ public class Equipment {
 			return null;
 		}
 		return equip(itemSlotToEquip, item);
+	}
+
+	static long itemSlotMaskForEquip(Item item, long requestedSlot) {
+		switch (item.getEquipmentType()) {
+		case STIGMA:
+		case ESTIMA:
+			return requestedSlot;
+		case WEAPON:
+			if (item.getItemTemplate().isTwoHandWeapon()) {
+				if ((requestedSlot & ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask()) != 0) {
+					return ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask();
+				}
+				return ItemSlot.MAIN_OR_SUB.getSlotIdMask();
+			}
+			if (isSingleWeaponSlot(requestedSlot)) {
+				return requestedSlot;
+			}
+			return item.getItemTemplate().getItemSlot();
+		default:
+			return item.getItemTemplate().getItemSlot();
+		}
+	}
+
+	private static boolean isSingleWeaponSlot(long slot) {
+		long weaponSlots = ItemSlot.MAIN_OR_SUB.getSlotIdMask() | ItemSlot.MAIN_OFF_OR_SUB_OFF.getSlotIdMask();
+		return slot != 0 && (slot & weaponSlots) == slot && ItemSlot.getSlotsFor(slot).length == 1;
+	}
+
+	static long occupiedSlotWithLowestEquipmentScore(ItemSlot[] possibleSlots, SortedMap<Long, Item> equipment) {
+		long selectedSlot = possibleSlots[0].getSlotIdMask();
+		Item selectedItem = equipment.get(selectedSlot);
+		for (int i = 1; i < possibleSlots.length; i++) {
+			long slot = possibleSlots[i].getSlotIdMask();
+			Item candidate = equipment.get(slot);
+			if (candidate == null) {
+				return slot;
+			}
+			if (selectedItem == null || compareEquipmentScore(candidate, selectedItem) < 0) {
+				selectedSlot = slot;
+				selectedItem = candidate;
+			}
+		}
+		return selectedSlot;
+	}
+
+	private static boolean shouldReplaceLowestScoredItem(ItemSlot[] possibleSlots) {
+		if (possibleSlots.length != 2) {
+			return false;
+		}
+		long slotMask = possibleSlots[0].getSlotIdMask() | possibleSlots[1].getSlotIdMask();
+		return slotMask == ItemSlot.RING_RIGHT_OR_LEFT.getSlotIdMask()
+				|| slotMask == ItemSlot.EARRING_RIGHT_OR_LEFT.getSlotIdMask();
+	}
+
+	private static int compareEquipmentScore(Item first, Item second) {
+		int comparison = Integer.compare(first.getItemTemplate().getLevel(), second.getItemTemplate().getLevel());
+		if (comparison != 0) {
+			return comparison;
+		}
+		comparison = Integer.compare(itemQualityId(first), itemQualityId(second));
+		if (comparison != 0) {
+			return comparison;
+		}
+		return Integer.compare(first.getEnchantLevel(), second.getEnchantLevel());
+	}
+
+	private static int itemQualityId(Item item) {
+		ItemQuality quality = item.getItemTemplate().getItemQuality();
+		return quality == null ? 0 : quality.getQualityId();
 	}
 
 	/**

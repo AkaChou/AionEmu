@@ -6,6 +6,8 @@ interface EquipmentSettingUseTarget {
 
 	boolean unEquipItem(int itemObjectId, long slot);
 
+	boolean canSwitchHands();
+
 	boolean switchHands();
 
 	long getEquippedSlot(int itemObjectId);

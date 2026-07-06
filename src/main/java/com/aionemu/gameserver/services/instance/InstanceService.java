@@ -65,6 +65,7 @@ public class InstanceService {
 	private static final List<Integer> instanceAggro = new ArrayList<Integer>();
 	private static final List<Integer> instanceCoolDownFilter = new ArrayList<Integer>();
 	private static final int SOLO_INSTANCES_DESTROY_DELAY = 2 * 60 * 1000;
+	private static final int EMPTY_INSTANCE_RESET_DELAY = 10 * 1000;
 
 	public static void load() {
 		for (String s : CustomConfig.INSTANCES_MOB_AGGRO.split(",")) {
@@ -237,6 +238,21 @@ public class InstanceService {
 		return com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getWorldMapInstanceById(instanceId) != null;
 	}
 
+	static boolean isEmptyForResetAfterLeave(WorldMapInstance instance) {
+		return instance.playersCount() == 0;
+	}
+
+	private static void scheduleResetIfEmpty(final WorldMapInstance instance) {
+		GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
+			@Override
+			public void run() {
+				if (isInstanceExist(instance.getMapId(), instance.getInstanceId()) && isEmptyForResetAfterLeave(instance)) {
+					destroyInstance(instance);
+				}
+			}
+		}, EMPTY_INSTANCE_RESET_DELAY);
+	}
+
 	private static void startInstanceChecker(WorldMapInstance worldMapInstance) {
 		int delay = 150000;
 		int period = 60000;
@@ -318,7 +334,8 @@ public class InstanceService {
 	}
 
 	public static void onLeaveInstance(Player player) {
-		player.getPosition().getWorldMapInstance().getInstanceHandler().onLeaveInstance(player);
+		WorldMapInstance instance = player.getPosition().getWorldMapInstance();
+		instance.getInstanceHandler().onLeaveInstance(player);
 		for (Item item : player.getInventory().getItems()) {
 			if (item.getItemTemplate().getOwnershipWorld() == player.getWorldId()) {
 				player.getInventory().decreaseByObjectId(item.getObjectId(), item.getItemCount());
@@ -327,6 +344,7 @@ public class InstanceService {
 		if (AutoGroupConfig.AUTO_GROUP_ENABLED) {
 			GameCoreGameplayServices.autoGroupService().onLeaveInstance(player);
 		}
+		scheduleResetIfEmpty(instance);
 	}
 
 	public static void onEnterZone(Player player, ZoneInstance zone) {
