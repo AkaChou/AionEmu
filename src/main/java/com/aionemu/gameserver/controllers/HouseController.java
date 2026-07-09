@@ -23,6 +23,7 @@ import java.util.List;
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
 import com.aionemu.gameserver.controllers.observer.ObserverType;
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.TeleportAnimation;
 import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -82,6 +83,13 @@ public class HouseController extends VisibleObjectController<House> {
 				obj.spawn();
 			}
 		}
+	}
+
+	@Override
+	public void onAfterSpawn() {
+		super.onAfterSpawn();
+		GameWorldServices.geoService().setHouseDoorState(getOwner().getWorldId(), getOwner().getInstanceId(),
+				getOwner().getAddress().getId(), getOwner().getDoorState().isDoorOpen());
 	}
 
 	public void updateAppearance() {

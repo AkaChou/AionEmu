@@ -71,7 +71,7 @@ public class TeleporterData {
 	/**
 	 * Returns an {@link NpcTemplate} object with given id.
 	 * 
-	 * @param id id of NPC
+	 * @param teleportId id of NPC
 	 * @return NpcTemplate object containing data about NPC with that id.
 	 */
 	public TeleporterTemplate getTeleporterTemplateByTeleportId(int teleportId) {

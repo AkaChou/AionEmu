@@ -243,6 +243,10 @@ public abstract class Spatial implements Collidable, Cloneable {
 
 	public abstract void setTransform(Matrix3f rotation, Vector3f loc, float scale);
 
+	public void setTransform(Matrix3f rotation, Vector3f loc, Vector3f scale) {
+		setTransform(rotation, loc, scale.x);
+	}
+
 	@Override
 	public Spatial clone() throws CloneNotSupportedException {
 		return (Spatial) super.clone();

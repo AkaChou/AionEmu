@@ -83,7 +83,7 @@ public class EffectController {
 	}
 
 	/**
-	 * @param effect
+	 * @param nextEffect
 	 */
 	public void addEffect(Effect nextEffect) {
 		Map<String, Effect> mapToUpdate = getMapForEffect(nextEffect);
@@ -251,7 +251,7 @@ public class EffectController {
 
 	/**
 	 * @param mapToUpdate
-	 * @param effect
+	 * @param newEffect
 	 * @return
 	 */
 	private final Effect findConflictedEffect(Map<String, Effect> mapToUpdate, Effect newEffect) {
@@ -412,8 +412,6 @@ public class EffectController {
 	 * targetslot and dispelLevel used only in DispelBuffCounterAtk, therefore rest
 	 * of cases are skipped
 	 * 
-	 * @param dispelCat
-	 * @param targetSlot
 	 * @param dispelLevel
 	 * @return
 	 */
@@ -977,8 +975,8 @@ public class EffectController {
 						}
 						if (et.getEffectid() == et2.getEffectid()) {
 							effect.endEffect();
+							return true;
 						}
-						return true;
 					}
 				}
 			}

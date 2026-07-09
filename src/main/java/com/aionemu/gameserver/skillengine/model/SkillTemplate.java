@@ -124,6 +124,8 @@ public class SkillTemplate {
 	protected AttackStatus counterSkill = null;
 	@XmlAttribute(name = "noremoveatdie")
 	protected boolean noRemoveAtDie = false;
+	@XmlAttribute(name = "applymcrit")
+	protected boolean applyMcrit = true;
 	@XmlAttribute(name = "charge_set_name")
 	protected String charge_set_name;
 	@XmlAttribute(name = "stigma")
@@ -427,6 +429,10 @@ public class SkillTemplate {
 
 	public boolean hasRecallInstant() {
 		return getEffects() != null && getEffects().isEffectTypePresent(EffectType.RECALLINSTANT);
+	}
+
+	public boolean isMcritApplied() {
+		return applyMcrit;
 	}
 
 	public boolean hasHealEffect() {

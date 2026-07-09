@@ -34,6 +34,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
 import java.util.Collections;
+import java.util.function.BiPredicate;
 
 /**
  * @author ATracer
@@ -42,7 +43,7 @@ public class AggroEventHandler {
 
 	/**
 	 * @param npcAI
-	 * @param creature
+	 * @param myTarget
 	 */
 	public static void onAggro(NpcAI2 npcAI, final Creature myTarget) {
 		final Npc owner = npcAI.getOwner();
@@ -59,12 +60,11 @@ public class AggroEventHandler {
 
 	public static boolean onCreatureNeedsSupport(NpcAI2 npcAI, Creature notMyTarget) {
 		Npc owner = npcAI.getOwner();
-		// 将支援范围扩大
-		// Double the support range
-		if (notMyTarget.isSupportFrom(owner) && MathUtil.isInRange((VisibleObject) owner, (VisibleObject) notMyTarget, (float) (owner.getAggroRange()))) {
-			VisibleObject myTarget = notMyTarget.getTarget();
-			if (myTarget != null && myTarget instanceof Creature) {
-				Creature targetCreature = (Creature) myTarget;
+		VisibleObject myTarget = notMyTarget.getTarget();
+		if (myTarget instanceof Creature) {
+			Creature targetCreature = (Creature) myTarget;
+			if (canReceiveSupport(owner, notMyTarget, targetCreature, owner.getAggroRange(),
+					GameWorldServices.geoService()::canSee)) {
 				PacketSendUtility.broadcastPacket(owner, new SM_ATTACK(owner, targetCreature, 0, 633, 0,
 						Collections.singletonList(new AttackResult(0, AttackStatus.NORMALHIT))));
 				GameThreadPoolServices.threadPoolManager().schedule(new AggroNotifier(owner, targetCreature, false), 500);
@@ -72,6 +72,14 @@ public class AggroEventHandler {
 			}
 		}
 		return false;
+	}
+
+	static boolean canReceiveSupport(Npc owner, Creature notMyTarget, Creature targetCreature, float supportRange,
+			BiPredicate<VisibleObject, VisibleObject> canSee) {
+		return notMyTarget.isSupportFrom(owner)
+				&& MathUtil.isIn3dRange(owner, notMyTarget, supportRange)
+				&& canSee.test(owner, notMyTarget)
+				&& canSee.test(owner, targetCreature);
 	}
 
 	public static boolean onGuardAgainstAttacker(NpcAI2 npcAI, Creature attacker) {

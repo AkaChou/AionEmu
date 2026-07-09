@@ -65,7 +65,7 @@ public class TaskManagerFromDB {
 	/**
 	 * Allow to register one task and check if already exists
 	 * 
-	 * @param shutdownTask
+	 * @param task
 	 */
 	private void registerNewTask(TaskFromDBHandler task) {
 		if (handlers.get(task.getTaskName()) != null) {
@@ -113,7 +113,7 @@ public class TaskManagerFromDB {
 	/**
 	 * Run a fixed in the time (HH:MM:SS) task
 	 * 
-	 * @param task
+	 * @param handler
 	 */
 	private void runFixedInTimeTask(TaskFromDBHandler handler, TaskFromDB dbTask) {
 		String time[] = dbTask.getStartTime().split(":");

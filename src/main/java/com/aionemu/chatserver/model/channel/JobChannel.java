@@ -35,8 +35,8 @@ public class JobChannel extends RaceChannel {
     private Gender gender;
 
     /**
+     * @param gender
      * @param playerClass
-     * @param race
      */
     public JobChannel(Gender gender, PlayerClass playerClass, Race race, String identifier) {
         super(ChannelType.JOB, race, identifier);

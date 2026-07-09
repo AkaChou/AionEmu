@@ -38,6 +38,7 @@ import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatFunctionProxy;
+import com.aionemu.gameserver.utils.stats.CalculationType;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -67,7 +68,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 	}
 
 	/**
-	 * @param atcount the atcount to set
+	 * @param attackCounter the atcount to set
 	 */
 	protected void setAttackCounter(int attackCounter) {
 		if (attackCounter <= 0) {
@@ -139,13 +140,22 @@ public abstract class CreatureGameStats<T extends Creature> {
 	}
 
 	public Stat2 getStat(StatEnum statEnum, int base) {
-		Stat2 stat = new AdditionStat(statEnum, base, (Creature) owner);
-		return getStat(statEnum, stat);
+		return getStat(statEnum, base, new CalculationType[0]);
 	}
 
-	public Stat2 getStat(StatEnum statEnum, int base, float bonusRate) {
+	public Stat2 getStat(StatEnum statEnum, int base, CalculationType... calculationTypes) {
+		Stat2 stat = new AdditionStat(statEnum, base, (Creature) owner);
+		return getStat(statEnum, stat, calculationTypes);
+	}
+
+	public Stat2 getStat(StatEnum statEnum, float base, CalculationType... calculationTypes) {
+		Stat2 stat = new AdditionStat(statEnum, base, (Creature) owner);
+		return getStat(statEnum, stat, calculationTypes);
+	}
+
+	public Stat2 getStat(StatEnum statEnum, int base, float bonusRate, CalculationType... calculationTypes) {
 		Stat2 stat = new AdditionStat(statEnum, base, (Creature) owner, bonusRate);
-		return getStat(statEnum, stat);
+		return getStat(statEnum, stat, calculationTypes);
 	}
 
 	public Stat2 getReverseStat(StatEnum statEnum, int base) {
@@ -158,7 +168,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 		return getStat(statEnum, stat);
 	}
 
-	public Stat2 getStat(StatEnum statEnum, Stat2 stat) {
+	public Stat2 getStat(StatEnum statEnum, Stat2 stat, CalculationType... calculationTypes) {
 		lock.readLock().lock();
 		try {
 			TreeSet<IStatFunction> functions = getStatsByStatEnum(statEnum);
@@ -167,7 +177,7 @@ public abstract class CreatureGameStats<T extends Creature> {
 			}
 			for (IStatFunction func : functions) {
 				if (func.validate(stat, func)) {
-					func.apply(stat);
+					func.apply(stat, calculationTypes);
 				}
 			}
 			StatCapUtil.calculateBaseValue(stat, ((Creature) owner).isPlayer());
@@ -237,6 +247,10 @@ public abstract class CreatureGameStats<T extends Creature> {
 
 	public abstract Stat2 getMainHandPAttack();
 
+	public Stat2 getMainHandPAttack(CalculationType... calculationTypes) {
+		return getMainHandPAttack();
+	}
+
 	public abstract Stat2 getMainHandPCritical();
 
 	public abstract Stat2 getMainHandPAccuracy();
@@ -245,7 +259,15 @@ public abstract class CreatureGameStats<T extends Creature> {
 
 	public abstract Stat2 getMainHandMAttack();
 
+	public Stat2 getMainHandMAttack(CalculationType... calculationTypes) {
+		return getMainHandMAttack();
+	}
+
 	public abstract Stat2 getOffHandMAttack();
+
+	public Stat2 getOffHandMAttack(CalculationType... calculationTypes) {
+		return getOffHandMAttack();
+	}
 
 	public abstract Stat2 getMBoost();
 

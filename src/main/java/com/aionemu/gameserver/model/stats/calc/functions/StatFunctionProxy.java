@@ -19,6 +19,7 @@ package com.aionemu.gameserver.model.stats.calc.functions;
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.calc.StatOwner;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import com.aionemu.gameserver.utils.stats.CalculationType;
 
 /**
  * @author ATracer
@@ -113,6 +114,11 @@ public class StatFunctionProxy implements IStatFunction, Comparable<IStatFunctio
 	@Override
 	public void apply(Stat2 stat) {
 		proxiedFunction.apply(stat);
+	}
+
+	@Override
+	public void apply(Stat2 stat, CalculationType... calculationTypes) {
+		proxiedFunction.apply(stat, calculationTypes);
 	}
 
 	@Override

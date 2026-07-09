@@ -55,12 +55,14 @@ public abstract class VisibleObject extends AionObject {
 	 * Constructor.
 	 *
 	 * @param objId
-	 * @param objectTemplate
+	 * @param controller
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public VisibleObject(int objId, VisibleObjectController<? extends VisibleObject> controller,
 			SpawnTemplate spawnTemplate, VisibleObjectTemplate objectTemplate, WorldPosition position) {
 		super(objId);
 		this.controller = controller;
+		((VisibleObjectController) controller).setOwner(this);
 		this.position = position;
 		this.spawn = spawnTemplate;
 		this.objectTemplate = objectTemplate;

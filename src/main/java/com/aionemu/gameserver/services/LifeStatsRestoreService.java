@@ -45,7 +45,7 @@ public class LifeStatsRestoreService {
 	/**
 	 * HP and MP restoring task
 	 * 
-	 * @param creature
+	 * @param lifeStats
 	 * @return Future<?>
 	 */
 	public Future<?> scheduleRestoreTask(CreatureLifeStats<? extends Creature> lifeStats) {

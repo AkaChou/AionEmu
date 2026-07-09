@@ -103,13 +103,13 @@ public class PlayerEffectController extends EffectController {
 	/**
 	 * @param skillId
 	 * @param skillLvl
-	 * @param currentTime
-	 * @param reuseDelay
+	 * @param remainingTime
+	 * @param endTime
 	 */
 	public void addSavedEffect(int skillId, int skillLvl, int remainingTime, long endTime) {
 		SkillTemplate template = DataManager.SKILL_DATA.getSkillTemplate(skillId);
 
-		if (remainingTime <= 0) {
+		if (remainingTime <= 0 || template == null) {
 			return;
 		}
 		if (CustomConfig.ABYSSXFORM_LOGOUT && template.isDeityAvatar()) {

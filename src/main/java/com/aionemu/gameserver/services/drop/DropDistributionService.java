@@ -55,7 +55,7 @@ public class DropDistributionService {
 	}
 
 	/**
-	 * @param Called from CM_GROUP_LOOT to handle rolls
+	 * @param player from CM_GROUP_LOOT to handle rolls
 	 */
 	public void handleRoll(Player player, int roll, int itemId, int npcId, int index) {
 		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
@@ -99,7 +99,7 @@ public class DropDistributionService {
 	}
 
 	/**
-	 * @param Called from CM_GROUP_LOOT to handle bids
+	 * @param player from CM_GROUP_LOOT to handle bids
 	 */
 	public void handleBid(Player player, long bid, int itemId, int npcId, int index) {
 		DropNpc dropNpc = GameWorldServices.dropRegistrationService().getDropRegistrationMap().get(npcId);
@@ -140,7 +140,7 @@ public class DropDistributionService {
 	}
 
 	/**
-	 * @param Checks all players have Rolled or Bid then Distributes items
+	 * @param player all players have Rolled or Bid then Distributes items
 	 *               accordingly
 	 */
 	private void distributeLoot(Player player, long luckyPlayer, int itemId, int npcId) {

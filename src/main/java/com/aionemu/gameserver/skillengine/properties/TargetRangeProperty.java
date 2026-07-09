@@ -73,8 +73,9 @@ public class TargetRangeProperty {
 						&& ((!(nextCreature instanceof Player)) || (!((Player) nextCreature).isProtectionActive()))) {
 					if (skill.isPointSkill()) {
 						float targetCollision = firstTarget.getObjectTemplate().getBoundRadius().getCollision();
+						float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
 						if (MathUtil.isIn3dRange(skill.getX(), skill.getY(), skill.getZ(), nextCreature.getX(),
-								nextCreature.getY(), nextCreature.getZ(), distance + targetCollision + 1)) {
+								nextCreature.getY(), nextCreature.getZ(), distance + targetCollision + creatureCollision + 1)) {
 							if (skill.shouldAffectTarget(nextCreature)) {
 								skill.getEffectedList().add((Creature) nextCreature);
 							}
@@ -210,8 +211,9 @@ public class TargetRangeProperty {
 				if ((nextCreature instanceof Player) && (((Player) nextCreature).isProtectionActive())) {
 					continue;
 				}
+				float creatureCollision = ((Creature) nextCreature).getObjectTemplate().getBoundRadius().getCollision();
 				if (MathUtil.getDistance(skill.getX(), skill.getY(), skill.getZ(), nextCreature.getX(),
-						nextCreature.getY(), nextCreature.getZ()) <= distance + 1) {
+						nextCreature.getY(), nextCreature.getZ()) <= distance + creatureCollision + 1) {
 					if (skill.shouldAffectTarget(nextCreature)) {
 						effectedList.add((Creature) nextCreature);
 					}

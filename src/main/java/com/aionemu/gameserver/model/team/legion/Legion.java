@@ -150,7 +150,7 @@ public class Legion {
 	/**
 	 * Add a legionMember to the legionMembers list
 	 *
-	 * @param legionMember
+	 * @param playerObjId
 	 */
 	public boolean addLegionMember(int playerObjId) {
 		if (canAddMember()) {
@@ -172,9 +172,9 @@ public class Legion {
 	/**
 	 * This method will set the permissions
 	 *
-	 * @param legionarPermission2
-	 * @param centurionPermission1
-	 * @param centurionPermission2
+	 * @param deputyPermission
+	 * @param centurionPermission
+	 * @param legionaryPermission
 	 * @return true or false
 	 */
 	public boolean setLegionPermissions(short deputyPermission, short centurionPermission, short legionaryPermission,
@@ -250,7 +250,7 @@ public class Legion {
 	}
 
 	/**
-	 * @param newPoints
+	 * @param contributionPoints
 	 */
 	public void setContributionPoints(long contributionPoints) {
 		this.contributionPoints = contributionPoints;

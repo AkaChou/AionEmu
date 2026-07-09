@@ -54,7 +54,7 @@ public class FollowEventHandler {
 	}
 
 	/**
-	 * @param creature
+	 * @param npcAI
 	 */
 	public static void checkFollowTarget(NpcAI2 npcAI, Creature creature) {
 		if (!isInRange(npcAI, creature)) {

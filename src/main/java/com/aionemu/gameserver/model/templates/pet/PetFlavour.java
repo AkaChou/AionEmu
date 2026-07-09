@@ -78,7 +78,7 @@ public class PetFlavour {
 	 * automatically
 	 * 
 	 * @param progress
-	 * @param itemId
+	 * @param foodType
 	 * @return
 	 */
 	public PetFeedResult processFeedResult(PetFeedProgress progress, FoodType foodType, int itemLevel,

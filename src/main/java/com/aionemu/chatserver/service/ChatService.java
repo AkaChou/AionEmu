@@ -60,9 +60,8 @@ public class ChatService {
      * Player registered from server side
      *
      * @param playerId
+     * @param playerLogin
      * @param nick
-     * @param token
-     * @param identifier
      * @return
      * @throws NoSuchAlgorithmException
      */
@@ -78,7 +77,7 @@ public class ChatService {
     }
 
     /**
-     * @param playerId
+     * @param accountToken
      * @return
      */
     private byte[] generateToken(byte[] accountToken) {
@@ -101,9 +100,8 @@ public class ChatService {
      * @param playerId
      * @param token
      * @param identifier
-     * @param realAccount
+     * @param channelHandler
      * @param realName
-     * @param clientChannelHandler
      * @throws UnsupportedEncodingException
      */
     public void registerPlayerConnection(int playerId, byte[] token, byte[] identifier, ClientChannelHandler channelHandler, String realName) throws UnsupportedEncodingException {

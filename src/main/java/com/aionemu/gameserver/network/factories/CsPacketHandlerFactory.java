@@ -30,7 +30,7 @@ public class CsPacketHandlerFactory {
 	private CsPacketHandler handler = new CsPacketHandler();
 
 	/**
-	 * @param injector
+	 * Registers chat-server packet handlers.
 	 */
 	public CsPacketHandlerFactory() {
 		addPacket(new CM_CS_AUTH_RESPONSE(0x00), State.CONNECTED);

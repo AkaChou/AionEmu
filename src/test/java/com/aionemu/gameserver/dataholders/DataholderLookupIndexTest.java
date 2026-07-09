@@ -1,10 +1,13 @@
 package com.aionemu.gameserver.dataholders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.StringReader;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Map;
 
 import jakarta.xml.bind.JAXBContext;
@@ -134,6 +137,15 @@ class DataholderLookupIndexTest {
 
 		assertEquals(2, data.getInstanceExit(200, Race.ASMODIANS).getExitWorld());
 		assertEquals(2, mapSize(data, "exitsByWorldId"));
+	}
+
+	@Test
+	void azoturanFortressHasElyosInstanceExit() throws Exception {
+		String xml = Files.readString(Path.of("src/main/resources/aion/game/data/static_data/instance_exit/instance_exit.xml"));
+		InstanceExitData data = unmarshal(InstanceExitData.class, xml);
+
+		assertNotNull(data.getInstanceExit(310100000, Race.ELYOS));
+		assertEquals(210040000, data.getInstanceExit(310100000, Race.ELYOS).getExitWorld());
 	}
 
 	private static <T> T unmarshal(Class<T> type, String xml) throws Exception {

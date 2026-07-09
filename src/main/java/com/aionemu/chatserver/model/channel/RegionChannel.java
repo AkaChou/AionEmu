@@ -31,9 +31,9 @@ public class RegionChannel extends RaceChannel {
     protected int mapId;
 
     /**
-     * @param channelId
      * @param mapId
      * @param race
+     * @param identifier
      */
     public RegionChannel(int mapId, Race race, String identifier) {
         super(ChannelType.PUBLIC, race, identifier);

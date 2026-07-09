@@ -30,7 +30,7 @@ public abstract class TaskFromDBHandler implements Runnable {
 	/**
 	 * Task's id
 	 * 
-	 * @param int
+	 * @param id
 	 */
 	public void setId(int id) {
 		this.id = id;

@@ -147,7 +147,7 @@ public class LegionEmblem {
 	}
 
 	/**
-	 * @param uploadData the uploadData to set
+	 * @param data the uploadData to set
 	 */
 	public void addUploadData(byte[] data) {
 		byte[] newData = new byte[uploadedSize];

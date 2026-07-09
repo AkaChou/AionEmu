@@ -971,7 +971,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="70" effectid="130" e="1"/>
+      <wpndual value="70" effectid="130" e="1" skill_efficiency="40" max_damage_chance="400"/>
     </effects>
   </skill_template>
   <skill_template skill_id="56" name="Advanced Sword Training I" nameId="563707" skill_group_name="KN_EQUIP_Sword" stack="SKILL_KN_EQUIP_SWORD" lvl="1" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="KN_EQUIP_Sword">
@@ -1134,7 +1134,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="63" effectid="130" e="1"/>
+      <wpndual value="63" delta="2" effectid="130" e="1" skill_efficiency="50" max_damage_chance="20" max_damage_delta="80"/>
     </effects>
   </skill_template>
   <skill_template skill_id="71" name="Advanced Sword Training I" nameId="563767" skill_group_name="RA_EQUIP_Sword" stack="SKILL_RA_EQUIP_SWORD" lvl="1" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="RA_EQUIP_Sword">
@@ -1198,7 +1198,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="83" effectid="130" e="1"/>
+      <wpndual value="83" delta="2" effectid="130" e="1" skill_efficiency="50" max_damage_chance="820" max_damage_delta="80"/>
     </effects>
   </skill_template>
   <skill_template skill_id="77" name="Advanced Sword Training I" nameId="563791" skill_group_name="AS_EQUIP_Sword" stack="SKILL_AS_EQUIP_SWORD" lvl="1" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="AS_EQUIP_Sword">
@@ -1262,7 +1262,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="83" effectid="130" e="1"/>
+      <wpndual value="83" delta="2" effectid="130" e="1" skill_efficiency="50" max_damage_chance="820" max_damage_delta="80"/>
     </effects>
   </skill_template>
   <skill_template skill_id="83" name="Basic Mace Training" nameId="563815" skill_group_name="CL_EQUIP_EnhancedMace" stack="SKILL_CL_EQUIP_ENHANCEDMACE" lvl="1" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="CL_EQUIP_EnhancedMace">
@@ -1946,7 +1946,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="80" effectid="130" e="1" basiclvl="40"/>
+      <wpndual value="80" effectid="130" e="1" basiclvl="40" skill_efficiency="44" max_damage_chance="600"/>
     </effects>
   </skill_template>
   <skill_template skill_id="144" name="Advanced Dual-Wielding IV" nameId="582369" skill_group_name="P_EQUIP_Dual" stack="SKILL_P_EQUIP_DUAL" lvl="4" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="P_EQUIP_Dual_G4">
@@ -1955,7 +1955,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="85" effectid="130" e="1" basiclvl="60"/>
+      <wpndual value="85" effectid="130" e="1" basiclvl="60" skill_efficiency="46" max_damage_chance="700"/>
     </effects>
   </skill_template>
   <skill_template skill_id="145" name="Boost Crit Strike Chance I" nameId="582371" skill_group_name="P_StatBoostCritical" stack="SKILL_P_STATBOOSTCRITICAL" lvl="1" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="P_StatBoostCritical_G1">
@@ -2256,7 +2256,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="75" effectid="130" e="1" basiclvl="20"/>
+      <wpndual value="75" effectid="130" e="1" basiclvl="20" skill_efficiency="42" max_damage_chance="500"/>
     </effects>
   </skill_template>
   <skill_template skill_id="172" name="Boost Physical Attack III" nameId="579683" skill_group_name="P_StatBoostPhysicalOffense" stack="SKILL_P_STATBOOSTPHYSICALOFFENSE" lvl="3" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="P_StatBoostPhysicalOffense_G3">
@@ -2662,7 +2662,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="90" effectid="130" e="1" basiclvl="80"/>
+      <wpndual value="90" effectid="130" e="1" basiclvl="80" skill_efficiency="48" max_damage_chance="800"/>
     </effects>
   </skill_template>
   <skill_template skill_id="208" name="Advanced Mace Training II" nameId="578553" skill_group_name="PR_EQUIP_Mace" stack="SKILL_PR_EQUIP_MACE" lvl="2" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="PR_EQUIP_Mace_G2">
@@ -134446,7 +134446,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="2" effectid="130" e="1" hoptype="SKILLLV"/>
+      <wpndual value="2" delta="63" effectid="130" e="1" hoptype="SKILLLV" skill_efficiency="50" max_damage_chance="20" max_damage_delta="80"/>
     </effects>
   </skill_template>
   <skill_template skill_id="11476" name="Wear Stigma Leather Armor" nameId="566159" delayId="50" stack="SKILL_STIGMA_ENHANCEDLEATHER" lvl="1" skilltype="PHYSICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="Stigma_EnhancedLeather">
@@ -135526,7 +135526,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="63" effectid="130" e="1"/>
+      <wpndual value="63" delta="2" effectid="130" e="1" skill_efficiency="50" max_damage_chance="20" max_damage_delta="80"/>
     </effects>
   </skill_template>
   <skill_template skill_id="11547" name="Stigma Crisis Management: Boost Defense" nameId="579449" delayId="306" stack="SKILL_STIGMAI_CONSTATBOOSTPHYSICALDEFENSE" lvl="1" skilltype="MAGICAL" skillsubtype="NONE" tslot="NOSHOW" activation="PASSIVE" cooldown="0" duration="0" name_desc="Stigma_ConStatBoostPhysicalDefense_G1">
@@ -135544,7 +135544,7 @@
       <playermove allow="false"/>
     </useconditions>
     <effects>
-      <wpndual value="78" effectid="130" e="1" basiclvl="20"/>
+      <wpndual value="78" delta="2" effectid="130" e="1" basiclvl="20" skill_efficiency="50" max_damage_chance="420" max_damage_delta="80"/>
     </effects>
   </skill_template>
   <skill_template skill_id="11549" name="Stigma Holy Shield I" nameId="579453" delayId="424" stack="SKILL_STIGMAI_HOLYWRATH" lvl="1" skilltype="MAGICAL" skillsubtype="BUFF" tslot="BUFF" activation="ACTIVE" cooldown="100" duration="1000" cancel_rate="10" name_desc="Stigma_HolyWrath_G1">

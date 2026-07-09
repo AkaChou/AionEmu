@@ -141,7 +141,7 @@ class NavDataTest {
 	}
 
 	private void writeNavFile(int mapId) throws IOException {
-		Path navDir = dataDir.resolve("nav");
+		Path navDir = dataDir.resolve("geo/nav");
 		Files.createDirectories(navDir);
 		ByteBuffer buffer = ByteBuffer.allocate(4 + 9 * 4 + 4 + 6 * 4).order(ByteOrder.LITTLE_ENDIAN);
 		buffer.putInt(9);

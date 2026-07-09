@@ -1,15 +1,18 @@
 package com.aionemu.gameserver.skillengine.properties;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.controllers.CreatureController;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.stats.container.CreatureLifeStats;
+import com.aionemu.gameserver.model.templates.BoundRadius;
 import com.aionemu.gameserver.model.templates.VisibleObjectTemplate;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.LOG;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK_STATUS.TYPE;
@@ -35,10 +38,61 @@ class TargetRangePropertyTest {
 		assertDoesNotThrow(() -> TargetRangeProperty.set(skill, properties));
 	}
 
+	@Test
+	void pointTargetSelectionIncludesCandidateCollisionRadius() {
+		boolean originalGeoEnabled = GeoDataConfig.GEO_ENABLE;
+		try {
+			GeoDataConfig.GEO_ENABLE = false;
+			TestCreature effector = new TestCreature(1);
+			TestCreature edgeTarget = new TestCreature(2, 6.5f, 0f, 0f, 2f);
+			effector.getKnownList().getKnownObjects().put(edgeTarget.getObjectId(), edgeTarget);
+			Skill skill = new Skill(new SkillTemplate(), effector, 1, effector, null);
+			skill.setTargetPosition(0f, 0f, 0f, (byte) 0);
+			Properties properties = new Properties();
+			properties.targetType = TargetRangeAttribute.POINT;
+			properties.targetDistance = 5;
+
+			TargetRangeProperty.set(skill, properties);
+
+			assertTrue(skill.getEffectedList().contains(edgeTarget));
+		} finally {
+			GeoDataConfig.GEO_ENABLE = originalGeoEnabled;
+		}
+	}
+
+	@Test
+	void areaPointSkillSelectionIncludesCandidateCollisionRadius() {
+		boolean originalGeoEnabled = GeoDataConfig.GEO_ENABLE;
+		try {
+			GeoDataConfig.GEO_ENABLE = false;
+			TestCreature effector = new TestCreature(1);
+			TestCreature edgeTarget = new TestCreature(2, 6.5f, 0f, 0f, 2f);
+			effector.getKnownList().getKnownObjects().put(edgeTarget.getObjectId(), edgeTarget);
+			Skill skill = new Skill(new SkillTemplate(), effector, 1, effector, null);
+			skill.setFirstTargetAttribute(FirstTargetAttribute.POINT);
+			skill.setFirstTarget(effector);
+			skill.setTargetPosition(0f, 0f, 0f, (byte) 0);
+			Properties properties = new Properties();
+			properties.targetType = TargetRangeAttribute.AREA;
+			properties.targetDistance = 5;
+
+			TargetRangeProperty.set(skill, properties);
+
+			assertTrue(skill.getEffectedList().contains(edgeTarget));
+		} finally {
+			GeoDataConfig.GEO_ENABLE = originalGeoEnabled;
+		}
+	}
+
 	private static class TestCreature extends Creature {
 
 		private TestCreature(int objectId) {
-			super(objectId, (CreatureController<? extends Creature>) null, null, new TestVisibleObjectTemplate(), position());
+			this(objectId, 0f, 0f, 0f, 0f);
+		}
+
+		private TestCreature(int objectId, float x, float y, float z, float collision) {
+			super(objectId, (CreatureController<? extends Creature>) null, null,
+					new TestVisibleObjectTemplate(collision), position(x, y, z));
 			setKnownlist(new KnownList(this));
 			setLifeStats(new TestLifeStats(this));
 		}
@@ -58,9 +112,9 @@ class TargetRangePropertyTest {
 			return 1;
 		}
 
-		private static WorldPosition position() {
+		private static WorldPosition position(float x, float y, float z) {
 			WorldPosition position = new WorldPosition(1);
-			position.setXYZH(0f, 0f, 0f, (byte) 0);
+			position.setXYZH(x, y, z, (byte) 0);
 			return position;
 		}
 	}
@@ -88,6 +142,12 @@ class TargetRangePropertyTest {
 
 	private static final class TestVisibleObjectTemplate extends VisibleObjectTemplate {
 
+		private final BoundRadius boundRadius;
+
+		private TestVisibleObjectTemplate(float collision) {
+			boundRadius = new BoundRadius(collision, collision, 0f);
+		}
+
 		@Override
 		public int getTemplateId() {
 			return 1;
@@ -101,6 +161,11 @@ class TargetRangePropertyTest {
 		@Override
 		public int getNameId() {
 			return 1;
+		}
+
+		@Override
+		public BoundRadius getBoundRadius() {
+			return boundRadius;
 		}
 	}
 

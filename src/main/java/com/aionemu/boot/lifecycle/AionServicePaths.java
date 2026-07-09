@@ -84,15 +84,20 @@ final class AionServicePaths {
             return true;
         }
 
-        Path sourceDirectory = RUNTIME_PROPERTIES.resolveHome("src/main/resources")
-            .resolve(resourcePath)
-            .normalize();
-        if (!Files.isDirectory(sourceDirectory)) {
-            return false;
+        if (!RUNTIME_PROPERTIES.hasHome()) {
+            Path checkoutSourceDirectory = Path.of("src/main/resources").resolve(resourcePath).normalize();
+            if (Files.isDirectory(checkoutSourceDirectory)) {
+                RUNTIME_PROPERTIES.set(property, checkoutSourceDirectory);
+                return true;
+            }
         }
 
-        RUNTIME_PROPERTIES.set(property, sourceDirectory);
-        return true;
+        Path sourceDirectory = RUNTIME_PROPERTIES.resolveHome("src/main/resources").resolve(resourcePath).normalize();
+        if (Files.isDirectory(sourceDirectory)) {
+            RUNTIME_PROPERTIES.set(property, sourceDirectory);
+            return true;
+        }
+        return false;
     }
 
     private static void configureDirectory(String property, String defaultPath) {
@@ -170,6 +175,10 @@ final class AionServicePaths {
     private static final class RuntimeProperties {
 
         private static final String AION_HOME = "aion.home";
+
+        private boolean hasHome() {
+            return System.getProperty(AION_HOME) != null;
+        }
 
         private boolean has(String property) {
             return System.getProperty(property) != null;

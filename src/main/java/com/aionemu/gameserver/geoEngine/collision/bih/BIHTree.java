@@ -367,24 +367,28 @@ public class BIHTree implements CollisionData {
 	private int collideWithRay(Ray r, Matrix4f worldMatrix, BoundingVolume worldBound, CollisionResults results) {
 
 		CollisionResults boundResults = new CollisionResults(results.getIntentions(), results.isOnlyFirst(),
-				results.getInstanceId());
+				results.getInstanceId(), results.getIgnoreProperties());
 		worldBound.collideWith(r, boundResults);
-		if (boundResults.size() > 0) {
-			float tMin = boundResults.getClosestCollision().getDistance();
-			float tMax = boundResults.getFarthestCollision().getDistance();
+		if (boundResults.size() > 0 || worldBound.contains(r.getOrigin())) {
+			float tMin = 0;
+			float tMax = r.getLimit();
+			if (boundResults.size() > 0) {
+				tMin = boundResults.getClosestCollision().getDistance();
+				tMax = boundResults.getFarthestCollision().getDistance();
 
-			if (tMax <= 0) {
-				tMax = Float.POSITIVE_INFINITY;
-			} else if (tMin == tMax) {
-				tMin = 0;
-			}
+				if (tMax <= 0) {
+					tMax = Float.POSITIVE_INFINITY;
+				} else if (tMin == tMax) {
+					tMin = 0;
+				}
 
-			if (tMin <= 0) {
-				tMin = 0;
-			}
+				if (tMin <= 0) {
+					tMin = 0;
+				}
 
-			if (r.getLimit() < Float.POSITIVE_INFINITY) {
-				tMax = Math.min(tMax, r.getLimit());
+				if (r.getLimit() < Float.POSITIVE_INFINITY) {
+					tMax = Math.min(tMax, r.getLimit());
+				}
 			}
 			// return root.intersectBrute(r, worldMatrix, this, tMin, tMax, results);
 			return root.intersectWhere(r, worldMatrix, this, tMin, tMax, results);

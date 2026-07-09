@@ -42,8 +42,6 @@ public class ChatService {
 	/**
 	 * @param playerId
 	 * @param token
-	 * @param account
-	 * @param nick
 	 */
 	public static void playerAuthed(int playerId, byte[] token) {
 		Player player = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findPlayer(playerId);
@@ -67,14 +65,14 @@ public class ChatService {
 	}
 
 	/**
-	 * @param ip the ip to set
+	 * @param _ip the ip to set
 	 */
 	public static void setIp(byte[] _ip) {
 		ip = _ip;
 	}
 
 	/**
-	 * @param port the port to set
+	 * @param _port the port to set
 	 */
 	public static void setPort(int _port) {
 		port = _port;

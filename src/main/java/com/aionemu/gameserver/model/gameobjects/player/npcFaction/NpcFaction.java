@@ -36,9 +36,8 @@ public class NpcFaction {
 	 * @param id
 	 * @param time
 	 * @param active
-	 * @param persistentState
-	 * @param mentor
 	 * @param state
+	 * @param questId
 	 */
 	public NpcFaction(int id, int time, boolean active, ENpcFactionQuestState state, int questId) {
 		this.id = id;

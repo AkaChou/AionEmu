@@ -53,7 +53,7 @@ public class SM_VERSION_CHECK extends AionServerPacket {
 	private final int characterCreateMode;
 
 	/**
-	 * @param chatService
+	 * @param version
 	 */
 	public SM_VERSION_CHECK(int version) {
 		this.version = version;

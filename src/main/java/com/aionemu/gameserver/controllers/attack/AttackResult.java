@@ -23,7 +23,7 @@ import com.aionemu.gameserver.skillengine.model.HitType;
  */
 public class AttackResult {
 
-	private int damage;
+	private float damage;
 
 	private AttackStatus attackStatus;
 
@@ -47,7 +47,17 @@ public class AttackResult {
 		this.attackStatus = attackStatus;
 	}
 
+	public AttackResult(float damage, AttackStatus attackStatus) {
+		this.damage = damage;
+		this.attackStatus = attackStatus;
+	}
+
 	public AttackResult(int damage, AttackStatus attackStatus, HitType type) {
+		this(damage, attackStatus);
+		this.hitType = type;
+	}
+
+	public AttackResult(float damage, AttackStatus attackStatus, HitType type) {
 		this(damage, attackStatus);
 		this.hitType = type;
 	}
@@ -56,6 +66,10 @@ public class AttackResult {
 	 * @return the damage
 	 */
 	public int getDamage() {
+		return (int) damage;
+	}
+
+	public float getExactDamage() {
 		return damage;
 	}
 
@@ -63,6 +77,10 @@ public class AttackResult {
 	 * @param damage the damage to set
 	 */
 	public void setDamage(int damage) {
+		this.damage = damage;
+	}
+
+	public void setDamage(float damage) {
 		this.damage = damage;
 	}
 

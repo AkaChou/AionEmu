@@ -43,7 +43,7 @@ public class CM_CHANNEL_REQUEST extends AbstractClientPacket {
     /**
      * @param packetReader
      * @param gameChannelHandler
-     * @param opCode
+     * @param chatService
      */
     public CM_CHANNEL_REQUEST(PacketReader packetReader, ClientChannelHandler gameChannelHandler, ChatService chatService) {
         super(packetReader, gameChannelHandler, 0x10);

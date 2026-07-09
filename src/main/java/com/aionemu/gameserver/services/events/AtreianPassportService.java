@@ -107,8 +107,8 @@ public class AtreianPassportService {
 	}
 
 	/**
-	 * @param count
-	 * @param timestamp
+	 * @param player
+	 * @param atreianId
 	 */
 	public void getReward(Player player, int atreianId) {
 		AtreianPassport loginRewardTemplate = DataManager.ATREIAN_PASSPORT_DATA.getAtreianPassportId(atreianId);

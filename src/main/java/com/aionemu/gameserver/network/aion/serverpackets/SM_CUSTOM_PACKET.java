@@ -135,7 +135,6 @@ public class SM_CUSTOM_PACKET extends AionServerPacket {
 		 * Writes value stored in this PacketElement into buffer <tt>buf</tt>
 		 * 
 		 * @param packet packet instance.
-		 * @param buf    packet write buffer.
 		 */
 		public void writeValue(SM_CUSTOM_PACKET packet) {
 			type.write(packet, value);

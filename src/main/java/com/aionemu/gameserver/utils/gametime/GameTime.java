@@ -223,7 +223,7 @@ public class GameTime implements Cloneable {
 	/**
 	 * Subtract the given game time from this game time
 	 *
-	 * @param game time to subtract
+	 * @param gt time to subtract
 	 * @return new game time
 	 */
 	public GameTime minus(GameTime gt) {
@@ -233,7 +233,7 @@ public class GameTime implements Cloneable {
 	/**
 	 * Add the given game time to this game time
 	 *
-	 * @param game time to add
+	 * @param gt time to add
 	 * @return new game time
 	 */
 	public GameTime plus(GameTime gt) {
@@ -263,7 +263,7 @@ public class GameTime implements Cloneable {
 	/**
 	 * Compare two game times
 	 *
-	 * @param GameTime object
+	 * @param o object
 	 * @return true or false
 	 * @author vlog
 	 */

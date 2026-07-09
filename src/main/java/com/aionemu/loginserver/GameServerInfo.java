@@ -180,7 +180,7 @@ public class GameServerInfo {
     /**
      * Set active GsConnection.
      *
-     * @param gsConnection
+     * @param gscHandler
      */
     public final void setConnection(GsConnection gscHandler) {
         this.gscHandler = gscHandler;

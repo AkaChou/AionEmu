@@ -17,8 +17,8 @@
 package com.aionemu.gameserver.world.zone;
 
 import lombok.extern.slf4j.Slf4j;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Rolandas
@@ -27,7 +27,7 @@ import java.util.Map;
 public final class ZoneName {
 
 
-	private static final Map<String, ZoneName> zoneNames = new LinkedHashMap<String, ZoneName>();
+	private static final Map<String, ZoneName> zoneNames = new ConcurrentHashMap<String, ZoneName>();
 	public static final String NONE = "NONE";
 	public static final String ABYSS_CASTLE = "_ABYSS_CASTLE_AREA_";
 
@@ -51,26 +51,19 @@ public final class ZoneName {
 	}
 
 	public static final ZoneName createOrGet(String name) {
-		name = name.toUpperCase();
-		if (zoneNames.containsKey(name))
-			return zoneNames.get(name);
-		ZoneName newZone = new ZoneName(name);
-		zoneNames.put(name, newZone);
-		return newZone;
+		return zoneNames.computeIfAbsent(name.toUpperCase(), ZoneName::new);
 	}
 
 	public static final int getId(String name) {
-		name = name.toUpperCase();
-		if (zoneNames.containsKey(name)) {
-			return zoneNames.get(name).id();
-		}
-		return zoneNames.get(NONE).id();
+		ZoneName zoneName = zoneNames.get(name.toUpperCase());
+		return (zoneName != null ? zoneName : zoneNames.get(NONE)).id();
 	}
 
 	public static final ZoneName get(String name) {
 		name = name.toUpperCase();
-		if (zoneNames.containsKey(name)) {
-			return zoneNames.get(name);
+		ZoneName zoneName = zoneNames.get(name);
+		if (zoneName != null) {
+			return zoneName;
 		}
 		log.warn("Missing zone : " + name);
 		return zoneNames.get(NONE);

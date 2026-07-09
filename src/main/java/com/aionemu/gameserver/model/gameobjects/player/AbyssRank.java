@@ -48,14 +48,15 @@ public class AbyssRank {
 
 	/**
 	 * @param dailyAP
-	 * @param weeklyAP
-	 * @param ap
-	 *
 	 * @param dailyGP
+	 * @param weeklyAP
+	 *
 	 * @param weeklyGP
+	 * @param ap
 	 * @param gp
 	 *
 	 * @param rank
+	 * @param topRanking
 	 * @param dailyKill
 	 * @param weeklyKill
 	 * @param allKill
@@ -63,7 +64,6 @@ public class AbyssRank {
 	 * @param lastKill
 	 * @param lastAP
 	 * @param lastGP
-	 * @param lastUpdate
 	 */
 	public AbyssRank(int dailyAP, int dailyGP, int weeklyAP, int weeklyGP, int ap, int gp, int rank, int topRanking,
 			int dailyKill, int weeklyKill, int allKill, int maxRank, int lastKill, int lastAP, int lastGP,

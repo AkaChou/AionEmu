@@ -325,7 +325,7 @@
 	<!-- Sanctum Underground Arena -->
 	<instance_exit instance_id="310080000" exit_world="110010000" race="ELYOS" x="1466.1178" y="1336.6044" z="566.41583" h="82"/>
 	<!-- Azoturan Fortress -->
-	<instance_exit instance_id="310110000" exit_world="210040000" race="ELYOS" x="539.2635" y="712.9911" z="153.02988" h="60"/>
+	<instance_exit instance_id="310100000" exit_world="210040000" race="ELYOS" x="539.2635" y="712.9911" z="153.02988" h="60"/>
 	<!-- Aerdina To Verteron -->
 	<instance_exit instance_id="320030000" exit_world="220030000" race="ASMODIANS" x="275.73795" y="162.70334" z="205.33205" h="0"/>
 	<!-- Sky Temple Interior -->

@@ -40,7 +40,7 @@ public abstract class LsServerPacket extends BaseServerPacket {
 	 * Write this packet data for given connection, to given buffer.
 	 * 
 	 * @param con
-	 * @param buf
+	 * @param buffer
 	 */
 	public final synchronized void write(LoginServerConnection con, ByteBuffer buffer) {
 		setBuf(buffer);

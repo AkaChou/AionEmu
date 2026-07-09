@@ -44,7 +44,6 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	/**
 	 * Write packet opcodec and two additional bytes
 	 * 
-	 * @param buf
 	 * @param value
 	 */
 	private final void writeOP(int value) {
@@ -65,7 +64,7 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	 * Write and encrypt this packet data for given connection, to given buffer.
 	 * 
 	 * @param con
-	 * @param buf
+	 * @param buffer
 	 */
 	public final synchronized void write(AionConnection con, ByteBuffer buffer) {
 		if (con.getState().equals(AionConnection.State.IN_GAME)
@@ -90,7 +89,6 @@ public abstract class AionServerPacket extends BaseServerPacket {
 	 * Write data that this packet represents to given byte buffer.
 	 * 
 	 * @param con
-	 * @param buf
 	 */
 	protected void writeImpl(AionConnection con) {
 

@@ -214,7 +214,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	}
 
 	/**
-	 * @param return itemCreator
+	 * @return item creator
 	 */
 	public String getItemCreator() {
 		if (itemCreator == null) {
@@ -377,7 +377,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * this method for newly created items which are not yet in any storage
 	 * 
 	 * @param count
-	 * @param left  count
 	 */
 	public long increaseItemCount(long count) {
 		if (count <= 0) {
@@ -398,7 +397,6 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	 * this method for newly created items which are not yet in any storage
 	 * 
 	 * @param count
-	 * @param left  count
 	 */
 	public long decreaseItemCount(long count) {
 		if (count <= 0) {
@@ -724,7 +722,7 @@ public class Item extends AionObject implements IExpirable, StatOwner {
 	/**
 	 * Compares two items on their object and item ids
 	 * 
-	 * @param Item object
+	 * @param i object
 	 * @return true, if this item is equal to the object item
 	 * @author vlog
 	 */

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -56,6 +57,7 @@ public class Town {
 		this.persistentState = PersistentState.UPDATED;
 		this.spawnedNpcs = new ArrayList<Npc>();
 		spawnNewObjects();
+		updateTownToLevel();
 	}
 
 	public Town(int id, Race race) {
@@ -108,6 +110,11 @@ public class Town {
 		broadcastUpdate();
 		despawnOldObjects();
 		spawnNewObjects();
+		updateTownToLevel();
+	}
+
+	private void updateTownToLevel() {
+		GameWorldServices.geoService().updateTownToLevel(DataManager.TOWN_SPAWNS_DATA.getWorldIdForTown(id), id, level);
 	}
 
 	private void broadcastUpdate() {

@@ -61,9 +61,7 @@ public class ChatClient {
     /**
      * @param clientId
      * @param token
-     * @param playerLogin
      * @param nick
-     * @param identifier
      */
     public ChatClient(int clientId, byte[] token, String nick) {
         this.clientId = clientId;
@@ -126,8 +124,6 @@ public class ChatClient {
 
     /**
      * @param identifier the identifier to set
-     * @param realAccount
-     * @param realName
      */
     public void setIdentifier(byte[] identifier) {
         this.identifier = identifier;

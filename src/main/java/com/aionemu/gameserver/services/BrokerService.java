@@ -524,7 +524,7 @@ public class BrokerService {
 	 * @param player
 	 * @param itemUniqueId
 	 * @param count
-	 * @param price
+	 * @param PricePerItem
 	 */
 	public void registerItem(Player player, int itemUniqueId, long count, long PricePerItem, boolean isSplitSell) {
 		long TotalItemPrice = PricePerItem * count;
@@ -809,7 +809,7 @@ public class BrokerService {
 	}
 
 	/**
-	 * @param PlayerCommonData
+	 * @param playerCommonData
 	 */
 	public long getCollectedMoney(PlayerCommonData playerCommonData) {
 		Map<Integer, BrokerItem> brokerSettledItems = getRaceBrokerSettledItems(playerCommonData.getRace());

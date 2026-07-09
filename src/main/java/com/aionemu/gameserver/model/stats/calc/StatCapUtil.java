@@ -23,6 +23,8 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import com.aionemu.gameserver.model.stats.container.CombatMode;
+import com.aionemu.gameserver.model.stats.container.RatioType;
 
 @Slf4j
 public class StatCapUtil {
@@ -165,6 +167,19 @@ public class StatCapUtil {
 			break;
 		}
 		return value;
+	}
+
+	public static int limitValueForPvpOrPveStat(CombatMode mode, RatioType type, int value) {
+		int min;
+		int max;
+		if (mode == CombatMode.PVP) {
+			min = type == RatioType.ATTACK ? -900 : -1000;
+			max = type == RatioType.ATTACK ? 1000 : 900;
+		} else {
+			min = type == RatioType.ATTACK ? -900 : -5000;
+			max = type == RatioType.ATTACK ? 5000 : 900;
+		}
+		return Math.max(min, Math.min(max, value));
 	}
 
 	private static void calculate(Stat2 stat2, int lowerCap, int upperCap) {

@@ -66,8 +66,7 @@ public class LoginServerConnection extends AConnection {
 	/**
 	 * Constructor.
 	 * 
-	 * @param sc
-	 * @param d
+	 * @param transport
 	 * @throws IOException
 	 */
 	public LoginServerConnection(ConnectionTransport transport) {

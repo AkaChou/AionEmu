@@ -264,7 +264,7 @@ public class AccountController {
      * Refresh last_mac of account
      *
      * @param accountId id of account
-     * @param adress new macAdress
+     * @param address new macAdress
      * @return refreshed or not
      */
     public static boolean refreshAccountsLastMac(int accountId, String address) {

@@ -194,7 +194,7 @@ public class SummonController extends CreatureController<Summon> {
 	/**
 	 * Handle automatic release if Ultra Skill demands it
 	 * 
-	 * @param is the skill commanded by summoner, after which pet is automatically
+	 * @param skillId the skill commanded by summoner, after which pet is automatically
 	 *           dismissed
 	 */
 	public void setReleaseAfterSkill(int skillId) {

@@ -34,7 +34,7 @@ public class QuestTasks {
 	/**
 	 * Schedule new following checker task
 	 *
-	 * @param player
+	 * @param env
 	 * @param npc
 	 * @param target
 	 * @return
@@ -47,7 +47,7 @@ public class QuestTasks {
 	/**
 	 * Schedule new following checker task
 	 *
-	 * @param player
+	 * @param env
 	 * @param npc
 	 * @param npcTargetId
 	 * @return
@@ -67,9 +67,9 @@ public class QuestTasks {
 	 * Schedule new following checker task
 	 *
 	 * @param env
+	 * @param npc
 	 * @param x
 	 * @param y
-	 * @param z
 	 * @return
 	 */
 	public static final Future<?> newFollowingToTargetCheckTask(final QuestEnv env, Npc npc, float x, float y,

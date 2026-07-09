@@ -42,7 +42,7 @@ public class StaticDoorSpawnManager {
 
 
 	/**
-	 * @param spawnGroup
+	 * @param worldId
 	 * @param instanceIndex
 	 */
 	public static void spawnTemplate(int worldId, int instanceIndex) {
@@ -57,15 +57,12 @@ public class StaticDoorSpawnManager {
 			}
 			SpawnTemplate spawn = new SpawnTemplate(new SpawnGroup2(worldId, 300001), data.getX(), data.getY(),
 					data.getZ(), (byte) 0, 0, null, 0, 0);
-			spawn.setEntityId(data.getDoorId());
+			spawn.setStaticId(data.getDoorId());
 			int objectId = GameWorldBootstrapServices.idFactory().nextId();
 			StaticDoor staticDoor = new StaticDoor(objectId, new StaticObjectController(), spawn, data, instanceIndex);
 			staticDoor.setKnownlist(new PlayerAwareKnownList(staticDoor));
 			bringIntoWorld(staticDoor, spawn, instanceIndex);
-			if (staticDoor.getDoorName() != null) {
-				GameWorldServices.geoService().setDoorState(worldId, instanceIndex, staticDoor.getDoorName(),
-						staticDoor.isOpen());
-			}
+			GameWorldServices.geoService().setDoorState(worldId, instanceIndex, data.getDoorId(), staticDoor.isOpen());
 			counter++;
 		}
 		if (counter > 0) {

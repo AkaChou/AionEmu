@@ -17,6 +17,7 @@
 package com.aionemu.gameserver.world.zone.handler;
 
 import com.aionemu.gameserver.controllers.observer.ActionObserver;
+import com.aionemu.gameserver.controllers.observer.AbstractCollisionObserver.CheckType;
 import com.aionemu.gameserver.controllers.observer.CollisionMaterialActor;
 import com.aionemu.gameserver.controllers.observer.IActor;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
@@ -72,12 +73,14 @@ public class MaterialZoneHandler implements ZoneHandler {
 		if (foundSkill == null) {
 			return;
 		}
-		CollisionMaterialActor actor = new CollisionMaterialActor(creature, geometry, template);
+		CheckType checkType = geometry.getMaterialId() >= 14 && geometry.getMaterialId() <= 16 ? CheckType.PASS : CheckType.TOUCH;
+		CollisionMaterialActor actor = new CollisionMaterialActor(creature, geometry, template, checkType);
 		creature.getObserveController().addObserver(actor);
 		observed.put(creature.getObjectId(), actor);
 		if (actOnEnter) {
 			actor.act();
 		}
+		actor.moved();
 	}
 
 	@Override

@@ -390,7 +390,7 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param transformModel the transformedModel to set
+	 * @param model the transformedModel to set
 	 */
 	public final void setTransformModel(TransformModel model) {
 		this.transformModel = model;
@@ -534,7 +534,7 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param visibleObject
+	 * @param creature
 	 * @return
 	 */
 
@@ -585,7 +585,7 @@ public abstract class Creature extends VisibleObject {
 	}
 
 	/**
-	 * @param delayId
+	 * @param template
 	 * @return
 	 */
 	public boolean isSkillDisabled(SkillTemplate template) {

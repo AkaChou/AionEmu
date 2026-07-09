@@ -15,6 +15,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
+
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
@@ -144,6 +148,23 @@ class XmlDataLoaderTest {
 		} finally {
 			thread.setContextClassLoader(originalClassLoader);
 		}
+	}
+
+	@Test
+	void staticDataSchemaCompiles() {
+		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+		assertDoesNotThrow(() -> schemaFactory.newSchema(Path.of("src/main/resources/aion/game/data/static_data/static_data.xsd").toFile()));
+	}
+
+	@Test
+	void skillTemplatesValidateAgainstSchema() {
+		SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+		assertDoesNotThrow(() -> schemaFactory
+			.newSchema(Path.of("src/main/resources/aion/game/data/static_data/skills/skills.xsd").toFile())
+			.newValidator()
+			.validate(new StreamSource(Path.of("src/main/resources/aion/game/data/static_data/skills/skill_templates.xml").toFile())));
 	}
 
 	@Test

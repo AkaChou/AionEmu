@@ -104,7 +104,7 @@ public class IPRange {
      * 将字节数组转换为长整型
      * Convert byte array to long
      *
-     * @param bytes 字节数组 / Byte array
+     * @param field 字节数组 / Byte array
      * @return 转换后的长整型值 / Converted long value
      */
     private static long toLong(String field, byte[] bytes) {

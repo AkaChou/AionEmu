@@ -37,7 +37,6 @@ public class GameServerService {
     private boolean isOnline = false;
 
     /**
-     * @param gameChannelHandler
      * @param gameServerId
      * @param defaultAddress
      * @param password

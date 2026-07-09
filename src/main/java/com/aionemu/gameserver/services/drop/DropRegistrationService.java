@@ -232,9 +232,9 @@ public class DropRegistrationService {
 			
 			if (!npc.getPosition().isInstanceMap()) {
 				// 为大世界增加掉落数量限制，使其与副本区域保持平衡 | Increase drop limit for open world to balance with instance areas
-				maxDropsAllowed += 5; // 增加3个物品的掉落上限 | Increase drop limit by 5 items
+				maxDropsAllowed += 5; // 增加5个物品的掉落上限 | Increase drop limit by 5 items
 				
-				// 为大世界精英怪物增加额外掉落率和掉落数量 | Add extra drop rate and drop quantity for elite monsters in open world
+				// 为大世界精英/英雄/传说怪物增加额外掉落率 | Add extra drop rate for elite/hero/legendary monsters in open world
 				if (npc.getRating() != null) {
 					if (npc.getRating().equals(NpcRating.ELITE)) {
 						extraDropRateModifier = 31.0f; // 精英怪掉落率提高3000%

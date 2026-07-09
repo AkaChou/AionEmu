@@ -48,9 +48,7 @@ public class QuestTimer {
 	}
 
 	/**
-	 * @param seconds
-	 * @param player
-	 * @return
+	 * Starts the quest timer.
 	 */
 	public void Start() {
 		PacketSendUtility.sendMessage(player, "Timer started");

@@ -18,6 +18,7 @@ package com.aionemu.gameserver.model.house;
 
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameHousingServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 
@@ -294,6 +295,10 @@ public class House extends VisibleObject {
 
 	public void setDoorState(HousePermissions doorState) {
 		permissions = HousePermissions.setDoorState(permissions, doorState);
+		if (isSpawned()) {
+			GameWorldServices.geoService().setHouseDoorState(getWorldId(), getInstanceId(), address.getId(),
+					doorState.isDoorOpen());
+		}
 	}
 
 	public HousePermissions getNoticeState() {

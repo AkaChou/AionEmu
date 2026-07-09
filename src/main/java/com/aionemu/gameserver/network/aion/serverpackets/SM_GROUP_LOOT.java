@@ -31,7 +31,7 @@ public class SM_GROUP_LOOT extends AionServerPacket {
 	private long luck;
 
 	/**
-	 * @param Player Id must be 0 to start the Roll Options
+	 * @param groupId Id must be 0 to start the Roll Options
 	 */
 	public SM_GROUP_LOOT(int groupId, int playerId, int itemId, int lootCorpseId, int distributionId, long luck,
 			int index) {

@@ -7,7 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 
+import com.aionemu.gameserver.dataholders.DataManager;
+import com.aionemu.gameserver.dataholders.SkillData;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
 import com.aionemu.gameserver.skillengine.effect.Effects;
@@ -17,6 +20,7 @@ import com.aionemu.gameserver.skillengine.model.Effect;
 import com.aionemu.gameserver.skillengine.model.SkillSubType;
 import com.aionemu.gameserver.skillengine.model.SkillTargetSlot;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
+import com.aionemu.gameserver.skillengine.model.StigmaType;
 import org.junit.jupiter.api.Test;
 
 class EffectControllerTest {
@@ -150,6 +154,33 @@ class EffectControllerTest {
 		assertNull(controller.abnormalEffect("second"));
 	}
 
+	@Test
+	void priorityStigmaChecksLaterEffectIdsBeforeAcceptingConflict() {
+		TestEffectController controller = new TestEffectController();
+		TestEffect existingEffect = stigmaEffect(controller, "existing", 10, StigmaType.BASIC, 10);
+		TestEffect nextEffect = stigmaEffect(controller, "next", 11, StigmaType.ADVANCED, 20, 10);
+
+		controller.addEffect(existingEffect);
+		controller.addEffect(nextEffect);
+
+		assertTrue(existingEffect.ended());
+		assertSame(nextEffect, controller.abnormalEffect("next"));
+	}
+
+	@Test
+	void addSavedEffectIgnoresMissingSkillTemplate() {
+		SkillData originalSkillData = DataManager.SKILL_DATA;
+		try {
+			DataManager.SKILL_DATA = new SkillData();
+			DataManager.SKILL_DATA.setSkillTemplates(Collections.emptyList());
+
+			assertDoesNotThrow(() -> new PlayerEffectController(null).addSavedEffect(999999, 1, 1000,
+					System.currentTimeMillis() + 1000));
+		} finally {
+			DataManager.SKILL_DATA = originalSkillData;
+		}
+	}
+
 	private static TestEffect abnormalEffect(TestEffectController controller, String stack, int skillId, int effectId,
 			int basicLevel) {
 		return effect(controller, stack, skillId, effectId, basicLevel, ActivationAttribute.ACTIVE, SkillTargetSlot.BUFF);
@@ -169,8 +200,23 @@ class EffectControllerTest {
 		return effect(controller, stack, skillId, effectId, basicLevel, ActivationAttribute.TOGGLE, SkillTargetSlot.NOSHOW);
 	}
 
+	private static TestEffect stigmaEffect(TestEffectController controller, String stack, int skillId,
+			StigmaType stigmaType, int... effectIds) {
+		SkillTemplate skillTemplate = skillTemplate(stack, skillId, ActivationAttribute.ACTIVE, SkillTargetSlot.BUFF);
+		setField(skillTemplate, "stigmaType", stigmaType);
+		setField(skillTemplate, "effects", effects(effectIds));
+		return new TestEffect(controller, skillTemplate);
+	}
+
 	private static TestEffect effect(TestEffectController controller, String stack, int skillId, int effectId,
 			int basicLevel, ActivationAttribute activationAttribute, SkillTargetSlot targetSlot) {
+		SkillTemplate skillTemplate = skillTemplate(stack, skillId, activationAttribute, targetSlot);
+		setField(skillTemplate, "effects", effects(effectId, basicLevel));
+		return new TestEffect(controller, skillTemplate);
+	}
+
+	private static SkillTemplate skillTemplate(String stack, int skillId, ActivationAttribute activationAttribute,
+			SkillTargetSlot targetSlot) {
 		SkillTemplate skillTemplate = new SkillTemplate();
 		setField(skillTemplate, "skillId", skillId);
 		setField(skillTemplate, "stack", stack);
@@ -178,13 +224,20 @@ class EffectControllerTest {
 		setField(skillTemplate, "subType", SkillSubType.NONE);
 		setField(skillTemplate, "targetSlot", targetSlot);
 		setField(skillTemplate, "dispelCategory", DispelCategoryType.BUFF);
-		setField(skillTemplate, "effects", effects(effectId, basicLevel));
-		return new TestEffect(controller, skillTemplate);
+		return skillTemplate;
 	}
 
 	private static Effects effects(int effectId, int basicLevel) {
 		Effects effects = new Effects();
 		effects.getEffects().add(new TestEffectTemplate(effectId, basicLevel));
+		return effects;
+	}
+
+	private static Effects effects(int... effectIds) {
+		Effects effects = new Effects();
+		for (int effectId : effectIds) {
+			effects.getEffects().add(new TestEffectTemplate(effectId, 1));
+		}
 		return effects;
 	}
 

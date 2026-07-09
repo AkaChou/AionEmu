@@ -17,6 +17,8 @@
 package com.aionemu.gameserver.geoEngine;
 
 import lombok.extern.slf4j.Slf4j;
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -27,9 +29,14 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import javax.imageio.ImageIO;
 
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
@@ -40,11 +47,11 @@ import com.aionemu.gameserver.geoEngine.math.Matrix3f;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Geometry;
+import com.aionemu.gameserver.geoEngine.scene.DespawnableNode;
 import com.aionemu.gameserver.geoEngine.scene.Mesh;
 import com.aionemu.gameserver.geoEngine.scene.Node;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.geoEngine.scene.VertexBuffer;
-import com.aionemu.gameserver.geoEngine.scene.mesh.DoorGeometry;
 import com.aionemu.gameserver.configs.Config;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.world.zone.ZoneName;
@@ -68,25 +75,21 @@ public class GeoWorldLoader {
 		try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r");
 			 FileChannel roChannel = raFile.getChannel();
 			 Arena arena = Arena.ofConfined()) {
-			ByteBuffer geo = mapReadOnly(roChannel, arena);
+			ByteBuffer geo = mapReadOnly(roChannel, arena).order(ByteOrder.BIG_ENDIAN);
 			while (geo.hasRemaining()) {
-				short namelenght = geo.getShort();
+				int namelenght = Short.toUnsignedInt(geo.getShort());
 				byte[] nameByte = new byte[namelenght];
 				geo.get(nameByte);
 				String name = new String(nameByte).intern();
+				boolean hasAliases = name.indexOf('|') >= 0;
 				Node node = new Node(DEBUG ? name : null);
 				byte intentions = 0;
 				byte singleChildMaterialId = -1;
-				int modelCount = geo.getShort();
+				int modelCount = Byte.toUnsignedInt(geo.get());
 				for (int c = 0; c < modelCount; c++) {
 					Mesh m = new Mesh();
 
-					int vectorCount;
-					if (GeoDataConfig.GEO_MONONO2_IN_USE) {
-						vectorCount = (geo.getInt()) * 3;
-					} else {
-						vectorCount = (geo.getShort()) * 3;
-					}
+					int vectorCount = Short.toUnsignedInt(geo.getShort()) * 3;
 
 					ByteBuffer floatBuffer = ByteBuffer.allocateDirect(vectorCount * 4);
 					FloatBuffer vertices = floatBuffer.asFloatBuffer();
@@ -94,50 +97,60 @@ public class GeoWorldLoader {
 						vertices.put(geo.getFloat());
 					}
 
-					int triangles = geo.getInt();
+					int triangles = Short.toUnsignedInt(geo.getShort()) * 3;
+					int indexSize = Byte.toUnsignedInt(geo.get());
 					ByteBuffer shortBuffer = ByteBuffer.allocateDirect(triangles * 2);
 					ShortBuffer indexes = shortBuffer.asShortBuffer();
 					for (int x = 0; x < triangles; x++) {
-						indexes.put(geo.getShort());
+						indexes.put((short) (indexSize == 1 ? Byte.toUnsignedInt(geo.get()) : Short.toUnsignedInt(geo.getShort())));
 					}
 
-					Geometry geom = null;
-					m.setCollisionFlags(geo.getShort());
-					if ((m.getIntentions() & CollisionIntention.MOVEABLE.getId()) != 0) {
-						// TODO: skip moveable collisions (ships, shugo boxes), not handled yet
-						continue;
-					}
+					Geometry geom;
+					int materialId = Byte.toUnsignedInt(geo.get());
+					int collisionIntentions = Byte.toUnsignedInt(geo.get());
+					m.setCollisionFlags((short) (collisionIntentions << 8 | materialId));
 					intentions |= m.getIntentions();
 					m.setBuffer(VertexBuffer.Type.Position, 3, vertices);
 					m.setBuffer(VertexBuffer.Type.Index, 3, indexes);
 					// ponytail: 碰撞树不再同步构建，改由 RealGeoData 后台并行预构建，避免阻塞启动
 
-					if ((intentions & CollisionIntention.DOOR.getId()) != 0
-							&& (intentions & CollisionIntention.PHYSICAL.getId()) != 0) {
-						if (!GeoDataConfig.GEO_DOORS_ENABLE) {
-							continue;
-						}
-						geom = new DoorGeometry(name, m);
-						// what if doors have few models ?
-					} else {
-						MaterialTemplate mtl = DataManager.MATERIAL_DATA.getTemplate(m.getMaterialId());
-						geom = new Geometry(null, m);
-						if (mtl != null || m.getMaterialId() == 11) {
-							node.setName(name);
-						}
-						if (modelCount == 1) {
-							geom.setName(name);
-							singleChildMaterialId = geom.getMaterialId();
-						} else {
-							geom.setName(("child" + c + "_" + name).intern());
-						}
-						node.attachChild(geom);
+					MaterialTemplate mtl = DataManager.MATERIAL_DATA == null ? null : DataManager.MATERIAL_DATA.getTemplate(m.getMaterialId());
+					geom = new Geometry(null, m);
+					if (mtl != null || m.getMaterialId() == 11) {
+						node.setName(name);
 					}
-					geoms.put(geom.getName(), geom);
+					if (modelCount == 1) {
+						geom.setName(name);
+						singleChildMaterialId = geom.getMaterialId();
+					} else {
+						geom.setName(("child" + c + "_" + name).intern());
+					}
+					node.attachChild(geom);
+					if (!hasAliases) {
+						geoms.put(geom.getName().toLowerCase().intern(), geom);
+					}
 				}
 				node.setCollisionFlags((short) (intentions << 8 | singleChildMaterialId & 0xFF));
 				if (!node.getChildren().isEmpty()) {
-					geoms.put(name, node);
+					if (!hasAliases) {
+						geoms.put(name.toLowerCase().intern(), node);
+					} else {
+						try {
+							for (String alias : name.split("\\|")) {
+								Node clone = node.clone();
+								if (clone.getName() != null) {
+									clone.setName(alias);
+								}
+								Spatial child = clone.getChild(name);
+								if (child != null) {
+									child.setName(alias);
+								}
+								geoms.put(alias.toLowerCase().intern(), clone);
+							}
+						} catch (CloneNotSupportedException e) {
+							throw new IOException("Failed to clone aliased geo model " + name, e);
+						}
+					}
 				}
 			}
 		}
@@ -146,52 +159,27 @@ public class GeoWorldLoader {
 	}
 
 	public static boolean loadWorld(int worldId, Map<String, Spatial> models, GeoMap map) throws IOException {
+		return loadWorld(worldId, models, map, true, new HashSet<String>());
+	}
+
+	public static boolean loadWorldObjects(int worldId, Map<String, Spatial> models, GeoMap map, Set<String> missingMeshes) throws IOException {
+		return loadWorld(worldId, models, map, false, missingMeshes);
+	}
+
+	private static boolean loadWorld(int worldId, Map<String, Spatial> models, GeoMap map, boolean loadTerrain, Set<String> missingMeshes)
+			throws IOException {
 		File geoFile = Config.dataFile(GEO_DIR + worldId + ".geo");
+		boolean hasTerrain = !loadTerrain || loadTerrain(worldId, map);
+		if (!geoFile.exists()) {
+			return hasTerrain;
+		}
 		try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r");
 			 FileChannel roChannel = raFile.getChannel();
 			 Arena arena = Arena.ofConfined()) {
-			ByteBuffer geo = mapReadOnly(roChannel, arena);
-
-			if (GeoDataConfig.GEO_MONONO2_IN_USE) {
-				if (geo.get() == 0) {
-					// no terrain
-					map.setTerrainData(new short[] { geo.getShort() });
-					/* int cutoutSize = */ geo.getInt();
-				} else {
-					int size = geo.getInt();
-					short[] terrainData = new short[size];
-					for (int i = 0; i < size; i++) {
-						terrainData[i] = geo.getShort();
-					}
-					map.setTerrainData(terrainData);
-
-					// read list of terrain indexes to remove.
-					int cutoutSize = geo.getInt();
-					if (cutoutSize > 0) {
-						int[] cutoutData = new int[cutoutSize];
-						for (int i = 0; i < cutoutSize; i++) {
-							cutoutData[i] = geo.getInt();
-						}
-						map.setTerrainCutouts(cutoutData);
-					}
-				}
-
-			} else {
-
-				if (geo.get() == 0) {
-					map.setTerrainData(new short[] { geo.getShort() });
-				} else {
-					int size = geo.getInt();
-					short[] terrainData = new short[size];
-					for (int i = 0; i < size; i++) {
-						terrainData[i] = geo.getShort();
-					}
-					map.setTerrainData(terrainData);
-				}
-			}
+			ByteBuffer geo = mapReadOnly(roChannel, arena).order(ByteOrder.BIG_ENDIAN);
 
 			while (geo.hasRemaining()) {
-				int nameLength = geo.getShort();
+				int nameLength = Short.toUnsignedInt(geo.getShort());
 				byte[] nameByte = new byte[nameLength];
 				geo.get(nameByte);
 				String name = new String(nameByte);
@@ -201,45 +189,33 @@ public class GeoWorldLoader {
 					matrix[i] = geo.getFloat();
 				}
 
-				float scale;
-				if (GeoDataConfig.GEO_MONONO2_IN_USE) {
-					scale = geo.getFloat();
-					geo.get(); // TODO : use the data: EventType eventType = EventType.fromByte(geo.get());
-				} else {
-					scale = geo.getFloat();
-				}
+				Vector3f scale = new Vector3f(geo.getFloat(), geo.getFloat(), geo.getFloat());
+				byte type = geo.get();
+				int id = Short.toUnsignedInt(geo.getShort());
+				byte level = geo.get();
 
 				Matrix3f matrix3f = new Matrix3f();
 				matrix3f.set(matrix);
 				Spatial node = models.get(name.toLowerCase().intern());
-				try {
-					if (node != null) {
-						Spatial nodeClone = node;
-						if (node instanceof DoorGeometry) {
-							try {
-								nodeClone = node.clone();
-							} catch (CloneNotSupportedException e) {
-								log.error("Failed to clone door geometry {}", name, e);
-							}
-							createDoors(nodeClone, worldId, matrix3f, loc, scale);
-							map.attachChild(nodeClone);
-						} else {
-							nodeClone = attachChild(map, node, matrix3f, loc, scale);
-							List<Spatial> children = ((Node) node)
-									.descendantMatches("child\\d+_" + name.replace("\\", "\\\\"));
-							if (children.size() == 0) {
-								createZone(nodeClone, worldId, 0);
-							} else {
-								for (int c = 0; c < children.size(); c++) {
-									Spatial child = children.get(c);
-									nodeClone = attachChild(map, child, matrix3f, loc, scale);
-									createZone(nodeClone, worldId, c + 1);
-								}
-							}
-						}
+				if (node != null) {
+					try {
+					if (type > 0 && node instanceof Node) {
+						node = despawnable((Node) node, type, id, level);
 					}
-				} catch (Throwable t) {
-					log.error("Failed to load geo node {} for world {}", name, worldId, t);
+					Spatial nodeClone = attachToMapAndCreateZones(map, node, matrix3f, loc, scale, worldId);
+					if (nodeClone instanceof DespawnableNode
+							&& ((DespawnableNode) nodeClone).type == DespawnableNode.DespawnableType.TOWN_OBJECT) {
+						loadTownLevelEntities(map, models, (DespawnableNode) nodeClone, name, matrix3f, loc, scale, level,
+								worldId);
+					}
+					} catch (CloneNotSupportedException e) {
+						throw new IOException("Could not clone geo node " + name + " in world " + worldId, e);
+					}
+				} else {
+					missingMeshes.add(name);
+					if (missingMeshes.size() == 1) {
+						log.warn("Missing geo mesh {} in world {}", name, worldId);
+					}
 				}
 			}
 		}
@@ -247,13 +223,199 @@ public class GeoWorldLoader {
 		return true;
 	}
 
-	private static Spatial attachChild(GeoMap map, Spatial node, Matrix3f matrix, Vector3f location, float scale) {
-		Spatial nodeClone = node;
-		try {
-			nodeClone = node.clone();
-		} catch (CloneNotSupportedException e) {
-			log.error("Failed to clone geometry node {}", node.getName(), e);
+	public static void loadTerrains(Collection<GeoMap> maps) throws IOException {
+		File geoDir = Config.dataFile(GEO_DIR);
+		File[] files = geoDir.listFiles((dir, name) -> name.endsWith(".png"));
+		if (files == null) {
+			return;
 		}
+		Arrays.sort(files, (a, b) -> Boolean.compare(isDirectTerrainFile(a.getName()), isDirectTerrainFile(b.getName())));
+		for (File file : files) {
+			BufferedImage image = ImageIO.read(file);
+			if (image == null) {
+				throw new IOException("Unsupported terrain PNG: " + file);
+			}
+			int width = image.getWidth();
+			int height = image.getHeight();
+			Raster raster = image.getRaster();
+			boolean material = file.getName().endsWith("_materials.png");
+			String stem = file.getName().substring(0, file.getName().length() - (material ? "_materials.png".length() : ".png".length()));
+			for (String token : stem.split(",")) {
+				int mapId;
+				try {
+					mapId = Integer.parseInt(token);
+				} catch (NumberFormatException e) {
+					continue;
+				}
+				for (GeoMap map : maps) {
+					if (map.getMapId() == mapId) {
+						if (material) {
+							map.setTerrainMaterialData(readMaterialData(raster, width, height), width, height);
+						} else {
+							map.setTerrainData(readHeightData(raster, width, height), width, height);
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	private static boolean isDirectTerrainFile(String fileName) {
+		String suffix = fileName.endsWith("_materials.png") ? "_materials.png" : ".png";
+		String stem = fileName.substring(0, fileName.length() - suffix.length());
+		return stem.indexOf(',') == -1;
+	}
+
+	private static DespawnableNode despawnable(Node node, byte type, int id, byte level) throws CloneNotSupportedException {
+		DespawnableNode despawnable = new DespawnableNode();
+		despawnable.copyFrom(node);
+		despawnable.type = DespawnableNode.DespawnableType.getById(type);
+		despawnable.id = id;
+		if (despawnable.type == DespawnableNode.DespawnableType.TOWN_OBJECT) {
+			if (level > 8) {
+				throw new IllegalArgumentException(level + " doesn't fit in town level bit mask");
+			}
+			despawnable.levelBitMask = level < 1 ? 0 : (byte) (1 << (level - 1));
+		} else if (level != 0) {
+			throw new IllegalArgumentException("Unexpected town level " + level + " for " + despawnable.type);
+		}
+		return despawnable;
+	}
+
+	private static void loadTownLevelEntities(GeoMap map, Map<String, Spatial> models, DespawnableNode townEntity,
+			String name, Matrix3f matrix, Vector3f loc, Vector3f scale, byte level, int worldId)
+			throws CloneNotSupportedException {
+		for (int townLevel = level + 1; townLevel <= 5; townLevel++) {
+			String townEntityName = name.replace("_01.cgf", "_0" + townLevel + ".cgf");
+			Spatial model = models.get(townEntityName.toLowerCase().intern());
+			if (model instanceof Node) {
+				DespawnableNode townNode = new DespawnableNode();
+				townNode.copyFrom((Node) model);
+				townNode.type = townEntity.type;
+				townNode.id = townEntity.id;
+				townNode.levelBitMask = (byte) (1 << (townLevel - 1));
+				attachToMapAndCreateZones(map, townNode, matrix, loc, scale, worldId);
+			} else {
+				townEntity.levelBitMask |= (byte) (1 << (townLevel - 1));
+			}
+		}
+	}
+
+	private static boolean loadTerrain(int worldId, GeoMap map) throws IOException {
+		File terrainFile = terrainFile(worldId);
+		if (terrainFile == null) {
+			map.setTerrainData(new short[] { 0 });
+			return false;
+		}
+		BufferedImage image = ImageIO.read(terrainFile);
+		if (image == null) {
+			throw new IOException("Unsupported terrain PNG: " + terrainFile);
+		}
+		int width = image.getWidth();
+		int height = image.getHeight();
+		Raster raster = image.getRaster();
+		map.setTerrainData(readHeightData(raster, width, height), width, height);
+		loadTerrainMaterials(worldId, map);
+		return true;
+	}
+
+	private static void loadTerrainMaterials(int worldId, GeoMap map) throws IOException {
+		File materialFile = terrainMaterialFile(worldId);
+		if (materialFile == null) {
+			return;
+		}
+		BufferedImage image = ImageIO.read(materialFile);
+		if (image == null) {
+			throw new IOException("Unsupported terrain material PNG: " + materialFile);
+		}
+		int width = image.getWidth();
+		int height = image.getHeight();
+		Raster raster = image.getRaster();
+		map.setTerrainMaterialData(readMaterialData(raster, width, height), width, height);
+	}
+
+	private static short[] readHeightData(Raster raster, int width, int height) {
+		short[] terrainData = new short[width * height];
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				terrainData[y + x * height] = (short) raster.getSample(y, x, 0);
+			}
+		}
+		return terrainData;
+	}
+
+	private static byte[] readMaterialData(Raster raster, int width, int height) {
+		byte[] materialData = new byte[width * height];
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				materialData[y + x * height] = (byte) raster.getSample(y, x, 0);
+			}
+		}
+		return materialData;
+	}
+
+	private static File terrainFile(int worldId) {
+		File direct = Config.dataFile(GEO_DIR + worldId + ".png");
+		if (direct.exists() && direct.isFile()) {
+			return direct;
+		}
+		File geoDir = Config.dataFile(GEO_DIR);
+		File[] files = geoDir.listFiles((dir, name) -> name.endsWith(".png") && !name.endsWith("_materials.png"));
+		if (files == null) {
+			return null;
+		}
+		String wanted = Integer.toString(worldId);
+		for (File file : files) {
+			String stem = file.getName().substring(0, file.getName().length() - ".png".length());
+			for (String token : stem.split(",")) {
+				if (wanted.equals(token)) {
+					return file;
+				}
+			}
+		}
+		return null;
+	}
+
+	private static File terrainMaterialFile(int worldId) {
+		File direct = Config.dataFile(GEO_DIR + worldId + "_materials.png");
+		if (direct.exists() && direct.isFile()) {
+			return direct;
+		}
+		File geoDir = Config.dataFile(GEO_DIR);
+		File[] files = geoDir.listFiles((dir, name) -> name.endsWith("_materials.png"));
+		if (files == null) {
+			return null;
+		}
+		String wanted = Integer.toString(worldId);
+		for (File file : files) {
+			String stem = file.getName().substring(0, file.getName().length() - "_materials.png".length());
+			for (String token : stem.split(",")) {
+				if (wanted.equals(token)) {
+					return file;
+				}
+			}
+		}
+		return null;
+	}
+
+	private static Spatial attachToMapAndCreateZones(GeoMap map, Spatial node, Matrix3f matrix, Vector3f location,
+			Vector3f scale, int worldId) throws CloneNotSupportedException {
+		Spatial nodeClone = attachChild(map, node, matrix, location, scale);
+		if (nodeClone instanceof Node) {
+			List<Spatial> children = ((Node) nodeClone).getChildren();
+			for (int c = 0; c < children.size(); c++) {
+				createZone(children.get(c), worldId, children.size() == 1 ? 0 : c + 1);
+			}
+		} else {
+			createZone(nodeClone, worldId, 0);
+		}
+		return nodeClone;
+	}
+
+	private static Spatial attachChild(GeoMap map, Spatial node, Matrix3f matrix, Vector3f location, Vector3f scale)
+			throws CloneNotSupportedException {
+		Spatial nodeClone = node.clone();
 		nodeClone.setTransform(matrix, location, scale);
 		nodeClone.updateModelBound();
 		map.attachChild(nodeClone);
@@ -264,7 +426,7 @@ public class GeoWorldLoader {
 		if (GeoDataConfig.GEO_MATERIALS_ENABLE && (node.getIntentions() & CollisionIntention.MATERIAL.getId()) != 0) {
 			BoundingVolume bv = node.getWorldBound();
 			int regionId = getVectorHash(bv.getCenter().x, bv.getCenter().y, bv.getCenter().z);
-			int index = node.getName().lastIndexOf('\\');
+			int index = Math.max(node.getName().lastIndexOf('\\'), node.getName().lastIndexOf('/'));
 			int dotIndex = node.getName().lastIndexOf('.');
 			String zoneName = node.getName().substring(index + 1, dotIndex).toUpperCase();
 			if (childNumber > 0) {
@@ -283,27 +445,16 @@ public class GeoWorldLoader {
 		}
 	}
 
-	private static void createDoors(Spatial node, int worldId, Matrix3f matrix, Vector3f location, float scale) {
-		node.setTransform(matrix, location, scale);
-		node.updateModelBound();
-		BoundingVolume bv = node.getWorldBound();
-		int regionId = getVectorHash(bv.getCenter().x, bv.getCenter().y, bv.getCenter().z);
-		int index = node.getName().lastIndexOf('\\');
-		String doorName = worldId + "_" + "DOOR" + "_" + regionId + "_"
-				+ node.getName().substring(index + 1).toUpperCase();
-		node.setName(doorName);
-	}
-
 	/**
 	 * Hash formula from paper
 	 * http://www.beosil.com/download/CollisionDetectionHashing_VMV03.pdf Hash table
-	 * size 50000, the higher value, more precision
+	 * size 700001, the higher value, more precision
 	 */
 	private static int getVectorHash(float x, float y, float z) {
 		long xIntBits = Float.floatToIntBits(x);
 		long yIntBits = Float.floatToIntBits(y);
 		long zIntBits = Float.floatToIntBits(z);
-		return (int) ((xIntBits * 73856093 ^ yIntBits * 19349663 ^ zIntBits * 83492791) % 50000);
+		return (int) ((xIntBits * 73856093 ^ yIntBits * 19349669 ^ zIntBits * 83492791) % 700001);
 	}
 
 	private static ByteBuffer mapReadOnly(FileChannel channel, Arena arena) throws IOException {

@@ -27,7 +27,7 @@ public class BrokerPlayerClassExtraFilter extends BrokerPlayerClassFilter {
 	private int mask;
 
 	/**
-	 * @param playerClass
+	 * @param mask
 	 */
 	public BrokerPlayerClassExtraFilter(int mask, PlayerClass playerClass) {
 		super(playerClass);

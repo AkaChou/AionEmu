@@ -44,8 +44,8 @@ public class PrivateStore {
 	/**
 	 * This method will add an item to the list and price
 	 *
-	 * @param tradeList
-	 * @param price
+	 * @param itemObjId
+	 * @param tradeItem
 	 */
 	public void addItemToSell(int itemObjId, TradePSItem tradeItem) {
 		items.put(itemObjId, tradeItem);
@@ -54,14 +54,14 @@ public class PrivateStore {
 	/**
 	 * This method will remove an item from the list
 	 *
-	 * @param item
+	 * @param itemObjId
 	 */
 	public void removeItem(int itemObjId) {
 		items.remove(itemObjId);
 	}
 
 	/**
-	 * @param itemId return tradeItem
+	 * @param itemObjId return tradeItem
 	 */
 	public TradePSItem getTradeItemByObjId(int itemObjId) {
 		return items.get(itemObjId);

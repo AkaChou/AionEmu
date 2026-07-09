@@ -30,9 +30,7 @@ import com.aionemu.commons.network.packet.BaseServerPacket;
 public abstract class GsServerPacket extends BaseServerPacket {
 
     /**
-     * Constructs a new server packet with specified id.
-     *
-     * @param opcode packet opcode.
+     * Constructs a new server packet.
      */
     protected GsServerPacket() {
         super(0);
@@ -42,7 +40,7 @@ public abstract class GsServerPacket extends BaseServerPacket {
      * Write this packet data for given connection, to given buffer.
      *
      * @param con
-     * @param buf
+     * @param buffer
      */
     public final synchronized void write(GsConnection con, ByteBuffer buffer) {
         setBuf(buffer);

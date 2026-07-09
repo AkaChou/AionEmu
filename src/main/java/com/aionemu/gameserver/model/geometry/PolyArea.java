@@ -38,9 +38,9 @@ public class PolyArea extends AbstractArea {
 	/**
 	 * Creates new area from given points
 	 * 
-	 * @param points list of points
-	 * @param zMin   minimal z
-	 * @param zMax   maximal z
+	 * @param zoneName list of points
+	 * @param worldId   minimal z
+	 * @param points   maximal z
 	 */
 	public PolyArea(ZoneName zoneName, int worldId, Collection<Point2D> points, float zMin, float zMax) {
 		this(zoneName, worldId, points.toArray(new Point2D[points.size()]), zMin, zMax);
@@ -49,9 +49,9 @@ public class PolyArea extends AbstractArea {
 	/**
 	 * Creates new area from given points
 	 * 
-	 * @param points list of points
-	 * @param zMin   minimal z
-	 * @param zMax   maximal z
+	 * @param zoneName list of points
+	 * @param worldId   minimal z
+	 * @param points   maximal z
 	 */
 	public PolyArea(ZoneName zoneName, int worldId, Point2D[] points, float zMin, float zMax) {
 		super(zoneName, worldId, zMin, zMax);

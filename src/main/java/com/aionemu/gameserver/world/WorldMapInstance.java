@@ -527,7 +527,7 @@ public abstract class WorldMapInstance {
 	}
 
 	/**
-	 * @param player
+	 * @param object
 	 * @param zoneName
 	 * @return
 	 */
@@ -541,7 +541,7 @@ public abstract class WorldMapInstance {
 
 	/**
 	 * @param pos
-	 * @param zone
+	 * @param zoneName
 	 * @return
 	 */
 	public boolean isInsideZone(WorldPosition pos, ZoneName zoneName) {

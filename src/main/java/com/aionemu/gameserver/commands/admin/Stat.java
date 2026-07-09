@@ -36,7 +36,7 @@ import java.util.TreeSet;
 public class Stat extends AdminCommand {
 
 	/**
-	 * @param alias
+	 * Creates the stat admin command.
 	 */
 	public Stat() {
 		super("stat");

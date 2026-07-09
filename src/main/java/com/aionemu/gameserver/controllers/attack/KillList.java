@@ -37,7 +37,6 @@ public class KillList {
 	}
 
 	/**
-	 * @param winnerId
 	 * @param victimId
 	 * @return killsForVictimId
 	 */

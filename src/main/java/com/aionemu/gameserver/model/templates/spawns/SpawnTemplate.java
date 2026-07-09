@@ -152,6 +152,14 @@ public class SpawnTemplate {
 		this.entityId = entityId;
 	}
 
+	public int getStaticId() {
+		return entityId;
+	}
+
+	public void setStaticId(int staticId) {
+		this.entityId = staticId;
+	}
+
 	public int getRandomWalk() {
 		return randomWalk;
 	}

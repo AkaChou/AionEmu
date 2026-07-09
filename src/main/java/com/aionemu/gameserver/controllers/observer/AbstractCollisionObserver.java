@@ -23,8 +23,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.math.Ray;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.world.geo.GeoService;
 
 /**
  * @author MrPoke
@@ -36,14 +38,20 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 	protected Vector3f oldPos;
 	protected Spatial geometry;
 	protected byte intentions;
+	private final CheckType checkType;
 	private AtomicBoolean isRunning = new AtomicBoolean();
 
 	public AbstractCollisionObserver(Creature creature, Spatial geometry, byte intentions) {
+		this(creature, geometry, intentions, CheckType.PASS);
+	}
+
+	public AbstractCollisionObserver(Creature creature, Spatial geometry, byte intentions, CheckType checkType) {
 		super(ObserverType.MOVE_OR_DIE);
 		this.creature = creature;
 		this.geometry = geometry;
 		this.oldPos = new Vector3f(creature.getX(), creature.getY(), creature.getZ());
 		this.intentions = intentions;
+		this.checkType = checkType;
 	}
 
 	@Override
@@ -54,8 +62,27 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 				@Override
 				public void run() {
 					try {
-						Vector3f pos = new Vector3f(creature.getX(), creature.getY(), creature.getZ());
-						Vector3f dir = oldPos.clone();
+						Vector3f pos;
+						Vector3f dir;
+						if (checkType == CheckType.TOUCH) {
+							float x = creature.getX();
+							float y = creature.getY();
+							float z = creature.getZ();
+							float zMax = z + 0.05f + creature.getObjectTemplate().getBoundRadius().getUpper();
+							float zMin = z - 0.11f;
+							if (!creature.isFlying()) {
+								float geoZ = GeoService.getInstance().getZ(creature.getWorldId(), x, y, z, 0.5f, creature.getInstanceId());
+								if (!Float.isNaN(geoZ)) {
+									zMin = geoZ - 0.11f;
+								}
+							}
+							pos = new Vector3f(x, y, zMax);
+							dir = new Vector3f(x, y, zMin);
+						} else {
+							pos = new Vector3f(creature.getX(), creature.getY(), creature.getZ() + GeoMap.COLLISION_CHECK_Z_OFFSET);
+							dir = oldPos.clone();
+							dir.setZ(dir.getZ() + GeoMap.COLLISION_CHECK_Z_OFFSET);
+						}
 						Float limit = pos.distance(dir);
 						dir.subtractLocal(pos).normalizeLocal();
 						Ray r = new Ray(pos, dir);
@@ -73,4 +100,9 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 	}
 
 	public abstract void onMoved(CollisionResults result);
+
+	public enum CheckType {
+		TOUCH,
+		PASS
+	}
 }

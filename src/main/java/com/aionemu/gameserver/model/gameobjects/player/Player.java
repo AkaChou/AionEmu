@@ -456,7 +456,7 @@ public class Player extends Creature {
 	/**
 	 * Only use for the Size admin command
 	 * 
-	 * @param playerAppearance PlayerAppearance : The saved player's appearance, to rollback his appearance
+	 * @param savedPlayerAppearance PlayerAppearance : The saved player's appearance, to rollback his appearance
 	 */
 	public void setSavedPlayerAppearance(PlayerAppearance savedPlayerAppearance) {
 		this.savedPlayerAppearance = savedPlayerAppearance;
@@ -778,7 +778,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param inventory the inventory to set Inventory should be set right after player object is created
+	 * @param storage the inventory to set Inventory should be set right after player object is created
 	 */
 	public void setStorage(Storage storage, StorageType storageType) {
 		if (storageType == StorageType.CUBE) {
@@ -1492,7 +1492,7 @@ public class Player extends Creature {
 	/**
 	 * Used in SM_NPC_INFO to check aggro irrespective to level
 	 * 
-	 * @param npcTribe
+	 * @param npc
 	 * @return
 	 */
 	public boolean isAggroIconTo(Npc npc) {
@@ -1620,7 +1620,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param delayId
+	 * @param limits
 	 * @return
 	 */
 	public boolean isItemUseDisabled(ItemUseLimits limits) {
@@ -1793,8 +1793,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param worldId
-	 * @return
+	 * @return portal cooldown list
 	 */
 	public PortalCooldownList getPortalCooldownList() {
 		return portalCooldownList;
@@ -1930,14 +1929,14 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param the Resurrection Positional State to set
+	 * @param value Resurrection Positional State to set
 	 */
 	public void setResPosState(boolean value) {
 		this.isInResurrectPosState = value;
 	}
 
 	/**
-	 * @param the Resurrection Positional X value to set
+	 * @param value Resurrection Positional X value to set
 	 */
 	public void setResPosX(float value) {
 		this.resPosX = value;
@@ -1951,7 +1950,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param the Resurrection Positional Y value to set
+	 * @param value Resurrection Positional Y value to set
 	 */
 	public void setResPosY(float value) {
 		this.resPosY = value;
@@ -1965,7 +1964,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param the Resurrection Positional Z value to set
+	 * @param value Resurrection Positional Z value to set
 	 */
 	public void setResPosZ(float value) {
 		this.resPosZ = value;
@@ -2001,7 +2000,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param the status of NoFpConsum Effect
+	 * @param value status of NoFpConsum Effect
 	 */
 	public void setUnderNoFPConsum(boolean value) {
 		this.underNoFPConsum = value;
@@ -2192,7 +2191,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param the flying mode flag to set
+	 * @param value flying mode flag to set
 	 */
 	public void setFlyingMode(boolean value) {
 		this.isFlying = value;
@@ -2209,7 +2208,6 @@ public class Player extends Creature {
 	 * Stone Use Order determined by highest inventory slot. :( If player has two
 	 * types, wrong one might be used.
 	 * 
-	 * @param player
 	 * @return selfRezItem
 	 */
 	public Item getSelfRezStone() {
@@ -2230,7 +2228,7 @@ public class Player extends Creature {
 	}
 
 	/**
-	 * @param stoneItemId
+	 * @param stoneId
 	 * @return stoneItem or null
 	 */
 	private Item getReviveStone(int stoneId) {

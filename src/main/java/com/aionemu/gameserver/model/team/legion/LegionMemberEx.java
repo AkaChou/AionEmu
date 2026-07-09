@@ -100,7 +100,7 @@ public class LegionMemberEx extends LegionMember {
 	/**
 	 * sets the exp value
 	 * 
-	 * @param admin : enable decrease level
+	 * @param exp : enable decrease level
 	 */
 	public void setExp(long exp) {
 		// maxLevel is 51 but in game 50 should be shown with full XP bar

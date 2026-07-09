@@ -207,6 +207,10 @@ public class NpcController extends CreatureController<Npc> {
 		} finally { // always make sure npc is scheduled to respawn
 			if (owner.getAi2().poll(AIQuestion.SHOULD_DECAY)) {
 				addTask(TaskId.DECAY, RespawnService.scheduleDecayTask(owner));
+				if (owner.getSpawn() != null && owner.getSpawn().getStaticId() > 0) {
+					GameWorldServices.geoService().despawnPlaceableObject(owner.getWorldId(), owner.getInstanceId(),
+							owner.getSpawn().getStaticId());
+				}
 			}
 			if (owner.getAi2().poll(AIQuestion.SHOULD_RESPAWN) && !owner.isDeleteDelayed() && !GameFeatureServices.siegeService().isSiegeNpcInActiveSiege(owner)) {
 				Future<?> respawnTask = scheduleRespawn();

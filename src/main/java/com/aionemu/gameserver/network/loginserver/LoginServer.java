@@ -200,7 +200,7 @@ public class LoginServer {
 	 * LoginServer if any to prevent leaks. Also notify LoginServer that this
 	 * account is no longer on GameServer side.
 	 * 
-	 * @param client
+	 * @param accountId
 	 */
 	public void aionClientDisconnected(int accountId) {
 		synchronized (this) {

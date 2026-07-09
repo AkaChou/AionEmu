@@ -66,6 +66,7 @@ import com.aionemu.gameserver.questEngine.model.QuestEnv;
 import com.aionemu.gameserver.services.StigmaService;
 import com.aionemu.gameserver.services.item.ItemPacketService;
 import com.aionemu.gameserver.services.item.ItemPacketService.ItemUpdateType;
+import com.aionemu.gameserver.skillengine.effect.WeaponDualEffect;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.stats.AbyssRankEnum;
 @Slf4j
@@ -93,6 +94,9 @@ public class Equipment {
          //Your nationality prevents you from using this item. PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_NATION); return null;
 		 */
 		ItemTemplate itemTemplate = item.getItemTemplate();
+		if (itemTemplate.isWeapon() && !itemTemplate.isTwoHandWeapon() && !WeaponDualEffect.hasDualWieldEffect(owner)) {
+			slot = ItemSlot.MAIN_HAND.getSlotIdMask();
+		}
 		if (item.getItemTemplate().isClassSpecific(owner.getCommonData().getPlayerClass()) == false) {
 			// Your Class cannot use the selected item.
 			PacketSendUtility.sendPacket(owner, SM_SYSTEM_MESSAGE.STR_CANNOT_USE_ITEM_INVALID_CLASS);
@@ -422,15 +426,14 @@ public class Equipment {
 	 * @return true if player can equip two one-handed weapons
 	 */
 	private boolean hasDualWieldingSkills() {
-		return owner.getSkillList().isSkillPresent(55) || owner.getSkillList().isSkillPresent(171) || owner.getSkillList().isSkillPresent(143) || owner.getSkillList().isSkillPresent(144) || owner.getSkillList().isSkillPresent(207);
+		return WeaponDualEffect.hasDualWieldEffect(owner);
 	}
 
 	/**
 	 * Used during equip process and analyzes equipped slots
 	 * 
 	 * @param item
-	 * @param itemInMainHand
-	 * @param itemInSubHand
+	 * @param validateOnly
 	 * @return
 	 */
 	private boolean validateEquippedWeapon(Item item, boolean validateOnly) {
@@ -567,7 +570,7 @@ public class Equipment {
 	 * Used during equip process and analyzes equipped slots
 	 * 
 	 * @param item
-	 * @param itemInMainHand
+	 * @param validateOnly
 	 * @return
 	 */
 	private boolean validateEquippedArmor(Item item, boolean validateOnly) {

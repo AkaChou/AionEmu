@@ -38,7 +38,7 @@ public abstract class TaskFromDBHandler {
     /**
      * Task's id
      *
-     * @param int
+     * @param taskId
      */
     public void setTaskId(int taskId) {
         this.taskId = taskId;

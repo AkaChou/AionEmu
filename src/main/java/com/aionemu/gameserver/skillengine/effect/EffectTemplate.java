@@ -231,7 +231,7 @@ public abstract class EffectTemplate {
 	}
 
 	/**
-	 * @param value
+	 * @param effect
 	 * @return
 	 */
 	protected ActionModifier getActionModifiers(Effect effect) {
@@ -350,7 +350,7 @@ public abstract class EffectTemplate {
 					break;
 				default:
 					if (Rnd.get(0, 1000) < StatFunctions.calculateMagicalResistRate(effect.getEffector(),
-							effect.getEffected(), accMod)) {
+							effect.getEffected(), accMod, getElement())) {
 						return false;
 					}
 					break;
@@ -358,7 +358,7 @@ public abstract class EffectTemplate {
 				break;
 			case MAGICAL:
 				if (Rnd.get(0, 1000) < StatFunctions.calculateMagicalResistRate(effect.getEffector(),
-						effect.getEffected(), accMod)) {
+						effect.getEffected(), accMod, getElement())) {
 					return false;
 				}
 			default:

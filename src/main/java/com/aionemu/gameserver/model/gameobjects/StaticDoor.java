@@ -35,7 +35,6 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 public class StaticDoor extends StaticObject {
 
 	private EnumSet<StaticDoorState> states;
-	private String doorName;
 
 	/**
 	 * @param objectId
@@ -47,10 +46,6 @@ public class StaticDoor extends StaticObject {
 			StaticDoorTemplate objectTemplate, int instanceId) {
 		super(objectId, controller, spawnTemplate, objectTemplate);
 		states = EnumSet.copyOf(getObjectTemplate().getInitialStates());
-		if (objectTemplate.getMeshFile() != null) {
-			doorName = GameWorldServices.geoService().getDoorName(spawnTemplate.getWorldId(), objectTemplate.getMeshFile(),
-					objectTemplate.getX(), objectTemplate.getY(), objectTemplate.getZ());
-		}
 	}
 
 	/**
@@ -83,26 +78,20 @@ public class StaticDoor extends StaticObject {
 			states.remove(StaticDoorState.OPENED); // 1010
 			packetState = 0xA;
 		}
-		if (doorName != null) {
-			GameWorldServices.geoService().setDoorState(getWorldId(), getInstanceId(), doorName, open);
-		}
+		GameWorldServices.geoService().setDoorState(getWorldId(), getInstanceId(), getSpawn().getStaticId(), open);
 		// int stateFlags = StaticDoorState.getFlags(states);
-		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getEntityId(), emotion, packetState));
+		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getStaticId(), emotion, packetState));
 	}
 
 	public void changeState(boolean open, int state) {
 		state = state & 0xF;
 		StaticDoorState.setStates(state, states);
 		EmotionType emotion = open ? emotion = EmotionType.OPEN_DOOR : EmotionType.CLOSE_DOOR;
-		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getEntityId(), emotion, state));
+		PacketSendUtility.broadcastPacket(this, new SM_EMOTION(this.getSpawn().getStaticId(), emotion, state));
 	}
 
 	@Override
 	public StaticDoorTemplate getObjectTemplate() {
 		return (StaticDoorTemplate) super.getObjectTemplate();
-	}
-
-	public String getDoorName() {
-		return doorName;
 	}
 }

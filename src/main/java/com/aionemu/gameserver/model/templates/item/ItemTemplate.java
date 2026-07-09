@@ -319,7 +319,6 @@ public class ItemTemplate extends VisibleObjectTemplate {
 
 	/**
 	 * @param playerClass
-	 * @param level
 	 * @return
 	 */
 	public int getRequiredLevel(PlayerClass playerClass) {

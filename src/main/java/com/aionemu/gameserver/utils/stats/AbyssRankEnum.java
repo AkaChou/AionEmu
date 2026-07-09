@@ -53,8 +53,8 @@ public enum AbyssRankEnum {
 	 * @param id
 	 * @param pointsGained
 	 * @param pointsLost
-	 * @param required
-	 * @param quota
+	 * @param apRequired
+	 * @param gpRequired
 	 */
 	private AbyssRankEnum(int id, int pointsGained, int pointsLost, int apRequired, int gpRequired, int quota,
 			int descriptionId) {

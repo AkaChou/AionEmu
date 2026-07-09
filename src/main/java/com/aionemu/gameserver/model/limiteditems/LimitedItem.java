@@ -51,8 +51,8 @@ public class LimitedItem {
 	}
 
 	/**
-	 * @param set playerObjectId.
-	 * @param set count.
+	 * @param playerObjectId playerObjectId.
+	 * @param count count.
 	 */
 	public void setBuyCount(int playerObjectId, int count) {
 		buyCounts.putIfAbsent(playerObjectId, count);
@@ -66,7 +66,7 @@ public class LimitedItem {
 	}
 
 	/**
-	 * @param set itemId.
+	 * @param itemId itemId.
 	 */
 	public void setItem(int itemId) {
 		this.itemId = itemId;
@@ -92,7 +92,7 @@ public class LimitedItem {
 	}
 
 	/**
-	 * @param set sellLimit.
+	 * @param sellLimit sellLimit.
 	 */
 	public void setSellLimit(int sellLimit) {
 		this.sellLimit = sellLimit;

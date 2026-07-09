@@ -18,8 +18,9 @@ import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerCommonData;
 import com.aionemu.gameserver.model.gameobjects.player.PlayerUpgradeArcade;
 import com.aionemu.gameserver.model.team.legion.LegionJoinRequestState;
+import com.aionemu.gameserver.model.templates.portal.InstanceExit;
 import com.aionemu.gameserver.world.MapRegion;
-import com.aionemu.gameserver.world.World;
+import com.aionemu.gameserver.world.WorldMapInstance;
 import com.aionemu.gameserver.world.WorldPosition;
 import com.google.common.collect.Maps;
 import java.util.LinkedHashMap;
@@ -324,16 +325,26 @@ public class MySQL8PlayerDAO extends PlayerDAO {
                     int worldId = resultSet.getInt("world_id");
                     
                     PlayerInitialData playerInitialData = DataManager.PLAYER_INITIAL_DATA;
-                    MapRegion mr = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getMainWorldMapInstance().getRegion(x, y, z);
-                    
-                    if (mr == null && playerInitialData != null) {
-                        LocationData ld = playerInitialData.getSpawnLocation(cd.getRace());
-                        if (ld != null) {
-                            x = ld.getX();
-                            y = ld.getY();
-                            z = ld.getZ();
-                            heading = ld.getHeading();
-                            worldId = ld.getMapId();
+                    WorldMapInstance mainInstance = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().getWorldMap(worldId).getMainWorldMapInstance();
+                    MapRegion mr = mainInstance == null ? null : mainInstance.getRegion(x, y, z);
+
+                    if (mr == null) {
+                        InstanceExit exit = DataManager.INSTANCE_EXIT_DATA == null ? null : DataManager.INSTANCE_EXIT_DATA.getInstanceExit(worldId, cd.getRace());
+                        if (exit != null) {
+                            x = exit.getX();
+                            y = exit.getY();
+                            z = exit.getZ();
+                            heading = exit.getH();
+                            worldId = exit.getExitWorld();
+                        } else if (playerInitialData != null) {
+                            LocationData ld = playerInitialData.getSpawnLocation(cd.getRace());
+                            if (ld != null) {
+                                x = ld.getX();
+                                y = ld.getY();
+                                z = ld.getZ();
+                                heading = ld.getHeading();
+                                worldId = ld.getMapId();
+                            }
                         }
                     }
                     

@@ -37,9 +37,9 @@ import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.attack.AttackUtil;
+import com.aionemu.gameserver.controllers.observer.TerrainZoneCollisionMaterialActor;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.Homing;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -58,6 +58,7 @@ import com.aionemu.gameserver.skillengine.model.Skill.SkillMethod;
 import com.aionemu.gameserver.taskmanager.tasks.MovementNotifyTask;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.World;
+import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.ZoneUpdateService;
@@ -74,6 +75,7 @@ import java.util.Map;
 public abstract class CreatureController<T extends Creature> extends VisibleObjectController<Creature> {
 
 	private final Map<Integer, Future<?>> tasks = new ConcurrentHashMap<Integer, Future<?>>();
+	private volatile TerrainZoneCollisionMaterialActor terrainMaterialActor;
 	private float healingSkillBoost = 1.0f;
 	private int SimpleAttackType;
 
@@ -130,8 +132,6 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 
 	/**
 	 * Zone update mask management
-	 *
-	 * @param mode
 	 */
 	public final void updateZone() {
 		GameMovementLoopServices.zoneUpdateService().add(getOwner());
@@ -324,18 +324,12 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 		 */
 		int attackType = 0;
 		List<AttackResult> attackResult;
-		if (getOwner() instanceof Homing) {
-			attackResult = AttackUtil.calculateHomingAttackResult(getOwner(), target,
+		if (getOwner().getAttackType() == ItemAttackType.PHYSICAL) {
+			attackResult = AttackUtil.calculatePhysicalAttackResult(getOwner(), target);
+		} else {
+			attackResult = AttackUtil.calculateMagAttackResult(getOwner(), target,
 					getOwner().getAttackType().getMagicalElement());
 			attackType = 1;
-		} else {
-			if (getOwner().getAttackType() == ItemAttackType.PHYSICAL) {
-				attackResult = AttackUtil.calculatePhysicalAttackResult(getOwner(), target);
-			} else {
-				attackResult = AttackUtil.calculateMagicalAttackResult(getOwner(), target,
-						getOwner().getAttackType().getMagicalElement());
-				attackType = 1;
-			}
 		}
 		int damage = 0;
 		for (AttackResult result : attackResult) {
@@ -548,6 +542,11 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 
 	@Override
 	public void onDespawn() {
+		if (terrainMaterialActor != null) {
+			terrainMaterialActor.abort();
+			getOwner().getObserveController().removeObserver(terrainMaterialActor);
+			terrainMaterialActor = null;
+		}
 		cancelTask(TaskId.DECAY);
 
 		Creature owner = getOwner();
@@ -590,5 +589,9 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	public void onAfterSpawn() {
 		super.onAfterSpawn();
 		getOwner().revalidateZones();
+		if (terrainMaterialActor == null && GeoService.getInstance().worldHasTerrainMaterials(getOwner().getWorldId())) {
+			terrainMaterialActor = new TerrainZoneCollisionMaterialActor(getOwner());
+			getOwner().getObserveController().addObserver(terrainMaterialActor);
+		}
 	}
 }

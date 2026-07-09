@@ -18,10 +18,10 @@ package com.aionemu.gameserver.skillengine.model;
 
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.utils.Rnd;
@@ -58,9 +58,6 @@ import com.aionemu.gameserver.skillengine.effect.TransformEffect;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicAction;
 import com.aionemu.gameserver.skillengine.periodicaction.PeriodicActions;
 import com.aionemu.gameserver.utils.PacketSendUtility;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Effect implements StatOwner {
 
@@ -138,7 +135,7 @@ public class Effect implements StatOwner {
 	private boolean isNoResurrectPenalty;
 	private int tauntHate;
 	private int effectHate;
-	private Map<Integer, EffectTemplate> successEffects = new LinkedHashMap<Integer, EffectTemplate>();
+	private List<EffectTemplate> successEffects = new ArrayList<EffectTemplate>();
 	private int carvedSignet = 0;
 	private int signetBurstedCount = 0;
 	protected int abnormals;
@@ -560,7 +557,7 @@ public class Effect implements StatOwner {
 	 * @return true or false
 	 */
 	public boolean containsEffectId(int effectId) {
-		for (EffectTemplate template : successEffects.values()) {
+		for (EffectTemplate template : successEffects) {
 			if (template.getEffectid() == effectId) {
 				return true;
 			}
@@ -631,7 +628,7 @@ public class Effect implements StatOwner {
 			template.calculateHate(this);
 		}
 		if (this.isLaunchSubEffect()) {
-			for (EffectTemplate template : successEffects.values()) {
+			for (EffectTemplate template : successEffects) {
 				template.calculateSubEffect(this);
 			}
 		}
@@ -724,7 +721,7 @@ public class Effect implements StatOwner {
 		if (skillTemplate.getEffects() == null || successEffects.isEmpty())
 			return;
 
-		for (EffectTemplate template : successEffects.values()) {
+		for (EffectTemplate template : successEffects) {
 			if (getEffected() != null) {
 				if (getEffected().getLifeStats().isAlreadyDead() && !skillTemplate.hasResurrectEffect()) {
 					continue;
@@ -745,7 +742,7 @@ public class Effect implements StatOwner {
 			return;
 		}
 		shedulePeriodicActions();
-		for (EffectTemplate template : successEffects.values()) {
+		for (EffectTemplate template : successEffects) {
 			template.startEffect(this);
 			checkUseEquipmentConditions();
 			checkCancelOnDmg();
@@ -802,7 +799,7 @@ public class Effect implements StatOwner {
 		if (isStopped) {
 			return;
 		}
-		for (EffectTemplate template : successEffects.values()) {
+		for (EffectTemplate template : successEffects) {
 			template.endEffect(this);
 		}
 		// If effect is a stance, remove stance from player
@@ -938,12 +935,14 @@ public class Effect implements StatOwner {
 	}
 
 	public void addSucessEffect(EffectTemplate effect) {
-		successEffects.put(effect.getPosition(), effect);
+		successEffects.add(effect);
 	}
 
 	public boolean isInSuccessEffects(int position) {
-		if (successEffects.get(position) != null) {
-			return true;
+		for (EffectTemplate effect : successEffects) {
+			if (effect.getPosition() == position) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -952,13 +951,13 @@ public class Effect implements StatOwner {
 	 * @return
 	 */
 	public Collection<EffectTemplate> getSuccessEffect() {
-		return successEffects.values();
+		return successEffects;
 	}
 
 	public void addAllEffectToSucess() {
 		successEffects.clear();
 		for (EffectTemplate template : getEffectTemplates()) {
-			successEffects.put(template.getPosition(), template);
+			successEffects.add(template);
 		}
 	}
 
@@ -995,7 +994,7 @@ public class Effect implements StatOwner {
 
 		// iterate skill's effects until we can calculate a duration time, which is
 		// valid for all of them
-		Iterator<EffectTemplate> itr = successEffects.values().iterator();
+		Iterator<EffectTemplate> itr = successEffects.iterator();
 		while (itr.hasNext() && duration == 0) {
 			EffectTemplate et = itr.next();
 			int effectDuration = et.getDuration2() + et.getDuration1() * getSkillLevel();
@@ -1302,13 +1301,13 @@ public class Effect implements StatOwner {
 	}
 
 	public void endEffects() {
-		for (EffectTemplate template : successEffects.values()) {
+		for (EffectTemplate template : successEffects) {
 			template.endEffect(this);
 		}
 	}
 
 	public boolean isFearEffect() {
-		for (EffectTemplate template : successEffects.values()) {
+		for (EffectTemplate template : successEffects) {
 			if (template instanceof FearEffect) {
 				return true;
 			}

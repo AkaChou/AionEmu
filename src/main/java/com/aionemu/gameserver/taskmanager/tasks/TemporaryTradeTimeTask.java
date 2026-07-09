@@ -40,7 +40,7 @@ public class TemporaryTradeTimeTask extends AbstractPeriodicTaskManager {
 	private final Map<Integer, Item> itemById = new HashMap<Integer, Item>();
 
 	/**
-	 * @param period
+	 * Creates a temporary trade task scheduler.
 	 */
 	public TemporaryTradeTimeTask() {
 		super(1000);

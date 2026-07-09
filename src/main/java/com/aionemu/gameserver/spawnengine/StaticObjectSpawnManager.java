@@ -35,7 +35,7 @@ import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 public class StaticObjectSpawnManager {
 
 	/**
-	 * @param spawnGroup
+	 * @param spawn
 	 * @param instanceIndex
 	 */
 	public static void spawnTemplate(SpawnGroup2 spawn, int instanceIndex) {

@@ -134,6 +134,14 @@ public class Geometry extends Spatial {
 	}
 
 	@Override
+	public void setTransform(Matrix3f rotation, Vector3f loc, Vector3f scale) {
+		cachedWorldMat.loadIdentity();
+		cachedWorldMat.setRotationMatrix(rotation);
+		cachedWorldMat.scale(scale);
+		cachedWorldMat.setTranslation(loc);
+	}
+
+	@Override
 	public short getCollisionFlags() {
 		return mesh.getCollisionFlags();
 	}

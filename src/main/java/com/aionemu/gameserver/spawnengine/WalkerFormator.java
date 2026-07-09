@@ -43,7 +43,7 @@ public class WalkerFormator {
 	 * step and resets data to the saved, no organizing is needed.
 	 * 
 	 * @param npc
-	 * @param instance
+	 * @param worldId
 	 * @return <tt>true</tt> if npc was brought into world by the method call.
 	 */
 	public static boolean processClusteredNpc(Npc npc, int worldId, int instanceId) {

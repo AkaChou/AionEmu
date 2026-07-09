@@ -81,12 +81,12 @@ public class RectangleArea extends AbstractArea {
 	/**
 	 * Creates new area from given points. Point order doesn't matter
 	 * 
+	 * @param zoneName   point
+	 * @param worldId   point
 	 * @param p1   point
 	 * @param p2   point
-	 * @param p3   point
-	 * @param p4   point
-	 * @param minZ minimal z
-	 * @param maxZ maximal z
+	 * @param p3 minimal z
+	 * @param p4 maximal z
 	 */
 	public RectangleArea(ZoneName zoneName, int worldId, Point p1, Point p2, Point p3, Point p4, int minZ, int maxZ) {
 		super(zoneName, worldId, minZ, maxZ);
@@ -106,12 +106,12 @@ public class RectangleArea extends AbstractArea {
 	/**
 	 * Creates new are from given coords
 	 * 
-	 * @param minX mimal x point
-	 * @param minY minimal y point
-	 * @param maxX maximal x point
-	 * @param maxY maximal y point
-	 * @param minZ minimal z point
-	 * @param maxZ maximal z point
+	 * @param zoneName mimal x point
+	 * @param worldId minimal y point
+	 * @param minX maximal x point
+	 * @param minY maximal y point
+	 * @param maxX minimal z point
+	 * @param maxY maximal z point
 	 */
 	public RectangleArea(ZoneName zoneName, int worldId, float minX, float minY, float maxX, float maxY, float minZ,
 			float maxZ) {

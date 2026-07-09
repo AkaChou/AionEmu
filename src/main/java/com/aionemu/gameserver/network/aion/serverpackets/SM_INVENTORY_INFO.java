@@ -48,7 +48,7 @@ public class SM_INVENTORY_INFO extends AionServerPacket {
 	private boolean isFirstPacket;
 
 	/**
-	 * @param items
+	 * @param isFirstPacket
 	 */
 	public SM_INVENTORY_INFO(boolean isFirstPacket, List<Item> items, int npcExpandsSize, int questExpandsSize,
 			Player player) {
@@ -62,7 +62,7 @@ public class SM_INVENTORY_INFO extends AionServerPacket {
 	}
 
 	/**
-	 * @param isEmpty
+	 * Creates an empty inventory info packet.
 	 */
 	public SM_INVENTORY_INFO() {
 		this.packetType = EMPTY;

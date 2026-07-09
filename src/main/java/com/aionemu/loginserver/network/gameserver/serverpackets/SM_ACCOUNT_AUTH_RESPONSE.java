@@ -70,7 +70,7 @@ public class SM_ACCOUNT_AUTH_RESPONSE extends GsServerPacket {
      * @param accountName
      * @param accessLevel
      * @param membership
-     * @param luna
+     * @param toll
      */
     public SM_ACCOUNT_AUTH_RESPONSE(int accountId, boolean ok, String accountName, byte accessLevel, byte membership, long toll, long luna, byte isReturn) {
         this.accountId = accountId;

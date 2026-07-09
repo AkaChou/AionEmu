@@ -39,7 +39,6 @@ public class InvasionZoneInstance extends ZoneInstance {
 	/**
 	 * @param mapId
 	 * @param template
-	 * @param handler
 	 */
 	public InvasionZoneInstance(int mapId, ZoneInfo template) {
 		super(mapId, template);

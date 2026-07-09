@@ -79,8 +79,8 @@ public class ExchangeService {
 	}
 
 	/**
-	 * @param objectId
-	 * @param objectId2
+	 * @param player1
+	 * @param player2
 	 */
 	public void registerExchange(Player player1, Player player2) {
 		if (!validateParticipants(player1, player2)) {

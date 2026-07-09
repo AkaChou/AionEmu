@@ -18,7 +18,8 @@ package com.aionemu.gameserver.model;
 
 public enum EventType {
 	NONE(0, ""), CHRISTMAS(1 << 0, "christmas"), HALLOWEEN(1 << 1, "halloween"), VALENTINE(1 << 2, "valentine"),
-	BRAXCAFE(1 << 3, "braxcafe");
+	BRAXCAFE(1 << 3, "braxcafe"), TEST_BASIC_1(1 << 4, "test_basic_1"), TEST_BASIC_2(1 << 5, "test_basic_2"),
+	TEST_BASIC_3(1 << 6, "test_basic_3"), TEST_BASIC_4(1 << 7, "test_basic_4");
 
 	private int id;
 	private String theme;

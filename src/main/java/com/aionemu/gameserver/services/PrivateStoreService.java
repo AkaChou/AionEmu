@@ -145,10 +145,7 @@ public class PrivateStoreService {
 
 	/**
 	 * @param activePlayer
-	 * @param itemObjId
-	 * @param itemId
-	 * @param itemAmount
-	 * @param itemPrice
+	 * @param tradePSItems
 	 */
 	public static void addItems(Player activePlayer, TradePSItem[] tradePSItems) {
 		if (CreatureState.ACTIVE.getId() != activePlayer.getState()) {
@@ -242,8 +239,8 @@ public class PrivateStoreService {
 	/**
 	 * This method will return the item in a inventory by object id
 	 *
-	 * @param player
-	 * @param tradePSItems
+	 * @param seller
+	 * @param itemObjId
 	 * @return
 	 */
 	private static Item getItemByObjId(Player seller, int itemObjId) {
@@ -299,8 +296,8 @@ public class PrivateStoreService {
 	}
 
 	/**
-	 * @param player1
-	 * @param player2
+	 * @param itemOwner
+	 * @param newOwner
 	 */
 	private static boolean validateParticipants(Player itemOwner, Player newOwner) {
 		return itemOwner != null && newOwner != null && itemOwner.isOnline() && newOwner.isOnline()
@@ -308,7 +305,7 @@ public class PrivateStoreService {
 	}
 
 	/**
-	 * @param tradeList
+	 * @param seller
 	 */
 	private static boolean validateBuyItems(Player seller, TradeList tradeList) {
 		for (TradeItem tradeItem : tradeList.getTradeItems()) {

@@ -3,6 +3,7 @@ package com.aionemu.boot.lifecycle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.lang.reflect.Method;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,6 +63,17 @@ class AionServicePathsTest {
         AionServicePaths.configureGame();
 
         assertEquals(sourceGameData.toString(), System.getProperty("aion.game.data.dir"));
+    }
+
+    @Test
+    void usesCheckoutResourceGameDataDirectoryWhenAionHomeIsDefault() throws Exception {
+        Method configureSourceResourceDirectory = AionServicePaths.class.getDeclaredMethod("configureSourceResourceDirectory", String.class,
+            String.class);
+        configureSourceResourceDirectory.setAccessible(true);
+
+        assertTrue((boolean) configureSourceResourceDirectory.invoke(null, "aion.game.data.dir", "aion/game/data"));
+
+        assertEquals(Path.of("src/main/resources/aion/game/data").normalize().toString(), System.getProperty("aion.game.data.dir"));
     }
 
     @Test

@@ -125,7 +125,7 @@ public class Skill {
 	 * 
 	 * @param skillTemplate
 	 * @param effector
-	 * @param world
+	 * @param firstTarget
 	 */
 	public Skill(SkillTemplate skillTemplate, Player effector, Creature firstTarget) {
 		this(skillTemplate, effector, effector.getSkillList().getSkillLevel(skillTemplate.getSkillId()), firstTarget, null);
@@ -1441,7 +1441,7 @@ public class Skill {
 
 	/**
 	 * @param spellStatus
-	 * @param effects
+	 * @param dashStatus
 	 */
 	private void sendCastspellEnd(int spellStatus, int dashStatus, List<Effect> effects) {
 		getSkillSkinData();
@@ -1589,7 +1589,7 @@ public class Skill {
 	}
 
 	/**
-	 * @param FirstTargetAttribute the firstTargetAttribute to set
+	 * @param firstTargetAttribute the firstTargetAttribute to set
 	 */
 	public void setFirstTargetAttribute(FirstTargetAttribute firstTargetAttribute) {
 		this.firstTargetAttribute = firstTargetAttribute;

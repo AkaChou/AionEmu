@@ -339,9 +339,7 @@ public class Node extends Spatial implements Cloneable {
 
 				// not used materialIds do not have collision intention for materials set
 				// not all material meshes have physical collisions set
-				// TODO: implement event mesh collisions
-				if ((child.getIntentions() & results.getIntentions()) == 0
-						|| (child.getIntentions() & CollisionIntention.EVENT.getId()) != 0) {
+				if ((child.getIntentions() & results.getIntentions()) == 0) {
 					continue;
 				}
 				if ((results.getIntentions() & CollisionIntention.MATERIAL.getId()) != 0
@@ -463,6 +461,15 @@ public class Node extends Spatial implements Cloneable {
 	 */
 	@Override
 	public void setTransform(Matrix3f rotation, Vector3f loc, float scale) {
+		if (children != null) {
+			for (int i = 0; i < children.size(); i++) {
+				children.get(i).setTransform(rotation, loc, scale);
+			}
+		}
+	}
+
+	@Override
+	public void setTransform(Matrix3f rotation, Vector3f loc, Vector3f scale) {
 		if (children != null) {
 			for (int i = 0; i < children.size(); i++) {
 				children.get(i).setTransform(rotation, loc, scale);

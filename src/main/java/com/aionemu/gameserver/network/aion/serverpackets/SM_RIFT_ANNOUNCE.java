@@ -36,7 +36,7 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	/**
 	 * Rift announce packet
 	 *
-	 * @param player
+	 * @param rifts
 	 */
 	public SM_RIFT_ANNOUNCE(Map<Integer, Integer> rifts) {
 		this.actionId = 0;
@@ -52,7 +52,7 @@ public class SM_RIFT_ANNOUNCE extends AionServerPacket {
 	/**
 	 * Rift announce packet
 	 *
-	 * @param player
+	 * @param rift
 	 */
 	public SM_RIFT_ANNOUNCE(RVController rift, boolean isMaster) {
 		this.rift = rift;

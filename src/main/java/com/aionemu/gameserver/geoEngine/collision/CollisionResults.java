@@ -27,11 +27,26 @@ public class CollisionResults implements Iterable<CollisionResult> {
 	private final boolean onlyFirst;
 	private final byte intentions;
 	private int instanceId;  // 移除final修饰符
+	private final IgnoreProperties ignoreProperties;
+	private boolean invalidateSlopingSurface;
 
 	public CollisionResults(byte intentions, boolean searchFirst, int instanceId) {
+		this(intentions, searchFirst, instanceId, null);
+	}
+
+	public CollisionResults(byte intentions, boolean searchFirst, int instanceId, IgnoreProperties ignoreProperties) {
 		this.intentions = intentions;
 		this.onlyFirst = searchFirst;
 		this.instanceId = instanceId;
+		this.ignoreProperties = ignoreProperties;
+	}
+
+	public CollisionResults(byte intentions, int instanceId, IgnoreProperties ignoreProperties) {
+		this(intentions, false, instanceId, ignoreProperties);
+	}
+
+	public CollisionResults(byte intentions, int instanceId) {
+		this(intentions, false, instanceId, null);
 	}
 
 	public void clear() {
@@ -137,6 +152,18 @@ public class CollisionResults implements Iterable<CollisionResult> {
 
 	public int getInstanceId() {
 		return instanceId;
+	}
+
+	public IgnoreProperties getIgnoreProperties() {
+		return ignoreProperties;
+	}
+
+	public boolean shouldInvalidateSlopingSurface() {
+		return invalidateSlopingSurface;
+	}
+
+	public void setInvalidateSlopingSurface(boolean invalidateSlopingSurface) {
+		this.invalidateSlopingSurface = invalidateSlopingSurface;
 	}
     
     public void setInstanceId(int instanceId) {

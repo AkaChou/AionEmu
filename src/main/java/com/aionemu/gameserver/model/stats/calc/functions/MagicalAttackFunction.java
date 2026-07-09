@@ -18,6 +18,7 @@ package com.aionemu.gameserver.model.stats.calc.functions;
 
 import com.aionemu.gameserver.model.stats.calc.Stat2;
 import com.aionemu.gameserver.model.stats.container.StatEnum;
+import com.aionemu.gameserver.utils.stats.CalculationType;
 
 class MagicalAttackFunction extends StatFunction {
 
@@ -26,9 +27,9 @@ class MagicalAttackFunction extends StatFunction {
 	}
 
 	@Override
-	public void apply(Stat2 stat) {
+	public void apply(Stat2 stat, CalculationType... calculationTypes) {
 		float knowledge = stat.getOwner().getGameStats().getKnowledge().getCurrent();
-		stat.setBase(Math.round(stat.getBase() * knowledge / 100.0F));
+		stat.setBaseRate(knowledge / 100.0F);
 	}
 
 	@Override

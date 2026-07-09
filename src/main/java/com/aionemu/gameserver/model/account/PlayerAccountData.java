@@ -123,7 +123,7 @@ public class PlayerAccountData {
 	}
 
 	/**
-	 * @param timestamp
+	 * @param creationDate
 	 */
 	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;

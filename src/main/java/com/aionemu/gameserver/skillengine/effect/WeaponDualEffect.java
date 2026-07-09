@@ -21,25 +21,39 @@ import java.util.List;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
 
+import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.skill.PlayerSkillEntry;
 import com.aionemu.gameserver.model.stats.calc.functions.IStatFunction;
 import com.aionemu.gameserver.model.stats.calc.functions.StatDualWeaponMasteryFunction;
 import com.aionemu.gameserver.skillengine.model.Effect;
+import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WeaponDualEffect")
 public class WeaponDualEffect extends BuffEffect {
 
+	@XmlAttribute(name = "skill_efficiency")
+	private int skillEfficiency;
+	@XmlAttribute(name = "max_damage_chance")
+	private int maxDamageChance;
+	@XmlAttribute(name = "max_damage_delta")
+	private int maxDamageDelta;
+
 	@Override
 	public void startEffect(Effect effect) {
+		if (effect.getEffected() instanceof Player) {
+			Player player = (Player) effect.getEffected();
+			player.setDualEffectValue(value);
+			player.getGameStats().setSkillEfficiency(skillEfficiency / 100f);
+			player.getGameStats().setMaxDamageChance(maxDamageChance + effect.getSkillLevel() * maxDamageDelta);
+			player.getGameStats().setMinDamageRatio((value + effect.getSkillLevel() * delta) / 100f);
+		}
 		if (change == null) {
 			return;
-		}
-
-		if (effect.getEffected() instanceof Player) {
-			((Player) effect.getEffected()).setDualEffectValue(value);
 		}
 
 		List<IStatFunction> modifiers = getModifiers(effect);
@@ -55,8 +69,28 @@ public class WeaponDualEffect extends BuffEffect {
 	@Override
 	public void endEffect(Effect effect) {
 		if (effect.getEffected() instanceof Player) {
-			((Player) effect.getEffected()).setDualEffectValue(0);
+			Player player = (Player) effect.getEffected();
+			player.setDualEffectValue(0);
+			player.getGameStats().setSkillEfficiency(0);
+			player.getGameStats().setMaxDamageChance(0);
+			player.getGameStats().setMinDamageRatio(0);
 		}
 		super.endEffect(effect);
+	}
+
+	public static boolean hasDualWieldEffect(Player player) {
+		if (!player.isSpawned()) {
+			for (PlayerSkillEntry skillEntry : player.getSkillList().getAllSkills()) {
+				SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skillEntry.getSkillId());
+				if (skillTemplate == null) {
+					continue;
+				}
+				Effects effects = skillTemplate.getEffects();
+				if (effects != null && effects.isEffectTypePresent(EffectType.WEAPONDUAL)) {
+					return true;
+				}
+			}
+		}
+		return player.getGameStats().getSkillEfficiency() != 0;
 	}
 }

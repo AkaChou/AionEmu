@@ -133,7 +133,7 @@ public class DropItem {
 	}
 
 	/**
-	 * @param WinningPlayer to set
+	 * @param winningPlayer to set
 	 */
 	public void setWinningPlayer(Player winningPlayer) {
 		this.winningPlayer = winningPlayer;

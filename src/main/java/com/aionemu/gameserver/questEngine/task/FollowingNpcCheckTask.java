@@ -35,8 +35,7 @@ public class FollowingNpcCheckTask implements Runnable {
 	private final DestinationChecker destinationChecker;
 
 	/**
-	 * @param player
-	 * @param npc
+	 * @param env
 	 * @param destinationChecker
 	 */
 	FollowingNpcCheckTask(QuestEnv env, DestinationChecker destinationChecker) {

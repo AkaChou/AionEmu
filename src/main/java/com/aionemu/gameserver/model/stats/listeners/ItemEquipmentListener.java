@@ -50,7 +50,7 @@ public class ItemEquipmentListener {
 
 	/**
 	 * @param item
-	 * @param cgs
+	 * @param owner
 	 */
 	public static void onItemEquipment(Item item, Player owner) {
 		owner.getController().cancelUseItem();
@@ -153,9 +153,9 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * @param itemTemplate
-	 * @param slot
+	 * @param item
 	 * @param cgs
+	 * @param player
 	 */
 	private static void onItemEquipment(Item item, CreatureGameStats<?> cgs, Player player) {
 		ItemTemplate itemTemplate = item.getItemTemplate();
@@ -325,7 +325,7 @@ public class ItemEquipmentListener {
 	 * All modifiers of stones will be applied to character
 	 * 
 	 * @param item
-	 * @param cgs
+	 * @param itemStones
 	 */
 	private static void addStonesStats(Item item, Set<? extends ManaStone> itemStones, CreatureGameStats<?> cgs) {
 		if (itemStones == null || itemStones.size() == 0) {
@@ -387,7 +387,7 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * @param item
+	 * @param player
 	 */
 	private static void addGodstoneEffect(Player player, Item item) {
 		if (item.getGodStone() != null) {
@@ -396,7 +396,7 @@ public class ItemEquipmentListener {
 	}
 
 	/**
-	 * @param item
+	 * @param player
 	 */
 	private static void removeGodstoneEffect(Player player, Item item) {
 		if (item.getGodStone() != null) {

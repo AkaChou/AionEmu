@@ -65,7 +65,6 @@ public abstract class HealOverTimeEffect extends AbstractOverTimeEffect {
 					.getCurrent();
 		}
 		effect.setReservedInt(position, finalHeal);
-		effect.addSucessEffect(this);
 	}
 
 	public void onPeriodicAction(Effect effect, HealType healType) {

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.GeoWorldLoader;
@@ -42,25 +43,33 @@ public class RealGeoData implements GeoData {
         ConsoleProgressLineRenderer progressRenderer = new ConsoleProgressLineRenderer(System.out, true);
         AtomicInteger completedMaps = new AtomicInteger();
         final List<Integer> mapsWithErrors = new ArrayList<>();
+        final Set<String> missingMeshes = ConcurrentHashMap.newKeySet();
         List<Callable<Void>> tasks = new ArrayList<>();
+        List<GeoMap> maps = new ArrayList<>();
+
+        for (final WorldMapTemplate map : DataManager.WORLD_MAPS_DATA) {
+            GeoMap geoMap = new GeoMap(String.valueOf(map.getMapId()), map.getWorldSize());
+            maps.add(geoMap);
+            geoMaps.put(map.getMapId(), geoMap);
+        }
+        try {
+            GeoWorldLoader.loadTerrains(maps);
+        } catch (IOException e) {
+            throw new IllegalStateException("Problem loading terrains", e);
+        }
 
         for (final WorldMapTemplate map : DataManager.WORLD_MAPS_DATA) {
             tasks.add(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
                     int mapId = map.getMapId();
-                    int worldSize = map.getWorldSize();
-                    GeoMap geoMap = new GeoMap(String.valueOf(mapId), worldSize);
+                    GeoMap geoMap = geoMaps.get(mapId);
                     try {
-                        if (GeoWorldLoader.loadWorld(mapId, models, geoMap)) {
-                            synchronized (geoMaps) {
-                                geoMaps.put(mapId, geoMap);
-                            }
-                        }
+                        GeoWorldLoader.loadWorldObjects(mapId, models, geoMap, missingMeshes);
                     } catch (Throwable t) {
+                        log.error("Error loading geo map {}", mapId, t);
                         synchronized (mapsWithErrors) {
                             mapsWithErrors.add(mapId);
-                            geoMaps.put(mapId, DummyGeoData.DUMMY_MAP);
                         }
                     }
                     progressRenderer.progress("GeoMaps", completedMaps.incrementAndGet(), totalMaps);
@@ -83,14 +92,20 @@ public class RealGeoData implements GeoData {
 
         progressRenderer.finished("GeoMaps", totalMaps);
         if (!mapsWithErrors.isEmpty()) {
+            for (Integer mapId : mapsWithErrors) {
+                geoMaps.put(mapId, DummyGeoData.DUMMY_MAP);
+            }
             log.warn("Some maps were not loaded correctly and reverted to dummy implementation: {}", mapsWithErrors);
+        }
+        if (!missingMeshes.isEmpty()) {
+            log.warn("{} meshes are missing:\n{}", missingMeshes.size(), missingMeshes.stream().sorted().collect(Collectors.joining("\n")));
         }
     }
 
     protected Map<String, Spatial> loadMeshes() {
         log.info("Loading meshes..");
         try {
-            return GeoWorldLoader.loadMeshs("data/geo/meshs.geo");
+            return GeoWorldLoader.loadMeshs("data/geo/models.mesh");
         } catch (IOException e) {
             throw new IllegalStateException("Problem loading meshes", e);
         }

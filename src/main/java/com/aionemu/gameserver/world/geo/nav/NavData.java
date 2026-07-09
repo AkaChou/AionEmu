@@ -53,7 +53,7 @@ public class NavData {
     private static volatile ObjectProvider<NavData> instanceProvider;
 
     /** Navigation data directory */
-    private static final String NAV_DIR = "./data/nav/";
+    private static final String NAV_DIR = "./data/geo/nav/";
     
     /** Size of float in bytes */
     private static final int FLOAT_SIZE_BYTES = 4;

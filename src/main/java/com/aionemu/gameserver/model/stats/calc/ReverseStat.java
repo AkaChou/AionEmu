@@ -32,8 +32,16 @@ public class ReverseStat extends Stat2 {
 		super(stat, base, owner, bonusRate);
 	}
 
+	public ReverseStat(StatEnum stat, float base, Creature owner) {
+		super(stat, base, owner);
+	}
+
+	public ReverseStat(StatEnum stat, float base, Creature owner, float bonusRate) {
+		super(stat, base, owner, bonusRate);
+	}
+
 	@Override
-	public void addToBase(int base) {
+	public void addToBase(float base) {
 		this.base -= base;
 		if (this.base < 0) {
 			this.base = 0;
@@ -41,7 +49,7 @@ public class ReverseStat extends Stat2 {
 	}
 
 	@Override
-	public void addToBonus(int bonus) {
+	public void addToBonus(float bonus) {
 		this.bonus -= bonusRate * bonus;
 	}
 

@@ -43,9 +43,7 @@ public class PunishmentService {
 	/**
 	 * This method will handle unbanning a character
 	 * 
-	 * @param player
-	 * @param state
-	 * @param delayInMinutes
+	 * @param playerId
 	 */
 	public static void unbanChar(int playerId) {
 		DAOManager.getDAO(PlayerPunishmentsDAO.class).unpunishPlayer(playerId, PunishmentType.CHARBAN);
@@ -54,9 +52,9 @@ public class PunishmentService {
 	/**
 	 * This method will handle banning a character
 	 * 
-	 * @param player
-	 * @param state
-	 * @param delayInMinutes
+	 * @param playerId
+	 * @param dayCount
+	 * @param reason
 	 */
 	public static void banChar(int playerId, int dayCount, String reason) {
 		DAOManager.getDAO(PlayerPunishmentsDAO.class).punishPlayer(playerId, PunishmentType.CHARBAN,
@@ -127,7 +125,7 @@ public class PunishmentService {
 	/**
 	 * This method will stop the prison task
 	 * 
-	 * @param playerObjId
+	 * @param player
 	 */
 	public static void stopPrisonTask(Player player, boolean save) {
 		Future<?> prisonTask = player.getController().getTask(TaskId.PRISON);

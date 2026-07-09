@@ -18,8 +18,8 @@ import javassist.LoaderClassPath;
 import javassist.Modifier;
 import javassist.NotFoundException;
 /**
- * 全局回调增强器，用于处理类级别的回调方法增强
- * Global callback enhancer for handling class-level callback method enhancement
+ * 全局回调增强器，用于处理@GlobalCallback方法增强
+ * Global callback enhancer for methods annotated with @GlobalCallback
  *
  * 该类继承自CallbackClassFileTransformer，实现了全局回调的字节码增强功能
  * This class extends CallbackClassFileTransformer to implement bytecode enhancement for global callbacks

@@ -33,6 +33,10 @@ public enum HousePermissions {
 		return (byte) result;
 	}
 
+	public boolean isDoorOpen() {
+		return this == DOOR_OPENED_ALL || this == DOOR_OPENED_FRIENDS;
+	}
+
 	public static HousePermissions getPacketDoorState(int value) {
 		value <<= 8;
 		for (HousePermissions perm : HousePermissions.values()) {

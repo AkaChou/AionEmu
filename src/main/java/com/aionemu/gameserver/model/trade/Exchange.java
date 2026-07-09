@@ -57,7 +57,7 @@ public class Exchange {
 	}
 
 	/**
-	 * @param exchangeItem
+	 * @param parentItemObjId
 	 */
 	public void addItem(int parentItemObjId, ExchangeItem exchangeItem) {
 		this.items.put(parentItemObjId, exchangeItem);

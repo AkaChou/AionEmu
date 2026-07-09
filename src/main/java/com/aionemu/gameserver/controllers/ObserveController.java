@@ -185,7 +185,7 @@ public class ObserveController {
 	}
 
 	/**
-	 * @param notify that creature died
+	 * @param creature that creature died
 	 */
 	public void notifyDeathObservers(Creature creature) {
 		notifyObservers(ObserverType.DEATH, creature);
@@ -201,7 +201,7 @@ public class ObserveController {
 	/**
 	 * notify that creature attacking
 	 * 
-	 * @param damage
+	 * @param creature
 	 */
 	public void notifyAttackObservers(Creature creature) {
 		notifyObservers(ObserverType.ATTACK, creature);

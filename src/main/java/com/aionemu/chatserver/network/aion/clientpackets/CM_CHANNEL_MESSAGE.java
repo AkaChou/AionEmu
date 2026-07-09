@@ -44,7 +44,7 @@ public class CM_CHANNEL_MESSAGE extends AbstractClientPacket {
     /**
      * @param packetReader
      * @param gameChannelHandler
-     * @param opCode
+     * @param broadcastService
      */
     public CM_CHANNEL_MESSAGE(PacketReader packetReader, ClientChannelHandler gameChannelHandler, BroadcastService broadcastService) {
         super(packetReader, gameChannelHandler, 0x18);

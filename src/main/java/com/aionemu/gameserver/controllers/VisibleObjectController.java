@@ -16,6 +16,7 @@
  */
 package com.aionemu.gameserver.controllers;
 
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.gameobjects.VisibleObject;
 import com.aionemu.gameserver.world.World;
 
@@ -44,6 +45,10 @@ public abstract class VisibleObjectController<T extends VisibleObject> {
 	}
 
 	public void onBeforeSpawn() {
+		if (getOwner().getSpawn() != null && getOwner().getSpawn().getStaticId() > 0) {
+			GameWorldServices.geoService().spawnPlaceableObject(getOwner().getWorldId(), getOwner().getInstanceId(),
+					getOwner().getSpawn().getStaticId());
+		}
 	}
 
 	public void onAfterSpawn() {
@@ -51,6 +56,10 @@ public abstract class VisibleObjectController<T extends VisibleObject> {
 	}
 
 	public void onDespawn() {
+		if (getOwner().getSpawn() != null && getOwner().getSpawn().getStaticId() > 0) {
+			GameWorldServices.geoService().despawnPlaceableObject(getOwner().getWorldId(), getOwner().getInstanceId(),
+					getOwner().getSpawn().getStaticId());
+		}
 	}
 
 	public void onDelete() {

@@ -33,12 +33,12 @@ public class SphereArea implements Area {
 	protected ZoneName zoneName;
 
 	/**
+	 * @param zoneName
+	 * @param worldId
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @param r
-	 * @param worldId
-	 * @param zoneName
 	 */
 	public SphereArea(ZoneName zoneName, int worldId, float x, float y, float z, float r) {
 		this.x = x;

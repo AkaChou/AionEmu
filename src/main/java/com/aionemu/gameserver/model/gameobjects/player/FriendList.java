@@ -54,8 +54,8 @@ public class FriendList implements Iterable<Friend> {
 	/**
 	 * Constructs a friend list for the given player, with the given friends
 	 * 
-	 * @param player  Player who has this friend list
-	 * @param friends Friends on the list
+	 * @param owner  Player who has this friend list
+	 * @param newFriends Friends on the list
 	 */
 	public FriendList(Player owner, Collection<Friend> newFriends) {
 		this.friends = new ConcurrentLinkedQueue<Friend>(newFriends);
@@ -120,7 +120,7 @@ public class FriendList implements Iterable<Friend> {
 	 * <li>Note: You should use requestDel to delete from both lists</li>
 	 * </ul>
 	 * 
-	 * @param friend
+	 * @param friendOid
 	 */
 	public void delFriend(int friendOid) {
 		Iterator<Friend> it = iterator();

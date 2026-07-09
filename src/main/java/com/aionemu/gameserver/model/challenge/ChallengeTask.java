@@ -35,9 +35,9 @@ public class ChallengeTask {
 	/**
 	 * Used for loading tasks from DAO.
 	 * 
-	 * @param header
+	 * @param taskId
+	 * @param ownerId
 	 * @param quests
-	 * @param completeTime
 	 */
 	public ChallengeTask(int taskId, int ownerId, Map<Integer, ChallengeQuest> quests, Timestamp completeTime) {
 		this.taskId = taskId;

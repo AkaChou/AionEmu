@@ -16,20 +16,19 @@
  */
 package com.aionemu.gameserver.model.siege;
 
-import com.aionemu.gameserver.lifecycle.GameFeatureServices;
-
-import com.aionemu.gameserver.controllers.observer.ActionObserver;
-import com.aionemu.gameserver.controllers.observer.IActor;
-import com.aionemu.gameserver.geoEngine.scene.Spatial;
-import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.ShieldService;
-import com.aionemu.gameserver.services.SiegeService;
-import com.aionemu.gameserver.world.zone.ZoneInstance;
-import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.aionemu.gameserver.controllers.observer.ActionObserver;
+import com.aionemu.gameserver.controllers.observer.CollisionDieActor;
+import com.aionemu.gameserver.configs.main.GeoDataConfig;
+import com.aionemu.gameserver.geoEngine.scene.DespawnableNode;
+import com.aionemu.gameserver.geoEngine.scene.Spatial;
+import com.aionemu.gameserver.lifecycle.GameFeatureServices;
+import com.aionemu.gameserver.model.gameobjects.Creature;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.world.zone.ZoneInstance;
+import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 
 /**
  * Shields have material ID 11 in geo.
@@ -38,13 +37,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SiegeShield implements ZoneHandler {
 
-	Map<Integer, IActor> observed = new ConcurrentHashMap<Integer, IActor>();
+	Map<Integer, ActionObserver> observed = new ConcurrentHashMap<Integer, ActionObserver>();
 	private Spatial geometry;
 	private int siegeLocationId;
 	private boolean isEnabled = false;
 
 	public SiegeShield(Spatial geometry) {
 		this.geometry = geometry;
+		if (geometry.getParent() instanceof DespawnableNode) {
+			((DespawnableNode) geometry.getParent()).setType(DespawnableNode.DespawnableType.SHIELD);
+		}
 	}
 
 	public Spatial getGeometry() {
@@ -57,25 +59,22 @@ public class SiegeShield implements ZoneHandler {
 			return;
 		}
 		Player player = (Player) creature;
-		if (isEnabled || siegeLocationId == 0) {
+		if (GeoDataConfig.GEO_SHIELDS_ENABLE && (isEnabled || siegeLocationId == 0)) {
 			FortressLocation loc = GameFeatureServices.siegeService().getFortress(siegeLocationId);
 			if (loc == null || loc.getRace() != SiegeRace.getByRace(player.getRace())) {
-				ActionObserver actor = GameFeatureServices.shieldService().createShieldObserver(this, creature);
-				if (actor instanceof IActor) {
-					creature.getObserveController().addObserver(actor);
-					observed.put(creature.getObjectId(), (IActor) actor);
-				}
+				CollisionDieActor actor = new CollisionDieActor(creature, geometry);
+				creature.getObserveController().addObserver(actor);
+				observed.put(creature.getObjectId(), actor);
 			}
 		}
 	}
 
 	@Override
 	public void onLeaveZone(Creature creature, ZoneInstance zone) {
-		IActor actor = observed.get(creature.getObjectId());
+		ActionObserver actor = observed.get(creature.getObjectId());
 		if (actor != null) {
-			creature.getObserveController().removeObserver((ActionObserver) actor);
+			creature.getObserveController().removeObserver(actor);
 			observed.remove(creature.getObjectId());
-			actor.abort();
 		}
 	}
 
@@ -93,6 +92,9 @@ public class SiegeShield implements ZoneHandler {
 
 	public void setSiegeLocationId(int siegeLocationId) {
 		this.siegeLocationId = siegeLocationId;
+		if (geometry.getParent() instanceof DespawnableNode) {
+			((DespawnableNode) geometry.getParent()).setId(siegeLocationId);
+		}
 	}
 
 	@Override

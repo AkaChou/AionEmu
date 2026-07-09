@@ -44,8 +44,8 @@ public abstract class AbstractArea implements Area {
 	/**
 	 * Creates new AbstractArea with min and max z
 	 * 
-	 * @param minZ min z
-	 * @param maxZ max z
+	 * @param zoneName min z
+	 * @param worldId max z
 	 */
 	protected AbstractArea(ZoneName zoneName, int worldId, float minZ, float maxZ) {
 		if (minZ > maxZ) {

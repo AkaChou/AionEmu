@@ -154,7 +154,7 @@ public class PlayerLifeStats extends CreatureLifeStats<Player> {
 	/**
 	 * This method is called whenever caller wants to restore creatures's FP
 	 * 
-	 * @param value
+	 * @param type
 	 * @return
 	 */
 	@Override

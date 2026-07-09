@@ -53,7 +53,7 @@ public class LsPacketHandlerFactory {
 	}
 
 	/**
-	 * @param loginServer
+	 * Registers login-server packet handlers.
 	 */
 	public LsPacketHandlerFactory() {
 		addPacket(new CM_ACCOUNT_RECONNECT_KEY(0x03), State.AUTHED);

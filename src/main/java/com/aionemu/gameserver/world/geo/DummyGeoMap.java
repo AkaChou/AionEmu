@@ -16,6 +16,8 @@
  */
 package com.aionemu.gameserver.world.geo;
 
+import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
+import com.aionemu.gameserver.geoEngine.collision.IgnoreProperties;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
@@ -41,14 +43,57 @@ public class DummyGeoMap extends GeoMap {
 	}
 
 	@Override
+	public boolean canSee(float x, float y, float z, float targetX, float targetY, float targetZ, float limit,
+			int instanceId, IgnoreProperties ignoreProperties) {
+		return true;
+	}
+
+	@Override
 	public Vector3f getClosestCollision(float x, float y, float z, float targetX, float targetY, float targetZ,
 			boolean changeDirction, boolean fly, int instanceId, byte intentions) {
 		return new Vector3f(targetX, targetY, targetZ);
 	}
 
 	@Override
-	public void setDoorState(int instanceId, String name, boolean state) {
+	public Vector3f getClosestCollision(float x, float y, float z, float targetX, float targetY, float targetZ,
+			boolean changeDirction, boolean fly, int instanceId, byte intentions, IgnoreProperties ignoreProperties) {
+		return new Vector3f(targetX, targetY, targetZ);
+	}
 
+	@Override
+	public CollisionResults getCollisions(float x, float y, float z, float targetX, float targetY, float targetZ,
+			boolean changeDirection, boolean fly, int instanceId, byte intentions, IgnoreProperties ignoreProperties) {
+		return new CollisionResults(intentions, changeDirection, instanceId, ignoreProperties);
+	}
+
+	@Override
+	public void setDoorState(int instanceId, int doorId, boolean open) {
+
+	}
+
+	@Override
+	public void spawnPlaceableObject(int instanceId, int staticId) {
+
+	}
+
+	@Override
+	public void despawnPlaceableObject(int instanceId, int staticId) {
+
+	}
+
+	@Override
+	public void updateTownToLevel(int townId, int level) {
+
+	}
+
+	@Override
+	public void setHouseDoorState(int instanceId, int houseAddress, boolean open) {
+
+	}
+
+	@Override
+	public boolean hasTerrainMaterials() {
+		return false;
 	}
 
 	@Override

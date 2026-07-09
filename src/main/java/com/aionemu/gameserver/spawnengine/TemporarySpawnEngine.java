@@ -109,7 +109,7 @@ public class TemporarySpawnEngine {
 	}
 
 	/**
-	 * @param spawnTemplate
+	 * @param spawn
 	 */
 	public static void addSpawnGroup(SpawnGroup2 spawn, int instanceId) {
 		synchronized (temporarySpawnLock) {

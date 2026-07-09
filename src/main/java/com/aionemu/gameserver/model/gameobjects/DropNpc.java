@@ -156,14 +156,14 @@ public class DropNpc {
 	}
 
 	/**
-	 * @param addPlayerStatus
+	 * @param player
 	 */
 	public void addPlayerStatus(Player player) {
 		playerStatus.add(player);
 	}
 
 	/**
-	 * @param delPlayerStatus
+	 * @param player
 	 */
 	public void delPlayerStatus(Player player) {
 		playerStatus.remove(player);

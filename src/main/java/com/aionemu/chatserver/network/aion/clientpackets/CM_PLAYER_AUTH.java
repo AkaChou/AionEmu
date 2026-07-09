@@ -42,8 +42,8 @@ public class CM_PLAYER_AUTH extends AbstractClientPacket {
 
     /**
      * @param packetReader
-     * @param gameChannelHandler
-     * @param opCode
+     * @param clientChannelHandler
+     * @param chatService
      */
     public CM_PLAYER_AUTH(PacketReader packetReader, ClientChannelHandler clientChannelHandler, ChatService chatService) {
         super(packetReader, clientChannelHandler, 0x05);

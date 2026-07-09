@@ -35,4 +35,13 @@ class RealGeoDataConcurrencyTest {
 
 		assertTrue(source.contains("Thread.currentThread().interrupt();"));
 	}
+
+	@Test
+	void worldMapLoadingDoesNotMutateGeoMapRegistryFromWorkerThreads() throws IOException {
+		String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/world/geo/RealGeoData.java"));
+		int workerStart = source.indexOf("public Void call() throws Exception");
+		int workerEnd = source.indexOf("progressRenderer.progress", workerStart);
+
+		assertFalse(source.substring(workerStart, workerEnd).contains("geoMaps.put"));
+	}
 }

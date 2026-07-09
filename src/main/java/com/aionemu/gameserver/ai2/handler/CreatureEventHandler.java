@@ -61,8 +61,8 @@ public class CreatureEventHandler {
 	}
 
 	/**
-	 * 处理生物移动事件
-	 * @param npcAI 非玩家角色的AI实例
+	 * 检查生物是否触发仇恨
+	 * @param ai 非玩家角色的AI实例
 	 * @param creature 移动的生物对象
 	 */
 	protected static void checkAggro(NpcAI2 ai, Creature creature) {

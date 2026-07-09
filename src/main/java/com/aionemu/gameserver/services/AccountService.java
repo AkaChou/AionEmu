@@ -64,8 +64,8 @@ public class AccountService {
 	 * Returns {@link Account} object that has given id.
 	 * 
 	 * @param accountId
-	 * @param accountTime
 	 * @param accountName
+	 * @param accountTime
 	 * @param accessLevel
 	 * @param membership
 	 * @return Account
@@ -129,7 +129,6 @@ public class AccountService {
 	 * Loads account data and returns.
 	 * 
 	 * @param accountId
-	 * @param accountName
 	 * @return
 	 */
 	public static Account loadAccount(int accountId) {
