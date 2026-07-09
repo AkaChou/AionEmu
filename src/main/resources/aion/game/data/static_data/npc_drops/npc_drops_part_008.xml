@@ -14626,7 +14626,7 @@
   </npc_drop>
   <npc_drop npc_id="219289">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="188051720" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_event_christmas_box_01"/>
+      <drop item_id="188051720" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_event_christmas_box_01"/>
       <drop item_id="162002037" chance="0.20" min_amount="3" max_amount="3" no_reduce="false" eachmember="false" name="remedy_hp_30a_bind"/>
       <drop item_id="162002040" chance="0.20" min_amount="3" max_amount="3" no_reduce="false" eachmember="false" name="remedy_mp_30a_bind"/>
     </drop_group>

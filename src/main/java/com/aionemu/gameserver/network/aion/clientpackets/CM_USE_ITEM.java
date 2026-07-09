@@ -26,6 +26,7 @@ import com.aionemu.gameserver.model.gameobjects.HouseObject;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.actions.AbstractItemAction;
+import com.aionemu.gameserver.model.templates.item.actions.DyeAction;
 import com.aionemu.gameserver.model.templates.item.actions.HouseDyeAction;
 import com.aionemu.gameserver.model.templates.item.actions.InstanceTimeClear;
 import com.aionemu.gameserver.model.templates.item.actions.ItemActions;
@@ -41,7 +42,7 @@ import com.aionemu.gameserver.utils.PacketSendUtility;
 
 public class CM_USE_ITEM extends AionClientPacket {
 	public int uniqueItemId;
-	public int type, targetItemId, syncId, returnId;
+	public int type, targetItemId, syncId, returnId, customDyeColor;
 
 	public CM_USE_ITEM(int opcode, State state, State... restStates) {
 		super(opcode, state, restStates);
@@ -57,6 +58,9 @@ public class CM_USE_ITEM extends AionClientPacket {
 			syncId = readD();
 		} else if (type == 6) {
 			returnId = readD();
+		} else if (type == 7) {
+			targetItemId = readD();
+			customDyeColor = readD();
 		}
 	}
 
@@ -165,6 +169,11 @@ public class CM_USE_ITEM extends AionClientPacket {
 					MultiReturnAction action = (MultiReturnAction) itemAction;
 					int SelectedMapIndex = returnId;
 					action.act(player, item, SelectedMapIndex);
+				}
+			} else if (type == 7) {
+				if (itemAction instanceof DyeAction) {
+					DyeAction action = (DyeAction) itemAction;
+					action.act(player, item, targetItem, customDyeColor);
 				}
 			} else {
 				itemAction.act(player, item, targetItem);

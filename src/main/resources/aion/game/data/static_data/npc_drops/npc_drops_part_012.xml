@@ -8155,13 +8155,13 @@
   </npc_drop>
   <npc_drop npc_id="235854">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="169000010" chance="0.01" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
+      <drop item_id="169000010" chance="0.009" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
     </drop_group>
     <common_drop_group name="JUNK_ANIMAL_ALL_55A"/>
   </npc_drop>
   <npc_drop npc_id="235855">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="169000010" chance="0.01" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
+      <drop item_id="169000010" chance="0.009" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
     </drop_group>
     <common_drop_group name="JUNK_ANIMAL_ALL_55A"/>
   </npc_drop>

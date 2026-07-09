@@ -51,15 +51,25 @@ public class LunaChestAction extends AbstractItemAction {
 
 			@Override
 			public void run() {
-				boolean succ = player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1);
+				int openCount = getOpenCount(parentItem.getItemCount());
+				boolean succ = player.getInventory().decreaseByObjectId(parentItem.getObjectId(), openCount);
 				PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), 0, parentItem.getObjectId(), parentItem.getItemId(), 0, 1, 0));
 				if (succ) {
+					int lunaReward = getLunaReward(count, openCount);
 					PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1300423, new Object[] { new DescriptionId(parentItem.getItemTemplate().getNameId()) }));
-					player.setLunaAccount(player.getLunaAccount() + count);
-					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GETLUNA(player.getName(), count));
+					player.setLunaAccount(player.getLunaAccount() + lunaReward);
+					PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_GETLUNA(player.getName(), lunaReward));
 					PacketSendUtility.sendPacket(player, new SM_LUNA_SHOP_LIST(0, player.getLunaAccount()));
 				}
 			}
 		}, 1000));
+	}
+
+	static int getOpenCount(long itemCount) {
+		return (int) Math.max(1, itemCount);
+	}
+
+	static int getLunaReward(int count, int openCount) {
+		return count * openCount;
 	}
 }

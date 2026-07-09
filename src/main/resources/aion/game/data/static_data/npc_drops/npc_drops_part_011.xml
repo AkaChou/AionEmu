@@ -2272,24 +2272,24 @@
   </npc_drop>
   <npc_drop npc_id="232934">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="152012578" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
+      <drop item_id="152012578" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="232935">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="152012578" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
+      <drop item_id="152012578" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="232936">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="152012578" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
-      <drop item_id="152012568" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5b_G_material_R_61a"/>
+      <drop item_id="152012578" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
+      <drop item_id="152012568" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5b_G_material_R_61a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="232937">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="152012578" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
-      <drop item_id="152012568" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5b_G_material_R_61a"/>
+      <drop item_id="152012578" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
+      <drop item_id="152012568" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5b_G_material_R_61a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="232938">
@@ -3447,14 +3447,14 @@
   </npc_drop>
   <npc_drop npc_id="232994">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="152012578" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
-      <drop item_id="152012568" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5b_G_material_R_61a"/>
+      <drop item_id="152012578" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
+      <drop item_id="152012568" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5b_G_material_R_61a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="232995">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="152012578" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
-      <drop item_id="152012568" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5b_G_material_R_61a"/>
+      <drop item_id="152012578" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
+      <drop item_id="152012568" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5b_G_material_R_61a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="232996">

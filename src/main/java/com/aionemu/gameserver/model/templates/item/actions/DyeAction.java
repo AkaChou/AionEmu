@@ -40,6 +40,9 @@ public class DyeAction extends AbstractItemAction implements HouseDyeAction {
 	@XmlAttribute
 	private Integer minutes;
 
+	@XmlAttribute
+	private boolean custom;
+
 	@Override
 	public boolean canAct(Player player, Item parentItem, Item targetItem) {
 		if (targetItem == null) {
@@ -50,7 +53,7 @@ public class DyeAction extends AbstractItemAction implements HouseDyeAction {
 	}
 
 	private int getColorBGRA() {
-		if (color.equals("no")) {
+		if (color == null || color.equals("no")) {
 			return 0;
 		} else {
 			int rgb = Integer.parseInt(color, 16);
@@ -58,17 +61,36 @@ public class DyeAction extends AbstractItemAction implements HouseDyeAction {
 		}
 	}
 
+	public boolean isCustom() {
+		return custom;
+	}
+
+	public int getColor(int customColor) {
+		return custom ? customColor : getColorBGRA();
+	}
+
 	@Override
 	public void act(Player player, Item parentItem, Item targetItem) {
+		if (custom) {
+			return;
+		}
+		act(player, parentItem, targetItem, 0);
+	}
+
+	public void act(Player player, Item parentItem, Item targetItem, int customColor) {
+		if (custom && customColor == 0) {
+			return;
+		}
 		if (!player.getInventory().decreaseByObjectId(parentItem.getObjectId(), 1)) {
 			return;
 		}
 		if (targetItem.getItemTemplate().isItemDyePermitted()) {
-			if (getColorBGRA() == 0) {
+			int color = getColor(customColor);
+			if (color == 0) {
 				targetItem.setItemColor(0);
 				targetItem.setColorExpireTime(0);
 			} else {
-				targetItem.setItemColor(parentItem.getItemTemplate().getTemplateId());
+				targetItem.setItemColor(custom ? color : parentItem.getItemTemplate().getTemplateId());
 				if (minutes != null)
 					targetItem.setColorExpireTime((int) (System.currentTimeMillis() / 1000 + minutes * 60));
 			}

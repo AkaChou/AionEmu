@@ -2356,7 +2356,7 @@
   <npc_drop npc_id="210316">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
       <drop item_id="182003735" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_d3_lehpar_15"/>
-      <drop item_id="186000013" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_v_s_11d"/>
+      <drop item_id="186000013" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_v_s_11d"/>
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000005" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_20"/>
@@ -11535,7 +11535,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001833" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30b"/>
+      <drop item_id="125001833" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30b"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_32A"/>
     <common_drop_group name="ARMOR_L_N_C2_34A"/>
@@ -11558,7 +11558,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_32A"/>
     <common_drop_group name="ARMOR_L_N_C2_34A"/>
@@ -11909,7 +11909,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001833" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30b"/>
+      <drop item_id="125001833" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30b"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_32A"/>
     <common_drop_group name="ARMOR_L_N_C2_34A"/>
@@ -11932,7 +11932,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_32A"/>
     <common_drop_group name="ARMOR_L_N_C2_34A"/>
@@ -11955,7 +11955,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_32A"/>
     <common_drop_group name="ARMOR_L_N_C2_34A"/>
@@ -12937,7 +12937,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_37A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -12964,7 +12964,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_37A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13167,7 +13167,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_37A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13194,7 +13194,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_37A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13221,7 +13221,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001833" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30b"/>
+      <drop item_id="125001833" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30b"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_37A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13248,7 +13248,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001818" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_30c"/>
+      <drop item_id="125001818" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_30c"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_37A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13275,7 +13275,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001818" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_30c"/>
+      <drop item_id="125001818" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_30c"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_37A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13329,7 +13329,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001834" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40b"/>
+      <drop item_id="125001834" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40b"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13357,7 +13357,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001819" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_40c"/>
+      <drop item_id="125001819" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_40c"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13385,7 +13385,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001819" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_40c"/>
+      <drop item_id="125001819" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_40c"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13413,7 +13413,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001829" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
+      <drop item_id="125001829" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13441,7 +13441,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="186000046" chance="10.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lehpar_quest_01a"/>
-      <drop item_id="125001829" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
+      <drop item_id="125001829" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -13467,7 +13467,7 @@
       <drop item_id="182003740" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_d3_lehpar_40"/>
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="125001829" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
+      <drop item_id="125001829" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
     </drop_group>
     <common_drop_group name="MATTER_OPTION_40A"/>
     <common_drop_group name="MATTER_PROC_40A"/>
@@ -13797,7 +13797,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_32A"/>
     <common_drop_group name="ARMOR_L_N_C2_34A"/>
@@ -13951,7 +13951,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_32A"/>
     <common_drop_group name="ARMOR_L_N_C2_34A"/>
@@ -13974,7 +13974,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001828" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
+      <drop item_id="125001828" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_30a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_32A"/>
     <common_drop_group name="ARMOR_L_N_C2_34A"/>
@@ -14607,7 +14607,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001818" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_30c"/>
+      <drop item_id="125001818" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_30c"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_37A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -16009,7 +16009,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001829" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
+      <drop item_id="125001829" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -16036,7 +16036,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
       <drop item_id="182201744" chance="0.30" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="doc_quest_1607a"/>
-      <drop item_id="125001829" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
+      <drop item_id="125001829" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -16359,7 +16359,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001819" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_40c"/>
+      <drop item_id="125001819" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_hood_n_r1_40c"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -16385,7 +16385,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001829" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
+      <drop item_id="125001829" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40a"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>
@@ -16411,7 +16411,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000008" chance="1.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="battery_40"/>
-      <drop item_id="125001834" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40b"/>
+      <drop item_id="125001834" chance="0.002" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="ac_mask_n_r1_40b"/>
     </drop_group>
     <common_drop_group name="WEAPON_L_N_C2_42A"/>
     <common_drop_group name="ARMOR_L_N_C2_39A"/>

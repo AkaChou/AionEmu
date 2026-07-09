@@ -3447,7 +3447,7 @@
       <drop item_id="186000033" chance="1.80" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_50a"/>
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="188054172" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.03" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="MATTER_OPTION_50A"/>
@@ -6222,7 +6222,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="152012805" chance="4.11" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dropmaterial_n_u_40e"/>
-      <drop item_id="188054172" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.12" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="MATTER_OPTION_50A"/>
@@ -6240,7 +6240,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="152012805" chance="3.36" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dropmaterial_n_u_40e"/>
-      <drop item_id="188054172" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.12" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="MATTER_OPTION_50A"/>
@@ -6505,7 +6505,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="152012805" chance="4.11" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dropmaterial_n_u_40e"/>
-      <drop item_id="188054172" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.12" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="MATTER_OPTION_50A"/>
@@ -7205,7 +7205,7 @@
       <drop item_id="152010317" chance="2.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="soulstone_n_c_04a"/>
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="188054172" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.006" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="SUPPLY_FOOD_50A"/>
@@ -8008,7 +8008,7 @@
       <drop item_id="152010317" chance="2.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="soulstone_n_c_04a"/>
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="188054172" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="SUPPLY_FOOD_50A"/>
@@ -8622,7 +8622,7 @@
       <drop item_id="152010317" chance="2.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="soulstone_n_c_04a"/>
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="188054172" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="SUPPLY_FOOD_50A"/>
@@ -8710,7 +8710,7 @@
       <drop item_id="152010317" chance="2.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="soulstone_n_c_04a"/>
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="188054172" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.006" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="SUPPLY_FOOD_50A"/>
@@ -8736,7 +8736,7 @@
       <drop item_id="186000033" chance="1.80" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_50a"/>
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="188054172" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.009" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.03" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="MATTER_OPTION_50A"/>
@@ -10325,7 +10325,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="152012805" chance="4.11" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dropmaterial_n_u_40e"/>
-      <drop item_id="188054172" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.12" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="MATTER_OPTION_50A"/>
@@ -10343,7 +10343,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="152012805" chance="3.36" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dropmaterial_n_u_40e"/>
-      <drop item_id="188054172" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.12" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="MATTER_OPTION_50A"/>
@@ -10360,7 +10360,7 @@
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="152012805" chance="4.11" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dropmaterial_n_u_40e"/>
-      <drop item_id="188054172" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
+      <drop item_id="188054172" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="true" name="Special_wrap_matter_2stenchant_m_65a"/>
       <drop item_id="188053295" chance="0.12" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="wrap_tshirt_m_65a"/>
     </drop_group>
     <common_drop_group name="MATTER_OPTION_50A"/>

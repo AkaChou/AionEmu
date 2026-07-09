@@ -6721,7 +6721,7 @@
   </npc_drop>
   <npc_drop npc_id="230136">
     <drop_group name="common_1" use_category="true" race="PC_ALL">
-      <drop item_id="169000010" chance="0.01" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
+      <drop item_id="169000010" chance="0.009" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
     </drop_group>
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="152012578" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="LDF5ab_all_material_U_61a"/>
@@ -14952,7 +14952,7 @@
   </npc_drop>
   <npc_drop npc_id="230627">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="169000010" chance="0.01" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
+      <drop item_id="169000010" chance="0.009" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_C2_59A"/>
     <common_drop_group name="ARMOR_A_N_C2_57A"/>
@@ -14998,7 +14998,7 @@
   </npc_drop>
   <npc_drop npc_id="230631">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="169000010" chance="0.01" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
+      <drop item_id="169000010" chance="0.009" min_amount="11" max_amount="11" no_reduce="false" eachmember="false" name="battery_60"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_C2_59A"/>
     <common_drop_group name="ARMOR_A_N_C2_57A"/>

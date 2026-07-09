@@ -1093,7 +1093,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1131,7 +1131,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1148,7 +1148,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1165,7 +1165,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1182,7 +1182,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1218,7 +1218,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1237,7 +1237,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1256,7 +1256,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.13" min_amount="156" max_amount="156" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1275,7 +1275,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1294,7 +1294,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.13" min_amount="156" max_amount="156" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1399,7 +1399,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1419,7 +1419,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1439,7 +1439,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1459,7 +1459,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1479,7 +1479,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1499,7 +1499,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1519,7 +1519,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1539,7 +1539,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1599,7 +1599,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1619,7 +1619,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1839,7 +1839,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1859,7 +1859,7 @@
       <drop item_id="186000235" chance="1.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.20" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.005" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1879,7 +1879,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1899,7 +1899,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1919,7 +1919,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1939,7 +1939,7 @@
       <drop item_id="186000235" chance="1.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.20" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.005" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1959,7 +1959,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1979,7 +1979,7 @@
       <drop item_id="186000235" chance="1.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.20" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.005" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -1999,7 +1999,7 @@
       <drop item_id="186000235" chance="1.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.20" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.005" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2019,7 +2019,7 @@
       <drop item_id="186000235" chance="1.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.20" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.005" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2039,7 +2039,7 @@
       <drop item_id="186000235" chance="1.25" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.16" min_amount="195" max_amount="195" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2059,7 +2059,7 @@
       <drop item_id="186000235" chance="1.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.20" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.005" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2078,7 +2078,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2097,7 +2097,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.20" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.70" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.005" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2116,7 +2116,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2152,7 +2152,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2189,7 +2189,7 @@
       <drop item_id="186000235" chance="1.88" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.24" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.70" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.007" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2209,7 +2209,7 @@
       <drop item_id="186000235" chance="1.88" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="dr_trade_recipe_61a"/>
       <drop item_id="169000010" chance="0.24" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.70" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.007" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2724,7 +2724,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.13" min_amount="156" max_amount="156" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.50" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2743,7 +2743,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.20" min_amount="234" max_amount="234" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.70" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.01" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.005" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2762,7 +2762,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2800,7 +2800,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>
@@ -2819,7 +2819,7 @@
     <drop_group name="common_0" use_category="true" race="PC_ALL">
       <drop item_id="169000010" chance="0.16" min_amount="188" max_amount="188" no_reduce="false" eachmember="false" name="battery_60"/>
       <drop item_id="186000237" chance="0.60" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="coin_ancient_01"/>
-      <drop item_id="186000402" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
+      <drop item_id="186000402" chance="0.004" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_lotto_ldf5_under_01"/>
     </drop_group>
     <common_drop_group name="WEAPON_A_N_R1_63A"/>
     <common_drop_group name="ARMOR_A_N_R1_63A"/>

@@ -434,6 +434,7 @@
 			<xs:extension base="AbstractItemAction">
 				<xs:attribute name="color" type="xs:string"/>
 				<xs:attribute name="minutes" type="xs:int" default="0"/>
+				<xs:attribute name="custom" type="xs:boolean"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

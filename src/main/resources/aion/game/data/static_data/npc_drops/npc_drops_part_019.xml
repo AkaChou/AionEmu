@@ -8917,7 +8917,7 @@
   </npc_drop>
   <npc_drop npc_id="259047">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="186000097" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
+      <drop item_id="186000097" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="259050">
@@ -8999,7 +8999,7 @@
   </npc_drop>
   <npc_drop npc_id="259083">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="186000097" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
+      <drop item_id="186000097" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="259086">
@@ -9186,7 +9186,7 @@
   </npc_drop>
   <npc_drop npc_id="259247">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="186000097" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
+      <drop item_id="186000097" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="259250">
@@ -9268,7 +9268,7 @@
   </npc_drop>
   <npc_drop npc_id="259283">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="186000097" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
+      <drop item_id="186000097" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="259286">
@@ -9455,7 +9455,7 @@
   </npc_drop>
   <npc_drop npc_id="259447">
     <drop_group name="common_0" use_category="true" race="PC_ALL">
-      <drop item_id="186000097" chance="0.00" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
+      <drop item_id="186000097" chance="0.001" min_amount="1" max_amount="1" no_reduce="false" eachmember="false" name="junk_master_recipe_quest_60a"/>
     </drop_group>
   </npc_drop>
   <npc_drop npc_id="259450">

@@ -16,16 +16,12 @@
  */
 package com.aionemu.gameserver.ai2.handler;
 
-import com.aionemu.gameserver.lifecycle.GameWorldServices;
-
-import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
-
-import java.util.Collections;
-
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
+import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -36,6 +32,8 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_ATTACK;
 import com.aionemu.gameserver.utils.MathUtil;
 import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.knownlist.Visitor;
+
+import java.util.Collections;
 
 /**
  * @author ATracer
@@ -63,7 +61,7 @@ public class AggroEventHandler {
 		Npc owner = npcAI.getOwner();
 		// 将支援范围扩大
 		// Double the support range
-		if (notMyTarget.isSupportFrom(owner) && MathUtil.isInRange((VisibleObject) owner, (VisibleObject) notMyTarget, (float) (owner.getAggroRange() * 1.5))){
+		if (notMyTarget.isSupportFrom(owner) && MathUtil.isInRange((VisibleObject) owner, (VisibleObject) notMyTarget, (float) (owner.getAggroRange()))) {
 			VisibleObject myTarget = notMyTarget.getTarget();
 			if (myTarget != null && myTarget instanceof Creature) {
 				Creature targetCreature = (Creature) myTarget;
