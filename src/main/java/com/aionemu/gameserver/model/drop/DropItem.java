@@ -16,9 +16,13 @@
  */
 package com.aionemu.gameserver.model.drop;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
+import com.aionemu.gameserver.world.World;
 
 /**
  * @author ATracer
@@ -27,8 +31,8 @@ public class DropItem {
 
 	private int index = 0;
 	private long count = 0;
-	private Drop dropTemplate;
-	private int playerObjId = 0;
+	private final Drop dropTemplate;
+	private List<Integer> playerObjIds = new ArrayList<>();
 	private boolean isFreeForAll = false;
 	private long highestValue = 0;
 	private Player winningPlayer = null;
@@ -93,15 +97,21 @@ public class DropItem {
 	/**
 	 * @return the playerObjId
 	 */
-	public int getPlayerObjId() {
-		return playerObjId;
+	public List<Integer> getPlayerObjIds() {
+		return playerObjIds;
+	}
+
+	public boolean canViewDropItem(int objectId) {
+		return playerObjIds.isEmpty() || playerObjIds.contains(objectId);
 	}
 
 	/**
 	 * @param playerObjId the playerObjId to set
 	 */
 	public void setPlayerObjId(int playerObjId) {
-		this.playerObjId = playerObjId;
+		if (playerObjId > 0 && !playerObjIds.contains(playerObjId)) {
+			playerObjIds.add(playerObjId);
+		}
 	}
 
 	/**
@@ -144,6 +154,12 @@ public class DropItem {
 	 * @return winningPlayer
 	 */
 	public Player getWinningPlayer() {
+		if (winningPlayer != null && !winningPlayer.isOnline()) {
+			Player onlinePlayer = World.getInstance().findPlayer(winningPlayer.getObjectId());
+			if (onlinePlayer != null) {
+				return onlinePlayer;
+			}
+		}
 		return winningPlayer;
 	}
 
@@ -185,5 +201,22 @@ public class DropItem {
 
 	public int getOptionalSocket() {
 		return optionalSocket;
+	}
+
+	public boolean isOnlyPossibleLooter(Player player) {
+		return playerObjIds.size() == 1 && playerObjIds.contains(player.getObjectId());
+	}
+
+	public int getLootEffectId() {
+		return switch (dropTemplate.getItemId()) {
+			case 166020000, 166020001, 166020002, 166020003 -> 1003;
+			case 168000034, 168000035, 168000073, 168000074, 168000117, 168000118, 168000120, 168000121,
+					168000161, 168000162, 168000164, 168000165, 168000213, 168000216, 168000223, 168000228,
+					168000230, 168000233, 168000240, 168000245 -> 1003;
+			case 188053083 -> 1003;
+			case 188053547, 188053548, 188053646, 188053647 -> 1002;
+			case 190100004, 190100052 -> 1003;
+			default -> 0;
+		};
 	}
 }

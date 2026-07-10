@@ -78,6 +78,7 @@ import com.aionemu.gameserver.model.templates.quest.QuestWorkItems;
 import com.aionemu.gameserver.model.templates.quest.Rewards;
 import com.aionemu.gameserver.model.templates.quest.XMLStartCondition;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS.Status;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_QUEST_ACTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_STATS_INFO;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
@@ -861,9 +862,9 @@ public final class QuestService {
 						dropItems.add(regQuestDropItem(drop, index++, 0));
 					}
 					for (Player p : pls) {
-						dropNpc.setPlayerObjectId(p.getObjectId());
+						dropNpc.setAllowedLooter(p);
 						if (player.getPlayerGroup2().getLootGroupRules().getLootRule() != LootRuleType.FREEFORALL) {
-							PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npc.getObjectId(), 0));
+							PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npc.getObjectId(), Status.LOOT_ENABLE));
 						}
 					}
 					pls.clear();
@@ -890,9 +891,9 @@ public final class QuestService {
 						dropItems.add(regQuestDropItem(drop, index++, 0));
 					}
 					for (Player p : pls) {
-						dropNpc.setPlayerObjectId(p.getObjectId());
+						dropNpc.setAllowedLooter(p);
 						if (player.getPlayerAlliance2().getLootGroupRules().getLootRule() != LootRuleType.FREEFORALL) {
-							PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npc.getObjectId(), 0));
+							PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npc.getObjectId(), Status.LOOT_ENABLE));
 						}
 					}
 					pls.clear();

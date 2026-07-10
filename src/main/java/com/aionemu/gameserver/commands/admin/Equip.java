@@ -17,7 +17,6 @@
 package com.aionemu.gameserver.commands.admin;
 
 import com.aionemu.gameserver.model.DescriptionId;
-import com.aionemu.gameserver.configs.administration.CommandsConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
@@ -81,7 +80,7 @@ public class Equip extends AdminCommand {
 			} else
 				i++;
 			if ("socket".startsWith(params[i])) {
-				if (admin.getAccessLevel() < CommandsConfig.EQUIP) {
+				if (admin.getAccessLevel() < getLevel()) {
 					PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 					return;
 				}
@@ -97,7 +96,7 @@ public class Equip extends AdminCommand {
 				socket(admin, player, manastone, quant);
 				return;
 			} if ("enchant".startsWith(params[i])) {
-				if (admin.getAccessLevel() < CommandsConfig.EQUIP) {
+				if (admin.getAccessLevel() < getLevel()) {
 					PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 					return;
 				}
@@ -111,7 +110,7 @@ public class Equip extends AdminCommand {
 				enchant(admin, player, enchant);
 				return;
 			} if ("tempering".startsWith(params[i])) {
-				if (admin.getAccessLevel() < CommandsConfig.EQUIP) {
+				if (admin.getAccessLevel() < getLevel()) {
 					PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 					return;
 				}
@@ -125,7 +124,7 @@ public class Equip extends AdminCommand {
 				tempering(admin, player, tempering);
 				return;
 			} if ("godstone".startsWith(params[i])) {
-				if (admin.getAccessLevel() < CommandsConfig.EQUIP) {
+				if (admin.getAccessLevel() < getLevel()) {
 					PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 					return;
 				}

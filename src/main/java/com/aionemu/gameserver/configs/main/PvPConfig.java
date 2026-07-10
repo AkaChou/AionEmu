@@ -57,7 +57,7 @@ public class PvPConfig {
 	public static int DOMINATING_KILL_COUNT;
 	@Property(key = "gameserver.pvp.raw.killcount.unstoppable", defaultValue = "30")
 	public static int UNSTOPPABLE_KILL_COUNT;
-	@Property(key = "gameserver.pvp.raw.killcount.insanemonster", defaultValue = "35")
+	@Property(key = "gameserver.pvp.raw.killcount.uniquemonster", defaultValue = "35")
 	public static int INSANEMONSTER_KILL_COUNT;
 	@Property(key = "gameserver.pvp.raw.killcount.godlike", defaultValue = "40")
 	public static int GODLIKE_KILL_COUNT;
@@ -107,9 +107,6 @@ public class PvPConfig {
 	public static boolean ENABLE_MEDAL_REWARDING;
 	@Property(key = "gameserver.pvp.medal.reward.chance", defaultValue = "10")
 	public static float MEDAL_REWARD_CHANCE;
-	@Property(key = "gameserver.pvp.medal.reward.quantity", defaultValue = "1")
-	public static int MEDAL_REWARD_QUANTITY;
-
 	/**
 	 * Medal rewarding
 	 */

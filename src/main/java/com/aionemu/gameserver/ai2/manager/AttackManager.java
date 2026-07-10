@@ -21,10 +21,11 @@ import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.AttackIntention;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
+import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
-import com.aionemu.gameserver.world.geo.GeoService;
+import com.aionemu.gameserver.model.gameobjects.VisibleObject;
+import com.aionemu.gameserver.utils.MathUtil;
 
 /**
  * NPC攻击管理器
@@ -55,6 +56,10 @@ public class AttackManager {
 	public static void scheduleNextAttack(NpcAI2 npcAI) {
 		if (npcAI.isLogging()) {
 			AI2Logger.info(npcAI, "AttackManager: scheduleNextAttack");
+		}
+		if (checkGiveupDistance(npcAI)) {
+			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
+			return;
 		}
 		
 		// 检查是否已经调度了攻击，防止重复调度
@@ -129,9 +134,15 @@ public class AttackManager {
 				return;
 			}
 		}
-		// 无法看到目标，放弃目标
+		// 无法看到目标，2秒后仍未恢复视野才放弃目标
 		if (!npc.canSee((Creature) npc.getTarget())) {
-			npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
+			if (npcAI.setSubStateIfNot(AISubState.TARGET_LOST)) {
+				GameThreadPoolServices.threadPoolManager().schedule(() -> {
+					if (npcAI.isInSubState(AISubState.TARGET_LOST) && npc.isSpawned() && !npcAI.isAlreadyDead()) {
+						npcAI.onGeneralEvent(AIEventType.TARGET_GIVEUP);
+					}
+				}, 2000);
+			}
 			return;
 		}
 		// 检查是否应该放弃目标
@@ -155,18 +166,20 @@ public class AttackManager {
 	private static boolean checkGiveupDistance(NpcAI2 npcAI) {
 		Npc npc = npcAI.getOwner();
 		// if target run away too far
-		float distanceToTarget = npc.getDistanceToTarget();
-		if (npcAI.isLogging()) {
-			AI2Logger.info(npcAI, "AttackManager: distanceToTarget " + distanceToTarget);
-		}
-		// TODO may be ask AI too
-		int chaseTarget = npc.isBoss() ? 200 : npc.getPosition().getWorldMapInstance().getTemplate().getAiInfo().getChaseTarget();
-		if (distanceToTarget > chaseTarget) {
-			return true;
+		VisibleObject target = npc.getTarget();
+		if (target != null) {
+			double distanceToTarget = MathUtil.getDistance(npc, target);
+			if (npcAI.isLogging()) {
+				AI2Logger.info(npcAI, "AttackManager: distanceToTarget " + distanceToTarget);
+			}
+			int chaseTarget = npc.isBoss() ? 50 : npc.getPosition().getWorldMapInstance().getTemplate().getAiInfo().getChaseTarget();
+			if (distanceToTarget >= chaseTarget) {
+				return true;
+			}
 		}
 
 		double distanceToHome = npc.getDistanceToSpawnLocation();
-		int chaseHome = npc.isBoss() ? 350 : npc.getPosition().getWorldMapInstance().getTemplate().getAiInfo().getChaseHome();
+		int chaseHome = npc.isBoss() ? 150 : npc.getPosition().getWorldMapInstance().getTemplate().getAiInfo().getChaseHome();
 		return shouldGiveUpByHomeDistance(distanceToHome, chaseHome, npc.getGameStats().getLastAttackTimeDelta(),
 			npc.getGameStats().getLastAttackedTimeDelta());
 	}
@@ -176,6 +189,7 @@ public class AttackManager {
 		if (distanceToHome > chaseHome) {
 			return true;
 		}
-		return chaseHome <= 200 && lastAttackTimeDelta > 10 && lastAttackedTimeDelta > 10;
+		return chaseHome <= 200 && ((lastAttackTimeDelta > 20 && lastAttackedTimeDelta > 20)
+			|| (distanceToHome > chaseHome / 2.0 && lastAttackedTimeDelta > 10));
 	}
 }

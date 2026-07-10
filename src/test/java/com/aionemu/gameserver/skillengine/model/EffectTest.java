@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.aionemu.gameserver.skillengine.effect.EffectTemplate;
+import com.aionemu.gameserver.skillengine.effect.Effects;
 import com.aionemu.gameserver.skillengine.effect.HealOverTimeEffect;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,30 @@ class EffectTest {
 	}
 
 	@Test
+	void ignoresDuplicateRegistrationOfSameEffect() {
+		Effect effect = new Effect(null, null, skillTemplate(), 1, 0);
+		EffectTemplate template = effectTemplate(1);
+
+		effect.addSucessEffect(template);
+		effect.addSucessEffect(template);
+
+		assertEquals(1, effect.getSuccessEffect().size());
+	}
+
+	@Test
+	void keepsReservedDamageForEachEffectTemplate() {
+		TestReservedEffect first = new TestReservedEffect(100);
+		TestReservedEffect second = new TestReservedEffect(25);
+		Effect effect = new Effect(null, null, skillTemplate(first, second), 1, 0);
+
+		effect.initialize();
+		effect.applyEffect();
+
+		assertEquals(100, first.appliedValue);
+		assertEquals(25, second.appliedValue);
+	}
+
+	@Test
 	void healOverTimeRegistersAsSuccessfulOnce() {
 		Effect effect = new Effect(null, null, skillTemplate(), 1, 0);
 		effect.setIsForcedEffect(true);
@@ -42,6 +67,14 @@ class EffectTest {
 	private static SkillTemplate skillTemplate() {
 		SkillTemplate skillTemplate = new SkillTemplate();
 		setField(skillTemplate, SkillTemplate.class, "activationAttribute", ActivationAttribute.ACTIVE);
+		return skillTemplate;
+	}
+
+	private static SkillTemplate skillTemplate(EffectTemplate... templates) {
+		SkillTemplate skillTemplate = skillTemplate();
+		Effects effects = new Effects();
+		effects.getEffects().addAll(Arrays.asList(templates));
+		setField(skillTemplate, SkillTemplate.class, "effects", effects);
 		return skillTemplate;
 	}
 
@@ -78,6 +111,27 @@ class EffectTest {
 		@Override
 		protected int getMaxStatValue(Effect effect) {
 			return 100;
+		}
+	}
+
+	private static final class TestReservedEffect extends EffectTemplate {
+
+		private final int calculatedValue;
+		private int appliedValue;
+
+		private TestReservedEffect(int calculatedValue) {
+			this.calculatedValue = calculatedValue;
+		}
+
+		@Override
+		public void calculate(Effect effect) {
+			effect.addSucessEffect(this);
+			effect.setReserved1(calculatedValue);
+		}
+
+		@Override
+		public void applyEffect(Effect effect) {
+			appliedValue = effect.getReserved1();
 		}
 	}
 }

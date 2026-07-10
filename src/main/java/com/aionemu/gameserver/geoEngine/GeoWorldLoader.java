@@ -32,7 +32,6 @@ import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -62,16 +61,11 @@ import com.aionemu.gameserver.world.zone.ZoneName;
 @Slf4j
 public class GeoWorldLoader {
 
-	private static String GEO_DIR = "data/geo/";
-	private static boolean DEBUG = false;
-
-	public static void setDebugMod(boolean debug) {
-		DEBUG = debug;
-	}
+	private static final String GEO_DIR = "geo/";
 
 	public static Map<String, Spatial> loadMeshs(String fileName) throws IOException {
 		Map<String, Spatial> geoms = new HashMap<String, Spatial>();
-		File geoFile = Config.dataFile(fileName);
+		File geoFile = Config.geoFile(fileName);
 		try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r");
 			 FileChannel roChannel = raFile.getChannel();
 			 Arena arena = Arena.ofConfined()) {
@@ -82,7 +76,7 @@ public class GeoWorldLoader {
 				geo.get(nameByte);
 				String name = new String(nameByte).intern();
 				boolean hasAliases = name.indexOf('|') >= 0;
-				Node node = new Node(DEBUG ? name : null);
+				Node node = new Node();
 				byte intentions = 0;
 				byte singleChildMaterialId = -1;
 				int modelCount = Byte.toUnsignedInt(geo.get());
@@ -158,20 +152,10 @@ public class GeoWorldLoader {
 
 	}
 
-	public static boolean loadWorld(int worldId, Map<String, Spatial> models, GeoMap map) throws IOException {
-		return loadWorld(worldId, models, map, true, new HashSet<String>());
-	}
-
-	public static boolean loadWorldObjects(int worldId, Map<String, Spatial> models, GeoMap map, Set<String> missingMeshes) throws IOException {
-		return loadWorld(worldId, models, map, false, missingMeshes);
-	}
-
-	private static boolean loadWorld(int worldId, Map<String, Spatial> models, GeoMap map, boolean loadTerrain, Set<String> missingMeshes)
-			throws IOException {
-		File geoFile = Config.dataFile(GEO_DIR + worldId + ".geo");
-		boolean hasTerrain = !loadTerrain || loadTerrain(worldId, map);
+	public static void loadWorldObjects(int worldId, Map<String, Spatial> models, GeoMap map, Set<String> missingMeshes) throws IOException {
+		File geoFile = Config.geoFile(GEO_DIR + worldId + ".geo");
 		if (!geoFile.exists()) {
-			return hasTerrain;
+			return;
 		}
 		try (RandomAccessFile raFile = new RandomAccessFile(geoFile, "r");
 			 FileChannel roChannel = raFile.getChannel();
@@ -220,11 +204,10 @@ public class GeoWorldLoader {
 			}
 		}
 		map.updateModelBound();
-		return true;
 	}
 
 	public static void loadTerrains(Collection<GeoMap> maps) throws IOException {
-		File geoDir = Config.dataFile(GEO_DIR);
+		File geoDir = Config.geoFile(GEO_DIR);
 		File[] files = geoDir.listFiles((dir, name) -> name.endsWith(".png"));
 		if (files == null) {
 			return;
@@ -302,39 +285,6 @@ public class GeoWorldLoader {
 		}
 	}
 
-	private static boolean loadTerrain(int worldId, GeoMap map) throws IOException {
-		File terrainFile = terrainFile(worldId);
-		if (terrainFile == null) {
-			map.setTerrainData(new short[] { 0 });
-			return false;
-		}
-		BufferedImage image = ImageIO.read(terrainFile);
-		if (image == null) {
-			throw new IOException("Unsupported terrain PNG: " + terrainFile);
-		}
-		int width = image.getWidth();
-		int height = image.getHeight();
-		Raster raster = image.getRaster();
-		map.setTerrainData(readHeightData(raster, width, height), width, height);
-		loadTerrainMaterials(worldId, map);
-		return true;
-	}
-
-	private static void loadTerrainMaterials(int worldId, GeoMap map) throws IOException {
-		File materialFile = terrainMaterialFile(worldId);
-		if (materialFile == null) {
-			return;
-		}
-		BufferedImage image = ImageIO.read(materialFile);
-		if (image == null) {
-			throw new IOException("Unsupported terrain material PNG: " + materialFile);
-		}
-		int width = image.getWidth();
-		int height = image.getHeight();
-		Raster raster = image.getRaster();
-		map.setTerrainMaterialData(readMaterialData(raster, width, height), width, height);
-	}
-
 	private static short[] readHeightData(Raster raster, int width, int height) {
 		short[] terrainData = new short[width * height];
 		for (int x = 0; x < width; x++) {
@@ -353,50 +303,6 @@ public class GeoWorldLoader {
 			}
 		}
 		return materialData;
-	}
-
-	private static File terrainFile(int worldId) {
-		File direct = Config.dataFile(GEO_DIR + worldId + ".png");
-		if (direct.exists() && direct.isFile()) {
-			return direct;
-		}
-		File geoDir = Config.dataFile(GEO_DIR);
-		File[] files = geoDir.listFiles((dir, name) -> name.endsWith(".png") && !name.endsWith("_materials.png"));
-		if (files == null) {
-			return null;
-		}
-		String wanted = Integer.toString(worldId);
-		for (File file : files) {
-			String stem = file.getName().substring(0, file.getName().length() - ".png".length());
-			for (String token : stem.split(",")) {
-				if (wanted.equals(token)) {
-					return file;
-				}
-			}
-		}
-		return null;
-	}
-
-	private static File terrainMaterialFile(int worldId) {
-		File direct = Config.dataFile(GEO_DIR + worldId + "_materials.png");
-		if (direct.exists() && direct.isFile()) {
-			return direct;
-		}
-		File geoDir = Config.dataFile(GEO_DIR);
-		File[] files = geoDir.listFiles((dir, name) -> name.endsWith("_materials.png"));
-		if (files == null) {
-			return null;
-		}
-		String wanted = Integer.toString(worldId);
-		for (File file : files) {
-			String stem = file.getName().substring(0, file.getName().length() - "_materials.png".length());
-			for (String token : stem.split(",")) {
-				if (wanted.equals(token)) {
-					return file;
-				}
-			}
-		}
-		return null;
 	}
 
 	private static Spatial attachToMapAndCreateZones(GeoMap map, Spatial node, Matrix3f matrix, Vector3f location,

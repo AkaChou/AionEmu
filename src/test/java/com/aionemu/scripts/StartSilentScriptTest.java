@@ -25,7 +25,7 @@ class StartSilentScriptTest {
         Files.writeString(marker, "keep");
         Path javaArgs = root.resolve("java-args.txt");
 
-        ProcessResult result = runScript(root, "start-silent.sh", javaArgs);
+        ProcessResult result = runScript(root, "scripts/start-silent.sh", javaArgs);
 
         assertEquals(0, result.exitCode(), result.output());
         assertTrue(Files.exists(marker));
@@ -35,7 +35,7 @@ class StartSilentScriptTest {
         assertTrue(args.contains("-Daion.home=" + root.resolve("aion")));
         assertTrue(args.contains("-Daion.log.dir=" + root.resolve("aion/log")));
         assertTrue(args.contains("-jar"));
-        assertTrue(args.contains(root.resolve("target/AionEmu.jar").toString()));
+        assertTrue(args.contains(root.resolve("aion/AionEmu.jar").toString()));
     }
 
     @Test
@@ -46,7 +46,7 @@ class StartSilentScriptTest {
         Files.writeString(marker, "remove");
         Path javaArgs = root.resolve("java-args.txt");
 
-        ProcessResult result = runScript(root, "start-silent.sh", javaArgs, "-c");
+        ProcessResult result = runScript(root, "scripts/start-silent.sh", javaArgs, "-c");
 
         assertEquals(0, result.exitCode(), result.output());
         assertFalse(Files.exists(marker));
@@ -68,7 +68,7 @@ class StartSilentScriptTest {
         Files.createDirectories(runtimeGameConfig.getParent());
         Files.writeString(runtimeGameConfig, "custom-game");
 
-        ProcessResult result = runScript(root, "start-silent.sh", root.resolve("java-args.txt"));
+        ProcessResult result = runScript(root, "scripts/start-silent.sh", root.resolve("java-args.txt"));
 
         assertEquals(0, result.exitCode(), result.output());
         assertEquals("custom-game", Files.readString(runtimeGameConfig));
@@ -77,33 +77,69 @@ class StartSilentScriptTest {
     }
 
     @Test
-    void refreshAionOverwritesRuntimeResourcesButKeepsConfigFiles() throws Exception {
+    void packageCopiesGeoJarAndScriptsIntoAionDirectory() throws Exception {
         Path root = prepareRuntimeRoot();
-        Files.copy(Path.of("refresh-aion.sh"), root.resolve("refresh-aion.sh"));
+        Path sourceGeo = root.resolve("src/main/resources/aion/game/geo/100.geo");
         Path sourceConfig = root.resolve("src/main/resources/aion/game/config/main/gameserver.properties");
-        Path sourceData = root.resolve("src/main/resources/aion/game/data/static_data/example.xml");
-        Path sourceLogback = root.resolve("src/main/resources/logback-spring.xml");
+        Files.createDirectories(sourceGeo.getParent());
         Files.createDirectories(sourceConfig.getParent());
-        Files.createDirectories(sourceData.getParent());
+        Files.writeString(sourceGeo, "geo");
         Files.writeString(sourceConfig, "default-config");
-        Files.writeString(sourceData, "default-data");
-        Files.writeString(sourceLogback, "default-logback");
         Path runtimeConfig = root.resolve("aion/game/config/main/gameserver.properties");
-        Path runtimeData = root.resolve("aion/game/data/static_data/example.xml");
-        Path runtimeLogback = root.resolve("aion/log/logback-spring.xml");
         Files.createDirectories(runtimeConfig.getParent());
-        Files.createDirectories(runtimeData.getParent());
-        Files.createDirectories(runtimeLogback.getParent());
         Files.writeString(runtimeConfig, "custom-config");
-        Files.writeString(runtimeData, "old-data");
-        Files.writeString(runtimeLogback, "custom-logback");
 
-        ProcessResult result = runScript(root, "refresh-aion.sh", root.resolve("java-args.txt"));
+        ProcessResult result = runScript(root, "package.sh", root.resolve("java-args.txt"));
 
         assertEquals(0, result.exitCode(), result.output());
-        assertEquals("custom-config", Files.readString(runtimeConfig));
-        assertEquals("default-data", Files.readString(runtimeData));
+        assertEquals("jar", Files.readString(root.resolve("aion/AionEmu.jar")));
+        assertEquals("geo", Files.readString(root.resolve("aion/game/geo/100.geo")));
+        assertEquals("default-config", Files.readString(runtimeConfig));
+        assertTrue(Files.isExecutable(root.resolve("aion/start-silent.sh")));
+        assertTrue(Files.isExecutable(root.resolve("aion/stop-silent.sh")));
+        assertTrue(Files.isExecutable(root.resolve("aion/shutdown.sh")));
+        assertTrue(result.output().contains("Start: ./aion/start-silent.sh"));
+        assertTrue(result.output().contains("Shutdown: ./aion/shutdown.sh"));
+        assertTrue(result.output().contains("Stop:  ./aion/stop-silent.sh"));
+
+        ProcessResult startResult = runScript(root, "aion/start-silent.sh", root.resolve("java-args.txt"));
+        assertEquals(0, startResult.exitCode(), startResult.output());
+        assertTrue(waitForLines(root.resolve("java-args.txt")).contains(root.resolve("aion/AionEmu.jar").toString()));
+
+        ProcessResult stopResult = runScript(root, "aion/stop-silent.sh", root.resolve("java-args.txt"));
+        assertEquals(0, stopResult.exitCode(), stopResult.output());
+        assertFalse(Files.exists(root.resolve("aion/log/aionemu.pid")));
+    }
+
+    @Test
+    void rePackageKeepsExistingConfigAndCopiesMissingConfig() throws Exception {
+        Path root = prepareRuntimeRoot();
+        Path sourceGameConfig = root.resolve("src/main/resources/aion/game/config/main/gameserver.properties");
+        Path sourceLoginConfig = root.resolve("src/main/resources/aion/login/config/network/database.properties");
+        Path sourceGeo = root.resolve("src/main/resources/aion/game/geo/100.geo");
+        Path sourceLogback = root.resolve("src/main/resources/logback-spring.xml");
+        Files.createDirectories(sourceGameConfig.getParent());
+        Files.createDirectories(sourceLoginConfig.getParent());
+        Files.createDirectories(sourceGeo.getParent());
+        Files.writeString(sourceGameConfig, "default-game");
+        Files.writeString(sourceLoginConfig, "default-login");
+        Files.writeString(sourceGeo, "new-geo");
+        Files.writeString(sourceLogback, "default-logback");
+        Path runtimeGameConfig = root.resolve("aion/game/config/main/gameserver.properties");
+        Path runtimeLogback = root.resolve("aion/log/logback-spring.xml");
+        Files.createDirectories(runtimeGameConfig.getParent());
+        Files.createDirectories(runtimeLogback.getParent());
+        Files.writeString(runtimeGameConfig, "custom-game");
+        Files.writeString(runtimeLogback, "custom-logback");
+
+        ProcessResult result = runScript(root, "re-package.sh", root.resolve("java-args.txt"));
+
+        assertEquals(0, result.exitCode(), result.output());
+        assertEquals("custom-game", Files.readString(runtimeGameConfig));
+        assertEquals("default-login", Files.readString(root.resolve("aion/login/config/network/database.properties")));
+        assertEquals("new-geo", Files.readString(root.resolve("aion/game/geo/100.geo")));
         assertEquals("custom-logback", Files.readString(runtimeLogback));
+        assertEquals("jar", Files.readString(root.resolve("aion/AionEmu.jar")));
     }
 
     @Test
@@ -113,18 +149,32 @@ class StartSilentScriptTest {
         Files.createDirectories(pidFile.getParent());
         Files.writeString(pidFile, "99999999");
 
-        ProcessResult result = runScript(root, "stop-silent.sh", root.resolve("java-args.txt"));
+        ProcessResult result = runScript(root, "scripts/stop-silent.sh", root.resolve("java-args.txt"));
 
         assertEquals(0, result.exitCode(), result.output());
         assertFalse(Files.exists(pidFile));
+    }
+
+    @Test
+    void shutdownRequestsGracefulSignalWithoutForceKill() throws Exception {
+        String script = Files.readString(Path.of("scripts/shutdown.sh"));
+
+        assertTrue(script.contains("kill \"$PID\""));
+        assertFalse(script.contains("kill -9"));
     }
 
     private Path prepareRuntimeRoot() throws IOException {
         Path root = tempDir.resolve("runtime");
         Files.createDirectories(root.resolve("target"));
         Files.writeString(root.resolve("target/AionEmu.jar"), "jar");
-        Files.copy(Path.of("start-silent.sh"), root.resolve("start-silent.sh"));
-        Files.copy(Path.of("stop-silent.sh"), root.resolve("stop-silent.sh"));
+        Files.createDirectories(root.resolve("aion"));
+        Files.writeString(root.resolve("aion/AionEmu.jar"), "jar");
+        Files.createDirectories(root.resolve("scripts"));
+        Files.copy(Path.of("package.sh"), root.resolve("package.sh"));
+        Files.copy(Path.of("re-package.sh"), root.resolve("re-package.sh"));
+        Files.copy(Path.of("scripts/start-silent.sh"), root.resolve("scripts/start-silent.sh"));
+        Files.copy(Path.of("scripts/stop-silent.sh"), root.resolve("scripts/stop-silent.sh"));
+        Files.copy(Path.of("scripts/shutdown.sh"), root.resolve("scripts/shutdown.sh"));
         Path fakeJava = root.resolve("bin/java");
         Files.createDirectories(fakeJava.getParent());
         Files.writeString(fakeJava, """
@@ -133,6 +183,9 @@ class StartSilentScriptTest {
             exit 0
             """);
         fakeJava.toFile().setExecutable(true);
+        Path fakeMaven = root.resolve("bin/mvn");
+        Files.writeString(fakeMaven, "#!/usr/bin/env bash\nexit 0\n");
+        fakeMaven.toFile().setExecutable(true);
         return root;
     }
 

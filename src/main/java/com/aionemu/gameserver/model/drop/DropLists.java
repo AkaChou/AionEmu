@@ -99,9 +99,11 @@ public class DropLists {
 					Element dropGroups = document.createElement("drop_group");
 					DropGroup gr = listgroup.get(i);
 					dropGroups.setAttribute("name", gr.getGroupName());
-					if (!gr.isUseCategory()) {
-						dropGroups.setAttribute("use_category", "false");
+					if (gr.getMaxItems() != 1) {
+						dropGroups.setAttribute("max_items", String.valueOf(gr.getMaxItems()));
 					}
+					dropGroups.setAttribute("level_based_chance_reduction",
+							String.valueOf(gr.isUseLevelBasedChanceReduction()));
 					if (gr.getRace() != Race.PC_ALL) {
 						dropGroups.setAttribute("race", String.valueOf(gr.getRace()));
 					}

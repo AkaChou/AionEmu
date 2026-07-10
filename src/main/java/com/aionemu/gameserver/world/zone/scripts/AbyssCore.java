@@ -18,49 +18,37 @@ package com.aionemu.gameserver.world.zone.scripts;
 
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.controllers.observer.CollisionDieActor;
-import com.aionemu.gameserver.geoEngine.GeoWorldLoader;
-import com.aionemu.gameserver.geoEngine.math.Matrix3f;
-import com.aionemu.gameserver.geoEngine.math.Vector3f;
-import com.aionemu.gameserver.geoEngine.scene.Node;
+import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.world.geo.GeoService;
 import com.aionemu.gameserver.world.zone.ZoneInstance;
 import com.aionemu.gameserver.world.zone.handler.ZoneHandler;
 import com.aionemu.gameserver.world.zone.handler.ZoneNameAnnotation;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import java.io.IOException;
-import java.nio.BufferUnderflowException;
-
 @ZoneNameAnnotation("CORE_400010000")
 @Slf4j
 public class AbyssCore implements ZoneHandler
 {
+	private static final String CORE_GEOMETRY = "levels/common/abyss/abground/landmark/ground_a/na_ab_lmark_col_01a.cgf";
+
 	Map<Integer, CollisionDieActor> observed = new ConcurrentHashMap<Integer, CollisionDieActor>();
 	
-	private Node geometry;
+	private final Spatial geometry;
 	
 	public AbyssCore() {
-		try {
-			this.geometry = (Node) GeoWorldLoader.loadMeshs("data/geo/models/na_ab_lmark_col_01a.mesh").values().toArray()[0];
-			this.geometry.setTransform(new Matrix3f(1.15f, 0, 0, 0, 1.15f, 0, 0, 0, 1.15f), new Vector3f(1526.6611f, 1563.0392f, 2332.4578f), 1f);
-			
-			geometry.updateModelBound();
+		geometry = GeoService.getInstance().getGeometry(400010000, CORE_GEOMETRY);
+		if (geometry == null) {
+			log.error("Abyss core geometry is missing from 400010000.geo: {}", CORE_GEOMETRY);
 		}
-		catch (IOException e) {
-			log.error("Failed to load abyss core geometry", e);
-		}
-		catch (BufferUnderflowException ei){
-			
-		}
-
 	}
 	
 	@Override
 	public void onEnterZone(Creature creature, ZoneInstance zone) {
 		Creature acting = creature.getActingCreature();
-		if (acting instanceof Player && !((Player) acting).isGM()) {
+		if (geometry != null && acting instanceof Player && !((Player) acting).isGM()) {
 			CollisionDieActor observer = new CollisionDieActor(creature, geometry);
 			creature.getObserveController().addObserver(observer);
 			observed.put(creature.getObjectId(), observer);

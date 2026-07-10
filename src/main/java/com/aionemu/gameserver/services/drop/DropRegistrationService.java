@@ -41,6 +41,7 @@ import com.aionemu.gameserver.dataholders.GlobalDropData;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropItem;
+import com.aionemu.gameserver.model.drop.DropModifiers;
 import com.aionemu.gameserver.model.drop.NpcDrop;
 import com.aionemu.gameserver.model.gameobjects.DropNpc;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -63,6 +64,7 @@ import com.aionemu.gameserver.model.templates.npc.NpcRating;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.model.templates.pet.PetFunctionType;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS.Status;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_MINIONS;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_PET;
 import com.aionemu.gameserver.services.EventService;
@@ -85,9 +87,14 @@ public class DropRegistrationService {
 
 	public DropRegistrationService() {
 		init();
-		noReductionMaps = new HashSet<Integer>();
-		for (String zone : DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES.split(",")) {
-			noReductionMaps.add(Integer.parseInt(zone));
+		noReductionMaps = new HashSet<>();
+		String configuredMaps = DropConfig.DISABLE_DROP_REDUCTION_IN_ZONES;
+		if (configuredMaps != null) {
+			for (String mapId : configuredMaps.split(",")) {
+				if (!mapId.isBlank() && !mapId.trim().equals("0")) {
+					noReductionMaps.add(Integer.parseInt(mapId.trim()));
+				}
+			}
 		}
 	}
 
@@ -98,7 +105,7 @@ public class DropRegistrationService {
 	/**
 	 * After NPC dies, it can register arbitrary drop
 	 */
-	public void registerDrop(Npc npc, Player player, int heighestLevel, Collection<Player> groupMembers) {
+	public void registerDrop(Npc npc, Player player, int highestLevel, Collection<Player> groupMembers) {
 
 		if (player == null) {
 			return;
@@ -107,84 +114,17 @@ public class DropRegistrationService {
 
 		// Getting all possible drops for this Npc
 		NpcDrop npcDrop = npc.getNpcDrop();
-		Set<DropItem> droppedItems = new HashSet<DropItem>();
+		List<Player> dropPlayers = new ArrayList<>();
+		Player teamLooter = initDropNpc(player, npcObjId, dropPlayers, groupMembers);
+		Player genesis = teamLooter == null ? player : teamLooter;
+		int winnerObj = teamLooter == null ? 0 : teamLooter.getObjectId();
+
+		Set<DropItem> droppedItems = new HashSet<>();
 		int index = 1;
-		int dropChance = 100;
-		int npcLevel = npc.getLevel();
-		boolean isChest = npc.getAi2().getName().equals("chest");
-		if (!DropConfig.DISABLE_DROP_REDUCTION && ((isChest && npcLevel != 1 || !isChest)) && !noReductionMaps.contains(npc.getWorldId())) {
-			dropChance = DropRewardEnum.dropRewardFrom(npcLevel - heighestLevel); // reduce chance depending on level
-		}
-
-		Player genesis = player;
-		Integer winnerObj = 0;
-
-		// Distributing drops to players
-		Collection<Player> dropPlayers = new ArrayList<Player>();
-		Collection<Player> winningPlayers = new ArrayList<Player>();
-		if (player.isInGroup2() || player.isInAlliance2()) {
-			List<Integer> dropMembers = new ArrayList<Integer>();
-			LootGroupRules lootGrouRules = player.getLootGroupRules();
-
-			switch (lootGrouRules.getLootRule()) {
-			case ROUNDROBIN:
-				int size = groupMembers.size();
-				if (size > lootGrouRules.getNrRoundRobin()) {
-					lootGrouRules.setNrRoundRobin(lootGrouRules.getNrRoundRobin() + 1);
-				} else {
-					lootGrouRules.setNrRoundRobin(1);
-				}
-				int i = 0;
-				for (Player p : groupMembers) {
-					i++;
-					if (i == lootGrouRules.getNrRoundRobin()) {
-						winningPlayers.add(p);
-						winnerObj = p.getObjectId();
-						setItemsToWinner(droppedItems, winnerObj);
-						genesis = p;
-						break;
-					}
-				}
-				break;
-			case FREEFORALL:
-				winningPlayers = groupMembers;
-				break;
-			case LEADER:
-				Player leader = player.isInGroup2() ? player.getPlayerGroup2().getLeaderObject(): player.getPlayerAlliance2().getLeaderObject();
-				winningPlayers.add(leader);
-				winnerObj = leader.getObjectId();
-				setItemsToWinner(droppedItems, winnerObj);
-				genesis = leader;
-				break;
-			}
-
-			for (Player member : winningPlayers) {
-				dropMembers.add(member.getObjectId());
-				dropPlayers.add(member);
-			}
-			DropNpc dropNpc = new DropNpc(npcObjId);
-			dropRegistrationMap.put(npcObjId, dropNpc);
-			dropNpc.setPlayersObjectId(dropMembers);
-			dropNpc.setInRangePlayers(groupMembers);
-			dropNpc.setGroupSize(groupMembers.size());
-		} else {
-			List<Integer> singlePlayer = new ArrayList<Integer>();
-			singlePlayer.add(player.getObjectId());
-			dropPlayers.add(player);
-			DropNpc dropNpc = new DropNpc(npcObjId);
-			dropRegistrationMap.put(npcObjId, dropNpc);
-			dropNpc.setPlayersObjectId(singlePlayer);
-		}
-		float boostDropRate = npc.getGameStats().getStat(StatEnum.BOOST_DROP_RATE, 100).getCurrent() / 100f;
-		boostDropRate += genesis.getGameStats().getStat(StatEnum.DR_BOOST, 100).getCurrent() / 100f;
-		boostDropRate += genesis.getCommonData().getCurrentReposteEnergy() > 0 ? 0.05f : 0;
-		boostDropRate += genesis.getCommonData().getCurrentSalvationPercent() > 0 ? 0.05f : 0;
-		boostDropRate += genesis.getActiveHouse() != null ? genesis.getActiveHouse().getHouseType().equals(HouseType.PALACE) ? 0.05f : 0 : 0;
-		boostDropRate += genesis.getGameStats().getStat(StatEnum.BOOST_DROP_RATE, 100).getCurrent() / 100f - 1;
-		boostDropRate += genesis.getGameStats().getStat(StatEnum.DR_BOOST, 100).getCurrent() / 100f - 1;
-		float dropRate = genesis.getRates().getDropRate() * boostDropRate * dropChance / 100f;
+		DropModifiers dropModifiers = createDropModifiers(npc, genesis, highestLevel);
+		float dropRate = dropModifiers.calculateDropChance(1f, true);
 		if (npcDrop != null) {
-			index = npcDrop.dropCalculator(droppedItems, index, dropRate, genesis.getRace(), groupMembers);
+			index = npcDrop.dropCalculator(droppedItems, index, dropModifiers, groupMembers);
 		}
 		currentDropMap.put(npcObjId, droppedItems);
 		index = QuestService.getQuestDrop(droppedItems, index, npc, groupMembers, genesis);
@@ -226,25 +166,7 @@ public class DropRegistrationService {
 			// 添加一个计数器来跟踪全局掉落添加的物品数量 | Add a counter to track the number of global drop items added
 			int globalDropCount = 0;
 			
-			// 根据地图类型调整最大掉落数量限制 | Adjust maximum drop quantity limit based on map type
 			int maxDropsAllowed = DropConfig.MAX_GLOBAL_DROPS_PER_NPC;
-			float extraDropRateModifier = 1.0f; // 额外掉落率修正
-			
-			if (!npc.getPosition().isInstanceMap()) {
-				// 为大世界增加掉落数量限制，使其与副本区域保持平衡 | Increase drop limit for open world to balance with instance areas
-				maxDropsAllowed += 5; // 增加5个物品的掉落上限 | Increase drop limit by 5 items
-				
-				// 为大世界精英/英雄/传说怪物增加额外掉落率 | Add extra drop rate for elite/hero/legendary monsters in open world
-				if (npc.getRating() != null) {
-					if (npc.getRating().equals(NpcRating.ELITE)) {
-						extraDropRateModifier = 31.0f; // 精英怪掉落率提高3000%
-					} else if (npc.getRating().equals(NpcRating.HERO)) {
-						extraDropRateModifier = 31.0f; // 英雄怪掉落率提高3000%
-					} else if (npc.getRating().equals(NpcRating.LEGENDARY)) {
-						extraDropRateModifier = 31.0f; // 传说怪掉落率提高3000%
-					}
-				}
-			}
 			
 			if (!isNpcChest && npc.getLevel() > 1 && npc.getAbyssNpcType() == AbyssNpcType.NONE) {
 				GlobalDropData globalDrops = DataManager.GLOBAL_DROP_DATA;
@@ -258,31 +180,15 @@ public class DropRegistrationService {
 					if (rule.getGlobalRuleItems() == null) {
 						continue;
 					}
-					boostDropRate += genesis.getGameStats().getStat(StatEnum.DR_BOOST, 100).getCurrent() / 100f;
-					boostDropRate += genesis.getCommonData().getCurrentReposteEnergy() > 0 ? 0.05f : 0;
-					boostDropRate += genesis.getCommonData().getCurrentSalvationPercent() > 0 ? 0.05f : 0;
-					boostDropRate += genesis.getActiveHouse() != null ? genesis.getActiveHouse().getHouseType().equals(HouseType.PALACE) ? 0.05f : 0 : 0;
-					boostDropRate += genesis.getGameStats().getStat(StatEnum.BOOST_DROP_RATE, 100).getCurrent() / 100f - 1;
-					boostDropRate += genesis.getGameStats().getStat(StatEnum.DR_BOOST, 100).getCurrent() / 100f - 1;
-					float gDropRate = genesis.getRates().getGlobalDropRate() * boostDropRate * dropChance / 100f;
-					
-					// 应用额外掉落率修正 | Apply extra drop rate modifier
-					gDropRate *= extraDropRateModifier;
-					
-					float percent = rule.getChance() * gDropRate;
+					float percent = dropModifiers.calculateDropChance(rule.getChance(), !rule.getNoReduction());
 					if (Rnd.get() * 100 > percent) {
 						continue;
 					}
-					if (!DropConfig.DISABLE_DROP_REDUCTION && ((isChest && npc.getLevel() != 1 || !isChest)) && !noReductionMaps.contains(npc.getWorldId())) {
-						if ((player.getLevel() - npc.getLevel()) >= 1 && !rule.getNoReduction()) {
-							continue;
-						}
-					}
 					if (rule.getRestrictionRace() != null) {
-						if (player.getRace() == Race.ASMODIANS && rule.getRestrictionRace().equals("ELYOS")) {
+						if (player.getRace() == Race.ASMODIANS && rule.getRestrictionRace() == GlobalRule.RestrictionRace.ELYOS) {
 							continue;
 						}
-						if (player.getRace() == Race.ELYOS && rule.getRestrictionRace().equals("ASMODIANS")) {
+						if (player.getRace() == Race.ELYOS && rule.getRestrictionRace() == GlobalRule.RestrictionRace.ASMODIANS) {
 							continue;
 						}
 					}
@@ -390,7 +296,7 @@ public class DropRegistrationService {
 		}
 		npc.getAi2().onGeneralEvent(AIEventType.DROP_REGISTERED);
 		for (Player p : dropPlayers) {
-			PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npcObjId, 0));
+			PacketSendUtility.sendPacket(p, new SM_LOOT_STATUS(npcObjId, Status.LOOT_ENABLE));
 		}
 		if (player.getPet() != null && player.getPet().getPetTemplate().getPetFunction(PetFunctionType.LOOT) != null && player.getPet().getCommonData().isLooting()) {
 			PacketSendUtility.sendPacket(player, new SM_PET(true, npcObjId));
@@ -427,12 +333,80 @@ public class DropRegistrationService {
 		GameCoreGameplayServices.dropService().scheduleFreeForAll(npcObjId);
 	}
 
-	public void setItemsToWinner(Set<DropItem> droppedItems, Integer obj) {
-		for (DropItem dropItem : droppedItems) {
-			if (!dropItem.getDropTemplate().isEachMember()) {
-				dropItem.setPlayerObjId(obj);
+	public DropModifiers createDropModifiers(Npc npc, Player player, int highestLevel) {
+		DropModifiers modifiers = new DropModifiers();
+		boolean isChest = npc.getAi2().getName().equals("chest");
+		modifiers.setDropNpcChest(isChest);
+		modifiers.setDropRace(player.getRace());
+		modifiers.setBoostDropRate(calculateBoostDropRate(player, npc));
+		modifiers.setReductionDropRate(getReductionDropRate(npc.getLevel(), highestLevel, npc.getWorldId(), isChest));
+		return modifiers;
+	}
+
+	private Player initDropNpc(Player player, int npcObjId, List<Player> allowedLooters, Collection<Player> groupMembers) {
+		Player looter = null;
+		DropNpc dropNpc = new DropNpc(npcObjId);
+		var lootingTeam = player.getCurrentTeam();
+		if (lootingTeam != null) {
+			LootGroupRules lootGroupRules = lootingTeam.getLootGroupRules();
+			switch (lootGroupRules.getLootRule()) {
+				case ROUNDROBIN:
+					if (groupMembers.size() > lootGroupRules.getNrRoundRobin()) {
+						lootGroupRules.setNrRoundRobin(lootGroupRules.getNrRoundRobin() + 1);
+					} else {
+						lootGroupRules.setNrRoundRobin(1);
+					}
+					int i = 0;
+					for (Player member : groupMembers) {
+						if (++i == lootGroupRules.getNrRoundRobin()) {
+							allowedLooters.add(member);
+							looter = member;
+							break;
+						}
+					}
+					break;
+				case FREEFORALL:
+					allowedLooters.addAll(groupMembers);
+					break;
+				case LEADER:
+					Player leader = player.isInGroup2() ? player.getPlayerGroup2().getLeaderObject()
+							: player.getPlayerAlliance2().getLeaderObject();
+					allowedLooters.add(leader);
+					looter = leader;
+					break;
 			}
+			dropNpc.setInRangePlayers(groupMembers);
+			dropNpc.setLootingTeam(lootingTeam);
+		} else {
+			allowedLooters.add(player);
 		}
+		allowedLooters.forEach(dropNpc::setAllowedLooter);
+		dropRegistrationMap.put(npcObjId, dropNpc);
+		return looter;
+	}
+
+	Float getReductionDropRate(int npcLevel, int highestLevel, int mapId, boolean isChest) {
+		if (DropConfig.DISABLE_DROP_REDUCTION || noReductionMaps.contains(mapId) || isChest && npcLevel == 1) {
+			return null;
+		}
+		int dropChance = DropRewardEnum.dropRewardFrom(npcLevel - highestLevel);
+		return dropChance == 100 ? null : dropChance / 100f;
+	}
+
+	private float calculateBoostDropRate(Player player, Npc npc) {
+		int boostDropRate = npc.getGameStats().getStat(StatEnum.BOOST_DROP_RATE, 100).getCurrent();
+		boostDropRate = player.getGameStats().getStat(StatEnum.BOOST_DROP_RATE, boostDropRate).getCurrent();
+		boostDropRate = player.getGameStats().getStat(StatEnum.DR_BOOST, boostDropRate).getCurrent();
+		if (player.getCommonData().getCurrentReposteEnergy() > 0) {
+			boostDropRate += 5;
+		}
+		if (player.getCommonData().getCurrentSalvationPercent() > 0) {
+			boostDropRate += 5;
+		}
+		if (player.getActiveHouse() != null && player.getActiveHouse().getHouseType() == HouseType.PALACE) {
+			boostDropRate += 5;
+		}
+		return player.getRates().getDropRate() * boostDropRate / 100f;
 	}
 
 	public DropItem regDropItem(int index, int playerObjId, int objId, int itemId, long count) {

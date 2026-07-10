@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
-import java.lang.ref.SoftReference;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
@@ -53,7 +52,7 @@ public class NavData {
     private static volatile ObjectProvider<NavData> instanceProvider;
 
     /** Navigation data directory */
-    private static final String NAV_DIR = "./data/geo/nav/";
+    private static final String NAV_DIR = "geo/nav/";
     
     /** Size of float in bytes */
     private static final int FLOAT_SIZE_BYTES = 4;
@@ -67,7 +66,7 @@ public class NavData {
     /** Size of one vertex in bytes */
     private static final int VERTEX_STRIDE_BYTES = FLOAT_SIZE_BYTES * VERTEX_COMPONENTS;
     
-    /** Header size: one int for float count (legacy format) */
+    /** Header size: one int for the float count */
     private static final int HEADER_SIZE_BYTES = INT_SIZE_BYTES;
 
     /**
@@ -92,16 +91,7 @@ public class NavData {
      */
     private final ConcurrentHashMap<Integer, File> navFiles = new ConcurrentHashMap<>();
     
-    /**
-     * SoftReference-based cache for memory-sensitive environments.
-     * Used only when enabled via config.
-     */
-    private final ConcurrentHashMap<Integer, SoftReference<GeoMap>> softNavMaps = new ConcurrentHashMap<>();
-    
-    /**
-     * Lock for map loading when computeIfAbsent can't be used
-     * (e.g., for soft reference cache)
-     */
+    /** Lock for loading each map once. */
     private final ConcurrentHashMap<Integer, ReentrantLock> mapLocks = new ConcurrentHashMap<>();
 
     public NavData() {}
@@ -135,7 +125,7 @@ public class NavData {
         
         for (WorldMapTemplate map : DataManager.WORLD_MAPS_DATA) {
             int mapId = map.getMapId();
-            File navFile = Config.dataFile(NAV_DIR + mapId + ".nav");
+            File navFile = Config.geoFile(NAV_DIR + mapId + ".nav");
             
             if (navFile.exists() && navFile.isFile()) {
                 navFiles.put(mapId, navFile);
@@ -148,10 +138,6 @@ public class NavData {
         
         long duration = System.currentTimeMillis() - startTime;
         logInfo("Found {} navigation files, took {} ms", fileCount, duration);
-
-        if (!GeoDataConfig.GEO_NAV_LAZY_LOAD) {
-            preloadNavMaps();
-        }
     }
 
     /**
@@ -162,23 +148,13 @@ public class NavData {
      * @return GeoMap with nav mesh, or null if not available
      */
     public GeoMap getNavMap(int worldId) {
-        return getNavMap(worldId, true);
-    }
-
-    private GeoMap getNavMap(int worldId, boolean logLoadInfo) {
-        // Fast path: config check
         if (!GeoDataConfig.GEO_NAV_ENABLE) {
             return null;
         }
-
-        if (GeoDataConfig.GEO_NAV_SOFT_CACHE) {
-            return getSoftCachedMap(worldId, logLoadInfo);
-        }
-
-        return getStrongCachedMap(worldId, logLoadInfo);
+        return getStrongCachedMap(worldId);
     }
 
-    private GeoMap getStrongCachedMap(int worldId, boolean logLoadInfo) {
+    private GeoMap getStrongCachedMap(int worldId) {
         synchronized (navMaps) {
             GeoMap cached = navMaps.get(worldId);
             if (cached != null) {
@@ -195,7 +171,7 @@ public class NavData {
                     return cached;
                 }
             }
-            GeoMap loaded = loadMap(worldId, logLoadInfo);
+            GeoMap loaded = loadMap(worldId);
             if (loaded != null) {
                 synchronized (navMaps) {
                     navMaps.put(worldId, loaded);
@@ -207,63 +183,11 @@ public class NavData {
         }
     }
 
-    private GeoMap getSoftCachedMap(int worldId, boolean logLoadInfo) {
-        GeoMap cached = getSoftReference(worldId);
-        if (cached != null) {
-            return cached;
-        }
-
-        ReentrantLock lock = mapLocks.computeIfAbsent(worldId, id -> new ReentrantLock());
-        lock.lock();
-        try {
-            cached = getSoftReference(worldId);
-            if (cached != null) {
-                return cached;
-            }
-            GeoMap loaded = loadMap(worldId, logLoadInfo);
-            if (loaded != null) {
-                softNavMaps.put(worldId, new SoftReference<>(loaded));
-            }
-            return loaded;
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    private GeoMap getSoftReference(int worldId) {
-        SoftReference<GeoMap> ref = softNavMaps.get(worldId);
-        if (ref == null) {
-            return null;
-        }
-        GeoMap map = ref.get();
-        if (map == null) {
-            softNavMaps.remove(worldId, ref);
-        }
-        return map;
-    }
-
-    private void preloadNavMaps() {
-        int loaded = 0;
-        long startTime = System.currentTimeMillis();
-        logInfo("Loading navigation meshes..");
-        int totalMaps = navFiles.size();
-        int processedMaps = 0;
-        ConsoleProgressLineRenderer progressRenderer = progressRenderer();
-        for (Integer worldId : navFiles.keySet()) {
-            if (getNavMap(worldId, false) != null) {
-                loaded++;
-            }
-            progressRenderer.progress("NavigationMeshes", ++processedMaps, totalMaps);
-        }
-        progressRenderer.finished("NavigationMeshes", totalMaps);
-        logInfo("Preloaded {} navigation meshes, took {} ms", loaded, System.currentTimeMillis() - startTime);
-    }
-
     /**
      * Internal map loading logic.
-     * Called only once per map via computeIfAbsent.
+     * Called only once per map while holding its load lock.
      */
-    private GeoMap loadMap(Integer worldId, boolean logLoadInfo) {
+    private GeoMap loadMap(Integer worldId) {
         // Check if file exists for this map
         File navFile = navFiles.get(worldId);
         if (navFile == null) {
@@ -283,11 +207,8 @@ public class NavData {
         try {
             if (loadNavMesh(worldId, navFile, geoMap)) {
                 long duration = System.currentTimeMillis() - startTime;
-                if (logLoadInfo) {
-                    logInfo("Loaded navigation mesh for map {} ({} triangles), took {} ms", worldId, geoMap.getChildren() != null ? geoMap.getChildren().size() : 0, duration);
-                } else {
-                    logDebug("Loaded navigation mesh for map {} ({} triangles), took {} ms", worldId, geoMap.getChildren() != null ? geoMap.getChildren().size() : 0, duration);
-                }
+                logInfo("Loaded navigation mesh for map {} ({} triangles), took {} ms", worldId,
+                        geoMap.getChildren() != null ? geoMap.getChildren().size() : 0, duration);
                 return geoMap;
             }
         } catch (IOException e) {
@@ -302,7 +223,7 @@ public class NavData {
     /**
      * Parses .nav file and constructs navigation mesh.
      * 
-     * Legacy file format:
+     * Navigation file format:
      * - int: floatCount (total number of floats = vertexCount * 3)
      * - float[vertexCount * 3]: vertex positions (x,y,z)
      * - int: triangleCount
@@ -328,7 +249,7 @@ public class NavData {
                 throw new IOException("File too small: missing float count");
             }
 
-            // Read floatCount (legacy format - total number of floats, not vertices)
+            // floatCount is the total number of floats, not vertices.
             int floatCount = nav.getInt();
             if (floatCount <= 0 || floatCount > 3000000) {
                 throw new IOException("Invalid float count: " + floatCount);
@@ -470,11 +391,6 @@ public class NavData {
             logDebug("Cleared navigation cache for map {}", worldId);
         }
 
-        SoftReference<GeoMap> ref = softNavMaps.remove(worldId);
-        GeoMap softMap = ref == null ? null : ref.get();
-        if (softMap != null && softMap != removed) {
-            softMap.detachAllChildren();
-        }
     }
 
     /**
@@ -489,13 +405,6 @@ public class NavData {
             }
             navMaps.clear();
         }
-        for (SoftReference<GeoMap> ref : softNavMaps.values()) {
-            GeoMap map = ref.get();
-            if (map != null) {
-                map.detachAllChildren();
-            }
-        }
-        softNavMaps.clear();
         logInfo("Cleared all navigation caches");
     }
 
@@ -510,40 +419,21 @@ public class NavData {
      * Returns the number of currently loaded nav meshes.
      */
     public int getLoadedMapCount() {
-        if (!GeoDataConfig.GEO_NAV_SOFT_CACHE) {
-            synchronized (navMaps) {
-                return navMaps.size();
-            }
+        synchronized (navMaps) {
+            return navMaps.size();
         }
-        int count = 0;
-        for (Map.Entry<Integer, SoftReference<GeoMap>> entry : softNavMaps.entrySet()) {
-            if (entry.getValue().get() == null) {
-                softNavMaps.remove(entry.getKey(), entry.getValue());
-            } else {
-                count++;
-            }
-        }
-        return count;
     }
 
     private static void logInfo(String message, Object... arguments) {
-        if (GeoDataConfig.GEO_NAV_LOG_LEVEL >= 1) {
-            log.info(message, arguments);
-        }
+        log.info(message, arguments);
     }
 
     private static void logDebug(String message, Object... arguments) {
-        if (GeoDataConfig.GEO_NAV_LOG_LEVEL >= 2) {
-            log.debug(message, arguments);
-        }
-    }
-
-    private static boolean showProgress() {
-        return GeoDataConfig.GEO_NAV_LOG_LEVEL >= 1;
+        log.debug(message, arguments);
     }
 
     private static ConsoleProgressLineRenderer progressRenderer() {
-        return new ConsoleProgressLineRenderer(System.out, showProgress());
+        return new ConsoleProgressLineRenderer(System.out, true);
     }
 
     /**

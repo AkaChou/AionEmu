@@ -2,6 +2,7 @@ package com.aionemu.gameserver.dataholders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
 import java.lang.reflect.Field;
@@ -10,6 +11,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.XMLConstants;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
 
 import jakarta.xml.bind.JAXBContext;
 
@@ -46,6 +51,7 @@ class NpcDropDataTest {
 		NpcDropData data = NpcDropData.loadEager(tempDir.toFile());
 
 		assertEquals(List.of(111, 222), itemIds(data.getDrop(100)));
+		assertTrue(data.getDrop(100).getDropGroup().get(1).isUseLevelBasedChanceReduction());
 	}
 
 	@Test
@@ -103,7 +109,7 @@ class NpcDropDataTest {
 				<npc_drops>
 					<npc_drop npc_id="100">
 						<drop_group name="base">
-							<drop item_id="111" min_amount="1" max_amount="1" chance="100"/>
+							<drop item_id="111" each_member="true"/>
 						</drop_group>
 					</npc_drop>
 				</npc_drops>
@@ -112,6 +118,59 @@ class NpcDropDataTest {
 		assertEquals(1, data.size());
 		assertEquals(List.of(111), itemIds(data.getDrop(100)));
 		assertSame(data.getDrop(100), indexedDrops(data).get(100));
+	}
+
+	@Test
+	void dropGroupsUseAionServerSelectionAttributes() throws Exception {
+		NpcDropData data = (NpcDropData) JAXBContext.newInstance(NpcDropData.class)
+			.createUnmarshaller()
+			.unmarshal(new StringReader("""
+				<npc_drops>
+					<npc_drop npc_id="100">
+						<drop_group max_items="2" level_based_chance_reduction="true" use_category="true">
+							<drop item_id="111" each_member="true"/>
+						</drop_group>
+					</npc_drop>
+				</npc_drops>
+				"""));
+
+		DropGroup group = data.getDrop(100).getDropGroup().getFirst();
+		assertEquals(2, group.getMaxItems());
+		assertTrue(group.isUseLevelBasedChanceReduction());
+		assertEquals(1, group.getDrop().getFirst().getMinAmount());
+		assertEquals(1, group.getDrop().getFirst().getMaxAmount());
+		assertTrue(group.getDrop().getFirst().isEachMember());
+	}
+
+	@Test
+	void npcDropSchemaAcceptsAionServerSelectionAttributes() throws Exception {
+		var schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+				.newSchema(Path.of("src/main/resources/aion/game/data/static_data/npc_drops/npc_drops.xsd").toFile());
+
+		schema.newValidator().validate(new StreamSource(new StringReader("""
+				<npc_drops>
+					<npc_drop npc_id="100">
+						<drop_group max_items="2" level_based_chance_reduction="true"/>
+					</npc_drop>
+				</npc_drops>
+				""")));
+	}
+
+	@Test
+	void legacyDropGroupsWithoutUseCategoryStillReduceChanceByLevel() throws Exception {
+		NpcDropData data = (NpcDropData) JAXBContext.newInstance(NpcDropData.class)
+			.createUnmarshaller()
+			.unmarshal(new StringReader("""
+				<npc_drops>
+					<npc_drop npc_id="100">
+						<drop_group>
+							<drop item_id="111"/>
+						</drop_group>
+					</npc_drop>
+				</npc_drops>
+				"""));
+
+		assertTrue(data.getDrop(100).getDropGroup().getFirst().isUseLevelBasedChanceReduction());
 	}
 
 	@Test

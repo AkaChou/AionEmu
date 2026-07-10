@@ -27,6 +27,7 @@ import com.aionemu.commons.configuration.ConfigurableProcessor;
 import com.aionemu.commons.utils.PropertiesUtils;
 import com.aionemu.gameserver.configs.administration.AdminConfig;
 import com.aionemu.gameserver.configs.administration.DeveloperConfig;
+import com.aionemu.gameserver.configs.administration.PanelConfig;
 import com.aionemu.gameserver.configs.main.AIConfig;
 import com.aionemu.gameserver.configs.main.AStationConfig;
 import com.aionemu.gameserver.configs.main.AbyssLandingConfig;
@@ -106,6 +107,14 @@ public class Config {
 		return new File(dataDir, stripDataPrefix(relativePath));
 	}
 
+	public static File geoFile(String relativePath) {
+		String geoDir = System.getProperty("aion.game.geo.dir");
+		if (geoDir == null) {
+			return dataFile(relativePath);
+		}
+		return new File(geoDir, stripGeoPrefix(relativePath));
+	}
+
 	public static File cacheFile(String relativePath) {
 		String cacheDir = System.getProperty("aion.game.cache.dir");
 		if (cacheDir == null) {
@@ -121,6 +130,17 @@ public class Config {
 		}
 		if (normalized.startsWith("data/")) {
 			return normalized.substring("data/".length());
+		}
+		return normalized;
+	}
+
+	private static String stripGeoPrefix(String path) {
+		String normalized = path.replace('\\', '/');
+		if (normalized.startsWith("./geo/")) {
+			return normalized.substring("./geo/".length());
+		}
+		if (normalized.startsWith("geo/")) {
+			return normalized.substring("geo/".length());
 		}
 		return normalized;
 	}
@@ -195,6 +215,7 @@ public class Config {
 			overrideRuntimeProperties(adminProps, myProps);
 			ConfigurableProcessor.process(AdminConfig.class, adminProps);
 			ConfigurableProcessor.process(DeveloperConfig.class, adminProps);
+			ConfigurableProcessor.process(PanelConfig.class, adminProps);
 			String main = configDir() + "/main";
 			Properties[] mainProps = PropertiesUtils.loadAllFromDirectory(main);
 			overrideRuntimeProperties(mainProps, myProps);
@@ -267,6 +288,7 @@ public class Config {
 			overrideRuntimeProperties(adminProps, myProps);
 			ConfigurableProcessor.process(AdminConfig.class, adminProps);
 			ConfigurableProcessor.process(DeveloperConfig.class, adminProps);
+			ConfigurableProcessor.process(PanelConfig.class, adminProps);
 			String main = configDir() + "/main";
 			Properties[] mainProps = PropertiesUtils.loadAllFromDirectory(main);
 			overrideRuntimeProperties(mainProps, myProps);

@@ -34,8 +34,6 @@ public class LegionConfig {
 	public static Pattern ANNOUNCEMENT_PATTERN;
 	@Property(key = "gameserver.legion.disband.time", defaultValue = "86400")
 	public static int LEGION_DISBAND_TIME;
-	@Property(key = "gameserver.legion.disband.difference", defaultValue = "604800")
-	public static int LEGION_DISBAND_DIFFERENCE;
 	@Property(key = "gameserver.legion.creation.required.kinah", defaultValue = "10000")
 	public static int LEGION_CREATE_REQUIRED_KINAH;
 	@Property(key = "gameserver.legion.emblem.required.kinah", defaultValue = "10000")

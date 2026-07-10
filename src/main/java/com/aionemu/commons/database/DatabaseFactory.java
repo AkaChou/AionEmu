@@ -40,10 +40,10 @@ public final class DatabaseFactory {
         config.setUsername(DatabaseConfig.DATABASE_USER);
         config.setPassword(DatabaseConfig.DATABASE_PASSWORD);
         config.setMaximumPoolSize(DatabaseConfig.DATABASE_MAXCONNECTIONS);
-        config.setConnectionTestQuery("SELECT 1");
+		config.setConnectionTestQuery(DatabaseConfig.HIKARI_CONNECTION_TEST_QUERY);
         config.setConnectionTimeout(30000);
         config.setIdleTimeout(600000);
-        config.setMaxLifetime(1800000);
+		config.setMaxLifetime(DatabaseConfig.HIKARI_MAX_LIFETIME);
         
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");

@@ -28,11 +28,9 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.controllers.observer.AbstractCollisionObserver.CheckType;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
-import com.aionemu.gameserver.geoEngine.collision.CollisionResult;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
 import com.aionemu.gameserver.geoEngine.scene.Spatial;
@@ -44,7 +42,6 @@ import com.aionemu.gameserver.model.templates.materials.MaterialSkill;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.model.templates.zone.ZoneClassName;
 import com.aionemu.gameserver.skillengine.model.Skill;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.utils.gametime.DayTime;
 import com.aionemu.gameserver.utils.gametime.GameTime;
 import com.aionemu.gameserver.utils.gametime.GameTimeManager;
@@ -53,6 +50,8 @@ import com.aionemu.gameserver.world.zone.ZoneInstance;
 public class CollisionMaterialActor extends AbstractCollisionObserver implements IActor {
 	private MaterialTemplate actionTemplate;
 	private AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<List<MaterialSkill>>(Collections.emptyList());
+	private final boolean stopWhenNotTouching;
+	private Future<?> task;
 
 	public CollisionMaterialActor(Creature creature, Spatial geometry, MaterialTemplate actionTemplate) {
 		this(creature, geometry, actionTemplate, CheckType.PASS);
@@ -61,6 +60,14 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	public CollisionMaterialActor(Creature creature, Spatial geometry, MaterialTemplate actionTemplate, CheckType checkType) {
 		super(creature, geometry, CollisionIntention.MATERIAL.getId(), checkType);
 		this.actionTemplate = actionTemplate;
+		this.stopWhenNotTouching = checkType == CheckType.TOUCH && !actsOnZoneEnter(geometry);
+	}
+
+	public static boolean actsOnZoneEnter(Spatial geometry) {
+		String name = geometry.getName();
+		return name.indexOf("FIRE_BOX") != -1 || name.indexOf("FIRE_SEMISPHERE") != -1 || name.indexOf("FIREPOT") != -1
+				|| name.indexOf("FIRE_CYLINDER") != -1 || name.indexOf("FIRE_CONE") != -1
+				|| name.startsWith("BU_H_CENTERHALL");
 	}
 
 	private List<MaterialSkill> getSkillsForTarget(Creature creature) {
@@ -115,32 +122,29 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 	@Override
 	public void onMoved(CollisionResults collisionResults) {
 		if (collisionResults.size() == 0) {
-			return;
-		} else {
-			if (GeoDataConfig.GEO_MATERIALS_SHOWDETAILS && creature instanceof Player) {
-				Player player = (Player) creature;
-				if (player.isGM()) {
-					CollisionResult result = collisionResults.getClosestCollision();
-					PacketSendUtility.sendMessage(player, "Entered " + result.getGeometry().getName());
-				}
+			if (stopWhenNotTouching) {
+				abort();
 			}
-			act();
+			return;
 		}
+		act();
 	}
 
 	@Override
-	public void act() {
+	public synchronized void act() {
 		final List<MaterialSkill> actSkills = getSkillsForTarget(creature);
-		if (!currentSkills.getAndSet(actSkills).equals(actSkills)) {
-			Future<?> existingTask = creature.getController().getTask(TaskId.MATERIAL_ACTION);
-			if (existingTask != null) {
-				creature.getController().cancelTask(TaskId.MATERIAL_ACTION);
+		boolean skillsChanged = !currentSkills.getAndSet(actSkills).equals(actSkills);
+		synchronized (creature.getController()) {
+			Future<?> existingTask = creature.getController().getTask(TaskId.ZONE_MATERIAL_ACTION);
+			if (!skillsChanged && existingTask != null && !existingTask.isDone()) {
+				return;
 			}
+			cancelOwnedTask();
 			if (actSkills.isEmpty()) {
 				return;
 			}
 			final int[] secondsElapsed = new int[1];
-			Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+			task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 				@Override
 				public void run() {
 					for (MaterialSkill actSkill : actSkills) {
@@ -150,12 +154,6 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 						if (creature.getEffectController().hasAbnormalEffect(actSkill.getId())) {
 							continue;
 						}
-						if (GeoDataConfig.GEO_MATERIALS_SHOWDETAILS && creature instanceof Player) {
-							Player player = (Player) creature;
-							if (player.isGM()) {
-								PacketSendUtility.sendMessage(player, "Use skill=" + actSkill.getId());
-							}
-						}
 						Skill skill = GameEngineServices.skillEngine().getSkill(creature, actSkill.getId(),
 								actSkill.getSkillLevel(), creature);
 						skill.getEffectedList().add(creature);
@@ -164,17 +162,23 @@ public class CollisionMaterialActor extends AbstractCollisionObserver implements
 					secondsElapsed[0]++;
 				}
 			}, 0, 1000);
-			creature.getController().addTask(TaskId.MATERIAL_ACTION, task);
+			creature.getController().addTask(TaskId.ZONE_MATERIAL_ACTION, task);
 		}
 	}
 
 	@Override
-	public void abort() {
-		Future<?> existingTask = creature.getController().getTask(TaskId.MATERIAL_ACTION);
-		if (existingTask != null) {
-			creature.getController().cancelTask(TaskId.MATERIAL_ACTION);
+	public synchronized void abort() {
+		synchronized (creature.getController()) {
+			cancelOwnedTask();
 		}
 		currentSkills.set(Collections.emptyList());
+	}
+
+	private void cancelOwnedTask() {
+		if (task != null && creature.getController().getTask(TaskId.ZONE_MATERIAL_ACTION) == task) {
+			creature.getController().cancelTask(TaskId.ZONE_MATERIAL_ACTION);
+		}
+		task = null;
 	}
 
 	@Override

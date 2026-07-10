@@ -44,6 +44,16 @@ class GameShutdownRequestTest {
     }
 
     @Test
+    void waitForPlayersToLeaveUsesShutdownHookProvider() {
+        List<String> events = new ArrayList<>();
+        GameShutdownRequest.setShutdownHookProvider(provider(new RecordingShutdownHook(events)));
+
+        GameShutdownRequest.waitForPlayersToLeave(180, 1);
+
+        assertEquals(List.of("waitForPlayersToLeave:180:1:SHUTDOWN"), events);
+    }
+
+    @Test
     void shutdownRequestDoesNotCallLegacyShutdownHookDirectly() throws IOException {
         String source = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/lifecycle/GameShutdownRequest.java"));
 
@@ -95,6 +105,12 @@ class GameShutdownRequestTest {
         @Override
         public void completeShutdown(ShutdownMode mode, boolean haltRuntime) {
             events.add("completeShutdown:" + mode + ":" + haltRuntime);
+        }
+
+        @Override
+        public boolean waitForPlayersToLeave(int delay, int announceInterval, ShutdownMode mode) {
+            events.add("waitForPlayersToLeave:" + delay + ":" + announceInterval + ":" + mode);
+            return true;
         }
     }
 }

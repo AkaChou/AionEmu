@@ -156,11 +156,6 @@ public class VipRates extends Rates {
 	}
 
 	@Override
-	public float getGlobalDropRate() {
-		return RateConfig.VIP_GLOBAL_DROP_RATE;
-	}
-
-	@Override
 	public float getGpPlayerGainRate() {
 		return RateConfig.VIP_GP_PLAYER_GAIN_RATE;
 	}

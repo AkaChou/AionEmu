@@ -29,6 +29,7 @@ import com.aionemu.gameserver.controllers.movement.SiegeWeaponMoveController;
 import com.aionemu.gameserver.controllers.movement.SummonMoveController;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.SkillElement;
 import com.aionemu.gameserver.model.TribeClass;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.stats.container.SummonGameStats;
@@ -49,6 +50,7 @@ public class Summon extends Creature {
 	private byte level;
 	private int liveTime = 0;
 	private Future<?> releaseTask;
+	private final SkillElement alwaysResistElement;
 
 	/**
 	 * @param objId
@@ -72,6 +74,21 @@ public class Summon extends Creature {
 				.getSummonTemplate(objectTemplate.getTemplateId(), level);
 		setGameStats(new SummonGameStats(this, statsTemplate));
 		setLifeStats(new SummonLifeStats(this));
+		alwaysResistElement = getAlwaysResistElement(objectTemplate.getName());
+	}
+
+	static SkillElement getAlwaysResistElement(String name) {
+		return switch (name) {
+			case "earth spirit" -> SkillElement.EARTH;
+			case "fire spirit" -> SkillElement.FIRE;
+			case "water spirit" -> SkillElement.WATER;
+			case "wind spirit" -> SkillElement.WIND;
+			default -> SkillElement.NONE;
+		};
+	}
+
+	public SkillElement getAlwaysResistElement() {
+		return alwaysResistElement;
 	}
 
 	@Override

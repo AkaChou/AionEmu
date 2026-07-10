@@ -17,41 +17,38 @@
 package com.aionemu.gameserver.model.drop;
 
 import java.nio.ByteBuffer;
-import java.util.Collection;
-import java.util.Set;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
 import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.Unmarshaller;
 
-import com.aionemu.commons.utils.Rnd;
-import com.aionemu.gameserver.configs.main.RateConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
-import com.aionemu.gameserver.model.Race;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "drop")
-public class Drop implements DropCalculator {
+public class Drop {
 	@XmlAttribute(name = "item_id", required = true)
 	protected int itemId;
 
-	@XmlAttribute(name = "min_amount", required = true)
-	protected int minAmount;
+	@XmlAttribute(name = "min_amount")
+	protected int minAmount = 1;
 
-	@XmlAttribute(name = "max_amount", required = true)
+	@XmlAttribute(name = "max_amount")
 	protected int maxAmount;
 
-	@XmlAttribute(required = true)
-	protected float chance;
+	@XmlAttribute
+	protected float chance = 100;
 
 	@XmlAttribute(name = "no_reduce")
 	protected Boolean noReduce = false;
 
 	@XmlAttribute(name = "eachmember")
 	protected boolean eachMember = false;
+	@XmlAttribute(name = "each_member")
+	protected Boolean aionServerEachMember;
 
 	private ItemTemplate template;
 
@@ -66,6 +63,13 @@ public class Drop implements DropCalculator {
 		this.noReduce = noReduce;
 		this.eachMember = eachMember;
 		template = DataManager.ITEM_DATA.getItemTemplate(itemId);
+	}
+
+	@SuppressWarnings("unused")
+	private void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
+		if (maxAmount == 0) {
+			maxAmount = minAmount;
+		}
 	}
 
 	public ItemTemplate getItemTemplate() {
@@ -93,36 +97,7 @@ public class Drop implements DropCalculator {
 	}
 
 	public Boolean isEachMember() {
-		return eachMember;
-	}
-
-	@Override
-	public int dropCalculator(Set<DropItem> result, int index, float dropModifier, Race race,
-			Collection<Player> groupMembers) {
-		float percent = chance;
-		if (!noReduce) {
-			percent *= dropModifier;
-			percent = percent - RateConfig.DROP_RATE_REDUCE;
-		}
-		if (Rnd.get() * 100 < percent) {
-			if (eachMember && (groupMembers != null) && (!groupMembers.isEmpty())) {
-				for (Player player : groupMembers) {
-					DropItem dropitem = new DropItem(this);
-					dropitem.calculateCount();
-					dropitem.setIndex(index++);
-					dropitem.setPlayerObjId(player.getObjectId());
-					dropitem.setWinningPlayer(player);
-					dropitem.isDistributeItem(true);
-					result.add(dropitem);
-				}
-			} else {
-				DropItem dropitem = new DropItem(this);
-				dropitem.calculateCount();
-				dropitem.setIndex(index++);
-				result.add(dropitem);
-			}
-		}
-		return index;
+		return aionServerEachMember == null ? eachMember : aionServerEachMember;
 	}
 
 	public static Drop load(ByteBuffer buffer) {

@@ -23,6 +23,7 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
@@ -31,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.ObjectProvider;
 
-import com.aionemu.commons.objects.filter.ObjectFilter;
 import com.aionemu.gameserver.configs.main.DropConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.model.DescriptionId;
@@ -55,12 +55,15 @@ import com.aionemu.gameserver.network.aion.serverpackets.SM_EMOTION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_GROUP_LOOT;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_ITEMLIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_LOOT_STATUS.Status;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.RespawnService;
 import com.aionemu.gameserver.services.item.ItemInfoService;
 import com.aionemu.gameserver.services.item.ItemService;
 import com.aionemu.gameserver.services.item.ItemService.ItemUpdatePredicate;
 import com.aionemu.gameserver.utils.PacketSendUtility;
+import com.aionemu.gameserver.utils.MathUtil;
+import com.aionemu.gameserver.configs.main.GroupConfig;
 import com.aionemu.gameserver.world.World;
 import com.aionemu.gameserver.world.knownlist.Visitor;
 
@@ -97,7 +100,14 @@ public class DropService {
 					dropRegistrationService().getDropRegistrationMap().get(npcUniqueId).startFreeForAll();
 					VisibleObject npc = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcUniqueId);
 					if (npc != null && npc.isSpawned()) {
-						PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcUniqueId, 0));
+						if (npc instanceof Npc freeForAllNpc
+								&& (freeForAllNpc.getRace() == com.aionemu.gameserver.model.Race.ELYOS
+										|| freeForAllNpc.getRace() == com.aionemu.gameserver.model.Race.ASMODIANS)) {
+							PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcUniqueId, Status.LOOT_ENABLE),
+									looter -> freeForAllNpc.getRace() != looter.getRace());
+						} else {
+							PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcUniqueId, Status.LOOT_ENABLE));
+						}
 					}
 				}
 			}
@@ -131,13 +141,21 @@ public class DropService {
 		if (player == null || dropNpc == null) {
 			return;
 		}
-		if (!dropNpc.containsKey(player.getObjectId()) && !dropNpc.isFreeForAll()) {
+		if (player.isLooting()) {
+			closeDropList(player, player.getLootingNpcOid());
+		}
+		if (!dropNpc.isAllowedToLoot(player)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_LOOT_NO_RIGHT);
 			return;
 		}
 		if (dropNpc.isBeingLooted()) {
-			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_LOOT_FAIL_ONLOOTING);
-			return;
+			if (!dropNpc.getLootingPlayer().isOnline()) {
+				log.warn("{} is offline but was still set as drop looter for {}", dropNpc.getLootingPlayer(),
+						com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId));
+			} else {
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_LOOT_FAIL_ONLOOTING);
+				return;
+			}
 		}
 		// Overburdened.
 		if (player.getInventory().isFull()) {
@@ -145,14 +163,14 @@ public class DropService {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_TOO_HEAVY);
 			return;
 		}
-		dropNpc.setBeingLooted(player);
+		dropNpc.setLootingPlayer(player);
 		VisibleObject visObj = com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
 		if (visObj instanceof Npc) {
 			Npc npc = ((Npc) visObj);
 			ScheduledFuture<?> decayTask = (ScheduledFuture<?>) npc.getController().cancelTask(TaskId.DECAY);
 			if (decayTask != null) {
 				long reamingDecayTime = decayTask.getDelay(TimeUnit.MILLISECONDS);
-				dropNpc.setReamingDecayTime(reamingDecayTime);
+				dropNpc.setRemainingDecayTime(reamingDecayTime);
 			}
 		}
 
@@ -162,8 +180,8 @@ public class DropService {
 			dropItems = Collections.emptySet();
 		}
 
-		PacketSendUtility.sendPacket(player, new SM_LOOT_ITEMLIST(npcId, dropItems, player));
-		PacketSendUtility.sendPacket(player, new SM_LOOT_STATUS(npcId, 2));
+		PacketSendUtility.sendPacket(player, new SM_LOOT_ITEMLIST(dropNpc, dropItems, player));
+		PacketSendUtility.sendPacket(player, new SM_LOOT_STATUS(npcId, Status.OPEN_DROP_LIST));
 		player.unsetState(CreatureState.ACTIVE);
 		player.setState(CreatureState.LOOTING);
 		player.setLootingNpcOid(npcId);
@@ -178,20 +196,17 @@ public class DropService {
 	 */
 	public void closeDropList(Player player, int npcId) {
 		final DropNpc dropNpc = dropRegistrationService().getDropRegistrationMap().get(npcId);
-		if (dropNpc == null) {
-			return;
-		}
 		player.unsetState(CreatureState.LOOTING);
 		player.setState(CreatureState.ACTIVE);
 		player.setLootingNpcOid(0);
 
 		PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_LOOT, 0, npcId), true);
 
-		if (dropNpc.getBeingLooted() != player) {
+		if (dropNpc == null || dropNpc.getLootingPlayer() != player) {
 			return;
 		}
 		Set<DropItem> dropItems = dropRegistrationService().getCurrentDropMap().get(npcId);
-		dropNpc.setBeingLooted(null);
+		dropNpc.setLootingPlayer(null);
 
 		Npc npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
 		if (npc != null) {
@@ -200,35 +215,27 @@ public class DropService {
 				return;
 			}
 
-			Future<?> decayTask = RespawnService.scheduleDecayTask(npc, dropNpc.getReamingDecayTime());
+			Future<?> decayTask = RespawnService.scheduleDecayTask(npc, dropNpc.getRemainingDecayTime());
 			npc.getController().addTask(TaskId.DECAY, decayTask);
 
-			LootGroupRules lootGrouRules = player.getLootGroupRules();
+			LootGroupRules lootGrouRules = dropNpc.getLootGroupRules();
 			if (lootGrouRules != null && dropNpc.getInRangePlayers().size() > 1
-					&& dropNpc.getPlayersObjectId().size() == 1) {
+					&& dropNpc.getAllowedLooters().size() == 1) {
 				LootRuleType lrt = lootGrouRules.getLootRule();
 				if (lrt != LootRuleType.FREEFORALL) {
 					for (Player member : dropNpc.getInRangePlayers()) {
 						if (member != null) {
-							Integer object = member.getObjectId();
-							dropNpc.setPlayerObjectId(object);
+							dropNpc.setAllowedLooter(member);
 						}
 					}
-					dropRegistrationService().setItemsToWinner(dropItems, 0);
+					for (DropItem dropItem : dropItems) {
+						if (!dropItem.getDropTemplate().isEachMember()) {
+							dropItem.getPlayerObjIds().clear();
+						}
+					}
 				}
 			}
-			if (dropNpc.isFreeForAll()) {
-				PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcId, 0));
-			} else {
-				PacketSendUtility.broadcastPacket(player, new SM_LOOT_STATUS(npcId, 0), true,
-						new ObjectFilter<Player>() {
-
-							@Override
-							public boolean acceptObject(Player object) {
-								return dropNpc.containsKey(object.getObjectId());
-							}
-						});
-			}
+			PacketSendUtility.broadcastPacket(npc, new SM_LOOT_STATUS(npcId, Status.LOOT_ENABLE), dropNpc::isAllowedToLoot);
 		}
 	}
 
@@ -240,14 +247,13 @@ public class DropService {
 		}
 		int itemId = requestedItem.getDropTemplate().getItemId();
 		ItemQuality quality = ItemInfoService.getQuality(itemId);
-		LootGroupRules lootGrouRules = player.getLootGroupRules();
+		LootGroupRules lootGrouRules = dropNpc.getLootGroupRules();
 		if (lootGrouRules == null) {
 			return true;
 		}
 
 		if (itemId != 182400001) {
-			lootGrouRules = player.getLootGroupRules();
-			if (dropNpc.getGroupSize() > 1) {
+			if (dropNpc.getInRangePlayers().size() > 1) {
 				dropNpc.setDistributionId(lootGrouRules.getAutodistribution().getId());
 				dropNpc.setDistributionType(lootGrouRules.getQualityRule(quality));
 			} else {
@@ -263,7 +269,7 @@ public class DropService {
 							dropNpc.addPlayerStatus(finalPlayer);
 							finalPlayer.setPlayerMode(PlayerMode.IN_ROLL,
 									new InRoll(npcId, itemId, requestedItem.getIndex(), dropNpc.getDistributionId()));
-							PacketSendUtility.sendPacket(finalPlayer, new SM_GROUP_LOOT(finalPlayer.getCurrentTeamId(),
+							PacketSendUtility.sendPacket(finalPlayer, new SM_GROUP_LOOT(dropNpc.getLootingTeamId(),
 									0, itemId, npcId, dropNpc.getDistributionId(), 1, requestedItem.getIndex()));
 							log.info("SM_GROUP_LOOT sended ");
 						}
@@ -296,7 +302,7 @@ public class DropService {
 		if (dropNpc == null) {
 			return false;
 		}
-		LootGroupRules lootGroupRules = player.getLootGroupRules();
+		LootGroupRules lootGroupRules = dropNpc.getLootGroupRules();
 		if (lootGroupRules == null) {
 			return true;
 		}
@@ -307,7 +313,7 @@ public class DropService {
 			return true;
 		}
 		int distId = lootGroupRules.getAutodistribution().getId();
-		if (dropNpc.getGroupSize() <= 1) {
+		if (dropNpc.getInRangePlayers().size() <= 1) {
 			distId = 0;
 			dropNpc.setDistributionId(distId);
 		}
@@ -352,8 +358,7 @@ public class DropService {
 		}
 
 		// fix exploit
-		if (!requestedItem.isDistributeItem() && !dropNpc.containsKey(player.getObjectId())
-				&& !dropNpc.isFreeForAll()) {
+		if (!requestedItem.isDistributeItem() && !dropNpc.isAllowedToLoot(player)) {
 			return;
 		}
 
@@ -370,7 +375,7 @@ public class DropService {
 
 		long currentDropItemCount = requestedItem.getCount();
 		ItemQuality quality = ItemInfoService.getQuality(itemId);
-		LootGroupRules lootGrouRules = player.getLootGroupRules();
+		LootGroupRules lootGrouRules = dropNpc.getLootGroupRules();
 		if (lootGrouRules != null && !requestedItem.isDistributeItem() && !requestedItem.isFreeForAll()) {
 			if (lootGrouRules.containDropItem(requestedItem)) {
 				if (!autoLoot) {
@@ -388,34 +393,23 @@ public class DropService {
 		}
 
 		if (itemId == 182400001) {
-			// to do distribution
-			currentDropItemCount = ItemService.addItem(player, itemId, currentDropItemCount,
-					ItemService.DEFAULT_UPDATE_PREDICATE);
-		} else if (!player.isInGroup2() && !player.isInAlliance2() && !requestedItem.isItemWonNotCollected()
+			if (lootGrouRules == null) {
+				currentDropItemCount = ItemService.addItem(player, itemId, currentDropItemCount,
+						ItemService.DEFAULT_UPDATE_PREDICATE);
+			} else {
+				List<Player> entitledPlayers = dropNpc.getInRangePlayers().stream()
+						.filter(member -> member.isOnline() && !member.getLifeStats().isAlreadyDead() && !member.isMentor()
+								&& MathUtil.isIn3dRange(member, player, GroupConfig.GROUP_MAX_DISTANCE))
+						.toList();
+				currentDropItemCount = distributeEqually(itemId, currentDropItemCount, entitledPlayers);
+			}
+		} else if (lootGrouRules == null && !requestedItem.isItemWonNotCollected()
 				&& dropNpc.getDistributionId() == 0) {
 			currentDropItemCount = ItemService.addItem(player, itemId, currentDropItemCount,
 					ItemService.DEFAULT_UPDATE_PREDICATE);
 			uniqueDropAnnounce(player, requestedItem);
-		}
-		if (autoLoot) {
-			if (currentDropItemCount <= 0L) {
-				synchronized (dropItems) {
-					dropItems.remove(requestedItem);
-				}
-			} else {
-				requestedItem.setCount(currentDropItemCount);
-			}
-			if (dropItems.size() == 0) {
-				Npc npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
-				if (npc != null) {
-					npc.getController().onDelete();
-				}
-			}
-			return;
-		}
-		if (!requestedItem.isDistributeItem()) {
-			if (player.isInGroup2() || player.isInAlliance2()) {
-				lootGrouRules = player.getLootGroupRules();
+		} else if (!requestedItem.isDistributeItem()) {
+			if (lootGrouRules != null) {
 				if (lootGrouRules.isMisc(quality)) {
 					Collection<Player> members = dropNpc.getInRangePlayers();
 
@@ -449,7 +443,7 @@ public class DropService {
 		}
 
 		// handles distribution of item to correct player and messages accordingly
-		if (requestedItem.isDistributeItem()) {
+		else if (!autoLoot && requestedItem.isDistributeItem()) {
 			if (player != requestedItem.getWinningPlayer() && requestedItem.isItemWonNotCollected()) {
 				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_LOOT_ANOTHER_OWNER_ITEM);
 				return;
@@ -457,6 +451,11 @@ public class DropService {
 					.isFull(requestedItem.getDropTemplate().getItemTemplate().getExtraInventoryId())) {
 				PacketSendUtility.sendPacket(requestedItem.getWinningPlayer(),
 						SM_SYSTEM_MESSAGE.STR_MSG_DICE_INVEN_ERROR);
+				requestedItem.isItemWonNotCollected(true);
+				return;
+			}
+			if (dropNpc.getDistributionId() == 3 && requestedItem.getHighestValue() > 0
+					&& !requestedItem.getWinningPlayer().getInventory().tryDecreaseKinah(requestedItem.getHighestValue())) {
 				requestedItem.isItemWonNotCollected(true);
 				return;
 			}
@@ -483,18 +482,40 @@ public class DropService {
 		} else {
 			requestedItem.setCount(currentDropItemCount);
 		}
-		resendDropList(dropNpc.getBeingLooted(), npcId, dropItems);
+		if (autoLoot) {
+			if (dropItems.isEmpty()) {
+				Npc npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
+				if (npc != null) {
+					npc.getController().onDelete();
+				}
+			}
+		} else {
+			resendDropList(dropNpc.getLootingPlayer(), npcId, dropNpc, dropItems);
+		}
 	}
 
-	private void resendDropList(Player player, int npcId, Set<DropItem> dropItems) {
+	private static long distributeEqually(int itemId, long count, List<Player> players) {
+		if (players.isEmpty()) {
+			return count;
+		}
+		long countPerPlayer = count / players.size();
+		for (int i = players.size() - 1; i >= 0; i--) {
+			long share = i == 0 ? count : countPerPlayer;
+			long remaining = ItemService.addItem(players.get(i), itemId, share, ItemService.DEFAULT_UPDATE_PREDICATE);
+			count = count - share + remaining;
+		}
+		return count;
+	}
+
+	private void resendDropList(Player player, int npcId, DropNpc dropNpc, Set<DropItem> dropItems) {
 		Npc npc = (Npc) com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().findVisibleObject(npcId);
 		if (dropItems.size() != 0) {
 			if (player != null) {
-				PacketSendUtility.sendPacket(player, new SM_LOOT_ITEMLIST(npcId, dropItems, player));
+				PacketSendUtility.sendPacket(player, new SM_LOOT_ITEMLIST(dropNpc, dropItems, player));
 			}
 		} else {
 			if (player != null) {
-				PacketSendUtility.sendPacket(player, new SM_LOOT_STATUS(npcId, 3));
+				PacketSendUtility.sendPacket(player, new SM_LOOT_STATUS(npcId, Status.CLOSE_DROP_LIST));
 				player.unsetState(CreatureState.LOOTING);
 				player.setState(CreatureState.ACTIVE);
 				PacketSendUtility.broadcastPacket(player, new SM_EMOTION(player, EmotionType.END_LOOT, 0, npcId), true);
@@ -531,7 +552,6 @@ public class DropService {
 
 		if (highestValue > 0) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_PAY_ACCOUNT_ME(highestValue));
-			player.getInventory().decreaseKinah(highestValue);
 		}
 
 		if (player.isInGroup2() || player.isInAlliance2())
@@ -541,10 +561,10 @@ public class DropService {
 				if (member != null && !player.equals(member) && member.isOnline()) {
 					PacketSendUtility.sendPacket(member,
 							SM_SYSTEM_MESSAGE.STR_MSG_PAY_ACCOUNT_OTHER(player.getName(), highestValue));
-					long distributeKinah = highestValue / (dropNpc.getGroupSize() - 1);
+					long distributeKinah = highestValue / (dropNpc.getInRangePlayers().size() - 1);
 					member.getInventory().increaseKinah(distributeKinah);
 					PacketSendUtility.sendPacket(member, SM_SYSTEM_MESSAGE.STR_MSG_PAY_DISTRIBUTE(highestValue,
-							dropNpc.getGroupSize() - 1, distributeKinah));
+							dropNpc.getInRangePlayers().size() - 1, distributeKinah));
 				}
 	}
 
@@ -572,14 +592,8 @@ public class DropService {
 		if (dropNpc == null) {
 			return;
 		}
-		if (dropNpc.containsKey(player.getObjectId()) || dropNpc.isFreeForAll()) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-
-				@Override
-				public void run() {
-					PacketSendUtility.sendPacket(player, new SM_LOOT_STATUS(id, 0));
-				}
-			}, 5000);
+		if (dropNpc.isAllowedToLoot(player)) {
+			PacketSendUtility.sendPacket(player, new SM_LOOT_STATUS(id, Status.LOOT_ENABLE));
 		}
 	}
 
@@ -631,12 +645,12 @@ public class DropService {
 
 		@Override
 		public boolean changeItem(Item input) {
-			if (dropNpc.getPlayersObjectId().size() > 1) {
+			if (dropNpc.getAllowedLooters().size() > 1) {
 				ItemTemplate template = input.getItemTemplate();
 				if (template.getTempExchangeTime() != 0) {
 					input.setTemporaryExchangeTime(
 							(int) (System.currentTimeMillis() / 1000) + (template.getTempExchangeTime() * 60));
-					GameTaskManagerServices.temporaryTradeTimeTask().addTask(input, dropNpc.getPlayersObjectId());
+					GameTaskManagerServices.temporaryTradeTimeTask().addTask(input, dropNpc.getAllowedLooters());
 				}
 				return true;
 			}

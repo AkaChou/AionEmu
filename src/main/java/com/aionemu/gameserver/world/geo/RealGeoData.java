@@ -105,7 +105,7 @@ public class RealGeoData implements GeoData {
     protected Map<String, Spatial> loadMeshes() {
         log.info("Loading meshes..");
         try {
-            return GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+            return GeoWorldLoader.loadMeshs("geo/models.mesh");
         } catch (IOException e) {
             throw new IllegalStateException("Problem loading meshes", e);
         }

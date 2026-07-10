@@ -106,6 +106,14 @@ public class GeneralNpcAI2 extends NpcAI2
 		super.handleTargetChanged(creature);
 		TargetEventHandler.onTargetChange(this, creature);
 	}
+
+	@Override
+	protected void handleCreatureNotSee(Creature creature) {
+		if (creature.equals(getTarget())) {
+			getOwner().getController().abortCast();
+			onGeneralEvent(AIEventType.TARGET_TOOFAR);
+		}
+	}
 	
 	@Override
 	protected void handleMoveValidate() {

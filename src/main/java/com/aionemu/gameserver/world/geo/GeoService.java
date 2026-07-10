@@ -19,6 +19,7 @@ import com.aionemu.gameserver.geoEngine.collision.CollisionIntention;
 import com.aionemu.gameserver.geoEngine.collision.CollisionResults;
 import com.aionemu.gameserver.geoEngine.collision.IgnoreProperties;
 import com.aionemu.gameserver.geoEngine.math.Vector3f;
+import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -70,6 +71,10 @@ public class GeoService {
 		if (GeoDataConfig.GEO_ENABLE) {
 			this.geoData.getMap(worldId).setDoorState(instanceId, doorId, isOpened);
 		}
+	}
+
+	public Spatial getGeometry(int worldId, String name) {
+		return geoData.getMap(worldId).getChild(name);
 	}
 
 	public void spawnPlaceableObject(int worldId, int instanceId, int staticId) {

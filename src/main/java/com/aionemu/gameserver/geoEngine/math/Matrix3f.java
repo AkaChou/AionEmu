@@ -9,7 +9,6 @@ package com.aionemu.gameserver.geoEngine.math;
 
 import java.nio.FloatBuffer;
 
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.utils.BufferUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -898,17 +897,10 @@ public final class Matrix3f implements Cloneable, Reusable {
 	}
 
 	public static Matrix3f newInstance() {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			return (Matrix3f) FACTORY.object();
-		}
-		return new Matrix3f();
+		return (Matrix3f) FACTORY.object();
 	}
 
 	public static void recycle(Matrix3f instance) {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			FACTORY.recycle((Object) instance);
-		} else {
-			instance = null;
-		}
+		FACTORY.recycle((Object) instance);
 	}
 }

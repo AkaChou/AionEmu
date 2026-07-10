@@ -20,6 +20,7 @@ import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -81,6 +82,8 @@ public class Effect implements StatOwner {
 	private float targetZ = 0;
 	private int mpShield = 0;
 	private int reserved1;
+	private final IdentityHashMap<EffectTemplate, Integer> reserved1ByEffect = new IdentityHashMap<>();
+	private EffectTemplate currentEffectTemplate;
 	private int reserved2;
 	private int reserved3;
 	private int reserved4;
@@ -273,11 +276,14 @@ public class Effect implements StatOwner {
 	}
 
 	public int getReserved1() {
-		return reserved1;
+		return currentEffectTemplate == null ? reserved1 : reserved1ByEffect.getOrDefault(currentEffectTemplate, reserved1);
 	}
 
 	public void setReserved1(int reserved1) {
 		this.reserved1 = reserved1;
+		if (currentEffectTemplate != null) {
+			reserved1ByEffect.put(currentEffectTemplate, reserved1);
+		}
 	}
 
 	public int getReserved2() {
@@ -595,7 +601,12 @@ public class Effect implements StatOwner {
 			return;
 		}
 		for (EffectTemplate template : getEffectTemplates()) {
-			template.calculate(this);
+			currentEffectTemplate = template;
+			try {
+				template.calculate(this);
+			} finally {
+				currentEffectTemplate = null;
+			}
 			if (template instanceof DelayedSpellAttackInstantEffect) {
 				setDelayedDamage(true);
 			}
@@ -625,7 +636,12 @@ public class Effect implements StatOwner {
 			}
 		}
 		for (EffectTemplate template : getEffectTemplates()) {
-			template.calculateHate(this);
+			currentEffectTemplate = template;
+			try {
+				template.calculateHate(this);
+			} finally {
+				currentEffectTemplate = null;
+			}
 		}
 		if (this.isLaunchSubEffect()) {
 			for (EffectTemplate template : successEffects) {
@@ -727,8 +743,13 @@ public class Effect implements StatOwner {
 					continue;
 				}
 			}
-			template.applyEffect(this);
-			template.startSubEffect(this);
+			currentEffectTemplate = template;
+			try {
+				template.applyEffect(this);
+				template.startSubEffect(this);
+			} finally {
+				currentEffectTemplate = null;
+			}
 		}
 	}
 
@@ -935,7 +956,9 @@ public class Effect implements StatOwner {
 	}
 
 	public void addSucessEffect(EffectTemplate effect) {
-		successEffects.add(effect);
+		if (!successEffects.contains(effect)) {
+			successEffects.add(effect);
+		}
 	}
 
 	public boolean isInSuccessEffects(int position) {

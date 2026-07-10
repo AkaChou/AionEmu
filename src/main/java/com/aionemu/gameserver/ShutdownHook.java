@@ -107,6 +107,24 @@ public class ShutdownHook extends Thread {
 	 * @param mode
 	 */
 	public void doShutdown(int delay, int announceInterval, ShutdownMode mode) {
+		if (!waitForPlayersToLeave(delay, announceInterval, mode)) {
+			return;
+		}
+
+		if (AionRuntimeMode.isBootEmbedded()) {
+			if (!AionEmbeddedShutdownHandler.requestShutdown(toEmbeddedMode(mode))) {
+				log.warn("Embedded shutdown handler is not registered; stopping GameServer directly.");
+				if (!GameServer.stop(mode)) {
+					completeShutdown(mode, false);
+				}
+			}
+			return;
+		}
+
+		completeShutdown(mode, true);
+	}
+
+	public boolean waitForPlayersToLeave(int delay, int announceInterval, ShutdownMode mode) {
 		log.info("Starting shutdown process with mode: {}, delay: {} seconds", mode.getText(), delay);
 		
 		for (int i = delay; i >= announceInterval; i -= announceInterval) {
@@ -128,21 +146,10 @@ public class ShutdownHook extends Thread {
 			} catch (InterruptedException e) {
 				log.warn("Shutdown interrupted during announcement phase");
 				Thread.currentThread().interrupt();
-				return;
+				return false;
 			}
 		}
-
-		if (AionRuntimeMode.isBootEmbedded()) {
-			if (!AionEmbeddedShutdownHandler.requestShutdown(toEmbeddedMode(mode))) {
-				log.warn("Embedded shutdown handler is not registered; stopping GameServer directly.");
-				if (!GameServer.stop(mode)) {
-					completeShutdown(mode, false);
-				}
-			}
-			return;
-		}
-
-		completeShutdown(mode, true);
+		return true;
 	}
 
 	private AionEmbeddedShutdownMode toEmbeddedMode(ShutdownMode mode) {

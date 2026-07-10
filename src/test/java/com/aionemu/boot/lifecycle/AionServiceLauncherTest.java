@@ -12,6 +12,8 @@ import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.ExitCode;
 import com.aionemu.commons.utils.AionRuntimeMode;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -189,6 +191,34 @@ class AionServiceLauncherTest {
         launcher.destroy();
 
         assertEquals(List.of("prepare", "start:login", "start:game", "stop:game", "stop:login", "stop:transport"), events);
+    }
+
+    @Test
+    void gracefulShutdownRequestRunsOnlyOnce() throws Exception {
+        AtomicInteger requests = new AtomicInteger();
+        AionServiceLauncher launcher = new AionServiceLauncher(
+            new AionServicesProperties(),
+            new RecordingTransportBoundary(new ArrayList<>()),
+            List.of()
+        );
+
+        Runnable shutdown = () -> {
+            requests.incrementAndGet();
+        };
+        launcher.requestGracefulShutdown(shutdown);
+        launcher.requestGracefulShutdown(shutdown);
+
+        assertEquals(1, requests.get());
+    }
+
+    @Test
+    void contextCloseCompletesGameShutdownAfterWaitingForPlayers() throws Exception {
+        String source = Files.readString(Path.of("src/main/java/com/aionemu/boot/lifecycle/AionServiceLauncher.java"));
+        int contextClose = source.indexOf("void onApplicationEvent(ContextClosedEvent event)");
+        int waitForPlayers = source.indexOf("GameShutdownRequest.waitForPlayersToLeave", contextClose);
+        int completeShutdown = source.indexOf("GameShutdownRequest.completeShutdown", contextClose);
+
+        assertTrue(waitForPlayers > contextClose && completeShutdown > waitForPlayers);
     }
 
     private static final class RecordingTransportBoundary extends AionTransportBoundary {

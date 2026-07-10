@@ -13,12 +13,22 @@ class AttackManagerLeashTest {
 	}
 
 	@Test
+	void bossGivesUpBeyondBossHomeChaseDistance() {
+		assertTrue(AttackManager.shouldGiveUpByHomeDistance(151, 150, 0, 0));
+	}
+
+	@Test
 	void staysEngagedInsideHomeChaseDistanceWhileCombatIsActive() {
 		assertFalse(AttackManager.shouldGiveUpByHomeDistance(199, 200, 0, 0));
 	}
 
 	@Test
 	void defaultMonstersStillGiveUpAfterNoCombatNearHomeLimit() {
-		assertTrue(AttackManager.shouldGiveUpByHomeDistance(150, 200, 11, 11));
+		assertTrue(AttackManager.shouldGiveUpByHomeDistance(50, 200, 21, 21));
+	}
+
+	@Test
+	void givesUpPastHalfHomeDistanceAfterTenSecondsWithoutBeingHit() {
+		assertTrue(AttackManager.shouldGiveUpByHomeDistance(76, 150, 0, 11));
 	}
 }

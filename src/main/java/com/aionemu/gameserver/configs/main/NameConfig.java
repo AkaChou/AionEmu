@@ -31,6 +31,4 @@ public class NameConfig {
 	public static boolean NAME_FORBIDDEN_ENABLE;
 	@Property(key = "gameserver.name.forbidden.client", defaultValue = "")
 	public static String NAME_FORBIDDEN_CLIENT;
-	@Property(key = "gameserver.pet.name.change.enable", defaultValue = "true")
-	public static boolean PET_NAME_CHANGE_ENABLE;
 }

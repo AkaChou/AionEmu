@@ -7,8 +7,6 @@
  */
 package com.aionemu.gameserver.geoEngine.math;
 
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
-
 public class Triangle extends AbstractTriangle implements Reusable {
 	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
 
@@ -209,17 +207,10 @@ public class Triangle extends AbstractTriangle implements Reusable {
 	}
 
 	public static Triangle newInstance() {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			return (Triangle) FACTORY.object();
-		}
-		return new Triangle();
+		return (Triangle) FACTORY.object();
 	}
 
 	public static void recycle(Triangle instance) {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			FACTORY.recycle((Object) instance);
-		} else {
-			instance = null;
-		}
+		FACTORY.recycle((Object) instance);
 	}
 }

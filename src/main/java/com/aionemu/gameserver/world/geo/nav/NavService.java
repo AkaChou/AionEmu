@@ -16,8 +16,6 @@ package com.aionemu.gameserver.world.geo.nav;
 
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 import org.springframework.beans.factory.ObjectProvider;
 
@@ -43,7 +41,6 @@ public final class NavService {
 	
 	private static volatile ObjectProvider<NavService> instanceProvider;
 	private final NavData navData = GameWorldServices.navData();
-	private final ConcurrentHashMap<GroundCacheKey, GroundCacheEntry> groundCache = new ConcurrentHashMap<>();
 	
 	public NavService() {};
 	
@@ -412,7 +409,7 @@ public final class NavService {
 	}
 	
 	private NavGeometry getNavTile(int worldId, float x, float y, float z) {
-		return getCachedGround(worldId, x, y, z, false, () -> findNavTile(worldId, x, y, z));
+		return findNavTile(worldId, x, y, z);
 	}
 
 	private NavGeometry findNavTile(int worldId, float x, float y, float z) {
@@ -438,7 +435,7 @@ public final class NavService {
 	}
 	
 	private NavGeometry getNavTileWithBox(int worldId, float x, float y, float z) {
-		return getCachedGround(worldId, x, y, z, true, () -> findNavTileWithBox(worldId, x, y, z));
+		return findNavTileWithBox(worldId, x, y, z);
 	}
 
 	private NavGeometry findNavTileWithBox(int worldId, float x, float y, float z) {
@@ -466,67 +463,6 @@ public final class NavService {
 		return null;
 	}
 
-	private NavGeometry getCachedGround(int worldId, float x, float y, float z, boolean box, Supplier<NavGeometry> lookup) {
-		if (!GeoDataConfig.GEO_NAV_CACHE_GROUND || GeoDataConfig.GEO_NAV_CACHE_TTL <= 0) {
-			return lookup.get();
-		}
-		long now = System.currentTimeMillis();
-		GroundCacheKey key = new GroundCacheKey(worldId, x, y, z, box);
-		GroundCacheEntry cached = groundCache.get(key);
-		if (cached != null) {
-			if (cached.expiresAt >= now) {
-				return cached.tile;
-			}
-			groundCache.remove(key, cached);
-		}
-		NavGeometry tile = lookup.get();
-		groundCache.put(key, new GroundCacheEntry(tile, now + GeoDataConfig.GEO_NAV_CACHE_TTL));
-		return tile;
-	}
-
-	private static final class GroundCacheEntry {
-		private final NavGeometry tile;
-		private final long expiresAt;
-
-		private GroundCacheEntry(NavGeometry tile, long expiresAt) {
-			this.tile = tile;
-			this.expiresAt = expiresAt;
-		}
-	}
-
-	private static final class GroundCacheKey {
-		private final int worldId;
-		private final int x;
-		private final int y;
-		private final int z;
-		private final boolean box;
-
-		private GroundCacheKey(int worldId, float x, float y, float z, boolean box) {
-			this.worldId = worldId;
-			this.x = Float.floatToIntBits(x);
-			this.y = Float.floatToIntBits(y);
-			this.z = Float.floatToIntBits(z);
-			this.box = box;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) return true;
-			if (!(obj instanceof GroundCacheKey other)) return false;
-			return worldId == other.worldId && x == other.x && y == other.y && z == other.z && box == other.box;
-		}
-
-		@Override
-		public int hashCode() {
-			int result = worldId;
-			result = 31 * result + x;
-			result = 31 * result + y;
-			result = 31 * result + z;
-			result = 31 * result + (box ? 1 : 0);
-			return result;
-		}
-	}
-	
 	static class NavPathway {
 		NavGeometry tile;
 		byte edge; //Values are 0, 1, 2, or 3

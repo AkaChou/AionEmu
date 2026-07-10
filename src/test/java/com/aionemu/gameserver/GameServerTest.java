@@ -46,10 +46,7 @@ class GameServerTest {
 	@Test
 	void loadsGeoDataDefaultsWithoutOverrideProperties() {
 		assertDoesNotThrow(() -> ConfigurableProcessor.process(GeoDataConfig.class, new Properties()));
-		assertFalse(GeoDataConfig.GEO_MONONO2_IN_USE);
-		assertTrue(readBooleanConfig("GEO_NAV_LAZY_LOAD"));
 		assertEquals(50, readIntConfig("GEO_NAV_CACHE_SIZE"));
-		assertEquals(1, readIntConfig("GEO_NAV_LOG_LEVEL"));
 		assertTrue(readBooleanConfig("GEO_NAV_PULL_ENABLE"));
 		assertEquals(800, readIntConfig("GEO_NAV_MAX_NODES"));
 		assertEquals(5F, readFloatConfig("GEO_NAV_TARGET_THRESHOLD"), 0.0001F);
@@ -62,17 +59,12 @@ class GameServerTest {
 		assertEquals(0.2F, readFloatConfig("GEO_NAV_BOX_CENTER_Z"), 0.0001F);
 		assertTrue(readBooleanConfig("GEO_NAV_SMOOTH_PATH"));
 		assertEquals(800, readIntConfig("GEO_NAV_CORRIDOR_LENGTH"));
-		assertTrue(readBooleanConfig("GEO_NAV_CACHE_GROUND"));
-		assertEquals(1000, readIntConfig("GEO_NAV_CACHE_TTL"));
-		assertFalse(readBooleanConfig("GEO_NAV_SOFT_CACHE"));
 	}
 
 	@Test
 	void loadsGeoNavOverrideProperties() {
 		Properties properties = new Properties();
-		properties.setProperty("gameserver.geo.nav.lazy.load", "false");
 		properties.setProperty("gameserver.geo.nav.cache.size", "7");
-		properties.setProperty("gameserver.geo.nav.log.level", "2");
 		properties.setProperty("gameserver.geo.nav.pull.enable", "false");
 		properties.setProperty("gameserver.geo.nav.max.nodes", "123");
 		properties.setProperty("gameserver.geo.nav.target.threshold", "6.5");
@@ -85,15 +77,10 @@ class GameServerTest {
 		properties.setProperty("gameserver.geo.nav.box.center.z", "0.6");
 		properties.setProperty("gameserver.geo.nav.smooth.path", "false");
 		properties.setProperty("gameserver.geo.nav.corridor.length", "321");
-		properties.setProperty("gameserver.geo.nav.cache.ground", "false");
-		properties.setProperty("gameserver.geo.nav.cache.ttl", "2500");
-		properties.setProperty("gameserver.geo.nav.soft.cache", "true");
 
 		ConfigurableProcessor.process(GeoDataConfig.class, properties);
 
-		assertFalse(readBooleanConfig("GEO_NAV_LAZY_LOAD"));
 		assertEquals(7, readIntConfig("GEO_NAV_CACHE_SIZE"));
-		assertEquals(2, readIntConfig("GEO_NAV_LOG_LEVEL"));
 		assertFalse(readBooleanConfig("GEO_NAV_PULL_ENABLE"));
 		assertEquals(123, readIntConfig("GEO_NAV_MAX_NODES"));
 		assertEquals(6.5F, readFloatConfig("GEO_NAV_TARGET_THRESHOLD"), 0.0001F);
@@ -106,9 +93,6 @@ class GameServerTest {
 		assertEquals(0.6F, readFloatConfig("GEO_NAV_BOX_CENTER_Z"), 0.0001F);
 		assertFalse(readBooleanConfig("GEO_NAV_SMOOTH_PATH"));
 		assertEquals(321, readIntConfig("GEO_NAV_CORRIDOR_LENGTH"));
-		assertFalse(readBooleanConfig("GEO_NAV_CACHE_GROUND"));
-		assertEquals(2500, readIntConfig("GEO_NAV_CACHE_TTL"));
-		assertTrue(readBooleanConfig("GEO_NAV_SOFT_CACHE"));
 	}
 
 	@Test

@@ -60,6 +60,12 @@ public final class Locator {
             String u = url.toString();
             int tail;
             String dirName;
+            if (u.startsWith("jar:nested:")) {
+                tail = u.indexOf("/!");
+                dirName = "file:" + u.substring("jar:nested:".length(), tail);
+                return new File(fromURI(dirName));
+            }
+
             if (u.startsWith("jar:file:")) {
                 tail = u.indexOf("!");
                 dirName = u.substring(4, tail);

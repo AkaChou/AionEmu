@@ -156,11 +156,6 @@ public class PremiumRates extends Rates {
 	}
 
 	@Override
-	public float getGlobalDropRate() {
-		return RateConfig.PREMIUM_GLOBAL_DROP_RATE;
-	}
-
-	@Override
 	public float getGpPlayerGainRate() {
 		return RateConfig.PREMIUM_GP_PLAYER_GAIN_RATE;
 	}

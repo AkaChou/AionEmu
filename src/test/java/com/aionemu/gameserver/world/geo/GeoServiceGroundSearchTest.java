@@ -1,11 +1,14 @@
 package com.aionemu.gameserver.world.geo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.lang.reflect.Field;
 
 import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.geoEngine.models.GeoMap;
+import com.aionemu.gameserver.geoEngine.scene.Node;
+import com.aionemu.gameserver.geoEngine.scene.Spatial;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +44,30 @@ class GeoServiceGroundSearchTest {
 		});
 
 		assertEquals(100.001F, geoService.getZ(1001, 2.5F, 2.5F, 150F, 0F, 1), 0.01F);
+	}
+
+	@Test
+	void findsNamedGeometryInLoadedWorldMap() throws Exception {
+		GeoService geoService = new GeoService();
+		Spatial geometry = new Node("world/core.cgf");
+		GeoMap map = new GeoMap("400010000", 4096) {
+			@Override
+			public Spatial getChild(String name) {
+				return geometry.getName().equals(name) ? geometry : null;
+			}
+		};
+		setGeoData(geoService, new GeoData() {
+			@Override
+			public void loadGeoMaps() {
+			}
+
+			@Override
+			public GeoMap getMap(int worldId) {
+				return map;
+			}
+		});
+
+		assertSame(geometry, geoService.getGeometry(400010000, "world/core.cgf"));
 	}
 
 	private static void setGeoData(GeoService geoService, GeoData geoData) throws Exception {

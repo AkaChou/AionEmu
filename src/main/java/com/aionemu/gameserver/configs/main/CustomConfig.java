@@ -72,8 +72,6 @@ public class CustomConfig {
 	public static boolean ENABLE_SIMPLE_2NDCLASS;
 	@Property(key = "gameserver.skill.chain.triggerrate", defaultValue = "true")
 	public static boolean SKILL_CHAIN_TRIGGERRATE;
-	@Property(key = "gameserver.unstuck.delay", defaultValue = "3600")
-	public static int UNSTUCK_DELAY;
 	@Property(key = "gameserver.admin.dye.price", defaultValue = "1000000")
 	public static int DYE_PRICE;
 	@Property(key = "gameserver.base.flytime", defaultValue = "60")
@@ -128,8 +126,6 @@ public class CustomConfig {
 	public static boolean RIFT_ENABLED;
 	@Property(key = "gameserver.rift.duration", defaultValue = "1")
 	public static int RIFT_DURATION;
-	@Property(key = "gameserver.rift.appear.chance", defaultValue = "50")
-	public static int RIFT_APPEAR_CHANCE;
 	@Property(key = "gameserver.auto.kinah.enabled", defaultValue = "false")
 	public static boolean AUTO_KINAH_ENABLED;
 
@@ -313,14 +309,6 @@ public class CustomConfig {
 	 */
 	@Property(key = "gameserver.thieves.guild.enable", defaultValue = "false")
 	public static boolean THIEVES_ENABLE;
-
-	/**
-	 * Three Upgrade 5.3
-	 */
-	@Property(key = "gameserver.threes.upgrade.enable", defaultValue = "false")
-	public static boolean THREES_UPGRADE_ENABLE;
-	@Property(key = "gameserver.threes.upgrade.rate", defaultValue = "1")
-	public static int THREES_UPGRADE_RATE;
 
 	// Auto Powershard
 	@Property(key = "gameserver.enable.auto.powershard", defaultValue = "false")

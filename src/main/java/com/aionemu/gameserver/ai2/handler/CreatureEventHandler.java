@@ -21,8 +21,10 @@ import com.aionemu.gameserver.lifecycle.GameWorldServices;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 
 import com.aionemu.gameserver.ai2.AIState;
+import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.NpcAI2;
 import com.aionemu.gameserver.ai2.event.AIEventType;
+import com.aionemu.gameserver.ai2.manager.AttackManager;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
@@ -53,6 +55,13 @@ public class CreatureEventHandler {
 	 * @param creature
 	 */
 	public static void onCreatureSee(NpcAI2 npcAI, Creature creature) {
+		if (npcAI.isInSubState(AISubState.TARGET_LOST) && creature.equals(npcAI.getTarget())) {
+			npcAI.setSubStateIfNot(AISubState.NONE);
+			if (npcAI.isInState(AIState.FIGHT)) {
+				AttackManager.scheduleNextAttack(npcAI);
+				return;
+			}
+		}
 		checkAggro(npcAI, creature);
 		if (creature instanceof Player) {
 			Player player = (Player) creature;

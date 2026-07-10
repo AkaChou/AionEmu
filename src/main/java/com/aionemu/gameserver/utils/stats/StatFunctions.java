@@ -38,6 +38,7 @@ import com.aionemu.gameserver.model.gameobjects.Homing;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.Npc;
 import com.aionemu.gameserver.model.gameobjects.Servant;
+import com.aionemu.gameserver.model.gameobjects.Summon;
 import com.aionemu.gameserver.model.gameobjects.SummonedObject;
 import com.aionemu.gameserver.model.gameobjects.Trap;
 import com.aionemu.gameserver.model.gameobjects.player.Equipment;
@@ -713,26 +714,15 @@ public class StatFunctions {
 			return false;
 		}
 
-		int critical = attacker.getGameStats().getMCritical().getCurrent();
-		if (attacked instanceof Player) {
-			critical = attacked.getGameStats().getPositiveReverseStat(StatEnum.MAGICAL_CRITICAL_RESIST, critical)
-					+ attacked.getGameStats().getPositiveReverseStat(StatEnum.PVP_MAGICAL_RESIST, critical);
-		} else {
-			critical = attacked.getGameStats().getPositiveReverseStat(StatEnum.MAGICAL_CRITICAL_RESIST, critical);
-		}
-		// add critical Prob
-		critical *= criticalProb / 100f;
+		int pvpResist = attacked instanceof Player
+				? attacked.getGameStats().getStat(StatEnum.PVP_MAGICAL_RESIST, 0).getCurrent() : 0;
+		int critical = calculateEffectiveMagicalCritical(attacker.getGameStats().getMCritical().getCurrent(),
+				attacked.getGameStats().getSpellResist().getCurrent(), pvpResist, criticalProb);
+		return Rnd.nextInt(1000) < critical;
+	}
 
-		double criticalRate;
-
-		if (critical <= 540) {
-			criticalRate = critical * 0.1f;
-		} else if (critical <= 700) {
-			criticalRate = (540 * 0.1f) + ((critical - 540) * 0.05f);
-		} else {
-			criticalRate = (540 * 0.1f) + (260 * 0.05f) + ((critical - 600) * 0.02f);
-		}
-		return Rnd.nextInt(100) < criticalRate;
+	static int calculateEffectiveMagicalCritical(int critical, int spellResist, int pvpResist, int criticalProb) {
+		return Math.max(0, Math.round((critical - spellResist - pvpResist) * criticalProb / 100f));
 	}
 
 	/**
@@ -926,7 +916,7 @@ public class StatFunctions {
 			return true;
 		}
 
-		float accuracy = attacker.getGameStats().getMainHandPAccuracy().getCurrent() + accMod;
+		float accuracy = attacker.getGameStats().getMainHandPAccuracy().getCurrent();
 		float dodge = 0;
 		if (attacked instanceof Player) {
 			dodge = attacked.getGameStats().getEvasion().getBonus()
@@ -936,7 +926,7 @@ public class StatFunctions {
 			dodge = attacked.getGameStats().getEvasion().getBonus()
 					+ getMovementModifier(attacked, StatEnum.EVASION, attacked.getGameStats().getEvasion().getBase());
 		}
-		float dodgeRate = dodge - accuracy;
+		float dodgeRate = calculateAvoidanceDifference(dodge, accuracy, accMod);
 		if (attacked instanceof Npc) {
 			int levelDiff = attacked.getLevel() - attacker.getLevel();
 			dodgeRate *= 1 + getNpcLevelDiffMod(levelDiff, 0);
@@ -957,6 +947,10 @@ public class StatFunctions {
 	 * @return int
 	 */
 	public static boolean calculatePhysicalParryRate(Creature attacker, Creature attacked) {
+		return calculatePhysicalParryRate(attacker, attacked, 0);
+	}
+
+	public static boolean calculatePhysicalParryRate(Creature attacker, Creature attacked, int accMod) {
 		// check always parry
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.PARRY)) {
 			return true;
@@ -971,7 +965,7 @@ public class StatFunctions {
 			parry = attacked.getGameStats().getParry().getBonus()
 					+ getMovementModifier(attacked, StatEnum.PARRY, attacked.getGameStats().getParry().getBase());
 		}
-		float parryRate = parry - accuracy;
+		float parryRate = calculateAvoidanceDifference(parry, accuracy, accMod);
 		return calculatePhysicalEvasion(parryRate, 400);
 	}
 
@@ -983,6 +977,10 @@ public class StatFunctions {
 	 * @return int
 	 */
 	public static boolean calculatePhysicalBlockRate(Creature attacker, Creature attacked) {
+		return calculatePhysicalBlockRate(attacker, attacked, 0);
+	}
+
+	public static boolean calculatePhysicalBlockRate(Creature attacker, Creature attacked, int accMod) {
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.BLOCK)) {
 			return true;
 		}
@@ -996,12 +994,12 @@ public class StatFunctions {
 			block = attacked.getGameStats().getBlock().getBonus()
 					+ getMovementModifier(attacked, StatEnum.BLOCK, attacked.getGameStats().getBlock().getBase());
 		}
-		float blockRate = block - accuracy;
-		// blockRate = blockRate*0.6f+50;
-		if (blockRate > 500) {
-			blockRate = 500;
-		}
-		return Rnd.nextInt(1000) < blockRate;
+		float blockRate = calculateAvoidanceDifference(block, accuracy, accMod);
+		return calculatePhysicalEvasion(blockRate, 500);
+	}
+
+	static float calculateAvoidanceDifference(float defense, float accuracy, int accMod) {
+		return defense - accuracy - accMod;
 	}
 
 	/**
@@ -1076,6 +1074,10 @@ public class StatFunctions {
 
 	public static int calculateMagicalResistRate(Creature attacker, Creature attacked, int accMod, SkillElement element) {
 		if (attacked.getObserveController().checkAttackStatus(AttackStatus.RESIST)) {
+			return 1000;
+		}
+		if (element != SkillElement.NONE && attacked instanceof Summon summon
+				&& element == summon.getAlwaysResistElement()) {
 			return 1000;
 		}
 

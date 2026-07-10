@@ -23,8 +23,8 @@ public class BrokerConfig {
 	public static int SAVE_MANAGER_INTERVAL;
 	@Property(key = "gameserver.broker.time.check.expired.items.interval", defaultValue = "60")
 	public static int CHECK_EXPIRED_ITEMS_INTERVAL;
-	@Property(key = "gameserver.broker.antihack.punishment", defaultValue = "0")
+	@Property(key = "gameserver.broker.anti.hack.punishment", defaultValue = "0")
 	public static int ANTI_HACK_PUNISHMENT;
-	@Property(key = "gameserver.broker.items.expiretime", defaultValue = "8")
+	@Property(key = "gameserver.broker.items.expire.time", defaultValue = "8")
 	public static int ITEMS_EXPIRE_TIME;
 }

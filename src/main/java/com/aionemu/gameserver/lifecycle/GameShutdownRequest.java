@@ -25,6 +25,10 @@ public final class GameShutdownRequest implements DisposableBean {
         shutdownHook().doShutdown(delay, announceInterval, mode);
     }
 
+    public static void waitForPlayersToLeave(int delay, int announceInterval) {
+        shutdownHook().waitForPlayersToLeave(delay, announceInterval, ShutdownMode.SHUTDOWN);
+    }
+
     public static void completeShutdown(ShutdownMode mode, boolean haltRuntime) {
         shutdownHook().completeShutdown(mode, haltRuntime);
     }

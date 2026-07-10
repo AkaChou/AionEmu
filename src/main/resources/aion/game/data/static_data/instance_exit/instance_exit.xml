@@ -352,4 +352,25 @@
 	<instance_exit instance_id="301360000" exit_world="600090000" race="PC_ALL" x="775.97034" y="1033.2181" z="111.394745" h="23"/>
 	<!-- Bastion Of Souls -->
 	<instance_exit instance_id="302340000" exit_world="400010000" race="PC_ALL" x="1315.2606" y="1353.0134" z="3039.1736" h="99"/>
+
+	<!-- Quest instances -->
+	<instance_exit instance_id="310010000" exit_world="210010000" race="ELYOS" x="245.14868" y="1639.1372" z="100.35713" h="60"/>
+	<instance_exit instance_id="320010000" exit_world="220010000" race="ASMODIANS" x="940.15" y="2295.64" z="265.7" h="43"/>
+	<instance_exit instance_id="320020000" exit_world="220010000" race="ASMODIANS" x="386.03476" y="1893.9309" z="327.62283" h="59"/>
+	<instance_exit instance_id="310040000" exit_world="210020000" race="ELYOS" x="2511.361816" y="792.140869" z="412.819" h="0"/>
+	<instance_exit instance_id="320040000" exit_world="220020000" race="ASMODIANS" x="3032.578369" y="877.538818" z="363.81018" h="0"/>
+	<instance_exit instance_id="310070000" exit_world="210030000" race="ELYOS" x="2315.9" y="1800.0" z="195.2" h="0"/>
+	<instance_exit instance_id="320070000" exit_world="220010000" race="ASMODIANS" x="1103.5642" y="1708.5078" z="270.05505" h="112"/>
+	<instance_exit instance_id="310120000" exit_world="110010000" race="ELYOS" x="1878.27" y="1513.74" z="812.675" h="25"/>
+	<instance_exit instance_id="320140000" exit_world="120010000" race="ASMODIANS" x="1275.370361" y="1168.611328" z="215.21492" h="30"/>
+	<instance_exit instance_id="301340000" exit_world="600090000" race="ELYOS" x="1329.3481" y="928.4717" z="153.14037" h="4"/>
+	<instance_exit instance_id="301340000" exit_world="600090000" race="ASMODIANS" x="364.02426" y="926.74615" z="90.12348" h="60"/>
+	<instance_exit instance_id="301690000" exit_world="210100000" race="ELYOS" x="639.8976" y="2404.188" z="248.18759" h="79"/>
+	<instance_exit instance_id="301690000" exit_world="220110000" race="ASMODIANS" x="228.99796" y="209.33243" z="287.2919" h="69"/>
+
+	<!-- Matchmaking and event instances -->
+	<instance_exit instance_id="301700000" exit_world="110010000" race="ELYOS" x="1444.5857" y="1511.3572" z="573.0719" h="60"/>
+	<instance_exit instance_id="301700000" exit_world="120010000" race="ASMODIANS" x="1275.561" y="1408.0289" z="208.125" h="34"/>
+	<instance_exit instance_id="600080000" exit_world="110010000" race="ELYOS" x="1444.5857" y="1511.3572" z="573.0719" h="60"/>
+	<instance_exit instance_id="600080000" exit_world="120010000" race="ASMODIANS" x="1275.561" y="1408.0289" z="208.125" h="34"/>
 </instance_exits>

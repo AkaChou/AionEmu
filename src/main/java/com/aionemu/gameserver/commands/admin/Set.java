@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.configs.administration.CommandsConfig;
 import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
 import com.aionemu.gameserver.model.PlayerClass;
@@ -54,7 +53,7 @@ public class Set extends AdminCommand
 		}
 		String paramValue = params[1];
 		if (params[0].equals("class")) {
-			if (admin.getAccessLevel() < CommandsConfig.SET) {
+			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 				return;
 			}
@@ -69,7 +68,7 @@ public class Set extends AdminCommand
 			PlayerClass oldClass = target.getPlayerClass();
 			setClass(target, oldClass, newClass);
 		} else if (params[0].equals("exp")) { //120086901
-			if (admin.getAccessLevel() < CommandsConfig.SET) {
+			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 				return;
 			}
@@ -86,7 +85,7 @@ public class Set extends AdminCommand
 		}
 		//<Abyss Points>
 		else if (params[0].equals("ap")) {
-			if (admin.getAccessLevel() < CommandsConfig.SET) {
+			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 				return;
 			}
@@ -107,7 +106,7 @@ public class Set extends AdminCommand
 		}
 		//<Glory Points>
 		else if (params[0].equals("gp")) {
-			if (admin.getAccessLevel() < CommandsConfig.SET) {
+			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 				return;
 			}
@@ -126,7 +125,7 @@ public class Set extends AdminCommand
 				PacketSendUtility.sendMessage(target, "Admin add <Glory Points> +  " + gp + ".");
 			}
 		} else if (params[0].equals("level")) {
-			if (admin.getAccessLevel() < CommandsConfig.SET) {
+			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 				return;
 			}
@@ -143,7 +142,7 @@ public class Set extends AdminCommand
 			}
 			PacketSendUtility.sendMessage(admin, "Set " + player.getCommonData().getName() + " level to " + level);
 		} else if (params[0].equals("title")) {
-			if (admin.getAccessLevel() < CommandsConfig.SET) {
+			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 				return;
 			}
@@ -160,7 +159,7 @@ public class Set extends AdminCommand
 			}
 			PacketSendUtility.sendMessage(admin, "Set " + player.getCommonData().getName() + " title to " + titleId);
 		} else if (params[0].equals("toll")) {
-			if (admin.getAccessLevel() < CommandsConfig.SET) {
+			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 				return;
 			}
@@ -182,7 +181,7 @@ public class Set extends AdminCommand
 				PacketSendUtility.sendMessage(target, "Admin set your <Toll> to " + toll + ".");
 			}
 		} else if (params[0].equals("luna")) {
-			if (admin.getAccessLevel() < CommandsConfig.SET) {
+			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 				return;
 			}
@@ -201,7 +200,7 @@ public class Set extends AdminCommand
 				PacketSendUtility.sendMessage(target, "Admin Add <Luna Points> + " + luna + ".");
 			}
 		} else if (params[0].equals("key")) {
-			if (admin.getAccessLevel() < CommandsConfig.SET) {
+			if (admin.getAccessLevel() < getLevel()) {
 				PacketSendUtility.sendMessage(admin, "You dont have enough rights to execute this command");
 				return;
 			}

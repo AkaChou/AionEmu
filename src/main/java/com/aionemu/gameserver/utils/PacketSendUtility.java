@@ -167,6 +167,17 @@ public class PacketSendUtility {
 		});
 	}
 
+	public static void broadcastPacket(VisibleObject visibleObject, AionServerPacket packet, ObjectFilter<Player> filter) {
+		visibleObject.getKnownList().doOnAllPlayers(new Visitor<Player>() {
+			@Override
+			public void visit(Player player) {
+				if (player.isOnline() && filter.acceptObject(player)) {
+					sendPacket(player, packet);
+				}
+			}
+		});
+	}
+
 	public static void broadcastPacket(Player player, final AionServerPacket packet, boolean toSelf,
 			final ObjectFilter<Player> filter) {
 		if (toSelf) {

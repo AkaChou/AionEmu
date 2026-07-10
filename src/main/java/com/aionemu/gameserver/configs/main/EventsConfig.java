@@ -54,8 +54,6 @@ public class EventsConfig {
 	// Crazy Daeva.
 	@Property(key = "gameserver.crazy.daeva.enable", defaultValue = "false")
 	public static boolean ENABLE_CRAZY;
-	@Property(key = "gameserver.crazy.daeva.tag", defaultValue = "<Crazy>")
-	public static String CRAZY_TAG;
 	@Property(key = "gameserver.crazy.daeva.lowest.rnd", defaultValue = "10")
 	public static int CRAZY_LOWEST_RND;
 	@Property(key = "gameserver.crazy.daeva.time.to.start", defaultValue = "0 0 0,12,20,0 ? * *")
@@ -76,7 +74,7 @@ public class EventsConfig {
 	public static boolean ENABLE_ABYSS_EVENT;
 	@Property(key = "gameserver.event.abyss.treasure.time", defaultValue = "0 0 15 ? * SUN")
 	public static String ABYSS_EVENT_SCHEDULE;
-	@Property(key = "gameserver.event.abyss.rewards ", defaultValue = "0")
+	@Property(key = "gameserver.event.abyss.rewards", defaultValue = "0")
 	public static String ABYSS_EVENT_REWARDS;
 
 	/**

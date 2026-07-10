@@ -18,6 +18,7 @@ package com.aionemu.gameserver.model.drop;
 import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import jakarta.xml.bind.annotation.XmlAccessType;
@@ -38,10 +39,14 @@ public class DropGroup implements DropCalculator {
 	protected List<Drop> drop;
 	@XmlAttribute
 	protected Race race = Race.PC_ALL;
-	@XmlAttribute(name = "use_category")
-	protected Boolean useCategory = true;
 	@XmlAttribute(name = "name")
 	protected String group_name;
+	@XmlAttribute(name = "use_category")
+	private Boolean legacyUseCategory;
+	@XmlAttribute(name = "level_based_chance_reduction")
+	private Boolean useLevelBasedChanceReduction;
+	@XmlAttribute(name = "max_items")
+	private int maxItems = 1;
 
 	public List<Drop> getDrop() {
 		return this.drop;
@@ -51,8 +56,12 @@ public class DropGroup implements DropCalculator {
 		return race;
 	}
 
-	public Boolean isUseCategory() {
-		return useCategory;
+	public int getMaxItems() {
+		return maxItems;
+	}
+
+	public boolean isUseLevelBasedChanceReduction() {
+		return useLevelBasedChanceReduction != null ? useLevelBasedChanceReduction : true;
 	}
 
 	/**
@@ -69,30 +78,68 @@ public class DropGroup implements DropCalculator {
 		DropGroup copy = new DropGroup();
 		copy.drop = drop == null ? null : new ArrayList<>(drop);
 		copy.race = race;
-		copy.useCategory = useCategory;
 		copy.group_name = group_name;
+		copy.legacyUseCategory = legacyUseCategory;
+		copy.useLevelBasedChanceReduction = useLevelBasedChanceReduction;
+		copy.maxItems = maxItems;
 		return copy;
 	}
 
 	@Override
-    public int dropCalculator(Set<DropItem> result, int index, float dropModifier, Race race, Collection<Player> groupMembers) {
+	public int dropCalculator(Set<DropItem> result, int index, DropModifiers dropModifiers, Collection<Player> groupMembers) {
+		if (drop == null || drop.isEmpty()) {
+			log.debug("Drop group {} is empty", getGroupName());
+			return index;
+		}
+		Set<Drop> remainingDrops = new HashSet<>(drop);
+		for (int i = 0; i < maxItems && !remainingDrops.isEmpty(); i++) {
+			float chance = Rnd.get() * 100;
+			float nearestChanceDiff = Float.MAX_VALUE;
+			List<Drop> nearestDropsOfSameChance = new ArrayList<>();
+			for (Drop candidate : remainingDrops) {
+				float finalChance = calculateEffectiveChance(candidate, dropModifiers);
+				if (chance < finalChance) {
+					float chanceDiff = finalChance - chance;
+					if (nearestDropsOfSameChance.isEmpty() || chanceDiff <= nearestChanceDiff) {
+						if (chanceDiff < nearestChanceDiff) {
+							nearestDropsOfSameChance.clear();
+							nearestChanceDiff = chanceDiff;
+						}
+						nearestDropsOfSameChance.add(candidate);
+					}
+				}
+			}
+			Drop selected = nearestDropsOfSameChance.isEmpty() ? null : Rnd.get(nearestDropsOfSameChance);
+			if (selected != null) {
+				index = addDropItem(result, index, selected, groupMembers);
+				remainingDrops.remove(selected);
+			}
+		}
+		return index;
+	}
 
-    if (drop == null || drop.isEmpty()) {
-        if (log.isDebugEnabled()) {
-            log.debug("Drop group {} is empty", getGroupName());
-        }
-        return index;
-    }
+	float calculateEffectiveChance(Drop candidate, DropModifiers dropModifiers) {
+		return dropModifiers.calculateDropChance(candidate.getChance(),
+				isUseLevelBasedChanceReduction() && !candidate.isNoReduction());
+	}
 
-    if (useCategory) {
-        Drop d = drop.get(Rnd.get(0, drop.size() - 1));
-        return d.dropCalculator(result, index, dropModifier, race, groupMembers);
-    }
-
-    for (int i = 0; i < drop.size(); i++) {
-        Drop d = drop.get(i);
-        index = d.dropCalculator(result, index, dropModifier, race, groupMembers);
-    }
-    return index;
-    }
+	private int addDropItem(Set<DropItem> result, int index, Drop selected, Collection<Player> groupMembers) {
+		if (selected.isEachMember() && groupMembers != null && !groupMembers.isEmpty()) {
+			for (Player player : groupMembers) {
+				DropItem item = new DropItem(selected);
+				item.calculateCount();
+				item.setIndex(index++);
+				item.setPlayerObjId(player.getObjectId());
+				item.setWinningPlayer(player);
+				item.isDistributeItem(true);
+				result.add(item);
+			}
+		} else {
+			DropItem item = new DropItem(selected);
+			item.calculateCount();
+			item.setIndex(index++);
+			result.add(item);
+		}
+		return index;
+	}
 }

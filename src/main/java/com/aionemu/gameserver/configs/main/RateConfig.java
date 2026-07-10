@@ -77,8 +77,6 @@ public class RateConfig {
 	public static float PREMIUM_DROP_RATE;
 	@Property(key = "gameserver.rate.vip.drop", defaultValue = "3")
 	public static float VIP_DROP_RATE;
-	@Property(key = "gameserver.rate.reduce.drop", defaultValue = "0.0")
-	public static float DROP_RATE_REDUCE;
 	@Property(key = "gameserver.rate.regular.ap.player.gain", defaultValue = "1")
 	public static float AP_PLAYER_GAIN_RATE;
 	@Property(key = "gameserver.rate.premium.ap.player.gain", defaultValue = "2")
@@ -186,14 +184,6 @@ public class RateConfig {
 	public static float PREMIUM_QUEST_EXP_BOOST_RATE;
 	@Property(key = "gameserver.rate.vip.quest.exp_boost", defaultValue = "3")
 	public static float VIP_QUEST_EXP_BOOST_RATE;
-
-	// Global Drop Rates
-	@Property(key = "gameserver.rate.regular.global.drop", defaultValue = "1")
-	public static float GLOBAL_DROP_RATE;
-	@Property(key = "gameserver.rate.premium.global.drop", defaultValue = "2")
-	public static float PREMIUM_GLOBAL_DROP_RATE;
-	@Property(key = "gameserver.rate.vip.global.drop", defaultValue = "3")
-	public static float VIP_GLOBAL_DROP_RATE;
 
 	// Atreian Bestiary
 	@Property(key = "gameserver.rate.regular.book", defaultValue = "1")

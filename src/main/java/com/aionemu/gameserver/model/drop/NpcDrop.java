@@ -78,14 +78,14 @@ public class NpcDrop implements DropCalculator {
 	}
 
 	@Override
-	public int dropCalculator(Set<DropItem> result, int index, float dropModifier, Race race,
+	public int dropCalculator(Set<DropItem> result, int index, DropModifiers dropModifiers,
 			Collection<Player> groupMembers) {
 		if (dropGroup == null || dropGroup.isEmpty()) {
 			return index;
 		}
 		for (DropGroup dg : dropGroup) {
-			if (dg.getRace() == Race.PC_ALL || dg.getRace() == race) {
-				index = dg.dropCalculator(result, index, dropModifier, race, groupMembers);
+			if (dg.getRace() == Race.PC_ALL || dg.getRace() == dropModifiers.getDropRace()) {
+				index = dg.dropCalculator(result, index, dropModifiers, groupMembers);
 			}
 		}
 		return index;

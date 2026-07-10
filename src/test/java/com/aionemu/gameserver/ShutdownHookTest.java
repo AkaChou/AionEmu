@@ -3,6 +3,7 @@ package com.aionemu.gameserver;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
@@ -12,6 +13,7 @@ import com.aionemu.gameserver.configs.main.ShutdownConfig;
 import com.aionemu.gameserver.controllers.NpcController;
 import com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.npc.NpcTemplate;
 import com.aionemu.gameserver.world.World;
 import java.io.IOException;
@@ -19,10 +21,10 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,6 +66,34 @@ class ShutdownHookTest {
     }
 
     @Test
+    void shutdownContinuesEarlyAfterLastPlayerLogsOut() throws Exception {
+        AionRuntimeMode.enableBootEmbeddedMode();
+        AtomicReference<AionEmbeddedShutdownMode> requestedMode = new AtomicReference<>();
+        AionEmbeddedShutdownHandler.register(requestedMode::set);
+        ShutdownConfig.DESPAWN_NPCS = false;
+        TestWorld world = objenesis.newInstance(TestWorld.class);
+        world.npcs = List.of();
+        world.players = new CopyOnWriteArrayList<>(List.of(objenesis.newInstance(Player.class)));
+        worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
+        Thread logout = Thread.ofPlatform().start(() -> {
+            try {
+                Thread.sleep(100);
+                world.players.clear();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        long start = System.nanoTime();
+        new ShutdownHook().doShutdown(3, 1, ShutdownMode.SHUTDOWN);
+        long elapsedMillis = java.time.Duration.ofNanos(System.nanoTime() - start).toMillis();
+        logout.join();
+
+        assertEquals(AionEmbeddedShutdownMode.SHUTDOWN, requestedMode.get());
+        assertTrue(elapsedMillis < 2500, "shutdown should not wait for the remaining countdown after all players log out");
+    }
+
+    @Test
     void stopReportsFalseWhenGameServerWasNotStarted() {
         assertFalse(GameServer.stop());
     }
@@ -80,6 +110,7 @@ class ShutdownHookTest {
         liveNpcs.add(thirdNpc);
         TestWorld world = objenesis.newInstance(TestWorld.class);
         world.npcs = liveNpcs;
+        world.players = List.of();
         worldBootstrapServices = new GameWorldBootstrapServices(null, null, null, null, provider(World.class, world));
 
         assertDoesNotThrow(() -> invokeSendShutdownStatus(true));
@@ -116,6 +147,7 @@ class ShutdownHookTest {
 
     private static final class TestWorld extends World {
         private Collection<Npc> npcs;
+        private Collection<Player> players = List.of();
 
         @Override
         public Collection<Npc> getNpcs() {
@@ -123,8 +155,8 @@ class ShutdownHookTest {
         }
 
         @Override
-        public Iterator<com.aionemu.gameserver.model.gameobjects.player.Player> getPlayersIterator() {
-            return Collections.emptyIterator();
+        public Iterator<Player> getPlayersIterator() {
+            return players.iterator();
         }
     }
 

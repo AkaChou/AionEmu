@@ -6,17 +6,14 @@ import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
 import com.aionemu.gameserver.dataholders.DataManager;
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Creature;
-import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.materials.MaterialSkill;
 import com.aionemu.gameserver.model.templates.materials.MaterialTemplate;
 import com.aionemu.gameserver.skillengine.model.Skill;
-import com.aionemu.gameserver.utils.PacketSendUtility;
 import com.aionemu.gameserver.world.geo.GeoService;
 
 public class TerrainZoneCollisionMaterialActor extends ActionObserver implements IActor {
@@ -24,6 +21,7 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	private final Creature creature;
 	private final AtomicReference<List<MaterialSkill>> currentSkills = new AtomicReference<List<MaterialSkill>>(Collections.emptyList());
 	private int lastMaterialId;
+	private Future<?> task;
 
 	public TerrainZoneCollisionMaterialActor(Creature creature) {
 		super(ObserverType.MOVE_OR_DIE);
@@ -31,18 +29,21 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	}
 
 	@Override
-	public void moved() {
+	public synchronized void moved() {
 		int materialId = GeoService.getInstance().getTerrainMaterialAt(creature.getWorldId(), creature.getX(), creature.getY(), creature.getZ(),
 				creature.getInstanceId());
-		if (materialId == lastMaterialId && !currentSkills.get().isEmpty()) {
+		if (materialId == lastMaterialId && !currentSkills.get().isEmpty() && hasActiveTask()) {
 			return;
 		}
 		lastMaterialId = materialId;
 		List<MaterialSkill> skills = findSkills(materialId);
-		if (!currentSkills.getAndSet(skills).equals(skills)) {
-			cancelTask();
-			if (!skills.isEmpty()) {
-				start(skills);
+		boolean skillsChanged = !currentSkills.getAndSet(skills).equals(skills);
+		if (skillsChanged || !skills.isEmpty() && !hasActiveTask()) {
+			synchronized (creature.getController()) {
+				cancelOwnedTask();
+				if (!skills.isEmpty()) {
+					start(skills);
+				}
 			}
 		}
 	}
@@ -69,15 +70,12 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 			return;
 		}
 		final int[] secondsElapsed = new int[1];
-		Future<?> task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+		task = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
 				for (MaterialSkill materialSkill : materialSkills) {
 					if (secondsElapsed[0] % materialSkill.getFrequency() != 0 || creature.getEffectController().hasAbnormalEffect(materialSkill.getId())) {
 						continue;
-					}
-					if (GeoDataConfig.GEO_MATERIALS_SHOWDETAILS && creature instanceof Player && ((Player) creature).isGM()) {
-						PacketSendUtility.sendMessage((Player) creature, "Use terrain material skill=" + materialSkill.getId());
 					}
 					Skill skill = GameEngineServices.skillEngine().getSkill(creature, materialSkill.getId(), materialSkill.getSkillLevel(), creature);
 					skill.getEffectedList().add(creature);
@@ -90,25 +88,36 @@ public class TerrainZoneCollisionMaterialActor extends ActionObserver implements
 	}
 
 	@Override
-	public void act() {
+	public synchronized void act() {
 		List<MaterialSkill> skills = currentSkills.get();
 		if (!skills.isEmpty()) {
-			cancelTask();
-			start(skills);
+			synchronized (creature.getController()) {
+				cancelOwnedTask();
+				start(skills);
+			}
 		}
 	}
 
 	@Override
-	public void abort() {
-		cancelTask();
+	public synchronized void abort() {
+		synchronized (creature.getController()) {
+			cancelOwnedTask();
+		}
 		currentSkills.set(Collections.emptyList());
+		lastMaterialId = 0;
 	}
 
-	private void cancelTask() {
-		Future<?> existingTask = creature.getController().getTask(TaskId.TERRAIN_MATERIAL_ACTION);
-		if (existingTask != null) {
+	private boolean hasActiveTask() {
+		synchronized (creature.getController()) {
+			return task != null && creature.getController().getTask(TaskId.TERRAIN_MATERIAL_ACTION) == task && !task.isDone();
+		}
+	}
+
+	private void cancelOwnedTask() {
+		if (task != null && creature.getController().getTask(TaskId.TERRAIN_MATERIAL_ACTION) == task) {
 			creature.getController().cancelTask(TaskId.TERRAIN_MATERIAL_ACTION);
 		}
+		task = null;
 	}
 
 	@Override

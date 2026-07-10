@@ -24,8 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.aionemu.gameserver.model.drop.Drop;
 import com.aionemu.gameserver.model.drop.DropItem;
+import com.aionemu.gameserver.model.gameobjects.DropNpc;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.model.templates.item.ItemCategory;
 import com.aionemu.gameserver.model.templates.item.ItemTemplate;
 import com.aionemu.gameserver.network.aion.AionConnection;
 import com.aionemu.gameserver.network.aion.AionServerPacket;
@@ -33,17 +33,19 @@ import com.aionemu.gameserver.network.aion.AionServerPacket;
 @Slf4j
 public class SM_LOOT_ITEMLIST extends AionServerPacket {
 	private int targetObjectId;
+	private final boolean teamMembersNearby;
 	private List<DropItem> dropItems;
 
-	public SM_LOOT_ITEMLIST(int targetObjectId, Set<DropItem> setItems, Player player) {
-		this.targetObjectId = targetObjectId;
+	public SM_LOOT_ITEMLIST(DropNpc dropNpc, Set<DropItem> setItems, Player player) {
+		this.targetObjectId = dropNpc.getObjectId();
+		this.teamMembersNearby = dropNpc.getInRangePlayers().size() > 1 && dropNpc.getInRangePlayers().contains(player);
 		this.dropItems = new ArrayList<>();
 		if (setItems == null) {
 			log.warn("null Set<DropItem>, skip");
 			return;
 		}
 		for (DropItem item : setItems) {
-			if (item.getPlayerObjId() == 0 || player.getObjectId() == item.getPlayerObjId()) {
+			if (item.canViewDropItem(player.getObjectId())) {
 				dropItems.add(item);
 			}
 		}
@@ -51,6 +53,10 @@ public class SM_LOOT_ITEMLIST extends AionServerPacket {
 
 	@Override
 	protected void writeImpl(AionConnection con) {
+		Player activePlayer = con.getActivePlayer();
+		if (activePlayer == null) {
+			return;
+		}
 		writeD(targetObjectId);
 		writeC(dropItems.size());
 		for (DropItem dropItem : dropItems) {
@@ -64,8 +70,11 @@ public class SM_LOOT_ITEMLIST extends AionServerPacket {
 			writeC(0);
 			writeC(0);
 			ItemTemplate template = drop.getItemTemplate();
-			//writeC(!template.getCategory().equals(ItemCategory.QUEST) && !template.isTradeable() ? 1 : 0); //Calls up a window when selecting loot that meets the criteria. Do we need this?
-            writeC(0); //No windows, no freedom of loot.
+			boolean showLootConfirmation = !template.isTradeable();
+			if (dropItem.isOnlyPossibleLooter(activePlayer) || !teamMembersNearby) {
+				showLootConfirmation = false;
+			}
+			writeC(showLootConfirmation ? 1 : 0);
 		}
 	}
 }

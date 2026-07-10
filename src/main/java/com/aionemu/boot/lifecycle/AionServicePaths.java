@@ -33,6 +33,7 @@ final class AionServicePaths {
         configureLogging();
         configureConfig("aion.game.config.dir", "game/config", "aion/game/config");
         configureGameData("aion.game.data.dir", "game/data", "aion/game/data");
+        configureGeoData("aion.game.geo.dir", "game/geo", "aion/game/geo");
         configureDirectory("aion.game.cache.dir", "game/cache");
     }
 
@@ -77,6 +78,12 @@ final class AionServicePaths {
         }
 
         configureResourceDirectory(property, defaultPath, resourcePath);
+    }
+
+    private static void configureGeoData(String property, String defaultPath, String resourcePath) {
+        if (!configureSourceResourceDirectory(property, resourcePath)) {
+            configure(property, defaultPath);
+        }
     }
 
     private static boolean configureSourceResourceDirectory(String property, String resourcePath) {

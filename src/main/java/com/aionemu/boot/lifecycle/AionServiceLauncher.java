@@ -7,6 +7,9 @@ import com.aionemu.commons.utils.AionEmbeddedFailureHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownHandler;
 import com.aionemu.commons.utils.AionEmbeddedShutdownMode;
 import com.aionemu.commons.utils.AionRuntimeMode;
+import com.aionemu.gameserver.ShutdownHook.ShutdownMode;
+import com.aionemu.gameserver.configs.main.ShutdownConfig;
+import com.aionemu.gameserver.lifecycle.GameShutdownRequest;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,12 +24,15 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class AionServiceLauncher implements ApplicationRunner, DisposableBean, ApplicationContextAware {
+public class AionServiceLauncher implements ApplicationRunner, DisposableBean, ApplicationContextAware,
+    ApplicationListener<ContextClosedEvent> {
 
     private final AionServicesProperties services;
     private final AionTransportBoundary transportBoundary;
@@ -35,6 +41,7 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
     private final List<AionServiceLifecycle> startedServices = new ArrayList<>();
     private final AtomicBoolean stopping = new AtomicBoolean(false);
     private final AtomicBoolean destroyed = new AtomicBoolean(false);
+    private final AtomicBoolean gracefulShutdownRequested = new AtomicBoolean(false);
     private final Consumer<RuntimeException> embeddedFailureHandler = this::handleEmbeddedFailure;
     private final Consumer<AionEmbeddedShutdownMode> embeddedShutdownHandler = this::handleEmbeddedShutdown;
     private ConfigurableApplicationContext applicationContext;
@@ -120,6 +127,23 @@ public class AionServiceLauncher implements ApplicationRunner, DisposableBean, A
             serviceLifecycle.start(args);
         }
         log.info("{} service startup returned.", name);
+    }
+
+    void requestGracefulShutdown(Runnable shutdown) {
+        if (gracefulShutdownRequested.compareAndSet(false, true)) {
+            shutdown.run();
+        }
+    }
+
+    @Override
+    public void onApplicationEvent(ContextClosedEvent event) {
+        boolean gameStarted = startedServices.stream().anyMatch(service -> "game".equals(service.getName()));
+        if (gameStarted && !stopping.get()) {
+            requestGracefulShutdown(() -> {
+                GameShutdownRequest.waitForPlayersToLeave(ShutdownConfig.HOOK_DELAY, ShutdownConfig.ANNOUNCE_INTERVAL);
+                GameShutdownRequest.completeShutdown(ShutdownMode.SHUTDOWN, false);
+            });
+        }
     }
 
     @Override

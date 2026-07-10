@@ -156,11 +156,6 @@ public class RegularRates extends Rates {
 	}
 
 	@Override
-	public float getGlobalDropRate() {
-		return RateConfig.GLOBAL_DROP_RATE;
-	}
-
-	@Override
 	public float getGpPlayerGainRate() {
 		return RateConfig.GP_PLAYER_GAIN_RATE;
 	}

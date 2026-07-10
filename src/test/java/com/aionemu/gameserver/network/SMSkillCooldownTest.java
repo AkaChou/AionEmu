@@ -1,6 +1,7 @@
 package com.aionemu.gameserver.network.aion.serverpackets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.aionemu.gameserver.dataholders.DataManager;
@@ -14,6 +15,8 @@ import com.aionemu.gameserver.skillengine.model.SkillTemplate;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +61,21 @@ class SMSkillCooldownTest {
 		} finally {
 			DataManager.SKILL_DATA = previousSkillData;
 		}
+	}
+
+	@Test
+	void newSkillResendsOnlyItsActiveCooldown() throws Exception {
+		String skillListSource = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/model/skill/PlayerSkillList.java"));
+		int addSkill = skillListSource.indexOf("private synchronized boolean addSkill(");
+		int sendSkillList = skillListSource.indexOf("new SM_SKILL_LIST(player, player.getSkillList().getLinkedSkills())", addSkill);
+		int resendCooldown = skillListSource.indexOf("new SM_SKILL_COOLDOWN(player, Map.of(skillTemplate.getDelayId(), reuseTime), false)", addSkill);
+
+		assertTrue(skillListSource.indexOf("if (isNew && player.isSpawned())", addSkill) > sendSkillList);
+		assertTrue(skillListSource.indexOf("if (reuseTime > System.currentTimeMillis())", addSkill) > sendSkillList);
+		assertTrue(resendCooldown > sendSkillList, "cooldown must be resent after the new skill is visible to the client");
+
+		String minionSource = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/toypet/MinionService.java"));
+		assertFalse(minionSource.contains("SM_SKILL_COOLDOWN"), "minion spawning must use the shared skill-addition cooldown sync");
 	}
 
 	private ByteBuffer write(SM_SKILL_COOLDOWN packet) throws Exception {

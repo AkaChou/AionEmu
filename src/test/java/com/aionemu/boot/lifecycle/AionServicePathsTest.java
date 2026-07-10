@@ -25,6 +25,7 @@ class AionServicePathsTest {
         System.clearProperty("aion.chat.config.dir");
         System.clearProperty("aion.game.config.dir");
         System.clearProperty("aion.game.data.dir");
+        System.clearProperty("aion.game.geo.dir");
         System.clearProperty("aion.game.cache.dir");
     }
 
@@ -41,6 +42,7 @@ class AionServicePathsTest {
         assertEquals(aionHome.resolve("chat/config").toString(), System.getProperty("aion.chat.config.dir"));
         assertEquals(aionHome.resolve("game/config").toString(), System.getProperty("aion.game.config.dir"));
         assertEquals(aionHome.resolve("game/data").toString(), System.getProperty("aion.game.data.dir"));
+        assertEquals(aionHome.resolve("game/geo").toString(), System.getProperty("aion.game.geo.dir"));
         assertEquals(aionHome.resolve("game/cache").toString(), System.getProperty("aion.game.cache.dir"));
         assertEquals(aionHome.resolve("log/logback-spring.xml").toString(), System.getProperty("aion.logging.config"));
 
@@ -55,14 +57,17 @@ class AionServicePathsTest {
     @Test
     void usesProjectResourceGameDataDirectoryWhenAvailable() throws Exception {
         Path sourceGameData = aionHome.resolve("src/main/resources/aion/game/data");
-        java.nio.file.Files.createDirectories(sourceGameData.resolve("geo"));
-        java.nio.file.Files.writeString(sourceGameData.resolve("geo/100.geo"), "geo");
+        Path sourceGameGeo = aionHome.resolve("src/main/resources/aion/game/geo");
+        java.nio.file.Files.createDirectories(sourceGameData);
+        java.nio.file.Files.createDirectories(sourceGameGeo);
+        java.nio.file.Files.writeString(sourceGameGeo.resolve("100.geo"), "geo");
 
         System.setProperty("aion.home", aionHome.toString());
 
         AionServicePaths.configureGame();
 
         assertEquals(sourceGameData.toString(), System.getProperty("aion.game.data.dir"));
+        assertEquals(sourceGameGeo.toString(), System.getProperty("aion.game.geo.dir"));
     }
 
     @Test
@@ -121,16 +126,19 @@ class AionServicePathsTest {
     void keepsExplicitRuntimeDirectories() {
         Path explicitLoginConfig = aionHome.resolve("custom/login-config");
         Path explicitGameData = aionHome.resolve("custom/game-data");
+        Path explicitGameGeo = aionHome.resolve("custom/game-geo");
         Path explicitLogback = aionHome.resolve("custom/logback-spring.xml");
         System.setProperty("aion.logging.config", explicitLogback.toString());
         System.setProperty("aion.login.config.dir", explicitLoginConfig.toString());
         System.setProperty("aion.game.data.dir", explicitGameData.toString());
+        System.setProperty("aion.game.geo.dir", explicitGameGeo.toString());
 
         AionServicePaths.configureLogin();
         AionServicePaths.configureGame();
 
         assertEquals(explicitLoginConfig.toString(), System.getProperty("aion.login.config.dir"));
         assertEquals(explicitGameData.toString(), System.getProperty("aion.game.data.dir"));
+        assertEquals(explicitGameGeo.toString(), System.getProperty("aion.game.geo.dir"));
         assertEquals(explicitLogback.toString(), System.getProperty("aion.logging.config"));
     }
 }

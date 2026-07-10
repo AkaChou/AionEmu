@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import com.aionemu.commons.utils.Rnd;
+import com.aionemu.gameserver.ai2.AISubState;
 import com.aionemu.gameserver.ai2.event.AIEventType;
 import com.aionemu.gameserver.ai2.poll.AIQuestion;
 import com.aionemu.gameserver.configs.main.CustomConfig;
@@ -87,9 +88,12 @@ public class NpcController extends CreatureController<Npc> {
 
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
-		super.notSee(object, isOutOfRange);
 		if (object instanceof Creature) {
 			getOwner().getAi2().onCreatureEvent(AIEventType.CREATURE_NOT_SEE, (Creature) object);
+		}
+		super.notSee(object, isOutOfRange);
+		if (object instanceof Creature && (getOwner().getAi2().getSubState() != AISubState.TARGET_LOST
+				|| object != getOwner().getTarget())) {
 			getOwner().getAggroList().remove((Creature) object);
 		}
 	}
@@ -111,13 +115,12 @@ public class NpcController extends CreatureController<Npc> {
 					owner.setState(CreatureState.DEAD);
 				}
 				
-				GameCoreGameplayServices.dropService().see(player, owner);
-				
 				GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
 					@Override
 					public void run() {
 						if (owner.isSpawned() && owner.getLifeStats().isAlreadyDead()) {
 							PacketSendUtility.sendPacket(player, new SM_EMOTION(owner, EmotionType.DIE, 0, 0));
+							GameCoreGameplayServices.dropService().see(player, owner);
 						}
 					}
 				}, 100);

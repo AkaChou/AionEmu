@@ -88,6 +88,14 @@ public class NpcMoveController
         }
     }
 
+    static boolean hasIntermediateWaypoint(float[][] path) {
+        return path != null && path.length > 1;
+    }
+
+    static boolean shouldBroadcastMovement(byte currentMask, byte newMask, boolean destinationChanged) {
+        return currentMask != newMask || destinationChanged;
+    }
+
     public void moveToTargetObject() {
         if (started.compareAndSet(false, true)) {
             if (owner.getAi2().isLogging()) {
@@ -187,7 +195,9 @@ public class NpcMoveController
                         pointX = target.getX();
                         pointY = target.getY();
                         pointZ = getTargetZ(owner, creature);
-                        cachedPathValid = false;
+                        if (!hasIntermediateWaypoint(cachedPath)) {
+                            cachedPathValid = false;
+                        }
                     }
                     if (!cachedPathValid || cachedPath == null) {
                         cachedPath = GameWorldServices.navService().navigateToTarget(owner, (Creature) target);
@@ -356,11 +366,13 @@ public class NpcMoveController
         }
         com.aionemu.gameserver.lifecycle.GameWorldBootstrapServices.world().updatePosition(this.owner, newX, newY, newZ, this.heading, false);
         byte newMask = this.getMoveMask(directionChanged);
-        if (this.movementMask != newMask) {
-            if (((Npc)this.owner).getAi2().isLogging()) {
-                AI2Logger.moveinfo((Creature)this.owner, "oldMask=" + this.movementMask + " newMask=" + newMask);
+        if (shouldBroadcastMovement(this.movementMask, newMask, directionChanged)) {
+            if (this.movementMask != newMask) {
+                if (((Npc)this.owner).getAi2().isLogging()) {
+                    AI2Logger.moveinfo((Creature)this.owner, "oldMask=" + this.movementMask + " newMask=" + newMask);
+                }
+                this.movementMask = newMask;
             }
-            this.movementMask = newMask;
             PacketSendUtility.broadcastPacket(this.owner, new SM_MOVE((Creature)this.owner));
         }
     }

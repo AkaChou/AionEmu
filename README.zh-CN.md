@@ -35,37 +35,39 @@ mvn -DskipTests package
 仓库也提供了打包脚本，会设置 Maven 默认内存参数并生成 `target/AionEmu.jar`：
 
 ```bash
-./maven-package.sh
+./package.sh
 ```
 
 如果需要执行其它 Maven 目标，可以把目标传给脚本，例如：
 
 ```bash
-./maven-package.sh test
+./package.sh test
 ```
+
+`package.sh` 会覆盖同名运行资源和配置。更新已有运行目录时可使用 `./re-package.sh`：它会保留已有配置，但仍会补齐缺失的配置文件。
 
 ## 快速启动
 
 ```bash
-./maven-package.sh
-./start-silent.sh
+./package.sh
+./aion/start-silent.sh
 tail -f aion/log/aionemu.log
 ```
 
 停止后台进程：
 
 ```bash
-./stop-silent.sh
+./aion/stop-silent.sh
 ```
 
-`start-silent.sh` 会启动 `target/AionEmu.jar`，把日志和 pid 文件写到 `aion/log/`，并把 `src/main/resources/aion` 中缺失的运行资源复制到 `aion/`。默认不会覆盖已有文件。只有在明确要删除并重建本地 `aion/` 运行目录时，才使用 `./start-silent.sh -c`。
+`package.sh` 会把 JAR、Geo 数据和启停脚本部署到 `aion/`。`aion/start-silent.sh` 启动 `aion/AionEmu.jar`，并把日志和 pid 文件写到 `aion/log/`。`aion/shutdown.sh` 会等待游戏内的优雅关闭流程完成；`aion/stop-silent.sh` 超时后会强制停止。只有在明确要清理运行数据时，才使用 `./aion/start-silent.sh -c`；已部署的 JAR 和启停脚本会保留。
 
 常见运行参数覆盖：
 
 ```bash
-AION_HOME=/path/to/runtime ./start-silent.sh
-AION_HEAP_OPTS="-Xms2g -Xmx10g" ./start-silent.sh
-AION_JVM_OPTS="..." ./start-silent.sh
+AION_HOME=/path/to/runtime ./aion/start-silent.sh
+AION_HEAP_OPTS="-Xms2g -Xmx10g" ./aion/start-silent.sh
+AION_JVM_OPTS="..." ./aion/start-silent.sh
 ```
 
 ## 运行说明
@@ -73,14 +75,6 @@ AION_JVM_OPTS="..." ./start-silent.sh
 Spring Boot 默认配置位于 `src/main/resources/application.yml`。game、login、chat 默认都启用，transport mode 默认使用 Netty。
 
 legacy 风格的服务端配置和数据默认资源位于 `src/main/resources/aion`。运行时路径由 `aion.home` 解析；在仓库自带脚本中，默认指向仓库内的 `aion/` 目录。这样本地配置改动、日志、生成文件和复制后的静态数据都会留在源码资源目录之外。
-
-当源码中的运行资源发生变化，并且需要刷新本地 `aion/` 副本但保留本地配置时，使用：
-
-```bash
-./refresh-aion.sh
-```
-
-`refresh-aion.sh` 会覆盖非配置运行文件，保留已有的 `*/config/**` 文件，并保留已有的 `aion/log/logback-spring.xml`。
 
 NPC 导航仍需要单独准备 geodata/navmesh 资源。相关说明保留在下方原项目介绍中。
 
@@ -102,13 +96,9 @@ Community Discord : https://discord.gg/Nt7rBd8mnN
 
 ### NPC Navigation
 
-[Monono2 Geodata](https://drive.google.com/file/d/1jjLjPDoU5NQr7u7jfg1xqkhKfMdEX1RY/view?usp=sharing) (requires setting **gameserver.geodata.monon2.in.use = true** in geodata.properties)
+Geo 数据位于 `src/main/resources/aion/game/geo`，使用 `models.mesh`、各地图 `.geo`、高度 `.png`，以及可选的 `_materials.png` 文件。
 
-[Navmeshes](https://drive.google.com/file/d/1ulkx0TwdDZnFZL5ildkVFtD1WQ3jGA7p/view?usp=sharing)
-
-The **nav** folder from the archive goes into your AL-Game\data folder. Make sure that you have **gameserver.geo.nav.pathfinding.enable = true** in geodata.properties
-
-The use of navmeshes is optional. However, they drastically improve npc navigation at the cost of additional 2GB RAM usage.
+寻路网格放在 `src/main/resources/aion/game/geo/nav`。在 `geodata.properties` 中设置 `gameserver.geo.nav.pathfinding.enable = true` 即可启用寻路。
 
 ### 已知开发者
 

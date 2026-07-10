@@ -7,8 +7,6 @@
  */
 package com.aionemu.gameserver.geoEngine.math;
 
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
-
 public class Array3f implements Reusable {
 	private static final ObjectFactory<Object> FACTORY = new ObjectFactory<Object>() {
 
@@ -27,17 +25,10 @@ public class Array3f implements Reusable {
 	}
 
 	public static Array3f newInstance() {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			return (Array3f) FACTORY.object();
-		}
-		return new Array3f();
+		return (Array3f) FACTORY.object();
 	}
 
 	public static void recycle(Array3f instance) {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			FACTORY.recycle((Object) instance);
-		} else {
-			instance = null;
-		}
+		FACTORY.recycle((Object) instance);
 	}
 }

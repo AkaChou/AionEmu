@@ -41,9 +41,6 @@ public class WeddingsConfig {
 	@Property(key = "gameserver.weddings.membership", defaultValue = "0")
 	public static byte WEDDINGS_MEMBERSHIP;
 
-	@Property(key = "gameserver.weddings.command.membership", defaultValue = "0")
-	public static byte WEDDINGS_COMMAND_MEMBERSHIP;
-
 	@Property(key = "gameserver.weddings.same_sex", defaultValue = "false")
 	public static boolean WEDDINGS_SAME_SEX;
 
@@ -56,6 +53,4 @@ public class WeddingsConfig {
 	@Property(key = "gameserver.weddings.announce", defaultValue = "true")
 	public static boolean WEDDINGS_ANNOUNCE;
 
-	@Property(key = "gameserver.weddings.tag", defaultValue = "\uE020 %s")
-	public static String TAG_WEDDING;
 }

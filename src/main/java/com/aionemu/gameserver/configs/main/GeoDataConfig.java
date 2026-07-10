@@ -45,22 +45,10 @@ public class GeoDataConfig {
 	public static boolean GEO_NPC_MOVE;
 
 	/**
-	 * Enable npc checks aggro target visibility range (canSee)
-	 */
-	@Property(key = "gameserver.geo.npc.aggro", defaultValue = "false")
-	public static boolean GEO_NPC_AGGRO;
-
-	/**
 	 * Enable geo materials using skills
 	 */
 	@Property(key = "gameserver.geo.materials.enable", defaultValue = "false")
 	public static boolean GEO_MATERIALS_ENABLE;
-
-	/**
-	 * Show collision zone name and skill id
-	 */
-	@Property(key = "gameserver.geo.materials.showdetails", defaultValue = "false")
-	public static boolean GEO_MATERIALS_SHOWDETAILS;
 
 	/**
 	 * Enable geo shields
@@ -68,34 +56,11 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.shields.enable", defaultValue = "false")
 	public static boolean GEO_SHIELDS_ENABLE;
 
-	/**
-	 * Enable geo doors
-	 */
-	@Property(key = "gameserver.geo.doors.enable", defaultValue = "false")
-	public static boolean GEO_DOORS_ENABLE;
-
-	/**
-	 * Object factory for geodata primitives enabled
-	 */
-	@Property(key = "gameserver.geodata.objectfactory.enabled", defaultValue = "true")
-	public static boolean GEO_OBJECT_FACTORY_ENABLE;
-
-	/**
-	 * If you use monon2 geo data for your server
-	 */
-	@Property(key = "gameserver.geodata.monon2.in.use", defaultValue = "false")
-	public static boolean GEO_MONONO2_IN_USE;
 	@Property(key = "gameserver.geo.nav.pathfinding.enable", defaultValue = "false")
 	public static boolean GEO_NAV_ENABLE;
 
-	@Property(key = "gameserver.geo.nav.lazy.load", defaultValue = "true")
-	public static boolean GEO_NAV_LAZY_LOAD;
-
 	@Property(key = "gameserver.geo.nav.cache.size", defaultValue = "50")
 	public static int GEO_NAV_CACHE_SIZE;
-
-	@Property(key = "gameserver.geo.nav.log.level", defaultValue = "1")
-	public static int GEO_NAV_LOG_LEVEL;
 
 	@Property(key = "gameserver.geo.nav.pull.enable", defaultValue = "true")
 	public static boolean GEO_NAV_PULL_ENABLE;
@@ -133,12 +98,4 @@ public class GeoDataConfig {
 	@Property(key = "gameserver.geo.nav.corridor.length", defaultValue = "800")
 	public static int GEO_NAV_CORRIDOR_LENGTH;
 
-	@Property(key = "gameserver.geo.nav.cache.ground", defaultValue = "true")
-	public static boolean GEO_NAV_CACHE_GROUND;
-
-	@Property(key = "gameserver.geo.nav.cache.ttl", defaultValue = "1000")
-	public static int GEO_NAV_CACHE_TTL;
-
-	@Property(key = "gameserver.geo.nav.soft.cache", defaultValue = "false")
-	public static boolean GEO_NAV_SOFT_CACHE;
 }

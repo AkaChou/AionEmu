@@ -30,4 +30,15 @@ class StatFunctionsTest {
 
 		assertEquals(150, StatFunctions.applyDamageMultiplier(100));
 	}
+
+	@Test
+	void calculatesEffectiveMagicalCriticalWithoutDuplicatingBaseValue() {
+		assertEquals(350, StatFunctions.calculateEffectiveMagicalCritical(500, 100, 50, 100));
+		assertEquals(175, StatFunctions.calculateEffectiveMagicalCritical(500, 100, 50, 50));
+	}
+
+	@Test
+	void appliesAccuracyModifierToAvoidanceDifference() {
+		assertEquals(100f, StatFunctions.calculateAvoidanceDifference(1000, 800, 100));
+	}
 }

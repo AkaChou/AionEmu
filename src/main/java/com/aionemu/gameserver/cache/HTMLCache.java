@@ -33,6 +33,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.ObjectProvider;
 
 import com.aionemu.gameserver.configs.Config;
+import com.aionemu.gameserver.configs.main.GSConfig;
 import com.aionemu.gameserver.configs.main.HTMLConfig;
 import lombok.extern.slf4j.Slf4j;
 
@@ -167,7 +168,7 @@ public final class HTMLCache {
 	}
 
 	private File getCacheFile() {
-		return Config.cacheFile(HTMLConfig.HTML_CACHE_FILE);
+		return Config.cacheFile(HTMLConfig.HTML_CACHE_FILE + ".i18n");
 	}
 
 	private static final String[] TAGS_TO_COMPACT;
@@ -288,7 +289,15 @@ public final class HTMLCache {
 	}
 
 	public String getHTML(String path) {
-		return cache.get(path);
+		return cache.get(localizedPath(path, GSConfig.SERVER_COUNTRY_CODE));
+	}
+
+	static String localizedPath(String path, int countryCode) {
+		if (path == null || countryCode == 5 || path.endsWith(".en.xhtml")) {
+			return path;
+		}
+		int extension = path.lastIndexOf(".xhtml");
+		return extension < 0 ? path : path.substring(0, extension) + ".en.xhtml";
 	}
 
 	private boolean isLoadable(File file) {
@@ -296,7 +305,7 @@ public final class HTMLCache {
 	}
 
 	public boolean pathExists(String path) {
-		return cache.containsKey(path);
+		return cache.containsKey(localizedPath(path, GSConfig.SERVER_COUNTRY_CODE));
 	}
 
 	@Override

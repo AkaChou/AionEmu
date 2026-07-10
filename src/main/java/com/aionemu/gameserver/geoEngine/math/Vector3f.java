@@ -7,8 +7,6 @@
  */
 package com.aionemu.gameserver.geoEngine.math;
 
-import com.aionemu.gameserver.configs.main.GeoDataConfig;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -513,21 +511,14 @@ public final class Vector3f implements Cloneable, Reusable {
 	}
 
 	public static Vector3f newInstance() {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			Vector3f vector3f = (Vector3f) FACTORY.object();
-			vector3f.z = 0.0f;
-			vector3f.y = 0.0f;
-			vector3f.x = 0.0f;
-			return vector3f;
-		}
-		return new Vector3f();
+		Vector3f vector3f = (Vector3f) FACTORY.object();
+		vector3f.z = 0.0f;
+		vector3f.y = 0.0f;
+		vector3f.x = 0.0f;
+		return vector3f;
 	}
 
 	public static void recycle(Vector3f instance) {
-		if (GeoDataConfig.GEO_OBJECT_FACTORY_ENABLE) {
-			FACTORY.recycle((Object) instance);
-		} else {
-			instance = null;
-		}
+		FACTORY.recycle((Object) instance);
 	}
 }

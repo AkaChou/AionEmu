@@ -26,8 +26,6 @@ public class AdminConfig {
 	public static int GM_LEVEL;
 	@Property(key = "gameserver.administration.gmpanel", defaultValue = "3")
 	public static int GM_PANEL;
-	@Property(key = "gameserver.administration.baseshield", defaultValue = "3")
-	public static int COMMAND_BASESHIELD;
 	@Property(key = "gameserver.administration.flight.freefly", defaultValue = "3")
 	public static int GM_FLIGHT_FREE;
 	@Property(key = "gameserver.administration.flight.unlimited", defaultValue = "3")
@@ -52,13 +50,6 @@ public class AdminConfig {
 	public static boolean WHISPER_GM_CONNECTION;
 	@Property(key = "gameserver.administration.gm.mode.connection", defaultValue = "false")
 	public static boolean GM_MODE_CONNECTION;
-	@Property(key = "gameserver.administration.quest.dialog.log", defaultValue = "false")
-	public static boolean QUEST_DIALOG_LOG;
-	/**
-	 * GM special skill
-	 */
-	@Property(key = "administration.command.special.skill", defaultValue = "3")
-	public static int COMMAND_SPECIAL_SKILL;
 	@Property(key = "gameserver.administration.trade.item.restriction", defaultValue = "false")
 	public static boolean ENABLE_TRADEITEM_RESTRICTION;
 	@Property(key = "gameserver.admin.tag.enable", defaultValue = "true")

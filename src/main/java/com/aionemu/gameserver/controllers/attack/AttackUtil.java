@@ -59,7 +59,8 @@ public class AttackUtil {
 		for (int i = 0; i < weaponResults.size(); i++) {
 			AttackResult result = weaponResults.get(i);
 			float damage = applyPhysicalAutoAttackModifiers(attacker, attacked, result.getExactDamage());
-			splitPhysicalDamage(attacker, attacked, getPhysicalHitCount(attacker, i == 0), Math.round(damage),
+			boolean mainHand = i == 0;
+			splitPhysicalDamage(attacker, attacked, mainHand, getPhysicalHitCount(attacker, mainHand), Math.round(damage),
 					result.getAttackStatus(), attackList);
 		}
 	    applyDamageMultiplier(attackList);
@@ -277,7 +278,7 @@ public class AttackUtil {
 	 * Generate attack results based on weapon hit count
 	 */
 	private static final List<AttackResult> splitPhysicalDamage(final Creature attacker, final Creature attacked,
-			int hitCount, int damage, AttackStatus status, List<AttackResult> attackList) {
+			boolean mainHand, int hitCount, int damage, AttackStatus status, List<AttackResult> attackList) {
 		WeaponType weaponType;
 		switch (AttackStatus.getBaseStatus(status)) {
 		case BLOCK:
@@ -311,11 +312,14 @@ public class AttackUtil {
 
 		if (status.isCritical()) {
 			if (attacker instanceof Player) {
-				weaponType = ((Player) attacker).getEquipment().getMainHandWeaponType();
+				weaponType = mainHand ? ((Player) attacker).getEquipment().getMainHandWeaponType()
+						: ((Player) attacker).getEquipment().getOffHandWeaponType();
 				damage = (int) calculateWeaponCritical(attacked, damage, weaponType,
 						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
 				// Proc Stumble/Stagger on Crit calculation
-				applyEffectOnCritical((Player) attacker, attacked, 0);
+				if (mainHand) {
+					applyEffectOnCritical((Player) attacker, attacked, 0);
+				}
 			} else {
 				damage = (int) calculateWeaponCritical(attacked, damage, null,
 						StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE);
@@ -326,14 +330,22 @@ public class AttackUtil {
 			attackList.add(new AttackResult(1, status, HitType.PHHIT));
 			return attackList;
 		}
-		int firstHit = (int) (damage * (1f - (0.1f * (hitCount - 1))));
-		int otherHits = Math.round(damage * 0.1f);
-
-		for (int i = 0; i < hitCount; i++) {
-			int dmg = (i == 0 ? firstHit : otherHits);
-			attackList.add(new AttackResult(dmg, status, HitType.PHHIT));
+		int[] hitDamages = splitPhysicalDamageValues(hitCount, damage);
+		for (int i = 0; i < hitDamages.length; i++) {
+			AttackStatus hitStatus = i == 0 ? status
+					: mainHand ? AttackStatus.NORMALHIT : AttackStatus.OFFHAND_NORMALHIT;
+			attackList.add(new AttackResult(hitDamages[i], hitStatus, HitType.PHHIT));
 		}
 		return attackList;
+	}
+
+	static int[] splitPhysicalDamageValues(int hitCount, int damage) {
+		int[] hitDamages = new int[Math.max(1, hitCount)];
+		hitDamages[0] = damage;
+		for (int i = 1; i < hitDamages.length; i++) {
+			hitDamages[i] = Math.round(damage * 0.1f);
+		}
+		return hitDamages;
 	}
 
 	/**
@@ -350,62 +362,32 @@ public class AttackUtil {
 
 	private static float calculateWeaponCritical(Creature attacked, float damages, WeaponType weaponType,
 			int critAddDmg, StatEnum stat) {
-		float coeficient = 2f;
+		int fortitude = attacked instanceof Player ? attacked.getGameStats().getStat(stat, 0).getCurrent() : 0;
+		return Math.round(damages * calculateWeaponCriticalMultiplier(weaponType, stat, fortitude, critAddDmg));
+	}
 
-		if (weaponType != null) {
-			switch (weaponType) {
+	static float calculateWeaponCriticalMultiplier(WeaponType weaponType, StatEnum stat, int fortitude, int critAddDmg) {
+		float coefficient = 1.5f;
+		if (stat == StatEnum.PHYSICAL_CRITICAL_DAMAGE_REDUCE && weaponType != null) {
+			coefficient = switch (weaponType) {
 			case GUN_1H:
 			case DAGGER_1H:
-				coeficient = 2.3f;
-				break;
+				yield 2.3f;
 			case SWORD_1H:
-				coeficient = 2.2f;
-				break;
+				yield 2.2f;
 			case MACE_1H:
-				coeficient = 2f;
-				break;
+				yield 2f;
 			case SWORD_2H:
 			case POLEARM_2H:
-				// NOTE: Handled by Default (1.5f)
-				// case CANNON_2H:
-				// case KEYBLADE_2H:
-				// case KEYHAMMER_2H:
-				coeficient = 1.8f;
-				break;
+				yield 1.8f;
 			case STAFF_2H:
 			case BOW:
-				coeficient = 1.7f;
-				break;
+				yield 1.7f;
 			default:
-				coeficient = 1.5f;
-				break;
-			}
-
-			if (stat.equals(StatEnum.MAGICAL_CRITICAL_DAMAGE_REDUCE)) {
-				coeficient = 1.5f; // Magical skill with physical weapon TODO: confirm this
-			}
+				yield 1.5f;
+			};
 		}
-
-		if (attacked instanceof Player) { // Strike Fortitude lowers the crit multiplier
-			Player player = (Player) attacked;
-			int fortitude = 0;
-			switch (stat) {
-			case PHYSICAL_CRITICAL_DAMAGE_REDUCE:
-			case MAGICAL_CRITICAL_DAMAGE_REDUCE:
-				fortitude = player.getGameStats().getStat(stat, 0).getCurrent();
-				coeficient -= Math.round(fortitude / 1000f);
-				break;
-			default:
-				break;
-			}
-		}
-
-		// add critical add dmg
-		coeficient += critAddDmg / 100f;
-
-		damages = Math.round(damages * coeficient);
-
-		return damages;
+		return coefficient - fortitude / 1000f + critAddDmg / 100f;
 	}
 
 	/**
@@ -754,25 +736,23 @@ public class AttackUtil {
 			if (!isSkill && StatFunctions.calculatePhysicalDodgeRate(attacker, attacked, accMod)) {
 				status = AttackStatus.DODGE;
 			} else if (attacked instanceof Player && ((Player) attacked).getEquipment().isShieldEquipped()
-					&& StatFunctions.calculatePhysicalBlockRate(attacker, attacked)) {
+					&& StatFunctions.calculatePhysicalBlockRate(attacker, attacked, accMod)) {
 				status = AttackStatus.BLOCK;
-			} else if (attacked instanceof Npc && StatFunctions.calculatePhysicalBlockRate(attacker, attacked)) {
+			} else if (attacked instanceof Npc && StatFunctions.calculatePhysicalBlockRate(attacker, attacked, accMod)) {
 				status = AttackStatus.BLOCK;
 			} else if (attacked instanceof Player && ((Player) attacked).getEquipment().getMainHandWeaponType() != null
-					&& StatFunctions.calculatePhysicalParryRate(attacker, attacked)) {
+					&& StatFunctions.calculatePhysicalParryRate(attacker, attacked, accMod)) {
 				status = AttackStatus.PARRY;
-			} else if (attacked instanceof Npc && StatFunctions.calculatePhysicalParryRate(attacker, attacked)) {
+			} else if (attacked instanceof Npc && StatFunctions.calculatePhysicalParryRate(attacker, attacked, accMod)) {
 				status = AttackStatus.PARRY;
-			} else if (!isSkill && StatFunctions.calculatePhysicalDodgeRate(attacker, attacked, accMod)) {
-				status = AttackStatus.DODGE;
 			}
 		} else {
 			/**
 			 * Check AlwaysDodge Check AlwaysParry Check AlwaysBlock
 			 */
 			StatFunctions.calculatePhysicalDodgeRate(attacker, attacked, accMod);
-			StatFunctions.calculatePhysicalParryRate(attacker, attacked);
-			StatFunctions.calculatePhysicalBlockRate(attacker, attacked);
+			StatFunctions.calculatePhysicalParryRate(attacker, attacked, accMod);
+			StatFunctions.calculatePhysicalBlockRate(attacker, attacked, accMod);
 		}
 
 		if (StatFunctions.calculatePhysicalCriticalRate(attacker, attacked, isMainHand, criticalProb, isSkill)) {

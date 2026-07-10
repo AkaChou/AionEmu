@@ -16,7 +16,6 @@
  */
 package com.aionemu.gameserver.commands.admin;
 
-import com.aionemu.gameserver.configs.administration.CommandsConfig;
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
@@ -79,7 +78,7 @@ public class Wc extends AdminCommand {
 
 			@Override
 			public void visit(Player player) {
-				if (toAll || player.getRace() == race || player.getAccessLevel() >= CommandsConfig.WC) {
+				if (toAll || player.getRace() == race || player.getAccessLevel() >= getLevel()) {
 					PacketSendUtility.sendMessage(player, sMessage);
 				}
 			}

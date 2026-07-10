@@ -71,7 +71,7 @@ public abstract class AbstractCollisionObserver extends ActionObserver {
 							float zMax = z + 0.05f + creature.getObjectTemplate().getBoundRadius().getUpper();
 							float zMin = z - 0.11f;
 							if (!creature.isFlying()) {
-								float geoZ = GeoService.getInstance().getZ(creature.getWorldId(), x, y, z, 0.5f, creature.getInstanceId());
+								float geoZ = GeoService.getInstance().getZ(creature.getWorldId(), x, y, z, 100.0f, creature.getInstanceId());
 								if (!Float.isNaN(geoZ)) {
 									zMin = geoZ - 0.11f;
 								}

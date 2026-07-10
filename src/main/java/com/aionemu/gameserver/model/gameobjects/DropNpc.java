@@ -16,65 +16,69 @@
  */
 package com.aionemu.gameserver.model.gameobjects;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.aionemu.gameserver.model.gameobjects.player.Player;
+import com.aionemu.gameserver.model.team2.TeamMember;
+import com.aionemu.gameserver.model.team2.TemporaryPlayerTeam;
+import com.aionemu.gameserver.model.team2.alliance.PlayerAlliance;
+import com.aionemu.gameserver.model.team2.common.legacy.LootGroupRules;
 
 /**
  * @author Simple
  */
 public class DropNpc {
 
-	private Collection<Integer> allowedList = new ArrayList<Integer>();
+	private final int objectId;
+	private Set<Integer> allowedLooters = new HashSet<>();
 	private Collection<Player> inRangePlayers = new ArrayList<Player>();
 	private Collection<Player> playerStatus = new ArrayList<Player>();
 	private Player lootingPlayer = null;
 	private int distributionId = 0;
 	private boolean distributionType;
 	private int currentIndex = 0;
-	private int groupSize = 0;
+	private WeakReference<TemporaryPlayerTeam<? extends TeamMember<Player>>> lootingTeam;
+	private int lootingTeamId;
+	private int maxRoll;
+	private LootGroupRules lastLootGroupRules;
 	private boolean isFreeForAll = false;
-	private final int npcUniqueId;
-	private long reamingDecayTime;
+	private long remainingDecayTime;
 
-	public DropNpc(int npcUniqueId) {
-		this.npcUniqueId = npcUniqueId;
+	public DropNpc(int objectId) {
+		this.objectId = objectId;
 	}
 
-	public void setPlayersObjectId(List<Integer> allowedList) {
-		this.allowedList = allowedList;
+	public void setAllowedLooters(Set<Integer> allowedLooters) {
+		this.allowedLooters = allowedLooters;
 	}
 
-	public void setPlayerObjectId(Integer object) {
-		if (!allowedList.contains(object)) {
-			allowedList.add(object);
-		}
+	public void setAllowedLooter(Player player) {
+		allowedLooters.add(player.getObjectId());
 	}
 
-	public Collection<Integer> getPlayersObjectId() {
-		return allowedList;
+	public Set<Integer> getAllowedLooters() {
+		return allowedLooters;
 	}
 
-	/**
-	 * @return true if playerObjId is found in list
-	 */
-	public boolean containsKey(int playerObjId) {
-		return allowedList.contains(playerObjId);
+	public boolean isAllowedToLoot(Player player) {
+		return isFreeForAll || allowedLooters.contains(player.getObjectId());
 	}
 
 	/**
 	 * @param player the lootingPlayer to set
 	 */
-	public void setBeingLooted(Player player) {
+	public void setLootingPlayer(Player player) {
 		this.lootingPlayer = player;
 	}
 
 	/**
 	 * @return lootingPlayer
 	 */
-	public Player getBeingLooted() {
+	public Player getLootingPlayer() {
 		return lootingPlayer;
 	}
 
@@ -127,23 +131,30 @@ public class DropNpc {
 		return currentIndex;
 	}
 
-	/**
-	 * @param groupSize
-	 */
-	public void setGroupSize(int groupSize) {
-		this.groupSize = groupSize;
+	public int getLootingTeamId() {
+		return lootingTeamId;
 	}
 
-	/**
-	 * @return groupSize
-	 */
-	public int getGroupSize() {
-		return groupSize;
+	public int getMaxRoll() {
+		return maxRoll;
 	}
 
-	/**
-	 * @param inRangePlayers
-	 */
+	public LootGroupRules getLootGroupRules() {
+		TemporaryPlayerTeam<? extends TeamMember<Player>> team = lootingTeam == null ? null : lootingTeam.get();
+		if (team != null) {
+			lastLootGroupRules = team.getLootGroupRules();
+		}
+		return lastLootGroupRules;
+	}
+
+	public void setLootingTeam(TemporaryPlayerTeam<? extends TeamMember<Player>> team) {
+		lootingTeam = new WeakReference<>(team);
+		lootingTeamId = team.getTeamId();
+		maxRoll = team instanceof PlayerAlliance alliance && alliance.isInLeague() ? 10000
+				: team instanceof PlayerAlliance ? 1000 : 100;
+		lastLootGroupRules = team.getLootGroupRules();
+	}
+
 	public void setInRangePlayers(Collection<Player> inRangePlayers) {
 		this.inRangePlayers = inRangePlayers;
 	}
@@ -193,18 +204,18 @@ public class DropNpc {
 	public void startFreeForAll() {
 		isFreeForAll = true;
 		distributionId = 0;
-		allowedList.clear();
+		allowedLooters.clear();
 	}
 
-	public final int getNpcUniqueId() {
-		return npcUniqueId;
+	public final int getObjectId() {
+		return objectId;
 	}
 
-	public long getReamingDecayTime() {
-		return reamingDecayTime;
+	public long getRemainingDecayTime() {
+		return remainingDecayTime;
 	}
 
-	public void setReamingDecayTime(long reamingDecayTime) {
-		this.reamingDecayTime = reamingDecayTime;
+	public void setRemainingDecayTime(long remainingDecayTime) {
+		this.remainingDecayTime = remainingDecayTime;
 	}
 }

@@ -45,7 +45,6 @@ public class MoveBehindEffect extends DamageEffect {
 
 	@Override
 	public void calculate(Effect effect) {
-		effect.addSucessEffect(this);
 		if (effect.getEffected() == null) {
 			return;
 		}

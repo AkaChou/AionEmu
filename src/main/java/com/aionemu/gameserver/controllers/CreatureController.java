@@ -82,7 +82,7 @@ public abstract class CreatureController<T extends Creature> extends VisibleObje
 	@Override
 	public void notSee(VisibleObject object, boolean isOutOfRange) {
 		super.notSee(object, isOutOfRange);
-		if (object == getOwner().getTarget()) {
+		if (object == getOwner().getTarget() && getOwner().getAi2().getSubState() != AISubState.TARGET_LOST) {
 			getOwner().setTarget(null);
 		}
 	}

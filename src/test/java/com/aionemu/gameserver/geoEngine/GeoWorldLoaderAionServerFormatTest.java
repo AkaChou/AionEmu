@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ class GeoWorldLoaderAionServerFormatTest {
 	Path dataDir;
 
 	private String oldDataDir;
+	private String oldGeoDir;
 
 	@AfterEach
 	void tearDown() {
@@ -46,22 +48,29 @@ class GeoWorldLoaderAionServerFormatTest {
 		} else {
 			System.setProperty("aion.game.data.dir", oldDataDir);
 		}
+		if (oldGeoDir == null) {
+			System.clearProperty("aion.game.geo.dir");
+		} else {
+			System.setProperty("aion.game.geo.dir", oldGeoDir);
+		}
 	}
 
 	@Test
 	void loadsModelsMeshSeparateTerrainPngAndWorldGeo() throws Exception {
 		oldDataDir = System.getProperty("aion.game.data.dir");
+		oldGeoDir = System.getProperty("aion.game.geo.dir");
 		System.setProperty("aion.game.data.dir", dataDir.toString());
 		Path geoDir = dataDir.resolve("geo");
+		System.setProperty("aion.game.geo.dir", geoDir.toString());
 		Files.createDirectories(geoDir);
 		Files.write(geoDir.resolve("models.mesh"), modelsMesh());
 		Files.write(geoDir.resolve("1001.geo"), worldGeo(0, 0, 0));
 		writeTerrainPng(geoDir.resolve("1001.png"), 32);
 
-		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
 		GeoMap map = new GeoMap("1001", 256);
 
-		assertTrue(GeoWorldLoader.loadWorld(1001, models, map));
+		loadCurrentWorld(1001, models, map);
 		assertTrue(models.containsKey("world/1001"));
 		assertEquals(1F, map.getZ(2F, 2F), 0.01F);
 	}
@@ -76,10 +85,10 @@ class GeoWorldLoaderAionServerFormatTest {
 		Files.write(geoDir.resolve("1001.geo"), worldGeo(2, 123, 0));
 		writeTerrainPng(geoDir.resolve("1001.png"), 32);
 
-		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
 		GeoMap map = new GeoMap("1001", 256);
 
-		assertTrue(GeoWorldLoader.loadWorld(1001, models, map));
+		loadCurrentWorld(1001, models, map);
 		DespawnableNode node = findDespawnable(map);
 		assertTrue(node != null);
 		assertEquals(DespawnableNode.DespawnableType.PLACEABLE, node.type);
@@ -100,7 +109,7 @@ class GeoWorldLoaderAionServerFormatTest {
 		writeTerrainPng(geoDir.resolve("1001.png"), 40000);
 		GeoMap map = new GeoMap("1001", 256);
 
-		assertTrue(GeoWorldLoader.loadWorld(1001, Map.of(), map));
+		loadCurrentWorld(1001, Map.of(), map);
 
 		assertEquals(1250F, map.getZ(2F, 2F), 0.01F);
 	}
@@ -115,7 +124,7 @@ class GeoWorldLoaderAionServerFormatTest {
 		writeTransposedMaterialPng(geoDir.resolve("1001_materials.png"), 7);
 		GeoMap map = new GeoMap("1001", 256);
 
-		assertTrue(GeoWorldLoader.loadWorld(1001, Map.of(), map));
+		loadCurrentWorld(1001, Map.of(), map);
 
 		assertEquals(1000F, map.getZ(2.5F, 4.5F), 0.01F);
 		assertEquals(7, map.getTerrainMaterialAt(2.5F, 4.5F, 1000F, 1));
@@ -131,7 +140,7 @@ class GeoWorldLoaderAionServerFormatTest {
 		writeTerrainMaterialPng(geoDir.resolve("1001_materials.png"), 7);
 		GeoMap map = new GeoMap("1001", 256);
 
-		assertTrue(GeoWorldLoader.loadWorld(1001, Map.of(), map));
+		loadCurrentWorld(1001, Map.of(), map);
 
 		assertTrue(map.hasTerrainMaterials());
 		assertEquals(7, map.getTerrainMaterialAt(2.5F, 2.5F, 1F, 1));
@@ -187,9 +196,9 @@ class GeoWorldLoaderAionServerFormatTest {
 		Files.write(geoDir.resolve("1001.geo"), worldGeo(2, 123, 0));
 		writeTerrainPng(geoDir.resolve("1001.png"), 32);
 
-		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
 		GeoMap map = new GeoMap("1001", 256);
-		assertTrue(GeoWorldLoader.loadWorld(1001, models, map));
+		loadCurrentWorld(1001, models, map);
 		DespawnableNode node = findDespawnable(map);
 
 		assertEquals(0, collideDown(node, new CollisionResults(CollisionIntention.PHYSICAL.getId(), false, 1)));
@@ -209,9 +218,9 @@ class GeoWorldLoaderAionServerFormatTest {
 		Files.write(geoDir.resolve("1001.geo"), worldGeo(1, 1, 0));
 		writeTerrainPng(geoDir.resolve("1001.png"), 32);
 
-		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
 		GeoMap map = new GeoMap("1001", 256);
-		assertTrue(GeoWorldLoader.loadWorld(1001, models, map));
+		loadCurrentWorld(1001, models, map);
 		DespawnableNode node = findDespawnable(map);
 
 		assertEquals(DespawnableNode.DespawnableType.EVENT, node.type);
@@ -228,9 +237,9 @@ class GeoWorldLoaderAionServerFormatTest {
 		Files.write(geoDir.resolve("1001.geo"), worldGeo(2, 123, 0));
 		writeTerrainPng(geoDir.resolve("1001.png"), 32);
 
-		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
 		GeoMap map = new GeoMap("1001", 256);
-		assertTrue(GeoWorldLoader.loadWorld(1001, models, map));
+		loadCurrentWorld(1001, models, map);
 		map.spawnPlaceableObject(1, 123);
 
 		int normalCollisions = map.getCollisions(1F, 1F, 5F, 1F, 1F, -5F, false, true, 1,
@@ -248,7 +257,7 @@ class GeoWorldLoaderAionServerFormatTest {
 		Files.createDirectories(geoDir);
 		Files.write(geoDir.resolve("models.mesh"), modelsMesh("world/alias_a|world/alias_b"));
 
-		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
 
 		assertTrue(models.containsKey("world/alias_a"));
 		assertTrue(models.containsKey("world/alias_b"));
@@ -263,7 +272,7 @@ class GeoWorldLoaderAionServerFormatTest {
 		Files.createDirectories(geoDir);
 		Files.write(geoDir.resolve("models.mesh"), modelsMesh("world/moveable", CollisionIntention.MOVEABLE.getId()));
 
-		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
 
 		assertTrue(models.containsKey("world/moveable"));
 	}
@@ -278,9 +287,9 @@ class GeoWorldLoaderAionServerFormatTest {
 		Files.write(geoDir.resolve("1001.geo"), worldGeo("world/multi", 0, 0, 0));
 		writeTerrainPng(geoDir.resolve("1001.png"), 32);
 
-		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
 		GeoMap map = new GeoMap("1001", 256);
-		assertTrue(GeoWorldLoader.loadWorld(1001, models, map));
+		loadCurrentWorld(1001, models, map);
 
 		assertEquals(2, collideDown(map, new CollisionResults(CollisionIntention.PHYSICAL.getId(), false, 1)));
 	}
@@ -297,7 +306,7 @@ class GeoWorldLoaderAionServerFormatTest {
 		ListAppender<ILoggingEvent> appender = attachAppender(logger);
 
 		try {
-			assertTrue(GeoWorldLoader.loadWorld(1001, Map.of(), new GeoMap("1001", 256)));
+			loadCurrentWorld(1001, Map.of(), new GeoMap("1001", 256));
 		} finally {
 			detachAppender(logger, appender);
 		}
@@ -321,9 +330,9 @@ class GeoWorldLoaderAionServerFormatTest {
 		Files.write(geoDir.resolve("1001.geo"), worldGeo("world/see_through", 0, 0, 0));
 		writeTerrainPng(geoDir.resolve("1001.png"), 32);
 
-		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("data/geo/models.mesh");
+		Map<String, Spatial> models = GeoWorldLoader.loadMeshs("geo/models.mesh");
 		GeoMap map = new GeoMap("1001", 256);
-		assertTrue(GeoWorldLoader.loadWorld(1001, models, map));
+		loadCurrentWorld(1001, models, map);
 
 		assertTrue(collideDown(map, new CollisionResults(CollisionIntention.valueOf("DEFAULT_COLLISIONS").getId(), false, 1)) > 0);
 		assertEquals(0, collideDown(map, new CollisionResults(CollisionIntention.valueOf("CANT_SEE_COLLISIONS").getId(), false, 1)));
@@ -349,6 +358,11 @@ class GeoWorldLoaderAionServerFormatTest {
 		assertTrue(terrainActor.contains("AtomicReference<List<MaterialSkill>>"));
 		assertFalse(siegeShield.contains("shieldService()"));
 		assertTrue(siegeShield.contains("new CollisionDieActor(creature, geometry)"));
+	}
+
+	private static void loadCurrentWorld(int worldId, Map<String, Spatial> models, GeoMap map) throws Exception {
+		GeoWorldLoader.loadTerrains(List.of(map));
+		GeoWorldLoader.loadWorldObjects(worldId, models, map, new HashSet<>());
 	}
 
 	private static byte[] modelsMesh() {

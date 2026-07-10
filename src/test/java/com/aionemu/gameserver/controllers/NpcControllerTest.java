@@ -1,7 +1,11 @@
 package com.aionemu.gameserver.controllers;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.Future;
 
 import org.junit.jupiter.api.Test;
@@ -31,6 +35,17 @@ class NpcControllerTest {
 				respawnTask.cancel(false);
 			}
 		}
+	}
+
+	@Test
+	void deadNpcRestoresLootStatusImmediatelyAfterDeathPacket() throws Exception {
+		String controller = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/controllers/NpcController.java"));
+		int deathPacket = controller.indexOf("new SM_EMOTION(owner, EmotionType.DIE");
+		assertTrue(controller.indexOf("dropService().see(player, owner)", deathPacket) > deathPacket);
+
+		String dropService = Files.readString(Path.of("src/main/java/com/aionemu/gameserver/services/drop/DropService.java"));
+		String seeMethod = dropService.substring(dropService.indexOf("public void see("), dropService.indexOf("private void uniqueDropAnnounce"));
+		assertFalse(seeMethod.contains("schedule("));
 	}
 
 	private static final class TestNpc extends Npc {

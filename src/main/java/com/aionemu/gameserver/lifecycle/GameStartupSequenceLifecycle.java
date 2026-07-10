@@ -64,10 +64,10 @@ public class GameStartupSequenceLifecycle {
         adminPanelLifecycle.start();
 
         staticDataLifecycle.start();
+        geoNavLifecycle.start();
         worldBootstrapLifecycle.start();
         eventBootstrapLifecycle.start();
 
-        geoNavLifecycle.start();
         GameServer gs = worldActivationLifecycle.start();
 
         enginesLifecycle.start();

@@ -28,6 +28,7 @@ import com.aionemu.gameserver.model.DescriptionId;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
 import com.aionemu.gameserver.model.templates.item.Stigma.StigmaSkill;
+import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_COOLDOWN;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SKILL_LIST;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.skillengine.model.SkillTemplate;
@@ -242,6 +243,14 @@ public final class PlayerSkillList implements SkillList<Player> {
 		}
 		PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getBasicSkills()));
 		PacketSendUtility.sendPacket(player, new SM_SKILL_LIST(player, player.getSkillList().getLinkedSkills()));
+		if (isNew && player.isSpawned()) {
+			SkillTemplate skillTemplate = DataManager.SKILL_DATA.getSkillTemplate(skillId);
+			long reuseTime = player.getSkillCoolDown(skillTemplate.getDelayId());
+			if (reuseTime > System.currentTimeMillis()) {
+				PacketSendUtility.sendPacket(player,
+						new SM_SKILL_COOLDOWN(player, Map.of(skillTemplate.getDelayId(), reuseTime), false));
+			}
+		}
 		return true;
 	}
 

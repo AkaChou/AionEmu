@@ -31,6 +31,7 @@ class NavDataTest {
 	Path dataDir;
 
 	private String oldDataDir;
+	private String oldGeoDir;
 	private WorldMapsData oldWorldMapsData;
 	private PrintStream oldOut;
 	private final NavData navData = NavData.getInstance();
@@ -38,15 +39,15 @@ class NavDataTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		oldDataDir = System.getProperty("aion.game.data.dir");
+		oldGeoDir = System.getProperty("aion.game.geo.dir");
 		oldWorldMapsData = DataManager.WORLD_MAPS_DATA;
 		oldOut = System.out;
 		System.setProperty("aion.game.data.dir", dataDir.toString());
+		System.setProperty("aion.game.geo.dir", dataDir.resolve("geo").toString());
 		DataManager.WORLD_MAPS_DATA = worldMaps(256, 1001, 1002);
 		resetNavData();
 		GeoDataConfig.GEO_NAV_ENABLE = true;
-		setGeoConfig("GEO_NAV_SOFT_CACHE", false);
 		setGeoConfig("GEO_NAV_CACHE_SIZE", 50);
-		setGeoConfig("GEO_NAV_LOG_LEVEL", 1);
 	}
 
 	@AfterEach
@@ -58,13 +59,17 @@ class NavDataTest {
 		} else {
 			System.setProperty("aion.game.data.dir", oldDataDir);
 		}
+		if (oldGeoDir == null) {
+			System.clearProperty("aion.game.geo.dir");
+		} else {
+			System.setProperty("aion.game.geo.dir", oldGeoDir);
+		}
 		System.setOut(oldOut);
 		GeoDataConfig.GEO_NAV_ENABLE = false;
 	}
 
 	@Test
-	void lazyLoadIndexesNavFilesWithoutLoadingMeshes() throws Exception {
-		setGeoConfig("GEO_NAV_LAZY_LOAD", true);
+	void indexesNavFilesWithoutLoadingMeshes() throws Exception {
 		writeNavFile(1001);
 
 		navData.loadNavMaps();
@@ -74,19 +79,7 @@ class NavDataTest {
 	}
 
 	@Test
-	void preloadModeLoadsMeshesDuringNavScan() throws Exception {
-		setGeoConfig("GEO_NAV_LAZY_LOAD", false);
-		writeNavFile(1001);
-
-		navData.loadNavMaps();
-
-		assertEquals(1, navData.getAvailableMapCount());
-		assertEquals(1, navData.getLoadedMapCount());
-	}
-
-	@Test
-	void lazyLoadScanPrintsBlockProgressLine() throws Exception {
-		setGeoConfig("GEO_NAV_LAZY_LOAD", true);
+	void scanPrintsBlockProgressLine() throws Exception {
 		writeNavFile(1001);
 		ByteArrayOutputStream bytes = captureSystemOut();
 
@@ -99,22 +92,7 @@ class NavDataTest {
 	}
 
 	@Test
-	void preloadModePrintsBlockProgressForIndexedFilesAndLoadedMeshes() throws Exception {
-		setGeoConfig("GEO_NAV_LAZY_LOAD", false);
-		writeNavFile(1001);
-		ByteArrayOutputStream bytes = captureSystemOut();
-
-		navData.loadNavMaps();
-
-		String output = bytes.toString(StandardCharsets.UTF_8);
-		assertTrue(output.contains("\r████████████████████ | \"NavigationFiles\" | 2/2\n"));
-		assertTrue(output.contains("\r████████████████████ | \"NavigationMeshes\" | 1/1\n"));
-		assertTrue(output.chars().noneMatch(character -> character == '%'));
-	}
-
-	@Test
 	void strongCacheHonorsConfiguredMaximumSize() throws Exception {
-		setGeoConfig("GEO_NAV_LAZY_LOAD", true);
 		setGeoConfig("GEO_NAV_CACHE_SIZE", 1);
 		writeNavFile(1001);
 		writeNavFile(1002);
@@ -125,19 +103,6 @@ class NavDataTest {
 
 		assertEquals(2, navData.getAvailableMapCount());
 		assertEquals(1, navData.getLoadedMapCount());
-	}
-
-	@Test
-	void softCacheDoesNotKeepLoadedMeshesInStrongCache() throws Exception {
-		setGeoConfig("GEO_NAV_LAZY_LOAD", true);
-		setGeoConfig("GEO_NAV_SOFT_CACHE", true);
-		writeNavFile(1001);
-		navData.loadNavMaps();
-
-		navData.getNavMap(1001);
-
-		assertEquals(1, navData.getLoadedMapCount());
-		assertEquals(0, strongCacheSize());
 	}
 
 	private void writeNavFile(int mapId) throws IOException {
@@ -177,18 +142,10 @@ class NavDataTest {
 		return data;
 	}
 
-	private int strongCacheSize() throws Exception {
-		return ((Map<Integer, ?>) getField(navData, "navMaps")).size();
-	}
-
 	@SuppressWarnings("unchecked")
 	private void resetNavData() throws Exception {
 		((Map<Integer, ?>) getField(navData, "navMaps")).clear();
 		((Map<Integer, ?>) getField(navData, "navFiles")).clear();
-		Object softNavMaps = getField(navData, "softNavMaps");
-		if (softNavMaps instanceof Map<?, ?> map) {
-			map.clear();
-		}
 		((Map<Integer, ?>) getField(navData, "mapLocks")).clear();
 	}
 

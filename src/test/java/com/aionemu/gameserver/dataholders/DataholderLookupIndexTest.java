@@ -140,12 +140,33 @@ class DataholderLookupIndexTest {
 	}
 
 	@Test
-	void azoturanFortressHasElyosInstanceExit() throws Exception {
+	void enteredInstancesHaveConfiguredExits() throws Exception {
 		String xml = Files.readString(Path.of("src/main/resources/aion/game/data/static_data/instance_exit/instance_exit.xml"));
 		InstanceExitData data = unmarshal(InstanceExitData.class, xml);
 
-		assertNotNull(data.getInstanceExit(310100000, Race.ELYOS));
-		assertEquals(210040000, data.getInstanceExit(310100000, Race.ELYOS).getExitWorld());
+		assertExit(data, 310100000, Race.ELYOS, 210040000);
+		assertExit(data, 310040000, Race.ELYOS, 210020000);
+		assertExit(data, 320040000, Race.ASMODIANS, 220020000);
+		assertExit(data, 310070000, Race.ELYOS, 210030000);
+		assertExit(data, 320070000, Race.ASMODIANS, 220010000);
+		assertExit(data, 301340000, Race.ELYOS, 600090000);
+		assertExit(data, 301340000, Race.ASMODIANS, 600090000);
+		assertExit(data, 301690000, Race.ELYOS, 210100000);
+		assertExit(data, 301690000, Race.ASMODIANS, 220110000);
+		assertExit(data, 310010000, Race.ELYOS, 210010000);
+		assertExit(data, 310120000, Race.ELYOS, 110010000);
+		assertExit(data, 320010000, Race.ASMODIANS, 220010000);
+		assertExit(data, 320020000, Race.ASMODIANS, 220010000);
+		assertExit(data, 320140000, Race.ASMODIANS, 120010000);
+		assertExit(data, 301700000, Race.ELYOS, 110010000);
+		assertExit(data, 301700000, Race.ASMODIANS, 120010000);
+		assertExit(data, 600080000, Race.ELYOS, 110010000);
+		assertExit(data, 600080000, Race.ASMODIANS, 120010000);
+	}
+
+	private static void assertExit(InstanceExitData data, int instanceId, Race race, int exitWorld) {
+		assertNotNull(data.getInstanceExit(instanceId, race), () -> "Missing instance exit for " + instanceId + " " + race);
+		assertEquals(exitWorld, data.getInstanceExit(instanceId, race).getExitWorld());
 	}
 
 	private static <T> T unmarshal(Class<T> type, String xml) throws Exception {

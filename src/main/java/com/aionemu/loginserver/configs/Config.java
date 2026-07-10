@@ -71,16 +71,6 @@ public class Config {
     @Property(key = "loginserver.network.client.bantimeforbruteforcing", defaultValue = "15")
     public static int WRONG_LOGIN_BAN_TIME;
     /**
-     * Number of Threads that will handle io read (>= 0)
-     */
-    @Property(key = "loginserver.network.nio.threads.read", defaultValue = "0")
-    public static int NIO_READ_THREADS;
-    /**
-     * Number of Threads that will handle io write (>= 0)
-     */
-    @Property(key = "loginserver.network.nio.threads.write", defaultValue = "0")
-    public static int NIO_WRITE_THREADS;
-    /**
      * Should server automaticly create accounts for users or not?
      */
     @Property(key = "loginserver.accounts.autocreate", defaultValue = "true")

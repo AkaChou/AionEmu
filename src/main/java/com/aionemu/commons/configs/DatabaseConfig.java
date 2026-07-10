@@ -18,4 +18,10 @@ public class DatabaseConfig {
     
     @Property(key = "database.maxconnections", defaultValue = "20")
     public static int DATABASE_MAXCONNECTIONS;
+
+    @Property(key = "database.hikari.maxLifetime", defaultValue = "1800000")
+    public static long HIKARI_MAX_LIFETIME;
+
+    @Property(key = "database.hikari.connectionTestQuery", defaultValue = "SELECT 1")
+    public static String HIKARI_CONNECTION_TEST_QUERY;
 }
