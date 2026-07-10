@@ -16,12 +16,12 @@ class ManaStoneInfoBlobEntryTest {
 
 	private static final int AMPLIFICATION_FLAG_OFFSET = 157;
 	private static final int AMPLIFICATION_SKILL_ID_OFFSET = 158;
-	private static final int SKILL_BOOST_FLAG_OFFSET = 173;
+	private static final int INHERENT_SKILL_FLAG_OFFSET = 173;
 	private static final int SKILL_BOOST_SKILL_ID_OFFSET = 174;
 	private static final int SKILL_BOOST_LEVEL_OFFSET = 178;
 
 	@Test
-	void writesSkillBoostDisplayFlagAndFieldsAtClientOffsets() {
+	void writesSkillBoostFieldsWithoutEnablingInherentSkillDisplay() {
 		Item item = new TestItem(1, new TestItemTemplate(114101846));
 		item.setIsEnhance(true);
 		item.setEnhanceSkillId(4037);
@@ -32,10 +32,9 @@ class ManaStoneInfoBlobEntryTest {
 		entry.writeThisBlob(buffer);
 
 		assertEquals(entry.getSize(), buffer.position());
-		for (int i = 162; i < SKILL_BOOST_FLAG_OFFSET; i++) {
+		for (int i = 162; i <= INHERENT_SKILL_FLAG_OFFSET; i++) {
 			assertEquals(0, buffer.get(i));
 		}
-		assertEquals(1, buffer.get(SKILL_BOOST_FLAG_OFFSET));
 		assertEquals(4037, buffer.getInt(SKILL_BOOST_SKILL_ID_OFFSET));
 		assertEquals(1, buffer.getInt(SKILL_BOOST_LEVEL_OFFSET));
 	}
@@ -52,7 +51,7 @@ class ManaStoneInfoBlobEntryTest {
 		entry.writeThisBlob(buffer);
 
 		assertEquals(entry.getSize(), buffer.position());
-		assertEquals(0, buffer.get(SKILL_BOOST_FLAG_OFFSET));
+		assertEquals(0, buffer.get(INHERENT_SKILL_FLAG_OFFSET));
 		assertEquals(0, buffer.getInt(SKILL_BOOST_SKILL_ID_OFFSET));
 		assertEquals(0, buffer.getInt(SKILL_BOOST_LEVEL_OFFSET));
 	}

@@ -1,9 +1,12 @@
 package com.aionemu.gameserver.utils.stats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.aionemu.gameserver.configs.main.CustomConfig;
 import com.aionemu.gameserver.configs.main.RateConfig;
+import com.aionemu.gameserver.model.Race;
+import com.aionemu.gameserver.model.stats.container.StatEnum;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,5 +43,15 @@ class StatFunctionsTest {
 	@Test
 	void appliesAccuracyModifierToAvoidanceDifference() {
 		assertEquals(100f, StatFunctions.calculateAvoidanceDifference(1000, 800, 100));
+	}
+
+	@Test
+	void mapsTargetTypesToTheirPveAttackRatioStats() {
+		assertEquals(StatEnum.PVE_ATTACK_RATIO_TYPE_A, StatFunctions.getPveAttackRatioStat(Race.TYPE_A));
+		assertEquals(StatEnum.PVE_ATTACK_RATIO_TYPE_B, StatFunctions.getPveAttackRatioStat(Race.TYPE_B));
+		assertEquals(StatEnum.PVE_ATTACK_RATIO_TYPE_C, StatFunctions.getPveAttackRatioStat(Race.TYPE_C));
+		assertEquals(StatEnum.PVE_ATTACK_RATIO_TYPE_D, StatFunctions.getPveAttackRatioStat(Race.TYPE_D));
+		assertEquals(StatEnum.PVE_ATTACK_RATIO_TYPE_E, StatFunctions.getPveAttackRatioStat(Race.TYPE_E));
+		assertNull(StatFunctions.getPveAttackRatioStat(Race.BEAST));
 	}
 }

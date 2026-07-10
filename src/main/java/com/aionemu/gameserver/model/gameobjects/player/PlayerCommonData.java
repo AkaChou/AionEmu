@@ -116,6 +116,8 @@ public class PlayerCommonData extends VisibleObjectTemplate {
 	// Atreian Passport Creation Date
 	private Timestamp creationDate;
 	private int minionSkillPoints;
+	// ponytail: session setting; persist it only if auto-charge must survive relogging.
+	private boolean minionSkillPointsAutoCharge;
 	private Timestamp minionFunctionTime;
 
 	public PlayerCommonData(int objId) {
@@ -1128,6 +1130,14 @@ public double getExpMultiplier() {
 
 	public void setMinionSkillPoints(int minionSkillPoints) {
 		this.minionSkillPoints = minionSkillPoints;
+	}
+
+	public boolean isMinionSkillPointsAutoCharge() {
+		return minionSkillPointsAutoCharge;
+	}
+
+	public void setMinionSkillPointsAutoCharge(boolean minionSkillPointsAutoCharge) {
+		this.minionSkillPointsAutoCharge = minionSkillPointsAutoCharge;
 	}
 
 	public Timestamp getMinionFunctionTime() {

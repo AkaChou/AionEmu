@@ -65,6 +65,9 @@ import com.aionemu.gameserver.world.knownlist.PlayerAwareKnownList;
 @Slf4j
 public class MinionService {
 
+	private static final int MAX_SKILL_POINTS = 50000;
+	private static final int KINAH_PER_SKILL_POINT = 20;
+	private static final int MAX_MINIONS = 200;
 	private static volatile ObjectProvider<MinionService> instanceProvider;
 	private static List<Integer> minions;
 	private MinionBuff minionbuff;
@@ -78,7 +81,8 @@ public class MinionService {
 	public void onPlayerLogin(Player player) {
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(0, player.getMinionList().getMinions()));
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(9, 0));
-		PacketSendUtility.sendPacket(player, new SM_MINIONS(11, player.getMinionSkillPoints(), false));
+		PacketSendUtility.sendPacket(player, new SM_MINIONS(11, player.getMinionSkillPoints(),
+				player.getCommonData().isMinionSkillPointsAutoCharge()));
 		PacketSendUtility.sendPacket(player, new SM_MINIONS(12));
 		
 		final int lastUsedMinionId = player.getMinionList().getLastUsed();
@@ -98,8 +102,7 @@ public class MinionService {
 	}
 
 	public void addMinion(final Player player, final int itemObjId) {
-		if (player.getMinionList().getMinions().size() == 200) {
-			PacketSendUtility.sendMessage(player, "Max 200 Minion!");
+		if (rejectIfMinionLimitReached(player)) {
 			return;
 		}
 
@@ -125,6 +128,11 @@ public class MinionService {
 			public void run() {
 				player.getObserveController().removeObserver(itemUseObserver);
 				player.getController().cancelTask(TaskId.ITEM_USE);
+				if (rejectIfMinionLimitReached(player)) {
+					PacketSendUtility.broadcastPacket(player,
+							new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 2), true);
+					return;
+				}
 				PacketSendUtility.broadcastPacket(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), itemObjId, item.getItemId(), 0, 1), true);
 
 				if (!player.getInventory().decreaseByObjectId(itemObjId, 1)) {
@@ -214,6 +222,18 @@ public class MinionService {
 				}
 			}
 		}, 1500));
+	}
+
+	private static boolean rejectIfMinionLimitReached(Player player) {
+		if (!isMinionLimitReached(player.getMinionList().getMinions().size())) {
+			return false;
+		}
+		PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FAMILIAR_MSG_CANNOT_CONTRACT_BY_MAXUNIT);
+		return true;
+	}
+
+	static boolean isMinionLimitReached(int minionCount) {
+		return minionCount >= MAX_MINIONS;
 	}
 
 	private static void checkQuest(Player player, Item item) {
@@ -445,20 +465,58 @@ public class MinionService {
 	}
 
 	public void addMinionSkillPoints(Player player, boolean charge, boolean autoCharge) {
-		int maxSkillPoints = 50000;
 		int currentSkillPoints = player.getMinionSkillPoints();
-		int skillPointsToAdd = maxSkillPoints - currentSkillPoints;
-		int price = skillPointsToAdd * 20;
-		if (player.getInventory().getKinah() < price) {
-			return;
-		}
+		player.getCommonData().setMinionSkillPointsAutoCharge(autoCharge);
 		if (charge) {
-			player.getInventory().decreaseKinah(price);
-			player.setMinionSkillPoints(maxSkillPoints);
-			PacketSendUtility.sendPacket(player, new SM_MINIONS(11, maxSkillPoints, autoCharge));
-		} else {
-			PacketSendUtility.sendPacket(player, new SM_MINIONS(11, currentSkillPoints, autoCharge));
+			if (!player.getInventory().tryDecreaseKinah(chargePrice(currentSkillPoints))) {
+				return;
+			}
+			currentSkillPoints = MAX_SKILL_POINTS;
+			player.setMinionSkillPoints(currentSkillPoints);
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FAMILIAR_MSG_FENERGY_CHARGE);
 		}
+		PacketSendUtility.sendPacket(player, new SM_MINIONS(11, currentSkillPoints, autoCharge));
+	}
+
+	public boolean consumeMinionSkillPoints(Player player, int skillId) {
+		if (player.getMinion() == null || player.getMinion().getMinionTemplate().getAction() == null
+				|| player.getMinion().getMinionTemplate().getAction().getSkillsCollections() == null) {
+			return true;
+		}
+
+		MinionSkill minionSkill = player.getMinion().getMinionTemplate().getAction().getSkillsCollections().stream()
+				.filter(skill -> skill.getSkillId() == skillId).findFirst().orElse(null);
+		if (minionSkill == null) {
+			return true;
+		}
+
+		int energyCost = minionSkill.getEnergyCost();
+		int currentSkillPoints = player.getMinionSkillPoints();
+		boolean autoCharge = player.getCommonData().isMinionSkillPointsAutoCharge();
+		if (currentSkillPoints < energyCost) {
+			if (!autoCharge) {
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FAMILIAR_MSG_CANNOT_USE_FSKILL_BY_LACK_FENERGY);
+				return false;
+			}
+			int skillPointsToAdd = MAX_SKILL_POINTS - currentSkillPoints;
+			int price = chargePrice(currentSkillPoints);
+			if (!player.getInventory().tryDecreaseKinah(price)) {
+				player.getCommonData().setMinionSkillPointsAutoCharge(false);
+				PacketSendUtility.sendPacket(player, new SM_MINIONS(11, currentSkillPoints, false));
+				PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_FAMILIAR_MSG_FENERGY_AUTOCHARGING_FAIL_BY_GOLD);
+				return false;
+			}
+			currentSkillPoints = MAX_SKILL_POINTS;
+			PacketSendUtility.sendPacket(player, new SM_SYSTEM_MESSAGE(1404328, skillPointsToAdd, price));
+		}
+
+		player.setMinionSkillPoints(currentSkillPoints - energyCost);
+		PacketSendUtility.sendPacket(player, new SM_MINIONS(11, player.getMinionSkillPoints(), autoCharge));
+		return true;
+	}
+
+	static int chargePrice(int currentSkillPoints) {
+		return Math.max(0, MAX_SKILL_POINTS - currentSkillPoints) * KINAH_PER_SKILL_POINT;
 	}
 
 	public void activateMinionFunction(Player player) {

@@ -2990,6 +2990,10 @@ public class Player extends Creature {
 	}
 
 	public void setLunaAccount(long luna) {
+		if (luna < 0) {
+			PacketSendUtility.sendMessage(this, "Invalid Luna balance.");
+			return;
+		}
 		if (com.aionemu.gameserver.lifecycle.GameServerNetworkServices.loginServer().sendPacket(new SM_ACCOUNT_TOLL_INFO(
 				this.getClientConnection().getAccount().getToll(), luna, this.getAcountName()))) {
 			this.getClientConnection().getAccount().setLuna(luna);

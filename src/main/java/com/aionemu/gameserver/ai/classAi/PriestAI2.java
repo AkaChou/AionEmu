@@ -23,15 +23,16 @@ import com.aionemu.gameserver.lifecycle.GameEngineServices;
 import com.aionemu.gameserver.lifecycle.GameThreadPoolServices;
 
 import com.aionemu.gameserver.ai.AggressiveNpcAI2;
-import com.aionemu.commons.network.util.ThreadPoolManager;
 import com.aionemu.commons.utils.Rnd;
 import com.aionemu.gameserver.ai2.AIName;
 import com.aionemu.gameserver.model.actions.PlayerActions;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Npc;
+import com.aionemu.gameserver.model.gameobjects.Servant;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.services.NpcShoutsService;
-import com.aionemu.gameserver.skillengine.SkillEngine;
+import com.aionemu.gameserver.model.templates.spawns.SpawnTemplate;
+import com.aionemu.gameserver.spawnengine.SpawnEngine;
+import com.aionemu.gameserver.spawnengine.VisibleObjectSpawner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,8 @@ public class PriestAI2 extends AggressiveNpcAI2
 {
 	private int priestPhase = 0;
 	private Future<?> phaseTask;
+	private final Object servantLock = new Object();
+	private boolean canSpawnServants;
 	private boolean canThink = true;
 	private AtomicBoolean isAggred = new AtomicBoolean(false);
 	
@@ -59,6 +62,9 @@ public class PriestAI2 extends AggressiveNpcAI2
 	}
 	
 	private void checkPercentage(int hpPercentage) {
+		if (getServantNpcId(getNpcId()) == 0) {
+			return;
+		}
 		if (hpPercentage == 95 && priestPhase < 1) {
 			priestPhase = 1;
 			startPhaseTask();
@@ -69,61 +75,60 @@ public class PriestAI2 extends AggressiveNpcAI2
 	}
 	
 	private void startPhaseTask() {
-		phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
-			@Override
-			public void run() {
-				if (isAlreadyDead()) {
-					cancelPhaseTask();
-				} else {
-					List<Player> players = getLifedPlayers();
-					if (!players.isEmpty()) {
-						int size = players.size();
-						if (players.size() < 1) {
-							for (Player p: players) {
-								spawnServant(p);
-							}
-						} else {
-							int count = Rnd.get(1, size);
-							for (int i = 0; i < count; i++) {
-								if (players.isEmpty()) {
-									break;
+		synchronized (servantLock) {
+			canSpawnServants = true;
+			if (phaseTask != null && !phaseTask.isDone()) {
+				return;
+			}
+			phaseTask = GameThreadPoolServices.threadPoolManager().scheduleAtFixedRate(new Runnable() {
+				@Override
+				public void run() {
+					if (isAlreadyDead()) {
+						cancelPhaseTask();
+					} else {
+						List<Player> players = getLifedPlayers();
+						if (!players.isEmpty()) {
+							int size = players.size();
+							if (players.size() < 1) {
+								for (Player p: players) {
+									spawnServant(p);
 								}
-								spawnServant(players.get(Rnd.get(players.size())));
+							} else {
+								int count = Rnd.get(1, size);
+								for (int i = 0; i < count; i++) {
+									if (players.isEmpty()) {
+										break;
+									}
+									spawnServant(players.get(Rnd.get(players.size())));
+								}
 							}
 						}
 					}
 				}
-			}
-		}, 3000, 15000);
+			}, 3000, 15000);
+		}
 	}
 	
 	private void spawnServant(Player player) {
-		final float x = player.getX();
-		final float y = player.getY();
-		final float z = player.getZ();
-		if (x > 0 && y > 0 && z > 0) {
-			GameThreadPoolServices.threadPoolManager().schedule(new Runnable() {
-				@Override
-				public void run() {
-					if (!isAlreadyDead()) {
-						switch (Rnd.get(1, 4)) {
-						    case 1:
-							    spawn(280638, x, y, z, (byte) 0); //Sacred Dragon Relic I.
-							break;
-							case 2:
-							    spawn(280639, x, y, z, (byte) 0); //Sacred Dragon Relic II.
-							break;
-							case 3:
-							    spawn(280640, x, y, z, (byte) 0); //Sacred Dragon Relic III.
-							break;
-							case 4:
-							    spawn(281301, x, y, z, (byte) 0); //Holy Servant I.
-							break;
-						}
-					}
-				}
-			}, 1000);
+		synchronized (servantLock) {
+			int servantNpcId = getServantNpcId(getNpcId());
+			if (canSpawnServants && servantNpcId != 0 && !isAlreadyDead()
+					&& player.getX() > 0 && player.getY() > 0 && player.getZ() > 0) {
+				SpawnTemplate template = SpawnEngine.addNewSingleTimeSpawn(getOwner().getWorldId(), servantNpcId,
+						player.getX(), player.getY(), player.getZ(), (byte) 0);
+				VisibleObjectSpawner.spawnEnemyServant(template, getOwner().getInstanceId(), getOwner(), getOwner().getLevel());
+			}
 		}
+	}
+
+	static int getServantNpcId(int priestNpcId) {
+		return switch (priestNpcId) {
+			case 280635 -> 280638;
+			case 280636 -> 280639;
+			case 280637 -> 280640;
+			case 281300 -> 281301;
+			default -> 0;
+		};
 	}
 	
 	@Override
@@ -356,45 +361,41 @@ public class PriestAI2 extends AggressiveNpcAI2
 	
 	@Override
 	protected void handleDespawned() {
-		cancelPhaseTask();
+		stopPhaseAndDeleteHelpers();
 		super.handleDespawned();
 	}
 	
 	@Override
 	protected void handleBackHome() {
 		canThink = true;
-		deleteHelpers();
-		cancelPhaseTask();
+		stopPhaseAndDeleteHelpers();
 		isAggred.set(false);
 		super.handleBackHome();
 	}
+
+	private void stopPhaseAndDeleteHelpers() {
+		synchronized (servantLock) {
+			canSpawnServants = false;
+			cancelPhaseTask();
+			deleteHelpers();
+		}
+	}
 	
 	private void deleteHelpers() {
-		despawnNpc(280638); //Sacred Dragon Relic I.
-		despawnNpc(280639); //Sacred Dragon Relic II.
-		despawnNpc(280640); //Sacred Dragon Relic III.
-		despawnNpc(281621); //Holy Servant I.
-		despawnNpc(281839); //Holy Servant II.
+		for (Npc npc: getPosition().getWorldMapInstance().getNpcs()) {
+			if (isOwnedServant(npc, getOwner())) {
+				npc.getController().onDelete();
+			}
+		}
+	}
+
+	static boolean isOwnedServant(Npc npc, Npc owner) {
+		return npc instanceof Servant && owner.equals(((Servant) npc).getCreator());
 	}
 	
 	@Override
 	protected void handleDied() {
-		deleteHelpers();
-		cancelPhaseTask();
-		despawnNpc(280638); //Sacred Dragon Relic I.
-		despawnNpc(280639); //Sacred Dragon Relic II.
-		despawnNpc(280640); //Sacred Dragon Relic III.
-		despawnNpc(281621); //Holy Servant I.
-		despawnNpc(281839); //Holy Servant II.
+		stopPhaseAndDeleteHelpers();
 		super.handleDied();
-	}
-	
-	private void despawnNpc(int npcId) {
-		if (getPosition().getWorldMapInstance().getNpcs(npcId) != null) {
-			List<Npc> npcs = getPosition().getWorldMapInstance().getNpcs(npcId);
-			for (Npc npc: npcs) {
-				npc.getController().onDelete();
-			}
-		}
 	}
 }

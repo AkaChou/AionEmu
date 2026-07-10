@@ -36012,6 +36012,11 @@
 		<npcskill probability="100" skilllevel="5" skillid="17125"/>
 		<npcskill probability="100" skilllevel="5" skillid="17261"/>
     </npcskills>
+	<!-- Sacred Dragon Relic IV -->
+	<npcskills npcid="281301">
+		<npcskill probability="100" skilllevel="5" skillid="17125"/>
+		<npcskill probability="100" skilllevel="5" skillid="17261"/>
+    </npcskills>
 	<!-- Holy Servant I -->
 	<npcskills npcid="281621">
 		<npcskill probability="100" skilllevel="5" skillid="17125"/>

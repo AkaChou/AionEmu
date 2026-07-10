@@ -339,18 +339,23 @@ public class ItemSocketService {
 	}
 
 	public static void socketGodstone(final Player player, int weaponId, int stoneId) {
-		final Item weaponItem = player.getInventory().getItemByObjId(weaponId);
+		final Item weaponItem = findGodstoneTarget(player, weaponId);
 		final Item godstone = player.getInventory().getItemByObjId(stoneId);
-		final int godStoneItemId = godstone.getItemTemplate().getTemplateId();
 		if (weaponItem == null) {
 			PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_GIVE_ITEM_PROC_CANNOT_GIVE_PROC_TO_EQUIPPED_ITEM);
 			return;
 		}
+		if (godstone == null) {
+			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_GIVE_ITEM_PROC_NO_PROC_GIVE_ITEM);
+			return;
+		}
 		if (!weaponItem.canSocketGodstone()) {
 			PacketSendUtility.sendPacket(player,
 					SM_SYSTEM_MESSAGE.STR_GIVE_ITEM_PROC_NOT_ADD_PROC(new DescriptionId(weaponItem.getNameId())));
+			return;
 		}
+		final int godStoneItemId = godstone.getItemTemplate().getTemplateId();
 		if (player.getInventory().getKinah() < getPriceByQuality(godstone)) {
 			PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_NOT_ENOUGH_MONEY);
 			return;
@@ -395,6 +400,11 @@ public class ItemSocketService {
 						godstone.getObjectId(), godstone.getItemTemplate().getTemplateId(), 0, 1, 384));
 			}
 		}, 5000));
+	}
+
+	static Item findGodstoneTarget(Player player, int weaponId) {
+		Item weapon = player.getInventory().getItemByObjId(weaponId);
+		return weapon != null ? weapon : player.getEquipment().getEquippedItemByObjId(weaponId);
 	}
 
 	private static int getPriceByQuality(Item item) {

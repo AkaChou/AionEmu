@@ -32,6 +32,7 @@ import com.aionemu.gameserver.controllers.attack.AttackResult;
 import com.aionemu.gameserver.controllers.attack.AttackStatus;
 import com.aionemu.gameserver.controllers.observer.AttackerCriticalStatus;
 import com.aionemu.gameserver.model.PlayerClass;
+import com.aionemu.gameserver.model.Race;
 import com.aionemu.gameserver.model.SkillElement;
 import com.aionemu.gameserver.model.gameobjects.Creature;
 import com.aionemu.gameserver.model.gameobjects.Homing;
@@ -851,6 +852,10 @@ public class StatFunctions {
 			}
 			int pveAttackBonus = attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO, 0).getCurrent();
 			int pveDefenceBonus = target.getGameStats().getStat(StatEnum.PVE_DEFEND_RATIO, 0).getCurrent();
+			StatEnum targetRaceAttackRatio = getPveAttackRatioStat(target.getRace());
+			if (targetRaceAttackRatio != null) {
+				pveAttackBonus += attacker.getGameStats().getStat(targetRaceAttackRatio, 0).getCurrent();
+			}
 			switch (element) {
 			case NONE:
 				pveAttackBonus += attacker.getGameStats().getStat(StatEnum.PVE_ATTACK_RATIO_PHYSICAL, 0).getCurrent();
@@ -897,6 +902,17 @@ public class StatFunctions {
 			}
 		}
 		return damages;
+	}
+
+	static StatEnum getPveAttackRatioStat(Race race) {
+		return switch (race) {
+			case TYPE_A -> StatEnum.PVE_ATTACK_RATIO_TYPE_A;
+			case TYPE_B -> StatEnum.PVE_ATTACK_RATIO_TYPE_B;
+			case TYPE_C -> StatEnum.PVE_ATTACK_RATIO_TYPE_C;
+			case TYPE_D -> StatEnum.PVE_ATTACK_RATIO_TYPE_D;
+			case TYPE_E -> StatEnum.PVE_ATTACK_RATIO_TYPE_E;
+			default -> null;
+		};
 	}
 
 	/**

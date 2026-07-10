@@ -210,6 +210,11 @@
 			<xs:enumeration value="PVE_ATTACK_RATIO"/>
 			<xs:enumeration value="PVE_ATTACK_RATIO_MAGICAL"/>
 			<xs:enumeration value="PVE_ATTACK_RATIO_PHYSICAL"/>
+			<xs:enumeration value="PVE_ATTACK_RATIO_TYPE_A"/>
+			<xs:enumeration value="PVE_ATTACK_RATIO_TYPE_B"/>
+			<xs:enumeration value="PVE_ATTACK_RATIO_TYPE_C"/>
+			<xs:enumeration value="PVE_ATTACK_RATIO_TYPE_D"/>
+			<xs:enumeration value="PVE_ATTACK_RATIO_TYPE_E"/>
 			<xs:enumeration value="PVP_DEFEND_RATIO"/>
 			<xs:enumeration value="PVP_DEFEND_RATIO_PHYSICAL"/>
 			<xs:enumeration value="PVP_DEFEND_RATIO_MAGICAL"/>

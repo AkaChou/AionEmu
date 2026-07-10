@@ -17,6 +17,8 @@ package com.aionemu.gameserver.skillengine.model;
 import lombok.extern.slf4j.Slf4j;
 import com.aionemu.gameserver.lifecycle.GameFeatureServices;
 
+import com.aionemu.gameserver.lifecycle.GameEventBootstrapServices;
+
 import com.aionemu.gameserver.lifecycle.GameWorldServices;
 
 import com.aionemu.gameserver.lifecycle.GameEngineServices;
@@ -1270,6 +1272,11 @@ public class Skill {
 		}
 
 		if (!preUsageCheck()) {
+			return;
+		}
+		if (skillMethod == SkillMethod.CAST && effector instanceof Player
+				&& !GameEventBootstrapServices.minionService().consumeMinionSkillPoints((Player) effector, skillTemplate.getSkillId())) {
+			effector.setCasting(null);
 			return;
 		}
 		effector.setCasting(null);

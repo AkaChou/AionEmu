@@ -29,7 +29,6 @@ import com.aionemu.gameserver.model.TaskId;
 import com.aionemu.gameserver.model.gameobjects.Item;
 import com.aionemu.gameserver.model.gameobjects.PersistentState;
 import com.aionemu.gameserver.model.gameobjects.player.Player;
-import com.aionemu.gameserver.network.aion.serverpackets.SM_INVENTORY_UPDATE_ITEM;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_ITEM_USAGE_ANIMATION;
 import com.aionemu.gameserver.network.aion.serverpackets.SM_SYSTEM_MESSAGE;
 import com.aionemu.gameserver.services.item.ItemPacketService;
@@ -107,8 +106,6 @@ public class TemperingAction extends AbstractItemAction {
 			public void run() {
 				if (player.getInventory().decreaseByItemId(parentItem.getItemId(), 1)) {
 					if (!isTemperingSuccess) {
-						PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), player.getObjectId().intValue(), parentItem.getObjectId().intValue(), parentItem.getItemId(), 0, 2, 0));
-						
 						boolean hasTemperingProtection = false;
 						if (player.getEffectController() != null) {
 							hasTemperingProtection = player.getEffectController().hasEffectById(900004);
@@ -147,7 +144,6 @@ public class TemperingAction extends AbstractItemAction {
 						}
 						
 					} else {
-						PacketSendUtility.broadcastPacketAndReceive(player, new SM_ITEM_USAGE_ANIMATION(player.getObjectId().intValue(), player.getObjectId().intValue(), parentItem.getObjectId().intValue(), parentItem.getItemId(), 0, 1, 0));
 						targetItem.setAuthorize(targetItem.getAuthorize() + 1);
 						
 						if (targetItem.getItemTemplate().isBracelet()) {
@@ -158,7 +154,6 @@ public class TemperingAction extends AbstractItemAction {
                         PacketSendUtility.sendPacket(player, SM_SYSTEM_MESSAGE.STR_MSG_ITEM_AUTHORIZE_SUCCEEDED(targetItem.getNameId(), targetItem.getAuthorize()));
 					}
 					
-					PacketSendUtility.sendPacket(player, new SM_INVENTORY_UPDATE_ITEM(player, targetItem));
 					player.getObserveController().removeObserver(observer);
 					
 					if (targetItem.isEquipped()) {
@@ -166,6 +161,9 @@ public class TemperingAction extends AbstractItemAction {
 					}
 					
 					ItemPacketService.updateItemAfterInfoChange(player, targetItem);
+					PacketSendUtility.broadcastPacketAndReceive(player,
+						new SM_ITEM_USAGE_ANIMATION(player.getObjectId(), player.getObjectId(), parentItem.getObjectId(), parentItem.getItemId(), 0,
+							isTemperingSuccess ? 1 : 2, 0));
 					
 					if (targetItem.isEquipped()) {
 						player.getEquipment().setPersistentState(PersistentState.UPDATE_REQUIRED);
